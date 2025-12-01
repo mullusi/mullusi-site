@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mullusi – Symbolic Intelligence</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #9cf06e;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    h2 {
+      font-weight: normal;
+      color: #b5b5b5;
+      margin-top: 10px;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.7;
+      font-size: 1.1rem;
+    }
+
+    .section-title {
+      color: #9cf06e;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding: 30px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>MULLUSI</h1>
+  <h2>Symbolic Intelligence • Causal Chain Reasoning • SGI Framework</h2>
+</header>
+
+<section>
+  <div class="section-title">About Mullusi</div>
+  <p>
+    Mullusi is a unified Symbolic General Intelligence ecosystem designed to reason,
+    model, predict, and understand the world through causal chains and symbolic structures.
+  </p>
+</section>
+
+<section>
+  <div class="section-title">Latest Articles</div>
+  <p>Coming soon: a dynamic feed of Mullusi research updates, guides, and symbolic breakthroughs.</p>
+</section>
+
+<section>
+  <div class="section-title">Ecosystem</div>
+  <p>
+    - Mullu Core  
+    - Symbolic Engine  
+    - MLCM Framework  
+    - Mullu.World Interface  
+    - Causal Chain Labs  
+    - Mfidel Audio Engine  
+    - Symbolic Visual Reasoning  
+  </p>
+</section>
+
+<section>
+  <div class="section-title">Contact</div>
+  <p>Email: tamirat@mullusi.com</p>
+</section>
+
+<footer>
+  Mullusi © 2025
+</footer>
+
+</body>
+</html>
