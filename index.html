@@ -1,915 +1,466 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ፊደል | Mfidel Symbolic Audio Atlas</title>
+    <title>Mullu - Symbolic Intelligence Without Black Boxes</title>
     <style>
-        :root {
-            --void: #0a0a0f;
-            --deep: #12121a;
-            --surface: #1a1a25;
-            --elevated: #242433;
-            --gold: #d4a574;
-            --gold-dim: rgba(212, 165, 116, 0.3);
-            --amber: #f59e0b;
-            --emerald: #10b981;
-            --cyan: #06b6d4;
-            --violet: #8b5cf6;
-            --rose: #f43f5e;
-            --white: #f5f5f5;
-            --muted: rgba(255,255,255,0.5);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--void);
-            color: var(--white);
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
         }
 
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, var(--deep) 0%, var(--surface) 100%);
-            border-bottom: 1px solid var(--gold-dim);
-            padding: 15px 30px;
+        header {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #64b5f6 0%, #81c784 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .logo-ethiopic {
-            font-size: 2.5rem;
-            color: var(--gold);
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+            font-size: 0.95rem;
         }
 
-        .logo h1 {
-            font-size: 1.4rem;
-            font-weight: 400;
-            color: var(--gold);
+        nav a:hover {
+            color: #64b5f6;
         }
 
-        .logo-sub {
-            font-size: 0.7rem;
-            color: var(--muted);
-        }
-
-        .stats-bar {
-            display: flex;
-            gap: 30px;
-        }
-
-        .stat {
+        .hero {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+            color: white;
+            padding: 150px 2rem 100px;
+            margin-top: 60px;
             text-align: center;
         }
 
-        .stat-value {
-            font-size: 1.5rem;
-            color: var(--cyan);
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            color: #b0bec5;
             font-weight: 300;
         }
 
-        .stat-label {
-            font-size: 0.65rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Main Layout */
-        .main-container {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            height: calc(100vh - 70px);
-        }
-
-        /* Gebeta Grid */
-        .gebeta-container {
-            padding: 20px;
-            overflow: auto;
-        }
-
-        .gebeta-title {
-            font-size: 1rem;
-            color: var(--gold);
-            margin-bottom: 15px;
+        .cta-buttons {
             display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .gebeta-title::before {
-            content: '◈';
-            color: var(--amber);
-        }
-
-        .gebeta-grid {
-            display: grid;
-            grid-template-columns: 50px repeat(8, 1fr);
-            gap: 2px;
-            background: rgba(212, 165, 116, 0.05);
-            padding: 10px;
-            border-radius: 8px;
-            max-width: 900px;
-        }
-
-        .column-header {
-            padding: 8px;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--amber);
-            background: rgba(245, 158, 11, 0.1);
-            border-radius: 4px;
-        }
-
-        .row-header {
-            padding: 8px 4px;
-            text-align: center;
-            font-size: 0.65rem;
-            color: var(--violet);
-            background: rgba(139, 92, 246, 0.1);
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
+            gap: 1rem;
             justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
         }
 
-        .row-num {
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .fidel-cell {
-            background: var(--surface);
-            border-radius: 4px;
-            padding: 8px 4px;
-            text-align: center;
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        .fidel-cell:hover {
-            background: var(--elevated);
-            transform: scale(1.05);
-            z-index: 10;
+        .btn-primary {
+            background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+            color: white;
         }
 
-        .fidel-cell.selected {
-            background: rgba(212, 165, 116, 0.2);
-            box-shadow: 0 0 0 2px var(--gold);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(66, 165, 245, 0.4);
         }
 
-        .fidel-cell.vowel-row {
-            background: rgba(6, 182, 212, 0.15);
+        .btn-secondary {
+            background: transparent;
+            color: #64b5f6;
+            border: 2px solid #64b5f6;
         }
 
-        .fidel-cell.exception {
-            background: rgba(244, 63, 94, 0.15);
+        .btn-secondary:hover {
+            background: #64b5f6;
+            color: white;
+            transform: translateY(-2px);
         }
 
-        .fidel-cell.col8 {
-            background: rgba(16, 185, 129, 0.15);
-        }
-
-        .fidel-symbol {
-            font-size: 1.4rem;
-            color: var(--white);
-            line-height: 1;
-        }
-
-        .fidel-id {
-            font-size: 0.5rem;
-            color: var(--muted);
-            margin-top: 2px;
-        }
-
-        .empty-cell {
-            background: rgba(255,255,255,0.02);
-        }
-
-        /* Right Panel */
-        .detail-panel {
-            background: var(--deep);
-            border-left: 1px solid var(--gold-dim);
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .panel-section {
-            margin-bottom: 25px;
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 2rem;
         }
 
         .section-title {
-            font-size: 0.75rem;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid var(--gold-dim);
-        }
-
-        /* Selected Fidel Display */
-        .selected-fidel {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
             text-align: center;
-            padding: 20px;
-            background: var(--surface);
-            border-radius: 8px;
-            margin-bottom: 20px;
+            color: #0a0e27;
         }
 
-        .selected-symbol {
-            font-size: 4rem;
-            color: var(--gold);
-            line-height: 1;
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
 
-        .selected-id {
-            font-size: 0.8rem;
-            color: var(--cyan);
-            margin-top: 8px;
+        .feature-card {
+            padding: 2rem;
+            border-radius: 12px;
+            background: #f5f5f5;
+            border-left: 4px solid #64b5f6;
+            transition: all 0.3s;
         }
 
-        .selected-family {
-            font-size: 0.7rem;
-            color: var(--muted);
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        /* Audio Formula Display */
-        .formula-box {
-            background: var(--surface);
-            border-radius: 6px;
-            padding: 12px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.75rem;
-            margin-bottom: 10px;
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
         }
 
-        .formula-label {
-            color: var(--muted);
-            font-size: 0.65rem;
-            margin-bottom: 4px;
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #0a0e27;
         }
 
-        .formula-content {
-            color: var(--emerald);
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
         }
 
-        .formula-decomp {
-            margin-top: 10px;
+        .how-it-works {
+            background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+            color: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
         }
 
-        .decomp-part {
-            padding: 8px 15px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 4px;
-        }
-
-        .decomp-equals {
-            color: var(--gold);
-        }
-
-        .decomp-plus {
-            color: var(--cyan);
-        }
-
-        .decomp-whisper {
-            color: var(--violet);
-        }
-
-        .decomp-vowel {
-            color: var(--amber);
-        }
-
-        /* Audio Controls */
-        .audio-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .audio-btn {
-            flex: 1;
-            padding: 10px;
-            background: var(--gold);
-            border: none;
-            border-radius: 6px;
-            color: var(--void);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .audio-btn:hover {
-            background: var(--amber);
-            transform: translateY(-1px);
-        }
-
-        .audio-btn:disabled {
-            background: var(--elevated);
-            color: var(--muted);
-            cursor: not-allowed;
-        }
-
-        /* Rules Reference */
-        .rules-list {
-            font-size: 0.7rem;
-            color: var(--muted);
-        }
-
-        .rule-item {
-            padding: 8px;
-            background: var(--surface);
-            border-radius: 4px;
-            margin-bottom: 6px;
-            border-left: 3px solid var(--gold-dim);
-        }
-
-        .rule-item.active {
-            border-left-color: var(--emerald);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .rule-title {
-            color: var(--white);
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        /* Legend */
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.65rem;
-            color: var(--muted);
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-        }
-
-        /* Word Input */
-        .word-input-container {
-            margin-top: 20px;
-        }
-
-        .word-input {
-            width: 100%;
-            padding: 12px;
-            background: var(--surface);
-            border: 1px solid var(--gold-dim);
-            border-radius: 6px;
-            color: var(--white);
+        .step h3 {
             font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #0a0e27;
+        }
+
+        .step p {
+            color: #666;
+        }
+
+        .comparison {
+            margin-top: 3rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .checkmark {
+            color: #81c784;
+            font-weight: bold;
+        }
+
+        .xmark {
+            color: #e57373;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: white;
             text-align: center;
-            direction: ltr;
+            padding: 80px 2rem;
         }
 
-        .word-input:focus {
-            outline: none;
-            border-color: var(--gold);
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .word-analysis {
-            margin-top: 10px;
-            font-size: 0.7rem;
-            color: var(--muted);
-            max-height: 150px;
-            overflow-y: auto;
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #b0bec5;
         }
 
-        .word-fidel {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            background: var(--surface);
-            border-radius: 4px;
-            margin: 2px;
+        footer {
+            background: #0a0e27;
+            color: #999;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #1a1f3a;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--void); }
-        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            nav a {
+                margin-left: 1rem;
+                font-size: 0.85rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            <span class="logo-ethiopic">ፊደል</span>
-            <div>
-                <h1>Mfidel Symbolic Audio Atlas</h1>
-                <div class="logo-sub">34 Families × 8 Forms • Atomic Symbols • Audio Synthesis</div>
-            </div>
-        </div>
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-value">272</div>
-                <div class="stat-label">Total Fidels</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">34</div>
-                <div class="stat-label">Families</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">8</div>
-                <div class="stat-label">Vowels</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="active-rules">0</div>
-                <div class="stat-label">Active Rules</div>
-            </div>
+    <header>
+        <div class="header-content">
+            <div class="logo">Mullu</div>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#how">How It Works</a>
+                <a href="#compare">Compare</a>
+                <a href="#contact">Get Started</a>
+            </nav>
         </div>
     </header>
 
-    <main class="main-container">
-        <!-- Gebeta Grid -->
-        <section class="gebeta-container">
-            <div class="gebeta-title">ፊደል ገበታ — Fidel Gebeta (Complete Atlas)</div>
-            <div class="gebeta-grid" id="gebeta-grid"></div>
-            
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background: rgba(6, 182, 212, 0.3)"></div>
-                    <span>Vowel Row (17)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: rgba(244, 63, 94, 0.3)"></div>
-                    <span>Exception (ሀ,ሐ,ዐ use አ)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: rgba(16, 185, 129, 0.3)"></div>
-                    <span>8th Form (f[r][2]+ኣ)</span>
-                </div>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>AI You Can Understand</h1>
+            <p class="hero-subtitle">Symbolic intelligence with complete transparency. No black boxes. No hidden layers. Pure causal reasoning.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary">Start Building</button>
+                <button class="btn btn-secondary">Read the Docs</button>
             </div>
-        </section>
+            <p style="color: #90caf9; font-size: 0.95rem;">Open source • Fully auditable • Explainable reasoning</p>
+        </div>
+    </section>
 
-        <!-- Detail Panel -->
-        <aside class="detail-panel">
-            <div class="selected-fidel" id="selected-display">
-                <div class="selected-symbol">ለ</div>
-                <div class="selected-id">f[2][1]</div>
-                <div class="selected-family">la-family (ለ)</div>
+    <section id="features" class="section">
+        <h2 class="section-title">Why Mullu?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Causal Chain Intelligence</h3>
+                <p>Every decision is traced through explicit causal relationships. See exactly why and how the system arrived at any conclusion.</p>
             </div>
-
-            <div class="panel-section">
-                <div class="section-title">Audio Formula</div>
-                <div class="formula-box">
-                    <div class="formula-label">Standard Formula</div>
-                    <div class="formula-content" id="formula-display">
-                        f[r][c].s(w,v) = f[r][c].s(w) + f[17][c].s(w,v)
-                    </div>
-                </div>
-                <div class="formula-decomp" id="decomp-display">
-                    <span class="decomp-part decomp-whisper">ለ</span>
-                    <span class="decomp-equals">=</span>
-                    <span class="decomp-part decomp-whisper">ለ</span>
-                    <span class="decomp-plus">+</span>
-                    <span class="decomp-part decomp-vowel">ኧ</span>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Complete Transparency</h3>
+                <p>No hidden parameters or learned weights. All reasoning is symbolic and verifiable. Audit every step of computation.</p>
             </div>
-
-            <div class="audio-controls">
-                <button class="audio-btn" id="btn-play-whisper">▶ Whisper</button>
-                <button class="audio-btn" id="btn-play-full">▶ Full Sound</button>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Symbolic Execution</h3>
+                <p>Handle complex mathematical problems, physics simulations, and logical reasoning through transparent symbolic frameworks.</p>
             </div>
-
-            <div class="panel-section">
-                <div class="section-title">Applied Rules</div>
-                <div class="rules-list" id="rules-list">
-                    <div class="rule-item active">
-                        <div class="rule-title">Standard Formula</div>
-                        <div>f[r][c].s(w,v) = f[r][c].s(w) + f[17][c].s(w,v)</div>
-                    </div>
-                    <div class="rule-item">
-                        <div class="rule-title">8th Column Rule</div>
-                        <div>f[r][8] = f[r][2].w + f[17][4].v</div>
-                    </div>
-                    <div class="rule-item">
-                        <div class="rule-title">ሀ/ሐ/ዐ Exception</div>
-                        <div>Column 1 uses አ instead of ኧ</div>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Formal Verification</h3>
+                <p>Prove correctness of reasoning chains. Generate formal proofs alongside answers. Build trust through mathematics.</p>
             </div>
-
-            <div class="panel-section word-input-container">
-                <div class="section-title">Word Analyzer</div>
-                <input type="text" class="word-input" id="word-input" placeholder="ለአማርኛ" value="ኢትዮጵያ">
-                <div class="word-analysis" id="word-analysis"></div>
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Multi-Modal Synthesis</h3>
+                <p>Unified symbolic framework for mathematics, graphics, physics, and more. One system, many domains.</p>
             </div>
-        </aside>
-    </main>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Alignment by Design</h3>
+                <p>Transparent reasoning means better alignment with human values. Understand and verify system behavior at every level.</p>
+            </div>
+        </div>
+    </section>
 
-    <script>
-    // =========================================================================
-    // MFIDEL ATLAS DATA
-    // =========================================================================
+    <section id="how" class="section how-it-works">
+        <h2 class="section-title">How Mullu Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Parse Input</h3>
+                <p>Break down problems into symbolic representations. Convert natural language, mathematics, and visual data into unified symbolic form.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Build Causal Chains</h3>
+                <p>Construct explicit causal dependency graphs. Each step logically follows from previous steps through transparent rules.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Execute Symbolically</h3>
+                <p>Process through your domain-specific reasoning engine. Mathematics, physics, logic—all through verifiable computation.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Generate Proof</h3>
+                <p>Produce formal proofs alongside answers. Every conclusion backed by rigorous logical derivation.</p>
+            </div>
+        </div>
+    </section>
 
-    const VOWELS = {
-        1: { symbol: 'ኧ', phonetic: 'ə' },
-        2: { symbol: 'ኡ', phonetic: 'u' },
-        3: { symbol: 'ኢ', phonetic: 'i' },
-        4: { symbol: 'ኣ', phonetic: 'a' },
-        5: { symbol: 'ኤ', phonetic: 'e' },
-        6: { symbol: 'እ', phonetic: 'ɨ' },
-        7: { symbol: 'ኦ', phonetic: 'o' },
-        8: { symbol: 'አ', phonetic: 'ʔa' }
-    };
+    <section id="compare" class="section">
+        <h2 class="section-title">Mullu vs Traditional Neural Networks</h2>
+        <div class="comparison">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Characteristic</th>
+                        <th>Mullu (Symbolic)</th>
+                        <th>Neural Networks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Interpretability</td>
+                        <td><span class="checkmark">✓ Complete</span></td>
+                        <td><span class="xmark">✗ Black box</span></td>
+                    </tr>
+                    <tr>
+                        <td>Causal Reasoning</td>
+                        <td><span class="checkmark">✓ Explicit</span></td>
+                        <td><span class="xmark">✗ Pattern matching</span></td>
+                    </tr>
+                    <tr>
+                        <td>Formal Verification</td>
+                        <td><span class="checkmark">✓ Yes</span></td>
+                        <td><span class="xmark">✗ No</span></td>
+                    </tr>
+                    <tr>
+                        <td>Proof Generation</td>
+                        <td><span class="checkmark">✓ Rigorous</span></td>
+                        <td><span class="xmark">✗ Not possible</span></td>
+                    </tr>
+                    <tr>
+                        <td>Rule Transparency</td>
+                        <td><span class="checkmark">✓ Auditable</span></td>
+                        <td><span class="xmark">✗ Hidden weights</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mathematical Reasoning</td>
+                        <td><span class="checkmark">✓ Symbolic execution</span></td>
+                        <td><span class="xmark">✗ Approximate</span></td>
+                    </tr>
+                    <tr>
+                        <td>Alignment & Safety</td>
+                        <td><span class="checkmark">✓ Built-in</span></td>
+                        <td><span class="xmark">✗ Challenging</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-    const FIDEL_GEBETA = {
-        1:  { name: 'ha', base: 'h', exception: true, fidels: ['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ','ሇ'] },
-        2:  { name: 'la', base: 'l', fidels: ['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ','ሏ'] },
-        3:  { name: 'ħa', base: 'ħ', exception: true, fidels: ['ሐ','ሑ','ሒ','ሓ','ሔ','ሕ','ሖ','ሗ'] },
-        4:  { name: 'ma', base: 'm', fidels: ['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ','ሟ'] },
-        5:  { name: 'śa', base: 'ś', fidels: ['ሠ','ሡ','ሢ','ሣ','ሤ','ሥ','ሦ','ሧ'] },
-        6:  { name: 'ra', base: 'r', fidels: ['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ','ሯ'] },
-        7:  { name: 'sa', base: 's', fidels: ['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ','ሷ'] },
-        8:  { name: 'ša', base: 'ʃ', fidels: ['ሸ','ሹ','ሺ','ሻ','ሼ','ሽ','ሾ','ሿ'] },
-        9:  { name: 'qa', base: 'q', fidels: ['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ','ቋ'] },
-        10: { name: 'ba', base: 'b', fidels: ['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ','ቧ'] },
-        11: { name: 'va', base: 'v', fidels: ['ቨ','ቩ','ቪ','ቫ','ቬ','ቭ','ቮ','ቯ'] },
-        12: { name: 'ta', base: 't', fidels: ['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ','ቷ'] },
-        13: { name: 'ča', base: 'tʃ', fidels: ['ቸ','ቹ','ቺ','ቻ','ቼ','ች','ቾ','ቿ'] },
-        14: { name: 'xa', base: 'x', fidels: ['ኀ','ኁ','ኂ','ኃ','ኄ','ኅ','ኆ','ኈ'] },
-        15: { name: 'na', base: 'n', fidels: ['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ','ኗ'] },
-        16: { name: 'ña', base: 'ɲ', fidels: ['ኘ','ኙ','ኚ','ኛ','ኜ','ኝ','ኞ','ኟ'] },
-        17: { name: 'vowel', base: 'ʔ', isVowel: true, fidels: ['ኧ','ኡ','ኢ','ኣ','ኤ','እ','ኦ','አ'] },
-        18: { name: 'ka', base: 'k', fidels: ['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ','ኳ'] },
-        19: { name: 'xa', base: 'x', fidels: ['ኸ','ኹ','ኺ','ኻ','ኼ','ኽ','ኾ','ዃ'] },
-        20: { name: 'wa', base: 'w', cols: 7, fidels: ['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'] },
-        21: { name: 'ʕa', base: 'ʕ', cols: 7, exception: true, fidels: ['ዐ','ዑ','ዒ','ዓ','ዔ','ዕ','ዖ'] },
-        22: { name: 'za', base: 'z', fidels: ['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ','ዟ'] },
-        23: { name: 'ža', base: 'ʒ', fidels: ['ዠ','ዡ','ዢ','ዣ','ዤ','ዥ','ዦ','ዧ'] },
-        24: { name: 'ya', base: 'j', cols: 7, fidels: ['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'] },
-        25: { name: 'da', base: 'd', fidels: ['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ','ዷ'] },
-        26: { name: 'ǧa', base: 'dʒ', fidels: ['ጀ','ጁ','ጂ','ጃ','ጄ','ጅ','ጆ','ጇ'] },
-        27: { name: 'ga', base: 'g', fidels: ['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ','ጓ'] },
-        28: { name: "t'a", base: "tʼ", fidels: ['ጠ','ጡ','ጢ','ጣ','ጤ','ጥ','ጦ','ጧ'] },
-        29: { name: "č'a", base: "tʃʼ", fidels: ['ጨ','ጩ','ጪ','ጫ','ጬ','ጭ','ጮ','ጯ'] },
-        30: { name: "p'a", base: "pʼ", fidels: ['ጰ','ጱ','ጲ','ጳ','ጴ','ጵ','ጶ','ጷ'] },
-        31: { name: "s'a", base: "sʼ", fidels: ['ጸ','ጹ','ጺ','ጻ','ጼ','ጽ','ጾ','ጿ'] },
-        32: { name: "ts'a", base: "tsʼ", fidels: ['ፀ','ፁ','ፂ','ፃ','ፄ','ፅ','ፆ','ፇ'] },
-        33: { name: 'fa', base: 'f', fidels: ['ፈ','ፉ','ፊ','ፋ','ፌ','ፍ','ፎ','ፏ'] },
-        34: { name: 'pa', base: 'p', fidels: ['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ','ፗ'] }
-    };
+    <section class="cta-section" id="contact">
+        <h2>Ready to Build With Transparent AI?</h2>
+        <p>Join the symbolic intelligence movement. Create AI systems that think the way you do.</p>
+        <div class="cta-buttons">
+            <button class="btn btn-primary">Get Started Free</button>
+            <button class="btn btn-secondary">Schedule a Demo</button>
+        </div>
+    </section>
 
-    // Build reverse lookup
-    const symbolToCoord = new Map();
-    for (let r = 1; r <= 34; r++) {
-        const row = FIDEL_GEBETA[r];
-        for (let c = 0; c < row.fidels.length; c++) {
-            symbolToCoord.set(row.fidels[c], { row: r, col: c + 1 });
-        }
-    }
-
-    // =========================================================================
-    // AUDIO ENGINE
-    // =========================================================================
-
-    let audioCtx = null;
-
-    const whisperFreq = {
-        'h': 200, 'l': 350, 'ħ': 180, 'm': 250, 'ś': 4500, 'r': 1500,
-        's': 4000, 'ʃ': 3500, 'q': 150, 'b': 120, 'v': 200, 't': 3000,
-        'tʃ': 3200, 'x': 2000, 'n': 280, 'ɲ': 300, 'ʔ': 100, 'k': 2500,
-        'w': 400, 'ʕ': 150, 'z': 250, 'ʒ': 280, 'j': 300, 'd': 150,
-        'dʒ': 200, 'g': 180, 'tʼ': 3000, 'tʃʼ': 3200, 'pʼ': 2800,
-        'sʼ': 4200, 'tsʼ': 4000, 'f': 3500, 'p': 2500
-    };
-
-    const vowelFormants = {
-        1: { f1: 500, f2: 1500 },
-        2: { f1: 300, f2: 870 },
-        3: { f1: 270, f2: 2290 },
-        4: { f1: 730, f2: 1090 },
-        5: { f1: 400, f2: 2000 },
-        6: { f1: 400, f2: 1600 },
-        7: { f1: 570, f2: 840 },
-        8: { f1: 730, f2: 1090 }
-    };
-
-    function initAudio() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        return audioCtx;
-    }
-
-    function playFidel(row, col, whisperOnly = false) {
-        const ctx = initAudio();
-        const rowData = FIDEL_GEBETA[row];
-        const baseFreq = whisperFreq[rowData.base] || 200;
-        
-        // Determine vowel column
-        let vowelCol = col;
-        if (col === 8 && (rowData.cols || 8) === 8) {
-            vowelCol = 4; // 8th form uses ኣ
-        }
-        if (col === 1 && rowData.exception) {
-            vowelCol = 8; // Exception uses አ
-        }
-        
-        const formants = vowelFormants[vowelCol];
-        const duration = 0.3;
-        const now = ctx.currentTime;
-
-        // Whisper oscillator
-        const whisperOsc = ctx.createOscillator();
-        const whisperGain = ctx.createGain();
-        whisperOsc.type = 'sawtooth';
-        whisperOsc.frequency.value = baseFreq;
-        whisperGain.gain.value = 0.15;
-        whisperOsc.connect(whisperGain);
-
-        // Vowel oscillators (if not whisper only)
-        const masterGain = ctx.createGain();
-        whisperGain.connect(masterGain);
-
-        if (!whisperOnly) {
-            const vowelOsc1 = ctx.createOscillator();
-            const vowelOsc2 = ctx.createOscillator();
-            const vowelGain = ctx.createGain();
-            
-            vowelOsc1.type = 'sine';
-            vowelOsc1.frequency.value = formants.f1;
-            vowelOsc2.type = 'sine';
-            vowelOsc2.frequency.value = formants.f2;
-            vowelGain.gain.value = 0.3;
-            
-            vowelOsc1.connect(vowelGain);
-            vowelOsc2.connect(vowelGain);
-            vowelGain.connect(masterGain);
-            
-            vowelOsc1.start(now);
-            vowelOsc2.start(now);
-            vowelOsc1.stop(now + duration);
-            vowelOsc2.stop(now + duration);
-        }
-
-        masterGain.connect(ctx.destination);
-        masterGain.gain.setValueAtTime(0, now);
-        masterGain.gain.linearRampToValueAtTime(0.5, now + 0.02);
-        masterGain.gain.linearRampToValueAtTime(0.3, now + duration * 0.5);
-        masterGain.gain.linearRampToValueAtTime(0, now + duration);
-
-        whisperOsc.start(now);
-        whisperOsc.stop(now + duration);
-    }
-
-    // =========================================================================
-    // FORMULA COMPUTATION
-    // =========================================================================
-
-    function computeFormula(row, col) {
-        const rowData = FIDEL_GEBETA[row];
-        const maxCols = rowData.cols || 8;
-        
-        let shapeRow = row;
-        let shapeCol = col;
-        let vowelCol = col;
-        let rules = ['standard'];
-
-        // 8th column rule
-        if (col === 8 && maxCols === 8) {
-            shapeCol = 2;
-            vowelCol = 4;
-            rules = ['col8'];
-        }
-
-        // Exception rule for rows 1, 3, 21
-        if (col === 1 && rowData.exception) {
-            vowelCol = 8;
-            rules = ['exception'];
-        }
-
-        // Special: vowel row col 8
-        if (row === 17 && col === 8) {
-            return {
-                shape: 'ኧ',
-                shapeId: 'f[17][1]',
-                vowel: 'ኣ',
-                vowelId: 'f[17][4]',
-                formula: 'f[17][8].s(w,v) = f[17][1].s(w) + f[17][4].s(w,v)',
-                rules: ['vowel8']
-            };
-        }
-
-        const shape = FIDEL_GEBETA[shapeRow].fidels[shapeCol - 1];
-        const vowel = VOWELS[vowelCol].symbol;
-
-        return {
-            shape,
-            shapeId: `f[${shapeRow}][${shapeCol}]`,
-            vowel,
-            vowelId: `f[17][${vowelCol}]`,
-            formula: `f[${row}][${col}].s(w,v) = f[${shapeRow}][${shapeCol}].s(w) + f[17][${vowelCol}].s(w,v)`,
-            rules
-        };
-    }
-
-    // =========================================================================
-    // UI RENDERING
-    // =========================================================================
-
-    let selectedFidel = { row: 2, col: 1 };
-
-    function buildGebetaGrid() {
-        const grid = document.getElementById('gebeta-grid');
-        grid.innerHTML = '';
-
-        // Header row
-        grid.appendChild(createEl('div', 'column-header', ''));
-        for (let c = 1; c <= 8; c++) {
-            const vowel = VOWELS[c];
-            grid.appendChild(createEl('div', 'column-header', `${c}: ${vowel.symbol}`));
-        }
-
-        // Data rows
-        for (let r = 1; r <= 34; r++) {
-            const rowData = FIDEL_GEBETA[r];
-            const maxCols = rowData.cols || 8;
-
-            // Row header
-            const header = createEl('div', 'row-header', '');
-            header.innerHTML = `<span class="row-num">${r}</span><span>${rowData.name}</span>`;
-            grid.appendChild(header);
-
-            // Fidel cells
-            for (let c = 1; c <= 8; c++) {
-                if (c > maxCols) {
-                    grid.appendChild(createEl('div', 'fidel-cell empty-cell', ''));
-                    continue;
-                }
-
-                const cell = document.createElement('div');
-                cell.className = 'fidel-cell';
-                
-                // Add special classes
-                if (r === 17) cell.classList.add('vowel-row');
-                if (c === 1 && rowData.exception) cell.classList.add('exception');
-                if (c === 8 && maxCols === 8 && r !== 17) cell.classList.add('col8');
-                if (r === selectedFidel.row && c === selectedFidel.col) {
-                    cell.classList.add('selected');
-                }
-
-                cell.innerHTML = `
-                    <div class="fidel-symbol">${rowData.fidels[c - 1]}</div>
-                    <div class="fidel-id">f[${r}][${c}]</div>
-                `;
-
-                cell.addEventListener('click', () => selectFidel(r, c));
-                grid.appendChild(cell);
-            }
-        }
-    }
-
-    function createEl(tag, className, text) {
-        const el = document.createElement(tag);
-        el.className = className;
-        el.textContent = text;
-        return el;
-    }
-
-    function selectFidel(row, col) {
-        selectedFidel = { row, col };
-        
-        // Update grid selection
-        document.querySelectorAll('.fidel-cell.selected').forEach(el => {
-            el.classList.remove('selected');
-        });
-        
-        const cells = document.querySelectorAll('.fidel-cell:not(.empty-cell)');
-        let idx = 0;
-        for (let r = 1; r <= 34; r++) {
-            const maxCols = FIDEL_GEBETA[r].cols || 8;
-            for (let c = 1; c <= 8; c++) {
-                if (c <= maxCols) {
-                    if (r === row && c === col) {
-                        cells[idx].classList.add('selected');
-                    }
-                    idx++;
-                }
-            }
-        }
-
-        updateDetailPanel();
-    }
-
-    function updateDetailPanel() {
-        const { row, col } = selectedFidel;
-        const rowData = FIDEL_GEBETA[row];
-        const fidel = rowData.fidels[col - 1];
-        const formula = computeFormula(row, col);
-
-        // Selected display
-        document.querySelector('.selected-symbol').textContent = fidel;
-        document.querySelector('.selected-id').textContent = `f[${row}][${col}]`;
-        document.querySelector('.selected-family').textContent = `${rowData.name}-family`;
-
-        // Formula
-        document.getElementById('formula-display').textContent = formula.formula;
-
-        // Decomposition
-        document.getElementById('decomp-display').innerHTML = `
-            <span class="decomp-part">${fidel}</span>
-            <span class="decomp-equals">=</span>
-            <span class="decomp-part decomp-whisper">${formula.shape}</span>
-            <span class="decomp-plus">+</span>
-            <span class="decomp-part decomp-vowel">${formula.vowel}</span>
-        `;
-
-        // Rules
-        const rulesEl = document.getElementById('rules-list');
-        rulesEl.querySelectorAll('.rule-item').forEach(el => {
-            el.classList.remove('active');
-        });
-        
-        if (formula.rules.includes('standard')) {
-            rulesEl.children[0].classList.add('active');
-        }
-        if (formula.rules.includes('col8')) {
-            rulesEl.children[1].classList.add('active');
-        }
-        if (formula.rules.includes('exception') || formula.rules.includes('vowel8')) {
-            rulesEl.children[2].classList.add('active');
-        }
-
-        // Active rules count
-        document.getElementById('active-rules').textContent = formula.rules.length;
-    }
-
-    function analyzeWord() {
-        const word = document.getElementById('word-input').value;
-        const analysisEl = document.getElementById('word-analysis');
-        let html = '';
-
-        for (const char of word) {
-            const coord = symbolToCoord.get(char);
-            if (coord) {
-                const formula = computeFormula(coord.row, coord.col);
-                html += `<div class="word-fidel">
-                    <span style="font-size: 1.2rem; color: var(--gold)">${char}</span>
-                    <span style="color: var(--muted)">=</span>
-                    <span style="color: var(--violet)">${formula.shape}</span>
-                    <span style="color: var(--cyan)">+</span>
-                    <span style="color: var(--amber)">${formula.vowel}</span>
-                </div>`;
-            }
-        }
-
-        analysisEl.innerHTML = html || '<em>Enter Amharic text above</em>';
-    }
-
-    // =========================================================================
-    // EVENT LISTENERS
-    // =========================================================================
-
-    document.getElementById('btn-play-whisper').addEventListener('click', () => {
-        playFidel(selectedFidel.row, selectedFidel.col, true);
-    });
-
-    document.getElementById('btn-play-full').addEventListener('click', () => {
-        playFidel(selectedFidel.row, selectedFidel.col, false);
-    });
-
-    document.getElementById('word-input').addEventListener('input', analyzeWord);
-
-    // =========================================================================
-    // INITIALIZATION
-    // =========================================================================
-
-    buildGebetaGrid();
-    updateDetailPanel();
-    analyzeWord();
-
-    console.log('Mfidel Symbolic Audio Atlas initialized');
-    console.log('Total fidels:', Array.from(symbolToCoord.keys()).length);
-    </script>
+    <footer>
+        <p>&copy; 2025 Mullu. Built on transparent reasoning. | <a href="#" style="color: #64b5f6; text-decoration: none;">GitHub</a> | <a href="#" style="color: #64b5f6; text-decoration: none;">Docs</a> | <a href="#" style="color: #64b5f6; text-decoration: none;">Community</a></p>
+    </footer>
 </body>
 </html>
