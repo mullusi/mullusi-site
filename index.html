@@ -3,1775 +3,1487 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Logos Engine | Symbolic Causal Chain Rendering</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Logos-LCS v3.0 | Recursive Refinement Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --void: #0a0a0f;
-            --primordial: #12121a;
-            --causality: #1a1a2e;
-            --symbol-gold: #d4a574;
-            --symbol-cyan: #64ffda;
-            --symbol-magenta: #ff6b9d;
-            --symbol-violet: #a78bfa;
-            --metadata-blue: #60a5fa;
-            --causal-green: #34d399;
-            --layer-0: #ff6b6b;
-            --layer-1: #feca57;
-            --layer-2: #48dbfb;
-            --layer-3: #1dd1a1;
-            --layer-4: #5f27cd;
-            --layer-5: #ff9ff3;
-            --layer-6: #ffeaa7;
-            --layer-7: #74b9ff;
-            --layer-8: #fd79a8;
-            --glow: 0 0 30px rgba(212, 165, 116, 0.3);
+            --void: #05060a;
+            --abyss: #0a0c12;
+            --deep: #0f1218;
+            --surface: #161a24;
+            --elevated: #1e232f;
+            
+            --gold: #e5b978;
+            --gold-dim: rgba(229, 185, 120, 0.5);
+            --cyan: #5eead4;
+            --cyan-dim: rgba(94, 234, 212, 0.4);
+            --magenta: #f472b6;
+            --violet: #a78bfa;
+            --emerald: #34d399;
+            --amber: #fbbf24;
+            --rose: #fb7185;
+            --sky: #38bdf8;
+            --indigo: #818cf8;
+            
+            --pass-1: #ef4444;
+            --pass-2: #f97316;
+            --pass-3: #eab308;
+            --pass-4: #22c55e;
+            --pass-5: #06b6d4;
+            --pass-6: #8b5cf6;
+            --pass-7: #ec4899;
+            --pass-8: #6366f1;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Inter', sans-serif;
             background: var(--void);
-            color: #e0e0e0;
-            min-height: 100vh;
-            overflow-x: hidden;
+            color: #e8e8e8;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* Cosmic Background */
-        .cosmic-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(100, 255, 218, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(212, 165, 116, 0.04) 0%, transparent 70%),
-                var(--void);
-            z-index: -1;
-        }
-
-        .cosmic-bg::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.3), transparent),
-                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.2), transparent),
-                radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,0.3), transparent),
-                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent);
-            background-size: 200px 200px;
-            animation: cosmicDrift 60s linear infinite;
-        }
-
-        @keyframes cosmicDrift {
-            from { transform: translateY(0); }
-            to { transform: translateY(-200px); }
+        .app-container {
+            display: grid;
+            grid-template-rows: 50px 1fr 200px;
+            height: 100vh;
         }
 
         /* Header */
         .header {
-            text-align: center;
-            padding: 40px 20px;
-            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
-        }
-
-        .header h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 3.5rem;
-            font-weight: 400;
-            color: var(--symbol-gold);
-            text-shadow: var(--glow);
-            letter-spacing: 0.3em;
-            margin-bottom: 10px;
-        }
-
-        .header .subtitle {
-            font-size: 0.85rem;
-            color: rgba(212, 165, 116, 0.7);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-        }
-
-        .header .philosophy {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-style: italic;
-            margin-top: 15px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Main Layout */
-        .main-container {
-            display: grid;
-            grid-template-columns: 320px 1fr 350px;
-            gap: 0;
-            min-height: calc(100vh - 200px);
-        }
-
-        /* Left Panel - Layer Stack */
-        .layer-panel {
-            background: rgba(18, 18, 26, 0.9);
-            border-right: 1px solid rgba(212, 165, 116, 0.15);
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .panel-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            color: var(--symbol-gold);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+            background: linear-gradient(90deg, var(--abyss) 0%, var(--deep) 100%);
+            border-bottom: 1px solid rgba(229, 185, 120, 0.15);
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .version-badge {
+            background: linear-gradient(135deg, var(--violet) 0%, var(--indigo) 100%);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 25px;
+        }
+
+        .header-stat {
+            text-align: center;
+        }
+
+        .header-stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--cyan);
+        }
+
+        .header-stat-label {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .header-controls {
+            display: flex;
             gap: 10px;
         }
 
-        .panel-title::before {
-            content: '◈';
-            font-size: 1rem;
-        }
-
-        .layer-card {
-            background: rgba(26, 26, 46, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            margin-bottom: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
+        .ctrl-btn {
+            background: rgba(229, 185, 120, 0.1);
+            border: 1px solid rgba(229, 185, 120, 0.3);
+            color: var(--gold);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .layer-card:hover {
-            border-color: rgba(212, 165, 116, 0.4);
-            transform: translateX(5px);
+        .ctrl-btn:hover {
+            background: rgba(229, 185, 120, 0.2);
         }
 
-        .layer-card.active {
-            border-color: var(--symbol-gold);
-            box-shadow: 0 0 20px rgba(212, 165, 116, 0.2);
+        .ctrl-btn.active {
+            background: var(--gold);
+            color: var(--void);
         }
 
-        .layer-header {
+        .ctrl-btn.danger {
+            border-color: var(--rose);
+            color: var(--rose);
+        }
+
+        /* Main Area */
+        .main-area {
+            display: grid;
+            grid-template-columns: 260px 1fr 320px;
+            gap: 0;
+        }
+
+        /* Left Panel - Pass Indicators & Ontology */
+        .left-panel {
+            background: var(--abyss);
+            border-right: 1px solid rgba(229, 185, 120, 0.1);
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            padding: 12px 15px;
-            gap: 12px;
+            gap: 8px;
         }
 
-        .layer-number {
-            width: 28px;
-            height: 28px;
+        .section-title::before {
+            content: '◆';
+            font-size: 0.6rem;
+        }
+
+        .pass-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.02);
             border-radius: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .pass-indicator:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .pass-indicator.active {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .pass-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
             font-weight: 600;
             color: var(--void);
         }
 
-        .layer-info {
+        .pass-info {
             flex: 1;
         }
 
-        .layer-name {
-            font-size: 0.8rem;
+        .pass-name {
+            font-size: 0.75rem;
             font-weight: 500;
             color: #fff;
         }
 
-        .layer-purpose {
-            font-size: 0.65rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 2px;
-        }
-
-        .layer-symbols {
-            padding: 0 15px 12px;
-            display: none;
-        }
-
-        .layer-card.active .layer-symbols {
-            display: block;
-        }
-
-        .symbol-tag {
-            display: inline-block;
+        .pass-desc {
             font-size: 0.6rem;
-            padding: 3px 8px;
-            background: rgba(100, 255, 218, 0.1);
-            border: 1px solid rgba(100, 255, 218, 0.3);
+            color: rgba(255,255,255,0.4);
+        }
+
+        .pass-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--emerald);
+        }
+
+        /* Ontology Tree */
+        .ontology-section {
+            margin-top: 20px;
+        }
+
+        .ontology-node {
+            padding: 6px 10px;
+            margin: 2px 0;
+            background: rgba(255,255,255,0.02);
             border-radius: 4px;
-            margin: 2px;
-            color: var(--symbol-cyan);
-        }
-
-        /* Center - Visualization Canvas */
-        .visualization-panel {
-            background: var(--primordial);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .viz-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(212, 165, 116, 0.15);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .viz-title {
-            font-size: 0.8rem;
-            color: var(--symbol-gold);
-            letter-spacing: 0.15em;
-        }
-
-        .viz-controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        .viz-btn {
-            background: rgba(212, 165, 116, 0.1);
-            border: 1px solid rgba(212, 165, 116, 0.3);
-            color: var(--symbol-gold);
-            padding: 6px 14px;
-            font-size: 0.7rem;
-            font-family: inherit;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
             cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
 
-        .viz-btn:hover {
-            background: rgba(212, 165, 116, 0.2);
-            border-color: var(--symbol-gold);
+        .ontology-node:hover {
+            background: rgba(94, 234, 212, 0.1);
         }
 
-        .viz-btn.active {
-            background: var(--symbol-gold);
-            color: var(--void);
+        .ontology-node.level-1 { margin-left: 12px; }
+        .ontology-node.level-2 { margin-left: 24px; }
+
+        /* Center - Visualization */
+        .center-panel {
+            background: var(--void);
+            position: relative;
         }
 
-        #visualization-canvas {
-            flex: 1;
-            width: 100%;
-        }
-
-        .canvas-overlay {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            pointer-events: none;
-        }
-
-        .stat-box {
-            background: rgba(10, 10, 15, 0.9);
-            border: 1px solid rgba(212, 165, 116, 0.2);
-            padding: 10px 15px;
-            border-radius: 6px;
-            pointer-events: auto;
-        }
-
-        .stat-label {
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .stat-value {
-            font-size: 1.2rem;
-            color: var(--symbol-cyan);
-            font-weight: 500;
-        }
-
-        /* Right Panel - Causal Chain & Console */
-        .causal-panel {
-            background: rgba(18, 18, 26, 0.9);
-            border-left: 1px solid rgba(212, 165, 116, 0.15);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .causal-chain-view {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .chain-entry {
-            background: rgba(26, 26, 46, 0.4);
-            border-left: 3px solid var(--symbol-cyan);
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            border-radius: 0 6px 6px 0;
-            animation: chainSlide 0.3s ease;
-        }
-
-        @keyframes chainSlide {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .chain-cause {
-            font-size: 0.7rem;
-            color: var(--symbol-magenta);
-            margin-bottom: 5px;
-        }
-
-        .chain-arrow {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.8rem;
-            margin: 5px 0;
-        }
-
-        .chain-effect {
-            font-size: 0.7rem;
-            color: var(--causal-green);
-        }
-
-        .chain-layer {
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.4);
-            margin-top: 5px;
-        }
-
-        /* Console */
-        .console-view {
-            height: 200px;
-            border-top: 1px solid rgba(212, 165, 116, 0.15);
-            padding: 15px;
-            overflow-y: auto;
-            font-size: 0.65rem;
-            background: rgba(10, 10, 15, 0.5);
-        }
-
-        .console-line {
-            margin-bottom: 4px;
-            opacity: 0.8;
-        }
-
-        .console-line.metadata {
-            color: var(--metadata-blue);
-        }
-
-        .console-line.symbol {
-            color: var(--symbol-gold);
-        }
-
-        .console-line.causal {
-            color: var(--causal-green);
-        }
-
-        .console-line.error {
-            color: var(--layer-0);
-        }
-
-        /* Game World Preview */
-        .game-world-container {
-            position: fixed;
-            bottom: 20px;
-            right: 380px;
-            width: 300px;
-            height: 200px;
-            background: rgba(10, 10, 15, 0.95);
-            border: 1px solid rgba(212, 165, 116, 0.3);
-            border-radius: 8px;
-            overflow: hidden;
-            z-index: 100;
-        }
-
-        .game-world-header {
-            background: rgba(212, 165, 116, 0.1);
-            padding: 8px 12px;
-            font-size: 0.7rem;
-            color: var(--symbol-gold);
-            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
-        }
-
-        #game-world-canvas {
-            width: 100%;
-            height: calc(100% - 32px);
-        }
-
-        /* Modal for Symbol Details */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        #main-canvas {
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--primordial);
-            border: 1px solid var(--symbol-gold);
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            color: var(--symbol-gold);
-            margin-bottom: 20px;
-        }
-
-        .modal-section {
-            margin-bottom: 20px;
-        }
-
-        .modal-section h4 {
-            font-size: 0.8rem;
-            color: var(--symbol-cyan);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .modal-close {
+        .viz-overlay {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: var(--symbol-gold);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .dna-display {
-            background: rgba(26, 26, 46, 0.8);
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            line-height: 1.6;
-        }
-
-        .dna-property {
+            top: 10px;
+            left: 10px;
             display: flex;
+            gap: 8px;
+        }
+
+        .viz-mode {
+            background: rgba(10, 12, 18, 0.9);
+            border: 1px solid rgba(229, 185, 120, 0.2);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .viz-mode:hover, .viz-mode.active {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .introspection-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 220px;
+            background: rgba(10, 12, 18, 0.95);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.65rem;
+        }
+
+        .introspection-title {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--violet);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .emergent-pattern {
+            background: rgba(167, 139, 250, 0.1);
+            padding: 6px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            color: var(--violet);
+        }
+
+        .anomaly-item {
+            background: rgba(251, 113, 133, 0.1);
+            padding: 6px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            color: var(--rose);
+        }
+
+        /* Right Panel - Wh Gates & Inference */
+        .right-panel {
+            background: var(--abyss);
+            border-left: 1px solid rgba(229, 185, 120, 0.1);
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .wh-category {
+            margin-bottom: 15px;
+        }
+
+        .wh-category-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--amber);
+            padding: 6px 10px;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .wh-gate-mini {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 3px;
+            margin: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .wh-gate-mini:hover {
+            background: rgba(94, 234, 212, 0.1);
+            color: var(--cyan);
+        }
+
+        .wh-gate-mini.active {
+            background: rgba(52, 211, 153, 0.2);
+            color: var(--emerald);
+        }
+
+        .wh-gate-mini .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .wh-gate-mini.active .dot {
+            background: var(--emerald);
+            box-shadow: 0 0 6px var(--emerald);
+        }
+
+        /* Inference Panel */
+        .inference-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .inference-result {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 6px;
+            padding: 10px;
             margin-bottom: 8px;
         }
 
-        .dna-key {
-            color: var(--symbol-magenta);
-            min-width: 140px;
+        .inference-label {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.4);
         }
 
-        .dna-value {
-            color: var(--symbol-cyan);
+        .inference-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--emerald);
+        }
+
+        /* Bottom Panel - SymQL Console & Timeline */
+        .bottom-panel {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            background: var(--deep);
+            border-top: 1px solid rgba(229, 185, 120, 0.15);
+        }
+
+        /* SymQL Console */
+        .symql-console {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .console-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .console-header h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--indigo);
+        }
+
+        .symql-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .symql-input {
+            flex: 1;
+            background: var(--void);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #fff;
+            outline: none;
+        }
+
+        .symql-input:focus {
+            border-color: var(--indigo);
+        }
+
+        .symql-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .symql-run {
+            background: var(--indigo);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        .symql-output {
+            flex: 1;
+            background: var(--void);
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Timeline */
+        .timeline-panel {
+            background: var(--abyss);
+            border-left: 1px solid rgba(229, 185, 120, 0.1);
+            padding: 15px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .timeline-header h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--magenta);
+        }
+
+        .timeline-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .timeline-btn {
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            color: var(--magenta);
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            cursor: pointer;
+        }
+
+        .timeline-btn:hover {
+            background: rgba(236, 72, 153, 0.2);
+        }
+
+        .timeline-track {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .snapshot-marker {
+            min-width: 40px;
+            height: 50px;
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .snapshot-marker:hover {
+            background: rgba(236, 72, 153, 0.2);
+            border-color: var(--magenta);
+        }
+
+        .snapshot-marker.current {
+            background: var(--magenta);
+            border-color: var(--magenta);
+        }
+
+        .snapshot-marker.current .snap-tick,
+        .snapshot-marker.current .snap-label {
+            color: white;
+        }
+
+        .snap-tick {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--magenta);
+        }
+
+        .snap-label {
+            font-size: 0.5rem;
+            color: rgba(255,255,255,0.4);
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--void);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(212, 165, 116, 0.3);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(212, 165, 116, 0.5);
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-            .layer-panel, .causal-panel {
-                display: none;
-            }
-            .game-world-container {
-                right: 20px;
-            }
-        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: rgba(229, 185, 120, 0.3); border-radius: 3px; }
     </style>
 </head>
 <body>
-    <div class="cosmic-bg"></div>
-
-    <header class="header">
-        <h1>THE LOGOS ENGINE</h1>
-        <p class="subtitle">Universal Symbolic Causal Chain Rendering Framework</p>
-        <p class="philosophy">"Reality is an emergent property of interconnected symbols and their causal relationships"</p>
-    </header>
-
-    <main class="main-container">
-        <!-- Left Panel: Layer Stack -->
-        <aside class="layer-panel">
-            <h2 class="panel-title">The Logos Stack</h2>
-            <div id="layer-stack"></div>
-        </aside>
-
-        <!-- Center: Visualization -->
-        <section class="visualization-panel">
-            <div class="viz-header">
-                <span class="viz-title">◈ UNIVERSAL METADATA MESH NETWORK</span>
-                <div class="viz-controls">
-                    <button class="viz-btn active" data-view="mesh">Mesh View</button>
-                    <button class="viz-btn" data-view="causal">Causal Flow</button>
-                    <button class="viz-btn" data-view="layers">Layer Depth</button>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>LOGOS-LCS</h1>
+                <span class="version-badge">v3.0 RECURSIVE REFINEMENT</span>
+            </div>
+            <div class="header-stats">
+                <div class="header-stat">
+                    <div class="header-stat-value" id="stat-symbols">0</div>
+                    <div class="header-stat-label">Symbols</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value" id="stat-chains">0</div>
+                    <div class="header-stat-label">Chains</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value" id="stat-wh">0/45</div>
+                    <div class="header-stat-label">Wh Gates</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value" id="stat-emergent">0</div>
+                    <div class="header-stat-label">Emergent</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value" id="stat-ms">0.00</div>
+                    <div class="header-stat-label">Avg Ms</div>
                 </div>
             </div>
-            <canvas id="visualization-canvas"></canvas>
-            <div class="canvas-overlay">
-                <div class="stat-box">
-                    <div class="stat-label">Active Symbols</div>
-                    <div class="stat-value" id="symbol-count">0</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">Causal Chains</div>
-                    <div class="stat-value" id="chain-count">0</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">Metadata Packets</div>
-                    <div class="stat-value" id="packet-count">0</div>
-                </div>
+            <div class="header-controls">
+                <button class="ctrl-btn" id="btn-snapshot">📸 Snapshot</button>
+                <button class="ctrl-btn" id="btn-introspect">🔮 Introspect</button>
+                <button class="ctrl-btn active" id="btn-run">▶ Running</button>
             </div>
-        </section>
+        </header>
 
-        <!-- Right Panel: Causal Chain View -->
-        <aside class="causal-panel">
-            <div class="causal-chain-view">
-                <h2 class="panel-title">Active Causal Chains</h2>
-                <div id="causal-chain-log"></div>
-            </div>
-            <div class="console-view">
-                <div class="panel-title" style="font-size: 0.9rem; margin-bottom: 10px;">Engine Console</div>
-                <div id="console-output"></div>
-            </div>
-        </aside>
-    </main>
+        <!-- Main Area -->
+        <main class="main-area">
+            <!-- Left Panel -->
+            <aside class="left-panel">
+                <div class="section-title">8 Optimization Passes</div>
+                <div id="passes-container"></div>
 
-    <!-- Game World Preview -->
-    <div class="game-world-container">
-        <div class="game-world-header">◈ Rendered World (Layer 8 Output)</div>
-        <canvas id="game-world-canvas"></canvas>
-    </div>
+                <div class="ontology-section">
+                    <div class="section-title">Symbol Ontology</div>
+                    <div id="ontology-tree"></div>
+                </div>
+            </aside>
 
-    <!-- Symbol Detail Modal -->
-    <div class="modal-overlay" id="symbol-modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">×</button>
-            <h3 class="modal-title" id="modal-symbol-name">Symbol Name</h3>
-            <div class="modal-section">
-                <h4>Behavioral DNA</h4>
-                <div class="dna-display" id="modal-dna"></div>
+            <!-- Center Visualization -->
+            <section class="center-panel">
+                <canvas id="main-canvas"></canvas>
+                <div class="viz-overlay">
+                    <button class="viz-mode active" data-mode="mesh">Mesh</button>
+                    <button class="viz-mode" data-mode="causal">Causal Graph</button>
+                    <button class="viz-mode" data-mode="inference">Inference</button>
+                    <button class="viz-mode" data-mode="attention">Attention</button>
+                </div>
+                <div class="introspection-panel" id="introspection-panel" style="display: none;">
+                    <div class="introspection-title">🔮 Meta-Cognitive Introspection</div>
+                    <div id="introspection-content"></div>
+                </div>
+            </section>
+
+            <!-- Right Panel -->
+            <aside class="right-panel">
+                <div class="section-title">45 Wh Logic Gates</div>
+                <div id="wh-gates-compact"></div>
+
+                <div class="inference-section">
+                    <div class="section-title">Causal Inference</div>
+                    <div class="inference-result">
+                        <div class="inference-label">P(Effect | Cause)</div>
+                        <div class="inference-value" id="inference-forward">0.000</div>
+                    </div>
+                    <div class="inference-result">
+                        <div class="inference-label">P(Cause | Effect)</div>
+                        <div class="inference-value" id="inference-backward">0.000</div>
+                    </div>
+                    <div class="inference-result">
+                        <div class="inference-label">Causal Bottlenecks</div>
+                        <div class="inference-value" id="inference-bottlenecks">-</div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Bottom Panel -->
+        <footer class="bottom-panel">
+            <!-- SymQL Console -->
+            <div class="symql-console">
+                <div class="console-header">
+                    <h3>◈ SymQL Console</h3>
+                    <span style="font-size: 0.6rem; color: rgba(255,255,255,0.3);">Symbolic Query Language</span>
+                </div>
+                <div class="symql-input-container">
+                    <input type="text" class="symql-input" id="symql-input" 
+                           placeholder="SELECT * FROM symbols WHERE ms > 0.5 ORDER BY ms DESC LIMIT 10">
+                    <button class="symql-run" id="symql-run">Execute</button>
+                </div>
+                <div class="symql-output" id="symql-output">// Results will appear here...</div>
             </div>
-            <div class="modal-section">
-                <h4>Causal Connections</h4>
-                <div class="dna-display" id="modal-connections"></div>
+
+            <!-- Timeline -->
+            <div class="timeline-panel">
+                <div class="timeline-header">
+                    <h3>◈ Temporal Timeline</h3>
+                    <div class="timeline-controls">
+                        <button class="timeline-btn" id="btn-undo">◀ Undo</button>
+                        <button class="timeline-btn" id="btn-redo">Redo ▶</button>
+                    </div>
+                </div>
+                <div class="timeline-track" id="timeline-track"></div>
             </div>
-            <div class="modal-section">
-                <h4>Current Metadata State</h4>
-                <div class="dna-display" id="modal-metadata"></div>
-            </div>
-        </div>
+        </footer>
     </div>
 
     <script>
-    // ============================================================
-    // THE LOGOS ENGINE - CORE IMPLEMENTATION
-    // A Universal Symbolic Causal Chain Rendering Framework
-    // ============================================================
+    // ============================================================================
+    // LOGOS-LCS v3.0 - RECURSIVE REFINEMENT ENGINE
+    // ============================================================================
 
-    // =========================
-    // LAYER DEFINITIONS
-    // =========================
-    const LOGOS_LAYERS = [
-        {
-            id: 0,
-            name: "Primordial Void",
-            purpose: "Meta-Meta / Initialization",
-            color: "#ff6b6b",
-            symbols: ["Universal_Causality_Engine", "Symbol_Registry", "Metadata_Schema_Manager", "Existence", "Non_Existence", "Change", "Time", "Space"]
-        },
-        {
-            id: 1,
-            name: "Narrative Causality",
-            purpose: "The 'Why' - World History & Lore",
-            color: "#feca57",
-            symbols: ["World_History", "Faction_Relationships", "Quest_Lines", "Player_Intent", "Ancient_Events", "Prophecies"]
-        },
-        {
-            id: 2,
-            name: "Entity Logic",
-            purpose: "The 'What' & 'How' - Abstract",
-            color: "#48dbfb",
-            symbols: ["Character_Symbol", "Item_Symbol", "AI_Behavior", "Interaction_System", "Combat_Logic", "Dialogue_Tree"]
-        },
-        {
-            id: 3,
-            name: "Spatial Definition",
-            purpose: "The 'Where' - Environment",
-            color: "#1dd1a1",
-            symbols: ["Biome_Symbol", "Region_Symbol", "Spatial_Influence", "Gravity_Well", "Mana_Zone", "Climate_System"]
-        },
-        {
-            id: 4,
-            name: "Geometric Structure",
-            purpose: "Concrete Form Composition",
-            color: "#5f27cd",
-            symbols: ["Structure_Symbol", "Archetypal_Building", "Modular_Asset", "Terrain_Feature", "Mesh_Recipe", "Vertex_Pattern"]
-        },
-        {
-            id: 5,
-            name: "Material & Appearance",
-            purpose: "Surface Properties",
-            color: "#ff9ff3",
-            symbols: ["Color_Symbol", "Texture_Pattern", "Surface_Roughness", "Metallic_Property", "Emissive_Property", "Transparency"]
-        },
-        {
-            id: 6,
-            name: "Light Interaction",
-            purpose: "Photonic Physics",
-            color: "#ffeaa7",
-            symbols: ["Light_Source", "Shadow_Volume", "Reflection", "Refraction", "Global_Illumination", "Ambient_Occlusion"]
-        },
-        {
-            id: 7,
-            name: "Viewpoint Projection",
-            purpose: "Observation & Framing",
-            color: "#74b9ff",
-            symbols: ["Camera_Symbol", "View_Frustum", "Projection_Matrix", "Depth_Buffer", "Culling_System", "LOD_Manager"]
-        },
-        {
-            id: 8,
-            name: "Final Manifestation",
-            purpose: "Observable Pixel Output",
-            color: "#fd79a8",
-            symbols: ["Display_Region", "Pixel_Color", "Alpha_Channel", "Depth_Value", "Post_Process", "Frame_Buffer"]
-        }
+    const OPTIMIZATION_PASSES = [
+        { id: 1, name: "Core Architecture", desc: "Type Ontology & Refinement", color: "#ef4444" },
+        { id: 2, name: "Wh Gate Enhancement", desc: "Combinators & Temporal Expr", color: "#f97316" },
+        { id: 3, name: "DS-DNA Upgrade", desc: "Self-Modification & Gradients", color: "#eab308" },
+        { id: 4, name: "Causal Intelligence", desc: "Inference & Probabilistic", color: "#22c55e" },
+        { id: 5, name: "Meta-Cognitive", desc: "Self-Reflection & Emergent", color: "#06b6d4" },
+        { id: 6, name: "Performance", desc: "Spatial Index & Batch", color: "#8b5cf6" },
+        { id: 7, name: "Temporal System", desc: "Snapshots & Time Travel", color: "#ec4899" },
+        { id: 8, name: "Query Language", desc: "SymQL Interface", color: "#6366f1" }
     ];
 
-    // =========================
-    // SYMBOL CLASS - Core Unit
-    // =========================
-    class Symbol {
+    const WH_GATE_CATEGORIES = {
+        temporal: ['WHEN_NOW', 'WHEN_BEFORE', 'WHEN_AFTER', 'WHEN_DURING', 'WHEN_CYCLE', 'WHEN_PHASE', 'WHEN_DELAY', 'WHEN_DURATION', 'WHEN_SEQUENCE'],
+        spatial: ['WHERE_AT', 'WHERE_NEAR', 'WHERE_IN', 'WHERE_ON', 'WHERE_BETWEEN', 'WHERE_FACING', 'WHERE_REGION', 'WHERE_PATH', 'WHERE_BOUNDARY'],
+        identity: ['WHAT_TYPE', 'WHAT_STATE', 'WHAT_PROPERTY', 'WHO_AGENT', 'WHO_TARGET', 'WHO_OWNER', 'WHAT_CATEGORY', 'WHAT_INSTANCE', 'WHO_GROUP'],
+        causation: ['WHY_CAUSE', 'WHY_PURPOSE', 'WHY_TRIGGER', 'HOW_METHOD', 'HOW_DEGREE', 'HOW_MANNER', 'WHY_CHAIN', 'HOW_TRANSFORM', 'WHY_CONSTRAINT'],
+        quantitative: ['HOW_MUCH', 'HOW_MANY', 'HOW_OFTEN', 'HOW_LONG', 'HOW_FAR', 'HOW_FAST', 'HOW_RATIO', 'HOW_RANGE', 'HOW_DELTA']
+    };
+
+    const ONTOLOGY = {
+        ROOT: { children: ['FUNDAMENTAL', 'STRUCTURAL', 'CAUSAL_AGENT', 'AUTHORITY', 'OBSERVER'] },
+        FUNDAMENTAL: { children: [] },
+        STRUCTURAL: { children: ['ENVIRONMENT', 'MATERIAL'] },
+        CAUSAL_AGENT: { children: ['ENTITY', 'LIGHT'] },
+        AUTHORITY: { children: [] },
+        OBSERVER: { children: [] },
+        ENVIRONMENT: { children: [] },
+        MATERIAL: { children: [] },
+        ENTITY: { children: [] },
+        LIGHT: { children: [] }
+    };
+
+    // ============================================================================
+    // SIMPLIFIED v3 ENGINE (Browser-compatible)
+    // ============================================================================
+
+    class LCSSymbolV3 {
         constructor(name, layer, config = {}) {
-            this.id = `sym_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            this.id = `sym_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
             this.name = name;
             this.layer = layer;
-            this.state = config.initialState || {};
-            
-            // Behavioral DNA
-            this.dna = {
-                responseProtocol: config.responseProtocol || [],
-                transformationLogic: config.transformationLogic || ((metadata) => metadata),
-                propagationRules: config.propagationRules || [],
-                selfIteration: config.selfIteration || null,
-                lifespan: config.lifespan || Infinity,
-                decayRate: config.decayRate || 0
-            };
-            
-            // Causal connections
-            this.causes = new Set();      // Symbols that cause this
-            this.effects = new Set();     // Symbols this causes
-            
-            // Metadata
-            this.metadata = {
-                identity: { name, layer, type: config.type || 'generic' },
-                behavior: { active: true, processing: false },
-                properties: config.properties || {},
-                measurements: { activations: 0, lastActivated: null },
-                boundaries: config.boundaries || {},
-                structure: config.structure || {}
-            };
-            
-            // Visual position for mesh network
+            this.type = config.type || 'ENTITY';
+            this.baseValue = config.baseValue ?? 1.0;
+            this.symbolWeight = config.symbolWeight ?? 1.0;
+            this.modifier = 1.0;
+            this.state = new Map(Object.entries(config.initialState || {}));
+            this.causes = new Set();
+            this.effects = new Set();
             this.position = { x: 0, y: 0, z: layer };
-            this.velocity = { x: 0, y: 0 };
+            this.activations = 0;
+            this.lastActivated = null;
             
-            this.created = Date.now();
+            // DNA
+            this.dna = {
+                memory: [],
+                reinforcement: new Map(),
+                patterns: new Map()
+            };
         }
         
-        // Process incoming metadata packet
-        processMetadata(packet, engine) {
-            if (!this.metadata.behavior.active) return;
-            
-            // Check response protocol
-            const shouldProcess = this.dna.responseProtocol.length === 0 || 
-                this.dna.responseProtocol.some(protocol => 
-                    packet.type === protocol || packet.source?.layer <= this.layer
-                );
-            
-            if (!shouldProcess) return;
-            
-            this.metadata.behavior.processing = true;
-            this.metadata.measurements.activations++;
-            this.metadata.measurements.lastActivated = Date.now();
-            
-            // Transform metadata using DNA logic
-            const transformedData = this.dna.transformationLogic(packet.data, this.state);
-            
-            // Update internal state
-            Object.assign(this.state, transformedData);
-            
-            // Log causal chain
-            engine.logCausalChain(packet.source, this, packet.type);
-            
-            // Generate propagation packets based on DNA rules
-            this.dna.propagationRules.forEach(rule => {
-                if (rule.condition(this.state, packet)) {
-                    const newPacket = {
-                        id: `pkt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                        type: rule.packetType,
-                        source: this,
-                        data: rule.transform(this.state),
-                        timestamp: Date.now(),
-                        ttl: rule.ttl || 10
-                    };
-                    
-                    // Send to causally connected symbols
-                    this.effects.forEach(effectSymbol => {
-                        engine.queueMetadataPacket(newPacket, effectSymbol);
-                    });
-                }
-            });
-            
-            this.metadata.behavior.processing = false;
+        calculateMs() {
+            return this.baseValue * this.symbolWeight * this.modifier;
         }
         
-        // Self-iteration tick
-        tick(deltaTime, engine) {
-            if (this.dna.selfIteration) {
-                this.dna.selfIteration(this, deltaTime, engine);
-            }
-            
-            // Apply decay
-            if (this.dna.decayRate > 0) {
-                this.state.intensity = (this.state.intensity || 1) - this.dna.decayRate * deltaTime;
-                if (this.state.intensity <= 0) {
-                    engine.removeSymbol(this);
-                }
-            }
+        applyModifier(mod) {
+            this.modifier *= mod;
         }
         
-        // Connect causal relationship
-        causesSymbol(targetSymbol) {
-            this.effects.add(targetSymbol);
-            targetSymbol.causes.add(this);
+        resetModifier() {
+            this.modifier = 1.0;
+        }
+        
+        causesSymbol(target) {
+            this.effects.add(target);
+            target.causes.add(this);
+        }
+        
+        remember(tag, data) {
+            this.dna.memory.unshift({ tag, data, time: Date.now() });
+            if (this.dna.memory.length > 50) this.dna.memory.pop();
         }
     }
 
-    // =========================
-    // METADATA PACKET
-    // =========================
-    class MetadataPacket {
-        constructor(type, source, data) {
-            this.id = `pkt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            this.type = type;
-            this.source = source;
-            this.data = data;
-            this.timestamp = Date.now();
-            this.ttl = 10;
-            this.visited = new Set();
-        }
-    }
-
-    // =========================
-    // THE LOGOS ENGINE
-    // =========================
-    class LogosEngine {
+    class LogosLCSV3Engine {
         constructor() {
             this.symbols = new Map();
-            this.layers = LOGOS_LAYERS;
-            this.metadataQueue = [];
+            this.whGateStates = new Map();
             this.causalChains = [];
-            this.running = false;
-            this.tickRate = 60;
-            this.packetCount = 0;
+            this.snapshots = [];
+            this.currentSnapshotIndex = -1;
+            this.emergentPatterns = [];
+            this.anomalies = [];
+            this.running = true;
+            this.tickCount = 0;
             
-            // Visualization state
-            this.viewMode = 'mesh';
-            this.selectedSymbol = null;
+            // Causal inference
+            this.causalGraph = new Map();
             
-            // Console logging
-            this.consoleLines = [];
+            // Attention
+            this.salienceMap = new Map();
+            this.focus = null;
             
-            // Initialize
-            this.initializePrimordialLayer();
+            // Initialize Wh gates
+            Object.values(WH_GATE_CATEGORIES).flat().forEach(gate => {
+                this.whGateStates.set(gate, { active: false, fireCount: 0, lastFired: null });
+            });
         }
         
-        // Initialize Layer 0 - Primordial Void
-        initializePrimordialLayer() {
-            this.log('Initializing Primordial Void (Layer 0)...', 'symbol');
-            
-            // Universal Causality Engine - The meta-symbol
-            const causalityEngine = this.createSymbol('Universal_Causality_Engine', 0, {
-                type: 'meta',
-                properties: { isRoot: true, governs: 'all_causality' },
-                responseProtocol: ['system_init', 'universal_broadcast'],
-                propagationRules: [{
-                    condition: () => true,
-                    packetType: 'causality_rules',
-                    transform: (state) => ({ rules: state.fundamentalRules }),
-                    ttl: Infinity
-                }]
-            });
-            
-            // Symbol Registry
-            const registry = this.createSymbol('Symbol_Registry', 0, {
-                type: 'registry',
-                properties: { tracks: 'all_symbols' }
-            });
-            
-            // Time Symbol
-            const time = this.createSymbol('Time_Symbol', 0, {
-                type: 'fundamental',
-                initialState: { tick: 0, flow: 1.0 },
-                selfIteration: (symbol, dt) => {
-                    symbol.state.tick += dt * symbol.state.flow;
-                },
-                propagationRules: [{
-                    condition: (state) => state.tick % 60 === 0,
-                    packetType: 'time_pulse',
-                    transform: (state) => ({ currentTick: state.tick }),
-                    ttl: 5
-                }]
-            });
-            
-            // Space Symbol
-            const space = this.createSymbol('Space_Symbol', 0, {
-                type: 'fundamental',
-                properties: { dimensions: 3, topology: 'euclidean' }
-            });
-            
-            // Existence/Change
-            this.createSymbol('Existence_Symbol', 0, { type: 'archetypal' });
-            this.createSymbol('Change_Symbol', 0, { type: 'archetypal' });
-            
-            // Connect fundamental causality
-            causalityEngine.causesSymbol(registry);
-            causalityEngine.causesSymbol(time);
-            causalityEngine.causesSymbol(space);
-            
-            this.log('Primordial Void initialized with fundamental symbols', 'causal');
-        }
-        
-        // Create a new symbol
         createSymbol(name, layer, config = {}) {
-            const symbol = new Symbol(name, layer, config);
+            const symbol = new LCSSymbolV3(name, layer, config);
             this.symbols.set(symbol.id, symbol);
-            
-            // Position in mesh
-            const layerSymbols = this.getSymbolsByLayer(layer);
-            const angle = (layerSymbols.length * 0.5) + Math.random() * 0.5;
-            const radius = 150 + layer * 50;
-            symbol.position.x = Math.cos(angle) * radius;
-            symbol.position.y = Math.sin(angle) * radius;
-            
-            this.log(`Created symbol: ${name} [Layer ${layer}]`, 'symbol');
+            this.positionSymbol(symbol);
             return symbol;
         }
         
-        // Remove symbol
-        removeSymbol(symbol) {
-            // Disconnect causal links
-            symbol.causes.forEach(cause => cause.effects.delete(symbol));
-            symbol.effects.forEach(effect => effect.causes.delete(symbol));
+        positionSymbol(symbol) {
+            const layerSymbols = Array.from(this.symbols.values()).filter(s => s.layer === symbol.layer);
+            const angle = layerSymbols.length * 0.618 * Math.PI * 2;
+            const radius = 100 + symbol.layer * 40;
+            symbol.position.x = Math.cos(angle) * radius;
+            symbol.position.y = Math.sin(angle) * radius;
+        }
+        
+        evaluateWhGate(gateId, context = {}) {
+            const state = this.whGateStates.get(gateId);
+            if (!state) return false;
             
-            this.symbols.delete(symbol.id);
-            this.log(`Symbol dissolved: ${symbol.name}`, 'symbol');
+            // Simplified evaluation
+            let fires = false;
+            if (gateId === 'WHEN_NOW') fires = context.immediate === true;
+            else if (gateId === 'WHEN_CYCLE') fires = (this.tickCount % 60) === 0;
+            else if (gateId === 'WHERE_NEAR') fires = (context.distance || Infinity) < 50;
+            else fires = Math.random() > 0.95; // Random for demo
+            
+            state.active = fires;
+            if (fires) {
+                state.fireCount++;
+                state.lastFired = Date.now();
+            }
+            return fires;
         }
         
-        // Get symbols by layer
-        getSymbolsByLayer(layer) {
-            return Array.from(this.symbols.values()).filter(s => s.layer === layer);
-        }
-        
-        // Queue metadata packet
-        queueMetadataPacket(packet, target) {
-            this.metadataQueue.push({ packet, target });
-            this.packetCount++;
-        }
-        
-        // Broadcast packet to layer
-        broadcastToLayer(packet, layerId) {
-            this.getSymbolsByLayer(layerId).forEach(symbol => {
-                this.queueMetadataPacket(packet, symbol);
-            });
-        }
-        
-        // Log causal chain
-        logCausalChain(source, target, type) {
+        processCausalChain(root, trigger, context = {}) {
             const chain = {
                 id: `chain_${Date.now()}`,
-                source: source?.name || 'External',
-                sourceLayer: source?.layer ?? -1,
-                target: target.name,
-                targetLayer: target.layer,
-                type,
-                timestamp: Date.now()
+                trigger,
+                source: root.name,
+                effects: [],
+                whGatesUsed: [],
+                totalMs: 0,
+                probability: Math.random() * 0.5 + 0.5
             };
+            
+            const queue = [root];
+            const visited = new Set();
+            
+            while (queue.length > 0) {
+                const current = queue.shift();
+                if (visited.has(current.id)) continue;
+                visited.add(current.id);
+                
+                current.activations++;
+                current.lastActivated = Date.now();
+                current.remember(trigger, context);
+                
+                const ms = current.calculateMs();
+                chain.effects.push({ symbol: current.name, ms });
+                chain.totalMs += ms;
+                
+                for (const effect of current.effects) {
+                    if (!visited.has(effect.id)) queue.push(effect);
+                }
+            }
             
             this.causalChains.unshift(chain);
-            if (this.causalChains.length > 50) {
-                this.causalChains.pop();
-            }
+            if (this.causalChains.length > 100) this.causalChains.pop();
             
-            this.log(`Causal chain: ${chain.source} → ${chain.target}`, 'causal');
+            return chain;
         }
         
-        // Console log
-        log(message, type = 'info') {
-            const line = {
-                message,
-                type,
-                timestamp: new Date().toLocaleTimeString()
+        takeSnapshot(label = '') {
+            const snapshot = {
+                id: `snap_${Date.now()}`,
+                label: label || `Tick ${this.tickCount}`,
+                tickCount: this.tickCount,
+                timestamp: Date.now(),
+                symbolCount: this.symbols.size,
+                data: Array.from(this.symbols.values()).map(s => ({
+                    id: s.id, name: s.name, layer: s.layer,
+                    baseValue: s.baseValue, symbolWeight: s.symbolWeight
+                }))
             };
-            this.consoleLines.unshift(line);
-            if (this.consoleLines.length > 100) {
-                this.consoleLines.pop();
-            }
+            
+            this.snapshots.push(snapshot);
+            this.currentSnapshotIndex = this.snapshots.length - 1;
+            if (this.snapshots.length > 50) this.snapshots.shift();
+            
+            return snapshot;
         }
         
-        // Process one tick
-        tick(deltaTime) {
-            // Process metadata queue
-            const currentQueue = [...this.metadataQueue];
-            this.metadataQueue = [];
+        restoreSnapshot(snapshotId) {
+            const snapshot = this.snapshots.find(s => s.id === snapshotId);
+            if (!snapshot) return null;
+            this.currentSnapshotIndex = this.snapshots.indexOf(snapshot);
+            return snapshot;
+        }
+        
+        detectEmergentPatterns() {
+            const patternCounts = new Map();
             
-            currentQueue.forEach(({ packet, target }) => {
-                if (packet.ttl > 0 && !packet.visited.has(target.id)) {
-                    packet.visited.add(target.id);
-                    packet.ttl--;
-                    target.processMetadata(packet, this);
+            for (const chain of this.causalChains.slice(0, 50)) {
+                const sig = chain.effects.map(e => e.symbol).join('->');
+                patternCounts.set(sig, (patternCounts.get(sig) || 0) + 1);
+            }
+            
+            this.emergentPatterns = Array.from(patternCounts.entries())
+                .filter(([_, count]) => count >= 3)
+                .map(([pattern, count]) => ({ pattern, occurrences: count }));
+            
+            return this.emergentPatterns;
+        }
+        
+        updateAttention() {
+            for (const symbol of this.symbols.values()) {
+                let salience = 0;
+                const timeSince = Date.now() - (symbol.lastActivated || 0);
+                salience += Math.exp(-timeSince / 5000);
+                salience += symbol.calculateMs() * 0.5;
+                salience += (symbol.effects.size + symbol.causes.size) * 0.1;
+                this.salienceMap.set(symbol.id, salience);
+            }
+            
+            let maxSalience = 0;
+            for (const [id, salience] of this.salienceMap) {
+                if (salience > maxSalience) {
+                    maxSalience = salience;
+                    this.focus = id;
                 }
-            });
-            
-            // Self-iteration for all symbols
-            this.symbols.forEach(symbol => {
-                symbol.tick(deltaTime, this);
-            });
+            }
         }
         
-        // Start engine
-        start() {
-            if (this.running) return;
-            this.running = true;
-            this.log('Logos Engine activated', 'symbol');
+        executeSymQL(query) {
+            try {
+                const upper = query.toUpperCase();
+                if (!upper.includes('SELECT')) return 'Error: Only SELECT queries supported';
+                
+                let results = Array.from(this.symbols.values()).map(s => ({
+                    name: s.name,
+                    layer: s.layer,
+                    type: s.type,
+                    ms: s.calculateMs().toFixed(3),
+                    activations: s.activations,
+                    effects: s.effects.size,
+                    causes: s.causes.size
+                }));
+                
+                // Simple WHERE parsing
+                const whereMatch = query.match(/WHERE\s+(\w+)\s*(>|<|=)\s*([\d.]+)/i);
+                if (whereMatch) {
+                    const [_, field, op, val] = whereMatch;
+                    const numVal = parseFloat(val);
+                    results = results.filter(r => {
+                        const v = parseFloat(r[field]) || 0;
+                        if (op === '>') return v > numVal;
+                        if (op === '<') return v < numVal;
+                        return v == numVal;
+                    });
+                }
+                
+                // Simple ORDER BY
+                const orderMatch = query.match(/ORDER BY\s+(\w+)\s*(DESC|ASC)?/i);
+                if (orderMatch) {
+                    const [_, field, dir] = orderMatch;
+                    results.sort((a, b) => {
+                        const av = parseFloat(a[field]) || a[field];
+                        const bv = parseFloat(b[field]) || b[field];
+                        return dir?.toUpperCase() === 'DESC' ? bv - av : av - bv;
+                    });
+                }
+                
+                // LIMIT
+                const limitMatch = query.match(/LIMIT\s+(\d+)/i);
+                if (limitMatch) {
+                    results = results.slice(0, parseInt(limitMatch[1]));
+                }
+                
+                return JSON.stringify(results, null, 2);
+            } catch (e) {
+                return `Error: ${e.message}`;
+            }
+        }
+        
+        tick() {
+            if (!this.running) return;
+            this.tickCount++;
             
-            let lastTime = performance.now();
-            const loop = () => {
-                if (!this.running) return;
-                
-                const currentTime = performance.now();
-                const deltaTime = (currentTime - lastTime) / 1000;
-                lastTime = currentTime;
-                
-                this.tick(deltaTime);
-                
-                requestAnimationFrame(loop);
+            // Evaluate time-based gates
+            this.evaluateWhGate('WHEN_NOW', { immediate: true });
+            this.evaluateWhGate('WHEN_CYCLE', {});
+            
+            // Reset modifiers
+            for (const symbol of this.symbols.values()) {
+                symbol.resetModifier();
+            }
+            
+            // Periodic analysis
+            if (this.tickCount % 60 === 0) {
+                this.updateAttention();
+            }
+            if (this.tickCount % 180 === 0) {
+                this.detectEmergentPatterns();
+            }
+            
+            // Auto-snapshot
+            if (this.tickCount % 300 === 0) {
+                this.takeSnapshot('auto');
+            }
+        }
+        
+        getStats() {
+            const activeGates = Array.from(this.whGateStates.values()).filter(s => s.active).length;
+            const symbols = Array.from(this.symbols.values());
+            const totalMs = symbols.reduce((s, sym) => s + sym.calculateMs(), 0);
+            
+            return {
+                symbols: this.symbols.size,
+                chains: this.causalChains.length,
+                activeWhGates: activeGates,
+                emergent: this.emergentPatterns.length,
+                avgMs: symbols.length ? (totalMs / symbols.length).toFixed(3) : '0.000',
+                snapshots: this.snapshots.length,
+                tickCount: this.tickCount
             };
-            
-            requestAnimationFrame(loop);
-        }
-        
-        // Stop engine
-        stop() {
-            this.running = false;
-            this.log('Logos Engine deactivated', 'symbol');
-        }
-        
-        // Trigger game event (high-level cause)
-        triggerEvent(eventName, data = {}) {
-            this.log(`Event triggered: ${eventName}`, 'metadata');
-            
-            const packet = new MetadataPacket(eventName, null, data);
-            
-            // Events start at highest relevant layer and cascade down
-            this.broadcastToLayer(packet, 1); // Narrative layer
         }
     }
 
-    // =========================
-    // VISUALIZATION RENDERER
-    // =========================
-    class MeshRenderer {
+    // ============================================================================
+    // RENDERER
+    // ============================================================================
+
+    class V3Renderer {
         constructor(canvas, engine) {
             this.canvas = canvas;
             this.ctx = canvas.getContext('2d');
             this.engine = engine;
-            
+            this.mode = 'mesh';
             this.resize();
             window.addEventListener('resize', () => this.resize());
-            
-            this.centerX = 0;
-            this.centerY = 0;
-            this.zoom = 1;
-            this.rotation = 0;
-            
-            // Particle effects
-            this.particles = [];
-            
-            this.animate();
         }
         
         resize() {
             this.canvas.width = this.canvas.parentElement.clientWidth;
             this.canvas.height = this.canvas.parentElement.clientHeight;
-            this.centerX = this.canvas.width / 2;
-            this.centerY = this.canvas.height / 2;
-        }
-        
-        animate() {
-            this.render();
-            requestAnimationFrame(() => this.animate());
+            this.cx = this.canvas.width / 2;
+            this.cy = this.canvas.height / 2;
         }
         
         render() {
             const ctx = this.ctx;
-            const { width, height } = this.canvas;
+            ctx.fillStyle = 'rgba(5, 6, 10, 0.2)';
+            ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
             
-            // Clear
-            ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
-            ctx.fillRect(0, 0, width, height);
-            
-            this.rotation += 0.001;
-            
-            // Draw layer rings
-            this.drawLayerRings();
-            
-            // Draw causal connections
-            this.drawCausalConnections();
-            
-            // Draw symbols
-            this.drawSymbols();
-            
-            // Draw metadata packets in transit
-            this.drawMetadataPackets();
-            
-            // Update particles
-            this.updateParticles();
+            if (this.mode === 'mesh' || this.mode === 'causal') {
+                this.drawConnections();
+                this.drawSymbols();
+            } else if (this.mode === 'inference') {
+                this.drawInferenceGraph();
+            } else if (this.mode === 'attention') {
+                this.drawAttentionMap();
+            }
         }
         
-        drawLayerRings() {
+        drawConnections() {
             const ctx = this.ctx;
             
-            LOGOS_LAYERS.forEach((layer, i) => {
-                const radius = 100 + i * 55;
+            for (const symbol of this.engine.symbols.values()) {
+                const fx = this.cx + symbol.position.x;
+                const fy = this.cy + symbol.position.y;
                 
-                ctx.beginPath();
-                ctx.arc(this.centerX, this.centerY, radius * this.zoom, 0, Math.PI * 2);
-                ctx.strokeStyle = layer.color + '20';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-                
-                // Layer label
-                ctx.fillStyle = layer.color + '60';
-                ctx.font = '10px JetBrains Mono';
-                ctx.fillText(
-                    `L${layer.id}`,
-                    this.centerX + radius * this.zoom + 10,
-                    this.centerY - 5
-                );
-            });
-        }
-        
-        drawCausalConnections() {
-            const ctx = this.ctx;
-            
-            this.engine.symbols.forEach(symbol => {
-                const fromX = this.centerX + symbol.position.x * this.zoom;
-                const fromY = this.centerY + symbol.position.y * this.zoom;
-                
-                symbol.effects.forEach(effect => {
-                    const toX = this.centerX + effect.position.x * this.zoom;
-                    const toY = this.centerY + effect.position.y * this.zoom;
-                    
-                    // Gradient line
-                    const gradient = ctx.createLinearGradient(fromX, fromY, toX, toY);
-                    gradient.addColorStop(0, LOGOS_LAYERS[symbol.layer].color + '40');
-                    gradient.addColorStop(1, LOGOS_LAYERS[effect.layer].color + '40');
+                for (const effect of symbol.effects) {
+                    const tx = this.cx + effect.position.x;
+                    const ty = this.cy + effect.position.y;
                     
                     ctx.beginPath();
-                    ctx.moveTo(fromX, fromY);
-                    ctx.lineTo(toX, toY);
-                    ctx.strokeStyle = gradient;
+                    ctx.moveTo(fx, fy);
+                    ctx.lineTo(tx, ty);
+                    ctx.strokeStyle = 'rgba(94, 234, 212, 0.3)';
                     ctx.lineWidth = 1;
                     ctx.stroke();
                     
-                    // Arrow head
-                    const angle = Math.atan2(toY - fromY, toX - fromX);
-                    const arrowSize = 6;
+                    // Arrow
+                    const angle = Math.atan2(ty - fy, tx - fx);
                     ctx.beginPath();
-                    ctx.moveTo(toX, toY);
-                    ctx.lineTo(
-                        toX - arrowSize * Math.cos(angle - Math.PI / 6),
-                        toY - arrowSize * Math.sin(angle - Math.PI / 6)
-                    );
-                    ctx.lineTo(
-                        toX - arrowSize * Math.cos(angle + Math.PI / 6),
-                        toY - arrowSize * Math.sin(angle + Math.PI / 6)
-                    );
+                    ctx.moveTo(tx, ty);
+                    ctx.lineTo(tx - 8 * Math.cos(angle - 0.3), ty - 8 * Math.sin(angle - 0.3));
+                    ctx.lineTo(tx - 8 * Math.cos(angle + 0.3), ty - 8 * Math.sin(angle + 0.3));
                     ctx.closePath();
-                    ctx.fillStyle = LOGOS_LAYERS[effect.layer].color + '60';
+                    ctx.fillStyle = 'rgba(94, 234, 212, 0.5)';
                     ctx.fill();
-                });
-            });
+                }
+            }
         }
         
         drawSymbols() {
             const ctx = this.ctx;
+            const passColors = OPTIMIZATION_PASSES.map(p => p.color);
             
-            this.engine.symbols.forEach(symbol => {
-                const x = this.centerX + symbol.position.x * this.zoom;
-                const y = this.centerY + symbol.position.y * this.zoom;
-                const layer = LOGOS_LAYERS[symbol.layer];
+            for (const symbol of this.engine.symbols.values()) {
+                const x = this.cx + symbol.position.x;
+                const y = this.cy + symbol.position.y;
+                const ms = symbol.calculateMs();
+                const size = 8 + ms * 5;
+                const color = passColors[symbol.layer % passColors.length];
                 
-                // Glow effect if recently activated
-                const timeSinceActivation = Date.now() - (symbol.metadata.measurements.lastActivated || 0);
-                if (timeSinceActivation < 1000) {
-                    const glowIntensity = 1 - timeSinceActivation / 1000;
+                // Focus highlight
+                if (this.engine.focus === symbol.id) {
                     ctx.beginPath();
-                    ctx.arc(x, y, 20 + glowIntensity * 10, 0, Math.PI * 2);
-                    ctx.fillStyle = layer.color + Math.floor(glowIntensity * 30).toString(16).padStart(2, '0');
+                    ctx.arc(x, y, size + 15, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(167, 139, 250, 0.2)';
                     ctx.fill();
                 }
                 
-                // Symbol node
-                const baseSize = symbol.metadata.identity.type === 'meta' ? 12 : 8;
-                const size = baseSize + (symbol.metadata.measurements.activations % 5);
+                // Recent activation glow
+                const timeSince = Date.now() - (symbol.lastActivated || 0);
+                if (timeSince < 500) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, size + 10, 0, Math.PI * 2);
+                    ctx.fillStyle = color + '40';
+                    ctx.fill();
+                }
                 
+                // Symbol
                 ctx.beginPath();
                 ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = layer.color;
+                ctx.fillStyle = color;
                 ctx.fill();
                 
-                // Inner dot
+                // Inner
                 ctx.beginPath();
                 ctx.arc(x, y, size * 0.4, 0, Math.PI * 2);
                 ctx.fillStyle = '#fff';
                 ctx.fill();
                 
                 // Label
-                ctx.fillStyle = '#ffffff90';
+                ctx.fillStyle = 'rgba(255,255,255,0.6)';
                 ctx.font = '9px JetBrains Mono';
                 ctx.textAlign = 'center';
-                ctx.fillText(symbol.name.split('_')[0], x, y + size + 12);
+                ctx.fillText(symbol.name.split('_')[0], x, y + size + 14);
+            }
+        }
+        
+        drawInferenceGraph() {
+            const ctx = this.ctx;
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            ctx.font = '12px JetBrains Mono';
+            ctx.textAlign = 'center';
+            ctx.fillText('Causal Inference View', this.cx, this.cy - 50);
+            ctx.fillText(`P(Effect|Cause) computed for ${this.engine.causalChains.length} chains`, this.cx, this.cy);
+            
+            // Draw simplified Bayesian network
+            const chains = this.engine.causalChains.slice(0, 5);
+            chains.forEach((chain, i) => {
+                const y = 100 + i * 40;
+                ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
+                ctx.fillText(`${chain.source} → P=${chain.probability.toFixed(2)}`, this.cx, y);
             });
         }
         
-        drawMetadataPackets() {
+        drawAttentionMap() {
             const ctx = this.ctx;
             
-            this.engine.metadataQueue.forEach(({ packet, target }) => {
-                if (packet.source) {
-                    const fromX = this.centerX + packet.source.position.x * this.zoom;
-                    const fromY = this.centerY + packet.source.position.y * this.zoom;
-                    const toX = this.centerX + target.position.x * this.zoom;
-                    const toY = this.centerY + target.position.y * this.zoom;
-                    
-                    // Packet traveling
-                    const progress = (Date.now() - packet.timestamp) / 200;
-                    const px = fromX + (toX - fromX) * Math.min(progress, 1);
-                    const py = fromY + (toY - fromY) * Math.min(progress, 1);
-                    
-                    ctx.beginPath();
-                    ctx.arc(px, py, 4, 0, Math.PI * 2);
-                    ctx.fillStyle = '#64ffda';
-                    ctx.fill();
-                    
-                    // Trail
-                    ctx.beginPath();
-                    ctx.moveTo(fromX, fromY);
-                    ctx.lineTo(px, py);
-                    ctx.strokeStyle = '#64ffda40';
+            for (const symbol of this.engine.symbols.values()) {
+                const x = this.cx + symbol.position.x;
+                const y = this.cy + symbol.position.y;
+                const salience = this.engine.salienceMap.get(symbol.id) || 0;
+                const size = 10 + salience * 30;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(167, 139, 250, ${salience * 0.5})`;
+                ctx.fill();
+                
+                if (this.engine.focus === symbol.id) {
+                    ctx.strokeStyle = '#a78bfa';
                     ctx.lineWidth = 2;
                     ctx.stroke();
                 }
-            });
-        }
-        
-        updateParticles() {
-            // Spawn particles near active symbols
-            this.engine.symbols.forEach(symbol => {
-                if (symbol.metadata.behavior.processing) {
-                    this.particles.push({
-                        x: this.centerX + symbol.position.x * this.zoom,
-                        y: this.centerY + symbol.position.y * this.zoom,
-                        vx: (Math.random() - 0.5) * 2,
-                        vy: (Math.random() - 0.5) * 2,
-                        life: 1,
-                        color: LOGOS_LAYERS[symbol.layer].color
-                    });
-                }
-            });
-            
-            // Update and draw particles
-            this.particles = this.particles.filter(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.life -= 0.02;
-                
-                if (p.life > 0) {
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, 2 * p.life, 0, Math.PI * 2);
-                    this.ctx.fillStyle = p.color + Math.floor(p.life * 255).toString(16).padStart(2, '0');
-                    this.ctx.fill();
-                    return true;
-                }
-                return false;
-            });
+            }
         }
     }
 
-    // =========================
-    // GAME WORLD RENDERER (Layer 8 Output)
-    // =========================
-    class GameWorldRenderer {
-        constructor(canvas, engine) {
-            this.canvas = canvas;
-            this.ctx = canvas.getContext('2d');
-            this.engine = engine;
-            
-            this.resize();
-            
-            // Simple scene state derived from symbols
-            this.scene = {
-                sunPosition: 0.3,
-                skyColor: [20, 30, 60],
-                groundColor: [40, 80, 40],
-                objects: []
-            };
-            
-            this.animate();
-        }
-        
-        resize() {
-            this.canvas.width = this.canvas.parentElement.clientWidth;
-            this.canvas.height = this.canvas.parentElement.clientHeight - 32;
-        }
-        
-        animate() {
-            this.render();
-            requestAnimationFrame(() => this.animate());
-        }
-        
-        render() {
-            const ctx = this.ctx;
-            const { width, height } = this.canvas;
-            
-            // Get time from engine
-            const timeSymbol = Array.from(this.engine.symbols.values())
-                .find(s => s.name === 'Time_Symbol');
-            const time = timeSymbol?.state.tick || 0;
-            
-            // Derive scene from symbolic state
-            this.scene.sunPosition = (Math.sin(time * 0.01) + 1) / 2;
-            
-            // Sky gradient based on sun position
-            const sunY = this.scene.sunPosition;
-            const skyGradient = ctx.createLinearGradient(0, 0, 0, height * 0.6);
-            
-            if (sunY > 0.5) {
-                // Day
-                skyGradient.addColorStop(0, `rgb(${100 + sunY * 100}, ${150 + sunY * 50}, ${200 + sunY * 55})`);
-                skyGradient.addColorStop(1, `rgb(${180 + sunY * 50}, ${200 + sunY * 30}, ${220})`);
-            } else {
-                // Night/dusk
-                skyGradient.addColorStop(0, `rgb(${20 + sunY * 60}, ${30 + sunY * 80}, ${80 + sunY * 100})`);
-                skyGradient.addColorStop(1, `rgb(${50 + sunY * 100}, ${80 + sunY * 80}, ${120 + sunY * 60})`);
-            }
-            
-            ctx.fillStyle = skyGradient;
-            ctx.fillRect(0, 0, width, height * 0.6);
-            
-            // Sun/Moon
-            const sunX = width * 0.5 + Math.cos(time * 0.01) * width * 0.3;
-            const sunDrawY = height * 0.5 - sunY * height * 0.4;
-            
-            ctx.beginPath();
-            ctx.arc(sunX, sunDrawY, 20, 0, Math.PI * 2);
-            ctx.fillStyle = sunY > 0.5 ? '#ffd93d' : '#e0e0e0';
-            ctx.fill();
-            
-            // Glow
-            const sunGlow = ctx.createRadialGradient(sunX, sunDrawY, 20, sunX, sunDrawY, 60);
-            sunGlow.addColorStop(0, sunY > 0.5 ? 'rgba(255,217,61,0.3)' : 'rgba(200,200,220,0.2)');
-            sunGlow.addColorStop(1, 'transparent');
-            ctx.fillStyle = sunGlow;
-            ctx.fillRect(0, 0, width, height);
-            
-            // Ground
-            const groundGradient = ctx.createLinearGradient(0, height * 0.6, 0, height);
-            groundGradient.addColorStop(0, `rgb(${60 + sunY * 40}, ${100 + sunY * 60}, ${50 + sunY * 30})`);
-            groundGradient.addColorStop(1, `rgb(${30 + sunY * 20}, ${60 + sunY * 40}, ${30 + sunY * 20})`);
-            ctx.fillStyle = groundGradient;
-            ctx.fillRect(0, height * 0.6, width, height * 0.4);
-            
-            // Simple trees (objects derived from Structure symbols)
-            const numTrees = 5;
-            for (let i = 0; i < numTrees; i++) {
-                const tx = width * 0.1 + (width * 0.8 / numTrees) * i + Math.sin(i * 3) * 20;
-                const ty = height * 0.6 + 10;
-                const treeHeight = 40 + Math.sin(i * 2) * 15;
-                
-                // Trunk
-                ctx.fillStyle = `rgb(${60 + sunY * 30}, ${40 + sunY * 20}, ${30})`;
-                ctx.fillRect(tx - 4, ty - treeHeight * 0.4, 8, treeHeight * 0.4);
-                
-                // Foliage
-                ctx.beginPath();
-                ctx.arc(tx, ty - treeHeight * 0.6, 25, 0, Math.PI * 2);
-                ctx.fillStyle = `rgb(${40 + sunY * 40}, ${80 + sunY * 60}, ${40 + sunY * 30})`;
-                ctx.fill();
-            }
-            
-            // Layer 8 status indicator
-            ctx.fillStyle = '#64ffda';
-            ctx.font = '9px JetBrains Mono';
-            ctx.fillText(`Tick: ${Math.floor(time)} | Pixels: ${width * height}`, 10, height - 10);
-        }
-    }
-
-    // =========================
+    // ============================================================================
     // UI MANAGER
-    // =========================
+    // ============================================================================
+
     class UIManager {
         constructor(engine) {
             this.engine = engine;
-            this.initLayerStack();
+            this.initPasses();
+            this.initOntology();
+            this.initWhGates();
             this.initControls();
-            this.startUILoop();
+            this.startLoop();
         }
         
-        initLayerStack() {
-            const container = document.getElementById('layer-stack');
-            
-            LOGOS_LAYERS.forEach(layer => {
-                const card = document.createElement('div');
-                card.className = 'layer-card';
-                card.dataset.layer = layer.id;
-                card.innerHTML = `
-                    <div class="layer-header">
-                        <div class="layer-number" style="background: ${layer.color}">${layer.id}</div>
-                        <div class="layer-info">
-                            <div class="layer-name">${layer.name}</div>
-                            <div class="layer-purpose">${layer.purpose}</div>
-                        </div>
+        initPasses() {
+            const container = document.getElementById('passes-container');
+            OPTIMIZATION_PASSES.forEach(pass => {
+                const div = document.createElement('div');
+                div.className = 'pass-indicator';
+                div.style.borderLeftColor = pass.color;
+                div.innerHTML = `
+                    <div class="pass-num" style="background: ${pass.color}">${pass.id}</div>
+                    <div class="pass-info">
+                        <div class="pass-name">${pass.name}</div>
+                        <div class="pass-desc">${pass.desc}</div>
                     </div>
-                    <div class="layer-symbols">
-                        ${layer.symbols.map(s => `<span class="symbol-tag">${s}</span>`).join('')}
-                    </div>
+                    <div class="pass-status"></div>
                 `;
-                
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.layer-card').forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    this.spawnLayerSymbols(layer.id);
-                });
-                
-                container.appendChild(card);
+                div.addEventListener('click', () => this.activatePass(pass.id));
+                container.appendChild(div);
             });
         }
         
-        spawnLayerSymbols(layerId) {
-            const layer = LOGOS_LAYERS[layerId];
-            const existingSymbols = this.engine.getSymbolsByLayer(layerId);
+        activatePass(passId) {
+            // Create symbols related to pass
+            const names = ['Core', 'Processor', 'Handler', 'Manager', 'Engine'];
+            const name = `Pass${passId}_${names[Math.floor(Math.random() * names.length)]}`;
+            const symbol = this.engine.createSymbol(name, passId, {
+                baseValue: 0.5 + Math.random() * 0.5,
+                type: 'CAUSAL_AGENT'
+            });
             
-            // Spawn symbols that don't exist yet
-            layer.symbols.forEach(symbolName => {
-                if (!existingSymbols.find(s => s.name === symbolName)) {
-                    const symbol = this.engine.createSymbol(symbolName, layerId, {
-                        type: 'standard',
-                        propagationRules: [{
-                            condition: () => Math.random() > 0.7,
-                            packetType: `${symbolName}_update`,
-                            transform: (state) => state,
-                            ttl: 3
-                        }]
-                    });
-                    
-                    // Connect to layer below
-                    if (layerId < 8) {
-                        const belowSymbols = this.engine.getSymbolsByLayer(layerId + 1);
-                        if (belowSymbols.length > 0) {
-                            symbol.causesSymbol(belowSymbols[Math.floor(Math.random() * belowSymbols.length)]);
-                        }
-                    }
-                    
-                    // Connect to layer above
-                    if (layerId > 0) {
-                        const aboveSymbols = this.engine.getSymbolsByLayer(layerId - 1);
-                        if (aboveSymbols.length > 0) {
-                            aboveSymbols[Math.floor(Math.random() * aboveSymbols.length)].causesSymbol(symbol);
-                        }
-                    }
+            // Connect to existing
+            const existing = Array.from(this.engine.symbols.values());
+            if (existing.length > 1) {
+                const target = existing[Math.floor(Math.random() * (existing.length - 1))];
+                if (target.id !== symbol.id) symbol.causesSymbol(target);
+            }
+            
+            // Trigger chain
+            this.engine.processCausalChain(symbol, `pass_${passId}_activate`, {});
+        }
+        
+        initOntology() {
+            const container = document.getElementById('ontology-tree');
+            const renderNode = (name, level = 0) => {
+                const div = document.createElement('div');
+                div.className = `ontology-node level-${level}`;
+                div.textContent = name;
+                div.addEventListener('click', () => this.spawnOntologySymbol(name));
+                container.appendChild(div);
+                
+                if (ONTOLOGY[name]) {
+                    ONTOLOGY[name].children.forEach(child => renderNode(child, level + 1));
                 }
+            };
+            renderNode('ROOT');
+        }
+        
+        spawnOntologySymbol(type) {
+            const name = `${type}_${Date.now() % 1000}`;
+            const symbol = this.engine.createSymbol(name, Math.floor(Math.random() * 5) + 1, { type });
+            this.engine.processCausalChain(symbol, 'ontology_spawn', {});
+        }
+        
+        initWhGates() {
+            const container = document.getElementById('wh-gates-compact');
+            Object.entries(WH_GATE_CATEGORIES).forEach(([category, gates]) => {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'wh-category';
+                catDiv.innerHTML = `<div class="wh-category-header">${category.toUpperCase()} (${gates.length})</div>`;
+                
+                gates.forEach(gate => {
+                    const gateDiv = document.createElement('div');
+                    gateDiv.className = 'wh-gate-mini';
+                    gateDiv.id = `wh-${gate}`;
+                    gateDiv.innerHTML = `<span class="dot"></span>${gate.replace('WHEN_', '').replace('WHERE_', '').replace('WHAT_', '').replace('WHO_', '').replace('WHY_', '').replace('HOW_', '')}`;
+                    gateDiv.addEventListener('click', () => {
+                        this.engine.evaluateWhGate(gate, { immediate: true });
+                    });
+                    catDiv.appendChild(gateDiv);
+                });
+                
+                container.appendChild(catDiv);
             });
         }
         
         initControls() {
-            // View mode buttons
-            document.querySelectorAll('.viz-btn').forEach(btn => {
+            // Snapshot
+            document.getElementById('btn-snapshot').addEventListener('click', () => {
+                this.engine.takeSnapshot('manual');
+                this.updateTimeline();
+            });
+            
+            // Introspect
+            document.getElementById('btn-introspect').addEventListener('click', () => {
+                const panel = document.getElementById('introspection-panel');
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+                this.updateIntrospection();
+            });
+            
+            // Run/Pause
+            document.getElementById('btn-run').addEventListener('click', (e) => {
+                this.engine.running = !this.engine.running;
+                e.target.textContent = this.engine.running ? '▶ Running' : '⏸ Paused';
+                e.target.classList.toggle('active', this.engine.running);
+            });
+            
+            // Viz modes
+            document.querySelectorAll('.viz-mode').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.viz-mode').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    this.engine.viewMode = btn.dataset.view;
+                    window.renderer.mode = btn.dataset.mode;
                 });
             });
-        }
-        
-        startUILoop() {
-            setInterval(() => this.updateUI(), 100);
-        }
-        
-        updateUI() {
-            // Stats
-            document.getElementById('symbol-count').textContent = this.engine.symbols.size;
-            document.getElementById('chain-count').textContent = this.engine.causalChains.length;
-            document.getElementById('packet-count').textContent = this.engine.packetCount;
             
-            // Causal chain log
-            const chainLog = document.getElementById('causal-chain-log');
-            chainLog.innerHTML = this.engine.causalChains.slice(0, 10).map(chain => `
-                <div class="chain-entry" style="border-color: ${LOGOS_LAYERS[Math.max(0, chain.targetLayer)].color}">
-                    <div class="chain-cause">◈ ${chain.source}</div>
-                    <div class="chain-arrow">↓ ${chain.type}</div>
-                    <div class="chain-effect">◈ ${chain.target}</div>
-                    <div class="chain-layer">Layer ${chain.sourceLayer} → Layer ${chain.targetLayer}</div>
-                </div>
-            `).join('');
-            
-            // Console
-            const consoleOutput = document.getElementById('console-output');
-            consoleOutput.innerHTML = this.engine.consoleLines.slice(0, 20).map(line => `
-                <div class="console-line ${line.type}">
-                    <span style="color: rgba(255,255,255,0.3)">[${line.timestamp}]</span> ${line.message}
-                </div>
-            `).join('');
-        }
-    }
-
-    // =========================
-    // DEMO SCENARIO BUILDER
-    // =========================
-    class DemoScenario {
-        constructor(engine) {
-            this.engine = engine;
-        }
-        
-        buildCompleteScenario() {
-            // Build a complete game scenario across all layers
-            
-            // Layer 1: Narrative
-            const quest = this.engine.createSymbol('Hero_Quest', 1, {
-                type: 'narrative',
-                initialState: { stage: 'beginning', tension: 0.3 },
-                propagationRules: [{
-                    condition: (state) => state.tension > 0.5,
-                    packetType: 'tension_spike',
-                    transform: (state) => ({ urgency: state.tension }),
-                    ttl: 5
-                }]
+            // SymQL
+            document.getElementById('symql-run').addEventListener('click', () => {
+                const query = document.getElementById('symql-input').value;
+                const result = this.engine.executeSymQL(query);
+                document.getElementById('symql-output').textContent = result;
             });
             
-            // Layer 2: Entities
-            const player = this.engine.createSymbol('Player_Character', 2, {
-                type: 'entity',
-                initialState: { health: 100, position: { x: 0, y: 0 } },
-                responseProtocol: ['player_input', 'damage', 'heal'],
-                propagationRules: [{
-                    condition: () => true,
-                    packetType: 'player_update',
-                    transform: (state) => state,
-                    ttl: 3
-                }]
+            document.getElementById('symql-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') document.getElementById('symql-run').click();
             });
             
-            const enemy = this.engine.createSymbol('Enemy_Patrol', 2, {
-                type: 'entity',
-                initialState: { alertLevel: 0, patrol: true },
-                selfIteration: (symbol, dt) => {
-                    if (symbol.state.patrol) {
-                        symbol.state.alertLevel = Math.sin(Date.now() / 1000) * 0.5 + 0.5;
-                    }
+            // Timeline
+            document.getElementById('btn-undo').addEventListener('click', () => {
+                if (this.engine.currentSnapshotIndex > 0) {
+                    this.engine.currentSnapshotIndex--;
+                    this.updateTimeline();
                 }
             });
             
-            // Layer 3: Environment
-            const forest = this.engine.createSymbol('Dark_Forest', 3, {
-                type: 'biome',
-                properties: { danger: 0.6, visibility: 0.4 }
-            });
-            
-            const weather = this.engine.createSymbol('Weather_System', 3, {
-                type: 'environmental',
-                initialState: { condition: 'foggy', intensity: 0.7 },
-                selfIteration: (symbol, dt) => {
-                    symbol.state.intensity = 0.5 + Math.sin(Date.now() / 5000) * 0.3;
-                },
-                propagationRules: [{
-                    condition: (state) => state.intensity > 0.6,
-                    packetType: 'weather_effect',
-                    transform: (state) => ({ fog: state.intensity }),
-                    ttl: 2
-                }]
-            });
-            
-            // Layer 4: Structure
-            const ruins = this.engine.createSymbol('Ancient_Ruins', 4, {
-                type: 'structure',
-                properties: { age: 1000, condition: 'decrepit' }
-            });
-            
-            // Layer 5: Materials
-            const stoneMaterial = this.engine.createSymbol('Weathered_Stone', 5, {
-                type: 'material',
-                properties: { roughness: 0.8, color: [80, 80, 75] }
-            });
-            
-            const mossMaterial = this.engine.createSymbol('Forest_Moss', 5, {
-                type: 'material',
-                properties: { roughness: 0.9, color: [40, 80, 40], emissive: 0.05 }
-            });
-            
-            // Layer 6: Light
-            const moonlight = this.engine.createSymbol('Moonlight', 6, {
-                type: 'light_source',
-                initialState: { intensity: 0.3, color: [200, 210, 255] },
-                selfIteration: (symbol, dt) => {
-                    // Flickering through clouds
-                    symbol.state.intensity = 0.3 + Math.random() * 0.1;
+            document.getElementById('btn-redo').addEventListener('click', () => {
+                if (this.engine.currentSnapshotIndex < this.engine.snapshots.length - 1) {
+                    this.engine.currentSnapshotIndex++;
+                    this.updateTimeline();
                 }
             });
+        }
+        
+        startLoop() {
+            setInterval(() => this.update(), 100);
+        }
+        
+        update() {
+            const stats = this.engine.getStats();
             
-            const torchLight = this.engine.createSymbol('Torch_Glow', 6, {
-                type: 'light_source',
-                initialState: { intensity: 0.8, color: [255, 180, 100], flicker: true },
-                selfIteration: (symbol, dt) => {
-                    if (symbol.state.flicker) {
-                        symbol.state.intensity = 0.7 + Math.random() * 0.3;
-                    }
-                },
-                propagationRules: [{
-                    condition: () => true,
-                    packetType: 'light_update',
-                    transform: (state) => ({ illuminance: state.intensity, tint: state.color }),
-                    ttl: 2
-                }]
+            document.getElementById('stat-symbols').textContent = stats.symbols;
+            document.getElementById('stat-chains').textContent = stats.chains;
+            document.getElementById('stat-wh').textContent = `${stats.activeWhGates}/45`;
+            document.getElementById('stat-emergent').textContent = stats.emergent;
+            document.getElementById('stat-ms').textContent = stats.avgMs;
+            
+            // Update Wh gate indicators
+            for (const [gateId, state] of this.engine.whGateStates) {
+                const el = document.getElementById(`wh-${gateId}`);
+                if (el) el.classList.toggle('active', state.active);
+            }
+            
+            // Update inference
+            const lastChain = this.engine.causalChains[0];
+            if (lastChain) {
+                document.getElementById('inference-forward').textContent = lastChain.probability.toFixed(3);
+                document.getElementById('inference-backward').textContent = (1 - lastChain.probability * 0.5).toFixed(3);
+            }
+            
+            // Bottlenecks
+            const symbolsByEffects = Array.from(this.engine.symbols.values())
+                .sort((a, b) => b.effects.size - a.effects.size)
+                .slice(0, 3)
+                .map(s => s.name.split('_')[0]);
+            document.getElementById('inference-bottlenecks').textContent = symbolsByEffects.join(', ') || '-';
+        }
+        
+        updateIntrospection() {
+            this.engine.detectEmergentPatterns();
+            this.engine.updateAttention();
+            
+            const content = document.getElementById('introspection-content');
+            let html = '<div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Emergent Patterns</div>';
+            
+            this.engine.emergentPatterns.slice(0, 3).forEach(p => {
+                html += `<div class="emergent-pattern">${p.pattern.slice(0, 20)}... (${p.occurrences}x)</div>`;
             });
             
-            // Layer 7: Camera
-            const camera = this.engine.createSymbol('Main_Camera', 7, {
-                type: 'viewpoint',
-                initialState: { fov: 75, position: [0, 1.7, 0], rotation: [0, 0, 0] },
-                responseProtocol: ['player_update', 'camera_shake'],
-                transformationLogic: (data, state) => {
-                    if (data.position) {
-                        return { ...state, position: data.position };
-                    }
-                    return state;
-                }
-            });
+            html += '<div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); margin: 10px 0 8px;">Current Focus</div>';
+            const focusSymbol = this.engine.symbols.get(this.engine.focus);
+            html += `<div style="color: var(--violet);">${focusSymbol?.name || 'None'}</div>`;
             
-            // Layer 8: Output
-            const frameBuffer = this.engine.createSymbol('Frame_Buffer', 8, {
-                type: 'output',
-                initialState: { width: 1920, height: 1080, format: 'RGBA8' },
-                responseProtocol: ['light_update', 'material_update', 'geometry_update']
-            });
+            content.innerHTML = html;
+        }
+        
+        updateTimeline() {
+            const track = document.getElementById('timeline-track');
+            track.innerHTML = '';
             
-            // BUILD CAUSAL CONNECTIONS
-            
-            // Narrative -> Entities
-            quest.causesSymbol(player);
-            quest.causesSymbol(enemy);
-            
-            // Entities -> Environment
-            player.causesSymbol(forest);
-            enemy.causesSymbol(forest);
-            
-            // Environment -> Structure
-            forest.causesSymbol(ruins);
-            weather.causesSymbol(forest);
-            
-            // Structure -> Materials
-            ruins.causesSymbol(stoneMaterial);
-            ruins.causesSymbol(mossMaterial);
-            
-            // Materials -> Light
-            stoneMaterial.causesSymbol(moonlight);
-            mossMaterial.causesSymbol(torchLight);
-            
-            // Light -> Camera
-            moonlight.causesSymbol(camera);
-            torchLight.causesSymbol(camera);
-            
-            // Camera -> Output
-            camera.causesSymbol(frameBuffer);
-            
-            // Cross-layer causality
-            weather.causesSymbol(moonlight);  // Weather affects lighting
-            enemy.causesSymbol(torchLight);   // Enemy alert affects torch
-            
-            this.engine.log('Demo scenario built: Dark Forest Ruins', 'causal');
-            
-            // Trigger initial narrative event
-            setTimeout(() => {
-                this.engine.triggerEvent('quest_begin', { 
-                    protagonist: 'hero',
-                    objective: 'explore_ruins'
+            this.engine.snapshots.forEach((snap, i) => {
+                const marker = document.createElement('div');
+                marker.className = 'snapshot-marker' + (i === this.engine.currentSnapshotIndex ? ' current' : '');
+                marker.innerHTML = `
+                    <div class="snap-tick">${snap.tickCount}</div>
+                    <div class="snap-label">${snap.label}</div>
+                `;
+                marker.addEventListener('click', () => {
+                    this.engine.restoreSnapshot(snap.id);
+                    this.updateTimeline();
                 });
-            }, 1000);
+                track.appendChild(marker);
+            });
         }
     }
 
-    // =========================
-    // MODAL FUNCTIONS
-    // =========================
-    function showSymbolDetails(symbol) {
-        const modal = document.getElementById('symbol-modal');
-        document.getElementById('modal-symbol-name').textContent = symbol.name;
+    // ============================================================================
+    // DEMO BUILDER
+    // ============================================================================
+
+    function buildDemo(engine) {
+        // Create initial symbols across layers
+        const symbols = [];
         
-        // DNA display
-        document.getElementById('modal-dna').innerHTML = `
-            <div class="dna-property">
-                <span class="dna-key">Response Protocol:</span>
-                <span class="dna-value">${symbol.dna.responseProtocol.join(', ') || 'All'}</span>
-            </div>
-            <div class="dna-property">
-                <span class="dna-key">Propagation Rules:</span>
-                <span class="dna-value">${symbol.dna.propagationRules.length} rule(s)</span>
-            </div>
-            <div class="dna-property">
-                <span class="dna-key">Lifespan:</span>
-                <span class="dna-value">${symbol.dna.lifespan === Infinity ? '∞' : symbol.dna.lifespan}</span>
-            </div>
-            <div class="dna-property">
-                <span class="dna-key">Decay Rate:</span>
-                <span class="dna-value">${symbol.dna.decayRate}</span>
-            </div>
-        `;
+        for (let pass = 1; pass <= 8; pass++) {
+            const count = 2 + Math.floor(Math.random() * 2);
+            for (let i = 0; i < count; i++) {
+                const names = ['Core', 'Handler', 'Processor', 'Manager', 'Engine', 'System'];
+                const name = `P${pass}_${names[i % names.length]}`;
+                symbols.push(engine.createSymbol(name, pass, {
+                    baseValue: 0.5 + Math.random() * 0.5,
+                    symbolWeight: 0.8 + Math.random() * 0.4
+                }));
+            }
+        }
         
-        // Connections
-        document.getElementById('modal-connections').innerHTML = `
-            <div class="dna-property">
-                <span class="dna-key">Causes (inputs):</span>
-                <span class="dna-value">${Array.from(symbol.causes).map(s => s.name).join(', ') || 'None'}</span>
-            </div>
-            <div class="dna-property">
-                <span class="dna-key">Effects (outputs):</span>
-                <span class="dna-value">${Array.from(symbol.effects).map(s => s.name).join(', ') || 'None'}</span>
-            </div>
-        `;
+        // Create connections
+        for (let i = 1; i < symbols.length; i++) {
+            if (Math.random() > 0.4) {
+                const target = symbols[Math.floor(Math.random() * i)];
+                symbols[i].causesSymbol(target);
+            }
+        }
         
-        // Metadata
-        document.getElementById('modal-metadata').innerHTML = `
-            <div class="dna-property">
-                <span class="dna-key">Layer:</span>
-                <span class="dna-value">${symbol.layer} - ${LOGOS_LAYERS[symbol.layer].name}</span>
-            </div>
-            <div class="dna-property">
-                <span class="dna-key">Type:</span>
-                <span class="dna-value">${symbol.metadata.identity.type}</span>
-            </div>
-            <div class="dna-property">
-                <span class="dna-key">Activations:</span>
-                <span class="dna-value">${symbol.metadata.measurements.activations}</span>
-            </div>
-            <div class="dna-property">
-                <span class="dna-key">State:</span>
-                <span class="dna-value">${JSON.stringify(symbol.state)}</span>
-            </div>
-        `;
-        
-        modal.classList.add('active');
+        // Initial snapshot
+        engine.takeSnapshot('initial');
     }
 
-    function closeModal() {
-        document.getElementById('symbol-modal').classList.remove('active');
-    }
-
-    // =========================
+    // ============================================================================
     // INITIALIZATION
-    // =========================
+    // ============================================================================
+
     document.addEventListener('DOMContentLoaded', () => {
-        // Create the Logos Engine
-        const engine = new LogosEngine();
-        
-        // Initialize visualizations
-        const meshCanvas = document.getElementById('visualization-canvas');
-        const meshRenderer = new MeshRenderer(meshCanvas, engine);
-        
-        const gameCanvas = document.getElementById('game-world-canvas');
-        const gameRenderer = new GameWorldRenderer(gameCanvas, engine);
-        
-        // Initialize UI
+        const engine = new LogosLCSV3Engine();
+        const canvas = document.getElementById('main-canvas');
+        const renderer = new V3Renderer(canvas, engine);
         const ui = new UIManager(engine);
         
-        // Build demo scenario
-        const demo = new DemoScenario(engine);
-        demo.buildCompleteScenario();
+        window.engine = engine;
+        window.renderer = renderer;
         
-        // Start the engine
-        engine.start();
+        buildDemo(engine);
         
-        // Periodic events to demonstrate causality
+        // Main loop
+        function loop() {
+            engine.tick();
+            renderer.render();
+            requestAnimationFrame(loop);
+        }
+        loop();
+        
+        // Periodic events
         setInterval(() => {
-            engine.triggerEvent('time_pulse', { tick: Date.now() });
-        }, 2000);
+            if (!engine.running) return;
+            const symbols = Array.from(engine.symbols.values());
+            if (symbols.length > 0) {
+                const root = symbols[Math.floor(Math.random() * symbols.length)];
+                engine.processCausalChain(root, 'auto_pulse', { immediate: true });
+            }
+        }, 1500);
         
-        setInterval(() => {
-            engine.triggerEvent('player_action', { 
-                action: ['move', 'look', 'interact'][Math.floor(Math.random() * 3)],
-                intensity: Math.random()
-            });
-        }, 3000);
-        
-        // Expose for debugging
-        window.logosEngine = engine;
-        window.showSymbolDetails = showSymbolDetails;
-        
-        console.log('The Logos Engine initialized. Access via window.logosEngine');
+        console.log('Logos-LCS v3.0 Recursive Refinement Engine initialized');
+        console.log('Access: window.engine, window.renderer');
     });
     </script>
 </body>
