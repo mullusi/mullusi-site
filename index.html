@@ -3,302 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mullu — Symbolic Intelligence Reimagined</title>
+    <title>The Logos Engine | Symbolic Causal Chain Rendering</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --void: #0a0a0f;
+            --primordial: #12121a;
+            --causality: #1a1a2e;
+            --symbol-gold: #d4a574;
+            --symbol-cyan: #64ffda;
+            --symbol-magenta: #ff6b9d;
+            --symbol-violet: #a78bfa;
+            --metadata-blue: #60a5fa;
+            --causal-green: #34d399;
+            --layer-0: #ff6b6b;
+            --layer-1: #feca57;
+            --layer-2: #48dbfb;
+            --layer-3: #1dd1a1;
+            --layer-4: #5f27cd;
+            --layer-5: #ff9ff3;
+            --layer-6: #ffeaa7;
+            --layer-7: #74b9ff;
+            --layer-8: #fd79a8;
+            --glow: 0 0 30px rgba(212, 165, 116, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=Unbounded:wght@400;700&display=swap');
-
-        :root {
-            --color-dark: #0a0e27;
-            --color-accent: #00d9ff;
-            --color-secondary: #ff006e;
-            --color-light: #f5f5f0;
-            --color-muted: #8b8b8b;
-        }
-
         body {
-            font-family: 'Crimson Text', serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-            color: var(--color-light);
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--void);
+            color: #e0e0e0;
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Navigation */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 4rem;
-            position: relative;
-            z-index: 100;
-        }
-
-        .logo {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            color: var(--color-accent);
-            text-transform: uppercase;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 3rem;
-        }
-
-        nav a {
-            color: var(--color-light);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-            border-bottom: 2px solid transparent;
-            padding-bottom: 0.25rem;
-        }
-
-        nav a:hover {
-            color: var(--color-accent);
-            border-bottom-color: var(--color-accent);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            top: -100px;
-            right: -200px;
-            z-index: 0;
-        }
-
-        .hero-content {
-            z-index: 10;
-            flex: 1;
-            max-width: 600px;
-        }
-
-        .hero h1 {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-            animation: slideInLeft 0.8s ease-out;
-        }
-
-        .hero h1 .highlight {
-            color: var(--color-accent);
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            line-height: 1.8;
-            color: var(--color-light);
-            margin-bottom: 2rem;
-            animation: slideInLeft 0.8s ease-out 0.2s both;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1.5rem;
-            animation: slideInLeft 0.8s ease-out 0.4s both;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-family: 'Unbounded', sans-serif;
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s ease;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .btn-primary {
-            background: var(--color-accent);
-            color: var(--color-dark);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
+        /* Cosmic Background */
+        .cosmic-bg {
+            position: fixed;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: var(--color-secondary);
-            transition: left 0.3s ease;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(100, 255, 218, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(212, 165, 116, 0.04) 0%, transparent 70%),
+                var(--void);
             z-index: -1;
         }
 
-        .btn-primary:hover::before {
-            left: 0;
+        .cosmic-bg::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent);
+            background-size: 200px 200px;
+            animation: cosmicDrift 60s linear infinite;
         }
 
-        .btn-primary:hover {
-            color: var(--color-light);
+        @keyframes cosmicDrift {
+            from { transform: translateY(0); }
+            to { transform: translateY(-200px); }
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--color-accent);
-            border: 2px solid var(--color-accent);
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
         }
 
-        .btn-secondary:hover {
-            background: var(--color-accent);
-            color: var(--color-dark);
+        .header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 400;
+            color: var(--symbol-gold);
+            text-shadow: var(--glow);
+            letter-spacing: 0.3em;
+            margin-bottom: 10px;
         }
 
-        /* Causal Chain Visualization */
-        .hero-visual {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 5;
-        }
-
-        canvas {
-            filter: drop-shadow(0 0 30px rgba(0, 217, 255, 0.3));
-        }
-
-        /* Features Section */
-        .features {
-            padding: 6rem 4rem;
-            background: rgba(10, 14, 39, 0.5);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0, 217, 255, 0.1);
-            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            border-left: 3px solid var(--color-accent);
-            padding-left: 2rem;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .feature-card:nth-child(2) {
-            animation-delay: 0.2s;
-            border-left-color: var(--color-secondary);
-        }
-
-        .feature-card:nth-child(3) {
-            animation-delay: 0.4s;
-            border-left-color: var(--color-accent);
-        }
-
-        .feature-card h3 {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            letter-spacing: 0.05em;
+        .header .subtitle {
+            font-size: 0.85rem;
+            color: rgba(212, 165, 116, 0.7);
+            letter-spacing: 0.2em;
             text-transform: uppercase;
         }
 
-        .feature-card p {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: var(--color-light);
-        }
-
-        /* Philosophy Section */
-        .philosophy {
-            padding: 6rem 4rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .philosophy h2 {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            letter-spacing: -0.02em;
-        }
-
-        .philosophy h2 .accent {
-            color: var(--color-accent);
-        }
-
-        .philosophy p {
-            font-size: 1.15rem;
-            line-height: 1.9;
-            color: var(--color-light);
-            margin-bottom: 1.5rem;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 4rem;
-            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(255, 0, 110, 0.05) 100%);
-            border: 1px solid rgba(0, 217, 255, 0.2);
-            border-radius: 0.5rem;
-            text-align: center;
-            margin: 6rem 4rem;
-        }
-
-        .cta-section h3 {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.05em;
-        }
-
-        .cta-section p {
+        .header .philosophy {
+            font-family: 'Cormorant Garamond', serif;
             font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: var(--color-light);
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+            margin-top: 15px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        /* Footer */
-        footer {
-            padding: 3rem 4rem;
-            border-top: 1px solid rgba(0, 217, 255, 0.1);
-            text-align: center;
-            color: var(--color-muted);
-            font-size: 0.9rem;
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 320px 1fr 350px;
+            gap: 0;
+            min-height: calc(100vh - 200px);
         }
 
-        /* Animations */
-        @keyframes slideInLeft {
+        /* Left Panel - Layer Stack */
+        .layer-panel {
+            background: rgba(18, 18, 26, 0.9);
+            border-right: 1px solid rgba(212, 165, 116, 0.15);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .panel-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--symbol-gold);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-title::before {
+            content: '◈';
+            font-size: 1rem;
+        }
+
+        .layer-card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .layer-card:hover {
+            border-color: rgba(212, 165, 116, 0.4);
+            transform: translateX(5px);
+        }
+
+        .layer-card.active {
+            border-color: var(--symbol-gold);
+            box-shadow: 0 0 20px rgba(212, 165, 116, 0.2);
+        }
+
+        .layer-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            gap: 12px;
+        }
+
+        .layer-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--void);
+        }
+
+        .layer-info {
+            flex: 1;
+        }
+
+        .layer-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .layer-purpose {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 2px;
+        }
+
+        .layer-symbols {
+            padding: 0 15px 12px;
+            display: none;
+        }
+
+        .layer-card.active .layer-symbols {
+            display: block;
+        }
+
+        .symbol-tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            padding: 3px 8px;
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 4px;
+            margin: 2px;
+            color: var(--symbol-cyan);
+        }
+
+        /* Center - Visualization Canvas */
+        .visualization-panel {
+            background: var(--primordial);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .viz-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .viz-title {
+            font-size: 0.8rem;
+            color: var(--symbol-gold);
+            letter-spacing: 0.15em;
+        }
+
+        .viz-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .viz-btn {
+            background: rgba(212, 165, 116, 0.1);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            color: var(--symbol-gold);
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .viz-btn:hover {
+            background: rgba(212, 165, 116, 0.2);
+            border-color: var(--symbol-gold);
+        }
+
+        .viz-btn.active {
+            background: var(--symbol-gold);
+            color: var(--void);
+        }
+
+        #visualization-canvas {
+            flex: 1;
+            width: 100%;
+        }
+
+        .canvas-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .stat-box {
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            padding: 10px 15px;
+            border-radius: 6px;
+            pointer-events: auto;
+        }
+
+        .stat-label {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            color: var(--symbol-cyan);
+            font-weight: 500;
+        }
+
+        /* Right Panel - Causal Chain & Console */
+        .causal-panel {
+            background: rgba(18, 18, 26, 0.9);
+            border-left: 1px solid rgba(212, 165, 116, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .causal-chain-view {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chain-entry {
+            background: rgba(26, 26, 46, 0.4);
+            border-left: 3px solid var(--symbol-cyan);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 0 6px 6px 0;
+            animation: chainSlide 0.3s ease;
+        }
+
+        @keyframes chainSlide {
             from {
                 opacity: 0;
-                transform: translateX(-30px);
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
@@ -306,389 +339,1440 @@
             }
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .chain-cause {
+            font-size: 0.7rem;
+            color: var(--symbol-magenta);
+            margin-bottom: 5px;
+        }
+
+        .chain-arrow {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            margin: 5px 0;
+        }
+
+        .chain-effect {
+            font-size: 0.7rem;
+            color: var(--causal-green);
+        }
+
+        .chain-layer {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 5px;
+        }
+
+        /* Console */
+        .console-view {
+            height: 200px;
+            border-top: 1px solid rgba(212, 165, 116, 0.15);
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 0.65rem;
+            background: rgba(10, 10, 15, 0.5);
+        }
+
+        .console-line {
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+
+        .console-line.metadata {
+            color: var(--metadata-blue);
+        }
+
+        .console-line.symbol {
+            color: var(--symbol-gold);
+        }
+
+        .console-line.causal {
+            color: var(--causal-green);
+        }
+
+        .console-line.error {
+            color: var(--layer-0);
+        }
+
+        /* Game World Preview */
+        .game-world-container {
+            position: fixed;
+            bottom: 20px;
+            right: 380px;
+            width: 300px;
+            height: 200px;
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .game-world-header {
+            background: rgba(212, 165, 116, 0.1);
+            padding: 8px 12px;
+            font-size: 0.7rem;
+            color: var(--symbol-gold);
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+        }
+
+        #game-world-canvas {
+            width: 100%;
+            height: calc(100% - 32px);
+        }
+
+        /* Modal for Symbol Details */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--primordial);
+            border: 1px solid var(--symbol-gold);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--symbol-gold);
+            margin-bottom: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section h4 {
+            font-size: 0.8rem;
+            color: var(--symbol-cyan);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--symbol-gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .dna-display {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            line-height: 1.6;
+        }
+
+        .dna-property {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .dna-key {
+            color: var(--symbol-magenta);
+            min-width: 140px;
+        }
+
+        .dna-value {
+            color: var(--symbol-cyan);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--void);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 165, 116, 0.3);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 165, 116, 0.5);
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            nav {
-                padding: 1.5rem 2rem;
-            }
-
-            nav ul {
-                gap: 1.5rem;
-            }
-
-            .hero {
-                flex-direction: column;
-                padding: 2rem;
-                min-height: auto;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .features-grid {
+        @media (max-width: 1200px) {
+            .main-container {
                 grid-template-columns: 1fr;
-                gap: 2rem;
             }
-
-            .cta-buttons {
-                flex-direction: column;
+            .layer-panel, .causal-panel {
+                display: none;
             }
-
-            .philosophy {
-                padding: 3rem 2rem;
-            }
-
-            .cta-section {
-                margin: 3rem 2rem;
+            .game-world-container {
+                right: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">Mullu</div>
-        <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#philosophy">Philosophy</a></li>
-            <li><a href="#cta">Get Started</a></li>
-        </ul>
-    </nav>
+    <div class="cosmic-bg"></div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Symbolic Intelligence <span class="highlight">Reimagined</span></h1>
-            <p>Transparent, auditable AI built on causal chains instead of opaque neural patterns. Every reasoning step is traceable. Every conclusion is explainable.</p>
-            <div class="cta-buttons">
-                <a href="#" class="btn btn-primary">Explore Now</a>
-                <a href="#" class="btn btn-secondary">Learn More</a>
+    <header class="header">
+        <h1>THE LOGOS ENGINE</h1>
+        <p class="subtitle">Universal Symbolic Causal Chain Rendering Framework</p>
+        <p class="philosophy">"Reality is an emergent property of interconnected symbols and their causal relationships"</p>
+    </header>
+
+    <main class="main-container">
+        <!-- Left Panel: Layer Stack -->
+        <aside class="layer-panel">
+            <h2 class="panel-title">The Logos Stack</h2>
+            <div id="layer-stack"></div>
+        </aside>
+
+        <!-- Center: Visualization -->
+        <section class="visualization-panel">
+            <div class="viz-header">
+                <span class="viz-title">◈ UNIVERSAL METADATA MESH NETWORK</span>
+                <div class="viz-controls">
+                    <button class="viz-btn active" data-view="mesh">Mesh View</button>
+                    <button class="viz-btn" data-view="causal">Causal Flow</button>
+                    <button class="viz-btn" data-view="layers">Layer Depth</button>
+                </div>
+            </div>
+            <canvas id="visualization-canvas"></canvas>
+            <div class="canvas-overlay">
+                <div class="stat-box">
+                    <div class="stat-label">Active Symbols</div>
+                    <div class="stat-value" id="symbol-count">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Causal Chains</div>
+                    <div class="stat-value" id="chain-count">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Metadata Packets</div>
+                    <div class="stat-value" id="packet-count">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Causal Chain View -->
+        <aside class="causal-panel">
+            <div class="causal-chain-view">
+                <h2 class="panel-title">Active Causal Chains</h2>
+                <div id="causal-chain-log"></div>
+            </div>
+            <div class="console-view">
+                <div class="panel-title" style="font-size: 0.9rem; margin-bottom: 10px;">Engine Console</div>
+                <div id="console-output"></div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Game World Preview -->
+    <div class="game-world-container">
+        <div class="game-world-header">◈ Rendered World (Layer 8 Output)</div>
+        <canvas id="game-world-canvas"></canvas>
+    </div>
+
+    <!-- Symbol Detail Modal -->
+    <div class="modal-overlay" id="symbol-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h3 class="modal-title" id="modal-symbol-name">Symbol Name</h3>
+            <div class="modal-section">
+                <h4>Behavioral DNA</h4>
+                <div class="dna-display" id="modal-dna"></div>
+            </div>
+            <div class="modal-section">
+                <h4>Causal Connections</h4>
+                <div class="dna-display" id="modal-connections"></div>
+            </div>
+            <div class="modal-section">
+                <h4>Current Metadata State</h4>
+                <div class="dna-display" id="modal-metadata"></div>
             </div>
         </div>
-        <div class="hero-visual">
-            <canvas id="causalCanvas" width="500" height="500"></canvas>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="features-grid">
-            <div class="feature-card">
-                <h3>Complete Transparency</h3>
-                <p>Every decision traced through explicit causal relationships. No black boxes. No hidden transformations. Pure symbolic reasoning from input to output.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Causal Chains</h3>
-                <p>Built on Universal Quantum Reasoning Systems and multi-layer symbolic computation. Handles complex mathematics, physics, and logic through auditable symbolic execution.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Unified Intelligence</h3>
-                <p>Mathematical computation, graphics rendering, multi-modal synthesis—all operating on the same transparent causal framework. No separate black-box subsystems.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Philosophy Section -->
-    <section class="philosophy" id="philosophy">
-        <h2>Why <span class="accent">Symbolic?</span></h2>
-        <p>Neural networks optimize for pattern matching. Mullu reasons through causality. We believe the future of AI isn't about larger pattern spaces—it's about genuine understanding through transparent causal inference.</p>
-        <p>Every problem solved through Mullu generates a proof, a trace, a story of reasoning. This isn't just AI that works. It's AI you understand.</p>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section" id="cta">
-        <h3>Ready to Build Intelligence That Makes Sense?</h3>
-        <p>Join us in exploring a new frontier of AI development where transparency and causality matter.</p>
-        <a href="#" class="btn btn-primary">Get Started with Mullu</a>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Mullu. Symbolic Intelligence Reimagined.</p>
-    </footer>
+    </div>
 
     <script>
-        // Advanced Causal Chain Orchestration
-        const canvas = document.getElementById('causalCanvas');
-        const ctx = canvas.getContext('2d');
-        let time = 0;
+    // ============================================================
+    // THE LOGOS ENGINE - CORE IMPLEMENTATION
+    // A Universal Symbolic Causal Chain Rendering Framework
+    // ============================================================
 
-        // Causal reasoning nodes with symbolic meaning
-        class CausalReasoningNode {
-            constructor(x, y, label, type = 'process') {
-                this.x = x;
-                this.y = y;
-                this.baseX = x;
-                this.baseY = y;
-                this.label = label;
-                this.type = type; // 'input', 'process', 'logic', 'output'
-                this.radius = 20;
-                this.energy = 0;
-                this.phase = Math.random() * Math.PI * 2;
-                this.frequency = 0.02 + Math.random() * 0.02;
-            }
-
-            update(globalTime) {
-                // Subtle orbital motion around base position
-                const orbit = 15;
-                this.x = this.baseX + Math.cos(globalTime * this.frequency + this.phase) * orbit;
-                this.y = this.baseY + Math.sin(globalTime * this.frequency * 0.7 + this.phase) * orbit;
-                
-                this.energy = Math.sin(globalTime * 0.05 + this.phase) * 0.5 + 0.5;
-            }
-
-            draw(ctx, time) {
-                // Inner glow based on energy
-                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 2);
-                const energyColor = this.energy > 0.5 ? '#00d9ff' : '#ff006e';
-                const intensity = this.energy;
-                
-                gradient.addColorStop(0, `rgba(0, 217, 255, ${intensity * 0.4})`);
-                gradient.addColorStop(0.5, `rgba(0, 217, 255, ${intensity * 0.15})`);
-                gradient.addColorStop(1, 'rgba(0, 217, 255, 0)');
-                
-                ctx.fillStyle = gradient;
-                ctx.fillRect(this.x - this.radius * 2, this.y - this.radius * 2, this.radius * 4, this.radius * 4);
-
-                // Node circle
-                ctx.fillStyle = `rgba(0, 217, 255, ${0.15 + intensity * 0.2})`;
-                ctx.strokeStyle = energyColor;
-                ctx.lineWidth = 2 + intensity * 2;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
-
-                // Inner symbol
-                ctx.fillStyle = energyColor;
-                ctx.font = 'bold 10px Unbounded';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(this.label.substring(0, 1), this.x, this.y);
-            }
+    // =========================
+    // LAYER DEFINITIONS
+    // =========================
+    const LOGOS_LAYERS = [
+        {
+            id: 0,
+            name: "Primordial Void",
+            purpose: "Meta-Meta / Initialization",
+            color: "#ff6b6b",
+            symbols: ["Universal_Causality_Engine", "Symbol_Registry", "Metadata_Schema_Manager", "Existence", "Non_Existence", "Change", "Time", "Space"]
+        },
+        {
+            id: 1,
+            name: "Narrative Causality",
+            purpose: "The 'Why' - World History & Lore",
+            color: "#feca57",
+            symbols: ["World_History", "Faction_Relationships", "Quest_Lines", "Player_Intent", "Ancient_Events", "Prophecies"]
+        },
+        {
+            id: 2,
+            name: "Entity Logic",
+            purpose: "The 'What' & 'How' - Abstract",
+            color: "#48dbfb",
+            symbols: ["Character_Symbol", "Item_Symbol", "AI_Behavior", "Interaction_System", "Combat_Logic", "Dialogue_Tree"]
+        },
+        {
+            id: 3,
+            name: "Spatial Definition",
+            purpose: "The 'Where' - Environment",
+            color: "#1dd1a1",
+            symbols: ["Biome_Symbol", "Region_Symbol", "Spatial_Influence", "Gravity_Well", "Mana_Zone", "Climate_System"]
+        },
+        {
+            id: 4,
+            name: "Geometric Structure",
+            purpose: "Concrete Form Composition",
+            color: "#5f27cd",
+            symbols: ["Structure_Symbol", "Archetypal_Building", "Modular_Asset", "Terrain_Feature", "Mesh_Recipe", "Vertex_Pattern"]
+        },
+        {
+            id: 5,
+            name: "Material & Appearance",
+            purpose: "Surface Properties",
+            color: "#ff9ff3",
+            symbols: ["Color_Symbol", "Texture_Pattern", "Surface_Roughness", "Metallic_Property", "Emissive_Property", "Transparency"]
+        },
+        {
+            id: 6,
+            name: "Light Interaction",
+            purpose: "Photonic Physics",
+            color: "#ffeaa7",
+            symbols: ["Light_Source", "Shadow_Volume", "Reflection", "Refraction", "Global_Illumination", "Ambient_Occlusion"]
+        },
+        {
+            id: 7,
+            name: "Viewpoint Projection",
+            purpose: "Observation & Framing",
+            color: "#74b9ff",
+            symbols: ["Camera_Symbol", "View_Frustum", "Projection_Matrix", "Depth_Buffer", "Culling_System", "LOD_Manager"]
+        },
+        {
+            id: 8,
+            name: "Final Manifestation",
+            purpose: "Observable Pixel Output",
+            color: "#fd79a8",
+            symbols: ["Display_Region", "Pixel_Color", "Alpha_Channel", "Depth_Value", "Post_Process", "Frame_Buffer"]
         }
+    ];
 
-        // Causal flow pathway
-        class CausalPath {
-            constructor(fromNode, toNode) {
-                this.fromNode = fromNode;
-                this.toNode = toNode;
-                this.particles = [];
-                this.particleCount = 8;
-                
-                for (let i = 0; i < this.particleCount; i++) {
-                    this.particles.push({
-                        progress: (i / this.particleCount),
-                        speed: 0.003 + Math.random() * 0.002,
-                        size: 1 + Math.random() * 2
+    // =========================
+    // SYMBOL CLASS - Core Unit
+    // =========================
+    class Symbol {
+        constructor(name, layer, config = {}) {
+            this.id = `sym_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            this.name = name;
+            this.layer = layer;
+            this.state = config.initialState || {};
+            
+            // Behavioral DNA
+            this.dna = {
+                responseProtocol: config.responseProtocol || [],
+                transformationLogic: config.transformationLogic || ((metadata) => metadata),
+                propagationRules: config.propagationRules || [],
+                selfIteration: config.selfIteration || null,
+                lifespan: config.lifespan || Infinity,
+                decayRate: config.decayRate || 0
+            };
+            
+            // Causal connections
+            this.causes = new Set();      // Symbols that cause this
+            this.effects = new Set();     // Symbols this causes
+            
+            // Metadata
+            this.metadata = {
+                identity: { name, layer, type: config.type || 'generic' },
+                behavior: { active: true, processing: false },
+                properties: config.properties || {},
+                measurements: { activations: 0, lastActivated: null },
+                boundaries: config.boundaries || {},
+                structure: config.structure || {}
+            };
+            
+            // Visual position for mesh network
+            this.position = { x: 0, y: 0, z: layer };
+            this.velocity = { x: 0, y: 0 };
+            
+            this.created = Date.now();
+        }
+        
+        // Process incoming metadata packet
+        processMetadata(packet, engine) {
+            if (!this.metadata.behavior.active) return;
+            
+            // Check response protocol
+            const shouldProcess = this.dna.responseProtocol.length === 0 || 
+                this.dna.responseProtocol.some(protocol => 
+                    packet.type === protocol || packet.source?.layer <= this.layer
+                );
+            
+            if (!shouldProcess) return;
+            
+            this.metadata.behavior.processing = true;
+            this.metadata.measurements.activations++;
+            this.metadata.measurements.lastActivated = Date.now();
+            
+            // Transform metadata using DNA logic
+            const transformedData = this.dna.transformationLogic(packet.data, this.state);
+            
+            // Update internal state
+            Object.assign(this.state, transformedData);
+            
+            // Log causal chain
+            engine.logCausalChain(packet.source, this, packet.type);
+            
+            // Generate propagation packets based on DNA rules
+            this.dna.propagationRules.forEach(rule => {
+                if (rule.condition(this.state, packet)) {
+                    const newPacket = {
+                        id: `pkt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                        type: rule.packetType,
+                        source: this,
+                        data: rule.transform(this.state),
+                        timestamp: Date.now(),
+                        ttl: rule.ttl || 10
+                    };
+                    
+                    // Send to causally connected symbols
+                    this.effects.forEach(effectSymbol => {
+                        engine.queueMetadataPacket(newPacket, effectSymbol);
                     });
                 }
+            });
+            
+            this.metadata.behavior.processing = false;
+        }
+        
+        // Self-iteration tick
+        tick(deltaTime, engine) {
+            if (this.dna.selfIteration) {
+                this.dna.selfIteration(this, deltaTime, engine);
             }
-
-            update(globalTime) {
-                this.particles.forEach(p => {
-                    p.progress = (p.progress + p.speed) % 1;
-                });
-            }
-
-            draw(ctx) {
-                // Draw causal connection line with wave
-                const steps = 30;
-                ctx.strokeStyle = 'rgba(0, 217, 255, 0.2)';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                
-                for (let i = 0; i <= steps; i++) {
-                    const t = i / steps;
-                    const x = this.fromNode.x + (this.toNode.x - this.fromNode.x) * t;
-                    const y = this.fromNode.y + (this.toNode.y - this.fromNode.y) * t;
-                    
-                    // Wave distortion based on distance
-                    const perpX = -(this.toNode.y - this.fromNode.y) / (Math.hypot(this.toNode.x - this.fromNode.x, this.toNode.y - this.fromNode.y) || 1);
-                    const perpY = (this.toNode.x - this.fromNode.x) / (Math.hypot(this.toNode.x - this.fromNode.x, this.toNode.y - this.fromNode.y) || 1);
-                    
-                    const wave = Math.sin(t * Math.PI * 3) * 3;
-                    const px = x + perpX * wave;
-                    const py = y + perpY * wave;
-                    
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
+            
+            // Apply decay
+            if (this.dna.decayRate > 0) {
+                this.state.intensity = (this.state.intensity || 1) - this.dna.decayRate * deltaTime;
+                if (this.state.intensity <= 0) {
+                    engine.removeSymbol(this);
                 }
-                ctx.stroke();
+            }
+        }
+        
+        // Connect causal relationship
+        causesSymbol(targetSymbol) {
+            this.effects.add(targetSymbol);
+            targetSymbol.causes.add(this);
+        }
+    }
 
-                // Draw causal energy particles
-                this.particles.forEach(p => {
-                    const t = p.progress;
-                    const x = this.fromNode.x + (this.toNode.x - this.fromNode.x) * t;
-                    const y = this.fromNode.y + (this.toNode.y - this.fromNode.y) * t;
+    // =========================
+    // METADATA PACKET
+    // =========================
+    class MetadataPacket {
+        constructor(type, source, data) {
+            this.id = `pkt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            this.type = type;
+            this.source = source;
+            this.data = data;
+            this.timestamp = Date.now();
+            this.ttl = 10;
+            this.visited = new Set();
+        }
+    }
+
+    // =========================
+    // THE LOGOS ENGINE
+    // =========================
+    class LogosEngine {
+        constructor() {
+            this.symbols = new Map();
+            this.layers = LOGOS_LAYERS;
+            this.metadataQueue = [];
+            this.causalChains = [];
+            this.running = false;
+            this.tickRate = 60;
+            this.packetCount = 0;
+            
+            // Visualization state
+            this.viewMode = 'mesh';
+            this.selectedSymbol = null;
+            
+            // Console logging
+            this.consoleLines = [];
+            
+            // Initialize
+            this.initializePrimordialLayer();
+        }
+        
+        // Initialize Layer 0 - Primordial Void
+        initializePrimordialLayer() {
+            this.log('Initializing Primordial Void (Layer 0)...', 'symbol');
+            
+            // Universal Causality Engine - The meta-symbol
+            const causalityEngine = this.createSymbol('Universal_Causality_Engine', 0, {
+                type: 'meta',
+                properties: { isRoot: true, governs: 'all_causality' },
+                responseProtocol: ['system_init', 'universal_broadcast'],
+                propagationRules: [{
+                    condition: () => true,
+                    packetType: 'causality_rules',
+                    transform: (state) => ({ rules: state.fundamentalRules }),
+                    ttl: Infinity
+                }]
+            });
+            
+            // Symbol Registry
+            const registry = this.createSymbol('Symbol_Registry', 0, {
+                type: 'registry',
+                properties: { tracks: 'all_symbols' }
+            });
+            
+            // Time Symbol
+            const time = this.createSymbol('Time_Symbol', 0, {
+                type: 'fundamental',
+                initialState: { tick: 0, flow: 1.0 },
+                selfIteration: (symbol, dt) => {
+                    symbol.state.tick += dt * symbol.state.flow;
+                },
+                propagationRules: [{
+                    condition: (state) => state.tick % 60 === 0,
+                    packetType: 'time_pulse',
+                    transform: (state) => ({ currentTick: state.tick }),
+                    ttl: 5
+                }]
+            });
+            
+            // Space Symbol
+            const space = this.createSymbol('Space_Symbol', 0, {
+                type: 'fundamental',
+                properties: { dimensions: 3, topology: 'euclidean' }
+            });
+            
+            // Existence/Change
+            this.createSymbol('Existence_Symbol', 0, { type: 'archetypal' });
+            this.createSymbol('Change_Symbol', 0, { type: 'archetypal' });
+            
+            // Connect fundamental causality
+            causalityEngine.causesSymbol(registry);
+            causalityEngine.causesSymbol(time);
+            causalityEngine.causesSymbol(space);
+            
+            this.log('Primordial Void initialized with fundamental symbols', 'causal');
+        }
+        
+        // Create a new symbol
+        createSymbol(name, layer, config = {}) {
+            const symbol = new Symbol(name, layer, config);
+            this.symbols.set(symbol.id, symbol);
+            
+            // Position in mesh
+            const layerSymbols = this.getSymbolsByLayer(layer);
+            const angle = (layerSymbols.length * 0.5) + Math.random() * 0.5;
+            const radius = 150 + layer * 50;
+            symbol.position.x = Math.cos(angle) * radius;
+            symbol.position.y = Math.sin(angle) * radius;
+            
+            this.log(`Created symbol: ${name} [Layer ${layer}]`, 'symbol');
+            return symbol;
+        }
+        
+        // Remove symbol
+        removeSymbol(symbol) {
+            // Disconnect causal links
+            symbol.causes.forEach(cause => cause.effects.delete(symbol));
+            symbol.effects.forEach(effect => effect.causes.delete(symbol));
+            
+            this.symbols.delete(symbol.id);
+            this.log(`Symbol dissolved: ${symbol.name}`, 'symbol');
+        }
+        
+        // Get symbols by layer
+        getSymbolsByLayer(layer) {
+            return Array.from(this.symbols.values()).filter(s => s.layer === layer);
+        }
+        
+        // Queue metadata packet
+        queueMetadataPacket(packet, target) {
+            this.metadataQueue.push({ packet, target });
+            this.packetCount++;
+        }
+        
+        // Broadcast packet to layer
+        broadcastToLayer(packet, layerId) {
+            this.getSymbolsByLayer(layerId).forEach(symbol => {
+                this.queueMetadataPacket(packet, symbol);
+            });
+        }
+        
+        // Log causal chain
+        logCausalChain(source, target, type) {
+            const chain = {
+                id: `chain_${Date.now()}`,
+                source: source?.name || 'External',
+                sourceLayer: source?.layer ?? -1,
+                target: target.name,
+                targetLayer: target.layer,
+                type,
+                timestamp: Date.now()
+            };
+            
+            this.causalChains.unshift(chain);
+            if (this.causalChains.length > 50) {
+                this.causalChains.pop();
+            }
+            
+            this.log(`Causal chain: ${chain.source} → ${chain.target}`, 'causal');
+        }
+        
+        // Console log
+        log(message, type = 'info') {
+            const line = {
+                message,
+                type,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            this.consoleLines.unshift(line);
+            if (this.consoleLines.length > 100) {
+                this.consoleLines.pop();
+            }
+        }
+        
+        // Process one tick
+        tick(deltaTime) {
+            // Process metadata queue
+            const currentQueue = [...this.metadataQueue];
+            this.metadataQueue = [];
+            
+            currentQueue.forEach(({ packet, target }) => {
+                if (packet.ttl > 0 && !packet.visited.has(target.id)) {
+                    packet.visited.add(target.id);
+                    packet.ttl--;
+                    target.processMetadata(packet, this);
+                }
+            });
+            
+            // Self-iteration for all symbols
+            this.symbols.forEach(symbol => {
+                symbol.tick(deltaTime, this);
+            });
+        }
+        
+        // Start engine
+        start() {
+            if (this.running) return;
+            this.running = true;
+            this.log('Logos Engine activated', 'symbol');
+            
+            let lastTime = performance.now();
+            const loop = () => {
+                if (!this.running) return;
+                
+                const currentTime = performance.now();
+                const deltaTime = (currentTime - lastTime) / 1000;
+                lastTime = currentTime;
+                
+                this.tick(deltaTime);
+                
+                requestAnimationFrame(loop);
+            };
+            
+            requestAnimationFrame(loop);
+        }
+        
+        // Stop engine
+        stop() {
+            this.running = false;
+            this.log('Logos Engine deactivated', 'symbol');
+        }
+        
+        // Trigger game event (high-level cause)
+        triggerEvent(eventName, data = {}) {
+            this.log(`Event triggered: ${eventName}`, 'metadata');
+            
+            const packet = new MetadataPacket(eventName, null, data);
+            
+            // Events start at highest relevant layer and cascade down
+            this.broadcastToLayer(packet, 1); // Narrative layer
+        }
+    }
+
+    // =========================
+    // VISUALIZATION RENDERER
+    // =========================
+    class MeshRenderer {
+        constructor(canvas, engine) {
+            this.canvas = canvas;
+            this.ctx = canvas.getContext('2d');
+            this.engine = engine;
+            
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
+            
+            this.centerX = 0;
+            this.centerY = 0;
+            this.zoom = 1;
+            this.rotation = 0;
+            
+            // Particle effects
+            this.particles = [];
+            
+            this.animate();
+        }
+        
+        resize() {
+            this.canvas.width = this.canvas.parentElement.clientWidth;
+            this.canvas.height = this.canvas.parentElement.clientHeight;
+            this.centerX = this.canvas.width / 2;
+            this.centerY = this.canvas.height / 2;
+        }
+        
+        animate() {
+            this.render();
+            requestAnimationFrame(() => this.animate());
+        }
+        
+        render() {
+            const ctx = this.ctx;
+            const { width, height } = this.canvas;
+            
+            // Clear
+            ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
+            ctx.fillRect(0, 0, width, height);
+            
+            this.rotation += 0.001;
+            
+            // Draw layer rings
+            this.drawLayerRings();
+            
+            // Draw causal connections
+            this.drawCausalConnections();
+            
+            // Draw symbols
+            this.drawSymbols();
+            
+            // Draw metadata packets in transit
+            this.drawMetadataPackets();
+            
+            // Update particles
+            this.updateParticles();
+        }
+        
+        drawLayerRings() {
+            const ctx = this.ctx;
+            
+            LOGOS_LAYERS.forEach((layer, i) => {
+                const radius = 100 + i * 55;
+                
+                ctx.beginPath();
+                ctx.arc(this.centerX, this.centerY, radius * this.zoom, 0, Math.PI * 2);
+                ctx.strokeStyle = layer.color + '20';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                // Layer label
+                ctx.fillStyle = layer.color + '60';
+                ctx.font = '10px JetBrains Mono';
+                ctx.fillText(
+                    `L${layer.id}`,
+                    this.centerX + radius * this.zoom + 10,
+                    this.centerY - 5
+                );
+            });
+        }
+        
+        drawCausalConnections() {
+            const ctx = this.ctx;
+            
+            this.engine.symbols.forEach(symbol => {
+                const fromX = this.centerX + symbol.position.x * this.zoom;
+                const fromY = this.centerY + symbol.position.y * this.zoom;
+                
+                symbol.effects.forEach(effect => {
+                    const toX = this.centerX + effect.position.x * this.zoom;
+                    const toY = this.centerY + effect.position.y * this.zoom;
                     
-                    const perpX = -(this.toNode.y - this.fromNode.y) / (Math.hypot(this.toNode.x - this.fromNode.x, this.toNode.y - this.fromNode.y) || 1);
-                    const perpY = (this.toNode.x - this.fromNode.x) / (Math.hypot(this.toNode.x - this.fromNode.x, this.toNode.y - this.fromNode.y) || 1);
+                    // Gradient line
+                    const gradient = ctx.createLinearGradient(fromX, fromY, toX, toY);
+                    gradient.addColorStop(0, LOGOS_LAYERS[symbol.layer].color + '40');
+                    gradient.addColorStop(1, LOGOS_LAYERS[effect.layer].color + '40');
                     
-                    const wave = Math.sin(t * Math.PI * 3) * 3;
-                    const px = x + perpX * wave;
-                    const py = y + perpY * wave;
-                    
-                    // Energy particle glow
-                    const gradient = ctx.createRadialGradient(px, py, 0, px, py, p.size * 3);
-                    gradient.addColorStop(0, 'rgba(0, 217, 255, 0.8)');
-                    gradient.addColorStop(1, 'rgba(0, 217, 255, 0)');
-                    
-                    ctx.fillStyle = gradient;
-                    ctx.fillRect(px - p.size * 3, py - p.size * 3, p.size * 6, p.size * 6);
-                    
-                    ctx.fillStyle = '#00d9ff';
                     ctx.beginPath();
-                    ctx.arc(px, py, p.size, 0, Math.PI * 2);
+                    ctx.moveTo(fromX, fromY);
+                    ctx.lineTo(toX, toY);
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    const angle = Math.atan2(toY - fromY, toX - fromX);
+                    const arrowSize = 6;
+                    ctx.beginPath();
+                    ctx.moveTo(toX, toY);
+                    ctx.lineTo(
+                        toX - arrowSize * Math.cos(angle - Math.PI / 6),
+                        toY - arrowSize * Math.sin(angle - Math.PI / 6)
+                    );
+                    ctx.lineTo(
+                        toX - arrowSize * Math.cos(angle + Math.PI / 6),
+                        toY - arrowSize * Math.sin(angle + Math.PI / 6)
+                    );
+                    ctx.closePath();
+                    ctx.fillStyle = LOGOS_LAYERS[effect.layer].color + '60';
                     ctx.fill();
                 });
-            }
+            });
         }
-
-        // Wave interference background
-        class WaveField {
-            constructor() {
-                this.sources = [
-                    { x: 100, y: 100, freq: 0.05, phase: 0 },
-                    { x: 400, y: 100, freq: 0.07, phase: Math.PI / 3 },
-                    { x: 250, y: 450, freq: 0.06, phase: Math.PI / 2 }
-                ];
-            }
-
-            getAmplitude(x, y, time) {
-                let total = 0;
-                this.sources.forEach(source => {
-                    const dist = Math.hypot(x - source.x, y - source.y);
-                    const wave = Math.sin(source.freq * dist - time * 0.03 + source.phase);
-                    total += wave / (1 + dist / 100);
-                });
-                return total;
-            }
-
-            draw(ctx, time) {
-                // Draw wave interference pattern at reduced resolution for performance
-                const scale = 8;
-                const width = canvas.width / scale;
-                const height = canvas.height / scale;
+        
+        drawSymbols() {
+            const ctx = this.ctx;
+            
+            this.engine.symbols.forEach(symbol => {
+                const x = this.centerX + symbol.position.x * this.zoom;
+                const y = this.centerY + symbol.position.y * this.zoom;
+                const layer = LOGOS_LAYERS[symbol.layer];
                 
-                const imageData = ctx.createImageData(width, height);
-                const data = imageData.data;
+                // Glow effect if recently activated
+                const timeSinceActivation = Date.now() - (symbol.metadata.measurements.lastActivated || 0);
+                if (timeSinceActivation < 1000) {
+                    const glowIntensity = 1 - timeSinceActivation / 1000;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 20 + glowIntensity * 10, 0, Math.PI * 2);
+                    ctx.fillStyle = layer.color + Math.floor(glowIntensity * 30).toString(16).padStart(2, '0');
+                    ctx.fill();
+                }
+                
+                // Symbol node
+                const baseSize = symbol.metadata.identity.type === 'meta' ? 12 : 8;
+                const size = baseSize + (symbol.metadata.measurements.activations % 5);
+                
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fillStyle = layer.color;
+                ctx.fill();
+                
+                // Inner dot
+                ctx.beginPath();
+                ctx.arc(x, y, size * 0.4, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+                
+                // Label
+                ctx.fillStyle = '#ffffff90';
+                ctx.font = '9px JetBrains Mono';
+                ctx.textAlign = 'center';
+                ctx.fillText(symbol.name.split('_')[0], x, y + size + 12);
+            });
+        }
+        
+        drawMetadataPackets() {
+            const ctx = this.ctx;
+            
+            this.engine.metadataQueue.forEach(({ packet, target }) => {
+                if (packet.source) {
+                    const fromX = this.centerX + packet.source.position.x * this.zoom;
+                    const fromY = this.centerY + packet.source.position.y * this.zoom;
+                    const toX = this.centerX + target.position.x * this.zoom;
+                    const toY = this.centerY + target.position.y * this.zoom;
+                    
+                    // Packet traveling
+                    const progress = (Date.now() - packet.timestamp) / 200;
+                    const px = fromX + (toX - fromX) * Math.min(progress, 1);
+                    const py = fromY + (toY - fromY) * Math.min(progress, 1);
+                    
+                    ctx.beginPath();
+                    ctx.arc(px, py, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = '#64ffda';
+                    ctx.fill();
+                    
+                    // Trail
+                    ctx.beginPath();
+                    ctx.moveTo(fromX, fromY);
+                    ctx.lineTo(px, py);
+                    ctx.strokeStyle = '#64ffda40';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            });
+        }
+        
+        updateParticles() {
+            // Spawn particles near active symbols
+            this.engine.symbols.forEach(symbol => {
+                if (symbol.metadata.behavior.processing) {
+                    this.particles.push({
+                        x: this.centerX + symbol.position.x * this.zoom,
+                        y: this.centerY + symbol.position.y * this.zoom,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: (Math.random() - 0.5) * 2,
+                        life: 1,
+                        color: LOGOS_LAYERS[symbol.layer].color
+                    });
+                }
+            });
+            
+            // Update and draw particles
+            this.particles = this.particles.filter(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+                
+                if (p.life > 0) {
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, 2 * p.life, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color + Math.floor(p.life * 255).toString(16).padStart(2, '0');
+                    this.ctx.fill();
+                    return true;
+                }
+                return false;
+            });
+        }
+    }
 
-                for (let i = 0; i < width; i++) {
-                    for (let j = 0; j < height; j++) {
-                        const worldX = i * scale;
-                        const worldY = j * scale;
-                        const amplitude = this.getAmplitude(worldX, worldY, time);
-                        const idx = (j * width + i) * 4;
-                        
-                        const intensity = Math.max(0, amplitude * 8);
-                        data[idx] = intensity * 10; // R
-                        data[idx + 1] = intensity * 50; // G
-                        data[idx + 2] = intensity * 60; // B
-                        data[idx + 3] = intensity * 3; // A
+    // =========================
+    // GAME WORLD RENDERER (Layer 8 Output)
+    // =========================
+    class GameWorldRenderer {
+        constructor(canvas, engine) {
+            this.canvas = canvas;
+            this.ctx = canvas.getContext('2d');
+            this.engine = engine;
+            
+            this.resize();
+            
+            // Simple scene state derived from symbols
+            this.scene = {
+                sunPosition: 0.3,
+                skyColor: [20, 30, 60],
+                groundColor: [40, 80, 40],
+                objects: []
+            };
+            
+            this.animate();
+        }
+        
+        resize() {
+            this.canvas.width = this.canvas.parentElement.clientWidth;
+            this.canvas.height = this.canvas.parentElement.clientHeight - 32;
+        }
+        
+        animate() {
+            this.render();
+            requestAnimationFrame(() => this.animate());
+        }
+        
+        render() {
+            const ctx = this.ctx;
+            const { width, height } = this.canvas;
+            
+            // Get time from engine
+            const timeSymbol = Array.from(this.engine.symbols.values())
+                .find(s => s.name === 'Time_Symbol');
+            const time = timeSymbol?.state.tick || 0;
+            
+            // Derive scene from symbolic state
+            this.scene.sunPosition = (Math.sin(time * 0.01) + 1) / 2;
+            
+            // Sky gradient based on sun position
+            const sunY = this.scene.sunPosition;
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, height * 0.6);
+            
+            if (sunY > 0.5) {
+                // Day
+                skyGradient.addColorStop(0, `rgb(${100 + sunY * 100}, ${150 + sunY * 50}, ${200 + sunY * 55})`);
+                skyGradient.addColorStop(1, `rgb(${180 + sunY * 50}, ${200 + sunY * 30}, ${220})`);
+            } else {
+                // Night/dusk
+                skyGradient.addColorStop(0, `rgb(${20 + sunY * 60}, ${30 + sunY * 80}, ${80 + sunY * 100})`);
+                skyGradient.addColorStop(1, `rgb(${50 + sunY * 100}, ${80 + sunY * 80}, ${120 + sunY * 60})`);
+            }
+            
+            ctx.fillStyle = skyGradient;
+            ctx.fillRect(0, 0, width, height * 0.6);
+            
+            // Sun/Moon
+            const sunX = width * 0.5 + Math.cos(time * 0.01) * width * 0.3;
+            const sunDrawY = height * 0.5 - sunY * height * 0.4;
+            
+            ctx.beginPath();
+            ctx.arc(sunX, sunDrawY, 20, 0, Math.PI * 2);
+            ctx.fillStyle = sunY > 0.5 ? '#ffd93d' : '#e0e0e0';
+            ctx.fill();
+            
+            // Glow
+            const sunGlow = ctx.createRadialGradient(sunX, sunDrawY, 20, sunX, sunDrawY, 60);
+            sunGlow.addColorStop(0, sunY > 0.5 ? 'rgba(255,217,61,0.3)' : 'rgba(200,200,220,0.2)');
+            sunGlow.addColorStop(1, 'transparent');
+            ctx.fillStyle = sunGlow;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Ground
+            const groundGradient = ctx.createLinearGradient(0, height * 0.6, 0, height);
+            groundGradient.addColorStop(0, `rgb(${60 + sunY * 40}, ${100 + sunY * 60}, ${50 + sunY * 30})`);
+            groundGradient.addColorStop(1, `rgb(${30 + sunY * 20}, ${60 + sunY * 40}, ${30 + sunY * 20})`);
+            ctx.fillStyle = groundGradient;
+            ctx.fillRect(0, height * 0.6, width, height * 0.4);
+            
+            // Simple trees (objects derived from Structure symbols)
+            const numTrees = 5;
+            for (let i = 0; i < numTrees; i++) {
+                const tx = width * 0.1 + (width * 0.8 / numTrees) * i + Math.sin(i * 3) * 20;
+                const ty = height * 0.6 + 10;
+                const treeHeight = 40 + Math.sin(i * 2) * 15;
+                
+                // Trunk
+                ctx.fillStyle = `rgb(${60 + sunY * 30}, ${40 + sunY * 20}, ${30})`;
+                ctx.fillRect(tx - 4, ty - treeHeight * 0.4, 8, treeHeight * 0.4);
+                
+                // Foliage
+                ctx.beginPath();
+                ctx.arc(tx, ty - treeHeight * 0.6, 25, 0, Math.PI * 2);
+                ctx.fillStyle = `rgb(${40 + sunY * 40}, ${80 + sunY * 60}, ${40 + sunY * 30})`;
+                ctx.fill();
+            }
+            
+            // Layer 8 status indicator
+            ctx.fillStyle = '#64ffda';
+            ctx.font = '9px JetBrains Mono';
+            ctx.fillText(`Tick: ${Math.floor(time)} | Pixels: ${width * height}`, 10, height - 10);
+        }
+    }
+
+    // =========================
+    // UI MANAGER
+    // =========================
+    class UIManager {
+        constructor(engine) {
+            this.engine = engine;
+            this.initLayerStack();
+            this.initControls();
+            this.startUILoop();
+        }
+        
+        initLayerStack() {
+            const container = document.getElementById('layer-stack');
+            
+            LOGOS_LAYERS.forEach(layer => {
+                const card = document.createElement('div');
+                card.className = 'layer-card';
+                card.dataset.layer = layer.id;
+                card.innerHTML = `
+                    <div class="layer-header">
+                        <div class="layer-number" style="background: ${layer.color}">${layer.id}</div>
+                        <div class="layer-info">
+                            <div class="layer-name">${layer.name}</div>
+                            <div class="layer-purpose">${layer.purpose}</div>
+                        </div>
+                    </div>
+                    <div class="layer-symbols">
+                        ${layer.symbols.map(s => `<span class="symbol-tag">${s}</span>`).join('')}
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.layer-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    this.spawnLayerSymbols(layer.id);
+                });
+                
+                container.appendChild(card);
+            });
+        }
+        
+        spawnLayerSymbols(layerId) {
+            const layer = LOGOS_LAYERS[layerId];
+            const existingSymbols = this.engine.getSymbolsByLayer(layerId);
+            
+            // Spawn symbols that don't exist yet
+            layer.symbols.forEach(symbolName => {
+                if (!existingSymbols.find(s => s.name === symbolName)) {
+                    const symbol = this.engine.createSymbol(symbolName, layerId, {
+                        type: 'standard',
+                        propagationRules: [{
+                            condition: () => Math.random() > 0.7,
+                            packetType: `${symbolName}_update`,
+                            transform: (state) => state,
+                            ttl: 3
+                        }]
+                    });
+                    
+                    // Connect to layer below
+                    if (layerId < 8) {
+                        const belowSymbols = this.engine.getSymbolsByLayer(layerId + 1);
+                        if (belowSymbols.length > 0) {
+                            symbol.causesSymbol(belowSymbols[Math.floor(Math.random() * belowSymbols.length)]);
+                        }
+                    }
+                    
+                    // Connect to layer above
+                    if (layerId > 0) {
+                        const aboveSymbols = this.engine.getSymbolsByLayer(layerId - 1);
+                        if (aboveSymbols.length > 0) {
+                            aboveSymbols[Math.floor(Math.random() * aboveSymbols.length)].causesSymbol(symbol);
+                        }
                     }
                 }
-
-                // Create temporary canvas at reduced scale
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = width;
-                tempCanvas.height = height;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.putImageData(imageData, 0, 0);
-
-                // Draw upscaled to canvas
-                ctx.globalAlpha = 0.15;
-                ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
-                ctx.globalAlpha = 1;
-            }
+            });
         }
-
-        // Initialize systems
-        const nodes = [
-            new CausalReasoningNode(250, 80, 'AXIOM', 'input'),
-            new CausalReasoningNode(140, 220, 'DEDUCE', 'process'),
-            new CausalReasoningNode(360, 220, 'VERIFY', 'process'),
-            new CausalReasoningNode(140, 350, 'INFER', 'process'),
-            new CausalReasoningNode(360, 350, 'APPLY', 'process'),
-            new CausalReasoningNode(250, 420, 'PROOF', 'output')
-        ];
-
-        const paths = [
-            new CausalPath(nodes[0], nodes[1]),
-            new CausalPath(nodes[0], nodes[2]),
-            new CausalPath(nodes[1], nodes[3]),
-            new CausalPath(nodes[2], nodes[4]),
-            new CausalPath(nodes[3], nodes[5]),
-            new CausalPath(nodes[4], nodes[5]),
-            new CausalPath(nodes[1], nodes[2]), // Cross-reasoning
-            new CausalPath(nodes[3], nodes[4])  // Cross-verification
-        ];
-
-        const waveField = new WaveField();
-
-        function animate() {
-            time++;
-
-            // Fade background to create motion blur effect
-            ctx.fillStyle = 'rgba(10, 14, 39, 0.08)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw wave interference pattern
-            waveField.draw(ctx, time);
-
-            // Update and draw all nodes
-            nodes.forEach(node => {
-                node.update(time);
+        
+        initControls() {
+            // View mode buttons
+            document.querySelectorAll('.viz-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.engine.viewMode = btn.dataset.view;
+                });
             });
-
-            // Draw causal paths
-            paths.forEach(path => {
-                path.update(time);
-                path.draw(ctx);
-            });
-
-            // Draw nodes on top
-            nodes.forEach(node => {
-                node.draw(ctx, time);
-            });
-
-            // Draw connection labels
-            ctx.fillStyle = 'rgba(0, 217, 255, 0.3)';
-            ctx.font = '9px Crimson Text';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-
-            requestAnimationFrame(animate);
         }
+        
+        startUILoop() {
+            setInterval(() => this.updateUI(), 100);
+        }
+        
+        updateUI() {
+            // Stats
+            document.getElementById('symbol-count').textContent = this.engine.symbols.size;
+            document.getElementById('chain-count').textContent = this.engine.causalChains.length;
+            document.getElementById('packet-count').textContent = this.engine.packetCount;
+            
+            // Causal chain log
+            const chainLog = document.getElementById('causal-chain-log');
+            chainLog.innerHTML = this.engine.causalChains.slice(0, 10).map(chain => `
+                <div class="chain-entry" style="border-color: ${LOGOS_LAYERS[Math.max(0, chain.targetLayer)].color}">
+                    <div class="chain-cause">◈ ${chain.source}</div>
+                    <div class="chain-arrow">↓ ${chain.type}</div>
+                    <div class="chain-effect">◈ ${chain.target}</div>
+                    <div class="chain-layer">Layer ${chain.sourceLayer} → Layer ${chain.targetLayer}</div>
+                </div>
+            `).join('');
+            
+            // Console
+            const consoleOutput = document.getElementById('console-output');
+            consoleOutput.innerHTML = this.engine.consoleLines.slice(0, 20).map(line => `
+                <div class="console-line ${line.type}">
+                    <span style="color: rgba(255,255,255,0.3)">[${line.timestamp}]</span> ${line.message}
+                </div>
+            `).join('');
+        }
+    }
 
-        animate();
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+    // =========================
+    // DEMO SCENARIO BUILDER
+    // =========================
+    class DemoScenario {
+        constructor(engine) {
+            this.engine = engine;
+        }
+        
+        buildCompleteScenario() {
+            // Build a complete game scenario across all layers
+            
+            // Layer 1: Narrative
+            const quest = this.engine.createSymbol('Hero_Quest', 1, {
+                type: 'narrative',
+                initialState: { stage: 'beginning', tension: 0.3 },
+                propagationRules: [{
+                    condition: (state) => state.tension > 0.5,
+                    packetType: 'tension_spike',
+                    transform: (state) => ({ urgency: state.tension }),
+                    ttl: 5
+                }]
+            });
+            
+            // Layer 2: Entities
+            const player = this.engine.createSymbol('Player_Character', 2, {
+                type: 'entity',
+                initialState: { health: 100, position: { x: 0, y: 0 } },
+                responseProtocol: ['player_input', 'damage', 'heal'],
+                propagationRules: [{
+                    condition: () => true,
+                    packetType: 'player_update',
+                    transform: (state) => state,
+                    ttl: 3
+                }]
+            });
+            
+            const enemy = this.engine.createSymbol('Enemy_Patrol', 2, {
+                type: 'entity',
+                initialState: { alertLevel: 0, patrol: true },
+                selfIteration: (symbol, dt) => {
+                    if (symbol.state.patrol) {
+                        symbol.state.alertLevel = Math.sin(Date.now() / 1000) * 0.5 + 0.5;
+                    }
                 }
             });
-        });
+            
+            // Layer 3: Environment
+            const forest = this.engine.createSymbol('Dark_Forest', 3, {
+                type: 'biome',
+                properties: { danger: 0.6, visibility: 0.4 }
+            });
+            
+            const weather = this.engine.createSymbol('Weather_System', 3, {
+                type: 'environmental',
+                initialState: { condition: 'foggy', intensity: 0.7 },
+                selfIteration: (symbol, dt) => {
+                    symbol.state.intensity = 0.5 + Math.sin(Date.now() / 5000) * 0.3;
+                },
+                propagationRules: [{
+                    condition: (state) => state.intensity > 0.6,
+                    packetType: 'weather_effect',
+                    transform: (state) => ({ fog: state.intensity }),
+                    ttl: 2
+                }]
+            });
+            
+            // Layer 4: Structure
+            const ruins = this.engine.createSymbol('Ancient_Ruins', 4, {
+                type: 'structure',
+                properties: { age: 1000, condition: 'decrepit' }
+            });
+            
+            // Layer 5: Materials
+            const stoneMaterial = this.engine.createSymbol('Weathered_Stone', 5, {
+                type: 'material',
+                properties: { roughness: 0.8, color: [80, 80, 75] }
+            });
+            
+            const mossMaterial = this.engine.createSymbol('Forest_Moss', 5, {
+                type: 'material',
+                properties: { roughness: 0.9, color: [40, 80, 40], emissive: 0.05 }
+            });
+            
+            // Layer 6: Light
+            const moonlight = this.engine.createSymbol('Moonlight', 6, {
+                type: 'light_source',
+                initialState: { intensity: 0.3, color: [200, 210, 255] },
+                selfIteration: (symbol, dt) => {
+                    // Flickering through clouds
+                    symbol.state.intensity = 0.3 + Math.random() * 0.1;
+                }
+            });
+            
+            const torchLight = this.engine.createSymbol('Torch_Glow', 6, {
+                type: 'light_source',
+                initialState: { intensity: 0.8, color: [255, 180, 100], flicker: true },
+                selfIteration: (symbol, dt) => {
+                    if (symbol.state.flicker) {
+                        symbol.state.intensity = 0.7 + Math.random() * 0.3;
+                    }
+                },
+                propagationRules: [{
+                    condition: () => true,
+                    packetType: 'light_update',
+                    transform: (state) => ({ illuminance: state.intensity, tint: state.color }),
+                    ttl: 2
+                }]
+            });
+            
+            // Layer 7: Camera
+            const camera = this.engine.createSymbol('Main_Camera', 7, {
+                type: 'viewpoint',
+                initialState: { fov: 75, position: [0, 1.7, 0], rotation: [0, 0, 0] },
+                responseProtocol: ['player_update', 'camera_shake'],
+                transformationLogic: (data, state) => {
+                    if (data.position) {
+                        return { ...state, position: data.position };
+                    }
+                    return state;
+                }
+            });
+            
+            // Layer 8: Output
+            const frameBuffer = this.engine.createSymbol('Frame_Buffer', 8, {
+                type: 'output',
+                initialState: { width: 1920, height: 1080, format: 'RGBA8' },
+                responseProtocol: ['light_update', 'material_update', 'geometry_update']
+            });
+            
+            // BUILD CAUSAL CONNECTIONS
+            
+            // Narrative -> Entities
+            quest.causesSymbol(player);
+            quest.causesSymbol(enemy);
+            
+            // Entities -> Environment
+            player.causesSymbol(forest);
+            enemy.causesSymbol(forest);
+            
+            // Environment -> Structure
+            forest.causesSymbol(ruins);
+            weather.causesSymbol(forest);
+            
+            // Structure -> Materials
+            ruins.causesSymbol(stoneMaterial);
+            ruins.causesSymbol(mossMaterial);
+            
+            // Materials -> Light
+            stoneMaterial.causesSymbol(moonlight);
+            mossMaterial.causesSymbol(torchLight);
+            
+            // Light -> Camera
+            moonlight.causesSymbol(camera);
+            torchLight.causesSymbol(camera);
+            
+            // Camera -> Output
+            camera.causesSymbol(frameBuffer);
+            
+            // Cross-layer causality
+            weather.causesSymbol(moonlight);  // Weather affects lighting
+            enemy.causesSymbol(torchLight);   // Enemy alert affects torch
+            
+            this.engine.log('Demo scenario built: Dark Forest Ruins', 'causal');
+            
+            // Trigger initial narrative event
+            setTimeout(() => {
+                this.engine.triggerEvent('quest_begin', { 
+                    protagonist: 'hero',
+                    objective: 'explore_ruins'
+                });
+            }, 1000);
+        }
+    }
+
+    // =========================
+    // MODAL FUNCTIONS
+    // =========================
+    function showSymbolDetails(symbol) {
+        const modal = document.getElementById('symbol-modal');
+        document.getElementById('modal-symbol-name').textContent = symbol.name;
+        
+        // DNA display
+        document.getElementById('modal-dna').innerHTML = `
+            <div class="dna-property">
+                <span class="dna-key">Response Protocol:</span>
+                <span class="dna-value">${symbol.dna.responseProtocol.join(', ') || 'All'}</span>
+            </div>
+            <div class="dna-property">
+                <span class="dna-key">Propagation Rules:</span>
+                <span class="dna-value">${symbol.dna.propagationRules.length} rule(s)</span>
+            </div>
+            <div class="dna-property">
+                <span class="dna-key">Lifespan:</span>
+                <span class="dna-value">${symbol.dna.lifespan === Infinity ? '∞' : symbol.dna.lifespan}</span>
+            </div>
+            <div class="dna-property">
+                <span class="dna-key">Decay Rate:</span>
+                <span class="dna-value">${symbol.dna.decayRate}</span>
+            </div>
+        `;
+        
+        // Connections
+        document.getElementById('modal-connections').innerHTML = `
+            <div class="dna-property">
+                <span class="dna-key">Causes (inputs):</span>
+                <span class="dna-value">${Array.from(symbol.causes).map(s => s.name).join(', ') || 'None'}</span>
+            </div>
+            <div class="dna-property">
+                <span class="dna-key">Effects (outputs):</span>
+                <span class="dna-value">${Array.from(symbol.effects).map(s => s.name).join(', ') || 'None'}</span>
+            </div>
+        `;
+        
+        // Metadata
+        document.getElementById('modal-metadata').innerHTML = `
+            <div class="dna-property">
+                <span class="dna-key">Layer:</span>
+                <span class="dna-value">${symbol.layer} - ${LOGOS_LAYERS[symbol.layer].name}</span>
+            </div>
+            <div class="dna-property">
+                <span class="dna-key">Type:</span>
+                <span class="dna-value">${symbol.metadata.identity.type}</span>
+            </div>
+            <div class="dna-property">
+                <span class="dna-key">Activations:</span>
+                <span class="dna-value">${symbol.metadata.measurements.activations}</span>
+            </div>
+            <div class="dna-property">
+                <span class="dna-key">State:</span>
+                <span class="dna-value">${JSON.stringify(symbol.state)}</span>
+            </div>
+        `;
+        
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('symbol-modal').classList.remove('active');
+    }
+
+    // =========================
+    // INITIALIZATION
+    // =========================
+    document.addEventListener('DOMContentLoaded', () => {
+        // Create the Logos Engine
+        const engine = new LogosEngine();
+        
+        // Initialize visualizations
+        const meshCanvas = document.getElementById('visualization-canvas');
+        const meshRenderer = new MeshRenderer(meshCanvas, engine);
+        
+        const gameCanvas = document.getElementById('game-world-canvas');
+        const gameRenderer = new GameWorldRenderer(gameCanvas, engine);
+        
+        // Initialize UI
+        const ui = new UIManager(engine);
+        
+        // Build demo scenario
+        const demo = new DemoScenario(engine);
+        demo.buildCompleteScenario();
+        
+        // Start the engine
+        engine.start();
+        
+        // Periodic events to demonstrate causality
+        setInterval(() => {
+            engine.triggerEvent('time_pulse', { tick: Date.now() });
+        }, 2000);
+        
+        setInterval(() => {
+            engine.triggerEvent('player_action', { 
+                action: ['move', 'look', 'interact'][Math.floor(Math.random() * 3)],
+                intensity: Math.random()
+            });
+        }, 3000);
+        
+        // Expose for debugging
+        window.logosEngine = engine;
+        window.showSymbolDetails = showSymbolDetails;
+        
+        console.log('The Logos Engine initialized. Access via window.logosEngine');
+    });
     </script>
 </body>
 </html>
