@@ -1,64 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logos-LCS v3.0 | Recursive Refinement Engine</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>ፊደል | Mfidel Symbolic Audio Atlas</title>
     <style>
         :root {
-            --void: #05060a;
-            --abyss: #0a0c12;
-            --deep: #0f1218;
-            --surface: #161a24;
-            --elevated: #1e232f;
-            
-            --gold: #e5b978;
-            --gold-dim: rgba(229, 185, 120, 0.5);
-            --cyan: #5eead4;
-            --cyan-dim: rgba(94, 234, 212, 0.4);
-            --magenta: #f472b6;
-            --violet: #a78bfa;
-            --emerald: #34d399;
-            --amber: #fbbf24;
-            --rose: #fb7185;
-            --sky: #38bdf8;
-            --indigo: #818cf8;
-            
-            --pass-1: #ef4444;
-            --pass-2: #f97316;
-            --pass-3: #eab308;
-            --pass-4: #22c55e;
-            --pass-5: #06b6d4;
-            --pass-6: #8b5cf6;
-            --pass-7: #ec4899;
-            --pass-8: #6366f1;
+            --void: #0a0a0f;
+            --deep: #12121a;
+            --surface: #1a1a25;
+            --elevated: #242433;
+            --gold: #d4a574;
+            --gold-dim: rgba(212, 165, 116, 0.3);
+            --amber: #f59e0b;
+            --emerald: #10b981;
+            --cyan: #06b6d4;
+            --violet: #8b5cf6;
+            --rose: #f43f5e;
+            --white: #f5f5f5;
+            --muted: rgba(255,255,255,0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: var(--void);
-            color: #e8e8e8;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .app-container {
-            display: grid;
-            grid-template-rows: 50px 1fr 200px;
-            height: 100vh;
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Header */
         .header {
-            background: linear-gradient(90deg, var(--abyss) 0%, var(--deep) 100%);
-            border-bottom: 1px solid rgba(229, 185, 120, 0.15);
+            background: linear-gradient(135deg, var(--deep) 0%, var(--surface) 100%);
+            border-bottom: 1px solid var(--gold-dim);
+            padding: 15px 30px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            align-items: center;
         }
 
         .logo {
@@ -67,1424 +47,869 @@
             gap: 15px;
         }
 
-        .logo h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
+        .logo-ethiopic {
+            font-size: 2.5rem;
             color: var(--gold);
-            font-weight: 500;
         }
 
-        .version-badge {
-            background: linear-gradient(135deg, var(--violet) 0%, var(--indigo) 100%);
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: white;
-            font-weight: 500;
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: var(--gold);
         }
 
-        .header-stats {
+        .logo-sub {
+            font-size: 0.7rem;
+            color: var(--muted);
+        }
+
+        .stats-bar {
             display: flex;
-            gap: 25px;
+            gap: 30px;
         }
 
-        .header-stat {
+        .stat {
             text-align: center;
         }
 
-        .header-stat-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
+        .stat-value {
+            font-size: 1.5rem;
             color: var(--cyan);
+            font-weight: 300;
         }
 
-        .header-stat-label {
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.4);
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--muted);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
         }
 
-        .header-controls {
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            height: calc(100vh - 70px);
+        }
+
+        /* Gebeta Grid */
+        .gebeta-container {
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .gebeta-title {
+            font-size: 1rem;
+            color: var(--gold);
+            margin-bottom: 15px;
             display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .ctrl-btn {
-            background: rgba(229, 185, 120, 0.1);
-            border: 1px solid rgba(229, 185, 120, 0.3);
-            color: var(--gold);
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
+        .gebeta-title::before {
+            content: '◈';
+            color: var(--amber);
+        }
+
+        .gebeta-grid {
+            display: grid;
+            grid-template-columns: 50px repeat(8, 1fr);
+            gap: 2px;
+            background: rgba(212, 165, 116, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 900px;
+        }
+
+        .column-header {
+            padding: 8px;
+            text-align: center;
             font-size: 0.7rem;
+            color: var(--amber);
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 4px;
+        }
+
+        .row-header {
+            padding: 8px 4px;
+            text-align: center;
+            font-size: 0.65rem;
+            color: var(--violet);
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .row-num {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .fidel-cell {
+            background: var(--surface);
+            border-radius: 4px;
+            padding: 8px 4px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
         }
 
-        .ctrl-btn:hover {
-            background: rgba(229, 185, 120, 0.2);
+        .fidel-cell:hover {
+            background: var(--elevated);
+            transform: scale(1.05);
+            z-index: 10;
         }
 
-        .ctrl-btn.active {
-            background: var(--gold);
-            color: var(--void);
+        .fidel-cell.selected {
+            background: rgba(212, 165, 116, 0.2);
+            box-shadow: 0 0 0 2px var(--gold);
         }
 
-        .ctrl-btn.danger {
-            border-color: var(--rose);
-            color: var(--rose);
+        .fidel-cell.vowel-row {
+            background: rgba(6, 182, 212, 0.15);
         }
 
-        /* Main Area */
-        .main-area {
-            display: grid;
-            grid-template-columns: 260px 1fr 320px;
-            gap: 0;
+        .fidel-cell.exception {
+            background: rgba(244, 63, 94, 0.15);
         }
 
-        /* Left Panel - Pass Indicators & Ontology */
-        .left-panel {
-            background: var(--abyss);
-            border-right: 1px solid rgba(229, 185, 120, 0.1);
+        .fidel-cell.col8 {
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .fidel-symbol {
+            font-size: 1.4rem;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .fidel-id {
+            font-size: 0.5rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .empty-cell {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Right Panel */
+        .detail-panel {
+            background: var(--deep);
+            border-left: 1px solid var(--gold-dim);
+            padding: 20px;
             overflow-y: auto;
-            padding: 15px;
+        }
+
+        .panel-section {
+            margin-bottom: 25px;
         }
 
         .section-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--gold);
             text-transform: uppercase;
             letter-spacing: 0.1em;
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--gold-dim);
         }
 
-        .section-title::before {
-            content: '◆';
-            font-size: 0.6rem;
+        /* Selected Fidel Display */
+        .selected-fidel {
+            text-align: center;
+            padding: 20px;
+            background: var(--surface);
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
-        .pass-indicator {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.02);
+        .selected-symbol {
+            font-size: 4rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .selected-id {
+            font-size: 0.8rem;
+            color: var(--cyan);
+            margin-top: 8px;
+        }
+
+        .selected-family {
+            font-size: 0.7rem;
+            color: var(--muted);
+        }
+
+        /* Audio Formula Display */
+        .formula-box {
+            background: var(--surface);
             border-radius: 6px;
-            margin-bottom: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
+            padding: 12px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
         }
 
-        .pass-indicator:hover {
-            background: rgba(255,255,255,0.05);
+        .formula-label {
+            color: var(--muted);
+            font-size: 0.65rem;
+            margin-bottom: 4px;
         }
 
-        .pass-indicator.active {
-            background: rgba(255,255,255,0.08);
+        .formula-content {
+            color: var(--emerald);
         }
 
-        .pass-num {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
+        .formula-decomp {
+            margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--void);
+            gap: 10px;
+            font-size: 1.5rem;
         }
 
-        .pass-info {
-            flex: 1;
-        }
-
-        .pass-name {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #fff;
-        }
-
-        .pass-desc {
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.4);
-        }
-
-        .pass-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--emerald);
-        }
-
-        /* Ontology Tree */
-        .ontology-section {
-            margin-top: 20px;
-        }
-
-        .ontology-node {
-            padding: 6px 10px;
-            margin: 2px 0;
-            background: rgba(255,255,255,0.02);
+        .decomp-part {
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.05);
             border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--cyan);
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .ontology-node:hover {
-            background: rgba(94, 234, 212, 0.1);
-        }
-
-        .ontology-node.level-1 { margin-left: 12px; }
-        .ontology-node.level-2 { margin-left: 24px; }
-
-        /* Center - Visualization */
-        .center-panel {
-            background: var(--void);
-            position: relative;
-        }
-
-        #main-canvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        .viz-overlay {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .viz-mode {
-            background: rgba(10, 12, 18, 0.9);
-            border: 1px solid rgba(229, 185, 120, 0.2);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: rgba(255,255,255,0.6);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .viz-mode:hover, .viz-mode.active {
-            border-color: var(--gold);
+        .decomp-equals {
             color: var(--gold);
         }
 
-        .introspection-panel {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 220px;
-            background: rgba(10, 12, 18, 0.95);
-            border: 1px solid rgba(167, 139, 250, 0.3);
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 0.65rem;
+        .decomp-plus {
+            color: var(--cyan);
         }
 
-        .introspection-title {
-            font-family: 'JetBrains Mono', monospace;
+        .decomp-whisper {
             color: var(--violet);
-            margin-bottom: 10px;
+        }
+
+        .decomp-vowel {
+            color: var(--amber);
+        }
+
+        /* Audio Controls */
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .audio-btn {
+            flex: 1;
+            padding: 10px;
+            background: var(--gold);
+            border: none;
+            border-radius: 6px;
+            color: var(--void);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .audio-btn:hover {
+            background: var(--amber);
+            transform: translateY(-1px);
+        }
+
+        .audio-btn:disabled {
+            background: var(--elevated);
+            color: var(--muted);
+            cursor: not-allowed;
+        }
+
+        /* Rules Reference */
+        .rules-list {
+            font-size: 0.7rem;
+            color: var(--muted);
+        }
+
+        .rule-item {
+            padding: 8px;
+            background: var(--surface);
+            border-radius: 4px;
+            margin-bottom: 6px;
+            border-left: 3px solid var(--gold-dim);
+        }
+
+        .rule-item.active {
+            border-left-color: var(--emerald);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .rule-title {
+            color: var(--white);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .legend-item {
             display: flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .emergent-pattern {
-            background: rgba(167, 139, 250, 0.1);
-            padding: 6px 8px;
-            border-radius: 4px;
-            margin-bottom: 4px;
-            color: var(--violet);
-        }
-
-        .anomaly-item {
-            background: rgba(251, 113, 133, 0.1);
-            padding: 6px 8px;
-            border-radius: 4px;
-            margin-bottom: 4px;
-            color: var(--rose);
-        }
-
-        /* Right Panel - Wh Gates & Inference */
-        .right-panel {
-            background: var(--abyss);
-            border-left: 1px solid rgba(229, 185, 120, 0.1);
-            overflow-y: auto;
-            padding: 15px;
-        }
-
-        .wh-category {
-            margin-bottom: 15px;
-        }
-
-        .wh-category-header {
-            font-family: 'JetBrains Mono', monospace;
             font-size: 0.65rem;
-            color: var(--amber);
-            padding: 6px 10px;
-            background: rgba(251, 191, 36, 0.1);
-            border-radius: 4px;
-            margin-bottom: 6px;
+            color: var(--muted);
         }
 
-        .wh-gate-mini {
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* Word Input */
+        .word-input-container {
+            margin-top: 20px;
+        }
+
+        .word-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--surface);
+            border: 1px solid var(--gold-dim);
+            border-radius: 6px;
+            color: var(--white);
+            font-size: 1.2rem;
+            text-align: center;
+            direction: ltr;
+        }
+
+        .word-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .word-analysis {
+            margin-top: 10px;
+            font-size: 0.7rem;
+            color: var(--muted);
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .word-fidel {
             display: inline-flex;
             align-items: center;
             gap: 4px;
             padding: 4px 8px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 3px;
+            background: var(--surface);
+            border-radius: 4px;
             margin: 2px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
-            color: rgba(255,255,255,0.5);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .wh-gate-mini:hover {
-            background: rgba(94, 234, 212, 0.1);
-            color: var(--cyan);
-        }
-
-        .wh-gate-mini.active {
-            background: rgba(52, 211, 153, 0.2);
-            color: var(--emerald);
-        }
-
-        .wh-gate-mini .dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-        }
-
-        .wh-gate-mini.active .dot {
-            background: var(--emerald);
-            box-shadow: 0 0 6px var(--emerald);
-        }
-
-        /* Inference Panel */
-        .inference-section {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .inference-result {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 8px;
-        }
-
-        .inference-label {
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.4);
-        }
-
-        .inference-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
-            color: var(--emerald);
-        }
-
-        /* Bottom Panel - SymQL Console & Timeline */
-        .bottom-panel {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            background: var(--deep);
-            border-top: 1px solid rgba(229, 185, 120, 0.15);
-        }
-
-        /* SymQL Console */
-        .symql-console {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .console-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .console-header h3 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--indigo);
-        }
-
-        .symql-input-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .symql-input {
-            flex: 1;
-            background: var(--void);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: #fff;
-            outline: none;
-        }
-
-        .symql-input:focus {
-            border-color: var(--indigo);
-        }
-
-        .symql-input::placeholder {
-            color: rgba(255,255,255,0.3);
-        }
-
-        .symql-run {
-            background: var(--indigo);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: white;
-            cursor: pointer;
-        }
-
-        .symql-output {
-            flex: 1;
-            background: var(--void);
-            border-radius: 4px;
-            padding: 10px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--cyan);
-            overflow-y: auto;
-            white-space: pre-wrap;
-        }
-
-        /* Timeline */
-        .timeline-panel {
-            background: var(--abyss);
-            border-left: 1px solid rgba(229, 185, 120, 0.1);
-            padding: 15px;
-        }
-
-        .timeline-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .timeline-header h3 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--magenta);
-        }
-
-        .timeline-controls {
-            display: flex;
-            gap: 6px;
-        }
-
-        .timeline-btn {
-            background: rgba(236, 72, 153, 0.1);
-            border: 1px solid rgba(236, 72, 153, 0.3);
-            color: var(--magenta);
-            padding: 4px 10px;
-            border-radius: 3px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            cursor: pointer;
-        }
-
-        .timeline-btn:hover {
-            background: rgba(236, 72, 153, 0.2);
-        }
-
-        .timeline-track {
-            display: flex;
-            gap: 4px;
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .snapshot-marker {
-            min-width: 40px;
-            height: 50px;
-            background: rgba(236, 72, 153, 0.1);
-            border: 1px solid rgba(236, 72, 153, 0.2);
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .snapshot-marker:hover {
-            background: rgba(236, 72, 153, 0.2);
-            border-color: var(--magenta);
-        }
-
-        .snapshot-marker.current {
-            background: var(--magenta);
-            border-color: var(--magenta);
-        }
-
-        .snapshot-marker.current .snap-tick,
-        .snapshot-marker.current .snap-label {
-            color: white;
-        }
-
-        .snap-tick {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--magenta);
-        }
-
-        .snap-label {
-            font-size: 0.5rem;
-            color: rgba(255,255,255,0.4);
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--void); }
-        ::-webkit-scrollbar-thumb { background: rgba(229, 185, 120, 0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <h1>LOGOS-LCS</h1>
-                <span class="version-badge">v3.0 RECURSIVE REFINEMENT</span>
+    <header class="header">
+        <div class="logo">
+            <span class="logo-ethiopic">ፊደል</span>
+            <div>
+                <h1>Mfidel Symbolic Audio Atlas</h1>
+                <div class="logo-sub">34 Families × 8 Forms • Atomic Symbols • Audio Synthesis</div>
             </div>
-            <div class="header-stats">
-                <div class="header-stat">
-                    <div class="header-stat-value" id="stat-symbols">0</div>
-                    <div class="header-stat-label">Symbols</div>
+        </div>
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">272</div>
+                <div class="stat-label">Total Fidels</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">34</div>
+                <div class="stat-label">Families</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Vowels</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="active-rules">0</div>
+                <div class="stat-label">Active Rules</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Gebeta Grid -->
+        <section class="gebeta-container">
+            <div class="gebeta-title">ፊደል ገበታ — Fidel Gebeta (Complete Atlas)</div>
+            <div class="gebeta-grid" id="gebeta-grid"></div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(6, 182, 212, 0.3)"></div>
+                    <span>Vowel Row (17)</span>
                 </div>
-                <div class="header-stat">
-                    <div class="header-stat-value" id="stat-chains">0</div>
-                    <div class="header-stat-label">Chains</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(244, 63, 94, 0.3)"></div>
+                    <span>Exception (ሀ,ሐ,ዐ use አ)</span>
                 </div>
-                <div class="header-stat">
-                    <div class="header-stat-value" id="stat-wh">0/45</div>
-                    <div class="header-stat-label">Wh Gates</div>
-                </div>
-                <div class="header-stat">
-                    <div class="header-stat-value" id="stat-emergent">0</div>
-                    <div class="header-stat-label">Emergent</div>
-                </div>
-                <div class="header-stat">
-                    <div class="header-stat-value" id="stat-ms">0.00</div>
-                    <div class="header-stat-label">Avg Ms</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(16, 185, 129, 0.3)"></div>
+                    <span>8th Form (f[r][2]+ኣ)</span>
                 </div>
             </div>
-            <div class="header-controls">
-                <button class="ctrl-btn" id="btn-snapshot">📸 Snapshot</button>
-                <button class="ctrl-btn" id="btn-introspect">🔮 Introspect</button>
-                <button class="ctrl-btn active" id="btn-run">▶ Running</button>
+        </section>
+
+        <!-- Detail Panel -->
+        <aside class="detail-panel">
+            <div class="selected-fidel" id="selected-display">
+                <div class="selected-symbol">ለ</div>
+                <div class="selected-id">f[2][1]</div>
+                <div class="selected-family">la-family (ለ)</div>
             </div>
-        </header>
 
-        <!-- Main Area -->
-        <main class="main-area">
-            <!-- Left Panel -->
-            <aside class="left-panel">
-                <div class="section-title">8 Optimization Passes</div>
-                <div id="passes-container"></div>
-
-                <div class="ontology-section">
-                    <div class="section-title">Symbol Ontology</div>
-                    <div id="ontology-tree"></div>
-                </div>
-            </aside>
-
-            <!-- Center Visualization -->
-            <section class="center-panel">
-                <canvas id="main-canvas"></canvas>
-                <div class="viz-overlay">
-                    <button class="viz-mode active" data-mode="mesh">Mesh</button>
-                    <button class="viz-mode" data-mode="causal">Causal Graph</button>
-                    <button class="viz-mode" data-mode="inference">Inference</button>
-                    <button class="viz-mode" data-mode="attention">Attention</button>
-                </div>
-                <div class="introspection-panel" id="introspection-panel" style="display: none;">
-                    <div class="introspection-title">🔮 Meta-Cognitive Introspection</div>
-                    <div id="introspection-content"></div>
-                </div>
-            </section>
-
-            <!-- Right Panel -->
-            <aside class="right-panel">
-                <div class="section-title">45 Wh Logic Gates</div>
-                <div id="wh-gates-compact"></div>
-
-                <div class="inference-section">
-                    <div class="section-title">Causal Inference</div>
-                    <div class="inference-result">
-                        <div class="inference-label">P(Effect | Cause)</div>
-                        <div class="inference-value" id="inference-forward">0.000</div>
-                    </div>
-                    <div class="inference-result">
-                        <div class="inference-label">P(Cause | Effect)</div>
-                        <div class="inference-value" id="inference-backward">0.000</div>
-                    </div>
-                    <div class="inference-result">
-                        <div class="inference-label">Causal Bottlenecks</div>
-                        <div class="inference-value" id="inference-bottlenecks">-</div>
+            <div class="panel-section">
+                <div class="section-title">Audio Formula</div>
+                <div class="formula-box">
+                    <div class="formula-label">Standard Formula</div>
+                    <div class="formula-content" id="formula-display">
+                        f[r][c].s(w,v) = f[r][c].s(w) + f[17][c].s(w,v)
                     </div>
                 </div>
-            </aside>
-        </main>
-
-        <!-- Bottom Panel -->
-        <footer class="bottom-panel">
-            <!-- SymQL Console -->
-            <div class="symql-console">
-                <div class="console-header">
-                    <h3>◈ SymQL Console</h3>
-                    <span style="font-size: 0.6rem; color: rgba(255,255,255,0.3);">Symbolic Query Language</span>
+                <div class="formula-decomp" id="decomp-display">
+                    <span class="decomp-part decomp-whisper">ለ</span>
+                    <span class="decomp-equals">=</span>
+                    <span class="decomp-part decomp-whisper">ለ</span>
+                    <span class="decomp-plus">+</span>
+                    <span class="decomp-part decomp-vowel">ኧ</span>
                 </div>
-                <div class="symql-input-container">
-                    <input type="text" class="symql-input" id="symql-input" 
-                           placeholder="SELECT * FROM symbols WHERE ms > 0.5 ORDER BY ms DESC LIMIT 10">
-                    <button class="symql-run" id="symql-run">Execute</button>
-                </div>
-                <div class="symql-output" id="symql-output">// Results will appear here...</div>
             </div>
 
-            <!-- Timeline -->
-            <div class="timeline-panel">
-                <div class="timeline-header">
-                    <h3>◈ Temporal Timeline</h3>
-                    <div class="timeline-controls">
-                        <button class="timeline-btn" id="btn-undo">◀ Undo</button>
-                        <button class="timeline-btn" id="btn-redo">Redo ▶</button>
+            <div class="audio-controls">
+                <button class="audio-btn" id="btn-play-whisper">▶ Whisper</button>
+                <button class="audio-btn" id="btn-play-full">▶ Full Sound</button>
+            </div>
+
+            <div class="panel-section">
+                <div class="section-title">Applied Rules</div>
+                <div class="rules-list" id="rules-list">
+                    <div class="rule-item active">
+                        <div class="rule-title">Standard Formula</div>
+                        <div>f[r][c].s(w,v) = f[r][c].s(w) + f[17][c].s(w,v)</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-title">8th Column Rule</div>
+                        <div>f[r][8] = f[r][2].w + f[17][4].v</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-title">ሀ/ሐ/ዐ Exception</div>
+                        <div>Column 1 uses አ instead of ኧ</div>
                     </div>
                 </div>
-                <div class="timeline-track" id="timeline-track"></div>
             </div>
-        </footer>
-    </div>
+
+            <div class="panel-section word-input-container">
+                <div class="section-title">Word Analyzer</div>
+                <input type="text" class="word-input" id="word-input" placeholder="ለአማርኛ" value="ኢትዮጵያ">
+                <div class="word-analysis" id="word-analysis"></div>
+            </div>
+        </aside>
+    </main>
 
     <script>
-    // ============================================================================
-    // LOGOS-LCS v3.0 - RECURSIVE REFINEMENT ENGINE
-    // ============================================================================
+    // =========================================================================
+    // MFIDEL ATLAS DATA
+    // =========================================================================
 
-    const OPTIMIZATION_PASSES = [
-        { id: 1, name: "Core Architecture", desc: "Type Ontology & Refinement", color: "#ef4444" },
-        { id: 2, name: "Wh Gate Enhancement", desc: "Combinators & Temporal Expr", color: "#f97316" },
-        { id: 3, name: "DS-DNA Upgrade", desc: "Self-Modification & Gradients", color: "#eab308" },
-        { id: 4, name: "Causal Intelligence", desc: "Inference & Probabilistic", color: "#22c55e" },
-        { id: 5, name: "Meta-Cognitive", desc: "Self-Reflection & Emergent", color: "#06b6d4" },
-        { id: 6, name: "Performance", desc: "Spatial Index & Batch", color: "#8b5cf6" },
-        { id: 7, name: "Temporal System", desc: "Snapshots & Time Travel", color: "#ec4899" },
-        { id: 8, name: "Query Language", desc: "SymQL Interface", color: "#6366f1" }
-    ];
-
-    const WH_GATE_CATEGORIES = {
-        temporal: ['WHEN_NOW', 'WHEN_BEFORE', 'WHEN_AFTER', 'WHEN_DURING', 'WHEN_CYCLE', 'WHEN_PHASE', 'WHEN_DELAY', 'WHEN_DURATION', 'WHEN_SEQUENCE'],
-        spatial: ['WHERE_AT', 'WHERE_NEAR', 'WHERE_IN', 'WHERE_ON', 'WHERE_BETWEEN', 'WHERE_FACING', 'WHERE_REGION', 'WHERE_PATH', 'WHERE_BOUNDARY'],
-        identity: ['WHAT_TYPE', 'WHAT_STATE', 'WHAT_PROPERTY', 'WHO_AGENT', 'WHO_TARGET', 'WHO_OWNER', 'WHAT_CATEGORY', 'WHAT_INSTANCE', 'WHO_GROUP'],
-        causation: ['WHY_CAUSE', 'WHY_PURPOSE', 'WHY_TRIGGER', 'HOW_METHOD', 'HOW_DEGREE', 'HOW_MANNER', 'WHY_CHAIN', 'HOW_TRANSFORM', 'WHY_CONSTRAINT'],
-        quantitative: ['HOW_MUCH', 'HOW_MANY', 'HOW_OFTEN', 'HOW_LONG', 'HOW_FAR', 'HOW_FAST', 'HOW_RATIO', 'HOW_RANGE', 'HOW_DELTA']
+    const VOWELS = {
+        1: { symbol: 'ኧ', phonetic: 'ə' },
+        2: { symbol: 'ኡ', phonetic: 'u' },
+        3: { symbol: 'ኢ', phonetic: 'i' },
+        4: { symbol: 'ኣ', phonetic: 'a' },
+        5: { symbol: 'ኤ', phonetic: 'e' },
+        6: { symbol: 'እ', phonetic: 'ɨ' },
+        7: { symbol: 'ኦ', phonetic: 'o' },
+        8: { symbol: 'አ', phonetic: 'ʔa' }
     };
 
-    const ONTOLOGY = {
-        ROOT: { children: ['FUNDAMENTAL', 'STRUCTURAL', 'CAUSAL_AGENT', 'AUTHORITY', 'OBSERVER'] },
-        FUNDAMENTAL: { children: [] },
-        STRUCTURAL: { children: ['ENVIRONMENT', 'MATERIAL'] },
-        CAUSAL_AGENT: { children: ['ENTITY', 'LIGHT'] },
-        AUTHORITY: { children: [] },
-        OBSERVER: { children: [] },
-        ENVIRONMENT: { children: [] },
-        MATERIAL: { children: [] },
-        ENTITY: { children: [] },
-        LIGHT: { children: [] }
+    const FIDEL_GEBETA = {
+        1:  { name: 'ha', base: 'h', exception: true, fidels: ['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ','ሇ'] },
+        2:  { name: 'la', base: 'l', fidels: ['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ','ሏ'] },
+        3:  { name: 'ħa', base: 'ħ', exception: true, fidels: ['ሐ','ሑ','ሒ','ሓ','ሔ','ሕ','ሖ','ሗ'] },
+        4:  { name: 'ma', base: 'm', fidels: ['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ','ሟ'] },
+        5:  { name: 'śa', base: 'ś', fidels: ['ሠ','ሡ','ሢ','ሣ','ሤ','ሥ','ሦ','ሧ'] },
+        6:  { name: 'ra', base: 'r', fidels: ['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ','ሯ'] },
+        7:  { name: 'sa', base: 's', fidels: ['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ','ሷ'] },
+        8:  { name: 'ša', base: 'ʃ', fidels: ['ሸ','ሹ','ሺ','ሻ','ሼ','ሽ','ሾ','ሿ'] },
+        9:  { name: 'qa', base: 'q', fidels: ['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ','ቋ'] },
+        10: { name: 'ba', base: 'b', fidels: ['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ','ቧ'] },
+        11: { name: 'va', base: 'v', fidels: ['ቨ','ቩ','ቪ','ቫ','ቬ','ቭ','ቮ','ቯ'] },
+        12: { name: 'ta', base: 't', fidels: ['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ','ቷ'] },
+        13: { name: 'ča', base: 'tʃ', fidels: ['ቸ','ቹ','ቺ','ቻ','ቼ','ች','ቾ','ቿ'] },
+        14: { name: 'xa', base: 'x', fidels: ['ኀ','ኁ','ኂ','ኃ','ኄ','ኅ','ኆ','ኈ'] },
+        15: { name: 'na', base: 'n', fidels: ['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ','ኗ'] },
+        16: { name: 'ña', base: 'ɲ', fidels: ['ኘ','ኙ','ኚ','ኛ','ኜ','ኝ','ኞ','ኟ'] },
+        17: { name: 'vowel', base: 'ʔ', isVowel: true, fidels: ['ኧ','ኡ','ኢ','ኣ','ኤ','እ','ኦ','አ'] },
+        18: { name: 'ka', base: 'k', fidels: ['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ','ኳ'] },
+        19: { name: 'xa', base: 'x', fidels: ['ኸ','ኹ','ኺ','ኻ','ኼ','ኽ','ኾ','ዃ'] },
+        20: { name: 'wa', base: 'w', cols: 7, fidels: ['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'] },
+        21: { name: 'ʕa', base: 'ʕ', cols: 7, exception: true, fidels: ['ዐ','ዑ','ዒ','ዓ','ዔ','ዕ','ዖ'] },
+        22: { name: 'za', base: 'z', fidels: ['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ','ዟ'] },
+        23: { name: 'ža', base: 'ʒ', fidels: ['ዠ','ዡ','ዢ','ዣ','ዤ','ዥ','ዦ','ዧ'] },
+        24: { name: 'ya', base: 'j', cols: 7, fidels: ['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'] },
+        25: { name: 'da', base: 'd', fidels: ['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ','ዷ'] },
+        26: { name: 'ǧa', base: 'dʒ', fidels: ['ጀ','ጁ','ጂ','ጃ','ጄ','ጅ','ጆ','ጇ'] },
+        27: { name: 'ga', base: 'g', fidels: ['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ','ጓ'] },
+        28: { name: "t'a", base: "tʼ", fidels: ['ጠ','ጡ','ጢ','ጣ','ጤ','ጥ','ጦ','ጧ'] },
+        29: { name: "č'a", base: "tʃʼ", fidels: ['ጨ','ጩ','ጪ','ጫ','ጬ','ጭ','ጮ','ጯ'] },
+        30: { name: "p'a", base: "pʼ", fidels: ['ጰ','ጱ','ጲ','ጳ','ጴ','ጵ','ጶ','ጷ'] },
+        31: { name: "s'a", base: "sʼ", fidels: ['ጸ','ጹ','ጺ','ጻ','ጼ','ጽ','ጾ','ጿ'] },
+        32: { name: "ts'a", base: "tsʼ", fidels: ['ፀ','ፁ','ፂ','ፃ','ፄ','ፅ','ፆ','ፇ'] },
+        33: { name: 'fa', base: 'f', fidels: ['ፈ','ፉ','ፊ','ፋ','ፌ','ፍ','ፎ','ፏ'] },
+        34: { name: 'pa', base: 'p', fidels: ['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ','ፗ'] }
     };
 
-    // ============================================================================
-    // SIMPLIFIED v3 ENGINE (Browser-compatible)
-    // ============================================================================
-
-    class LCSSymbolV3 {
-        constructor(name, layer, config = {}) {
-            this.id = `sym_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
-            this.name = name;
-            this.layer = layer;
-            this.type = config.type || 'ENTITY';
-            this.baseValue = config.baseValue ?? 1.0;
-            this.symbolWeight = config.symbolWeight ?? 1.0;
-            this.modifier = 1.0;
-            this.state = new Map(Object.entries(config.initialState || {}));
-            this.causes = new Set();
-            this.effects = new Set();
-            this.position = { x: 0, y: 0, z: layer };
-            this.activations = 0;
-            this.lastActivated = null;
-            
-            // DNA
-            this.dna = {
-                memory: [],
-                reinforcement: new Map(),
-                patterns: new Map()
-            };
-        }
-        
-        calculateMs() {
-            return this.baseValue * this.symbolWeight * this.modifier;
-        }
-        
-        applyModifier(mod) {
-            this.modifier *= mod;
-        }
-        
-        resetModifier() {
-            this.modifier = 1.0;
-        }
-        
-        causesSymbol(target) {
-            this.effects.add(target);
-            target.causes.add(this);
-        }
-        
-        remember(tag, data) {
-            this.dna.memory.unshift({ tag, data, time: Date.now() });
-            if (this.dna.memory.length > 50) this.dna.memory.pop();
+    // Build reverse lookup
+    const symbolToCoord = new Map();
+    for (let r = 1; r <= 34; r++) {
+        const row = FIDEL_GEBETA[r];
+        for (let c = 0; c < row.fidels.length; c++) {
+            symbolToCoord.set(row.fidels[c], { row: r, col: c + 1 });
         }
     }
 
-    class LogosLCSV3Engine {
-        constructor() {
-            this.symbols = new Map();
-            this.whGateStates = new Map();
-            this.causalChains = [];
-            this.snapshots = [];
-            this.currentSnapshotIndex = -1;
-            this.emergentPatterns = [];
-            this.anomalies = [];
-            this.running = true;
-            this.tickCount = 0;
-            
-            // Causal inference
-            this.causalGraph = new Map();
-            
-            // Attention
-            this.salienceMap = new Map();
-            this.focus = null;
-            
-            // Initialize Wh gates
-            Object.values(WH_GATE_CATEGORIES).flat().forEach(gate => {
-                this.whGateStates.set(gate, { active: false, fireCount: 0, lastFired: null });
-            });
+    // =========================================================================
+    // AUDIO ENGINE
+    // =========================================================================
+
+    let audioCtx = null;
+
+    const whisperFreq = {
+        'h': 200, 'l': 350, 'ħ': 180, 'm': 250, 'ś': 4500, 'r': 1500,
+        's': 4000, 'ʃ': 3500, 'q': 150, 'b': 120, 'v': 200, 't': 3000,
+        'tʃ': 3200, 'x': 2000, 'n': 280, 'ɲ': 300, 'ʔ': 100, 'k': 2500,
+        'w': 400, 'ʕ': 150, 'z': 250, 'ʒ': 280, 'j': 300, 'd': 150,
+        'dʒ': 200, 'g': 180, 'tʼ': 3000, 'tʃʼ': 3200, 'pʼ': 2800,
+        'sʼ': 4200, 'tsʼ': 4000, 'f': 3500, 'p': 2500
+    };
+
+    const vowelFormants = {
+        1: { f1: 500, f2: 1500 },
+        2: { f1: 300, f2: 870 },
+        3: { f1: 270, f2: 2290 },
+        4: { f1: 730, f2: 1090 },
+        5: { f1: 400, f2: 2000 },
+        6: { f1: 400, f2: 1600 },
+        7: { f1: 570, f2: 840 },
+        8: { f1: 730, f2: 1090 }
+    };
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        return audioCtx;
+    }
+
+    function playFidel(row, col, whisperOnly = false) {
+        const ctx = initAudio();
+        const rowData = FIDEL_GEBETA[row];
+        const baseFreq = whisperFreq[rowData.base] || 200;
+        
+        // Determine vowel column
+        let vowelCol = col;
+        if (col === 8 && (rowData.cols || 8) === 8) {
+            vowelCol = 4; // 8th form uses ኣ
+        }
+        if (col === 1 && rowData.exception) {
+            vowelCol = 8; // Exception uses አ
         }
         
-        createSymbol(name, layer, config = {}) {
-            const symbol = new LCSSymbolV3(name, layer, config);
-            this.symbols.set(symbol.id, symbol);
-            this.positionSymbol(symbol);
-            return symbol;
+        const formants = vowelFormants[vowelCol];
+        const duration = 0.3;
+        const now = ctx.currentTime;
+
+        // Whisper oscillator
+        const whisperOsc = ctx.createOscillator();
+        const whisperGain = ctx.createGain();
+        whisperOsc.type = 'sawtooth';
+        whisperOsc.frequency.value = baseFreq;
+        whisperGain.gain.value = 0.15;
+        whisperOsc.connect(whisperGain);
+
+        // Vowel oscillators (if not whisper only)
+        const masterGain = ctx.createGain();
+        whisperGain.connect(masterGain);
+
+        if (!whisperOnly) {
+            const vowelOsc1 = ctx.createOscillator();
+            const vowelOsc2 = ctx.createOscillator();
+            const vowelGain = ctx.createGain();
+            
+            vowelOsc1.type = 'sine';
+            vowelOsc1.frequency.value = formants.f1;
+            vowelOsc2.type = 'sine';
+            vowelOsc2.frequency.value = formants.f2;
+            vowelGain.gain.value = 0.3;
+            
+            vowelOsc1.connect(vowelGain);
+            vowelOsc2.connect(vowelGain);
+            vowelGain.connect(masterGain);
+            
+            vowelOsc1.start(now);
+            vowelOsc2.start(now);
+            vowelOsc1.stop(now + duration);
+            vowelOsc2.stop(now + duration);
         }
+
+        masterGain.connect(ctx.destination);
+        masterGain.gain.setValueAtTime(0, now);
+        masterGain.gain.linearRampToValueAtTime(0.5, now + 0.02);
+        masterGain.gain.linearRampToValueAtTime(0.3, now + duration * 0.5);
+        masterGain.gain.linearRampToValueAtTime(0, now + duration);
+
+        whisperOsc.start(now);
+        whisperOsc.stop(now + duration);
+    }
+
+    // =========================================================================
+    // FORMULA COMPUTATION
+    // =========================================================================
+
+    function computeFormula(row, col) {
+        const rowData = FIDEL_GEBETA[row];
+        const maxCols = rowData.cols || 8;
         
-        positionSymbol(symbol) {
-            const layerSymbols = Array.from(this.symbols.values()).filter(s => s.layer === symbol.layer);
-            const angle = layerSymbols.length * 0.618 * Math.PI * 2;
-            const radius = 100 + symbol.layer * 40;
-            symbol.position.x = Math.cos(angle) * radius;
-            symbol.position.y = Math.sin(angle) * radius;
+        let shapeRow = row;
+        let shapeCol = col;
+        let vowelCol = col;
+        let rules = ['standard'];
+
+        // 8th column rule
+        if (col === 8 && maxCols === 8) {
+            shapeCol = 2;
+            vowelCol = 4;
+            rules = ['col8'];
         }
-        
-        evaluateWhGate(gateId, context = {}) {
-            const state = this.whGateStates.get(gateId);
-            if (!state) return false;
-            
-            // Simplified evaluation
-            let fires = false;
-            if (gateId === 'WHEN_NOW') fires = context.immediate === true;
-            else if (gateId === 'WHEN_CYCLE') fires = (this.tickCount % 60) === 0;
-            else if (gateId === 'WHERE_NEAR') fires = (context.distance || Infinity) < 50;
-            else fires = Math.random() > 0.95; // Random for demo
-            
-            state.active = fires;
-            if (fires) {
-                state.fireCount++;
-                state.lastFired = Date.now();
-            }
-            return fires;
+
+        // Exception rule for rows 1, 3, 21
+        if (col === 1 && rowData.exception) {
+            vowelCol = 8;
+            rules = ['exception'];
         }
-        
-        processCausalChain(root, trigger, context = {}) {
-            const chain = {
-                id: `chain_${Date.now()}`,
-                trigger,
-                source: root.name,
-                effects: [],
-                whGatesUsed: [],
-                totalMs: 0,
-                probability: Math.random() * 0.5 + 0.5
-            };
-            
-            const queue = [root];
-            const visited = new Set();
-            
-            while (queue.length > 0) {
-                const current = queue.shift();
-                if (visited.has(current.id)) continue;
-                visited.add(current.id);
-                
-                current.activations++;
-                current.lastActivated = Date.now();
-                current.remember(trigger, context);
-                
-                const ms = current.calculateMs();
-                chain.effects.push({ symbol: current.name, ms });
-                chain.totalMs += ms;
-                
-                for (const effect of current.effects) {
-                    if (!visited.has(effect.id)) queue.push(effect);
-                }
-            }
-            
-            this.causalChains.unshift(chain);
-            if (this.causalChains.length > 100) this.causalChains.pop();
-            
-            return chain;
-        }
-        
-        takeSnapshot(label = '') {
-            const snapshot = {
-                id: `snap_${Date.now()}`,
-                label: label || `Tick ${this.tickCount}`,
-                tickCount: this.tickCount,
-                timestamp: Date.now(),
-                symbolCount: this.symbols.size,
-                data: Array.from(this.symbols.values()).map(s => ({
-                    id: s.id, name: s.name, layer: s.layer,
-                    baseValue: s.baseValue, symbolWeight: s.symbolWeight
-                }))
-            };
-            
-            this.snapshots.push(snapshot);
-            this.currentSnapshotIndex = this.snapshots.length - 1;
-            if (this.snapshots.length > 50) this.snapshots.shift();
-            
-            return snapshot;
-        }
-        
-        restoreSnapshot(snapshotId) {
-            const snapshot = this.snapshots.find(s => s.id === snapshotId);
-            if (!snapshot) return null;
-            this.currentSnapshotIndex = this.snapshots.indexOf(snapshot);
-            return snapshot;
-        }
-        
-        detectEmergentPatterns() {
-            const patternCounts = new Map();
-            
-            for (const chain of this.causalChains.slice(0, 50)) {
-                const sig = chain.effects.map(e => e.symbol).join('->');
-                patternCounts.set(sig, (patternCounts.get(sig) || 0) + 1);
-            }
-            
-            this.emergentPatterns = Array.from(patternCounts.entries())
-                .filter(([_, count]) => count >= 3)
-                .map(([pattern, count]) => ({ pattern, occurrences: count }));
-            
-            return this.emergentPatterns;
-        }
-        
-        updateAttention() {
-            for (const symbol of this.symbols.values()) {
-                let salience = 0;
-                const timeSince = Date.now() - (symbol.lastActivated || 0);
-                salience += Math.exp(-timeSince / 5000);
-                salience += symbol.calculateMs() * 0.5;
-                salience += (symbol.effects.size + symbol.causes.size) * 0.1;
-                this.salienceMap.set(symbol.id, salience);
-            }
-            
-            let maxSalience = 0;
-            for (const [id, salience] of this.salienceMap) {
-                if (salience > maxSalience) {
-                    maxSalience = salience;
-                    this.focus = id;
-                }
-            }
-        }
-        
-        executeSymQL(query) {
-            try {
-                const upper = query.toUpperCase();
-                if (!upper.includes('SELECT')) return 'Error: Only SELECT queries supported';
-                
-                let results = Array.from(this.symbols.values()).map(s => ({
-                    name: s.name,
-                    layer: s.layer,
-                    type: s.type,
-                    ms: s.calculateMs().toFixed(3),
-                    activations: s.activations,
-                    effects: s.effects.size,
-                    causes: s.causes.size
-                }));
-                
-                // Simple WHERE parsing
-                const whereMatch = query.match(/WHERE\s+(\w+)\s*(>|<|=)\s*([\d.]+)/i);
-                if (whereMatch) {
-                    const [_, field, op, val] = whereMatch;
-                    const numVal = parseFloat(val);
-                    results = results.filter(r => {
-                        const v = parseFloat(r[field]) || 0;
-                        if (op === '>') return v > numVal;
-                        if (op === '<') return v < numVal;
-                        return v == numVal;
-                    });
-                }
-                
-                // Simple ORDER BY
-                const orderMatch = query.match(/ORDER BY\s+(\w+)\s*(DESC|ASC)?/i);
-                if (orderMatch) {
-                    const [_, field, dir] = orderMatch;
-                    results.sort((a, b) => {
-                        const av = parseFloat(a[field]) || a[field];
-                        const bv = parseFloat(b[field]) || b[field];
-                        return dir?.toUpperCase() === 'DESC' ? bv - av : av - bv;
-                    });
-                }
-                
-                // LIMIT
-                const limitMatch = query.match(/LIMIT\s+(\d+)/i);
-                if (limitMatch) {
-                    results = results.slice(0, parseInt(limitMatch[1]));
-                }
-                
-                return JSON.stringify(results, null, 2);
-            } catch (e) {
-                return `Error: ${e.message}`;
-            }
-        }
-        
-        tick() {
-            if (!this.running) return;
-            this.tickCount++;
-            
-            // Evaluate time-based gates
-            this.evaluateWhGate('WHEN_NOW', { immediate: true });
-            this.evaluateWhGate('WHEN_CYCLE', {});
-            
-            // Reset modifiers
-            for (const symbol of this.symbols.values()) {
-                symbol.resetModifier();
-            }
-            
-            // Periodic analysis
-            if (this.tickCount % 60 === 0) {
-                this.updateAttention();
-            }
-            if (this.tickCount % 180 === 0) {
-                this.detectEmergentPatterns();
-            }
-            
-            // Auto-snapshot
-            if (this.tickCount % 300 === 0) {
-                this.takeSnapshot('auto');
-            }
-        }
-        
-        getStats() {
-            const activeGates = Array.from(this.whGateStates.values()).filter(s => s.active).length;
-            const symbols = Array.from(this.symbols.values());
-            const totalMs = symbols.reduce((s, sym) => s + sym.calculateMs(), 0);
-            
+
+        // Special: vowel row col 8
+        if (row === 17 && col === 8) {
             return {
-                symbols: this.symbols.size,
-                chains: this.causalChains.length,
-                activeWhGates: activeGates,
-                emergent: this.emergentPatterns.length,
-                avgMs: symbols.length ? (totalMs / symbols.length).toFixed(3) : '0.000',
-                snapshots: this.snapshots.length,
-                tickCount: this.tickCount
+                shape: 'ኧ',
+                shapeId: 'f[17][1]',
+                vowel: 'ኣ',
+                vowelId: 'f[17][4]',
+                formula: 'f[17][8].s(w,v) = f[17][1].s(w) + f[17][4].s(w,v)',
+                rules: ['vowel8']
             };
         }
+
+        const shape = FIDEL_GEBETA[shapeRow].fidels[shapeCol - 1];
+        const vowel = VOWELS[vowelCol].symbol;
+
+        return {
+            shape,
+            shapeId: `f[${shapeRow}][${shapeCol}]`,
+            vowel,
+            vowelId: `f[17][${vowelCol}]`,
+            formula: `f[${row}][${col}].s(w,v) = f[${shapeRow}][${shapeCol}].s(w) + f[17][${vowelCol}].s(w,v)`,
+            rules
+        };
     }
 
-    // ============================================================================
-    // RENDERER
-    // ============================================================================
+    // =========================================================================
+    // UI RENDERING
+    // =========================================================================
 
-    class V3Renderer {
-        constructor(canvas, engine) {
-            this.canvas = canvas;
-            this.ctx = canvas.getContext('2d');
-            this.engine = engine;
-            this.mode = 'mesh';
-            this.resize();
-            window.addEventListener('resize', () => this.resize());
-        }
-        
-        resize() {
-            this.canvas.width = this.canvas.parentElement.clientWidth;
-            this.canvas.height = this.canvas.parentElement.clientHeight;
-            this.cx = this.canvas.width / 2;
-            this.cy = this.canvas.height / 2;
-        }
-        
-        render() {
-            const ctx = this.ctx;
-            ctx.fillStyle = 'rgba(5, 6, 10, 0.2)';
-            ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            
-            if (this.mode === 'mesh' || this.mode === 'causal') {
-                this.drawConnections();
-                this.drawSymbols();
-            } else if (this.mode === 'inference') {
-                this.drawInferenceGraph();
-            } else if (this.mode === 'attention') {
-                this.drawAttentionMap();
-            }
-        }
-        
-        drawConnections() {
-            const ctx = this.ctx;
-            
-            for (const symbol of this.engine.symbols.values()) {
-                const fx = this.cx + symbol.position.x;
-                const fy = this.cy + symbol.position.y;
-                
-                for (const effect of symbol.effects) {
-                    const tx = this.cx + effect.position.x;
-                    const ty = this.cy + effect.position.y;
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(fx, fy);
-                    ctx.lineTo(tx, ty);
-                    ctx.strokeStyle = 'rgba(94, 234, 212, 0.3)';
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                    
-                    // Arrow
-                    const angle = Math.atan2(ty - fy, tx - fx);
-                    ctx.beginPath();
-                    ctx.moveTo(tx, ty);
-                    ctx.lineTo(tx - 8 * Math.cos(angle - 0.3), ty - 8 * Math.sin(angle - 0.3));
-                    ctx.lineTo(tx - 8 * Math.cos(angle + 0.3), ty - 8 * Math.sin(angle + 0.3));
-                    ctx.closePath();
-                    ctx.fillStyle = 'rgba(94, 234, 212, 0.5)';
-                    ctx.fill();
-                }
-            }
-        }
-        
-        drawSymbols() {
-            const ctx = this.ctx;
-            const passColors = OPTIMIZATION_PASSES.map(p => p.color);
-            
-            for (const symbol of this.engine.symbols.values()) {
-                const x = this.cx + symbol.position.x;
-                const y = this.cy + symbol.position.y;
-                const ms = symbol.calculateMs();
-                const size = 8 + ms * 5;
-                const color = passColors[symbol.layer % passColors.length];
-                
-                // Focus highlight
-                if (this.engine.focus === symbol.id) {
-                    ctx.beginPath();
-                    ctx.arc(x, y, size + 15, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(167, 139, 250, 0.2)';
-                    ctx.fill();
-                }
-                
-                // Recent activation glow
-                const timeSince = Date.now() - (symbol.lastActivated || 0);
-                if (timeSince < 500) {
-                    ctx.beginPath();
-                    ctx.arc(x, y, size + 10, 0, Math.PI * 2);
-                    ctx.fillStyle = color + '40';
-                    ctx.fill();
-                }
-                
-                // Symbol
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = color;
-                ctx.fill();
-                
-                // Inner
-                ctx.beginPath();
-                ctx.arc(x, y, size * 0.4, 0, Math.PI * 2);
-                ctx.fillStyle = '#fff';
-                ctx.fill();
-                
-                // Label
-                ctx.fillStyle = 'rgba(255,255,255,0.6)';
-                ctx.font = '9px JetBrains Mono';
-                ctx.textAlign = 'center';
-                ctx.fillText(symbol.name.split('_')[0], x, y + size + 14);
-            }
-        }
-        
-        drawInferenceGraph() {
-            const ctx = this.ctx;
-            ctx.fillStyle = 'rgba(255,255,255,0.1)';
-            ctx.font = '12px JetBrains Mono';
-            ctx.textAlign = 'center';
-            ctx.fillText('Causal Inference View', this.cx, this.cy - 50);
-            ctx.fillText(`P(Effect|Cause) computed for ${this.engine.causalChains.length} chains`, this.cx, this.cy);
-            
-            // Draw simplified Bayesian network
-            const chains = this.engine.causalChains.slice(0, 5);
-            chains.forEach((chain, i) => {
-                const y = 100 + i * 40;
-                ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
-                ctx.fillText(`${chain.source} → P=${chain.probability.toFixed(2)}`, this.cx, y);
-            });
-        }
-        
-        drawAttentionMap() {
-            const ctx = this.ctx;
-            
-            for (const symbol of this.engine.symbols.values()) {
-                const x = this.cx + symbol.position.x;
-                const y = this.cy + symbol.position.y;
-                const salience = this.engine.salienceMap.get(symbol.id) || 0;
-                const size = 10 + salience * 30;
-                
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(167, 139, 250, ${salience * 0.5})`;
-                ctx.fill();
-                
-                if (this.engine.focus === symbol.id) {
-                    ctx.strokeStyle = '#a78bfa';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                }
-            }
-        }
-    }
+    let selectedFidel = { row: 2, col: 1 };
 
-    // ============================================================================
-    // UI MANAGER
-    // ============================================================================
+    function buildGebetaGrid() {
+        const grid = document.getElementById('gebeta-grid');
+        grid.innerHTML = '';
 
-    class UIManager {
-        constructor(engine) {
-            this.engine = engine;
-            this.initPasses();
-            this.initOntology();
-            this.initWhGates();
-            this.initControls();
-            this.startLoop();
+        // Header row
+        grid.appendChild(createEl('div', 'column-header', ''));
+        for (let c = 1; c <= 8; c++) {
+            const vowel = VOWELS[c];
+            grid.appendChild(createEl('div', 'column-header', `${c}: ${vowel.symbol}`));
         }
-        
-        initPasses() {
-            const container = document.getElementById('passes-container');
-            OPTIMIZATION_PASSES.forEach(pass => {
-                const div = document.createElement('div');
-                div.className = 'pass-indicator';
-                div.style.borderLeftColor = pass.color;
-                div.innerHTML = `
-                    <div class="pass-num" style="background: ${pass.color}">${pass.id}</div>
-                    <div class="pass-info">
-                        <div class="pass-name">${pass.name}</div>
-                        <div class="pass-desc">${pass.desc}</div>
-                    </div>
-                    <div class="pass-status"></div>
+
+        // Data rows
+        for (let r = 1; r <= 34; r++) {
+            const rowData = FIDEL_GEBETA[r];
+            const maxCols = rowData.cols || 8;
+
+            // Row header
+            const header = createEl('div', 'row-header', '');
+            header.innerHTML = `<span class="row-num">${r}</span><span>${rowData.name}</span>`;
+            grid.appendChild(header);
+
+            // Fidel cells
+            for (let c = 1; c <= 8; c++) {
+                if (c > maxCols) {
+                    grid.appendChild(createEl('div', 'fidel-cell empty-cell', ''));
+                    continue;
+                }
+
+                const cell = document.createElement('div');
+                cell.className = 'fidel-cell';
+                
+                // Add special classes
+                if (r === 17) cell.classList.add('vowel-row');
+                if (c === 1 && rowData.exception) cell.classList.add('exception');
+                if (c === 8 && maxCols === 8 && r !== 17) cell.classList.add('col8');
+                if (r === selectedFidel.row && c === selectedFidel.col) {
+                    cell.classList.add('selected');
+                }
+
+                cell.innerHTML = `
+                    <div class="fidel-symbol">${rowData.fidels[c - 1]}</div>
+                    <div class="fidel-id">f[${r}][${c}]</div>
                 `;
-                div.addEventListener('click', () => this.activatePass(pass.id));
-                container.appendChild(div);
-            });
-        }
-        
-        activatePass(passId) {
-            // Create symbols related to pass
-            const names = ['Core', 'Processor', 'Handler', 'Manager', 'Engine'];
-            const name = `Pass${passId}_${names[Math.floor(Math.random() * names.length)]}`;
-            const symbol = this.engine.createSymbol(name, passId, {
-                baseValue: 0.5 + Math.random() * 0.5,
-                type: 'CAUSAL_AGENT'
-            });
-            
-            // Connect to existing
-            const existing = Array.from(this.engine.symbols.values());
-            if (existing.length > 1) {
-                const target = existing[Math.floor(Math.random() * (existing.length - 1))];
-                if (target.id !== symbol.id) symbol.causesSymbol(target);
+
+                cell.addEventListener('click', () => selectFidel(r, c));
+                grid.appendChild(cell);
             }
-            
-            // Trigger chain
-            this.engine.processCausalChain(symbol, `pass_${passId}_activate`, {});
-        }
-        
-        initOntology() {
-            const container = document.getElementById('ontology-tree');
-            const renderNode = (name, level = 0) => {
-                const div = document.createElement('div');
-                div.className = `ontology-node level-${level}`;
-                div.textContent = name;
-                div.addEventListener('click', () => this.spawnOntologySymbol(name));
-                container.appendChild(div);
-                
-                if (ONTOLOGY[name]) {
-                    ONTOLOGY[name].children.forEach(child => renderNode(child, level + 1));
-                }
-            };
-            renderNode('ROOT');
-        }
-        
-        spawnOntologySymbol(type) {
-            const name = `${type}_${Date.now() % 1000}`;
-            const symbol = this.engine.createSymbol(name, Math.floor(Math.random() * 5) + 1, { type });
-            this.engine.processCausalChain(symbol, 'ontology_spawn', {});
-        }
-        
-        initWhGates() {
-            const container = document.getElementById('wh-gates-compact');
-            Object.entries(WH_GATE_CATEGORIES).forEach(([category, gates]) => {
-                const catDiv = document.createElement('div');
-                catDiv.className = 'wh-category';
-                catDiv.innerHTML = `<div class="wh-category-header">${category.toUpperCase()} (${gates.length})</div>`;
-                
-                gates.forEach(gate => {
-                    const gateDiv = document.createElement('div');
-                    gateDiv.className = 'wh-gate-mini';
-                    gateDiv.id = `wh-${gate}`;
-                    gateDiv.innerHTML = `<span class="dot"></span>${gate.replace('WHEN_', '').replace('WHERE_', '').replace('WHAT_', '').replace('WHO_', '').replace('WHY_', '').replace('HOW_', '')}`;
-                    gateDiv.addEventListener('click', () => {
-                        this.engine.evaluateWhGate(gate, { immediate: true });
-                    });
-                    catDiv.appendChild(gateDiv);
-                });
-                
-                container.appendChild(catDiv);
-            });
-        }
-        
-        initControls() {
-            // Snapshot
-            document.getElementById('btn-snapshot').addEventListener('click', () => {
-                this.engine.takeSnapshot('manual');
-                this.updateTimeline();
-            });
-            
-            // Introspect
-            document.getElementById('btn-introspect').addEventListener('click', () => {
-                const panel = document.getElementById('introspection-panel');
-                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-                this.updateIntrospection();
-            });
-            
-            // Run/Pause
-            document.getElementById('btn-run').addEventListener('click', (e) => {
-                this.engine.running = !this.engine.running;
-                e.target.textContent = this.engine.running ? '▶ Running' : '⏸ Paused';
-                e.target.classList.toggle('active', this.engine.running);
-            });
-            
-            // Viz modes
-            document.querySelectorAll('.viz-mode').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.viz-mode').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    window.renderer.mode = btn.dataset.mode;
-                });
-            });
-            
-            // SymQL
-            document.getElementById('symql-run').addEventListener('click', () => {
-                const query = document.getElementById('symql-input').value;
-                const result = this.engine.executeSymQL(query);
-                document.getElementById('symql-output').textContent = result;
-            });
-            
-            document.getElementById('symql-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') document.getElementById('symql-run').click();
-            });
-            
-            // Timeline
-            document.getElementById('btn-undo').addEventListener('click', () => {
-                if (this.engine.currentSnapshotIndex > 0) {
-                    this.engine.currentSnapshotIndex--;
-                    this.updateTimeline();
-                }
-            });
-            
-            document.getElementById('btn-redo').addEventListener('click', () => {
-                if (this.engine.currentSnapshotIndex < this.engine.snapshots.length - 1) {
-                    this.engine.currentSnapshotIndex++;
-                    this.updateTimeline();
-                }
-            });
-        }
-        
-        startLoop() {
-            setInterval(() => this.update(), 100);
-        }
-        
-        update() {
-            const stats = this.engine.getStats();
-            
-            document.getElementById('stat-symbols').textContent = stats.symbols;
-            document.getElementById('stat-chains').textContent = stats.chains;
-            document.getElementById('stat-wh').textContent = `${stats.activeWhGates}/45`;
-            document.getElementById('stat-emergent').textContent = stats.emergent;
-            document.getElementById('stat-ms').textContent = stats.avgMs;
-            
-            // Update Wh gate indicators
-            for (const [gateId, state] of this.engine.whGateStates) {
-                const el = document.getElementById(`wh-${gateId}`);
-                if (el) el.classList.toggle('active', state.active);
-            }
-            
-            // Update inference
-            const lastChain = this.engine.causalChains[0];
-            if (lastChain) {
-                document.getElementById('inference-forward').textContent = lastChain.probability.toFixed(3);
-                document.getElementById('inference-backward').textContent = (1 - lastChain.probability * 0.5).toFixed(3);
-            }
-            
-            // Bottlenecks
-            const symbolsByEffects = Array.from(this.engine.symbols.values())
-                .sort((a, b) => b.effects.size - a.effects.size)
-                .slice(0, 3)
-                .map(s => s.name.split('_')[0]);
-            document.getElementById('inference-bottlenecks').textContent = symbolsByEffects.join(', ') || '-';
-        }
-        
-        updateIntrospection() {
-            this.engine.detectEmergentPatterns();
-            this.engine.updateAttention();
-            
-            const content = document.getElementById('introspection-content');
-            let html = '<div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Emergent Patterns</div>';
-            
-            this.engine.emergentPatterns.slice(0, 3).forEach(p => {
-                html += `<div class="emergent-pattern">${p.pattern.slice(0, 20)}... (${p.occurrences}x)</div>`;
-            });
-            
-            html += '<div style="font-size: 0.6rem; color: rgba(255,255,255,0.5); margin: 10px 0 8px;">Current Focus</div>';
-            const focusSymbol = this.engine.symbols.get(this.engine.focus);
-            html += `<div style="color: var(--violet);">${focusSymbol?.name || 'None'}</div>`;
-            
-            content.innerHTML = html;
-        }
-        
-        updateTimeline() {
-            const track = document.getElementById('timeline-track');
-            track.innerHTML = '';
-            
-            this.engine.snapshots.forEach((snap, i) => {
-                const marker = document.createElement('div');
-                marker.className = 'snapshot-marker' + (i === this.engine.currentSnapshotIndex ? ' current' : '');
-                marker.innerHTML = `
-                    <div class="snap-tick">${snap.tickCount}</div>
-                    <div class="snap-label">${snap.label}</div>
-                `;
-                marker.addEventListener('click', () => {
-                    this.engine.restoreSnapshot(snap.id);
-                    this.updateTimeline();
-                });
-                track.appendChild(marker);
-            });
         }
     }
 
-    // ============================================================================
-    // DEMO BUILDER
-    // ============================================================================
-
-    function buildDemo(engine) {
-        // Create initial symbols across layers
-        const symbols = [];
-        
-        for (let pass = 1; pass <= 8; pass++) {
-            const count = 2 + Math.floor(Math.random() * 2);
-            for (let i = 0; i < count; i++) {
-                const names = ['Core', 'Handler', 'Processor', 'Manager', 'Engine', 'System'];
-                const name = `P${pass}_${names[i % names.length]}`;
-                symbols.push(engine.createSymbol(name, pass, {
-                    baseValue: 0.5 + Math.random() * 0.5,
-                    symbolWeight: 0.8 + Math.random() * 0.4
-                }));
-            }
-        }
-        
-        // Create connections
-        for (let i = 1; i < symbols.length; i++) {
-            if (Math.random() > 0.4) {
-                const target = symbols[Math.floor(Math.random() * i)];
-                symbols[i].causesSymbol(target);
-            }
-        }
-        
-        // Initial snapshot
-        engine.takeSnapshot('initial');
+    function createEl(tag, className, text) {
+        const el = document.createElement(tag);
+        el.className = className;
+        el.textContent = text;
+        return el;
     }
 
-    // ============================================================================
-    // INITIALIZATION
-    // ============================================================================
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const engine = new LogosLCSV3Engine();
-        const canvas = document.getElementById('main-canvas');
-        const renderer = new V3Renderer(canvas, engine);
-        const ui = new UIManager(engine);
+    function selectFidel(row, col) {
+        selectedFidel = { row, col };
         
-        window.engine = engine;
-        window.renderer = renderer;
+        // Update grid selection
+        document.querySelectorAll('.fidel-cell.selected').forEach(el => {
+            el.classList.remove('selected');
+        });
         
-        buildDemo(engine);
-        
-        // Main loop
-        function loop() {
-            engine.tick();
-            renderer.render();
-            requestAnimationFrame(loop);
-        }
-        loop();
-        
-        // Periodic events
-        setInterval(() => {
-            if (!engine.running) return;
-            const symbols = Array.from(engine.symbols.values());
-            if (symbols.length > 0) {
-                const root = symbols[Math.floor(Math.random() * symbols.length)];
-                engine.processCausalChain(root, 'auto_pulse', { immediate: true });
+        const cells = document.querySelectorAll('.fidel-cell:not(.empty-cell)');
+        let idx = 0;
+        for (let r = 1; r <= 34; r++) {
+            const maxCols = FIDEL_GEBETA[r].cols || 8;
+            for (let c = 1; c <= 8; c++) {
+                if (c <= maxCols) {
+                    if (r === row && c === col) {
+                        cells[idx].classList.add('selected');
+                    }
+                    idx++;
+                }
             }
-        }, 1500);
+        }
+
+        updateDetailPanel();
+    }
+
+    function updateDetailPanel() {
+        const { row, col } = selectedFidel;
+        const rowData = FIDEL_GEBETA[row];
+        const fidel = rowData.fidels[col - 1];
+        const formula = computeFormula(row, col);
+
+        // Selected display
+        document.querySelector('.selected-symbol').textContent = fidel;
+        document.querySelector('.selected-id').textContent = `f[${row}][${col}]`;
+        document.querySelector('.selected-family').textContent = `${rowData.name}-family`;
+
+        // Formula
+        document.getElementById('formula-display').textContent = formula.formula;
+
+        // Decomposition
+        document.getElementById('decomp-display').innerHTML = `
+            <span class="decomp-part">${fidel}</span>
+            <span class="decomp-equals">=</span>
+            <span class="decomp-part decomp-whisper">${formula.shape}</span>
+            <span class="decomp-plus">+</span>
+            <span class="decomp-part decomp-vowel">${formula.vowel}</span>
+        `;
+
+        // Rules
+        const rulesEl = document.getElementById('rules-list');
+        rulesEl.querySelectorAll('.rule-item').forEach(el => {
+            el.classList.remove('active');
+        });
         
-        console.log('Logos-LCS v3.0 Recursive Refinement Engine initialized');
-        console.log('Access: window.engine, window.renderer');
+        if (formula.rules.includes('standard')) {
+            rulesEl.children[0].classList.add('active');
+        }
+        if (formula.rules.includes('col8')) {
+            rulesEl.children[1].classList.add('active');
+        }
+        if (formula.rules.includes('exception') || formula.rules.includes('vowel8')) {
+            rulesEl.children[2].classList.add('active');
+        }
+
+        // Active rules count
+        document.getElementById('active-rules').textContent = formula.rules.length;
+    }
+
+    function analyzeWord() {
+        const word = document.getElementById('word-input').value;
+        const analysisEl = document.getElementById('word-analysis');
+        let html = '';
+
+        for (const char of word) {
+            const coord = symbolToCoord.get(char);
+            if (coord) {
+                const formula = computeFormula(coord.row, coord.col);
+                html += `<div class="word-fidel">
+                    <span style="font-size: 1.2rem; color: var(--gold)">${char}</span>
+                    <span style="color: var(--muted)">=</span>
+                    <span style="color: var(--violet)">${formula.shape}</span>
+                    <span style="color: var(--cyan)">+</span>
+                    <span style="color: var(--amber)">${formula.vowel}</span>
+                </div>`;
+            }
+        }
+
+        analysisEl.innerHTML = html || '<em>Enter Amharic text above</em>';
+    }
+
+    // =========================================================================
+    // EVENT LISTENERS
+    // =========================================================================
+
+    document.getElementById('btn-play-whisper').addEventListener('click', () => {
+        playFidel(selectedFidel.row, selectedFidel.col, true);
     });
+
+    document.getElementById('btn-play-full').addEventListener('click', () => {
+        playFidel(selectedFidel.row, selectedFidel.col, false);
+    });
+
+    document.getElementById('word-input').addEventListener('input', analyzeWord);
+
+    // =========================================================================
+    // INITIALIZATION
+    // =========================================================================
+
+    buildGebetaGrid();
+    updateDetailPanel();
+    analyzeWord();
+
+    console.log('Mfidel Symbolic Audio Atlas initialized');
+    console.log('Total fidels:', Array.from(symbolToCoord.keys()).length);
     </script>
 </body>
 </html>
