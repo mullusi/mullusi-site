@@ -1,101 +1,694 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mullusi – Symbolic Intelligence</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mullu — Symbolic Intelligence Reimagined</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #e0e0e0;
-      overflow-x: hidden;
-    }
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=Unbounded:wght@400;700&display=swap');
 
-    header {
-      text-align: center;
-      padding: 80px 20px 40px;
-    }
+        :root {
+            --color-dark: #0a0e27;
+            --color-accent: #00d9ff;
+            --color-secondary: #ff006e;
+            --color-light: #f5f5f0;
+            --color-muted: #8b8b8b;
+        }
 
-    h1 {
-      font-size: 3rem;
-      color: #9cf06e;
-      margin: 0;
-      letter-spacing: 2px;
-    }
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: var(--color-light);
+            overflow-x: hidden;
+        }
 
-    h2 {
-      font-weight: normal;
-      color: #b5b5b5;
-      margin-top: 10px;
-    }
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            position: relative;
+            z-index: 100;
+        }
 
-    section {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-      line-height: 1.7;
-      font-size: 1.1rem;
-    }
+        .logo {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--color-accent);
+            text-transform: uppercase;
+        }
 
-    .section-title {
-      color: #9cf06e;
-      font-size: 1.6rem;
-      margin-bottom: 10px;
-    }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 3rem;
+        }
 
-    footer {
-      text-align: center;
-      margin-top: 60px;
-      padding: 30px;
-      color: #666;
-    }
-  </style>
+        nav a {
+            color: var(--color-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 0.25rem;
+        }
+
+        nav a:hover {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -100px;
+            right: -200px;
+            z-index: 0;
+        }
+
+        .hero-content {
+            z-index: 10;
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .hero h1 .highlight {
+            color: var(--color-accent);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--color-light);
+            margin-bottom: 2rem;
+            animation: slideInLeft 0.8s ease-out 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            animation: slideInLeft 0.8s ease-out 0.4s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-family: 'Unbounded', sans-serif;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: var(--color-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--color-secondary);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-primary:hover::before {
+            left: 0;
+        }
+
+        .btn-primary:hover {
+            color: var(--color-light);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-accent);
+            color: var(--color-dark);
+        }
+
+        /* Causal Chain Visualization */
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        canvas {
+            filter: drop-shadow(0 0 30px rgba(0, 217, 255, 0.3));
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 4rem;
+            background: rgba(10, 14, 39, 0.5);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            border-left: 3px solid var(--color-accent);
+            padding-left: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.2s;
+            border-left-color: var(--color-secondary);
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.4s;
+            border-left-color: var(--color-accent);
+        }
+
+        .feature-card h3 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--color-light);
+        }
+
+        /* Philosophy Section */
+        .philosophy {
+            padding: 6rem 4rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .philosophy h2 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .philosophy h2 .accent {
+            color: var(--color-accent);
+        }
+
+        .philosophy p {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--color-light);
+            margin-bottom: 1.5rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(255, 0, 110, 0.05) 100%);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 0.5rem;
+            text-align: center;
+            margin: 6rem 4rem;
+        }
+
+        .cta-section h3 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: var(--color-light);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 4rem;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            text-align: center;
+            color: var(--color-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 2rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            .hero {
+                flex-direction: column;
+                padding: 2rem;
+                min-height: auto;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .philosophy {
+                padding: 3rem 2rem;
+            }
+
+            .cta-section {
+                margin: 3rem 2rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Mullu</div>
+        <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#philosophy">Philosophy</a></li>
+            <li><a href="#cta">Get Started</a></li>
+        </ul>
+    </nav>
 
-<header>
-  <h1>MULLUSI</h1>
-  <h2>Symbolic Intelligence • Causal Chain Reasoning • SGI Framework</h2>
-</header>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Symbolic Intelligence <span class="highlight">Reimagined</span></h1>
+            <p>Transparent, auditable AI built on causal chains instead of opaque neural patterns. Every reasoning step is traceable. Every conclusion is explainable.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Explore Now</a>
+                <a href="#" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <canvas id="causalCanvas" width="500" height="500"></canvas>
+        </div>
+    </section>
 
-<section>
-  <div class="section-title">About Mullusi</div>
-  <p>
-    Mullusi is a unified Symbolic General Intelligence ecosystem designed to reason,
-    model, predict, and understand the world through causal chains and symbolic structures.
-  </p>
-</section>
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Complete Transparency</h3>
+                <p>Every decision traced through explicit causal relationships. No black boxes. No hidden transformations. Pure symbolic reasoning from input to output.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Causal Chains</h3>
+                <p>Built on Universal Quantum Reasoning Systems and multi-layer symbolic computation. Handles complex mathematics, physics, and logic through auditable symbolic execution.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Unified Intelligence</h3>
+                <p>Mathematical computation, graphics rendering, multi-modal synthesis—all operating on the same transparent causal framework. No separate black-box subsystems.</p>
+            </div>
+        </div>
+    </section>
 
-<section>
-  <div class="section-title">Latest Articles</div>
-  <p>Coming soon: a dynamic feed of Mullusi research updates, guides, and symbolic breakthroughs.</p>
-</section>
+    <!-- Philosophy Section -->
+    <section class="philosophy" id="philosophy">
+        <h2>Why <span class="accent">Symbolic?</span></h2>
+        <p>Neural networks optimize for pattern matching. Mullu reasons through causality. We believe the future of AI isn't about larger pattern spaces—it's about genuine understanding through transparent causal inference.</p>
+        <p>Every problem solved through Mullu generates a proof, a trace, a story of reasoning. This isn't just AI that works. It's AI you understand.</p>
+    </section>
 
-<section>
-  <div class="section-title">Ecosystem</div>
-  <p>
-    - Mullu Core  
-    - Symbolic Engine  
-    - MLCM Framework  
-    - Mullu.World Interface  
-    - Causal Chain Labs  
-    - Mfidel Audio Engine  
-    - Symbolic Visual Reasoning  
-  </p>
-</section>
+    <!-- CTA Section -->
+    <section class="cta-section" id="cta">
+        <h3>Ready to Build Intelligence That Makes Sense?</h3>
+        <p>Join us in exploring a new frontier of AI development where transparency and causality matter.</p>
+        <a href="#" class="btn btn-primary">Get Started with Mullu</a>
+    </section>
 
-<section>
-  <div class="section-title">Contact</div>
-  <p>Email: tamirat@mullusi.com</p>
-</section>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Mullu. Symbolic Intelligence Reimagined.</p>
+    </footer>
 
-<footer>
-  Mullusi © 2025
-</footer>
+    <script>
+        // Advanced Causal Chain Orchestration
+        const canvas = document.getElementById('causalCanvas');
+        const ctx = canvas.getContext('2d');
+        let time = 0;
 
+        // Causal reasoning nodes with symbolic meaning
+        class CausalReasoningNode {
+            constructor(x, y, label, type = 'process') {
+                this.x = x;
+                this.y = y;
+                this.baseX = x;
+                this.baseY = y;
+                this.label = label;
+                this.type = type; // 'input', 'process', 'logic', 'output'
+                this.radius = 20;
+                this.energy = 0;
+                this.phase = Math.random() * Math.PI * 2;
+                this.frequency = 0.02 + Math.random() * 0.02;
+            }
+
+            update(globalTime) {
+                // Subtle orbital motion around base position
+                const orbit = 15;
+                this.x = this.baseX + Math.cos(globalTime * this.frequency + this.phase) * orbit;
+                this.y = this.baseY + Math.sin(globalTime * this.frequency * 0.7 + this.phase) * orbit;
+                
+                this.energy = Math.sin(globalTime * 0.05 + this.phase) * 0.5 + 0.5;
+            }
+
+            draw(ctx, time) {
+                // Inner glow based on energy
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 2);
+                const energyColor = this.energy > 0.5 ? '#00d9ff' : '#ff006e';
+                const intensity = this.energy;
+                
+                gradient.addColorStop(0, `rgba(0, 217, 255, ${intensity * 0.4})`);
+                gradient.addColorStop(0.5, `rgba(0, 217, 255, ${intensity * 0.15})`);
+                gradient.addColorStop(1, 'rgba(0, 217, 255, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(this.x - this.radius * 2, this.y - this.radius * 2, this.radius * 4, this.radius * 4);
+
+                // Node circle
+                ctx.fillStyle = `rgba(0, 217, 255, ${0.15 + intensity * 0.2})`;
+                ctx.strokeStyle = energyColor;
+                ctx.lineWidth = 2 + intensity * 2;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Inner symbol
+                ctx.fillStyle = energyColor;
+                ctx.font = 'bold 10px Unbounded';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.label.substring(0, 1), this.x, this.y);
+            }
+        }
+
+        // Causal flow pathway
+        class CausalPath {
+            constructor(fromNode, toNode) {
+                this.fromNode = fromNode;
+                this.toNode = toNode;
+                this.particles = [];
+                this.particleCount = 8;
+                
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push({
+                        progress: (i / this.particleCount),
+                        speed: 0.003 + Math.random() * 0.002,
+                        size: 1 + Math.random() * 2
+                    });
+                }
+            }
+
+            update(globalTime) {
+                this.particles.forEach(p => {
+                    p.progress = (p.progress + p.speed) % 1;
+                });
+            }
+
+            draw(ctx) {
+                // Draw causal connection line with wave
+                const steps = 30;
+                ctx.strokeStyle = 'rgba(0, 217, 255, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                
+                for (let i = 0; i <= steps; i++) {
+                    const t = i / steps;
+                    const x = this.fromNode.x + (this.toNode.x - this.fromNode.x) * t;
+                    const y = this.fromNode.y + (this.toNode.y - this.fromNode.y) * t;
+                    
+                    // Wave distortion based on distance
+                    const perpX = -(this.toNode.y - this.fromNode.y) / (Math.hypot(this.toNode.x - this.fromNode.x, this.toNode.y - this.fromNode.y) || 1);
+                    const perpY = (this.toNode.x - this.fromNode.x) / (Math.hypot(this.toNode.x - this.fromNode.x, this.toNode.y - this.fromNode.y) || 1);
+                    
+                    const wave = Math.sin(t * Math.PI * 3) * 3;
+                    const px = x + perpX * wave;
+                    const py = y + perpY * wave;
+                    
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+
+                // Draw causal energy particles
+                this.particles.forEach(p => {
+                    const t = p.progress;
+                    const x = this.fromNode.x + (this.toNode.x - this.fromNode.x) * t;
+                    const y = this.fromNode.y + (this.toNode.y - this.fromNode.y) * t;
+                    
+                    const perpX = -(this.toNode.y - this.fromNode.y) / (Math.hypot(this.toNode.x - this.fromNode.x, this.toNode.y - this.fromNode.y) || 1);
+                    const perpY = (this.toNode.x - this.fromNode.x) / (Math.hypot(this.toNode.x - this.fromNode.x, this.toNode.y - this.fromNode.y) || 1);
+                    
+                    const wave = Math.sin(t * Math.PI * 3) * 3;
+                    const px = x + perpX * wave;
+                    const py = y + perpY * wave;
+                    
+                    // Energy particle glow
+                    const gradient = ctx.createRadialGradient(px, py, 0, px, py, p.size * 3);
+                    gradient.addColorStop(0, 'rgba(0, 217, 255, 0.8)');
+                    gradient.addColorStop(1, 'rgba(0, 217, 255, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(px - p.size * 3, py - p.size * 3, p.size * 6, p.size * 6);
+                    
+                    ctx.fillStyle = '#00d9ff';
+                    ctx.beginPath();
+                    ctx.arc(px, py, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+        }
+
+        // Wave interference background
+        class WaveField {
+            constructor() {
+                this.sources = [
+                    { x: 100, y: 100, freq: 0.05, phase: 0 },
+                    { x: 400, y: 100, freq: 0.07, phase: Math.PI / 3 },
+                    { x: 250, y: 450, freq: 0.06, phase: Math.PI / 2 }
+                ];
+            }
+
+            getAmplitude(x, y, time) {
+                let total = 0;
+                this.sources.forEach(source => {
+                    const dist = Math.hypot(x - source.x, y - source.y);
+                    const wave = Math.sin(source.freq * dist - time * 0.03 + source.phase);
+                    total += wave / (1 + dist / 100);
+                });
+                return total;
+            }
+
+            draw(ctx, time) {
+                // Draw wave interference pattern at reduced resolution for performance
+                const scale = 8;
+                const width = canvas.width / scale;
+                const height = canvas.height / scale;
+                
+                const imageData = ctx.createImageData(width, height);
+                const data = imageData.data;
+
+                for (let i = 0; i < width; i++) {
+                    for (let j = 0; j < height; j++) {
+                        const worldX = i * scale;
+                        const worldY = j * scale;
+                        const amplitude = this.getAmplitude(worldX, worldY, time);
+                        const idx = (j * width + i) * 4;
+                        
+                        const intensity = Math.max(0, amplitude * 8);
+                        data[idx] = intensity * 10; // R
+                        data[idx + 1] = intensity * 50; // G
+                        data[idx + 2] = intensity * 60; // B
+                        data[idx + 3] = intensity * 3; // A
+                    }
+                }
+
+                // Create temporary canvas at reduced scale
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = width;
+                tempCanvas.height = height;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.putImageData(imageData, 0, 0);
+
+                // Draw upscaled to canvas
+                ctx.globalAlpha = 0.15;
+                ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // Initialize systems
+        const nodes = [
+            new CausalReasoningNode(250, 80, 'AXIOM', 'input'),
+            new CausalReasoningNode(140, 220, 'DEDUCE', 'process'),
+            new CausalReasoningNode(360, 220, 'VERIFY', 'process'),
+            new CausalReasoningNode(140, 350, 'INFER', 'process'),
+            new CausalReasoningNode(360, 350, 'APPLY', 'process'),
+            new CausalReasoningNode(250, 420, 'PROOF', 'output')
+        ];
+
+        const paths = [
+            new CausalPath(nodes[0], nodes[1]),
+            new CausalPath(nodes[0], nodes[2]),
+            new CausalPath(nodes[1], nodes[3]),
+            new CausalPath(nodes[2], nodes[4]),
+            new CausalPath(nodes[3], nodes[5]),
+            new CausalPath(nodes[4], nodes[5]),
+            new CausalPath(nodes[1], nodes[2]), // Cross-reasoning
+            new CausalPath(nodes[3], nodes[4])  // Cross-verification
+        ];
+
+        const waveField = new WaveField();
+
+        function animate() {
+            time++;
+
+            // Fade background to create motion blur effect
+            ctx.fillStyle = 'rgba(10, 14, 39, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw wave interference pattern
+            waveField.draw(ctx, time);
+
+            // Update and draw all nodes
+            nodes.forEach(node => {
+                node.update(time);
+            });
+
+            // Draw causal paths
+            paths.forEach(path => {
+                path.update(time);
+                path.draw(ctx);
+            });
+
+            // Draw nodes on top
+            nodes.forEach(node => {
+                node.draw(ctx, time);
+            });
+
+            // Draw connection labels
+            ctx.fillStyle = 'rgba(0, 217, 255, 0.3)';
+            ctx.font = '9px Crimson Text';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
