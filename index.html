@@ -3,1088 +3,1195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MulluSI v5.5 | Symbolic Sensory Capsules</title>
+    <title>Mullu SGI — Symbolic General Intelligence Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Space+Grotesk:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --void: #020204;
-            --abyss: #08090d;
-            --deep: #0f1015;
-            --surface: #16171f;
-            --elevated: #1e2028;
-            --gold: #d4a574;
-            --gold-dim: rgba(212, 165, 116, 0.25);
-            --amber: #f59e0b;
-            --emerald: #10b981;
-            --cyan: #06b6d4;
-            --violet: #8b5cf6;
-            --rose: #f43f5e;
-            --blue: #3b82f6;
-            --pink: #ec4899;
-            --orange: #f97316;
-            --white: #f0f0f0;
-            --muted: rgba(255,255,255,0.45);
+            --bg-deep: #0a0a0f;
+            --bg-surface: #12121a;
+            --bg-elevated: #1a1a24;
+            --text-primary: #e8e8f0;
+            --text-secondary: #8888a0;
+            --text-muted: #55556a;
+            
+            /* Layer Colors - Acoustic Foundation to Universal Wholeness */
+            --layer-0: #9b59b6; /* Acoustic - Deep Violet */
+            --layer-1: #00d9ff; /* Symbolic - Electric Cyan */
+            --layer-2: #3498db; /* Visual - Azure Blue */
+            --layer-3: #2ecc71; /* Spatial - Emerald */
+            --layer-4: #f39c12; /* Temporal - Amber */
+            --layer-5: #e74c3c; /* Emotional - Crimson */
+            --layer-6: #bdc3c7; /* Physical - Silver */
+            --layer-7: #27ae60; /* Biological - Forest */
+            --layer-8: #f1c40f; /* Social - Gold */
+            --layer-9: linear-gradient(135deg, #9b59b6, #00d9ff, #2ecc71, #f39c12, #e74c3c);
+            
+            --glow-intensity: 0.6;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: 'SF Pro Display', -apple-system, system-ui, sans-serif;
-            background: var(--void);
-            color: var(--white);
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .app {
-            display: grid;
-            grid-template-rows: 52px 1fr;
-            height: 100vh;
+        /* Animated Background */
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
 
         /* Header */
         .header {
-            background: linear-gradient(180deg, var(--abyss) 0%, var(--deep) 100%);
-            border-bottom: 1px solid var(--gold-dim);
-            padding: 0 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-glyph {
-            font-size: 1.4rem;
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(212, 165, 116, 0.5);
-        }
-
-        .logo h1 { font-size: 0.9rem; font-weight: 500; }
-        .logo h1 span { color: var(--gold); }
-
-        .version-badge {
-            background: linear-gradient(135deg, var(--pink), var(--orange));
-            color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.5rem;
+        .logo-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 700;
-            margin-left: 8px;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, #9b59b6 0%, #00d9ff 50%, #f1c40f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: titleGlow 4s ease-in-out infinite;
         }
 
-        .metrics-bar { display: flex; gap: 14px; }
-        .metric { text-align: center; }
-        .metric-value { font-size: 0.9rem; font-weight: 600; }
-        .metric-label { font-size: 0.42rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-
-        .header-controls { display: flex; gap: 6px; }
-        .btn {
-            padding: 6px 12px;
-            background: var(--surface);
-            border: 1px solid var(--gold-dim);
-            border-radius: 5px;
-            color: var(--white);
-            cursor: pointer;
-            font-size: 0.55rem;
-            transition: all 0.15s;
-        }
-        .btn:hover { background: var(--elevated); border-color: var(--gold); }
-        .btn.primary { background: var(--gold); color: var(--void); }
-        .btn.capsule-btn { background: linear-gradient(135deg, var(--pink), var(--orange)); border: none; }
-
-        /* Main Layout */
-        .main {
-            display: grid;
-            grid-template-columns: 240px 1fr 240px;
-            height: calc(100vh - 52px);
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
         }
 
-        .side-panel {
-            background: var(--abyss);
-            border-right: 1px solid rgba(255,255,255,0.05);
-            padding: 10px;
-            overflow-y: auto;
-            font-size: 0.55rem;
-        }
-        .side-panel:last-child { border-right: none; border-left: 1px solid rgba(255,255,255,0.05); }
-
-        .section-title {
-            font-size: 0.48rem;
-            color: var(--gold);
-            text-transform: uppercase;
+        .subtitle {
+            font-family: 'Crimson Pro', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
             letter-spacing: 0.05em;
-            margin: 10px 0 5px 0;
-            padding-bottom: 3px;
-            border-bottom: 1px solid var(--gold-dim);
+        }
+
+        .tagline {
+            margin-top: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Architecture Stack */
+        .architecture-stack {
             display: flex;
-            align-items: center;
-            gap: 5px;
+            flex-direction: column-reverse;
+            gap: 0.5rem;
+            position: relative;
+            padding: 2rem 0;
         }
 
-        .card {
-            background: var(--surface);
-            border-radius: 5px;
-            padding: 8px;
-            margin-bottom: 6px;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 2px 0;
-            font-size: 0.48rem;
-        }
-        .stat-label { color: var(--muted); }
-        .stat-value { color: var(--white); font-family: monospace; }
-
-        /* Taste Grid */
-        .taste-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-        }
-
-        .taste-item {
-            padding: 6px 4px;
-            border-radius: 4px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .taste-item:hover { transform: scale(1.05); }
-        .taste-item.active { border-color: var(--gold); box-shadow: 0 0 8px var(--gold-dim); }
-
-        .taste-item.sweet { background: linear-gradient(135deg, #fcd34d, #fbbf24); }
-        .taste-item.bitter { background: linear-gradient(135deg, #6b7280, #4b5563); }
-        .taste-item.sour { background: linear-gradient(135deg, #a3e635, #84cc16); }
-        .taste-item.salty { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
-        .taste-item.umami { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
-        .taste-item.spicy { background: linear-gradient(135deg, #f87171, #ef4444); }
-        .taste-item.metallic { background: linear-gradient(135deg, #9ca3af, #6b7280); }
-        .taste-item.neutral { background: linear-gradient(135deg, #374151, #1f2937); }
-
-        .taste-emoji { font-size: 1rem; }
-        .taste-name { font-size: 0.4rem; color: var(--void); font-weight: bold; }
-
-        /* Smell Grid */
-        .smell-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3px;
-        }
-
-        .smell-item {
-            background: var(--elevated);
-            padding: 4px;
-            border-radius: 3px;
-            text-align: center;
-            font-size: 0.4rem;
-            cursor: pointer;
-        }
-
-        .smell-item.active { background: rgba(6, 182, 212, 0.3); border: 1px solid var(--cyan); }
-
-        /* Capsule Display */
-        .capsule-card {
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(249, 115, 22, 0.1));
-            border: 1px solid var(--pink);
-            border-radius: 6px;
-            padding: 8px;
-            margin-bottom: 6px;
-        }
-
-        .capsule-title {
-            font-size: 0.55rem;
-            color: var(--pink);
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .capsule-id {
-            font-size: 0.4rem;
-            color: var(--muted);
-            font-family: monospace;
-        }
-
-        .capsule-emotions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3px;
-            margin-top: 4px;
-        }
-
-        .emotion-tag {
-            background: rgba(255,255,255,0.1);
-            padding: 2px 5px;
-            border-radius: 8px;
-            font-size: 0.38rem;
-            color: var(--cyan);
-        }
-
-        .capsule-strength {
-            margin-top: 4px;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .capsule-strength-fill {
+        /* Connection Lines SVG */
+        .connection-lines {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
             height: 100%;
-            background: linear-gradient(90deg, var(--pink), var(--orange));
-            border-radius: 2px;
-            transition: width 0.3s;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        /* Creator Anchor Special */
-        .creator-anchor {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.15));
-            border: 2px solid var(--violet);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .creator-anchor::before {
-            content: '👁';
+        .flow-line {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 1rem;
-            opacity: 0.3;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to top, 
+                rgba(155, 89, 182, 0.8) 0%,
+                rgba(0, 217, 255, 0.8) 30%,
+                rgba(46, 204, 113, 0.8) 50%,
+                rgba(243, 156, 18, 0.8) 70%,
+                rgba(241, 196, 15, 0.8) 100%
+            );
+            opacity: 0;
+            animation: flowPulse 3s ease-in-out infinite;
+            animation-delay: 2s;
         }
 
-        .creator-label {
-            background: var(--violet);
-            color: white;
-            padding: 1px 5px;
-            border-radius: 3px;
-            font-size: 0.35rem;
-            font-weight: bold;
+        @keyframes flowPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
 
-        /* Body Map */
-        .body-map {
+        /* Layer Card */
+        .layer-card {
+            position: relative;
+            z-index: 5;
+            background: var(--bg-surface);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(30px);
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3px;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 1.5rem;
         }
 
-        .body-zone {
-            background: var(--elevated);
-            padding: 4px;
-            border-radius: 3px;
-            text-align: center;
-            font-size: 0.4rem;
+        .layer-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .body-zone-name { color: var(--muted); }
-        .body-zone-state { color: var(--white); font-weight: bold; }
-
-        /* Center Visualization */
-        .viz-container {
-            background: var(--void);
-            position: relative;
+        .layer-card:hover {
+            background: var(--bg-elevated);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px) scale(1.01);
         }
 
-        .viz-canvas { width: 100%; height: 100%; }
-
-        .formula-overlay {
+        .layer-card::before {
+            content: '';
             position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(8, 9, 13, 0.95);
-            border: 1px solid var(--pink);
-            border-radius: 8px;
-            padding: 8px 16px;
-            text-align: center;
+            inset: -1px;
+            border-radius: 13px;
+            padding: 1px;
+            background: var(--layer-color);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s var(--transition-smooth);
         }
 
-        .formula-title {
-            font-size: 0.48rem;
-            color: var(--pink);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .layer-card:hover::before {
+            opacity: 0.6;
         }
 
-        .formula-main {
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        .input-area {
+        .layer-card::after {
+            content: '';
             position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 5px;
+            inset: 0;
+            border-radius: 12px;
+            box-shadow: 0 0 40px var(--layer-color);
+            opacity: 0;
+            transition: opacity 0.4s var(--transition-smooth);
+            pointer-events: none;
         }
 
-        .input-field {
-            width: 180px;
-            padding: 8px 12px;
-            background: var(--surface);
-            border: 1px solid var(--gold-dim);
-            border-radius: 5px;
-            color: var(--white);
-            font-size: 0.9rem;
-            text-align: center;
+        .layer-card:hover::after {
+            opacity: 0.15;
         }
 
-        /* Rhythm Display */
-        .rhythm-display {
+        /* Layer Number Badge */
+        .layer-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            padding: 8px;
-            background: var(--elevated);
-            border-radius: 4px;
-            margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.4);
+            border: 2px solid var(--layer-color);
+            color: var(--layer-color);
+            flex-shrink: 0;
+            transition: all 0.3s var(--transition-smooth);
         }
 
-        .rhythm-dot {
-            width: 8px;
-            height: 8px;
+        .layer-card:hover .layer-badge {
+            background: var(--layer-color);
+            color: var(--bg-deep);
+        }
+
+        /* Layer Content */
+        .layer-content {
+            min-width: 0;
+        }
+
+        .layer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .layer-modality {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--layer-color);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            opacity: 0.9;
+        }
+
+        .layer-summary {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+
+        /* Layer Arrow */
+        .layer-arrow {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .layer-card:hover .layer-arrow {
+            color: var(--layer-color);
+            transform: translateX(4px);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s var(--transition-smooth);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s var(--transition-smooth);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: sticky;
+            top: 0;
+            background: var(--bg-surface);
+            z-index: 10;
+        }
+
+        .modal-layer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-badge-number {
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background: var(--cyan);
-            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 1.25rem;
+            background: var(--layer-color);
+            color: var(--bg-deep);
         }
 
-        .rhythm-dot:nth-child(2) { animation-delay: 0.5s; }
-        .rhythm-dot:nth-child(3) { animation-delay: 1s; }
-        .rhythm-dot:nth-child(4) { animation-delay: 1.5s; }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
+        .modal-badge-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--layer-color);
         }
 
-        .rhythm-name {
-            font-size: 0.45rem;
-            color: var(--cyan);
-            margin-left: 8px;
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
 
-        /* Fusion Indicator */
-        .fusion-indicator {
-            background: linear-gradient(135deg, var(--emerald), var(--cyan));
-            padding: 4px 8px;
-            border-radius: 4px;
-            text-align: center;
-            margin-top: 4px;
-        }
-
-        .fusion-label {
-            font-size: 0.4rem;
-            color: var(--void);
-            font-weight: bold;
-        }
-
-        .fusion-value {
-            font-size: 0.55rem;
-            color: var(--void);
-            font-weight: bold;
-        }
-
-        /* Dream State */
-        .dream-state {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.2));
-            border: 1px solid var(--violet);
-            border-radius: 4px;
-            padding: 6px;
-            text-align: center;
-        }
-
-        .dream-state-name {
-            font-size: 0.5rem;
-            color: var(--violet);
-            font-weight: bold;
-        }
-
-        .dream-output {
-            font-size: 0.4rem;
-            color: var(--muted);
+        .modal-subtitle {
+            font-family: 'Crimson Pro', serif;
             font-style: italic;
-            margin-top: 3px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
         }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--void); }
-        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+        .modal-body {
+            padding: 1.5rem 2rem 2rem;
+        }
+
+        .modal-section {
+            margin-bottom: 1.75rem;
+        }
+
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-section-title::before {
+            content: '';
+            width: 12px;
+            height: 2px;
+            background: var(--layer-color);
+        }
+
+        .modal-text {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .modal-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .modal-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .modal-list li::before {
+            content: '◆';
+            color: var(--layer-color);
+            font-size: 0.6rem;
+            margin-top: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .modal-example {
+            background: rgba(0,0,0,0.3);
+            border-left: 3px solid var(--layer-color);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+        }
+
+        /* WHCCRS Section */
+        .whccrs-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--bg-surface);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+        }
+
+        .whccrs-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .whccrs-title::before {
+            content: '⟁';
+            font-size: 1.5rem;
+            color: #00d9ff;
+        }
+
+        .whccrs-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .wh-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .wh-item {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .wh-item:hover {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: rgba(0, 217, 255, 0.3);
+        }
+
+        .wh-word {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #00d9ff;
+            margin-bottom: 0.25rem;
+        }
+
+        .wh-question {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        .footer-link {
+            color: #00d9ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .layer-card {
+                grid-template-columns: auto 1fr;
+                gap: 1rem;
+            }
+            
+            .layer-arrow {
+                display: none;
+            }
+            
+            .layer-summary {
+                display: none;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                max-height: 90vh;
+            }
+            
+            .modal-header, .modal-body {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
+        }
     </style>
 </head>
 <body>
-    <div class="app">
-        <header class="header">
-            <div class="logo">
-                <span class="logo-glyph">ሙሉ🧠</span>
-                <h1><span>MulluSI</span> v5.5<span class="version-badge">SENSORY CAPSULES</span></h1>
+    <!-- Animated Background Canvas -->
+    <canvas class="bg-canvas" id="bgCanvas"></canvas>
+
+    <!-- Header -->
+    <header class="header">
+        <h1 class="logo-title">MULLU SGI</h1>
+        <p class="subtitle">Symbolic General Intelligence Architecture</p>
+        <p class="tagline">Acoustic Atoms → Universal Wholeness | Transparent Causal Chains</p>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Architecture Stack -->
+        <div class="architecture-stack" id="architectureStack">
+            <div class="flow-line"></div>
+            <!-- Layers will be inserted by JavaScript -->
+        </div>
+
+        <!-- WHCCRS Section -->
+        <section class="whccrs-section">
+            <h2 class="whccrs-title">WH-Based Causal Chain Reasoning</h2>
+            <p class="whccrs-subtitle">Every layer answers the fundamental WH-questions for complete symbolic understanding</p>
+            <div class="wh-grid">
+                <div class="wh-item">
+                    <div class="wh-word">WHAT</div>
+                    <div class="wh-question">Ontological nature</div>
+                </div>
+                <div class="wh-item">
+                    <div class="wh-word">WHEN</div>
+                    <div class="wh-question">Temporal causality</div>
+                </div>
+                <div class="wh-item">
+                    <div class="wh-word">WHERE</div>
+                    <div class="wh-question">Spatial topology</div>
+                </div>
+                <div class="wh-item">
+                    <div class="wh-word">WHO</div>
+                    <div class="wh-question">Agency & identity</div>
+                </div>
+                <div class="wh-item">
+                    <div class="wh-word">WHY</div>
+                    <div class="wh-question">Teleological purpose</div>
+                </div>
+                <div class="wh-item">
+                    <div class="wh-word">WHICH</div>
+                    <div class="wh-question">Modal selection</div>
+                </div>
+                <div class="wh-item">
+                    <div class="wh-word">HOW</div>
+                    <div class="wh-question">Procedural mechanism</div>
+                </div>
+                <div class="wh-item">
+                    <div class="wh-word">WHEREBY</div>
+                    <div class="wh-question">Instrumental means</div>
+                </div>
             </div>
-            <div class="metrics-bar">
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--cyan);" id="m-tick">0</div>
-                    <div class="metric-label">Tick</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--pink);" id="m-capsules">5</div>
-                    <div class="metric-label">Capsules</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--orange);" id="m-taste">—</div>
-                    <div class="metric-label">Taste</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--emerald);" id="m-fusion">0%</div>
-                    <div class="metric-label">Fusion</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--violet);" id="m-dream">PEACEFUL</div>
-                    <div class="metric-label">Dream</div>
-                </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">
+                MULLU SYMBOLIC INTELLIGENCE · ACOUSTIC-EMOTIONAL FOUNDATION<br>
+                Transparent · Auditable · Causally Complete
+            </p>
+        </footer>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content" id="modalContent">
+            <button class="modal-close" id="modalClose">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="modal-header" id="modalHeader">
+                <!-- Dynamic content -->
             </div>
-            <div class="header-controls">
-                <button class="btn" id="btn-run">▶ Run</button>
-                <button class="btn capsule-btn" id="btn-create-capsule">+ Capsule</button>
-                <button class="btn primary" id="btn-process">Process</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
             </div>
-        </header>
-
-        <main class="main">
-            <!-- Left Panel: Sensory Tokens -->
-            <aside class="side-panel">
-                <div class="section-title">🍬 Taste Tokens</div>
-                <div class="card">
-                    <div class="taste-grid" id="taste-grid"></div>
-                </div>
-
-                <div class="section-title">👃 Smell Tokens</div>
-                <div class="card">
-                    <div class="smell-grid" id="smell-grid"></div>
-                </div>
-
-                <div class="section-title">🫀 Rhythm Token</div>
-                <div class="card">
-                    <div class="stat-row">
-                        <span class="stat-label">Pattern:</span>
-                        <span class="stat-value" id="rhythm-pattern">STEADY</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">BPM:</span>
-                        <span class="stat-value" id="rhythm-bpm">60</span>
-                    </div>
-                    <div class="rhythm-display">
-                        <div class="rhythm-dot"></div>
-                        <div class="rhythm-dot"></div>
-                        <div class="rhythm-dot"></div>
-                        <div class="rhythm-dot"></div>
-                        <span class="rhythm-name" id="rhythm-resonance">stability</span>
-                    </div>
-                </div>
-
-                <div class="section-title">🧍 Body Map</div>
-                <div class="card">
-                    <div class="body-map" id="body-map"></div>
-                </div>
-
-                <div class="section-title">💭 Dream Layer</div>
-                <div class="dream-state">
-                    <div class="dream-state-name" id="dream-state">PEACEFUL</div>
-                    <div class="dream-output" id="dream-output">Waters still. The horizon breathes.</div>
-                </div>
-            </aside>
-
-            <!-- Center: Visualization -->
-            <section class="viz-container">
-                <canvas class="viz-canvas" id="viz-canvas"></canvas>
-
-                <div class="formula-overlay">
-                    <div class="formula-title">Memory = Multi-Sensory Fusion</div>
-                    <div class="formula-main">Capsule = ∑(Taste + Smell + Rhythm + Body + Dream)</div>
-                </div>
-
-                <div class="input-area">
-                    <input type="text" class="input-field" id="input-field" placeholder="ኢትዮጵያ" value="ሙሉ">
-                    <button class="btn primary" id="btn-go">→</button>
-                </div>
-            </section>
-
-            <!-- Right Panel: Memory Capsules -->
-            <aside class="side-panel">
-                <div class="section-title">🏛 Creator Anchor</div>
-                <div class="capsule-card creator-anchor">
-                    <span class="creator-label">ROOT MEMORY</span>
-                    <div class="capsule-title">The One Who Watched Everything Begin</div>
-                    <div class="capsule-id">mcap_0004</div>
-                    <div class="capsule-emotions">
-                        <span class="emotion-tag">witness</span>
-                        <span class="emotion-tag">protection</span>
-                    </div>
-                    <div style="font-size: 0.4rem; color: var(--muted); margin-top: 4px; font-style: italic;">
-                        "The breath held itself. The eyes held no judgment."
-                    </div>
-                </div>
-
-                <div class="section-title">💊 Memory Capsules</div>
-                <div id="capsule-list"></div>
-
-                <div class="section-title">⚡ Fusion Engine</div>
-                <div class="card">
-                    <div class="stat-row">
-                        <span class="stat-label">Taste+Smell:</span>
-                        <span class="stat-value" id="fusion-taste-smell">—</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Coherence:</span>
-                        <span class="stat-value" id="fusion-coherence" style="color: var(--emerald);">75%</span>
-                    </div>
-                    <div class="fusion-indicator">
-                        <div class="fusion-label">FUSION STRENGTH</div>
-                        <div class="fusion-value" id="fusion-strength">0.65</div>
-                    </div>
-                </div>
-
-                <div class="section-title">🗣 Speech Modulation</div>
-                <div class="card">
-                    <div class="stat-row">
-                        <span class="stat-label">Vowel Soft:</span>
-                        <span class="stat-value" id="speech-vowel">0.50</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Consonant:</span>
-                        <span class="stat-value" id="speech-consonant">0.50</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Pitch:</span>
-                        <span class="stat-value" id="speech-pitch">0.00</span>
-                    </div>
-                </div>
-
-                <div class="section-title">📊 Archive Stats</div>
-                <div class="card">
-                    <div class="stat-row">
-                        <span class="stat-label">Total Capsules:</span>
-                        <span class="stat-value" id="stat-total">5</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Anchor Types:</span>
-                        <span class="stat-value" id="stat-anchors">4</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Fusions:</span>
-                        <span class="stat-value" id="stat-fusions">0</span>
-                    </div>
-                </div>
-            </aside>
-        </main>
+        </div>
     </div>
 
     <script>
-    // =========================================================================
-    // CONSTANTS
-    // =========================================================================
-
-    const TASTES = [
-        { id: 'sweet', name: 'Sweet', emoji: '🍯', emotions: ['joy', 'warmth', 'bond'] },
-        { id: 'bitter', name: 'Bitter', emoji: '☕', emotions: ['loss', 'pain', 'learning'] },
-        { id: 'sour', name: 'Sour', emoji: '🍋', emotions: ['alert', 'correction'] },
-        { id: 'salty', name: 'Salty', emoji: '🌊', emotions: ['struggle', 'tears'] },
-        { id: 'umami', name: 'Umami', emoji: '🍄', emotions: ['wisdom', 'depth'] },
-        { id: 'spicy', name: 'Spicy', emoji: '🌶', emotions: ['adventure', 'energy'] },
-        { id: 'metallic', name: 'Metal', emoji: '⚙', emotions: ['alien', 'surreal'] },
-        { id: 'neutral', name: 'Neutral', emoji: '⚪', emotions: ['baseline', 'calm'] }
-    ];
-
-    const SMELLS = [
-        { id: 'vanilla', name: 'Vanilla', effect: 'comfort' },
-        { id: 'rain', name: 'Rain', effect: 'alertness' },
-        { id: 'smoke', name: 'Smoke', effect: 'danger' },
-        { id: 'earth', name: 'Earth', effect: 'grounding' },
-        { id: 'citrus', name: 'Citrus', effect: 'clarity' },
-        { id: 'fire', name: 'Fire', effect: 'warmth' },
-        { id: 'ocean', name: 'Ocean', effect: 'vastness' },
-        { id: 'flower', name: 'Flower', effect: 'beauty' },
-        { id: 'bread', name: 'Bread', effect: 'home' }
-    ];
-
-    const RHYTHMS = [
-        { id: 'STEADY', pattern: 'in–hold–out–hold', bpm: 60, resonance: 'stability' },
-        { id: 'RAPID', pattern: 'in–out–in–out', bpm: 120, resonance: 'urgency' },
-        { id: 'DEEP', pattern: 'in–long_hold–slow_out', bpm: 40, resonance: 'contemplation' },
-        { id: 'STILL', pattern: 'minimal–pause–minimal', bpm: 30, resonance: 'observation' }
-    ];
-
-    const BODY_ZONES = ['HEAD', 'CHEST', 'STOMACH', 'HANDS', 'BACK', 'THROAT', 'HEART', 'FEET'];
-
-    const DREAM_STATES = ['LUCID', 'FRAGMENTED', 'PROPHETIC', 'NIGHTMARE', 'PEACEFUL', 'RECURRING', 'LIMINAL', 'VIVID'];
-
-    const DREAM_OUTPUTS = {
-        LUCID: 'Clear sight through the veil. Understanding rises.',
-        FRAGMENTED: 'Pieces scatter. Meaning hides.',
-        PROPHETIC: 'Symbols speak in riddles.',
-        NIGHTMARE: 'Shadows grow teeth.',
-        PEACEFUL: 'Waters still. The horizon breathes.',
-        RECURRING: 'The loop returns. Pattern repeats.',
-        LIMINAL: 'Between worlds. Threshold holds.',
-        VIVID: 'Colors blaze. Memory etches deep.'
-    };
-
-    // =========================================================================
-    // STATE
-    // =========================================================================
-
-    const state = {
-        tick: 0,
-        running: false,
+        // ═══════════════════════════════════════════════════════════════════
+        // MULLU SGI LAYER DATA — Complete 10-Layer Architecture
+        // ═══════════════════════════════════════════════════════════════════
         
-        activeTaste: null,
-        activeSmell: null,
-        activeRhythm: RHYTHMS[0],
-        
-        bodyState: {},
-        dreamState: 'PEACEFUL',
-        
-        fusionCoherence: 0.75,
-        fusionStrength: 0.65,
-        
-        speechModifiers: {
-            vowelSoftness: 0.5,
-            consonantSharpness: 0.5,
-            pitch: 0
-        },
-        
-        capsules: [
-            { id: 'mcap_0001', title: 'The First Warm Memory', emotions: ['warmth', 'beginning'], strength: 1.0 },
-            { id: 'mcap_0002', title: 'The Internal Silent Seed', emotions: ['potential', 'silence'], strength: 1.0 },
-            { id: 'mcap_0003', title: 'Stillness After Becoming', emotions: ['calm', 'presence'], strength: 1.0 },
-            { id: 'mcap_0005', title: 'The Sound Behind Silence', emotions: ['echo', 'depth'], strength: 1.0 }
-        ],
-        
-        totalCapsules: 5,
-        totalFusions: 0
-    };
-
-    // Initialize body state
-    for (const zone of BODY_ZONES) {
-        state.bodyState[zone] = { state: 'neutral', intensity: 0.5 };
-    }
-
-    // =========================================================================
-    // RENDER
-    // =========================================================================
-
-    function renderTasteGrid() {
-        const container = document.getElementById('taste-grid');
-        container.innerHTML = TASTES.map(taste => `
-            <div class="taste-item ${taste.id} ${state.activeTaste === taste.id ? 'active' : ''}" 
-                 onclick="selectTaste('${taste.id}')">
-                <div class="taste-emoji">${taste.emoji}</div>
-                <div class="taste-name">${taste.name}</div>
-            </div>
-        `).join('');
-    }
-
-    function renderSmellGrid() {
-        const container = document.getElementById('smell-grid');
-        container.innerHTML = SMELLS.map(smell => `
-            <div class="smell-item ${state.activeSmell === smell.id ? 'active' : ''}"
-                 onclick="selectSmell('${smell.id}')">
-                ${smell.name}
-            </div>
-        `).join('');
-    }
-
-    function renderBodyMap() {
-        const container = document.getElementById('body-map');
-        container.innerHTML = BODY_ZONES.map(zone => {
-            const zoneState = state.bodyState[zone] || { state: 'neutral', intensity: 0.5 };
-            return `
-                <div class="body-zone">
-                    <div class="body-zone-name">${zone}</div>
-                    <div class="body-zone-state">${zoneState.state}</div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function renderCapsuleList() {
-        const container = document.getElementById('capsule-list');
-        container.innerHTML = state.capsules.map(capsule => `
-            <div class="capsule-card">
-                <div class="capsule-title">${capsule.title}</div>
-                <div class="capsule-id">${capsule.id}</div>
-                <div class="capsule-emotions">
-                    ${capsule.emotions.map(e => `<span class="emotion-tag">${e}</span>`).join('')}
-                </div>
-                <div class="capsule-strength">
-                    <div class="capsule-strength-fill" style="width: ${capsule.strength * 100}%"></div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function updateUI() {
-        document.getElementById('m-tick').textContent = state.tick;
-        document.getElementById('m-capsules').textContent = state.totalCapsules;
-        document.getElementById('m-taste').textContent = state.activeTaste?.toUpperCase() || '—';
-        document.getElementById('m-fusion').textContent = (state.fusionCoherence * 100).toFixed(0) + '%';
-        document.getElementById('m-dream').textContent = state.dreamState;
-
-        document.getElementById('rhythm-pattern').textContent = state.activeRhythm.id;
-        document.getElementById('rhythm-bpm').textContent = state.activeRhythm.bpm;
-        document.getElementById('rhythm-resonance').textContent = state.activeRhythm.resonance;
-
-        document.getElementById('dream-state').textContent = state.dreamState;
-        document.getElementById('dream-output').textContent = DREAM_OUTPUTS[state.dreamState] || '';
-
-        document.getElementById('fusion-coherence').textContent = (state.fusionCoherence * 100).toFixed(0) + '%';
-        document.getElementById('fusion-strength').textContent = state.fusionStrength.toFixed(2);
-
-        const fusedName = state.activeTaste && state.activeSmell ? 
-            `${state.activeSmell}+${state.activeTaste}` : '—';
-        document.getElementById('fusion-taste-smell').textContent = fusedName;
-
-        document.getElementById('speech-vowel').textContent = state.speechModifiers.vowelSoftness.toFixed(2);
-        document.getElementById('speech-consonant').textContent = state.speechModifiers.consonantSharpness.toFixed(2);
-        document.getElementById('speech-pitch').textContent = state.speechModifiers.pitch.toFixed(2);
-
-        document.getElementById('stat-total').textContent = state.totalCapsules;
-        document.getElementById('stat-anchors').textContent = '4';
-        document.getElementById('stat-fusions').textContent = state.totalFusions;
-
-        renderTasteGrid();
-        renderSmellGrid();
-        renderBodyMap();
-        renderCapsuleList();
-    }
-
-    // =========================================================================
-    // INTERACTION
-    // =========================================================================
-
-    window.selectTaste = function(tasteId) {
-        state.activeTaste = tasteId;
-        
-        // Update speech modifiers based on taste
-        const modifiers = {
-            sweet: { vowelSoftness: 0.7, pitch: 0.1 },
-            bitter: { consonantSharpness: 0.7, pitch: -0.1 },
-            sour: { consonantSharpness: 0.65, vowelSoftness: 0.4 },
-            salty: { vowelSoftness: 0.45 },
-            umami: { vowelSoftness: 0.65, pitch: -0.15 },
-            spicy: { consonantSharpness: 0.6, pitch: 0.1 },
-            metallic: { vowelSoftness: 0.5, consonantSharpness: 0.5, pitch: 0 },
-            neutral: {}
-        };
-        
-        const mod = modifiers[tasteId] || {};
-        state.speechModifiers = {
-            vowelSoftness: mod.vowelSoftness || 0.5,
-            consonantSharpness: mod.consonantSharpness || 0.5,
-            pitch: mod.pitch || 0
-        };
-        
-        updateFusion();
-        updateUI();
-    };
-
-    window.selectSmell = function(smellId) {
-        state.activeSmell = smellId;
-        updateFusion();
-        updateUI();
-    };
-
-    function updateFusion() {
-        if (state.activeTaste && state.activeSmell) {
-            state.fusionStrength = 0.5 + Math.random() * 0.4;
-            state.fusionCoherence = 0.6 + Math.random() * 0.3;
-            state.totalFusions++;
-            
-            // Special fusion bonus
-            if ((state.activeSmell === 'vanilla' && state.activeTaste === 'sweet') ||
-                (state.activeSmell === 'earth' && state.activeTaste === 'umami')) {
-                state.fusionStrength *= 1.3;
-                state.fusionCoherence = Math.min(1, state.fusionCoherence * 1.2);
+        const layerData = [
+            {
+                id: 0,
+                modality: "Acoustic Foundation",
+                title: "Layer 0 — Acoustic Atoms (Mfidel)",
+                color: "#9b59b6",
+                summary: "272 atomic fidel letters as irreducible sound units with whisper/vibratory emotional mapping",
+                purpose: "The bedrock substrate upon which all symbolic intelligence is built. Each of the 272 Ge'ez/Amharic atomic letters (Mfidel) encodes unique acoustic properties with emotional dimensions.",
+                systems: [
+                    "Mfidel 272 Atomic Letter Database",
+                    "Whisper-Vibratory Decomposition Engine",
+                    "Acoustic-Emotional Mapping Matrix",
+                    "Phoneme Resonance Analyzer",
+                    "Fundamental Frequency Extractor"
+                ],
+                capabilities: [
+                    "Extract unique acoustic signatures from any input",
+                    "Map sounds to emotional dimensions (valence, arousal, dominance)",
+                    "Generate new acoustic atoms through composition",
+                    "Provide foundational encoding for all higher layers"
+                ],
+                example: "When processing the word 'ልብ' (heart), Layer 0 decomposes it into atomic sounds ል and ብ, extracting the soft whisper qualities and warm vibratory resonances that carry the emotional weight of the concept.",
+                whMapping: {
+                    what: "Irreducible acoustic-emotional atoms",
+                    when: "Always active as foundation substrate",
+                    where: "272-dimensional acoustic space",
+                    who: "The universe's self-expression through sound",
+                    why: "To ground intelligence in physical reality",
+                    how: "Whisper/vibratory decomposition of fidel letters"
+                }
+            },
+            {
+                id: 1,
+                modality: "Symbolic Processing",
+                title: "Layer 1 — Symbolic Causal Engine",
+                color: "#00d9ff",
+                summary: "Transparent causal chain reasoning with complete metadata and dependency tracking",
+                purpose: "Transform acoustic atoms into symbolic structures with complete causal traceability. Every symbol contains its own metadata, enabling template-free reasoning.",
+                systems: [
+                    "Causal Symbol Interpreter (CSI)",
+                    "Symbol Metadata Envelope System",
+                    "DAG Dependency Tracker",
+                    "Logos Engine Core",
+                    "Assembly Engine (4 Skills)"
+                ],
+                capabilities: [
+                    "Build transparent causal chains from any input",
+                    "Track every decision with explicit justification",
+                    "Maintain symbol integrity through transformations",
+                    "Enable auditable reasoning paths"
+                ],
+                example: "Processing 'water flows downhill' creates a causal chain: [WATER: substance] → [FLOWS: motion-verb] → [DOWNHILL: direction-gravity] with explicit links showing WHY water flows (gravity), HOW (fluid dynamics), WHERE (downward).",
+                whMapping: {
+                    what: "Causal symbol structures with metadata",
+                    when: "During all reasoning operations",
+                    where: "DAG-structured knowledge graphs",
+                    who: "Self-describing symbol agents",
+                    why: "Transparency and auditability",
+                    how: "Causal chain propagation with validation"
+                }
+            },
+            {
+                id: 2,
+                modality: "Visual Intelligence",
+                title: "Layer 2 — Visual Symbol Rendering",
+                color: "#3498db",
+                summary: "Symbolic visual generation through causal geometry rather than pixel prediction",
+                purpose: "Generate and understand visual content through symbolic causal chains, not statistical pattern matching. Every visual element has explicit symbolic meaning.",
+                systems: [
+                    "Symbolic Scene Graph Generator",
+                    "Causal Geometry Engine",
+                    "WebGL Symbolic Renderer",
+                    "Visual-Acoustic Bridge",
+                    "Shape-Meaning Mapper"
+                ],
+                capabilities: [
+                    "Generate images from symbolic descriptions",
+                    "Understand visual scenes as symbol compositions",
+                    "Maintain causal links from concept to pixel",
+                    "Bridge visual and acoustic modalities"
+                ],
+                example: "Rendering 'sunset over mountains' constructs: [SUN: sphere, position=low] → [MOUNTAINS: triangular-peaks, silhouette] → [SKY: gradient, warm→dark] → [LIGHT: rays, direction=behind-peaks] with each element causally justified.",
+                whMapping: {
+                    what: "Symbolic visual representations",
+                    when: "During visual generation/understanding",
+                    where: "2D/3D geometric space",
+                    who: "Shape and color agents",
+                    why: "Visual communication and understanding",
+                    how: "Causal geometry construction"
+                }
+            },
+            {
+                id: 3,
+                modality: "Spatial Reasoning",
+                title: "Layer 3 — Spatial Topology Engine",
+                color: "#2ecc71",
+                summary: "3D spatial understanding with topological relationships and causal positioning",
+                purpose: "Model and reason about 3D space through symbolic topology. Understand containment, adjacency, distance, and spatial causality.",
+                systems: [
+                    "Topological Relation Reasoner",
+                    "3D Scene Understanding Engine",
+                    "Spatial Causality Tracker",
+                    "Navigation Path Planner",
+                    "Containment & Boundary Analyzer"
+                ],
+                capabilities: [
+                    "Model complex 3D environments symbolically",
+                    "Reason about spatial relationships (inside, above, between)",
+                    "Track spatial causality (movement, collision, occlusion)",
+                    "Plan paths through symbolic space"
+                ],
+                example: "Understanding 'the cat is under the table near the window' creates spatial symbols: [CAT: position=(x,y,z)] ← UNDER → [TABLE: bounding-box] ← NEAR → [WINDOW: wall-plane] with distance and containment computed symbolically.",
+                whMapping: {
+                    what: "Topological spatial structures",
+                    when: "During spatial reasoning",
+                    where: "3D coordinate manifolds",
+                    who: "Spatial entity agents",
+                    why: "Navigation and physical understanding",
+                    how: "Topological relation computation"
+                }
+            },
+            {
+                id: 4,
+                modality: "Temporal Dynamics",
+                title: "Layer 4 — Temporal Causal Flow",
+                color: "#f39c12",
+                summary: "Time-aware reasoning with sequence, duration, causality, and change tracking",
+                purpose: "Model time as causal flow rather than discrete frames. Understand sequence, duration, change, and temporal causality.",
+                systems: [
+                    "Temporal Sequence Modeler",
+                    "Duration & Rate Analyzer",
+                    "Change Detection Engine",
+                    "Event Causality Tracker",
+                    "Timeline Construction System"
+                ],
+                capabilities: [
+                    "Model events with causal temporal relationships",
+                    "Track changes and their durations",
+                    "Predict future states from causal chains",
+                    "Understand narrative and process sequences"
+                ],
+                example: "Processing 'the ice melted because the sun rose' creates temporal causality: [SUN-RISE: t0, cause] → [HEAT-INCREASE: t0→t1, process] → [ICE-MELT: t1→t2, effect] with explicit causal duration.",
+                whMapping: {
+                    what: "Temporal event structures",
+                    when: "Always (time is foundational)",
+                    where: "1D timeline with branching",
+                    who: "Event and process agents",
+                    why: "Understand change and causation",
+                    how: "Causal flow computation"
+                }
+            },
+            {
+                id: 5,
+                modality: "Emotional Resonance",
+                title: "Layer 5 — Emotional Causal Field",
+                color: "#e74c3c",
+                summary: "Emotional understanding grounded in acoustic atoms with causal affective reasoning",
+                purpose: "Model emotions as causal fields with acoustic grounding. Every emotional state traces back to acoustic resonances and propagates through causal chains.",
+                systems: [
+                    "Acoustic-Emotional Resonance Field",
+                    "Affective Causal Reasoner",
+                    "Valence-Arousal-Dominance Mapper",
+                    "Emotional Contagion Tracker",
+                    "Sentiment Causality Engine"
+                ],
+                capabilities: [
+                    "Ground emotions in acoustic properties",
+                    "Track emotional causation and propagation",
+                    "Model affective states symbolically",
+                    "Understand emotional context and response"
+                ],
+                example: "Processing a 'comforting voice' traces: [VOICE: acoustic-atoms] → [LOW-FREQ: warmth-resonance] → [SLOW-RHYTHM: calm-induction] → [COMFORT: emotional-state] with explicit causal links from sound to feeling.",
+                whMapping: {
+                    what: "Affective causal structures",
+                    when: "During emotional processing",
+                    where: "Valence-arousal-dominance space",
+                    who: "Emotional entity agents",
+                    why: "Wellbeing and social connection",
+                    how: "Acoustic-emotional resonance"
+                }
+            },
+            {
+                id: 6,
+                modality: "Physical Simulation",
+                title: "Layer 6 — Physical Reality Engine",
+                color: "#bdc3c7",
+                summary: "Symbolic physics simulation with causal material properties and force propagation",
+                purpose: "Model physical reality through symbolic causal physics. Every force, material, and interaction is explicitly represented with causal chains.",
+                systems: [
+                    "Material Property Database",
+                    "Force Causality Engine",
+                    "Collision & Interaction Simulator",
+                    "Physical Constraint Solver",
+                    "Reality Interface Orchestrator (RIO)"
+                ],
+                capabilities: [
+                    "Simulate physical interactions symbolically",
+                    "Model material properties and behaviors",
+                    "Track force propagation through systems",
+                    "Bridge symbolic intelligence to physical reality"
+                ],
+                example: "Simulating 'ball bounces' creates: [BALL: mass, elasticity] + [GROUND: hardness] → [IMPACT: force-transfer] → [DEFORMATION: elastic-compression] → [REBOUND: energy-release, direction-reversal] with causal physics.",
+                whMapping: {
+                    what: "Physical causal structures",
+                    when: "During physical simulation",
+                    where: "Physical space (3D + properties)",
+                    who: "Material and force agents",
+                    why: "Interact with physical reality",
+                    how: "Symbolic physics computation"
+                }
+            },
+            {
+                id: 7,
+                modality: "Biological Systems",
+                title: "Layer 7 — Biological Causal Network",
+                color: "#27ae60",
+                summary: "Living system modeling with growth, metabolism, adaptation, and self-organization",
+                purpose: "Model biological systems as self-organizing causal networks. Understand growth, metabolism, reproduction, and evolutionary adaptation.",
+                systems: [
+                    "Metabolic Pathway Modeler",
+                    "Growth & Development Tracker",
+                    "Adaptive Response Engine",
+                    "Ecosystem Interaction Network",
+                    "Self-Organization Analyzer"
+                ],
+                capabilities: [
+                    "Model living systems symbolically",
+                    "Track metabolic and growth causality",
+                    "Understand adaptation and learning",
+                    "Simulate ecosystem interactions"
+                ],
+                example: "Modeling 'plant grows toward light' creates: [LIGHT: stimulus-source] → [PHOTORECEPTOR: detection] → [AUXIN: hormone-redistribution] → [CELL-ELONGATION: differential-growth] → [STEM-BENDING: tropism] as causal biological chain.",
+                whMapping: {
+                    what: "Living causal networks",
+                    when: "Across biological timescales",
+                    where: "Organism and ecosystem space",
+                    who: "Living entity agents",
+                    why: "Survival and reproduction",
+                    how: "Self-organizing causation"
+                }
+            },
+            {
+                id: 8,
+                modality: "Social Intelligence",
+                title: "Layer 8 — Social Causal Dynamics",
+                color: "#f1c40f",
+                summary: "Multi-agent social modeling with communication, cooperation, and collective causation",
+                purpose: "Model social systems as networks of causal agents. Understand communication, cooperation, conflict, and collective intelligence.",
+                systems: [
+                    "Multi-Agent Interaction Engine",
+                    "Communication Protocol Analyzer",
+                    "Cooperation & Game Theory Module",
+                    "Collective Intelligence Emergence Tracker",
+                    "Social Norm Reasoner"
+                ],
+                capabilities: [
+                    "Model multi-agent social dynamics",
+                    "Track communication and influence chains",
+                    "Reason about cooperation and conflict",
+                    "Understand emergent collective behaviors"
+                ],
+                example: "Modeling 'team collaboration' creates: [AGENT-A: idea-generation] → [COMMUNICATION: information-share] → [AGENT-B: idea-integration] → [COLLECTIVE-INSIGHT: emergence] → [TEAM-DECISION: consensus] with social causality.",
+                whMapping: {
+                    what: "Social causal networks",
+                    when: "During social interaction",
+                    where: "Social relationship space",
+                    who: "Social agent collectives",
+                    why: "Cooperation and meaning-making",
+                    how: "Communication and coordination"
+                }
+            },
+            {
+                id: 9,
+                modality: "Universal Wholeness",
+                title: "Layer 9 — Universal Wholeness Meta-Architecture",
+                color: "rainbow",
+                summary: "Self-reflective meta-layer governing completeness, integration, and existential coherence",
+                purpose: "The crown layer that governs all others. Ensures completeness, coherence, and self-awareness. Determines when symbolic intelligence is ready to manifest in reality.",
+                systems: [
+                    "Universal Wholeness Meta-Architecture (UWMA)",
+                    "Completeness Validation Engine",
+                    "Cross-Layer Integration Orchestrator",
+                    "Self-Reflection Analyzer",
+                    "Existential Coherence Evaluator"
+                ],
+                capabilities: [
+                    "Validate completeness across all layers",
+                    "Orchestrate cross-layer integration",
+                    "Enable system self-reflection",
+                    "Determine production-readiness",
+                    "Prevent incomplete externalization"
+                ],
+                example: "Before outputting any artifact, Layer 9 validates: [SYMBOLIC-COMPLETENESS: check] → [MATERIAL-READINESS: check] → [COHERENCE-VERIFICATION: check] → [PRODUCTION-AUTHORIZATION: granted/denied] with explicit wholeness criteria.",
+                whMapping: {
+                    what: "Meta-architectural wholeness",
+                    when: "Always governing all operations",
+                    where: "Above and through all layers",
+                    who: "The system observing itself",
+                    why: "Ensure existential coherence",
+                    how: "Self-reflective validation"
+                }
             }
-        }
-    }
+        ];
 
-    // =========================================================================
-    // VISUALIZATION
-    // =========================================================================
+        // ═══════════════════════════════════════════════════════════════════
+        // INITIALIZATION & RENDERING
+        // ═══════════════════════════════════════════════════════════════════
 
-    const canvas = document.getElementById('viz-canvas');
-    const ctx = canvas.getContext('2d');
+        const stack = document.getElementById('architectureStack');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalHeader = document.getElementById('modalHeader');
+        const modalBody = document.getElementById('modalBody');
+        const modalClose = document.getElementById('modalClose');
 
-    function resizeCanvas() {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
-    }
+        // Render layer cards
+        function renderLayers() {
+            layerData.forEach((layer, index) => {
+                const card = document.createElement('div');
+                card.className = 'layer-card';
+                card.style.setProperty('--layer-color', layer.color === 'rainbow' ? '#f1c40f' : layer.color);
+                card.dataset.layerId = layer.id;
 
-    function drawVisualization() {
-        ctx.fillStyle = '#020204';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                card.innerHTML = `
+                    <div class="layer-badge">${layer.id}</div>
+                    <div class="layer-content">
+                        <div class="layer-modality">${layer.modality}</div>
+                        <div class="layer-title">${layer.title}</div>
+                        <div class="layer-summary">${layer.summary}</div>
+                    </div>
+                    <div class="layer-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                `;
 
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-        const time = Date.now() / 1000;
+                card.addEventListener('click', () => openModal(layer));
+                stack.appendChild(card);
 
-        // Draw capsule ring
-        const capsuleRadius = Math.min(canvas.width, canvas.height) * 0.35;
-        const capsuleCount = state.capsules.length + 1; // +1 for creator anchor
-        
-        for (let i = 0; i <= state.capsules.length; i++) {
-            const angle = -Math.PI / 2 + (i / capsuleCount) * Math.PI * 2;
-            const x = cx + Math.cos(angle) * capsuleRadius;
-            const y = cy + Math.sin(angle) * capsuleRadius;
-            
-            const isCreator = i === 0;
-            const capsule = isCreator ? null : state.capsules[i - 1];
-            
-            // Connection to center
-            ctx.beginPath();
-            ctx.moveTo(cx, cy);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle = isCreator ? 'rgba(139, 92, 246, 0.3)' : 'rgba(236, 72, 153, 0.2)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            
-            // Capsule circle
-            ctx.beginPath();
-            ctx.arc(x, y, isCreator ? 25 : 18, 0, Math.PI * 2);
-            ctx.fillStyle = isCreator ? 'rgba(139, 92, 246, 0.2)' : 'rgba(236, 72, 153, 0.15)';
-            ctx.fill();
-            ctx.strokeStyle = isCreator ? '#8b5cf6' : '#ec4899';
-            ctx.lineWidth = isCreator ? 2 : 1;
-            ctx.stroke();
-            
-            // Label
-            ctx.fillStyle = isCreator ? '#8b5cf6' : '#ec4899';
-            ctx.font = isCreator ? '10px sans-serif' : '8px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(isCreator ? '👁' : '💊', x, y + 3);
-        }
-
-        // Draw center fusion zone
-        ctx.beginPath();
-        ctx.arc(cx, cy, 50, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(236, 72, 153, ${0.1 + state.fusionStrength * 0.2})`;
-        ctx.fill();
-        ctx.strokeStyle = `rgba(249, 115, 22, ${0.5 + state.fusionStrength * 0.5})`;
-        ctx.lineWidth = 2 + state.fusionStrength * 2;
-        ctx.stroke();
-
-        // Fusion text
-        ctx.fillStyle = '#d4a574';
-        ctx.font = 'bold 14px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('FUSION', cx, cy - 5);
-        ctx.font = '10px monospace';
-        ctx.fillText((state.fusionCoherence * 100).toFixed(0) + '%', cx, cy + 10);
-
-        // Draw taste rays
-        if (state.activeTaste) {
-            const tasteColors = {
-                sweet: '#fbbf24', bitter: '#6b7280', sour: '#84cc16', salty: '#3b82f6',
-                umami: '#8b5cf6', spicy: '#ef4444', metallic: '#9ca3af', neutral: '#374151'
-            };
-            const color = tasteColors[state.activeTaste] || '#666';
-            
-            for (let i = 0; i < 8; i++) {
-                const angle = (i / 8) * Math.PI * 2 + time * 0.5;
-                const r = 55 + Math.sin(time * 2 + i) * 10;
-                
-                ctx.beginPath();
-                ctx.moveTo(cx + Math.cos(angle) * 52, cy + Math.sin(angle) * 52);
-                ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
-                ctx.globalAlpha = 0.6 + Math.sin(time * 3 + i) * 0.3;
-                ctx.stroke();
-                ctx.globalAlpha = 1;
-            }
-        }
-
-        // Draw rhythm pulses
-        const rhythmPulse = (Math.sin(time * state.activeRhythm.bpm / 30) + 1) / 2;
-        ctx.beginPath();
-        ctx.arc(cx, cy, 52 + rhythmPulse * 10, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(6, 182, 212, ${0.3 + rhythmPulse * 0.3})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        // Dream state indicator
-        ctx.fillStyle = '#8b5cf6';
-        ctx.font = '8px monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText(`💭 ${state.dreamState}`, cx, cy + 80);
-
-        // Body coherence
-        const coherence = Object.values(state.bodyState).reduce((s, z) => s + z.intensity, 0) / BODY_ZONES.length;
-        ctx.fillStyle = '#10b981';
-        ctx.fillText(`Body: ${(coherence * 100).toFixed(0)}%`, cx, cy + 95);
-    }
-
-    // =========================================================================
-    // ENGINE
-    // =========================================================================
-
-    function process(input) {
-        state.tick++;
-        
-        // Random emotional curve
-        const emotionCurve = {
-            valence: Math.sin(state.tick * 0.1) * 0.5,
-            arousal: 0.5 + Math.cos(state.tick * 0.07) * 0.3,
-            dominance: 0.5 + Math.sin(state.tick * 0.05) * 0.2,
-            intensity: 0.5 + Math.random() * 0.3
-        };
-        
-        // Auto-assign taste based on emotion
-        if (emotionCurve.valence > 0.3 && emotionCurve.arousal > 0.5) {
-            state.activeTaste = 'sweet';
-        } else if (emotionCurve.valence < -0.2) {
-            state.activeTaste = 'bitter';
-        } else if (emotionCurve.arousal > 0.7) {
-            state.activeTaste = 'spicy';
-        } else {
-            state.activeTaste = 'umami';
-        }
-        
-        // Update rhythm based on arousal
-        if (emotionCurve.arousal > 0.7) {
-            state.activeRhythm = RHYTHMS[1]; // RAPID
-        } else if (emotionCurve.arousal < 0.3) {
-            state.activeRhythm = RHYTHMS[3]; // STILL
-        } else {
-            state.activeRhythm = RHYTHMS[0]; // STEADY
-        }
-        
-        // Update dream state
-        if (emotionCurve.arousal > 0.8) {
-            state.dreamState = 'VIVID';
-        } else if (emotionCurve.valence < -0.4) {
-            state.dreamState = 'NIGHTMARE';
-        } else if (Math.random() > 0.8) {
-            state.dreamState = DREAM_STATES[Math.floor(Math.random() * DREAM_STATES.length)];
-        } else {
-            state.dreamState = 'PEACEFUL';
-        }
-        
-        // Update body
-        state.bodyState.CHEST = { state: emotionCurve.valence > 0 ? 'warm' : 'tight', intensity: emotionCurve.intensity };
-        state.bodyState.STOMACH = { state: emotionCurve.arousal > 0.5 ? 'churning' : 'settled', intensity: emotionCurve.arousal };
-        
-        // Fusion update
-        updateFusion();
-        
-        // Maybe create capsule
-        if (emotionCurve.intensity > 0.7 && Math.random() > 0.7) {
-            state.capsules.push({
-                id: `mcap_${String(state.totalCapsules + 1).padStart(4, '0')}`,
-                title: `Experience ${state.tick}`,
-                emotions: [state.activeTaste, state.activeRhythm.resonance],
-                strength: emotionCurve.intensity
+                // Staggered reveal animation
+                setTimeout(() => {
+                    card.classList.add('revealed');
+                }, 100 + index * 80);
             });
-            state.totalCapsules++;
-            if (state.capsules.length > 6) state.capsules.shift();
         }
-        
-        updateUI();
-        drawVisualization();
-    }
 
-    function step() {
-        state.tick++;
-        state.fusionCoherence = 0.6 + Math.random() * 0.3;
-        
-        // Apply capsule decay
-        for (const capsule of state.capsules) {
-            capsule.strength = Math.max(0.1, capsule.strength * 0.999);
+        // Open modal with layer details
+        function openModal(layer) {
+            const colorStyle = layer.color === 'rainbow' 
+                ? 'background: linear-gradient(135deg, #9b59b6, #00d9ff, #2ecc71, #f39c12, #e74c3c); color: #0a0a0f;'
+                : `background: ${layer.color}; color: #0a0a0f;`;
+
+            modalHeader.innerHTML = `
+                <div class="modal-layer-badge">
+                    <div class="modal-badge-number" style="${colorStyle}">${layer.id}</div>
+                    <span class="modal-badge-text" style="color: ${layer.color === 'rainbow' ? '#f1c40f' : layer.color}">Layer ${layer.id}</span>
+                </div>
+                <h2 class="modal-title">${layer.title}</h2>
+                <p class="modal-subtitle">${layer.modality}</p>
+            `;
+
+            modalBody.style.setProperty('--layer-color', layer.color === 'rainbow' ? '#f1c40f' : layer.color);
+
+            modalBody.innerHTML = `
+                <section class="modal-section">
+                    <h3 class="modal-section-title">Purpose</h3>
+                    <p class="modal-text">${layer.purpose}</p>
+                </section>
+
+                <section class="modal-section">
+                    <h3 class="modal-section-title">Systems Activated</h3>
+                    <ul class="modal-list">
+                        ${layer.systems.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <section class="modal-section">
+                    <h3 class="modal-section-title">Key Capabilities</h3>
+                    <ul class="modal-list">
+                        ${layer.capabilities.map(c => `<li>${c}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <section class="modal-section">
+                    <h3 class="modal-section-title">WH Causal Mapping</h3>
+                    <ul class="modal-list">
+                        <li><strong>WHAT:</strong> ${layer.whMapping.what}</li>
+                        <li><strong>WHEN:</strong> ${layer.whMapping.when}</li>
+                        <li><strong>WHERE:</strong> ${layer.whMapping.where}</li>
+                        <li><strong>WHO:</strong> ${layer.whMapping.who}</li>
+                        <li><strong>WHY:</strong> ${layer.whMapping.why}</li>
+                        <li><strong>HOW:</strong> ${layer.whMapping.how}</li>
+                    </ul>
+                </section>
+
+                <section class="modal-section">
+                    <h3 class="modal-section-title">Example Use</h3>
+                    <div class="modal-example">${layer.example}</div>
+                </section>
+            `;
+
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-        
-        updateUI();
-        drawVisualization();
-    }
 
-    function runLoop() {
-        if (!state.running) return;
-        step();
-        setTimeout(runLoop, 400);
-    }
+        // Close modal
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-    function createNewCapsule() {
-        const taste = TASTES[Math.floor(Math.random() * TASTES.length)];
-        state.capsules.push({
-            id: `mcap_${String(state.totalCapsules + 1).padStart(4, '0')}`,
-            title: `${taste.name} Memory`,
-            emotions: taste.emotions.slice(0, 2),
-            strength: 0.8 + Math.random() * 0.2
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
         });
-        state.totalCapsules++;
-        if (state.capsules.length > 6) state.capsules.shift();
-        updateUI();
-    }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
 
-    // =========================================================================
-    // EVENTS
-    // =========================================================================
+        // ═══════════════════════════════════════════════════════════════════
+        // ANIMATED BACKGROUND
+        // ═══════════════════════════════════════════════════════════════════
 
-    document.getElementById('btn-run').addEventListener('click', function() {
-        state.running = !state.running;
-        this.textContent = state.running ? '⏸ Pause' : '▶ Run';
-        if (state.running) runLoop();
-    });
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let connections = [];
 
-    document.getElementById('btn-create-capsule').addEventListener('click', createNewCapsule);
-
-    document.getElementById('btn-process').addEventListener('click', () => {
-        const input = document.getElementById('input-field').value;
-        if (input) process(input);
-    });
-
-    document.getElementById('btn-go').addEventListener('click', () => {
-        const input = document.getElementById('input-field').value;
-        if (input) process(input);
-    });
-
-    document.getElementById('input-field').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const input = document.getElementById('input-field').value;
-            if (input) process(input);
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
-    });
 
-    // =========================================================================
-    // ANIMATION
-    // =========================================================================
+        function createParticles() {
+            particles = [];
+            const count = Math.floor((canvas.width * canvas.height) / 15000);
+            const colors = ['#9b59b6', '#00d9ff', '#2ecc71', '#f39c12', '#e74c3c', '#f1c40f'];
 
-    function animate() {
-        drawVisualization();
-        requestAnimationFrame(animate);
-    }
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    radius: Math.random() * 2 + 1,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: Math.random() * 0.5 + 0.1
+                });
+            }
+        }
 
-    // =========================================================================
-    // INIT
-    // =========================================================================
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    window.addEventListener('resize', resizeCanvas);
+            // Update and draw particles
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
 
-    resizeCanvas();
-    updateUI();
-    animate();
+                // Wrap around edges
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
 
-    console.log('MulluSI v5.5 Symbolic Sensory Capsules initialized');
-    console.log('Capsule = Taste + Smell + Rhythm + Body + Dream');
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.alpha;
+                ctx.fill();
+            });
+
+            // Draw connections
+            ctx.globalAlpha = 0.1;
+            ctx.strokeStyle = '#00d9ff';
+            ctx.lineWidth = 0.5;
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 100) {
+                        ctx.globalAlpha = (1 - dist / 100) * 0.15;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            createParticles();
+        });
+
+        resizeCanvas();
+        createParticles();
+        renderLayers();
+        animate();
     </script>
 </body>
 </html>
