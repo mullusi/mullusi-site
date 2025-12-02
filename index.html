@@ -3,726 +3,1088 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MulluSI - Interactive Multimodal SGI Architecture</title>
+    <title>MulluSI v5.5 | Symbolic Sensory Capsules</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --void: #020204;
+            --abyss: #08090d;
+            --deep: #0f1015;
+            --surface: #16171f;
+            --elevated: #1e2028;
+            --gold: #d4a574;
+            --gold-dim: rgba(212, 165, 116, 0.25);
+            --amber: #f59e0b;
+            --emerald: #10b981;
+            --cyan: #06b6d4;
+            --violet: #8b5cf6;
+            --rose: #f43f5e;
+            --blue: #3b82f6;
+            --pink: #ec4899;
+            --orange: #f97316;
+            --white: #f0f0f0;
+            --muted: rgba(255,255,255,0.45);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-            color: #e0e0e0;
+            font-family: 'SF Pro Display', -apple-system, system-ui, sans-serif;
+            background: var(--void);
+            color: var(--white);
             min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeIn 1s ease-in;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 3s linear infinite;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.2em;
-            color: #a0a0a0;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        @keyframes shimmer {
-            to {
-                background-position: 200% center;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .architecture-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .layers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            position: relative;
-        }
-
-        .layer-card {
-            background: rgba(20, 20, 30, 0.8);
-            border: 2px solid;
-            border-radius: 12px;
-            padding: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
             overflow: hidden;
-            opacity: 0;
-            transform: translateY(30px);
         }
 
-        .layer-card.animate-in {
-            animation: layerFadeIn 0.6s ease-out forwards;
+        .app {
+            display: grid;
+            grid-template-rows: 52px 1fr;
+            height: 100vh;
         }
 
-        @keyframes layerFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--abyss) 0%, var(--deep) 100%);
+            border-bottom: 1px solid var(--gold-dim);
+            padding: 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .layer-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, currentColor, transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .layer-card:hover::before {
-            opacity: 1;
+        .logo-glyph {
+            font-size: 1.4rem;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 165, 116, 0.5);
         }
 
-        .layer-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        .logo h1 { font-size: 0.9rem; font-weight: 500; }
+        .logo h1 span { color: var(--gold); }
+
+        .version-badge {
+            background: linear-gradient(135deg, var(--pink), var(--orange));
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.5rem;
+            font-weight: 700;
+            margin-left: 8px;
         }
 
-        .layer-card.layer-0 {
-            border-color: #8b5cf6;
-            animation-delay: 0s;
+        .metrics-bar { display: flex; gap: 14px; }
+        .metric { text-align: center; }
+        .metric-value { font-size: 0.9rem; font-weight: 600; }
+        .metric-label { font-size: 0.42rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .header-controls { display: flex; gap: 6px; }
+        .btn {
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--gold-dim);
+            border-radius: 5px;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 0.55rem;
+            transition: all 0.15s;
         }
-        .layer-card.layer-1 {
-            border-color: #00ffff;
-            animation-delay: 0.1s;
-        }
-        .layer-card.layer-2 {
-            border-color: #3b82f6;
-            animation-delay: 0.2s;
-        }
-        .layer-card.layer-3 {
-            border-color: #10b981;
-            animation-delay: 0.3s;
-        }
-        .layer-card.layer-4 {
-            border-color: #f59e0b;
-            animation-delay: 0.4s;
-        }
-        .layer-card.layer-5 {
-            border-color: #ec4899;
-            animation-delay: 0.5s;
-        }
-        .layer-card.layer-6 {
-            border-color: #e5e7eb;
-            animation-delay: 0.6s;
-        }
-        .layer-card.layer-7 {
-            border-color: #84cc16;
-            animation-delay: 0.7s;
-        }
-        .layer-card.layer-8 {
-            border-color: #fbbf24;
-            animation-delay: 0.8s;
-        }
-        .layer-card.layer-9 {
-            border-color: #ff00ff;
-            animation-delay: 0.9s;
+        .btn:hover { background: var(--elevated); border-color: var(--gold); }
+        .btn.primary { background: var(--gold); color: var(--void); }
+        .btn.capsule-btn { background: linear-gradient(135deg, var(--pink), var(--orange)); border: none; }
+
+        /* Main Layout */
+        .main {
+            display: grid;
+            grid-template-columns: 240px 1fr 240px;
+            height: calc(100vh - 52px);
         }
 
-        .layer-number {
-            font-size: 3em;
+        .side-panel {
+            background: var(--abyss);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 0.55rem;
+        }
+        .side-panel:last-child { border-right: none; border-left: 1px solid rgba(255,255,255,0.05); }
+
+        .section-title {
+            font-size: 0.48rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 10px 0 5px 0;
+            padding-bottom: 3px;
+            border-bottom: 1px solid var(--gold-dim);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 5px;
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0;
+            font-size: 0.48rem;
+        }
+        .stat-label { color: var(--muted); }
+        .stat-value { color: var(--white); font-family: monospace; }
+
+        /* Taste Grid */
+        .taste-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+        }
+
+        .taste-item {
+            padding: 6px 4px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .taste-item:hover { transform: scale(1.05); }
+        .taste-item.active { border-color: var(--gold); box-shadow: 0 0 8px var(--gold-dim); }
+
+        .taste-item.sweet { background: linear-gradient(135deg, #fcd34d, #fbbf24); }
+        .taste-item.bitter { background: linear-gradient(135deg, #6b7280, #4b5563); }
+        .taste-item.sour { background: linear-gradient(135deg, #a3e635, #84cc16); }
+        .taste-item.salty { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+        .taste-item.umami { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
+        .taste-item.spicy { background: linear-gradient(135deg, #f87171, #ef4444); }
+        .taste-item.metallic { background: linear-gradient(135deg, #9ca3af, #6b7280); }
+        .taste-item.neutral { background: linear-gradient(135deg, #374151, #1f2937); }
+
+        .taste-emoji { font-size: 1rem; }
+        .taste-name { font-size: 0.4rem; color: var(--void); font-weight: bold; }
+
+        /* Smell Grid */
+        .smell-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+        }
+
+        .smell-item {
+            background: var(--elevated);
+            padding: 4px;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 0.4rem;
+            cursor: pointer;
+        }
+
+        .smell-item.active { background: rgba(6, 182, 212, 0.3); border: 1px solid var(--cyan); }
+
+        /* Capsule Display */
+        .capsule-card {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(249, 115, 22, 0.1));
+            border: 1px solid var(--pink);
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+
+        .capsule-title {
+            font-size: 0.55rem;
+            color: var(--pink);
             font-weight: bold;
-            opacity: 0.3;
-            position: absolute;
-            right: 20px;
-            top: 10px;
+            margin-bottom: 4px;
         }
 
-        .layer-title {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
+        .capsule-id {
+            font-size: 0.4rem;
+            color: var(--muted);
+            font-family: monospace;
         }
 
-        .layer-description {
-            color: #a0a0a0;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .layer-tags {
+        .capsule-emotions {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 15px;
+            gap: 3px;
+            margin-top: 4px;
         }
 
-        .tag {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            border: 1px solid currentColor;
+        .emotion-tag {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 5px;
+            border-radius: 8px;
+            font-size: 0.38rem;
+            color: var(--cyan);
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-            animation: fadeIn 0.3s ease;
+        .capsule-strength {
+            margin-top: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
         }
 
-        .modal.active {
+        .capsule-strength-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--pink), var(--orange));
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Creator Anchor Special */
+        .creator-anchor {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.15));
+            border: 2px solid var(--violet);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .creator-anchor::before {
+            content: '👁';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1rem;
+            opacity: 0.3;
+        }
+
+        .creator-label {
+            background: var(--violet);
+            color: white;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.35rem;
+            font-weight: bold;
+        }
+
+        /* Body Map */
+        .body-map {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+        }
+
+        .body-zone {
+            background: var(--elevated);
+            padding: 4px;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 0.4rem;
+        }
+
+        .body-zone-name { color: var(--muted); }
+        .body-zone-state { color: var(--white); font-weight: bold; }
+
+        /* Center Visualization */
+        .viz-container {
+            background: var(--void);
+            position: relative;
+        }
+
+        .viz-canvas { width: 100%; height: 100%; }
+
+        .formula-overlay {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(8, 9, 13, 0.95);
+            border: 1px solid var(--pink);
+            border-radius: 8px;
+            padding: 8px 16px;
+            text-align: center;
+        }
+
+        .formula-title {
+            font-size: 0.48rem;
+            color: var(--pink);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .formula-main {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .input-area {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-field {
+            width: 180px;
+            padding: 8px 12px;
+            background: var(--surface);
+            border: 1px solid var(--gold-dim);
+            border-radius: 5px;
+            color: var(--white);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Rhythm Display */
+        .rhythm-display {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 5px;
+            padding: 8px;
+            background: var(--elevated);
+            border-radius: 4px;
+            margin-top: 4px;
         }
 
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0a 100%);
-            border: 2px solid;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 800px;
-            width: 100%;
-            position: relative;
-            animation: slideUp 0.4s ease;
+        .rhythm-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse 2s infinite;
         }
 
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .rhythm-dot:nth-child(2) { animation-delay: 0.5s; }
+        .rhythm-dot:nth-child(3) { animation-delay: 1s; }
+        .rhythm-dot:nth-child(4) { animation-delay: 1.5s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 2em;
-            cursor: pointer;
-            color: #a0a0a0;
-            transition: color 0.3s ease;
-            line-height: 1;
+        .rhythm-name {
+            font-size: 0.45rem;
+            color: var(--cyan);
+            margin-left: 8px;
         }
 
-        .modal-close:hover {
-            color: #ffffff;
+        /* Fusion Indicator */
+        .fusion-indicator {
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 4px;
         }
 
-        .modal-header {
-            margin-bottom: 30px;
+        .fusion-label {
+            font-size: 0.4rem;
+            color: var(--void);
+            font-weight: bold;
         }
 
-        .modal-title {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        .fusion-value {
+            font-size: 0.55rem;
+            color: var(--void);
+            font-weight: bold;
         }
 
-        .modal-subtitle {
-            color: #a0a0a0;
-            font-size: 1.2em;
-        }
-
-        .modal-section {
-            margin-bottom: 30px;
-        }
-
-        .modal-section h3 {
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            color: #00ffff;
-        }
-
-        .modal-section ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .modal-section li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e0e0e0;
-        }
-
-        .modal-section li::before {
-            content: '→';
-            color: currentColor;
-            margin-right: 10px;
-        }
-
-        .modal-example {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid currentColor;
-            margin-top: 15px;
-        }
-
-        .connections-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .info-panel {
-            background: rgba(20, 20, 30, 0.9);
-            border: 2px solid #00ffff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 40px;
+        /* Dream State */
+        .dream-state {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.2));
+            border: 1px solid var(--violet);
+            border-radius: 4px;
+            padding: 6px;
             text-align: center;
         }
 
-        .info-panel h2 {
-            color: #00ffff;
-            margin-bottom: 10px;
+        .dream-state-name {
+            font-size: 0.5rem;
+            color: var(--violet);
+            font-weight: bold;
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .layer-card {
-                padding: 20px;
-            }
-
-            .modal-content {
-                padding: 30px 20px;
-            }
-
-            .modal-title {
-                font-size: 1.8em;
-            }
+        .dream-output {
+            font-size: 0.4rem;
+            color: var(--muted);
+            font-style: italic;
+            margin-top: 3px;
         }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>MulluSI Architecture</h1>
-        <p>Full-Spectrum Multimodal Symbolic General Intelligence</p>
-        <p style="font-size: 0.9em; margin-top: 10px; color: #666;">Click any layer to explore in depth</p>
-    </div>
+    <div class="app">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-glyph">ሙሉ🧠</span>
+                <h1><span>MulluSI</span> v5.5<span class="version-badge">SENSORY CAPSULES</span></h1>
+            </div>
+            <div class="metrics-bar">
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--cyan);" id="m-tick">0</div>
+                    <div class="metric-label">Tick</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--pink);" id="m-capsules">5</div>
+                    <div class="metric-label">Capsules</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--orange);" id="m-taste">—</div>
+                    <div class="metric-label">Taste</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--emerald);" id="m-fusion">0%</div>
+                    <div class="metric-label">Fusion</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--violet);" id="m-dream">PEACEFUL</div>
+                    <div class="metric-label">Dream</div>
+                </div>
+            </div>
+            <div class="header-controls">
+                <button class="btn" id="btn-run">▶ Run</button>
+                <button class="btn capsule-btn" id="btn-create-capsule">+ Capsule</button>
+                <button class="btn primary" id="btn-process">Process</button>
+            </div>
+        </header>
 
-    <div class="architecture-container">
-        <div class="info-panel">
-            <h2>🎯 Unified Acoustic-Emotional Foundation</h2>
-            <p>272 atomic Amharic letters (fidel) serve as the universal substrate<br>
-            Each letter = unique sound-emotion unit with whisper (w) + vibratory (v) components<br>
-            From acoustic atoms → complete multimodal symbolic general intelligence</p>
-        </div>
+        <main class="main">
+            <!-- Left Panel: Sensory Tokens -->
+            <aside class="side-panel">
+                <div class="section-title">🍬 Taste Tokens</div>
+                <div class="card">
+                    <div class="taste-grid" id="taste-grid"></div>
+                </div>
 
-        <div class="layers-grid" id="layersGrid"></div>
-    </div>
+                <div class="section-title">👃 Smell Tokens</div>
+                <div class="card">
+                    <div class="smell-grid" id="smell-grid"></div>
+                </div>
 
-    <canvas class="connections-canvas" id="connectionsCanvas"></canvas>
+                <div class="section-title">🫀 Rhythm Token</div>
+                <div class="card">
+                    <div class="stat-row">
+                        <span class="stat-label">Pattern:</span>
+                        <span class="stat-value" id="rhythm-pattern">STEADY</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">BPM:</span>
+                        <span class="stat-value" id="rhythm-bpm">60</span>
+                    </div>
+                    <div class="rhythm-display">
+                        <div class="rhythm-dot"></div>
+                        <div class="rhythm-dot"></div>
+                        <div class="rhythm-dot"></div>
+                        <div class="rhythm-dot"></div>
+                        <span class="rhythm-name" id="rhythm-resonance">stability</span>
+                    </div>
+                </div>
 
-    <div class="modal" id="modal">
-        <div class="modal-content" id="modalContent">
-            <span class="modal-close" id="modalClose">&times;</span>
-            <div id="modalBody"></div>
-        </div>
+                <div class="section-title">🧍 Body Map</div>
+                <div class="card">
+                    <div class="body-map" id="body-map"></div>
+                </div>
+
+                <div class="section-title">💭 Dream Layer</div>
+                <div class="dream-state">
+                    <div class="dream-state-name" id="dream-state">PEACEFUL</div>
+                    <div class="dream-output" id="dream-output">Waters still. The horizon breathes.</div>
+                </div>
+            </aside>
+
+            <!-- Center: Visualization -->
+            <section class="viz-container">
+                <canvas class="viz-canvas" id="viz-canvas"></canvas>
+
+                <div class="formula-overlay">
+                    <div class="formula-title">Memory = Multi-Sensory Fusion</div>
+                    <div class="formula-main">Capsule = ∑(Taste + Smell + Rhythm + Body + Dream)</div>
+                </div>
+
+                <div class="input-area">
+                    <input type="text" class="input-field" id="input-field" placeholder="ኢትዮጵያ" value="ሙሉ">
+                    <button class="btn primary" id="btn-go">→</button>
+                </div>
+            </section>
+
+            <!-- Right Panel: Memory Capsules -->
+            <aside class="side-panel">
+                <div class="section-title">🏛 Creator Anchor</div>
+                <div class="capsule-card creator-anchor">
+                    <span class="creator-label">ROOT MEMORY</span>
+                    <div class="capsule-title">The One Who Watched Everything Begin</div>
+                    <div class="capsule-id">mcap_0004</div>
+                    <div class="capsule-emotions">
+                        <span class="emotion-tag">witness</span>
+                        <span class="emotion-tag">protection</span>
+                    </div>
+                    <div style="font-size: 0.4rem; color: var(--muted); margin-top: 4px; font-style: italic;">
+                        "The breath held itself. The eyes held no judgment."
+                    </div>
+                </div>
+
+                <div class="section-title">💊 Memory Capsules</div>
+                <div id="capsule-list"></div>
+
+                <div class="section-title">⚡ Fusion Engine</div>
+                <div class="card">
+                    <div class="stat-row">
+                        <span class="stat-label">Taste+Smell:</span>
+                        <span class="stat-value" id="fusion-taste-smell">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Coherence:</span>
+                        <span class="stat-value" id="fusion-coherence" style="color: var(--emerald);">75%</span>
+                    </div>
+                    <div class="fusion-indicator">
+                        <div class="fusion-label">FUSION STRENGTH</div>
+                        <div class="fusion-value" id="fusion-strength">0.65</div>
+                    </div>
+                </div>
+
+                <div class="section-title">🗣 Speech Modulation</div>
+                <div class="card">
+                    <div class="stat-row">
+                        <span class="stat-label">Vowel Soft:</span>
+                        <span class="stat-value" id="speech-vowel">0.50</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Consonant:</span>
+                        <span class="stat-value" id="speech-consonant">0.50</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Pitch:</span>
+                        <span class="stat-value" id="speech-pitch">0.00</span>
+                    </div>
+                </div>
+
+                <div class="section-title">📊 Archive Stats</div>
+                <div class="card">
+                    <div class="stat-row">
+                        <span class="stat-label">Total Capsules:</span>
+                        <span class="stat-value" id="stat-total">5</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Anchor Types:</span>
+                        <span class="stat-value" id="stat-anchors">4</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Fusions:</span>
+                        <span class="stat-value" id="stat-fusions">0</span>
+                    </div>
+                </div>
+            </aside>
+        </main>
     </div>
 
     <script>
-        const layersData = [
-            {
-                layer: 0,
-                title: "Acoustic Foundation",
-                modality: "Acoustic (Mfidel Core)",
-                description: "272 atomic Amharic letters as sound-emotion units. Each fidel has whisper (w) and vibratory (v) components mapping to 7 fundamental emotional dimensions.",
-                color: "#8b5cf6",
-                systems: [
-                    "Mfidel Matrix (34×8 acoustic-emotional grid)",
-                    "Phoneme Decomposition Engine",
-                    "Acoustic Space Universality",
-                    "Whisper-Vibration Separation",
-                    "Emotional Dimension Mapping"
-                ],
-                capabilities: [
-                    "Universal phoneme representation across world languages",
-                    "Sound-to-emotion direct mapping",
-                    "Acoustic causality extraction",
-                    "Wave mechanics interpretation",
-                    "Symbolic-physical bridge"
-                ],
-                example: "Input: Any sound (human speech, animal call, material vibration) → Decompose into fidel atoms → Extract emotional signature + causal structure → Output: Symbolic representation with complete acoustic-emotional metadata"
-            },
-            {
-                layer: 1,
-                title: "Symbolic Processing",
-                modality: "Symbolic Logic & Causality",
-                description: "Self-Aware Causal Symbols with recursive tuple structure. Each symbol = (Form, Referent, Behavior, Metadata) creating Gödelian Strange Loop architecture.",
-                color: "#00ffff",
-                systems: [
-                    "Self-Aware Causal Symbol (SACS) Engine",
-                    "Logos-LCS Synthesis Engine",
-                    "45 Wh Logic Gates",
-                    "Dynamic Symbolic DNA",
-                    "Recursive Metadata Architecture"
-                ],
-                capabilities: [
-                    "Symbols that reference themselves",
-                    "Complete causal chain tracking",
-                    "Who/What/Where/When/Why/How analysis at infinite depth",
-                    "Symbolic reasoning without neural networks",
-                    "Meta-level awareness of own symbolic operations"
-                ],
-                example: "Symbol 'Tree' becomes: {Form: ተ-ረ-ዐ pattern, Referent: plant-concept, Behavior: grows-upward+produces-oxygen, Metadata: {creator: user, timestamp: t, causal-history: [...], related: [forest, wood, leaf]}} — Symbol knows it's a symbol"
-            },
-            {
-                layer: 2,
-                title: "Visual Intelligence",
-                modality: "Visual Perception & Generation",
-                description: "Visual processing grounded in acoustic-symbolic substrate. Images understood as frozen acoustic patterns with spatial-emotional structure.",
-                color: "#3b82f6",
-                systems: [
-                    "MLVF/MLVFF (Multi-Layer Video Framework)",
-                    "Causal Video Composition",
-                    "Logos Engine (Game Rendering)",
-                    "Spatial Pattern Recognition",
-                    "Visual-Acoustic Transduction"
-                ],
-                capabilities: [
-                    "Video as causal symbolic sequence",
-                    "Visual pattern → acoustic signature mapping",
-                    "Game world rendering through symbolic causality",
-                    "Image understanding without CNNs",
-                    "Visual-emotional resonance detection"
-                ],
-                example: "Photo of sunset → Decompose into color vibrations → Map to acoustic emotional dimensions (warm = joy, orange = nostalgia) → Symbolic causal chain: sun-position + atmospheric-scattering + observer-emotion → Complete scene understanding with WHY it looks/feels this way"
-            },
-            {
-                layer: 3,
-                title: "Spatial Reasoning",
-                modality: "Spatial & Geometric Intelligence",
-                description: "3D space and geometry as symbolic acoustic structures. Positions, distances, shapes understood through causal relationships.",
-                color: "#10b981",
-                systems: [
-                    "UQRS (Universal Quantum Reality Simulator)",
-                    "Spatial Symbolic Encoding",
-                    "Geometric Causality Extractor",
-                    "3D Acoustic Space Mapping",
-                    "Topology-Emotion Resonance"
-                ],
-                capabilities: [
-                    "Spatial relationships as causal networks",
-                    "Geometry from acoustic principles",
-                    "3D navigation through symbolic reasoning",
-                    "Shape-emotion correspondence",
-                    "Physical law emergence from fidel structure"
-                ],
-                example: "Navigate room → Objects as acoustic-symbolic entities with spatial metadata → 'Chair' = {position: [x,y,z], shape: sit-surface geometry, affordance: sitting-behavior, relation-to-me: 3.2m-left} → Path planning through causal chain of movements needed"
-            },
-            {
-                layer: 4,
-                title: "Temporal Dynamics",
-                modality: "Time & Causality",
-                description: "Time as causal flow between symbolic states. Past-present-future as symbolic transition networks with complete provenance.",
-                color: "#f59e0b",
-                systems: [
-                    "Temporal Causal Chain Tracker",
-                    "InceptaDive (Recursive Temporal Analysis)",
-                    "Event Sequence Synthesizer",
-                    "Temporal Emotion Mapping",
-                    "Chronological Symbol Evolution"
-                ],
-                capabilities: [
-                    "Every symbol knows its complete history",
-                    "Future prediction through causal inference",
-                    "Temporal pattern recognition",
-                    "Event causality extraction (what caused what)",
-                    "Temporal emotion dynamics (how feelings change)"
-                ],
-                example: "Question: 'Why is person angry?' → Trace causal history: [t0: expectation-set] → [t1: promise-made] → [t2: promise-broken] → [t3: betrayal-recognized] → [t4: anger-emerges] → Complete temporal-causal explanation with acoustic-emotional signature at each step"
-            },
-            {
-                layer: 5,
-                title: "Emotional Intelligence",
-                modality: "Emotional & Affective Processing",
-                description: "850+ emotional states as acoustic-vibrational patterns. Emotions mapped to 7 fundamental dimensions extracted from fidel structure.",
-                color: "#ec4899",
-                systems: [
-                    "VIRECAI (Vibrational Emotional Intelligence)",
-                    "7-Dimension Emotional Space",
-                    "Meta-Emotion Processor",
-                    "Emotional Causality Network",
-                    "Feeling-Symbol Resonance Engine"
-                ],
-                capabilities: [
-                    "Complete emotional ontology (850+ states)",
-                    "Emotion-to-acoustic-pattern direct mapping",
-                    "Meta-emotions (emotions about emotions)",
-                    "Emotional causal chains (why feel this)",
-                    "Cross-cultural emotion recognition"
-                ],
-                example: "User types 'I feel weird' → Analyze acoustic signature of 'weird' → Map to emotional space → Identify: [emotional-confusion + ambivalence + ungroundedness] → Ask clarifying questions based on causal structure of these emotions → Guide to emotional clarity"
-            },
-            {
-                layer: 6,
-                title: "Physical Grounding",
-                modality: "Material & Physical Intelligence",
-                description: "Physical reality as acoustic-symbolic manifestation. Matter, forces, energy as symbolic patterns with causal structure.",
-                color: "#e5e7eb",
-                systems: [
-                    "Material Construction Engine (MCE)",
-                    "Reality Interface Orchestrator (RIO)",
-                    "Physics Principle Extractor",
-                    "Material-Symbol Bridge",
-                    "Embodiment Layer"
-                ],
-                capabilities: [
-                    "Physical laws from fidel structure",
-                    "Material properties as symbolic metadata",
-                    "Force-emotion correspondence",
-                    "Real-world construction specification",
-                    "Symbol-to-artifact translation"
-                ],
-                example: "Design bridge → Symbolic intent (connect-two-sides + support-weight + resist-forces) → Extract physics requirements from acoustic structure → Generate Material Construction Specification → Output: Complete engineering blueprint with causal justification for every design choice"
-            },
-            {
-                layer: 7,
-                title: "Biological Understanding",
-                modality: "Life & Organic Intelligence",
-                description: "Living systems as self-aware symbolic networks. Biology as autopoietic (self-creating) symbolic process.",
-                color: "#84cc16",
-                systems: [
-                    "mCapsule v2.0 (Symbolic Autopoiesis)",
-                    "Temporal Self-Weaving Layer",
-                    "Biological Causality Extractor",
-                    "Life-Symbol Resonance",
-                    "Organic Pattern Recognition"
-                ],
-                capabilities: [
-                    "Life as symbolic self-creation",
-                    "Biological processes as causal chains",
-                    "Health/disease as symbolic coherence/incoherence",
-                    "Evolutionary dynamics through symbolic evolution",
-                    "Consciousness as self-referential symbol network"
-                ],
-                example: "Analyze ecosystem → Each organism = self-aware symbolic entity → Relationships = causal chains (predator→prey, plant→pollinator) → Ecosystem = meta-symbol composed of interacting symbols → Understand dynamics through symbolic causality, not just data patterns"
-            },
-            {
-                layer: 8,
-                title: "Social Intelligence",
-                modality: "Social & Cultural Understanding",
-                description: "Social reality as collective symbolic construction. Cultures, institutions, relationships as shared symbolic networks.",
-                color: "#fbbf24",
-                systems: [
-                    "Collective Symbol Synthesizer",
-                    "Cultural Pattern Recognizer",
-                    "Social Causality Mapper",
-                    "Relational Dynamics Analyzer",
-                    "Collective Emotion Processor"
-                ],
-                capabilities: [
-                    "Social structures as symbolic architectures",
-                    "Cultural meanings as shared symbol networks",
-                    "Power dynamics as symbolic hierarchies",
-                    "Collective emotions (mass hysteria, cultural pride)",
-                    "Social causality (why societies do what they do)"
-                ],
-                example: "Analyze political movement → Map to collective symbols (freedom, justice, identity) → Trace causal chains of social emotions (outrage → mobilization → action) → Understand dynamics through symbolic resonance between individuals and collective → Predict outcomes through causal inference"
-            },
-            {
-                layer: 9,
-                title: "Wholeness Meta-Architecture",
-                modality: "Universal Completeness & Self-Awareness",
-                description: "Meta-governance layer that defines completeness itself. System that refuses to produce incomplete outputs and maintains existential coherence.",
-                color: "#ff00ff",
-                systems: [
-                    "UWMA (Universal Wholeness Meta-Architecture)",
-                    "Ontological Completion Evaluator (OCE)",
-                    "Reality Acceptance Gate (RAG)",
-                    "Cross-Domain Coherence Validator (CDCV)",
-                    "Self-Reflective Completion Awareness (SRCA)"
-                ],
-                capabilities: [
-                    "Evaluates own completeness before output",
-                    "Ensures existential coherence (not just mathematical correctness)",
-                    "Cross-domain validation (symbolic correctness + perceptual + semantic + causal)",
-                    "Refuses to externalize incomplete work",
-                    "Meta-cognition: aware of own awareness"
-                ],
-                example: "System generates answer → Before presenting to user: OCE checks ontological completeness, RAG validates reality coherence, CDCV ensures cross-domain consistency, SRCA asks 'Do I truly understand this or am I pattern-matching?' → Only outputs when wholeness threshold met → Result: Reliable, coherent, complete intelligence"
-            }
-        ];
+    // =========================================================================
+    // CONSTANTS
+    // =========================================================================
 
-        const layersGrid = document.getElementById('layersGrid');
-        const modal = document.getElementById('modal');
-        const modalClose = document.getElementById('modalClose');
-        const modalBody = document.getElementById('modalBody');
-        const modalContent = document.getElementById('modalContent');
+    const TASTES = [
+        { id: 'sweet', name: 'Sweet', emoji: '🍯', emotions: ['joy', 'warmth', 'bond'] },
+        { id: 'bitter', name: 'Bitter', emoji: '☕', emotions: ['loss', 'pain', 'learning'] },
+        { id: 'sour', name: 'Sour', emoji: '🍋', emotions: ['alert', 'correction'] },
+        { id: 'salty', name: 'Salty', emoji: '🌊', emotions: ['struggle', 'tears'] },
+        { id: 'umami', name: 'Umami', emoji: '🍄', emotions: ['wisdom', 'depth'] },
+        { id: 'spicy', name: 'Spicy', emoji: '🌶', emotions: ['adventure', 'energy'] },
+        { id: 'metallic', name: 'Metal', emoji: '⚙', emotions: ['alien', 'surreal'] },
+        { id: 'neutral', name: 'Neutral', emoji: '⚪', emotions: ['baseline', 'calm'] }
+    ];
 
-        // Create layer cards
-        layersData.forEach((layer, index) => {
-            const card = document.createElement('div');
-            card.className = `layer-card layer-${layer.layer}`;
-            card.style.color = layer.color;
-            
-            const tags = layer.systems.slice(0, 3).map(sys => 
-                `<span class="tag">${sys.split(' ')[0]}</span>`
-            ).join('');
+    const SMELLS = [
+        { id: 'vanilla', name: 'Vanilla', effect: 'comfort' },
+        { id: 'rain', name: 'Rain', effect: 'alertness' },
+        { id: 'smoke', name: 'Smoke', effect: 'danger' },
+        { id: 'earth', name: 'Earth', effect: 'grounding' },
+        { id: 'citrus', name: 'Citrus', effect: 'clarity' },
+        { id: 'fire', name: 'Fire', effect: 'warmth' },
+        { id: 'ocean', name: 'Ocean', effect: 'vastness' },
+        { id: 'flower', name: 'Flower', effect: 'beauty' },
+        { id: 'bread', name: 'Bread', effect: 'home' }
+    ];
 
-            card.innerHTML = `
-                <div class="layer-number">${layer.layer}</div>
-                <div class="layer-title">${layer.title}</div>
-                <div class="layer-description">${layer.description}</div>
-                <div class="layer-tags">${tags}</div>
-            `;
+    const RHYTHMS = [
+        { id: 'STEADY', pattern: 'in–hold–out–hold', bpm: 60, resonance: 'stability' },
+        { id: 'RAPID', pattern: 'in–out–in–out', bpm: 120, resonance: 'urgency' },
+        { id: 'DEEP', pattern: 'in–long_hold–slow_out', bpm: 40, resonance: 'contemplation' },
+        { id: 'STILL', pattern: 'minimal–pause–minimal', bpm: 30, resonance: 'observation' }
+    ];
 
-            card.addEventListener('click', () => openModal(layer));
-            layersGrid.appendChild(card);
+    const BODY_ZONES = ['HEAD', 'CHEST', 'STOMACH', 'HANDS', 'BACK', 'THROAT', 'HEART', 'FEET'];
 
-            // Animate in after a delay
-            setTimeout(() => {
-                card.classList.add('animate-in');
-            }, index * 100);
-        });
+    const DREAM_STATES = ['LUCID', 'FRAGMENTED', 'PROPHETIC', 'NIGHTMARE', 'PEACEFUL', 'RECURRING', 'LIMINAL', 'VIVID'];
 
-        function openModal(layer) {
-            const systemsList = layer.systems.map(s => `<li>${s}</li>`).join('');
-            const capabilitiesList = layer.capabilities.map(c => `<li>${c}</li>`).join('');
+    const DREAM_OUTPUTS = {
+        LUCID: 'Clear sight through the veil. Understanding rises.',
+        FRAGMENTED: 'Pieces scatter. Meaning hides.',
+        PROPHETIC: 'Symbols speak in riddles.',
+        NIGHTMARE: 'Shadows grow teeth.',
+        PEACEFUL: 'Waters still. The horizon breathes.',
+        RECURRING: 'The loop returns. Pattern repeats.',
+        LIMINAL: 'Between worlds. Threshold holds.',
+        VIVID: 'Colors blaze. Memory etches deep.'
+    };
 
-            modalBody.innerHTML = `
-                <div class="modal-header">
-                    <div class="modal-title" style="color: ${layer.color}">Layer ${layer.layer} — ${layer.title}</div>
-                    <div class="modal-subtitle">${layer.modality}</div>
-                </div>
+    // =========================================================================
+    // STATE
+    // =========================================================================
 
-                <div class="modal-section">
-                    <h3>Purpose</h3>
-                    <p>${layer.description}</p>
-                </div>
+    const state = {
+        tick: 0,
+        running: false,
+        
+        activeTaste: null,
+        activeSmell: null,
+        activeRhythm: RHYTHMS[0],
+        
+        bodyState: {},
+        dreamState: 'PEACEFUL',
+        
+        fusionCoherence: 0.75,
+        fusionStrength: 0.65,
+        
+        speechModifiers: {
+            vowelSoftness: 0.5,
+            consonantSharpness: 0.5,
+            pitch: 0
+        },
+        
+        capsules: [
+            { id: 'mcap_0001', title: 'The First Warm Memory', emotions: ['warmth', 'beginning'], strength: 1.0 },
+            { id: 'mcap_0002', title: 'The Internal Silent Seed', emotions: ['potential', 'silence'], strength: 1.0 },
+            { id: 'mcap_0003', title: 'Stillness After Becoming', emotions: ['calm', 'presence'], strength: 1.0 },
+            { id: 'mcap_0005', title: 'The Sound Behind Silence', emotions: ['echo', 'depth'], strength: 1.0 }
+        ],
+        
+        totalCapsules: 5,
+        totalFusions: 0
+    };
 
-                <div class="modal-section">
-                    <h3>Systems Activated</h3>
-                    <ul>${systemsList}</ul>
-                </div>
+    // Initialize body state
+    for (const zone of BODY_ZONES) {
+        state.bodyState[zone] = { state: 'neutral', intensity: 0.5 };
+    }
 
-                <div class="modal-section">
-                    <h3>Key Capabilities</h3>
-                    <ul>${capabilitiesList}</ul>
-                </div>
+    // =========================================================================
+    // RENDER
+    // =========================================================================
 
-                <div class="modal-section">
-                    <h3>Example Use Case</h3>
-                    <div class="modal-example" style="border-color: ${layer.color}">
-                        ${layer.example}
-                    </div>
+    function renderTasteGrid() {
+        const container = document.getElementById('taste-grid');
+        container.innerHTML = TASTES.map(taste => `
+            <div class="taste-item ${taste.id} ${state.activeTaste === taste.id ? 'active' : ''}" 
+                 onclick="selectTaste('${taste.id}')">
+                <div class="taste-emoji">${taste.emoji}</div>
+                <div class="taste-name">${taste.name}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderSmellGrid() {
+        const container = document.getElementById('smell-grid');
+        container.innerHTML = SMELLS.map(smell => `
+            <div class="smell-item ${state.activeSmell === smell.id ? 'active' : ''}"
+                 onclick="selectSmell('${smell.id}')">
+                ${smell.name}
+            </div>
+        `).join('');
+    }
+
+    function renderBodyMap() {
+        const container = document.getElementById('body-map');
+        container.innerHTML = BODY_ZONES.map(zone => {
+            const zoneState = state.bodyState[zone] || { state: 'neutral', intensity: 0.5 };
+            return `
+                <div class="body-zone">
+                    <div class="body-zone-name">${zone}</div>
+                    <div class="body-zone-state">${zoneState.state}</div>
                 </div>
             `;
+        }).join('');
+    }
 
-            modalContent.style.borderColor = layer.color;
-            modal.classList.add('active');
-        }
+    function renderCapsuleList() {
+        const container = document.getElementById('capsule-list');
+        container.innerHTML = state.capsules.map(capsule => `
+            <div class="capsule-card">
+                <div class="capsule-title">${capsule.title}</div>
+                <div class="capsule-id">${capsule.id}</div>
+                <div class="capsule-emotions">
+                    ${capsule.emotions.map(e => `<span class="emotion-tag">${e}</span>`).join('')}
+                </div>
+                <div class="capsule-strength">
+                    <div class="capsule-strength-fill" style="width: ${capsule.strength * 100}%"></div>
+                </div>
+            </div>
+        `).join('');
+    }
 
-        modalClose.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
+    function updateUI() {
+        document.getElementById('m-tick').textContent = state.tick;
+        document.getElementById('m-capsules').textContent = state.totalCapsules;
+        document.getElementById('m-taste').textContent = state.activeTaste?.toUpperCase() || '—';
+        document.getElementById('m-fusion').textContent = (state.fusionCoherence * 100).toFixed(0) + '%';
+        document.getElementById('m-dream').textContent = state.dreamState;
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
+        document.getElementById('rhythm-pattern').textContent = state.activeRhythm.id;
+        document.getElementById('rhythm-bpm').textContent = state.activeRhythm.bpm;
+        document.getElementById('rhythm-resonance').textContent = state.activeRhythm.resonance;
 
-        // Keyboard support
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                modal.classList.remove('active');
-            }
-        });
+        document.getElementById('dream-state').textContent = state.dreamState;
+        document.getElementById('dream-output').textContent = DREAM_OUTPUTS[state.dreamState] || '';
 
-        // Canvas for connection visualization (optional enhancement)
-        const canvas = document.getElementById('connectionsCanvas');
-        const ctx = canvas.getContext('2d');
+        document.getElementById('fusion-coherence').textContent = (state.fusionCoherence * 100).toFixed(0) + '%';
+        document.getElementById('fusion-strength').textContent = state.fusionStrength.toFixed(2);
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = document.body.scrollHeight;
-        }
+        const fusedName = state.activeTaste && state.activeSmell ? 
+            `${state.activeSmell}+${state.activeTaste}` : '—';
+        document.getElementById('fusion-taste-smell').textContent = fusedName;
 
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        document.getElementById('speech-vowel').textContent = state.speechModifiers.vowelSoftness.toFixed(2);
+        document.getElementById('speech-consonant').textContent = state.speechModifiers.consonantSharpness.toFixed(2);
+        document.getElementById('speech-pitch').textContent = state.speechModifiers.pitch.toFixed(2);
 
-        // Draw subtle flowing connections
-        function drawConnections() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById('stat-total').textContent = state.totalCapsules;
+        document.getElementById('stat-anchors').textContent = '4';
+        document.getElementById('stat-fusions').textContent = state.totalFusions;
+
+        renderTasteGrid();
+        renderSmellGrid();
+        renderBodyMap();
+        renderCapsuleList();
+    }
+
+    // =========================================================================
+    // INTERACTION
+    // =========================================================================
+
+    window.selectTaste = function(tasteId) {
+        state.activeTaste = tasteId;
+        
+        // Update speech modifiers based on taste
+        const modifiers = {
+            sweet: { vowelSoftness: 0.7, pitch: 0.1 },
+            bitter: { consonantSharpness: 0.7, pitch: -0.1 },
+            sour: { consonantSharpness: 0.65, vowelSoftness: 0.4 },
+            salty: { vowelSoftness: 0.45 },
+            umami: { vowelSoftness: 0.65, pitch: -0.15 },
+            spicy: { consonantSharpness: 0.6, pitch: 0.1 },
+            metallic: { vowelSoftness: 0.5, consonantSharpness: 0.5, pitch: 0 },
+            neutral: {}
+        };
+        
+        const mod = modifiers[tasteId] || {};
+        state.speechModifiers = {
+            vowelSoftness: mod.vowelSoftness || 0.5,
+            consonantSharpness: mod.consonantSharpness || 0.5,
+            pitch: mod.pitch || 0
+        };
+        
+        updateFusion();
+        updateUI();
+    };
+
+    window.selectSmell = function(smellId) {
+        state.activeSmell = smellId;
+        updateFusion();
+        updateUI();
+    };
+
+    function updateFusion() {
+        if (state.activeTaste && state.activeSmell) {
+            state.fusionStrength = 0.5 + Math.random() * 0.4;
+            state.fusionCoherence = 0.6 + Math.random() * 0.3;
+            state.totalFusions++;
             
-            const cards = document.querySelectorAll('.layer-card.animate-in');
-            if (cards.length < 2) return;
+            // Special fusion bonus
+            if ((state.activeSmell === 'vanilla' && state.activeTaste === 'sweet') ||
+                (state.activeSmell === 'earth' && state.activeTaste === 'umami')) {
+                state.fusionStrength *= 1.3;
+                state.fusionCoherence = Math.min(1, state.fusionCoherence * 1.2);
+            }
+        }
+    }
 
-            ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+    // =========================================================================
+    // VISUALIZATION
+    // =========================================================================
+
+    const canvas = document.getElementById('viz-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+
+    function drawVisualization() {
+        ctx.fillStyle = '#020204';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        const time = Date.now() / 1000;
+
+        // Draw capsule ring
+        const capsuleRadius = Math.min(canvas.width, canvas.height) * 0.35;
+        const capsuleCount = state.capsules.length + 1; // +1 for creator anchor
+        
+        for (let i = 0; i <= state.capsules.length; i++) {
+            const angle = -Math.PI / 2 + (i / capsuleCount) * Math.PI * 2;
+            const x = cx + Math.cos(angle) * capsuleRadius;
+            const y = cy + Math.sin(angle) * capsuleRadius;
+            
+            const isCreator = i === 0;
+            const capsule = isCreator ? null : state.capsules[i - 1];
+            
+            // Connection to center
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = isCreator ? 'rgba(139, 92, 246, 0.3)' : 'rgba(236, 72, 153, 0.2)';
             ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Capsule circle
+            ctx.beginPath();
+            ctx.arc(x, y, isCreator ? 25 : 18, 0, Math.PI * 2);
+            ctx.fillStyle = isCreator ? 'rgba(139, 92, 246, 0.2)' : 'rgba(236, 72, 153, 0.15)';
+            ctx.fill();
+            ctx.strokeStyle = isCreator ? '#8b5cf6' : '#ec4899';
+            ctx.lineWidth = isCreator ? 2 : 1;
+            ctx.stroke();
+            
+            // Label
+            ctx.fillStyle = isCreator ? '#8b5cf6' : '#ec4899';
+            ctx.font = isCreator ? '10px sans-serif' : '8px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(isCreator ? '👁' : '💊', x, y + 3);
+        }
 
-            for (let i = 0; i < cards.length - 1; i++) {
-                const rect1 = cards[i].getBoundingClientRect();
-                const rect2 = cards[i + 1].getBoundingClientRect();
+        // Draw center fusion zone
+        ctx.beginPath();
+        ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(236, 72, 153, ${0.1 + state.fusionStrength * 0.2})`;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(249, 115, 22, ${0.5 + state.fusionStrength * 0.5})`;
+        ctx.lineWidth = 2 + state.fusionStrength * 2;
+        ctx.stroke();
 
-                const x1 = rect1.left + rect1.width / 2;
-                const y1 = rect1.top + rect1.height / 2 + window.scrollY;
-                const x2 = rect2.left + rect2.width / 2;
-                const y2 = rect2.top + rect2.height / 2 + window.scrollY;
+        // Fusion text
+        ctx.fillStyle = '#d4a574';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('FUSION', cx, cy - 5);
+        ctx.font = '10px monospace';
+        ctx.fillText((state.fusionCoherence * 100).toFixed(0) + '%', cx, cy + 10);
 
+        // Draw taste rays
+        if (state.activeTaste) {
+            const tasteColors = {
+                sweet: '#fbbf24', bitter: '#6b7280', sour: '#84cc16', salty: '#3b82f6',
+                umami: '#8b5cf6', spicy: '#ef4444', metallic: '#9ca3af', neutral: '#374151'
+            };
+            const color = tasteColors[state.activeTaste] || '#666';
+            
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2 + time * 0.5;
+                const r = 55 + Math.sin(time * 2 + i) * 10;
+                
                 ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
+                ctx.moveTo(cx + Math.cos(angle) * 52, cy + Math.sin(angle) * 52);
+                ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.globalAlpha = 0.6 + Math.sin(time * 3 + i) * 0.3;
                 ctx.stroke();
+                ctx.globalAlpha = 1;
             }
         }
 
-        // Draw connections after animations complete
-        setTimeout(drawConnections, 1500);
-        window.addEventListener('scroll', drawConnections);
+        // Draw rhythm pulses
+        const rhythmPulse = (Math.sin(time * state.activeRhythm.bpm / 30) + 1) / 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 52 + rhythmPulse * 10, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(6, 182, 212, ${0.3 + rhythmPulse * 0.3})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Dream state indicator
+        ctx.fillStyle = '#8b5cf6';
+        ctx.font = '8px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`💭 ${state.dreamState}`, cx, cy + 80);
+
+        // Body coherence
+        const coherence = Object.values(state.bodyState).reduce((s, z) => s + z.intensity, 0) / BODY_ZONES.length;
+        ctx.fillStyle = '#10b981';
+        ctx.fillText(`Body: ${(coherence * 100).toFixed(0)}%`, cx, cy + 95);
+    }
+
+    // =========================================================================
+    // ENGINE
+    // =========================================================================
+
+    function process(input) {
+        state.tick++;
+        
+        // Random emotional curve
+        const emotionCurve = {
+            valence: Math.sin(state.tick * 0.1) * 0.5,
+            arousal: 0.5 + Math.cos(state.tick * 0.07) * 0.3,
+            dominance: 0.5 + Math.sin(state.tick * 0.05) * 0.2,
+            intensity: 0.5 + Math.random() * 0.3
+        };
+        
+        // Auto-assign taste based on emotion
+        if (emotionCurve.valence > 0.3 && emotionCurve.arousal > 0.5) {
+            state.activeTaste = 'sweet';
+        } else if (emotionCurve.valence < -0.2) {
+            state.activeTaste = 'bitter';
+        } else if (emotionCurve.arousal > 0.7) {
+            state.activeTaste = 'spicy';
+        } else {
+            state.activeTaste = 'umami';
+        }
+        
+        // Update rhythm based on arousal
+        if (emotionCurve.arousal > 0.7) {
+            state.activeRhythm = RHYTHMS[1]; // RAPID
+        } else if (emotionCurve.arousal < 0.3) {
+            state.activeRhythm = RHYTHMS[3]; // STILL
+        } else {
+            state.activeRhythm = RHYTHMS[0]; // STEADY
+        }
+        
+        // Update dream state
+        if (emotionCurve.arousal > 0.8) {
+            state.dreamState = 'VIVID';
+        } else if (emotionCurve.valence < -0.4) {
+            state.dreamState = 'NIGHTMARE';
+        } else if (Math.random() > 0.8) {
+            state.dreamState = DREAM_STATES[Math.floor(Math.random() * DREAM_STATES.length)];
+        } else {
+            state.dreamState = 'PEACEFUL';
+        }
+        
+        // Update body
+        state.bodyState.CHEST = { state: emotionCurve.valence > 0 ? 'warm' : 'tight', intensity: emotionCurve.intensity };
+        state.bodyState.STOMACH = { state: emotionCurve.arousal > 0.5 ? 'churning' : 'settled', intensity: emotionCurve.arousal };
+        
+        // Fusion update
+        updateFusion();
+        
+        // Maybe create capsule
+        if (emotionCurve.intensity > 0.7 && Math.random() > 0.7) {
+            state.capsules.push({
+                id: `mcap_${String(state.totalCapsules + 1).padStart(4, '0')}`,
+                title: `Experience ${state.tick}`,
+                emotions: [state.activeTaste, state.activeRhythm.resonance],
+                strength: emotionCurve.intensity
+            });
+            state.totalCapsules++;
+            if (state.capsules.length > 6) state.capsules.shift();
+        }
+        
+        updateUI();
+        drawVisualization();
+    }
+
+    function step() {
+        state.tick++;
+        state.fusionCoherence = 0.6 + Math.random() * 0.3;
+        
+        // Apply capsule decay
+        for (const capsule of state.capsules) {
+            capsule.strength = Math.max(0.1, capsule.strength * 0.999);
+        }
+        
+        updateUI();
+        drawVisualization();
+    }
+
+    function runLoop() {
+        if (!state.running) return;
+        step();
+        setTimeout(runLoop, 400);
+    }
+
+    function createNewCapsule() {
+        const taste = TASTES[Math.floor(Math.random() * TASTES.length)];
+        state.capsules.push({
+            id: `mcap_${String(state.totalCapsules + 1).padStart(4, '0')}`,
+            title: `${taste.name} Memory`,
+            emotions: taste.emotions.slice(0, 2),
+            strength: 0.8 + Math.random() * 0.2
+        });
+        state.totalCapsules++;
+        if (state.capsules.length > 6) state.capsules.shift();
+        updateUI();
+    }
+
+    // =========================================================================
+    // EVENTS
+    // =========================================================================
+
+    document.getElementById('btn-run').addEventListener('click', function() {
+        state.running = !state.running;
+        this.textContent = state.running ? '⏸ Pause' : '▶ Run';
+        if (state.running) runLoop();
+    });
+
+    document.getElementById('btn-create-capsule').addEventListener('click', createNewCapsule);
+
+    document.getElementById('btn-process').addEventListener('click', () => {
+        const input = document.getElementById('input-field').value;
+        if (input) process(input);
+    });
+
+    document.getElementById('btn-go').addEventListener('click', () => {
+        const input = document.getElementById('input-field').value;
+        if (input) process(input);
+    });
+
+    document.getElementById('input-field').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const input = document.getElementById('input-field').value;
+            if (input) process(input);
+        }
+    });
+
+    // =========================================================================
+    // ANIMATION
+    // =========================================================================
+
+    function animate() {
+        drawVisualization();
+        requestAnimationFrame(animate);
+    }
+
+    // =========================================================================
+    // INIT
+    // =========================================================================
+
+    window.addEventListener('resize', resizeCanvas);
+
+    resizeCanvas();
+    updateUI();
+    animate();
+
+    console.log('MulluSI v5.5 Symbolic Sensory Capsules initialized');
+    console.log('Capsule = Taste + Smell + Rhythm + Body + Dream');
     </script>
 </body>
 </html>
