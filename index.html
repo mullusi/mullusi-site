@@ -3,1497 +3,726 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCCI Assembly Engine — Symbolic Causal Chain Intelligence</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <title>MulluSI - Interactive Multimodal SGI Architecture</title>
     <style>
-        :root {
-            --bg-0: #050508;
-            --bg-1: #0a0a10;
-            --bg-2: #10101a;
-            --bg-3: #18182a;
-            --bg-4: #202035;
-            --text-0: #ffffff;
-            --text-1: #d0d0e0;
-            --text-2: #9090a8;
-            --text-3: #606078;
-            --border: #252540;
-            --skill-r: #ff6b6b;
-            --skill-s: #4ecdc4;
-            --skill-b: #ffe66d;
-            --skill-i: #a29bfe;
-            --psi: #b388ff;
-            --success: #69f0ae;
-            --warning: #ffab40;
-            --error: #ff5252;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-0);
-            color: var(--text-1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
             min-height: 100vh;
-            line-height: 1.6;
+            padding: 20px;
+            overflow-x: hidden;
         }
 
-        /* Header */
         .header {
-            background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-0) 100%);
-            padding: 2rem;
             text-align: center;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header-icon {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-in;
         }
 
         .header h1 {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 0.3em;
-            color: var(--text-0);
-            margin-bottom: 0.25rem;
+            font-size: 2.5em;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+            margin-bottom: 10px;
         }
 
-        .header .subtitle {
-            font-size: 0.85rem;
-            color: var(--text-2);
-        }
-
-        /* Main Layout */
-        .main {
-            max-width: 1400px;
+        .header p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 2rem 1rem;
         }
 
-        /* Section */
-        .section {
-            margin-bottom: 3rem;
-        }
-
-        .section-title {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            color: var(--psi);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .section-title::before,
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-        }
-
-        /* Formula Card */
-        .formula-card {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .formula-card.highlight {
-            border-color: var(--psi);
-            box-shadow: 0 0 40px -15px var(--psi);
-        }
-
-        .formula-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            color: var(--psi);
-            margin-bottom: 1rem;
-        }
-
-        .formula-main {
-            font-size: 1.2rem;
-            text-align: center;
-            padding: 1.5rem;
-            background: var(--bg-1);
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            overflow-x: auto;
-        }
-
-        .formula-desc {
-            font-size: 0.9rem;
-            color: var(--text-2);
-            line-height: 1.7;
-        }
-
-        /* Skill Cards */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .skill-card {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5);
-        }
-
-        .skill-card.r-int { --skill-color: var(--skill-r); }
-        .skill-card.s-harm { --skill-color: var(--skill-s); }
-        .skill-card.b-pred { --skill-color: var(--skill-b); }
-        .skill-card.i-prop { --skill-color: var(--skill-i); }
-
-        .skill-card:hover {
-            border-color: var(--skill-color);
-        }
-
-        .skill-header {
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(var(--skill-color-rgb), 0.1), transparent);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .skill-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            background: var(--bg-3);
-            border: 2px solid var(--skill-color);
-            color: var(--skill-color);
-        }
-
-        .skill-title-group {
-            flex: 1;
-        }
-
-        .skill-notation {
-            font-family: 'Times New Roman', serif;
-            font-size: 1rem;
-            font-style: italic;
-            color: var(--skill-color);
-            margin-bottom: 0.25rem;
-        }
-
-        .skill-name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-0);
-        }
-
-        .skill-role {
-            font-size: 0.7rem;
-            color: var(--text-3);
-            letter-spacing: 0.1em;
-        }
-
-        .skill-body {
-            padding: 1.5rem;
-        }
-
-        .skill-formula {
-            background: var(--bg-1);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            text-align: center;
-            font-size: 0.95rem;
-            overflow-x: auto;
-        }
-
-        .skill-function {
-            margin-bottom: 1rem;
-        }
-
-        .skill-function-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            color: var(--text-3);
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-function-text {
-            font-size: 0.85rem;
-            color: var(--text-1);
-            line-height: 1.6;
-        }
-
-        .skill-example {
-            background: var(--bg-3);
-            border-radius: 8px;
-            padding: 1rem;
-            border-left: 3px solid var(--skill-color);
-        }
-
-        .skill-example-label {
-            font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            color: var(--skill-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-example-text {
-            font-size: 0.8rem;
-            color: var(--text-2);
-            line-height: 1.5;
-        }
-
-        /* Assembly Pipeline */
-        .pipeline-container {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-        }
-
-        .pipeline-stages {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .pipeline-stage {
-            flex: 1;
-            min-width: 120px;
-            text-align: center;
-            padding: 1rem;
-            background: var(--bg-3);
-            border-radius: 12px;
-            border: 2px solid var(--border);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .pipeline-stage.active {
-            border-color: var(--psi);
-            background: rgba(179, 136, 255, 0.1);
-        }
-
-        .pipeline-stage.completed {
-            border-color: var(--success);
-        }
-
-        .pipeline-stage-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .pipeline-stage-name {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-1);
-        }
-
-        .pipeline-arrow {
-            color: var(--text-3);
-            font-size: 1.2rem;
-        }
-
-        .pipeline-controls {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background: var(--bg-3);
-            border: 1px solid var(--border);
-            color: var(--text-1);
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn:hover { border-color: var(--psi); }
-        .btn.primary { background: var(--psi); color: #000; border-color: var(--psi); }
-
-        .pipeline-output {
-            background: var(--bg-1);
-            border-radius: 12px;
-            min-height: 300px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px;
-            overflow: hidden;
-        }
-
-        @media (max-width: 800px) {
-            .pipeline-output {
-                grid-template-columns: 1fr;
+        @keyframes shimmer {
+            to {
+                background-position: 200% center;
             }
         }
 
-        .output-panel {
-            background: var(--bg-2);
-            padding: 1rem;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .output-panel-title {
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            color: var(--text-3);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .architecture-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
         }
 
-        .output-panel-title::before {
-            content: '◈';
-            color: var(--psi);
+        .layers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            position: relative;
         }
 
-        /* Assembly Log */
-        .assembly-log {
-            font-family: 'SF Mono', monospace;
-            font-size: 0.75rem;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .log-entry {
-            padding: 0.4rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .log-skill {
-            min-width: 60px;
-            font-weight: 600;
-        }
-
-        .log-skill.r { color: var(--skill-r); }
-        .log-skill.s { color: var(--skill-s); }
-        .log-skill.b { color: var(--skill-b); }
-        .log-skill.i { color: var(--skill-i); }
-
-        .log-message {
-            color: var(--text-2);
-            flex: 1;
-        }
-
-        /* Component Visualization */
-        .component-viz {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .component-item {
-            background: var(--bg-3);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.75rem;
-            transition: all 0.3s ease;
-        }
-
-        .component-item.assembling {
-            border-color: var(--psi);
-            box-shadow: 0 0 15px -5px var(--psi);
-        }
-
-        .component-item.assembled {
-            border-color: var(--success);
-        }
-
-        .component-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .component-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-0);
-        }
-
-        .component-type {
-            font-size: 0.6rem;
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-            background: var(--bg-4);
-            color: var(--text-2);
-        }
-
-        .component-meta {
-            font-size: 0.7rem;
-            color: var(--text-3);
-        }
-
-        /* Constraint Checker */
-        .constraint-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .constraint-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.75rem;
-        }
-
-        .constraint-status {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-        }
-
-        .constraint-status.pass { background: var(--success); color: #000; }
-        .constraint-status.fail { background: var(--error); color: #fff; }
-        .constraint-status.pending { background: var(--text-3); color: var(--bg-0); }
-
-        .constraint-name {
-            flex: 1;
-            color: var(--text-2);
-        }
-
-        .constraint-value {
-            color: var(--text-1);
-            font-family: monospace;
-        }
-
-        /* Result Display */
-        .result-symbol {
-            background: var(--bg-3);
-            border: 2px solid var(--success);
+        .layer-card {
+            background: rgba(20, 20, 30, 0.8);
+            border: 2px solid;
             border-radius: 12px;
-            padding: 1rem;
-            text-align: center;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
         }
 
-        .result-symbol-name {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--success);
-            margin-bottom: 0.5rem;
+        .layer-card.animate-in {
+            animation: layerFadeIn 0.6s ease-out forwards;
         }
 
-        .result-behaviors {
+        @keyframes layerFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .layer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .layer-card:hover::before {
+            opacity: 1;
+        }
+
+        .layer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .layer-card.layer-0 {
+            border-color: #8b5cf6;
+            animation-delay: 0s;
+        }
+        .layer-card.layer-1 {
+            border-color: #00ffff;
+            animation-delay: 0.1s;
+        }
+        .layer-card.layer-2 {
+            border-color: #3b82f6;
+            animation-delay: 0.2s;
+        }
+        .layer-card.layer-3 {
+            border-color: #10b981;
+            animation-delay: 0.3s;
+        }
+        .layer-card.layer-4 {
+            border-color: #f59e0b;
+            animation-delay: 0.4s;
+        }
+        .layer-card.layer-5 {
+            border-color: #ec4899;
+            animation-delay: 0.5s;
+        }
+        .layer-card.layer-6 {
+            border-color: #e5e7eb;
+            animation-delay: 0.6s;
+        }
+        .layer-card.layer-7 {
+            border-color: #84cc16;
+            animation-delay: 0.7s;
+        }
+        .layer-card.layer-8 {
+            border-color: #fbbf24;
+            animation-delay: 0.8s;
+        }
+        .layer-card.layer-9 {
+            border-color: #ff00ff;
+            animation-delay: 0.9s;
+        }
+
+        .layer-number {
+            font-size: 3em;
+            font-weight: bold;
+            opacity: 0.3;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+
+        .layer-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .layer-description {
+            color: #a0a0a0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .layer-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            border: 1px solid currentColor;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
             justify-content: center;
         }
 
-        .result-behavior {
-            font-size: 0.7rem;
-            background: rgba(105, 240, 174, 0.1);
-            border: 1px solid var(--success);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            color: var(--success);
-        }
-
-        /* Assembly Scenarios */
-        .scenario-selector {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .scenario-btn {
-            background: var(--bg-3);
-            border: 1px solid var(--border);
-            color: var(--text-2);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.75rem;
-            transition: all 0.2s;
-        }
-
-        .scenario-btn:hover, .scenario-btn.active {
-            border-color: var(--psi);
-            color: var(--psi);
-        }
-
-        /* Math rendering */
-        .katex { font-size: 1em; }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-0); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-        /* Animation */
-        @keyframes pulse-border {
-            0%, 100% { border-color: var(--psi); }
-            50% { border-color: transparent; }
-        }
-
-        .assembling {
-            animation: pulse-border 1s infinite;
-        }
-
-        /* Relationship Graph */
-        .rel-graph {
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0a 100%);
+            border: 2px solid;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 800px;
             width: 100%;
-            height: 200px;
-            background: var(--bg-1);
+            position: relative;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            color: #a0a0a0;
+            transition: color 0.3s ease;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #ffffff;
+        }
+
+        .modal-header {
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            color: #a0a0a0;
+            font-size: 1.2em;
+        }
+
+        .modal-section {
+            margin-bottom: 30px;
+        }
+
+        .modal-section h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #00ffff;
+        }
+
+        .modal-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .modal-section li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        .modal-section li::before {
+            content: '→';
+            color: currentColor;
+            margin-right: 10px;
+        }
+
+        .modal-example {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
             border-radius: 8px;
-            margin-top: 1rem;
+            border-left: 4px solid currentColor;
+            margin-top: 15px;
         }
 
-        /* Footer */
-        .footer {
+        .connections-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .info-panel {
+            background: rgba(20, 20, 30, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
             text-align: center;
-            padding: 2rem;
-            border-top: 1px solid var(--border);
-            margin-top: 2rem;
         }
 
-        .footer-symbol {
-            font-size: 1.5rem;
-            color: var(--psi);
-            margin-bottom: 0.5rem;
+        .info-panel h2 {
+            color: #00ffff;
+            margin-bottom: 10px;
         }
 
-        .footer-text {
-            font-size: 0.75rem;
-            color: var(--text-3);
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .layer-card {
+                padding: 20px;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+            .modal-title {
+                font-size: 1.8em;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-icon">⚙</div>
-        <h1>SYMBOLIC ASSEMBLY ENGINE</h1>
-        <p class="subtitle">SCCI Skills for Causal Chain Construction — Template-Free Assembly</p>
-    </header>
+    <div class="header">
+        <h1>MulluSI Architecture</h1>
+        <p>Full-Spectrum Multimodal Symbolic General Intelligence</p>
+        <p style="font-size: 0.9em; margin-top: 10px; color: #666;">Click any layer to explore in depth</p>
+    </div>
 
-    <main class="main">
-        <!-- Assembly Formula -->
-        <section class="section">
-            <div class="section-title">ASSEMBLY FORMULA</div>
-            
-            <div class="formula-card highlight">
-                <div class="formula-label">SYMBOLIC ASSEMBLY OPERATOR</div>
-                <div class="formula-main">
-                    $$\text{Assemble}(S_{\text{new}}) = \mathcal{I}_{\text{prop}} \circ \mathcal{B}_{\text{pred}} \circ \mathcal{S}_{\text{harm}} \circ \mathcal{R}_{\text{int}} \left( \text{Comp}(S_{\text{new}}), \text{Def}(S_{\text{new}}) \right)$$
-                </div>
-                <div class="formula-desc">
-                    Assembly synthesizes a new complex symbol $S_{\text{new}}$ by executing four skills in sequence: 
-                    <strong>Relationship Integration</strong> establishes structural connections, 
-                    <strong>Specification Harmonization</strong> validates constraints, 
-                    <strong>Emergent Behavior Prediction</strong> synthesizes new behaviors, and 
-                    <strong>Recursive ID Propagation</strong> updates component contexts.
-                </div>
-            </div>
-        </section>
-
-        <!-- Four Skills -->
-        <section class="section">
-            <div class="section-title">THE FOUR ASSEMBLY SKILLS</div>
-            
-            <div class="skills-grid">
-                <!-- Skill 1: Relationship Integration -->
-                <div class="skill-card r-int">
-                    <div class="skill-header">
-                        <div class="skill-icon">⟷</div>
-                        <div class="skill-title-group">
-                            <div class="skill-notation">$\mathcal{R}_{\text{int}}$</div>
-                            <div class="skill-name">Relationship Integration</div>
-                            <div class="skill-role">ORCHESTRATION</div>
-                        </div>
-                    </div>
-                    <div class="skill-body">
-                        <div class="skill-formula">
-                            $$\mathcal{R}_{\text{int}}: \text{Rel}(C_i) \times \text{Rel}(C_j) \to \text{Arch}(S_{\text{new}})$$
-                        </div>
-                        <div class="skill-function">
-                            <div class="skill-function-label">FUNCTION</div>
-                            <div class="skill-function-text">
-                                Matches required $\text{Rel}$ of child symbols to establish structural architecture. 
-                                No templates — only metadata-driven connection discovery.
-                            </div>
-                        </div>
-                        <div class="skill-example">
-                            <div class="skill-example-label">EXAMPLE</div>
-                            <div class="skill-example-text">
-                                Door assembly: Hinge.Rel('Attaches-To-Fixed-Frame') ⟷ Frame.Rel('Accepts-Hinge') → Architecture link established
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Skill 2: Specification Harmonization -->
-                <div class="skill-card s-harm">
-                    <div class="skill-header">
-                        <div class="skill-icon">⊕</div>
-                        <div class="skill-title-group">
-                            <div class="skill-notation">$\mathcal{S}_{\text{harm}}$</div>
-                            <div class="skill-name">Specification Harmonization</div>
-                            <div class="skill-role">CONSTRAINT SOLVING</div>
-                        </div>
-                    </div>
-                    <div class="skill-body">
-                        <div class="skill-formula">
-                            $$\mathcal{S}_{\text{harm}}: \bigwedge_{i,j} \text{Compatible}(\text{Spec}(C_i), \text{Spec}(C_j)) = \top$$
-                        </div>
-                        <div class="skill-function">
-                            <div class="skill-function-label">FUNCTION</div>
-                            <div class="skill-function-text">
-                                Validates that specifications across interacting components are mutually consistent. 
-                                Resolves conflicts, calculates tolerances, propagates constraints.
-                            </div>
-                        </div>
-                        <div class="skill-example">
-                            <div class="skill-example-label">EXAMPLE</div>
-                            <div class="skill-example-text">
-                                Bearing → Axle: Bearing.Spec.Diameter ∈ Axle.Spec.HoleTolerance ± 0.02mm → ✓ Harmonized
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Skill 3: Emergent Behavior Prediction -->
-                <div class="skill-card b-pred">
-                    <div class="skill-header">
-                        <div class="skill-icon">⚡</div>
-                        <div class="skill-title-group">
-                            <div class="skill-notation">$\mathcal{B}_{\text{pred}}$</div>
-                            <div class="skill-name">Emergent Behavior Prediction</div>
-                            <div class="skill-role">COMPLEX SYSTEMS</div>
-                        </div>
-                    </div>
-                    <div class="skill-body">
-                        <div class="skill-formula">
-                            $$\mathcal{B}_{\text{pred}}: \text{Beh}(S_{\text{new}}) = \text{Rules} \otimes \bigcup_{C} \text{Beh}(C)$$
-                        </div>
-                        <div class="skill-function">
-                            <div class="skill-function-label">FUNCTION</div>
-                            <div class="skill-function-text">
-                                Synthesizes emergent behaviors by applying physics/domain Rules to combined component behaviors and geometries.
-                            </div>
-                        </div>
-                        <div class="skill-example">
-                            <div class="skill-example-label">EXAMPLE</div>
-                            <div class="skill-example-text">
-                                Blade + Motor → Apply(HydrodynamicsRule) → Emergent: "Generates-Forward-Thrust ∝ RPM"
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Skill 4: Recursive ID Propagation -->
-                <div class="skill-card i-prop">
-                    <div class="skill-header">
-                        <div class="skill-icon">↻</div>
-                        <div class="skill-title-group">
-                            <div class="skill-notation">$\mathcal{I}_{\text{prop}}$</div>
-                            <div class="skill-name">Recursive ID Propagation</div>
-                            <div class="skill-role">ORGANIZATION</div>
-                        </div>
-                    </div>
-                    <div class="skill-body">
-                        <div class="skill-formula">
-                            $$\mathcal{I}_{\text{prop}}: \forall C \in \text{Comp}(S), \mathcal{C}(C) \leftarrow \mathcal{C}(C) \cup \{\text{Parent}: S_{\text{new}}\}$$
-                        </div>
-                        <div class="skill-function">
-                            <div class="skill-function-label">FUNCTION</div>
-                            <div class="skill-function-text">
-                                Updates the Context of all components with the parent's Identity, changing how 
-                                the Ψ formula processes them in future evaluations.
-                            </div>
-                        </div>
-                        <div class="skill-example">
-                            <div class="skill-example-label">EXAMPLE</div>
-                            <div class="skill-example-text">
-                                Metal Rod in Telescope: 𝒞(Rod) ← {Role: 'Focus-Adjustment'} → Precision Motion Rule activates instead of Structural Support
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Interactive Assembly Pipeline -->
-        <section class="section">
-            <div class="section-title">INTERACTIVE ASSEMBLY PIPELINE</div>
-            
-            <div class="pipeline-container">
-                <div class="scenario-selector">
-                    <button class="scenario-btn active" data-scenario="door">🚪 Door Assembly</button>
-                    <button class="scenario-btn" data-scenario="propeller">⚙ Propeller System</button>
-                    <button class="scenario-btn" data-scenario="telescope">🔭 Telescope Mechanism</button>
-                    <button class="scenario-btn" data-scenario="engine">🔧 Engine Block</button>
-                </div>
-
-                <div class="pipeline-stages">
-                    <div class="pipeline-stage" data-stage="0" id="stage0">
-                        <div class="pipeline-stage-icon">📥</div>
-                        <div class="pipeline-stage-name">Components</div>
-                    </div>
-                    <div class="pipeline-arrow">→</div>
-                    <div class="pipeline-stage" data-stage="1" id="stage1">
-                        <div class="pipeline-stage-icon" style="color: var(--skill-r);">⟷</div>
-                        <div class="pipeline-stage-name">ℛ_int</div>
-                    </div>
-                    <div class="pipeline-arrow">→</div>
-                    <div class="pipeline-stage" data-stage="2" id="stage2">
-                        <div class="pipeline-stage-icon" style="color: var(--skill-s);">⊕</div>
-                        <div class="pipeline-stage-name">𝒮_harm</div>
-                    </div>
-                    <div class="pipeline-arrow">→</div>
-                    <div class="pipeline-stage" data-stage="3" id="stage3">
-                        <div class="pipeline-stage-icon" style="color: var(--skill-b);">⚡</div>
-                        <div class="pipeline-stage-name">ℬ_pred</div>
-                    </div>
-                    <div class="pipeline-arrow">→</div>
-                    <div class="pipeline-stage" data-stage="4" id="stage4">
-                        <div class="pipeline-stage-icon" style="color: var(--skill-i);">↻</div>
-                        <div class="pipeline-stage-name">ℐ_prop</div>
-                    </div>
-                    <div class="pipeline-arrow">→</div>
-                    <div class="pipeline-stage" data-stage="5" id="stage5">
-                        <div class="pipeline-stage-icon" style="color: var(--success);">✓</div>
-                        <div class="pipeline-stage-name">S_new</div>
-                    </div>
-                </div>
-
-                <div class="pipeline-controls">
-                    <button class="btn primary" id="btnAssemble">▶ Run Assembly</button>
-                    <button class="btn" id="btnStep">⏭ Step</button>
-                    <button class="btn" id="btnReset">↻ Reset</button>
-                </div>
-
-                <div class="pipeline-output">
-                    <!-- Components Panel -->
-                    <div class="output-panel">
-                        <div class="output-panel-title">COMPONENTS & RELATIONSHIPS</div>
-                        <div class="component-viz" id="componentViz">
-                            <!-- Populated by JS -->
-                        </div>
-                        <canvas class="rel-graph" id="relGraph"></canvas>
-                    </div>
-
-                    <!-- Log & Constraints Panel -->
-                    <div class="output-panel">
-                        <div class="output-panel-title">ASSEMBLY LOG</div>
-                        <div class="assembly-log" id="assemblyLog">
-                            <!-- Populated by JS -->
-                        </div>
-
-                        <div class="output-panel-title" style="margin-top: 1rem;">CONSTRAINT VALIDATION</div>
-                        <div class="constraint-list" id="constraintList">
-                            <!-- Populated by JS -->
-                        </div>
-
-                        <div id="resultContainer" style="margin-top: 1rem; display: none;">
-                            <div class="output-panel-title">ASSEMBLED SYMBOL</div>
-                            <div class="result-symbol" id="resultSymbol">
-                                <!-- Populated by JS -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Formal Composition -->
-        <section class="section">
-            <div class="section-title">FORMAL COMPOSITION RULES</div>
-            
-            <div class="formula-card">
-                <div class="formula-label">SKILL COMPOSITION ORDER (NON-COMMUTATIVE)</div>
-                <div class="formula-main">
-                    $$\mathcal{I}_{\text{prop}} \circ \mathcal{B}_{\text{pred}} \circ \mathcal{S}_{\text{harm}} \circ \mathcal{R}_{\text{int}} \neq \mathcal{R}_{\text{int}} \circ \mathcal{S}_{\text{harm}} \circ \mathcal{B}_{\text{pred}} \circ \mathcal{I}_{\text{prop}}$$
-                </div>
-                <div class="formula-desc">
-                    The skills must execute in a specific order: <strong>Relationships</strong> establish structure, 
-                    <strong>Specifications</strong> validate constraints, <strong>Behaviors</strong> emerge from validated structure, 
-                    and <strong>Identity</strong> propagates after the complete symbol exists.
-                </div>
-            </div>
-
-            <div class="skills-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-                <div class="formula-card" style="padding: 1rem;">
-                    <div class="formula-label">AXIOM A.1 — RELATIONSHIP PRIMACY</div>
-                    <div class="formula-main" style="font-size: 0.9rem; padding: 0.75rem;">
-                        $$\mathcal{R}_{\text{int}} \text{ precedes all other skills}$$
-                    </div>
-                    <div class="formula-desc" style="font-size: 0.75rem;">
-                        Structure must exist before constraints can be validated.
-                    </div>
-                </div>
-                <div class="formula-card" style="padding: 1rem;">
-                    <div class="formula-label">AXIOM A.2 — CONSTRAINT GATE</div>
-                    <div class="formula-main" style="font-size: 0.9rem; padding: 0.75rem;">
-                        $$\mathcal{S}_{\text{harm}} = \bot \implies \text{Assembly fails}$$
-                    </div>
-                    <div class="formula-desc" style="font-size: 0.75rem;">
-                        Incompatible specifications halt the assembly process.
-                    </div>
-                </div>
-                <div class="formula-card" style="padding: 1rem;">
-                    <div class="formula-label">AXIOM A.3 — EMERGENCE REQUIRES VALIDITY</div>
-                    <div class="formula-main" style="font-size: 0.9rem; padding: 0.75rem;">
-                        $$\mathcal{B}_{\text{pred}} \text{ requires } \mathcal{S}_{\text{harm}} = \top$$
-                    </div>
-                    <div class="formula-desc" style="font-size: 0.75rem;">
-                        Behaviors only emerge from constraint-valid assemblies.
-                    </div>
-                </div>
-                <div class="formula-card" style="padding: 1rem;">
-                    <div class="formula-label">AXIOM A.4 — IDENTITY COMPLETENESS</div>
-                    <div class="formula-main" style="font-size: 0.9rem; padding: 0.75rem;">
-                        $$\mathcal{I}_{\text{prop}} \text{ executes last}$$
-                    </div>
-                    <div class="formula-desc" style="font-size: 0.75rem;">
-                        Context updates require the complete assembled symbol.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Integration with Ψ -->
-        <section class="section">
-            <div class="section-title">INTEGRATION WITH Ψ FORMULA</div>
-            
-            <div class="formula-card">
-                <div class="formula-label">ASSEMBLY AS Ψ INVERSE</div>
-                <div class="formula-main">
-                    $$\Psi^{-1}(S_{\text{new}}) = \text{Assemble}(\text{Comp}(S_{\text{new}})) \text{ where } \Psi(S_{\text{new}}) \to \mathcal{O}$$
-                </div>
-                <div class="formula-desc">
-                    While Ψ <strong>resolves</strong> symbols into outputs (analysis), Assembly <strong>constructs</strong> symbols from components (synthesis). 
-                    Together they form a complete symbolic intelligence cycle: <em>understand ↔ create</em>.
-                </div>
-            </div>
-
-            <div class="formula-card">
-                <div class="formula-label">COMPLETE SCCI CYCLE</div>
-                <div class="formula-main">
-                    $$\text{SCCI} = \Psi \circ \text{Assemble} : \text{Components} \xrightarrow{\text{Assemble}} S_{\text{new}} \xrightarrow{\Psi} \mathcal{O}$$
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-symbol">⚙</div>
-        <div class="footer-text">
-            SCCI Assembly Engine — Symbolic Causal Chain Intelligence<br>
-            <span style="opacity: 0.6;">Template-Free • Metadata-Driven • Causally Complete</span>
+    <div class="architecture-container">
+        <div class="info-panel">
+            <h2>🎯 Unified Acoustic-Emotional Foundation</h2>
+            <p>272 atomic Amharic letters (fidel) serve as the universal substrate<br>
+            Each letter = unique sound-emotion unit with whisper (w) + vibratory (v) components<br>
+            From acoustic atoms → complete multimodal symbolic general intelligence</p>
         </div>
-    </footer>
+
+        <div class="layers-grid" id="layersGrid"></div>
+    </div>
+
+    <canvas class="connections-canvas" id="connectionsCanvas"></canvas>
+
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modalContent">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
 
     <script>
-        // ═══════════════════════════════════════════════════════════════════
-        // ASSEMBLY SCENARIOS
-        // ═══════════════════════════════════════════════════════════════════
-
-        const SCENARIOS = {
-            door: {
-                name: 'Door Assembly',
-                targetSymbol: 'Door',
-                components: [
-                    {
-                        id: 'DoorPanel',
-                        type: 'Object',
-                        def: 'Rectangular barrier panel',
-                        rel: ['Accepts-Hinge-Mount', 'Accepts-Handle-Mount', 'Fills-Frame-Opening'],
-                        spec: { width: 80, height: 200, thickness: 4, material: 'Wood', weight: 15 },
-                        beh: ['Swings-On-Axis', 'Blocks-Passage']
-                    },
-                    {
-                        id: 'Hinge_A',
-                        type: 'Object',
-                        def: 'Rotational joint mechanism',
-                        rel: ['Attaches-To-Fixed-Frame', 'Provides-Rotation-Axis'],
-                        spec: { loadCapacity: 25, rotationRange: 180, material: 'Steel' },
-                        beh: ['Enables-Rotation', 'Bears-Load']
-                    },
-                    {
-                        id: 'Hinge_B',
-                        type: 'Object',
-                        def: 'Rotational joint mechanism',
-                        rel: ['Attaches-To-Fixed-Frame', 'Provides-Rotation-Axis'],
-                        spec: { loadCapacity: 25, rotationRange: 180, material: 'Steel' },
-                        beh: ['Enables-Rotation', 'Bears-Load']
-                    },
-                    {
-                        id: 'DoorFrame',
-                        type: 'Object',
-                        def: 'Fixed structural surround',
-                        rel: ['Accepts-Hinge-Attachment', 'Defines-Opening', 'Anchors-To-Wall'],
-                        spec: { innerWidth: 82, innerHeight: 202, material: 'Wood', loadCapacity: 100 },
-                        beh: ['Supports-Door', 'Defines-Threshold']
-                    },
-                    {
-                        id: 'Handle',
-                        type: 'Object',
-                        def: 'User grip and latch mechanism',
-                        rel: ['Mounts-To-Panel', 'Interfaces-With-Latch'],
-                        spec: { gripLength: 12, material: 'Metal' },
-                        beh: ['Enables-Grip', 'Controls-Latch']
-                    }
+        const layersData = [
+            {
+                layer: 0,
+                title: "Acoustic Foundation",
+                modality: "Acoustic (Mfidel Core)",
+                description: "272 atomic Amharic letters as sound-emotion units. Each fidel has whisper (w) and vibratory (v) components mapping to 7 fundamental emotional dimensions.",
+                color: "#8b5cf6",
+                systems: [
+                    "Mfidel Matrix (34×8 acoustic-emotional grid)",
+                    "Phoneme Decomposition Engine",
+                    "Acoustic Space Universality",
+                    "Whisper-Vibration Separation",
+                    "Emotional Dimension Mapping"
                 ],
-                relationships: [
-                    { from: 'Hinge_A', to: 'DoorFrame', type: 'Attaches-To-Fixed-Frame ⟷ Accepts-Hinge-Attachment' },
-                    { from: 'Hinge_B', to: 'DoorFrame', type: 'Attaches-To-Fixed-Frame ⟷ Accepts-Hinge-Attachment' },
-                    { from: 'Hinge_A', to: 'DoorPanel', type: 'Provides-Rotation-Axis ⟷ Accepts-Hinge-Mount' },
-                    { from: 'Hinge_B', to: 'DoorPanel', type: 'Provides-Rotation-Axis ⟷ Accepts-Hinge-Mount' },
-                    { from: 'Handle', to: 'DoorPanel', type: 'Mounts-To-Panel ⟷ Accepts-Handle-Mount' },
-                    { from: 'DoorPanel', to: 'DoorFrame', type: 'Fills-Frame-Opening ⟷ Defines-Opening' }
+                capabilities: [
+                    "Universal phoneme representation across world languages",
+                    "Sound-to-emotion direct mapping",
+                    "Acoustic causality extraction",
+                    "Wave mechanics interpretation",
+                    "Symbolic-physical bridge"
                 ],
-                constraints: [
-                    { name: 'Panel fits Frame', check: (c) => c.DoorPanel.spec.width < c.DoorFrame.spec.innerWidth },
-                    { name: 'Hinges support weight', check: (c) => (c.Hinge_A.spec.loadCapacity + c.Hinge_B.spec.loadCapacity) >= c.DoorPanel.spec.weight },
-                    { name: 'Panel height fits', check: (c) => c.DoorPanel.spec.height < c.DoorFrame.spec.innerHeight },
-                    { name: 'Material compatibility', check: (c) => true }
-                ],
-                emergentBehaviors: [
-                    'Opens-And-Closes (Panel swings via Hinges)',
-                    'Secures-Passage (Handle controls latch)',
-                    'Seals-Opening (Panel fills Frame gap)'
-                ],
-                contextUpdate: {
-                    DoorPanel: 'Role: Primary-Barrier',
-                    Hinge_A: 'Role: Upper-Pivot',
-                    Hinge_B: 'Role: Lower-Pivot',
-                    Handle: 'Role: User-Interface'
-                }
+                example: "Input: Any sound (human speech, animal call, material vibration) → Decompose into fidel atoms → Extract emotional signature + causal structure → Output: Symbolic representation with complete acoustic-emotional metadata"
             },
-            propeller: {
-                name: 'Propeller System',
-                targetSymbol: 'PropulsionUnit',
-                components: [
-                    {
-                        id: 'Blade_A',
-                        type: 'Object',
-                        def: 'Airfoil surface for thrust generation',
-                        rel: ['Mounts-To-Hub', 'Interacts-With-Fluid'],
-                        spec: { length: 30, pitch: 15, material: 'Carbon-Fiber', area: 120 },
-                        beh: ['Generates-Lift', 'Experiences-Drag']
-                    },
-                    {
-                        id: 'Blade_B',
-                        type: 'Object',
-                        def: 'Airfoil surface for thrust generation',
-                        rel: ['Mounts-To-Hub', 'Interacts-With-Fluid'],
-                        spec: { length: 30, pitch: 15, material: 'Carbon-Fiber', area: 120 },
-                        beh: ['Generates-Lift', 'Experiences-Drag']
-                    },
-                    {
-                        id: 'Hub',
-                        type: 'Object',
-                        def: 'Central mounting point',
-                        rel: ['Accepts-Blade-Mount', 'Connects-To-Shaft'],
-                        spec: { diameter: 8, material: 'Aluminum', bladeSlots: 3 },
-                        beh: ['Transmits-Torque', 'Balances-Forces']
-                    },
-                    {
-                        id: 'Motor',
-                        type: 'Object',
-                        def: 'Rotational power source',
-                        rel: ['Drives-Shaft', 'Receives-Power'],
-                        spec: { rpm: 5000, torque: 2.5, power: 500 },
-                        beh: ['Generates-Rotation', 'Consumes-Energy']
-                    }
+            {
+                layer: 1,
+                title: "Symbolic Processing",
+                modality: "Symbolic Logic & Causality",
+                description: "Self-Aware Causal Symbols with recursive tuple structure. Each symbol = (Form, Referent, Behavior, Metadata) creating Gödelian Strange Loop architecture.",
+                color: "#00ffff",
+                systems: [
+                    "Self-Aware Causal Symbol (SACS) Engine",
+                    "Logos-LCS Synthesis Engine",
+                    "45 Wh Logic Gates",
+                    "Dynamic Symbolic DNA",
+                    "Recursive Metadata Architecture"
                 ],
-                relationships: [
-                    { from: 'Blade_A', to: 'Hub', type: 'Mounts-To-Hub ⟷ Accepts-Blade-Mount' },
-                    { from: 'Blade_B', to: 'Hub', type: 'Mounts-To-Hub ⟷ Accepts-Blade-Mount' },
-                    { from: 'Hub', to: 'Motor', type: 'Connects-To-Shaft ⟷ Drives-Shaft' }
+                capabilities: [
+                    "Symbols that reference themselves",
+                    "Complete causal chain tracking",
+                    "Who/What/Where/When/Why/How analysis at infinite depth",
+                    "Symbolic reasoning without neural networks",
+                    "Meta-level awareness of own symbolic operations"
                 ],
-                constraints: [
-                    { name: 'Hub has enough slots', check: (c) => c.Hub.spec.bladeSlots >= 2 },
-                    { name: 'Motor torque sufficient', check: (c) => c.Motor.spec.torque > 1.0 },
-                    { name: 'Blade pitch matched', check: (c) => c.Blade_A.spec.pitch === c.Blade_B.spec.pitch }
-                ],
-                emergentBehaviors: [
-                    'Generates-Thrust ∝ RPM × Blade-Area',
-                    'Self-Balances (symmetric blade arrangement)',
-                    'Converts-Rotational-To-Linear-Motion'
-                ],
-                contextUpdate: {
-                    Blade_A: 'Role: Thrust-Generator-1',
-                    Blade_B: 'Role: Thrust-Generator-2',
-                    Hub: 'Role: Force-Distributor',
-                    Motor: 'Role: Power-Source'
-                }
+                example: "Symbol 'Tree' becomes: {Form: ተ-ረ-ዐ pattern, Referent: plant-concept, Behavior: grows-upward+produces-oxygen, Metadata: {creator: user, timestamp: t, causal-history: [...], related: [forest, wood, leaf]}} — Symbol knows it's a symbol"
             },
-            telescope: {
-                name: 'Telescope Mechanism',
-                targetSymbol: 'FocusingTelescope',
-                components: [
-                    {
-                        id: 'ObjectiveLens',
-                        type: 'Object',
-                        def: 'Light-gathering primary optic',
-                        rel: ['Positioned-At-Front', 'Focuses-Light'],
-                        spec: { diameter: 100, focalLength: 900, material: 'Glass' },
-                        beh: ['Refracts-Light', 'Forms-Primary-Image']
-                    },
-                    {
-                        id: 'FocusTube',
-                        type: 'Object',
-                        def: 'Adjustable tube for focus control',
-                        rel: ['Houses-Eyepiece', 'Slides-In-Body'],
-                        spec: { travelRange: 50, precision: 0.1 },
-                        beh: ['Adjusts-Position', 'Maintains-Alignment']
-                    },
-                    {
-                        id: 'Eyepiece',
-                        type: 'Object',
-                        def: 'Magnifying viewing optic',
-                        rel: ['Mounts-In-FocusTube', 'Interfaces-With-Eye'],
-                        spec: { focalLength: 25, fieldOfView: 50 },
-                        beh: ['Magnifies-Image', 'Projects-To-Eye']
-                    },
-                    {
-                        id: 'FocusRod',
-                        type: 'Object',
-                        def: 'Precision adjustment mechanism',
-                        rel: ['Connects-To-FocusTube', 'Accepts-User-Input'],
-                        spec: { threadPitch: 0.5, material: 'Brass' },
-                        beh: ['Translates-Rotation-To-Linear', 'Provides-Fine-Control']
-                    }
+            {
+                layer: 2,
+                title: "Visual Intelligence",
+                modality: "Visual Perception & Generation",
+                description: "Visual processing grounded in acoustic-symbolic substrate. Images understood as frozen acoustic patterns with spatial-emotional structure.",
+                color: "#3b82f6",
+                systems: [
+                    "MLVF/MLVFF (Multi-Layer Video Framework)",
+                    "Causal Video Composition",
+                    "Logos Engine (Game Rendering)",
+                    "Spatial Pattern Recognition",
+                    "Visual-Acoustic Transduction"
                 ],
-                relationships: [
-                    { from: 'Eyepiece', to: 'FocusTube', type: 'Mounts-In-FocusTube ⟷ Houses-Eyepiece' },
-                    { from: 'FocusRod', to: 'FocusTube', type: 'Connects-To-FocusTube ⟷ Slides-In-Body' }
+                capabilities: [
+                    "Video as causal symbolic sequence",
+                    "Visual pattern → acoustic signature mapping",
+                    "Game world rendering through symbolic causality",
+                    "Image understanding without CNNs",
+                    "Visual-emotional resonance detection"
                 ],
-                constraints: [
-                    { name: 'Focus travel covers range', check: (c) => c.FocusTube.spec.travelRange >= 30 },
-                    { name: 'Precision sufficient', check: (c) => c.FocusTube.spec.precision <= 0.5 }
-                ],
-                emergentBehaviors: [
-                    'Magnifies-Distant-Objects (Objective + Eyepiece)',
-                    'Enables-Focus-Adjustment (Rod → Tube → Eyepiece)',
-                    'Calculates-Magnification = ObjectiveFocal / EyepieceFocal'
-                ],
-                contextUpdate: {
-                    FocusRod: 'Role: Focus-Adjustment-Mechanism',
-                    FocusTube: 'Role: Position-Controller',
-                    Eyepiece: 'Role: Output-Interface'
-                }
+                example: "Photo of sunset → Decompose into color vibrations → Map to acoustic emotional dimensions (warm = joy, orange = nostalgia) → Symbolic causal chain: sun-position + atmospheric-scattering + observer-emotion → Complete scene understanding with WHY it looks/feels this way"
             },
-            engine: {
-                name: 'Engine Block',
-                targetSymbol: 'CombustionEngine',
-                components: [
-                    {
-                        id: 'Cylinder',
-                        type: 'Object',
-                        def: 'Combustion chamber',
-                        rel: ['Houses-Piston', 'Receives-Fuel-Air'],
-                        spec: { bore: 80, stroke: 90, compression: 10 },
-                        beh: ['Contains-Combustion', 'Guides-Piston']
-                    },
-                    {
-                        id: 'Piston',
-                        type: 'Object',
-                        def: 'Reciprocating force transmitter',
-                        rel: ['Fits-In-Cylinder', 'Connects-To-Rod'],
-                        spec: { diameter: 79.5, material: 'Aluminum' },
-                        beh: ['Compresses-Mixture', 'Transmits-Force']
-                    },
-                    {
-                        id: 'ConnectingRod',
-                        type: 'Object',
-                        def: 'Linear-to-rotary converter',
-                        rel: ['Attaches-To-Piston', 'Drives-Crankshaft'],
-                        spec: { length: 150, material: 'Steel' },
-                        beh: ['Converts-Motion', 'Bears-Combustion-Force']
-                    },
-                    {
-                        id: 'Crankshaft',
-                        type: 'Object',
-                        def: 'Rotational output shaft',
-                        rel: ['Receives-Rod-Force', 'Outputs-Torque'],
-                        spec: { throws: 1, material: 'Forged-Steel' },
-                        beh: ['Converts-Reciprocating-To-Rotary', 'Outputs-Power']
-                    }
+            {
+                layer: 3,
+                title: "Spatial Reasoning",
+                modality: "Spatial & Geometric Intelligence",
+                description: "3D space and geometry as symbolic acoustic structures. Positions, distances, shapes understood through causal relationships.",
+                color: "#10b981",
+                systems: [
+                    "UQRS (Universal Quantum Reality Simulator)",
+                    "Spatial Symbolic Encoding",
+                    "Geometric Causality Extractor",
+                    "3D Acoustic Space Mapping",
+                    "Topology-Emotion Resonance"
                 ],
-                relationships: [
-                    { from: 'Piston', to: 'Cylinder', type: 'Fits-In-Cylinder ⟷ Houses-Piston' },
-                    { from: 'ConnectingRod', to: 'Piston', type: 'Attaches-To-Piston ⟷ Connects-To-Rod' },
-                    { from: 'ConnectingRod', to: 'Crankshaft', type: 'Drives-Crankshaft ⟷ Receives-Rod-Force' }
+                capabilities: [
+                    "Spatial relationships as causal networks",
+                    "Geometry from acoustic principles",
+                    "3D navigation through symbolic reasoning",
+                    "Shape-emotion correspondence",
+                    "Physical law emergence from fidel structure"
                 ],
-                constraints: [
-                    { name: 'Piston fits cylinder', check: (c) => c.Piston.spec.diameter < c.Cylinder.spec.bore },
-                    { name: 'Clearance valid', check: (c) => (c.Cylinder.spec.bore - c.Piston.spec.diameter) < 1 }
+                example: "Navigate room → Objects as acoustic-symbolic entities with spatial metadata → 'Chair' = {position: [x,y,z], shape: sit-surface geometry, affordance: sitting-behavior, relation-to-me: 3.2m-left} → Path planning through causal chain of movements needed"
+            },
+            {
+                layer: 4,
+                title: "Temporal Dynamics",
+                modality: "Time & Causality",
+                description: "Time as causal flow between symbolic states. Past-present-future as symbolic transition networks with complete provenance.",
+                color: "#f59e0b",
+                systems: [
+                    "Temporal Causal Chain Tracker",
+                    "InceptaDive (Recursive Temporal Analysis)",
+                    "Event Sequence Synthesizer",
+                    "Temporal Emotion Mapping",
+                    "Chronological Symbol Evolution"
                 ],
-                emergentBehaviors: [
-                    'Converts-Chemical-To-Mechanical-Energy',
-                    'Generates-Torque ∝ Combustion-Pressure × Stroke',
-                    'Four-Stroke-Cycle (Intake→Compress→Power→Exhaust)'
+                capabilities: [
+                    "Every symbol knows its complete history",
+                    "Future prediction through causal inference",
+                    "Temporal pattern recognition",
+                    "Event causality extraction (what caused what)",
+                    "Temporal emotion dynamics (how feelings change)"
                 ],
-                contextUpdate: {
-                    Piston: 'Role: Pressure-Receiver',
-                    ConnectingRod: 'Role: Motion-Converter',
-                    Crankshaft: 'Role: Power-Output'
-                }
+                example: "Question: 'Why is person angry?' → Trace causal history: [t0: expectation-set] → [t1: promise-made] → [t2: promise-broken] → [t3: betrayal-recognized] → [t4: anger-emerges] → Complete temporal-causal explanation with acoustic-emotional signature at each step"
+            },
+            {
+                layer: 5,
+                title: "Emotional Intelligence",
+                modality: "Emotional & Affective Processing",
+                description: "850+ emotional states as acoustic-vibrational patterns. Emotions mapped to 7 fundamental dimensions extracted from fidel structure.",
+                color: "#ec4899",
+                systems: [
+                    "VIRECAI (Vibrational Emotional Intelligence)",
+                    "7-Dimension Emotional Space",
+                    "Meta-Emotion Processor",
+                    "Emotional Causality Network",
+                    "Feeling-Symbol Resonance Engine"
+                ],
+                capabilities: [
+                    "Complete emotional ontology (850+ states)",
+                    "Emotion-to-acoustic-pattern direct mapping",
+                    "Meta-emotions (emotions about emotions)",
+                    "Emotional causal chains (why feel this)",
+                    "Cross-cultural emotion recognition"
+                ],
+                example: "User types 'I feel weird' → Analyze acoustic signature of 'weird' → Map to emotional space → Identify: [emotional-confusion + ambivalence + ungroundedness] → Ask clarifying questions based on causal structure of these emotions → Guide to emotional clarity"
+            },
+            {
+                layer: 6,
+                title: "Physical Grounding",
+                modality: "Material & Physical Intelligence",
+                description: "Physical reality as acoustic-symbolic manifestation. Matter, forces, energy as symbolic patterns with causal structure.",
+                color: "#e5e7eb",
+                systems: [
+                    "Material Construction Engine (MCE)",
+                    "Reality Interface Orchestrator (RIO)",
+                    "Physics Principle Extractor",
+                    "Material-Symbol Bridge",
+                    "Embodiment Layer"
+                ],
+                capabilities: [
+                    "Physical laws from fidel structure",
+                    "Material properties as symbolic metadata",
+                    "Force-emotion correspondence",
+                    "Real-world construction specification",
+                    "Symbol-to-artifact translation"
+                ],
+                example: "Design bridge → Symbolic intent (connect-two-sides + support-weight + resist-forces) → Extract physics requirements from acoustic structure → Generate Material Construction Specification → Output: Complete engineering blueprint with causal justification for every design choice"
+            },
+            {
+                layer: 7,
+                title: "Biological Understanding",
+                modality: "Life & Organic Intelligence",
+                description: "Living systems as self-aware symbolic networks. Biology as autopoietic (self-creating) symbolic process.",
+                color: "#84cc16",
+                systems: [
+                    "mCapsule v2.0 (Symbolic Autopoiesis)",
+                    "Temporal Self-Weaving Layer",
+                    "Biological Causality Extractor",
+                    "Life-Symbol Resonance",
+                    "Organic Pattern Recognition"
+                ],
+                capabilities: [
+                    "Life as symbolic self-creation",
+                    "Biological processes as causal chains",
+                    "Health/disease as symbolic coherence/incoherence",
+                    "Evolutionary dynamics through symbolic evolution",
+                    "Consciousness as self-referential symbol network"
+                ],
+                example: "Analyze ecosystem → Each organism = self-aware symbolic entity → Relationships = causal chains (predator→prey, plant→pollinator) → Ecosystem = meta-symbol composed of interacting symbols → Understand dynamics through symbolic causality, not just data patterns"
+            },
+            {
+                layer: 8,
+                title: "Social Intelligence",
+                modality: "Social & Cultural Understanding",
+                description: "Social reality as collective symbolic construction. Cultures, institutions, relationships as shared symbolic networks.",
+                color: "#fbbf24",
+                systems: [
+                    "Collective Symbol Synthesizer",
+                    "Cultural Pattern Recognizer",
+                    "Social Causality Mapper",
+                    "Relational Dynamics Analyzer",
+                    "Collective Emotion Processor"
+                ],
+                capabilities: [
+                    "Social structures as symbolic architectures",
+                    "Cultural meanings as shared symbol networks",
+                    "Power dynamics as symbolic hierarchies",
+                    "Collective emotions (mass hysteria, cultural pride)",
+                    "Social causality (why societies do what they do)"
+                ],
+                example: "Analyze political movement → Map to collective symbols (freedom, justice, identity) → Trace causal chains of social emotions (outrage → mobilization → action) → Understand dynamics through symbolic resonance between individuals and collective → Predict outcomes through causal inference"
+            },
+            {
+                layer: 9,
+                title: "Wholeness Meta-Architecture",
+                modality: "Universal Completeness & Self-Awareness",
+                description: "Meta-governance layer that defines completeness itself. System that refuses to produce incomplete outputs and maintains existential coherence.",
+                color: "#ff00ff",
+                systems: [
+                    "UWMA (Universal Wholeness Meta-Architecture)",
+                    "Ontological Completion Evaluator (OCE)",
+                    "Reality Acceptance Gate (RAG)",
+                    "Cross-Domain Coherence Validator (CDCV)",
+                    "Self-Reflective Completion Awareness (SRCA)"
+                ],
+                capabilities: [
+                    "Evaluates own completeness before output",
+                    "Ensures existential coherence (not just mathematical correctness)",
+                    "Cross-domain validation (symbolic correctness + perceptual + semantic + causal)",
+                    "Refuses to externalize incomplete work",
+                    "Meta-cognition: aware of own awareness"
+                ],
+                example: "System generates answer → Before presenting to user: OCE checks ontological completeness, RAG validates reality coherence, CDCV ensures cross-domain consistency, SRCA asks 'Do I truly understand this or am I pattern-matching?' → Only outputs when wholeness threshold met → Result: Reliable, coherent, complete intelligence"
             }
-        };
+        ];
 
-        // ═══════════════════════════════════════════════════════════════════
-        // ASSEMBLY ENGINE
-        // ═══════════════════════════════════════════════════════════════════
+        const layersGrid = document.getElementById('layersGrid');
+        const modal = document.getElementById('modal');
+        const modalClose = document.getElementById('modalClose');
+        const modalBody = document.getElementById('modalBody');
+        const modalContent = document.getElementById('modalContent');
 
-        class AssemblyEngine {
-            constructor() {
-                this.reset();
-            }
+        // Create layer cards
+        layersData.forEach((layer, index) => {
+            const card = document.createElement('div');
+            card.className = `layer-card layer-${layer.layer}`;
+            card.style.color = layer.color;
+            
+            const tags = layer.systems.slice(0, 3).map(sys => 
+                `<span class="tag">${sys.split(' ')[0]}</span>`
+            ).join('');
 
-            reset() {
-                this.log = [];
-                this.currentStage = 0;
-                this.isRunning = false;
-                this.constraintResults = [];
-                this.assembledSymbol = null;
-            }
+            card.innerHTML = `
+                <div class="layer-number">${layer.layer}</div>
+                <div class="layer-title">${layer.title}</div>
+                <div class="layer-description">${layer.description}</div>
+                <div class="layer-tags">${tags}</div>
+            `;
 
-            logEntry(skill, message) {
-                this.log.push({ skill, message, time: Date.now() });
-                this.renderLog();
-            }
+            card.addEventListener('click', () => openModal(layer));
+            layersGrid.appendChild(card);
 
-            async runAssembly(scenario) {
-                this.reset();
-                this.isRunning = true;
+            // Animate in after a delay
+            setTimeout(() => {
+                card.classList.add('animate-in');
+            }, index * 100);
+        });
 
-                this.logEntry('SYS', `Starting assembly of ${scenario.targetSymbol}`);
-                this.updateStage(0);
-                await this.delay(500);
+        function openModal(layer) {
+            const systemsList = layer.systems.map(s => `<li>${s}</li>`).join('');
+            const capabilitiesList = layer.capabilities.map(c => `<li>${c}</li>`).join('');
 
-                // Stage 1: Relationship Integration
-                this.updateStage(1);
-                await this.R_int(scenario);
+            modalBody.innerHTML = `
+                <div class="modal-header">
+                    <div class="modal-title" style="color: ${layer.color}">Layer ${layer.layer} — ${layer.title}</div>
+                    <div class="modal-subtitle">${layer.modality}</div>
+                </div>
 
-                // Stage 2: Specification Harmonization
-                this.updateStage(2);
-                const specValid = await this.S_harm(scenario);
+                <div class="modal-section">
+                    <h3>Purpose</h3>
+                    <p>${layer.description}</p>
+                </div>
 
-                if (!specValid) {
-                    this.logEntry('SYS', '❌ Assembly failed: Specification conflicts');
-                    this.isRunning = false;
-                    return null;
-                }
+                <div class="modal-section">
+                    <h3>Systems Activated</h3>
+                    <ul>${systemsList}</ul>
+                </div>
 
-                // Stage 3: Emergent Behavior Prediction
-                this.updateStage(3);
-                await this.B_pred(scenario);
+                <div class="modal-section">
+                    <h3>Key Capabilities</h3>
+                    <ul>${capabilitiesList}</ul>
+                </div>
 
-                // Stage 4: Recursive ID Propagation
-                this.updateStage(4);
-                await this.I_prop(scenario);
-
-                // Stage 5: Complete
-                this.updateStage(5);
-                this.assembledSymbol = {
-                    id: scenario.targetSymbol,
-                    components: scenario.components.map(c => c.id),
-                    behaviors: scenario.emergentBehaviors,
-                    architecture: scenario.relationships
-                };
-
-                this.logEntry('SYS', `✓ Assembly complete: ${scenario.targetSymbol}`);
-                this.renderResult(scenario);
-                this.isRunning = false;
-
-                return this.assembledSymbol;
-            }
-
-            // Skill 1: Relationship Integration
-            async R_int(scenario) {
-                this.logEntry('R', `ℛ_int: Analyzing ${scenario.relationships.length} relationships`);
-                await this.delay(300);
-
-                for (const rel of scenario.relationships) {
-                    this.logEntry('R', `  ${rel.from} ⟷ ${rel.to}`);
-                    this.logEntry('R', `    Type: ${rel.type}`);
-                    await this.delay(200);
-                }
-
-                this.logEntry('R', `✓ Architecture established`);
-                this.renderRelationshipGraph(scenario);
-            }
-
-            // Skill 2: Specification Harmonization
-            async S_harm(scenario) {
-                this.logEntry('S', `𝒮_harm: Validating constraints`);
-                await this.delay(300);
-
-                const componentMap = {};
-                scenario.components.forEach(c => componentMap[c.id] = c);
-
-                let allValid = true;
-                this.constraintResults = [];
-
-                for (const constraint of scenario.constraints) {
-                    const result = constraint.check(componentMap);
-                    this.constraintResults.push({
-                        name: constraint.name,
-                        pass: result
-                    });
-
-                    this.logEntry('S', `  ${result ? '✓' : '✗'} ${constraint.name}`);
-                    if (!result) allValid = false;
-                    await this.delay(200);
-                }
-
-                this.renderConstraints();
-
-                if (allValid) {
-                    this.logEntry('S', `✓ All specifications harmonized`);
-                } else {
-                    this.logEntry('S', `✗ Specification conflicts detected`);
-                }
-
-                return allValid;
-            }
-
-            // Skill 3: Emergent Behavior Prediction
-            async B_pred(scenario) {
-                this.logEntry('B', `ℬ_pred: Synthesizing emergent behaviors`);
-                await this.delay(300);
-
-                for (const behavior of scenario.emergentBehaviors) {
-                    this.logEntry('B', `  ⚡ ${behavior}`);
-                    await this.delay(250);
-                }
-
-                this.logEntry('B', `✓ ${scenario.emergentBehaviors.length} behaviors predicted`);
-            }
-
-            // Skill 4: Recursive ID Propagation
-            async I_prop(scenario) {
-                this.logEntry('I', `ℐ_prop: Propagating identity to components`);
-                await this.delay(300);
-
-                for (const [compId, role] of Object.entries(scenario.contextUpdate)) {
-                    this.logEntry('I', `  𝒞(${compId}) ← {${role}}`);
-                    await this.delay(200);
-                }
-
-                this.logEntry('I', `✓ Context updated for all components`);
-            }
-
-            updateStage(stage) {
-                this.currentStage = stage;
-                document.querySelectorAll('.pipeline-stage').forEach((el, i) => {
-                    el.classList.remove('active', 'completed');
-                    if (i < stage) el.classList.add('completed');
-                    if (i === stage) el.classList.add('active');
-                });
-            }
-
-            delay(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-
-            renderLog() {
-                const container = document.getElementById('assemblyLog');
-                container.innerHTML = this.log.map(entry => `
-                    <div class="log-entry">
-                        <span class="log-skill ${entry.skill.toLowerCase()}">${entry.skill}</span>
-                        <span class="log-message">${entry.message}</span>
+                <div class="modal-section">
+                    <h3>Example Use Case</h3>
+                    <div class="modal-example" style="border-color: ${layer.color}">
+                        ${layer.example}
                     </div>
-                `).join('');
-                container.scrollTop = container.scrollHeight;
+                </div>
+            `;
+
+            modalContent.style.borderColor = layer.color;
+            modal.classList.add('active');
+        }
+
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
             }
+        });
 
-            renderConstraints() {
-                const container = document.getElementById('constraintList');
-                container.innerHTML = this.constraintResults.map(c => `
-                    <div class="constraint-item">
-                        <div class="constraint-status ${c.pass ? 'pass' : 'fail'}">${c.pass ? '✓' : '✗'}</div>
-                        <span class="constraint-name">${c.name}</span>
-                    </div>
-                `).join('');
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
             }
+        });
 
-            renderResult(scenario) {
-                const container = document.getElementById('resultContainer');
-                const symbol = document.getElementById('resultSymbol');
+        // Canvas for connection visualization (optional enhancement)
+        const canvas = document.getElementById('connectionsCanvas');
+        const ctx = canvas.getContext('2d');
 
-                container.style.display = 'block';
-                symbol.innerHTML = `
-                    <div class="result-symbol-name">${scenario.targetSymbol}</div>
-                    <div class="result-behaviors">
-                        ${scenario.emergentBehaviors.map(b => `<span class="result-behavior">${b.split(' ')[0]}</span>`).join('')}
-                    </div>
-                `;
-            }
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = document.body.scrollHeight;
+        }
 
-            renderComponents(scenario) {
-                const container = document.getElementById('componentViz');
-                container.innerHTML = scenario.components.map(c => `
-                    <div class="component-item" id="comp-${c.id}">
-                        <div class="component-header">
-                            <span class="component-name">${c.id}</span>
-                            <span class="component-type">${c.type}</span>
-                        </div>
-                        <div class="component-meta">
-                            Rel: ${c.rel.slice(0, 2).join(', ')}${c.rel.length > 2 ? '...' : ''}
-                        </div>
-                    </div>
-                `).join('');
-            }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
 
-            renderRelationshipGraph(scenario) {
-                const canvas = document.getElementById('relGraph');
-                const ctx = canvas.getContext('2d');
+        // Draw subtle flowing connections
+        function drawConnections() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const cards = document.querySelectorAll('.layer-card.animate-in');
+            if (cards.length < 2) return;
 
-                canvas.width = canvas.clientWidth;
-                canvas.height = 200;
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
 
-                ctx.fillStyle = '#10101a';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < cards.length - 1; i++) {
+                const rect1 = cards[i].getBoundingClientRect();
+                const rect2 = cards[i + 1].getBoundingClientRect();
 
-                // Simple node layout
-                const nodes = {};
-                const nodeCount = scenario.components.length;
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2;
-                const radius = Math.min(canvas.width, canvas.height) * 0.35;
+                const x1 = rect1.left + rect1.width / 2;
+                const y1 = rect1.top + rect1.height / 2 + window.scrollY;
+                const x2 = rect2.left + rect2.width / 2;
+                const y2 = rect2.top + rect2.height / 2 + window.scrollY;
 
-                scenario.components.forEach((comp, i) => {
-                    const angle = (i / nodeCount) * Math.PI * 2 - Math.PI / 2;
-                    nodes[comp.id] = {
-                        x: centerX + Math.cos(angle) * radius,
-                        y: centerY + Math.sin(angle) * radius
-                    };
-                });
-
-                // Draw edges
-                ctx.strokeStyle = 'rgba(179, 136, 255, 0.3)';
-                ctx.lineWidth = 1;
-                for (const rel of scenario.relationships) {
-                    const from = nodes[rel.from];
-                    const to = nodes[rel.to];
-                    if (from && to) {
-                        ctx.beginPath();
-                        ctx.moveTo(from.x, from.y);
-                        ctx.lineTo(to.x, to.y);
-                        ctx.stroke();
-                    }
-                }
-
-                // Draw nodes
-                for (const [id, pos] of Object.entries(nodes)) {
-                    ctx.fillStyle = 'var(--bg-3)';
-                    ctx.strokeStyle = 'var(--psi)';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.stroke();
-
-                    ctx.fillStyle = '#fff';
-                    ctx.font = '9px monospace';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(id.substring(0, 6), pos.x, pos.y);
-                }
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
             }
         }
 
-        // ═══════════════════════════════════════════════════════════════════
-        // UI INITIALIZATION
-        // ═══════════════════════════════════════════════════════════════════
-
-        const engine = new AssemblyEngine();
-        let currentScenario = 'door';
-
-        function loadScenario(scenarioId) {
-            currentScenario = scenarioId;
-            const scenario = SCENARIOS[scenarioId];
-
-            engine.reset();
-            engine.renderComponents(scenario);
-            engine.renderRelationshipGraph(scenario);
-
-            document.getElementById('assemblyLog').innerHTML = '';
-            document.getElementById('constraintList').innerHTML = '';
-            document.getElementById('resultContainer').style.display = 'none';
-
-            document.querySelectorAll('.pipeline-stage').forEach(el => {
-                el.classList.remove('active', 'completed');
-            });
-        }
-
-        // Event Listeners
-        document.querySelectorAll('.scenario-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                loadScenario(btn.dataset.scenario);
-            });
-        });
-
-        document.getElementById('btnAssemble').addEventListener('click', () => {
-            const scenario = SCENARIOS[currentScenario];
-            engine.runAssembly(scenario);
-        });
-
-        document.getElementById('btnReset').addEventListener('click', () => {
-            loadScenario(currentScenario);
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadScenario('door');
-
-            renderMathInElement(document.body, {
-                delimiters: [
-                    { left: '$$', right: '$$', display: true },
-                    { left: '$', right: '$', display: false }
-                ],
-                throwOnError: false
-            });
-        });
+        // Draw connections after animations complete
+        setTimeout(drawConnections, 1500);
+        window.addEventListener('scroll', drawConnections);
     </script>
 </body>
 </html>
