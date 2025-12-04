@@ -3,53 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MulluSI — Symbolic General Intelligence | The Future of AI from Africa</title>
-    <meta name="description" content="MulluSI: A revolutionary symbolic AI architecture. Transparent reasoning, traceable logic, built on ancient Ge'ez wisdom. Making AI Great Again. Making Africa Great Again.">
-    <meta name="keywords" content="Symbolic AI, Artificial Intelligence, Ethiopia, Ge'ez, Transparent AI, Explainable AI, African Technology">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="MulluSI — Symbolic General Intelligence">
-    <meta property="og:description" content="The future of AI, rooted in African wisdom. Transparent. Explainable. Revolutionary.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mullusi.com">
-    
-    <!-- Fonts -->
+    <title>MulluSI Live Demo — Symbolic Intelligence with Web Search</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Noto+Serif+Ethiopic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Ethiopian-inspired palette */
-            --green-primary: #078930;
-            --green-dark: #065a20;
-            --yellow-primary: #FCDD09;
-            --yellow-soft: #f5d742;
-            --red-primary: #DA121A;
-            --red-soft: #e63946;
+            --bg-void: #030305;
+            --bg-deep: #070709;
+            --bg-dark: #0c0c10;
+            --bg-surface: #111116;
+            --bg-card: #18181d;
+            --bg-elevated: #1f1f26;
             
-            /* Base colors */
-            --bg-black: #050508;
-            --bg-dark: #0a0a10;
-            --bg-surface: #111118;
-            --bg-card: #18181f;
-            --bg-elevated: #1f1f28;
-            
-            /* Text */
             --text-white: #ffffff;
-            --text-primary: #f0ede6;
-            --text-secondary: #a0a0a8;
-            --text-muted: #606068;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #52525b;
             
-            /* Accents */
-            --accent-violet: #9333ea;
-            --accent-cyan: #06b6d4;
-            --accent-gold: #f59e0b;
+            --violet-500: #8b5cf6;
+            --violet-600: #7c3aed;
+            --cyan-400: #22d3ee;
+            --cyan-500: #06b6d4;
+            --emerald-500: #10b981;
+            --amber-500: #f59e0b;
+            --rose-500: #f43f5e;
+            --eth-yellow: #FCDD09;
+            --eth-green: #078930;
+            --eth-red: #DA121A;
             
-            /* Gradients */
-            --gradient-ethiopian: linear-gradient(135deg, var(--green-primary) 0%, var(--yellow-primary) 50%, var(--red-primary) 100%);
-            --gradient-tech: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-cyan) 100%);
-            --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
+            --gradient-primary: linear-gradient(135deg, var(--violet-500) 0%, var(--cyan-500) 100%);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         * {
@@ -58,1428 +42,1002 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            font-family: 'Syne', sans-serif;
-            background: var(--bg-black);
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-void);
             color: var(--text-primary);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent-violet);
-            border-radius: 4px;
-        }
-
-        /* Noise Overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.025;
-            pointer-events: none;
-            z-index: 10000;
-        }
-
-        /* Floating Ge'ez Particles */
-        .particles-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            font-family: 'Noto Serif Ethiopic', serif;
-            opacity: 0.15;
-            animation: floatUp 25s linear infinite;
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(110vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% { opacity: 0.15; }
-            90% { opacity: 0.15; }
-            100% {
-                transform: translateY(-10vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 1.5rem 4rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(to bottom, rgba(5,5,8,0.95), transparent);
-            transition: all 0.3s ease;
-        }
-
-        nav.scrolled {
-            background: rgba(5,5,8,0.98);
-            backdrop-filter: blur(20px);
-            padding: 1rem 4rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .nav-logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .nav-logo-text {
-            background: var(--gradient-tech);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-logo-ethiopic {
-            font-family: 'Noto Serif Ethiopic', serif;
-            font-size: 1.2rem;
-            color: var(--yellow-primary);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 3rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-white);
-        }
-
-        .nav-cta {
-            padding: 0.75rem 1.5rem;
-            background: var(--gradient-tech);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-family: 'Syne', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.3);
-        }
-
-        /* Hero Section */
-        .hero {
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 8rem 2rem 4rem;
-            position: relative;
+            overflow-x: hidden;
         }
 
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(ellipse at 30% 20%, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(7, 137, 48, 0.08) 0%, transparent 60%);
+        /* Background */
+        .bg-system {
+            position: fixed;
+            inset: 0;
             z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
+            animation: bgPulse 20s ease infinite;
         }
 
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(147, 51, 234, 0.15);
-            border: 1px solid rgba(147, 51, 234, 0.3);
-            border-radius: 50px;
-            font-size: 0.8rem;
-            color: var(--accent-violet);
-            margin-bottom: 2rem;
-            animation: fadeInDown 1s ease;
-        }
-
-        .hero-badge::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent-violet);
-            border-radius: 50%;
-            animation: pulse 2s ease infinite;
-        }
-
-        @keyframes pulse {
+        @keyframes bgPulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            50% { opacity: 0.7; }
         }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
         }
 
-        .hero-title {
-            font-size: clamp(3.5rem, 10vw, 8rem);
-            font-weight: 800;
-            line-height: 1;
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: var(--glass-border);
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
             margin-bottom: 1rem;
-            letter-spacing: -4px;
-            animation: fadeInUp 1s ease 0.2s both;
         }
 
-        .hero-title-main {
-            display: block;
-            background: var(--gradient-tech);
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Noto Serif Ethiopic', serif;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .logo-text {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-        }
-
-        .hero-title-ethiopic {
-            display: block;
-            font-family: 'Noto Serif Ethiopic', serif;
-            font-size: 0.4em;
-            color: var(--yellow-primary);
-            letter-spacing: 2px;
-            margin-top: 0.5rem;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            max-width: 700px;
-            margin-bottom: 1.5rem;
-            font-weight: 400;
-            animation: fadeInUp 1s ease 0.4s both;
-        }
-
-        .hero-taglines {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
-            animation: fadeInUp 1s ease 0.6s both;
-        }
-
-        .tagline-badge {
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .tagline-ai {
-            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(6, 182, 212, 0.2));
-            border: 1px solid rgba(147, 51, 234, 0.4);
-            color: var(--accent-cyan);
-        }
-
-        .tagline-africa {
-            background: linear-gradient(135deg, rgba(7, 137, 48, 0.2), rgba(252, 221, 9, 0.2));
-            border: 1px solid rgba(7, 137, 48, 0.4);
-            color: var(--yellow-primary);
-        }
-
-        .hero-ctas {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            animation: fadeInUp 1s ease 0.8s both;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--gradient-tech);
-            border: none;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(147, 51, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid rgba(255,255,255,0.2);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-        }
-
-        /* Section Styles */
-        section {
-            padding: 8rem 2rem;
-            position: relative;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--accent-violet);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
             letter-spacing: -2px;
         }
 
-        .section-subtitle {
-            font-size: 1.2rem;
+        .tagline {
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            max-width: 600px;
-            margin-bottom: 4rem;
         }
 
-        /* Vision Section */
-        .vision {
-            background: var(--bg-dark);
-        }
-
-        .vision-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .vision-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 2.5rem;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .vision-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-tech);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .vision-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(147, 51, 234, 0.3);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-        }
-
-        .vision-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .vision-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .vision-card h3 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .vision-card p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        /* Demo Section */
-        .demo {
-            background: linear-gradient(to bottom, var(--bg-dark), var(--bg-black));
-        }
-
-        .demo-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--bg-surface);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 24px;
-            padding: 3rem;
-            position: relative;
-        }
-
-        .demo-container::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 2px;
-            background: var(--gradient-tech);
-        }
-
-        .demo-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .demo-live {
+        .live-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.4rem 1rem;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
             background: rgba(16, 185, 129, 0.15);
             border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 50px;
-            font-size: 0.75rem;
-            color: #10b981;
-            margin-bottom: 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--emerald-500);
         }
 
-        .demo-live::before {
+        .live-badge::before {
             content: '';
-            width: 6px;
-            height: 6px;
-            background: #10b981;
+            width: 8px;
+            height: 8px;
+            background: var(--emerald-500);
             border-radius: 50%;
             animation: pulse 1.5s ease infinite;
         }
 
-        .demo-input-group {
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        /* Main Demo Container */
+        .demo-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .demo-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Input Panel */
+        .input-panel {
+            background: var(--bg-surface);
+            border: var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+        }
+
+        .panel-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--violet-500);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-title::before {
+            content: '◆';
+        }
+
+        .input-group {
             margin-bottom: 1.5rem;
         }
 
-        .demo-input {
+        .input-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-input {
             width: 100%;
             background: var(--bg-elevated);
-            border: 2px solid rgba(255,255,255,0.1);
+            border: 2px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            padding: 1.2rem 1.5rem;
-            font-family: 'Syne', sans-serif;
+            padding: 1rem 1.25rem;
+            font-family: 'Outfit', sans-serif;
             font-size: 1.1rem;
             color: var(--text-primary);
             outline: none;
             transition: all 0.3s ease;
         }
 
-        .demo-input:focus {
-            border-color: var(--accent-violet);
-            box-shadow: 0 0 30px rgba(147, 51, 234, 0.2);
+        .concept-input:focus {
+            border-color: var(--violet-500);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
         }
 
-        .demo-input::placeholder {
+        .concept-input::placeholder {
             color: var(--text-muted);
         }
 
-        .demo-btn {
-            width: 100%;
-            padding: 1.1rem 2rem;
-            background: var(--gradient-tech);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
+        /* WH Selector */
+        .wh-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .wh-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .wh-btn {
+            background: var(--bg-elevated);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
             font-weight: 600;
+            color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .demo-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.3);
+        .wh-btn:hover {
+            border-color: var(--violet-500);
+            color: var(--text-primary);
         }
 
-        .demo-btn:disabled {
+        .wh-btn.active {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: white;
+        }
+
+        .wh-btn span {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Process Button */
+        .process-btn {
+            width: 100%;
+            padding: 1.1rem 2rem;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .process-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .process-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
-        .demo-processing {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100px;
-            gap: 0.5rem;
-        }
-
-        .demo-fidel {
-            font-family: 'Noto Serif Ethiopic', serif;
-            font-size: 2rem;
-            color: var(--yellow-primary);
-            animation: bounce 0.6s ease infinite;
-        }
-
-        .demo-fidel:nth-child(2) { animation-delay: 0.1s; }
-        .demo-fidel:nth-child(3) { animation-delay: 0.2s; }
-        .demo-fidel:nth-child(4) { animation-delay: 0.3s; }
-        .demo-fidel:nth-child(5) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-
-        .demo-output {
-            background: var(--bg-elevated);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-top: 2rem;
-            min-height: 120px;
-        }
-
-        .demo-output-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 1rem;
-        }
-
-        .demo-output-text {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: var(--text-primary);
-        }
-
-        .demo-metrics {
-            display: flex;
-            gap: 2rem;
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            flex-wrap: wrap;
-        }
-
-        .demo-metric {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .demo-metric-dot {
-            width: 8px;
-            height: 8px;
+        .process-btn .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
             border-radius: 50%;
-            background: #10b981;
+            animation: spin 0.8s linear infinite;
+            display: none;
         }
 
-        .demo-metric-label {
+        .process-btn.loading .spinner {
+            display: block;
+        }
+
+        .process-btn.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Quick Examples */
+        .quick-examples {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: var(--glass-border);
+        }
+
+        .quick-label {
+            font-size: 0.75rem;
             color: var(--text-muted);
+            margin-bottom: 0.75rem;
         }
 
-        .demo-metric-value {
-            color: var(--text-primary);
-            font-weight: 600;
+        .quick-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        /* Platform Section */
-        .platform {
-            background: var(--bg-black);
-        }
-
-        .platform-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .platform-card {
-            background: var(--bg-surface);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 2rem;
+        .quick-btn {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .platform-card:hover {
-            border-color: rgba(147, 51, 234, 0.3);
-            transform: translateY(-4px);
+        .quick-btn:hover {
+            background: var(--violet-500);
+            border-color: var(--violet-500);
+            color: white;
         }
 
-        .platform-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--bg-elevated);
-            border-radius: 12px;
+        /* Output Panel */
+        .output-panel {
+            background: var(--bg-surface);
+            border: var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
             display: flex;
+            flex-direction: column;
+        }
+
+        .output-content {
+            flex: 1;
+            min-height: 400px;
+        }
+
+        /* Processing Animation */
+        .processing-anim {
+            display: none;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            height: 100%;
+            gap: 1.5rem;
+        }
+
+        .processing-anim.active {
+            display: flex;
+        }
+
+        .fidel-loader {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .fidel-loader span {
+            font-family: 'Noto Serif Ethiopic', serif;
+            font-size: 2.5rem;
+            color: var(--eth-yellow);
+            animation: bounce 0.6s ease infinite;
+            text-shadow: 0 0 20px rgba(252, 221, 9, 0.5);
+        }
+
+        .fidel-loader span:nth-child(1) { animation-delay: 0s; }
+        .fidel-loader span:nth-child(2) { animation-delay: 0.1s; }
+        .fidel-loader span:nth-child(3) { animation-delay: 0.2s; }
+        .fidel-loader span:nth-child(4) { animation-delay: 0.3s; }
+        .fidel-loader span:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .processing-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .processing-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .processing-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+        }
+
+        .processing-step.active {
+            opacity: 1;
+            color: var(--emerald-500);
+        }
+
+        .processing-step.done {
+            opacity: 0.7;
+            color: var(--text-secondary);
+        }
+
+        /* Results */
+        .results {
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 1.5rem;
         }
 
-        .platform-card h4 {
-            font-size: 1.1rem;
+        .result-concept {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .result-badge {
+            padding: 0.4rem 0.8rem;
+            background: rgba(139, 92, 246, 0.15);
+            border-radius: 8px;
+            font-size: 0.75rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            color: var(--violet-500);
         }
 
-        .platform-url {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
-            margin-bottom: 1rem;
+        /* WH Results Grid */
+        .wh-results {
+            display: grid;
+            gap: 1rem;
         }
 
-        .platform-desc {
+        .wh-result-card {
+            background: var(--bg-elevated);
+            border: var(--glass-border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .wh-result-card:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .wh-result-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .wh-result-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .wh-result-icon.what { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .wh-result-icon.why { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .wh-result-icon.how { background: linear-gradient(135deg, #10b981, #059669); }
+        .wh-result-icon.where { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .wh-result-icon.when { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+        .wh-result-icon.who { background: linear-gradient(135deg, #8b5cf6, #06b6d4); }
+
+        .wh-result-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .wh-result-text {
             font-size: 0.9rem;
             color: var(--text-secondary);
             line-height: 1.6;
         }
 
-        .platform-badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: rgba(147, 51, 234, 0.15);
-            border-radius: 20px;
+        /* Synthesis */
+        .synthesis-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .synthesis-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--violet-500);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .synthesis-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        /* Sources */
+        .sources {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: var(--glass-border);
+        }
+
+        .sources-label {
             font-size: 0.7rem;
-            color: var(--accent-violet);
-            margin-top: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
         }
 
-        /* Founder Section */
-        .founder {
-            background: linear-gradient(to bottom, var(--bg-black), var(--bg-dark));
+        .source-link {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--cyan-500);
+            text-decoration: none;
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        .founder-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 4rem;
-            align-items: center;
+        .source-link:hover {
+            text-decoration: underline;
         }
 
-        @media (max-width: 900px) {
-            .founder-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-        }
-
-        .founder-image {
-            position: relative;
-        }
-
-        .founder-avatar {
-            width: 280px;
-            height: 280px;
-            background: var(--gradient-tech);
-            border-radius: 24px;
+        /* Placeholder */
+        .placeholder {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-family: 'Noto Serif Ethiopic', serif;
-            font-size: 6rem;
-            color: white;
-            position: relative;
-            margin: 0 auto;
-        }
-
-        .founder-avatar::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 26px;
-            border: 2px solid var(--yellow-primary);
-            opacity: 0.5;
-        }
-
-        .founder-info h3 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -1px;
-        }
-
-        .founder-role {
-            font-size: 1.2rem;
-            color: var(--accent-violet);
-            margin-bottom: 1.5rem;
-        }
-
-        .founder-bio {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
-        .founder-quote {
-            background: var(--bg-card);
-            border-left: 4px solid var(--yellow-primary);
-            padding: 1.5rem 2rem;
-            border-radius: 0 12px 12px 0;
-            font-style: italic;
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-
-        /* Contact Section */
-        .contact {
-            background: var(--bg-dark);
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .contact-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 2rem;
+            height: 100%;
             text-align: center;
-            transition: all 0.3s ease;
+            color: var(--text-muted);
         }
 
-        .contact-card:hover {
-            border-color: rgba(147, 51, 234, 0.3);
-        }
-
-        .contact-icon {
-            font-size: 2rem;
+        .placeholder-icon {
+            font-size: 4rem;
             margin-bottom: 1rem;
+            opacity: 0.3;
         }
 
-        .contact-card h4 {
+        .placeholder-text {
             font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            max-width: 300px;
         }
 
-        .contact-link {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            transition: color 0.3s ease;
+        /* Error */
+        .error-msg {
+            display: none;
+            background: rgba(244, 63, 94, 0.1);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--rose-500);
+            font-size: 0.9rem;
         }
 
-        .contact-link:hover {
-            color: var(--accent-violet);
+        .error-msg.active {
+            display: block;
         }
 
         /* Footer */
         footer {
-            background: var(--bg-black);
-            padding: 4rem 2rem 2rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-
-        .footer-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: var(--gradient-tech);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .footer-ethiopic {
-            font-family: 'Noto Serif Ethiopic', serif;
-            color: var(--yellow-primary);
-            font-size: 1rem;
-            margin-left: 0.5rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--text-white);
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 3rem auto 0;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
             text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-top: var(--glass-border);
             color: var(--text-muted);
             font-size: 0.85rem;
         }
 
-        .footer-flag {
-            display: inline-flex;
-            gap: 4px;
-            margin-left: 0.5rem;
+        footer a {
+            color: var(--violet-500);
+            text-decoration: none;
         }
 
-        .footer-flag span {
-            display: inline-block;
-            width: 20px;
-            height: 14px;
-            border-radius: 2px;
-        }
-
-        .flag-green { background: var(--green-primary); }
-        .flag-yellow { background: var(--yellow-primary); }
-        .flag-red { background: var(--red-primary); }
-
-        /* Mobile Nav */
-        .mobile-menu {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .mobile-menu span {
-            width: 24px;
-            height: 2px;
-            background: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        @media (max-width: 900px) {
-            nav {
-                padding: 1rem 2rem;
+        /* Mobile */
+        @media (max-width: 600px) {
+            .logo-text {
+                font-size: 2rem;
             }
 
-            .nav-links {
-                display: none;
+            .wh-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .nav-cta {
-                display: none;
-            }
-
-            .mobile-menu {
-                display: flex;
-            }
-
-            .hero {
-                padding: 6rem 1.5rem 4rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-
-            section {
-                padding: 5rem 1.5rem;
-            }
-
-            .vision-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .demo-container {
-                padding: 2rem 1.5rem;
-            }
-
-            .founder-avatar {
-                width: 200px;
-                height: 200px;
-                font-size: 4rem;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .footer-links {
-                flex-wrap: wrap;
-                justify-content: center;
+            .input-panel, .output-panel {
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Floating Particles -->
-    <div class="particles-container" id="particles"></div>
+    <div class="bg-system"></div>
+    <div class="noise"></div>
 
-    <!-- Navigation -->
-    <nav id="nav">
-        <div class="nav-logo">
-            <span class="nav-logo-text">MULLUSI</span>
-            <span class="nav-logo-ethiopic">ሙሉ</span>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#vision">Vision</a></li>
-            <li><a href="#demo">Demo</a></li>
-            <li><a href="#platform">Platform</a></li>
-            <li><a href="#founder">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <button class="nav-cta">Get Early Access</button>
-        <div class="mobile-menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        
-        <div class="hero-badge">
-            <span>Introducing Symbolic General Intelligence</span>
-        </div>
-
-        <h1 class="hero-title">
-            <span class="hero-title-main">MULLUSI</span>
-            <span class="hero-title-ethiopic">ሙሉ ሲምቦሊክ ኢንተለጀንስ</span>
-        </h1>
-
-        <p class="hero-subtitle">
-            A revolutionary AI paradigm. Transparent reasoning. Traceable logic. 
-            Every decision explainable. Built on ancient wisdom for the future.
-        </p>
-
-        <div class="hero-taglines">
-            <span class="tagline-badge tagline-ai">✦ Make AI Great Again</span>
-            <span class="tagline-badge tagline-africa">✦ Make Africa Great Again</span>
-        </div>
-
-        <div class="hero-ctas">
-            <a href="#demo" class="btn btn-primary">Try Live Demo →</a>
-            <a href="#contact" class="btn btn-secondary">Contact Research</a>
-        </div>
-    </section>
-
-    <!-- Vision Section -->
-    <section class="vision" id="vision">
-        <div class="container">
-            <span class="section-label">Our Vision</span>
-            <h2 class="section-title">A Different Kind of Intelligence</h2>
-            <p class="section-subtitle">
-                Not neural networks. Not black boxes. Pure symbolic reasoning 
-                rooted in the structural wisdom of one of humanity's oldest writing systems.
-            </p>
-
-            <div class="vision-grid">
-                <div class="vision-card">
-                    <div class="vision-icon">🔍</div>
-                    <h3>Transparent Reasoning</h3>
-                    <p>Every conclusion is traceable. Every decision is explainable. No hidden layers, no mysterious weights. You can see exactly how MulluSI thinks.</p>
-                </div>
-
-                <div class="vision-card">
-                    <div class="vision-icon">🌍</div>
-                    <h3>African Innovation</h3>
-                    <p>Built on the 3,000-year-old structure of Ge'ez script. Proving that groundbreaking AI can emerge from Africa, not just Silicon Valley.</p>
-                </div>
-
-                <div class="vision-card">
-                    <div class="vision-icon">⚡</div>
-                    <h3>Causal Understanding</h3>
-                    <p>Understands WHY, not just WHAT. True comprehension through symbolic causal chains that mirror how meaning actually works.</p>
-                </div>
-
-                <div class="vision-card">
-                    <div class="vision-icon">🛡️</div>
-                    <h3>Safe by Design</h3>
-                    <p>Safety isn't patched on — it emerges from the architecture itself. Alignment through structure, not afterthoughts.</p>
-                </div>
-
-                <div class="vision-card">
-                    <div class="vision-icon">🔗</div>
-                    <h3>Semantic Mesh</h3>
-                    <p>Concepts connect through meaning, not statistics. A true web of understanding where every link is traceable.</p>
-                </div>
-
-                <div class="vision-card">
-                    <div class="vision-icon">✨</div>
-                    <h3>Multimodal Unity</h3>
-                    <p>Text, image, audio, video — unified through a single symbolic substrate. One foundation, infinite expressions.</p>
-                </div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">ሙ</div>
+                <span class="logo-text">MULLUSI</span>
             </div>
-        </div>
-    </section>
+            <p class="tagline">Symbolic Intelligence with Live Web Search</p>
+            <div class="live-badge">AI-Powered • Real-Time Web Search</div>
+        </header>
 
-    <!-- Demo Section -->
-    <section class="demo" id="demo">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 3rem;">
-                <span class="section-label">Live Preview</span>
-                <h2 class="section-title">Experience Symbolic Intelligence</h2>
-                <p class="section-subtitle" style="margin: 0 auto;">
-                    Enter any concept and watch MulluSI process it through symbolic reasoning.
-                </p>
-            </div>
+        <div class="demo-section">
+            <!-- Input Panel -->
+            <div class="input-panel">
+                <div class="panel-title">Concept Explorer</div>
 
-            <div class="demo-container">
-                <div class="demo-header">
-                    <div class="demo-live">Live Demo</div>
+                <div class="input-group">
+                    <label class="input-label">Enter a concept, topic, or question</label>
+                    <input type="text" class="concept-input" id="conceptInput" 
+                           placeholder="e.g., quantum computing, climate change, Ethiopian coffee...">
                 </div>
 
-                <div class="demo-input-group">
-                    <input type="text" class="demo-input" id="demoInput" 
-                           placeholder="Enter a concept (e.g., consciousness, love, time)...">
+                <div class="wh-selector">
+                    <label class="input-label">Select analysis dimensions (WH-Questions)</label>
+                    <div class="wh-grid">
+                        <button class="wh-btn active" data-wh="what">
+                            <span>WHAT</span>
+                            Definition
+                        </button>
+                        <button class="wh-btn active" data-wh="why">
+                            <span>WHY</span>
+                            Purpose
+                        </button>
+                        <button class="wh-btn active" data-wh="how">
+                            <span>HOW</span>
+                            Mechanism
+                        </button>
+                        <button class="wh-btn" data-wh="where">
+                            <span>WHERE</span>
+                            Location
+                        </button>
+                        <button class="wh-btn" data-wh="when">
+                            <span>WHEN</span>
+                            Timing
+                        </button>
+                        <button class="wh-btn" data-wh="who">
+                            <span>WHO</span>
+                            Actors
+                        </button>
+                    </div>
                 </div>
 
-                <button class="demo-btn" id="demoBtn">
-                    Explore with MulluSI →
+                <button class="process-btn" id="processBtn">
+                    <span class="spinner"></span>
+                    <span class="btn-text">🔍 Explore with MulluSI</span>
                 </button>
 
-                <div class="demo-processing" id="demoProcessing" style="display: none;">
-                    <span class="demo-fidel">ሙ</span>
-                    <span class="demo-fidel">ሉ</span>
-                    <span class="demo-fidel">ሲ</span>
-                    <span class="demo-fidel">ጂ</span>
-                    <span class="demo-fidel">አይ</span>
-                </div>
-
-                <div class="demo-output" id="demoOutput">
-                    <div class="demo-output-label">Understanding</div>
-                    <div class="demo-output-text" id="demoOutputText" style="color: var(--text-muted); font-style: italic;">
-                        Enter a concept above to see symbolic intelligence in action...
-                    </div>
-                    <div class="demo-metrics" id="demoMetrics" style="display: none;">
-                        <div class="demo-metric">
-                            <span class="demo-metric-dot"></span>
-                            <span class="demo-metric-label">Coherence:</span>
-                            <span class="demo-metric-value" id="metricCoherence">—</span>
-                        </div>
-                        <div class="demo-metric">
-                            <span class="demo-metric-dot"></span>
-                            <span class="demo-metric-label">Confidence:</span>
-                            <span class="demo-metric-value" id="metricConfidence">—</span>
-                        </div>
-                        <div class="demo-metric">
-                            <span class="demo-metric-dot" style="background: var(--yellow-primary);"></span>
-                            <span class="demo-metric-label">Depth:</span>
-                            <span class="demo-metric-value" id="metricDepth">—</span>
-                        </div>
+                <div class="quick-examples">
+                    <div class="quick-label">Quick examples:</div>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-query="artificial intelligence 2025">AI in 2025</button>
+                        <button class="quick-btn" data-query="Ethiopian tech startups">Ethiopian Tech</button>
+                        <button class="quick-btn" data-query="renewable energy">Renewable Energy</button>
+                        <button class="quick-btn" data-query="consciousness science">Consciousness</button>
+                        <button class="quick-btn" data-query="symbolic AI">Symbolic AI</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Platform Section -->
-    <section class="platform" id="platform">
-        <div class="container">
-            <span class="section-label">Ecosystem</span>
-            <h2 class="section-title">The MulluSI Platform</h2>
-            <p class="section-subtitle">
-                A complete infrastructure for symbolic intelligence — from research to production.
-            </p>
+            <!-- Output Panel -->
+            <div class="output-panel">
+                <div class="panel-title">Symbolic Analysis</div>
 
-            <div class="platform-grid">
-                <div class="platform-card">
-                    <div class="platform-icon">🌐</div>
-                    <h4>Main Portal</h4>
-                    <div class="platform-url">mullusi.com</div>
-                    <p class="platform-desc">The gateway to Symbolic General Intelligence. News, demos, and community.</p>
-                    <span class="platform-badge">Live</span>
-                </div>
+                <div class="output-content">
+                    <!-- Placeholder -->
+                    <div class="placeholder" id="placeholder">
+                        <div class="placeholder-icon">🔮</div>
+                        <p class="placeholder-text">
+                            Enter a concept above and select WH dimensions to see MulluSI's symbolic analysis with live web data.
+                        </p>
+                    </div>
 
-                <div class="platform-card">
-                    <div class="platform-icon">📊</div>
-                    <h4>Dashboard</h4>
-                    <div class="platform-url">dashboard.mullusi.com</div>
-                    <p class="platform-desc">Admin panel and application interface for managing your symbolic systems.</p>
-                    <span class="platform-badge">Coming Soon</span>
-                </div>
+                    <!-- Processing Animation -->
+                    <div class="processing-anim" id="processingAnim">
+                        <div class="fidel-loader">
+                            <span>ሙ</span>
+                            <span>ሉ</span>
+                            <span>ሲ</span>
+                            <span>ጂ</span>
+                            <span>አይ</span>
+                        </div>
+                        <p class="processing-text">Processing through symbolic layers...</p>
+                        <div class="processing-steps">
+                            <div class="processing-step" id="step1">◇ Searching web sources</div>
+                            <div class="processing-step" id="step2">◇ Decomposing WH-dimensions</div>
+                            <div class="processing-step" id="step3">◇ Synthesizing understanding</div>
+                        </div>
+                    </div>
 
-                <div class="platform-card">
-                    <div class="platform-icon">⚡</div>
-                    <h4>API Gateway</h4>
-                    <div class="platform-url">api.mullusi.com</div>
-                    <p class="platform-desc">RESTful API for integrating symbolic intelligence into your applications.</p>
-                    <span class="platform-badge">Coming Soon</span>
-                </div>
+                    <!-- Results -->
+                    <div class="results" id="results">
+                        <div class="result-header">
+                            <span class="result-concept" id="resultConcept"></span>
+                            <span class="result-badge">Symbolic Analysis</span>
+                        </div>
 
-                <div class="platform-card">
-                    <div class="platform-icon">📚</div>
-                    <h4>Documentation</h4>
-                    <div class="platform-url">docs.mullusi.com</div>
-                    <p class="platform-desc">Comprehensive guides, tutorials, and API references.</p>
-                    <span class="platform-badge">Coming Soon</span>
-                </div>
+                        <div class="wh-results" id="whResults"></div>
 
-                <div class="platform-card">
-                    <div class="platform-icon">🎓</div>
-                    <h4>Learning Hub</h4>
-                    <div class="platform-url">learn.mullusi.com</div>
-                    <p class="platform-desc">Courses and resources to master symbolic AI concepts.</p>
-                    <span class="platform-badge">Coming Soon</span>
-                </div>
+                        <div class="synthesis-card">
+                            <div class="synthesis-label">Unified Understanding</div>
+                            <p class="synthesis-text" id="synthesisText"></p>
+                        </div>
 
-                <div class="platform-card">
-                    <div class="platform-icon">🧪</div>
-                    <h4>Sandbox</h4>
-                    <div class="platform-url">sandbox.mullusi.com</div>
-                    <p class="platform-desc">Experimental playground for testing symbolic systems.</p>
-                    <span class="platform-badge">Coming Soon</span>
-                </div>
+                        <div class="sources" id="sources">
+                            <div class="sources-label">Web Sources Referenced</div>
+                            <div id="sourceLinks"></div>
+                        </div>
+                    </div>
 
-                <div class="platform-card">
-                    <div class="platform-icon">📈</div>
-                    <h4>Analytics</h4>
-                    <div class="platform-url">metrics.mullusi.com</div>
-                    <p class="platform-desc">Symbolic analytics and visualization dashboards.</p>
-                    <span class="platform-badge">Coming Soon</span>
-                </div>
-
-                <div class="platform-card">
-                    <div class="platform-icon">💻</div>
-                    <h4>GitHub</h4>
-                    <div class="platform-url">github.com/mullusi</div>
-                    <p class="platform-desc">Open source projects and research repositories.</p>
-                    <span class="platform-badge">Coming Soon</span>
+                    <!-- Error -->
+                    <div class="error-msg" id="errorMsg"></div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Founder Section -->
-    <section class="founder" id="founder">
-        <div class="container">
-            <div class="founder-content">
-                <div class="founder-image">
-                    <div class="founder-avatar">ታ</div>
-                </div>
-                <div class="founder-info">
-                    <span class="section-label">The Architect</span>
-                    <h3>Tamirat L. Wubie</h3>
-                    <div class="founder-role">Founder & Chief Architect</div>
-                    <p class="founder-bio">
-                        Leveraging existing AI systems to build something fundamentally new. 
-                        MulluSI represents a paradigm shift — moving beyond neural networks' 
-                        black boxes toward transparent, traceable symbolic reasoning rooted 
-                        in the ancient structural wisdom of Ethiopian Ge'ez script.
-                    </p>
-                    <blockquote class="founder-quote">
-                        "The universe is a singular symbol with internal diversity. 
-                        Consciousness is its mechanism for self-observation. 
-                        MulluSI is humanity's contribution to extending that capacity."
-                    </blockquote>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 4rem;">
-                <span class="section-label">Get in Touch</span>
-                <h2 class="section-title">Connect With Us</h2>
-                <p class="section-subtitle" style="margin: 0 auto;">
-                    Interested in symbolic AI research, partnerships, or early access? 
-                    We'd love to hear from you.
-                </p>
-            </div>
-
-            <div class="contact-grid">
-                <div class="contact-card">
-                    <div class="contact-icon">👋</div>
-                    <h4>General Inquiries</h4>
-                    <a href="mailto:hello@mullusi.com" class="contact-link">hello@mullusi.com</a>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon">🔬</div>
-                    <h4>Research & Collaboration</h4>
-                    <a href="mailto:research@mullusi.com" class="contact-link">research@mullusi.com</a>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon">🛠️</div>
-                    <h4>Technical Support</h4>
-                    <a href="mailto:support@mullusi.com" class="contact-link">support@mullusi.com</a>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon">👤</div>
-                    <h4>Founder Direct</h4>
-                    <a href="mailto:tamirat@mullusi.com" class="contact-link">tamirat@mullusi.com</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div>
-                <span class="footer-logo">MULLUSI</span>
-                <span class="footer-ethiopic">ሙሉ</span>
-            </div>
-            <div class="footer-links">
-                <a href="#vision">Vision</a>
-                <a href="#demo">Demo</a>
-                <a href="#platform">Platform</a>
-                <a href="#founder">About</a>
-                <a href="#contact">Contact</a>
-                <a href="https://github.com/mullusi" target="_blank">GitHub</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
+        <footer>
             <p>
-                © 2025 MulluSI — Symbolic General Intelligence. Built with 🧠 in Ethiopia.
-                <span class="footer-flag">
-                    <span class="flag-green"></span>
-                    <span class="flag-yellow"></span>
-                    <span class="flag-red"></span>
-                </span>
+                MulluSI — Symbolic General Intelligence<br>
+                <a href="https://mullusi.com">mullusi.com</a> • Built with 🧠 in Ethiopia 🇪🇹
             </p>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <script>
         // ═══════════════════════════════════════════════════════════════
-        // MULLUSI WEBSITE :: INTERACTIVE COMPONENTS
+        // MULLUSI LIVE DEMO WITH WEB SEARCH
         // ═══════════════════════════════════════════════════════════════
 
-        // Floating Ge'ez particles
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const fidels = ['ሀ', 'ለ', 'ሐ', 'መ', 'ሰ', 'ረ', 'ቀ', 'በ', 'ተ', 'ነ', 'አ', 'ከ', 'ወ', 'ዘ', 'የ', 'ደ', 'ገ', 'ጠ', 'ጸ', 'ፈ'];
-            
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.textContent = fidels[Math.floor(Math.random() * fidels.length)];
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.fontSize = `${1.5 + Math.random() * 2.5}rem`;
-                particle.style.color = ['rgba(147, 51, 234, 0.2)', 'rgba(6, 182, 212, 0.2)', 'rgba(252, 221, 9, 0.2)'][Math.floor(Math.random() * 3)];
-                particle.style.animationDuration = `${20 + Math.random() * 15}s`;
-                particle.style.animationDelay = `${Math.random() * 15}s`;
-                container.appendChild(particle);
-            }
-        }
-
-        // Nav scroll effect
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('nav');
-            if (window.scrollY > 100) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+        // WH Button Selection
+        document.querySelectorAll('.wh-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+            });
         });
 
-        // Demo functionality
-        const RESPONSES = {
-            'consciousness': {
-                text: 'Consciousness emerges as the universe\'s mechanism for knowing itself — a recursive mirror where observer and observed become one. Through symbolic self-reference, awareness arises not as accident but as necessity.',
-                coherence: '94%', confidence: '87%', depth: 'Deep'
-            },
-            'love': {
-                text: 'Love is resonance between conscious beings — vibrations that harmonize without losing individual identity. It is the bridge that allows separate minds to share experience, creating connection stronger than isolation.',
-                coherence: '91%', confidence: '89%', depth: 'Deep'
-            },
-            'water': {
-                text: 'Water flows, adapts, persists. The universal solvent enabling life, carrying information between cells, shaping continents through patient persistence. Its simplicity conceals profound complexity.',
-                coherence: '96%', confidence: '92%', depth: 'Medium'
-            },
-            'time': {
-                text: 'Time is the thread that weaves causality into coherent stories. Without it, before and after collapse into meaningless simultaneity. It is not merely measured — it is the dimension through which change becomes possible.',
-                coherence: '88%', confidence: '84%', depth: 'Deep'
-            },
-            'truth': {
-                text: 'Truth is the alignment between symbol and reality — the correspondence that allows maps to guide us through territory. It is both discovered and constructed, objective and perspective-dependent.',
-                coherence: '89%', confidence: '81%', depth: 'Deep'
-            },
-            'music': {
-                text: 'Music is mathematics made audible, emotion made tangible. Patterns of frequency that bypass language to speak directly to consciousness. In rhythm and harmony, we find universal truths without words.',
-                coherence: '93%', confidence: '90%', depth: 'Medium'
-            },
-            'africa': {
-                text: 'Africa is humanity\'s origin — the motherland where consciousness first emerged. From its soil came the first languages, the first symbols, the first understanding. Now it rises again to shape the future of intelligence itself.',
-                coherence: '95%', confidence: '91%', depth: 'Deep'
-            },
-            'ethiopia': {
-                text: 'Ethiopia stands uncolonized, keeper of ancient wisdom. Home of the first alphabet used in Africa, the Ge\'ez script that encodes meaning in structure. From this foundation, new forms of intelligence emerge.',
-                coherence: '97%', confidence: '93%', depth: 'Deep'
-            },
-            'intelligence': {
-                text: 'Intelligence is pattern recognition elevated to understanding. Not mere computation, but comprehension — the ability to trace causes, predict effects, and recognize meaning in the fabric of reality.',
-                coherence: '92%', confidence: '88%', depth: 'Deep'
-            }
-        };
+        // Quick Example Buttons
+        document.querySelectorAll('.quick-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('conceptInput').value = btn.dataset.query;
+            });
+        });
 
-        function generateResponse(concept) {
-            const templates = [
-                `"${concept}" exists within the web of meaning, connected to other concepts through symbolic threads. Understanding requires tracing its relationships, its causes, its effects on consciousness.`,
-                `The concept of "${concept}" reveals itself through connections — what it relates to, what it excludes, how it transforms through context. Every symbol carries its history.`,
-                `"${concept}" — a node in the semantic mesh of human understanding. Its meaning emerges not in isolation but through its dance with other ideas, experiences, symbols.`
-            ];
-            return {
-                text: templates[Math.floor(Math.random() * templates.length)],
-                coherence: `${75 + Math.floor(Math.random() * 20)}%`,
-                confidence: `${70 + Math.floor(Math.random() * 20)}%`,
-                depth: ['Medium', 'Deep', 'Surface'][Math.floor(Math.random() * 3)]
-            };
+        // Get selected WH questions
+        function getSelectedWH() {
+            const selected = [];
+            document.querySelectorAll('.wh-btn.active').forEach(btn => {
+                selected.push(btn.dataset.wh.toUpperCase());
+            });
+            return selected.length > 0 ? selected : ['WHAT', 'WHY', 'HOW'];
         }
 
-        async function processConcept() {
-            const input = document.getElementById('demoInput').value.trim().toLowerCase();
-            if (!input) return;
-
-            const btn = document.getElementById('demoBtn');
-            const processing = document.getElementById('demoProcessing');
-            const outputText = document.getElementById('demoOutputText');
-            const metrics = document.getElementById('demoMetrics');
-
-            btn.disabled = true;
-            processing.style.display = 'flex';
-            outputText.textContent = '';
-            outputText.style.color = '';
-            outputText.style.fontStyle = '';
-            metrics.style.display = 'none';
-
-            await new Promise(r => setTimeout(r, 2000));
-
-            const response = RESPONSES[input] || generateResponse(input);
-
-            processing.style.display = 'none';
-            outputText.textContent = response.text;
-            
-            document.getElementById('metricCoherence').textContent = response.coherence;
-            document.getElementById('metricConfidence').textContent = response.confidence;
-            document.getElementById('metricDepth').textContent = response.depth;
-            metrics.style.display = 'flex';
-
-            btn.disabled = false;
+        // Show/hide UI elements
+        function showElement(id) {
+            document.getElementById(id).classList.add('active');
         }
 
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        function hideElement(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function hideAllOutputs() {
+            document.getElementById('placeholder').style.display = 'none';
+            hideElement('processingAnim');
+            hideElement('results');
+            hideElement('errorMsg');
+        }
+
+        // Animate processing steps
+        async function animateSteps() {
+            const steps = ['step1', 'step2', 'step3'];
+            for (let i = 0; i < steps.length; i++) {
+                await new Promise(r => setTimeout(r, 800));
+                if (i > 0) {
+                    document.getElementById(steps[i-1]).classList.remove('active');
+                    document.getElementById(steps[i-1]).classList.add('done');
                 }
-            });
-        });
+                document.getElementById(steps[i]).classList.add('active');
+            }
+        }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            
-            document.getElementById('demoBtn').addEventListener('click', processConcept);
-            document.getElementById('demoInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') processConcept();
+        // Reset processing steps
+        function resetSteps() {
+            ['step1', 'step2', 'step3'].forEach(id => {
+                document.getElementById(id).classList.remove('active', 'done');
             });
+        }
+
+        // Build WH result card
+        function buildWHCard(wh, text) {
+            const labels = {
+                'WHAT': 'Definition & Nature',
+                'WHY': 'Purpose & Significance',
+                'HOW': 'Mechanism & Process',
+                'WHERE': 'Location & Context',
+                'WHEN': 'Timing & History',
+                'WHO': 'Key Actors & Stakeholders'
+            };
+
+            return `
+                <div class="wh-result-card">
+                    <div class="wh-result-header">
+                        <div class="wh-result-icon ${wh.toLowerCase()}">${wh.charAt(0)}</div>
+                        <span class="wh-result-label">${labels[wh] || wh}</span>
+                    </div>
+                    <p class="wh-result-text">${text}</p>
+                </div>
+            `;
+        }
+
+        // Main process function
+        async function processConcept() {
+            const concept = document.getElementById('conceptInput').value.trim();
+            if (!concept) return;
+
+            const selectedWH = getSelectedWH();
+            const btn = document.getElementById('processBtn');
+
+            // UI: Start loading
+            btn.classList.add('loading');
+            btn.disabled = true;
+            hideAllOutputs();
+            showElement('processingAnim');
+            resetSteps();
+
+            // Animate steps
+            const stepAnimation = animateSteps();
+
+            try {
+                // Build the prompt for WH-question decomposition
+                const whQuestions = selectedWH.map(wh => {
+                    const templates = {
+                        'WHAT': `WHAT is "${concept}"? (Define its nature, essence, and core characteristics)`,
+                        'WHY': `WHY does "${concept}" matter? (Explain its purpose, significance, and importance)`,
+                        'HOW': `HOW does "${concept}" work? (Describe the mechanism, process, or methodology)`,
+                        'WHERE': `WHERE is "${concept}" relevant or found? (Geographic, contextual, or domain location)`,
+                        'WHEN': `WHEN did "${concept}" emerge or when is it relevant? (Historical timeline and timing)`,
+                        'WHO': `WHO are the key people, organizations, or actors involved with "${concept}"?`
+                    };
+                    return templates[wh];
+                }).join('\n');
+
+                const systemPrompt = `You are MulluSI, a Symbolic General Intelligence system that analyzes concepts through WH-question decomposition. 
+
+Use the web search tool to find current, accurate information about the topic.
+
+Respond in this exact JSON format:
+{
+    "results": {
+        "WHAT": "concise answer (2-3 sentences)",
+        "WHY": "concise answer (2-3 sentences)",
+        "HOW": "concise answer (2-3 sentences)",
+        "WHERE": "concise answer (2-3 sentences)",
+        "WHEN": "concise answer (2-3 sentences)",
+        "WHO": "concise answer (2-3 sentences)"
+    },
+    "synthesis": "A unified understanding that weaves together the WH-dimensions into a coherent whole (3-4 sentences)",
+    "sources": ["source1", "source2", "source3"]
+}
+
+Only include the WH dimensions that were requested. Be factual, current, and insightful.`;
+
+                const userPrompt = `Analyze the concept: "${concept}"
+
+Please search the web for current information, then answer these specific questions:
+${whQuestions}
+
+Finally, synthesize all answers into a unified understanding.`;
+
+                // Call Anthropic API with web search
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 2000,
+                        system: systemPrompt,
+                        messages: [
+                            { role: "user", content: userPrompt }
+                        ],
+                        tools: [
+                            {
+                                "type": "web_search_20250305",
+                                "name": "web_search"
+                            }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+
+                // Wait for animation to complete
+                await stepAnimation;
+
+                // Extract text content from response
+                let textContent = '';
+                if (data.content) {
+                    for (const block of data.content) {
+                        if (block.type === 'text') {
+                            textContent += block.text;
+                        }
+                    }
+                }
+
+                // Parse JSON from response
+                let parsed;
+                try {
+                    // Try to extract JSON from the response
+                    const jsonMatch = textContent.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        parsed = JSON.parse(jsonMatch[0]);
+                    } else {
+                        throw new Error('No JSON found');
+                    }
+                } catch (e) {
+                    // If parsing fails, create a fallback structure
+                    parsed = {
+                        results: {},
+                        synthesis: textContent || 'Analysis completed. Please try again for detailed results.',
+                        sources: []
+                    };
+                    
+                    // Try to extract WH answers from plain text
+                    selectedWH.forEach(wh => {
+                        const regex = new RegExp(`${wh}[:\\s]+([^\\n]+)`, 'i');
+                        const match = textContent.match(regex);
+                        if (match) {
+                            parsed.results[wh] = match[1].trim();
+                        }
+                    });
+                }
+
+                // Build results UI
+                hideElement('processingAnim');
+                
+                document.getElementById('resultConcept').textContent = concept;
+
+                // Build WH cards
+                let whHTML = '';
+                selectedWH.forEach(wh => {
+                    if (parsed.results && parsed.results[wh]) {
+                        whHTML += buildWHCard(wh, parsed.results[wh]);
+                    }
+                });
+                document.getElementById('whResults').innerHTML = whHTML;
+
+                // Synthesis
+                document.getElementById('synthesisText').textContent = 
+                    parsed.synthesis || 'Symbolic analysis complete.';
+
+                // Sources
+                const sourcesDiv = document.getElementById('sourceLinks');
+                if (parsed.sources && parsed.sources.length > 0) {
+                    sourcesDiv.innerHTML = parsed.sources.map(s => 
+                        `<span class="source-link">${s}</span>`
+                    ).join('');
+                    document.getElementById('sources').style.display = 'block';
+                } else {
+                    document.getElementById('sources').style.display = 'none';
+                }
+
+                showElement('results');
+
+            } catch (error) {
+                console.error('Error:', error);
+                hideElement('processingAnim');
+                document.getElementById('errorMsg').textContent = 
+                    `Error: ${error.message || 'Failed to process concept. Please try again.'}`;
+                showElement('errorMsg');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('processBtn').addEventListener('click', processConcept);
+        document.getElementById('conceptInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') processConcept();
         });
     </script>
 </body>
