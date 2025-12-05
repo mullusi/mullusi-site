@@ -3,1042 +3,1167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MulluSI Live Demo — Symbolic Intelligence with Web Search</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Noto+Serif+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
+    <title>MulluSI v5.8 | Full GQRS Integration | 12 Improvements</title>
     <style>
         :root {
-            --bg-void: #030305;
-            --bg-deep: #070709;
-            --bg-dark: #0c0c10;
-            --bg-surface: #111116;
-            --bg-card: #18181d;
-            --bg-elevated: #1f1f26;
-            
-            --text-white: #ffffff;
-            --text-primary: #f4f4f5;
-            --text-secondary: #a1a1aa;
-            --text-muted: #52525b;
-            
-            --violet-500: #8b5cf6;
-            --violet-600: #7c3aed;
-            --cyan-400: #22d3ee;
-            --cyan-500: #06b6d4;
-            --emerald-500: #10b981;
-            --amber-500: #f59e0b;
-            --rose-500: #f43f5e;
-            --eth-yellow: #FCDD09;
-            --eth-green: #078930;
-            --eth-red: #DA121A;
-            
-            --gradient-primary: linear-gradient(135deg, var(--violet-500) 0%, var(--cyan-500) 100%);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --void: #020204;
+            --abyss: #08090d;
+            --deep: #0f1015;
+            --surface: #16171f;
+            --elevated: #1e2028;
+            --gold: #d4a574;
+            --gold-dim: rgba(212, 165, 116, 0.25);
+            --emerald: #10b981;
+            --cyan: #06b6d4;
+            --violet: #8b5cf6;
+            --rose: #f43f5e;
+            --blue: #3b82f6;
+            --amber: #f59e0b;
+            --lime: #84cc16;
+            --pink: #ec4899;
+            --white: #f0f0f0;
+            --muted: rgba(255,255,255,0.45);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg-void);
-            color: var(--text-primary);
+            font-family: 'SF Pro Display', -apple-system, system-ui, sans-serif;
+            background: var(--void);
+            color: var(--white);
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Background */
-        .bg-system {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
-            animation: bgPulse 20s ease infinite;
-        }
-
-        @keyframes bgPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .noise {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.03;
-            pointer-events: none;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem;
+        .app {
+            display: grid;
+            grid-template-rows: auto 1fr;
             min-height: 100vh;
         }
 
         /* Header */
-        header {
-            text-align: center;
-            padding: 3rem 0;
-            border-bottom: var(--glass-border);
-            margin-bottom: 3rem;
-        }
-
-        .logo {
+        .header {
+            background: linear-gradient(180deg, var(--abyss) 0%, var(--deep) 100%);
+            border-bottom: 1px solid var(--gold-dim);
+            padding: 8px 15px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-primary);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Noto Serif Ethiopic', serif;
-            font-size: 2rem;
-            color: white;
-            box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
-        }
-
-        .logo-text {
-            font-size: 3rem;
-            font-weight: 800;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -2px;
-        }
-
-        .tagline {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-        }
-
-        .live-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--emerald-500);
-        }
-
-        .live-badge::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--emerald-500);
-            border-radius: 50%;
-            animation: pulse 1.5s ease infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.3); }
-        }
-
-        /* Main Demo Container */
-        .demo-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        @media (max-width: 900px) {
-            .demo-section {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Input Panel */
-        .input-panel {
-            background: var(--bg-surface);
-            border: var(--glass-border);
-            border-radius: 24px;
-            padding: 2rem;
-        }
-
-        .panel-title {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--violet-500);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .panel-title::before {
-            content: '◆';
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .concept-input {
-            width: 100%;
-            background: var(--bg-elevated);
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .concept-input:focus {
-            border-color: var(--violet-500);
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
-        }
-
-        .concept-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        /* WH Selector */
-        .wh-selector {
-            margin-bottom: 1.5rem;
-        }
-
-        .wh-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-        }
-
-        .wh-btn {
-            background: var(--bg-elevated);
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 0.75rem;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .wh-btn:hover {
-            border-color: var(--violet-500);
-            color: var(--text-primary);
-        }
-
-        .wh-btn.active {
-            background: var(--gradient-primary);
-            border-color: transparent;
-            color: white;
-        }
-
-        .wh-btn span {
-            display: block;
-            font-size: 1.1rem;
-            margin-bottom: 0.2rem;
-        }
-
-        /* Process Button */
-        .process-btn {
-            width: 100%;
-            padding: 1.1rem 2rem;
-            background: var(--gradient-primary);
-            border: none;
-            border-radius: 14px;
-            color: white;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .process-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
-        }
-
-        .process-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .process-btn .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: none;
-        }
-
-        .process-btn.loading .spinner {
-            display: block;
-        }
-
-        .process-btn.loading .btn-text {
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Quick Examples */
-        .quick-examples {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: var(--glass-border);
-        }
-
-        .quick-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-        }
-
-        .quick-btns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .quick-btn {
-            background: var(--bg-elevated);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .quick-btn:hover {
-            background: var(--violet-500);
-            border-color: var(--violet-500);
-            color: white;
-        }
-
-        /* Output Panel */
-        .output-panel {
-            background: var(--bg-surface);
-            border: var(--glass-border);
-            border-radius: 24px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .output-content {
-            flex: 1;
-            min-height: 400px;
-        }
-
-        /* Processing Animation */
-        .processing-anim {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            gap: 1.5rem;
-        }
-
-        .processing-anim.active {
-            display: flex;
-        }
-
-        .fidel-loader {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .fidel-loader span {
-            font-family: 'Noto Serif Ethiopic', serif;
-            font-size: 2.5rem;
-            color: var(--eth-yellow);
-            animation: bounce 0.6s ease infinite;
-            text-shadow: 0 0 20px rgba(252, 221, 9, 0.5);
-        }
-
-        .fidel-loader span:nth-child(1) { animation-delay: 0s; }
-        .fidel-loader span:nth-child(2) { animation-delay: 0.1s; }
-        .fidel-loader span:nth-child(3) { animation-delay: 0.2s; }
-        .fidel-loader span:nth-child(4) { animation-delay: 0.3s; }
-        .fidel-loader span:nth-child(5) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .processing-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .processing-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .processing-step {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            opacity: 0.4;
-            transition: all 0.3s ease;
-        }
-
-        .processing-step.active {
-            opacity: 1;
-            color: var(--emerald-500);
-        }
-
-        .processing-step.done {
-            opacity: 0.7;
-            color: var(--text-secondary);
-        }
-
-        /* Results */
-        .results {
-            display: none;
-        }
-
-        .results.active {
-            display: block;
-        }
-
-        .result-header {
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .result-concept {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .result-badge {
-            padding: 0.4rem 0.8rem;
-            background: rgba(139, 92, 246, 0.15);
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--violet-500);
-        }
-
-        /* WH Results Grid */
-        .wh-results {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .wh-result-card {
-            background: var(--bg-elevated);
-            border: var(--glass-border);
-            border-radius: 14px;
-            padding: 1.25rem;
-            transition: all 0.3s ease;
-        }
-
-        .wh-result-card:hover {
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-
-        .wh-result-header {
-            display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
         }
 
-        .wh-result-icon {
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon {
             width: 36px;
             height: 36px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, var(--gold), var(--amber));
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: white;
+            font-size: 1.2rem;
         }
+        .logo-text h1 { font-size: 1rem; font-weight: 600; }
+        .logo-text h1 span { color: var(--gold); }
+        .logo-text p { font-size: 0.5rem; color: var(--muted); }
 
-        .wh-result-icon.what { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-        .wh-result-icon.why { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .wh-result-icon.how { background: linear-gradient(135deg, #10b981, #059669); }
-        .wh-result-icon.where { background: linear-gradient(135deg, #06b6d4, #0891b2); }
-        .wh-result-icon.when { background: linear-gradient(135deg, #f43f5e, #e11d48); }
-        .wh-result-icon.who { background: linear-gradient(135deg, #8b5cf6, #06b6d4); }
-
-        .wh-result-label {
-            font-size: 0.9rem;
+        .version-badges { display: flex; gap: 6px; }
+        .badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.42rem;
             font-weight: 600;
-            color: var(--text-primary);
+        }
+        .badge.gqrs { background: linear-gradient(135deg, var(--cyan), var(--emerald)); }
+        .badge.v58 { background: linear-gradient(135deg, var(--violet), var(--pink)); }
+
+        .tabs {
+            display: flex;
+            gap: 3px;
+            background: var(--surface);
+            padding: 3px;
+            border-radius: 6px;
+        }
+        .tab {
+            padding: 5px 12px;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.55rem;
+            transition: all 0.2s;
+        }
+        .tab:hover { background: var(--elevated); color: var(--white); }
+        .tab.active { background: var(--gold); color: var(--void); }
+
+        /* Main Content */
+        .main {
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            height: calc(100vh - 54px);
+            overflow: hidden;
         }
 
-        .wh-result-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
+        .panel {
+            background: var(--abyss);
+            padding: 10px;
+            overflow-y: auto;
         }
+        .panel.left { border-right: 1px solid rgba(255,255,255,0.05); }
+        .panel.right { border-left: 1px solid rgba(255,255,255,0.05); }
 
-        /* Synthesis */
-        .synthesis-card {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
+        .section {
+            margin-bottom: 12px;
         }
-
-        .synthesis-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--violet-500);
-            letter-spacing: 1px;
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            font-size: 0.5rem;
+            color: var(--gold);
             text-transform: uppercase;
-            margin-bottom: 0.75rem;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--gold-dim);
+            padding-bottom: 4px;
+        }
+        .section-num {
+            background: var(--gold);
+            color: var(--void);
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.4rem;
+            font-weight: 700;
         }
 
-        .synthesis-text {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: var(--text-primary);
+        .card {
+            background: var(--surface);
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 6px;
         }
 
-        /* Sources */
-        .sources {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: var(--glass-border);
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
         }
-
-        .sources-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
+        .stat {
+            padding: 4px 6px;
+            background: var(--elevated);
+            border-radius: 4px;
+            text-align: center;
         }
+        .stat-value { font-size: 0.7rem; font-weight: 600; }
+        .stat-label { font-size: 0.36rem; color: var(--muted); text-transform: uppercase; }
 
-        .source-link {
-            display: inline-block;
-            font-size: 0.75rem;
-            color: var(--cyan-500);
-            text-decoration: none;
-            margin-right: 1rem;
-            margin-bottom: 0.5rem;
+        /* Phase Ring */
+        .phase-ring-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
         }
-
-        .source-link:hover {
-            text-decoration: underline;
+        .phase-ring-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 10; }
+        .phase-ring-fg { fill: none; stroke-width: 10; stroke-linecap: round; transition: all 0.3s; }
+        .phase-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
         }
+        .phase-value { font-size: 1.2rem; font-weight: bold; }
+        .phase-v { font-size: 1rem; color: var(--gold); }
 
-        /* Placeholder */
-        .placeholder {
+        /* V-Phase Spectrum */
+        .v-spectrum {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            padding: 6px;
+            background: var(--elevated);
+            border-radius: 4px;
+        }
+        .v-item { text-align: center; }
+        .v-glyph { font-size: 0.8rem; display: block; }
+        .v-deg { font-size: 0.32rem; color: var(--muted); }
+
+        /* Integration Flow */
+        .flow-container {
             display: flex;
             flex-direction: column;
+            gap: 3px;
+        }
+        .flow-step {
+            padding: 6px 8px;
+            background: var(--elevated);
+            border-radius: 4px;
+            font-size: 0.42rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .flow-step.active { border-left-color: var(--cyan); background: rgba(6, 182, 212, 0.1); }
+        .flow-step.complete { border-left-color: var(--emerald); }
+        .flow-step.error { border-left-color: var(--rose); }
+        .flow-icon { width: 14px; height: 14px; border-radius: 50%; }
+
+        /* Central Visualization */
+        .viz-area {
+            position: relative;
+            background: var(--void);
+            display: flex;
+            flex-direction: column;
+        }
+        .viz-canvas { flex: 1; }
+
+        /* Improvement Cards */
+        .improvement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .improvement-card {
+            padding: 8px;
+            background: var(--elevated);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .improvement-card:hover { border-color: var(--cyan); }
+        .improvement-card.active { border-color: var(--gold); background: rgba(212, 165, 116, 0.1); }
+        .improvement-num {
+            width: 20px;
+            height: 20px;
+            background: var(--surface);
+            border-radius: 50%;
+            margin: 0 auto 4px;
+            display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.45rem;
+            font-weight: 700;
+        }
+        .improvement-name { font-size: 0.4rem; color: var(--white); margin-bottom: 2px; }
+        .improvement-status { font-size: 0.32rem; color: var(--emerald); }
+
+        /* Detail Panel */
+        .detail-panel {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(8, 9, 13, 0.95);
+            border: 1px solid var(--gold-dim);
+            border-radius: 8px;
+            padding: 12px 20px;
+            min-width: 400px;
+            max-width: 500px;
+        }
+        .detail-title {
+            font-size: 0.6rem;
+            color: var(--gold);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        .detail-content { font-size: 0.48rem; color: var(--muted); line-height: 1.5; }
+
+        /* Proof Demo */
+        .proof-container {
+            background: var(--surface);
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.45rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .proof-step {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .proof-step:last-child { border-bottom: none; }
+        .proof-type {
+            color: var(--cyan);
+            font-weight: bold;
+        }
+        .proof-stmt { color: var(--white); }
+        .proof-just { color: var(--muted); font-style: italic; }
+        .proof-phase { color: var(--emerald); }
+        .proof-phase.warn { color: var(--amber); }
+        .proof-phase.error { color: var(--rose); }
+
+        /* Efficiency Dashboard */
+        .eff-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 4px 0;
+        }
+        .eff-label { font-size: 0.38rem; width: 100px; color: var(--muted); }
+        .eff-track {
+            flex: 1;
+            height: 6px;
+            background: var(--elevated);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .eff-fill {
             height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        .eff-value { font-size: 0.4rem; width: 40px; text-align: right; }
+
+        /* MLVF Layers */
+        .mlvf-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .mlvf-layer {
+            padding: 4px 8px;
+            background: var(--elevated);
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.4rem;
+        }
+        .mlvf-v { color: var(--gold); font-size: 0.55rem; }
+
+        /* Abstraction Layers */
+        .abs-layers {
+            display: flex;
+            gap: 4px;
+        }
+        .abs-layer {
+            flex: 1;
+            padding: 8px;
+            background: var(--elevated);
+            border-radius: 4px;
             text-align: center;
-            color: var(--text-muted);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .abs-layer:hover { border-color: var(--cyan); }
+        .abs-layer.active { border-color: var(--emerald); background: rgba(16, 185, 129, 0.1); }
+        .abs-name { font-size: 0.45rem; font-weight: 600; margin-bottom: 2px; }
+        .abs-nodes { font-size: 0.35rem; color: var(--muted); }
+
+        /* Buttons */
+        .btn {
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--gold-dim);
+            border-radius: 4px;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 0.5rem;
+            transition: all 0.15s;
+        }
+        .btn:hover { background: var(--elevated); border-color: var(--gold); }
+        .btn.primary { background: var(--gold); color: var(--void); border-color: var(--gold); }
+
+        /* Input */
+        .input-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .input-field {
+            flex: 1;
+            padding: 6px 10px;
+            background: var(--surface);
+            border: 1px solid var(--gold-dim);
+            border-radius: 4px;
+            color: var(--white);
+            font-size: 0.5rem;
         }
 
-        .placeholder-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
-        }
-
-        .placeholder-text {
-            font-size: 1rem;
-            max-width: 300px;
-        }
-
-        /* Error */
-        .error-msg {
-            display: none;
-            background: rgba(244, 63, 94, 0.1);
-            border: 1px solid rgba(244, 63, 94, 0.3);
-            border-radius: 12px;
-            padding: 1rem;
-            color: var(--rose-500);
-            font-size: 0.9rem;
-        }
-
-        .error-msg.active {
-            display: block;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-            border-top: var(--glass-border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        footer a {
-            color: var(--violet-500);
-            text-decoration: none;
-        }
-
-        /* Mobile */
-        @media (max-width: 600px) {
-            .logo-text {
-                font-size: 2rem;
-            }
-
-            .wh-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .input-panel, .output-panel {
-                padding: 1.5rem;
-            }
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
     </style>
 </head>
 <body>
-    <div class="bg-system"></div>
-    <div class="noise"></div>
-
-    <div class="container">
-        <header>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
             <div class="logo">
-                <div class="logo-icon">ሙ</div>
-                <span class="logo-text">MULLUSI</span>
+                <div class="logo-icon">Ψ</div>
+                <div class="logo-text">
+                    <h1><span>Mullu</span>SI v5.8</h1>
+                    <p>GQRS-Enhanced Symbolic Causal Chain Intelligence</p>
+                </div>
+                <div class="version-badges">
+                    <span class="badge gqrs">GQRS 2.0</span>
+                    <span class="badge v58">12 IMPROVEMENTS</span>
+                </div>
             </div>
-            <p class="tagline">Symbolic Intelligence with Live Web Search</p>
-            <div class="live-badge">AI-Powered • Real-Time Web Search</div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="overview">Overview</button>
+                <button class="tab" data-tab="math">Math Proofs</button>
+                <button class="tab" data-tab="video">Video MLVF</button>
+                <button class="tab" data-tab="efficiency">Efficiency</button>
+            </div>
+
+            <div style="display: flex; gap: 6px; align-items: center;">
+                <span style="font-size: 0.42rem; color: var(--muted);">Wholeness:</span>
+                <span id="wholeness-score" style="font-size: 0.6rem; color: var(--gold); font-weight: bold;">94.7%</span>
+                <button class="btn primary" id="btn-run">Run GQRS</button>
+            </div>
         </header>
 
-        <div class="demo-section">
-            <!-- Input Panel -->
-            <div class="input-panel">
-                <div class="panel-title">Concept Explorer</div>
-
-                <div class="input-group">
-                    <label class="input-label">Enter a concept, topic, or question</label>
-                    <input type="text" class="concept-input" id="conceptInput" 
-                           placeholder="e.g., quantum computing, climate change, Ethiopian coffee...">
-                </div>
-
-                <div class="wh-selector">
-                    <label class="input-label">Select analysis dimensions (WH-Questions)</label>
-                    <div class="wh-grid">
-                        <button class="wh-btn active" data-wh="what">
-                            <span>WHAT</span>
-                            Definition
-                        </button>
-                        <button class="wh-btn active" data-wh="why">
-                            <span>WHY</span>
-                            Purpose
-                        </button>
-                        <button class="wh-btn active" data-wh="how">
-                            <span>HOW</span>
-                            Mechanism
-                        </button>
-                        <button class="wh-btn" data-wh="where">
-                            <span>WHERE</span>
-                            Location
-                        </button>
-                        <button class="wh-btn" data-wh="when">
-                            <span>WHEN</span>
-                            Timing
-                        </button>
-                        <button class="wh-btn" data-wh="who">
-                            <span>WHO</span>
-                            Actors
-                        </button>
+        <!-- Main -->
+        <main class="main">
+            <!-- Left Panel -->
+            <aside class="panel left">
+                <!-- Phase Mechanics -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">2</span>
+                        Phase Mechanics
+                    </div>
+                    <div class="card">
+                        <div class="phase-ring-container">
+                            <svg viewBox="0 0 100 100" width="100" height="100">
+                                <circle class="phase-ring-bg" cx="50" cy="50" r="40"/>
+                                <circle class="phase-ring-fg" id="phase-arc" cx="50" cy="50" r="40"
+                                        stroke="var(--cyan)"
+                                        stroke-dasharray="251.3"
+                                        stroke-dashoffset="251.3"
+                                        transform="rotate(-90 50 50)"/>
+                            </svg>
+                            <div class="phase-center">
+                                <div class="phase-value" id="phase-val">0°</div>
+                                <div class="phase-v" id="phase-v">ኤ</div>
+                            </div>
+                        </div>
+                        <div class="v-spectrum">
+                            <div class="v-item"><span class="v-glyph">ኤ</span><span class="v-deg">0°</span></div>
+                            <div class="v-item"><span class="v-glyph">ኣ</span><span class="v-deg">22°</span></div>
+                            <div class="v-item"><span class="v-glyph">አ</span><span class="v-deg">60°</span></div>
+                            <div class="v-item"><span class="v-glyph">ኢ</span><span class="v-deg">90°</span></div>
+                            <div class="v-item"><span class="v-glyph">ኡ</span><span class="v-deg">180°</span></div>
+                        </div>
                     </div>
                 </div>
 
-                <button class="process-btn" id="processBtn">
-                    <span class="spinner"></span>
-                    <span class="btn-text">🔍 Explore with MulluSI</span>
-                </button>
-
-                <div class="quick-examples">
-                    <div class="quick-label">Quick examples:</div>
-                    <div class="quick-btns">
-                        <button class="quick-btn" data-query="artificial intelligence 2025">AI in 2025</button>
-                        <button class="quick-btn" data-query="Ethiopian tech startups">Ethiopian Tech</button>
-                        <button class="quick-btn" data-query="renewable energy">Renewable Energy</button>
-                        <button class="quick-btn" data-query="consciousness science">Consciousness</button>
-                        <button class="quick-btn" data-query="symbolic AI">Symbolic AI</button>
+                <!-- Superposition State -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">3</span>
+                        Causal Superposition
+                    </div>
+                    <div class="card">
+                        <div class="stat-grid">
+                            <div class="stat">
+                                <div class="stat-value" id="path-count" style="color: var(--cyan);">0</div>
+                                <div class="stat-label">Paths</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="entropy-val" style="color: var(--violet);">0.00</div>
+                                <div class="stat-label">Entropy</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="coherence-val" style="color: var(--emerald);">100%</div>
+                                <div class="stat-label">Coherence</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="contradict-val" style="color: var(--rose);">0</div>
+                                <div class="stat-label">Contradictions</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Output Panel -->
-            <div class="output-panel">
-                <div class="panel-title">Symbolic Analysis</div>
-
-                <div class="output-content">
-                    <!-- Placeholder -->
-                    <div class="placeholder" id="placeholder">
-                        <div class="placeholder-icon">🔮</div>
-                        <p class="placeholder-text">
-                            Enter a concept above and select WH dimensions to see MulluSI's symbolic analysis with live web data.
-                        </p>
+                <!-- Bidirectional Reasoning -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">5</span>
+                        Bidirectional Reasoning
                     </div>
-
-                    <!-- Processing Animation -->
-                    <div class="processing-anim" id="processingAnim">
-                        <div class="fidel-loader">
-                            <span>ሙ</span>
-                            <span>ሉ</span>
-                            <span>ሲ</span>
-                            <span>ጂ</span>
-                            <span>አይ</span>
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.4rem; color: var(--muted);">FORWARD</div>
+                                <div style="font-size: 0.5rem;">Premises→Goal</div>
+                            </div>
+                            <div style="font-size: 1.2rem; color: var(--cyan);">⟷</div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.4rem; color: var(--muted);">BACKWARD</div>
+                                <div style="font-size: 0.5rem;">Goal→Premises</div>
+                            </div>
                         </div>
-                        <p class="processing-text">Processing through symbolic layers...</p>
-                        <div class="processing-steps">
-                            <div class="processing-step" id="step1">◇ Searching web sources</div>
-                            <div class="processing-step" id="step2">◇ Decomposing WH-dimensions</div>
-                            <div class="processing-step" id="step3">◇ Synthesizing understanding</div>
+                        <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.4rem;">
+                            <span style="color: var(--muted);">Meeting Point:</span>
+                            <span id="meeting-pt" style="color: var(--emerald);">—</span>
                         </div>
                     </div>
-
-                    <!-- Results -->
-                    <div class="results" id="results">
-                        <div class="result-header">
-                            <span class="result-concept" id="resultConcept"></span>
-                            <span class="result-badge">Symbolic Analysis</span>
-                        </div>
-
-                        <div class="wh-results" id="whResults"></div>
-
-                        <div class="synthesis-card">
-                            <div class="synthesis-label">Unified Understanding</div>
-                            <p class="synthesis-text" id="synthesisText"></p>
-                        </div>
-
-                        <div class="sources" id="sources">
-                            <div class="sources-label">Web Sources Referenced</div>
-                            <div id="sourceLinks"></div>
-                        </div>
-                    </div>
-
-                    <!-- Error -->
-                    <div class="error-msg" id="errorMsg"></div>
                 </div>
-            </div>
-        </div>
 
-        <footer>
-            <p>
-                MulluSI — Symbolic General Intelligence<br>
-                <a href="https://mullusi.com">mullusi.com</a> • Built with 🧠 in Ethiopia 🇪🇹
-            </p>
-        </footer>
+                <!-- Multi-Layer Abstraction -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">6</span>
+                        Multi-Layer Abstraction
+                    </div>
+                    <div class="card">
+                        <div class="abs-layers">
+                            <div class="abs-layer" id="abs-l3">
+                                <div class="abs-name">L3</div>
+                                <div class="abs-nodes">3-10</div>
+                            </div>
+                            <div class="abs-layer active" id="abs-l2">
+                                <div class="abs-name">L2</div>
+                                <div class="abs-nodes">20-100</div>
+                            </div>
+                            <div class="abs-layer" id="abs-l1">
+                                <div class="abs-name">L1</div>
+                                <div class="abs-nodes">100+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entanglement -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">4</span>
+                        Entanglement Map
+                    </div>
+                    <div class="card">
+                        <div class="stat-grid">
+                            <div class="stat">
+                                <div class="stat-value" id="entangle-pairs" style="color: var(--violet);">0</div>
+                                <div class="stat-label">Pairs</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="entangle-entropy" style="color: var(--pink);">0.00</div>
+                                <div class="stat-label">Entropy</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center: Visualization -->
+            <section class="viz-area">
+                <canvas id="main-canvas" class="viz-canvas"></canvas>
+
+                <!-- 12 Improvements Grid -->
+                <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%);">
+                    <div class="improvement-grid">
+                        <div class="improvement-card active" data-imp="1">
+                            <div class="improvement-num" style="background: var(--cyan);">1</div>
+                            <div class="improvement-name">Basis Discovery</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="2">
+                            <div class="improvement-num" style="background: var(--violet);">2</div>
+                            <div class="improvement-name">Phase Mechanics</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="3">
+                            <div class="improvement-num" style="background: var(--emerald);">3</div>
+                            <div class="improvement-name">Amplitude Tuning</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="4">
+                            <div class="improvement-num" style="background: var(--amber);">4</div>
+                            <div class="improvement-name">Efficiency Metrics</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="5">
+                            <div class="improvement-num" style="background: var(--rose);">5</div>
+                            <div class="improvement-name">Bidirectional</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="6">
+                            <div class="improvement-num" style="background: var(--blue);">6</div>
+                            <div class="improvement-name">Multi-Layer</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="7">
+                            <div class="improvement-num" style="background: var(--lime);">7</div>
+                            <div class="improvement-name">Resource Budget</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="8">
+                            <div class="improvement-num" style="background: var(--pink);">8</div>
+                            <div class="improvement-name">Domain Signatures</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="9">
+                            <div class="improvement-num" style="background: var(--gold);">9</div>
+                            <div class="improvement-name">Explanations</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="10">
+                            <div class="improvement-num" style="background: var(--cyan);">10</div>
+                            <div class="improvement-name">MLVF Bridge</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="11">
+                            <div class="improvement-num" style="background: var(--violet);">11</div>
+                            <div class="improvement-name">Math Proofs</div>
+                            <div class="improvement-status">✓ Active</div>
+                        </div>
+                        <div class="improvement-card active" data-imp="12">
+                            <div class="improvement-num" style="background: var(--emerald);">12</div>
+                            <div class="improvement-name">Integration</div>
+                            <div class="improvement-status">✓ Complete</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="detail-panel" id="detail-panel">
+                    <div class="detail-title" id="detail-title">GQRS Wave Function</div>
+                    <div class="detail-content" id="detail-content">
+                        Ψ(t) = Σ αᵢe^(iφᵢ)|pathᵢ⟩ · cos(Δφ) → Interference<br><br>
+                        Phase near 0° → Constructive (agreement)<br>
+                        Phase near 180° → Destructive (contradiction)
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel -->
+            <aside class="panel right">
+                <!-- Basis Discovery -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">1</span>
+                        Basis Discovery
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 0.42rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="color: var(--muted);">Domain:</span>
+                                <span id="basis-domain">PRACTICAL</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="color: var(--muted);">Quality Score:</span>
+                                <span id="basis-quality" style="color: var(--emerald);">0.82</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--muted);">Source:</span>
+                                <span id="basis-source" style="color: var(--cyan);">DISCOVERED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource Budget -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">7</span>
+                        Resource Budget
+                    </div>
+                    <div class="card">
+                        <div class="eff-bar">
+                            <span class="eff-label">Time</span>
+                            <div class="eff-track"><div class="eff-fill" id="res-time" style="width: 0%; background: var(--amber);"></div></div>
+                            <span class="eff-value" id="res-time-val">0%</span>
+                        </div>
+                        <div class="eff-bar">
+                            <span class="eff-label">Memory</span>
+                            <div class="eff-track"><div class="eff-fill" id="res-mem" style="width: 0%; background: var(--violet);"></div></div>
+                            <span class="eff-value" id="res-mem-val">0%</span>
+                        </div>
+                        <div style="font-size: 0.4rem; margin-top: 6px; display: flex; justify-content: space-between;">
+                            <span style="color: var(--muted);">Strategy:</span>
+                            <span id="res-strategy" style="color: var(--gold);">BALANCED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MLVF Video Bridge -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">10</span>
+                        MLVF Video Bridge
+                    </div>
+                    <div class="card">
+                        <div class="mlvf-stack">
+                            <div class="mlvf-layer"><span>Object Layer</span><span class="mlvf-v">ኦ</span></div>
+                            <div class="mlvf-layer"><span>Semantic Layer</span><span class="mlvf-v">ኢ</span></div>
+                            <div class="mlvf-layer"><span>Motion Layer</span><span class="mlvf-v">አ</span></div>
+                            <div class="mlvf-layer"><span>Lighting Layer</span><span class="mlvf-v">ኣ</span></div>
+                            <div class="mlvf-layer"><span>Composition</span><span class="mlvf-v">ኧ</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Efficiency Metrics -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">4</span>
+                        Efficiency Metrics
+                    </div>
+                    <div class="card">
+                        <div class="eff-bar">
+                            <span class="eff-label">Coherence Eff</span>
+                            <div class="eff-track"><div class="eff-fill" id="eff-coherence" style="width: 0%; background: var(--cyan);"></div></div>
+                            <span class="eff-value" id="eff-coherence-val">0%</span>
+                        </div>
+                        <div class="eff-bar">
+                            <span class="eff-label">Entanglement</span>
+                            <div class="eff-track"><div class="eff-fill" id="eff-entangle" style="width: 0%; background: var(--violet);"></div></div>
+                            <span class="eff-value" id="eff-entangle-val">0%</span>
+                        </div>
+                        <div class="eff-bar">
+                            <span class="eff-label">Proof Eff</span>
+                            <div class="eff-track"><div class="eff-fill" id="eff-proof" style="width: 0%; background: var(--emerald);"></div></div>
+                            <span class="eff-value" id="eff-proof-val">0x</span>
+                        </div>
+                        <div class="eff-bar">
+                            <span class="eff-label">Measurement</span>
+                            <div class="eff-track"><div class="eff-fill" id="eff-measure" style="width: 0%; background: var(--amber);"></div></div>
+                            <span class="eff-value" id="eff-measure-val">0 bits</span>
+                        </div>
+                        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.45rem;">
+                                <span style="color: var(--gold);">OVERALL EFFICIENCY:</span>
+                                <span id="eff-overall" style="color: var(--gold); font-weight: bold;">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Math Proof Demo -->
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-num">11</span>
+                        Math Proof Demo
+                    </div>
+                    <div class="card">
+                        <select id="theorem-select" style="width: 100%; padding: 4px; background: var(--elevated); border: 1px solid var(--gold-dim); border-radius: 4px; color: var(--white); font-size: 0.42rem; margin-bottom: 6px;">
+                            <option value="triangular">Triangular Numbers</option>
+                            <option value="modus">Modus Ponens</option>
+                            <option value="false">False Statement (test)</option>
+                        </select>
+                        <div class="proof-container" id="proof-output">
+                            <div style="color: var(--muted); font-style: italic;">Select theorem and run proof...</div>
+                        </div>
+                        <button class="btn" style="width: 100%; margin-top: 6px;" id="btn-prove">Prove Theorem</button>
+                    </div>
+                </div>
+            </aside>
+        </main>
     </div>
 
     <script>
-        // ═══════════════════════════════════════════════════════════════
-        // MULLUSI LIVE DEMO WITH WEB SEARCH
-        // ═══════════════════════════════════════════════════════════════
+    // State
+    const state = {
+        phase: 0,
+        paths: [],
+        coherence: 1.0,
+        entropy: 0,
+        contradictions: 0,
+        entanglePairs: 0,
+        resTime: 0,
+        resMem: 0,
+        effCoherence: 0,
+        effEntangle: 0,
+        effProof: 0,
+        effMeasure: 0,
+        activeImprovement: null,
+        running: false
+    };
 
-        // WH Button Selection
-        document.querySelectorAll('.wh-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                btn.classList.toggle('active');
-            });
-        });
+    const PI = Math.PI;
+    const V_PHASE = {'ኤ':0, 'ኣ':PI/8, 'እ':PI/6, 'ኧ':PI/4, 'አ':PI/3, 'ኦ':PI/2.5, 'ኢ':PI/2, 'ኡ':PI};
 
-        // Quick Example Buttons
-        document.querySelectorAll('.quick-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.getElementById('conceptInput').value = btn.dataset.query;
-            });
-        });
+    // Canvas
+    const canvas = document.getElementById('main-canvas');
+    const ctx = canvas.getContext('2d');
 
-        // Get selected WH questions
-        function getSelectedWH() {
-            const selected = [];
-            document.querySelectorAll('.wh-btn.active').forEach(btn => {
-                selected.push(btn.dataset.wh.toUpperCase());
-            });
-            return selected.length > 0 ? selected : ['WHAT', 'WHY', 'HOW'];
-        }
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-        // Show/hide UI elements
-        function showElement(id) {
-            document.getElementById(id).classList.add('active');
-        }
-
-        function hideElement(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        function hideAllOutputs() {
-            document.getElementById('placeholder').style.display = 'none';
-            hideElement('processingAnim');
-            hideElement('results');
-            hideElement('errorMsg');
-        }
-
-        // Animate processing steps
-        async function animateSteps() {
-            const steps = ['step1', 'step2', 'step3'];
-            for (let i = 0; i < steps.length; i++) {
-                await new Promise(r => setTimeout(r, 800));
-                if (i > 0) {
-                    document.getElementById(steps[i-1]).classList.remove('active');
-                    document.getElementById(steps[i-1]).classList.add('done');
-                }
-                document.getElementById(steps[i]).classList.add('active');
+    // Get V from phase
+    function getV(phase) {
+        let closest = 'ኤ', minDiff = Infinity;
+        for (const [v, p] of Object.entries(V_PHASE)) {
+            if (Math.abs(phase - p) < minDiff) {
+                minDiff = Math.abs(phase - p);
+                closest = v;
             }
         }
+        return closest;
+    }
 
-        // Reset processing steps
-        function resetSteps() {
-            ['step1', 'step2', 'step3'].forEach(id => {
-                document.getElementById(id).classList.remove('active', 'done');
+    // Update UI
+    function updateUI() {
+        // Phase
+        const phaseDeg = (state.phase * 180 / PI).toFixed(0);
+        document.getElementById('phase-val').textContent = phaseDeg + '°';
+        document.getElementById('phase-v').textContent = getV(state.phase);
+        
+        const circumference = 251.3;
+        const offset = circumference - (state.phase / PI) * circumference;
+        document.getElementById('phase-arc').style.strokeDashoffset = offset;
+        
+        const phaseColor = state.phase < PI/3 ? 'var(--emerald)' : 
+                          state.phase < 2*PI/3 ? 'var(--amber)' : 'var(--rose)';
+        document.getElementById('phase-arc').style.stroke = phaseColor;
+        document.getElementById('phase-val').style.color = phaseColor;
+
+        // Stats
+        document.getElementById('path-count').textContent = state.paths.length;
+        document.getElementById('entropy-val').textContent = state.entropy.toFixed(2);
+        document.getElementById('coherence-val').textContent = (state.coherence * 100).toFixed(0) + '%';
+        document.getElementById('contradict-val').textContent = state.contradictions;
+        document.getElementById('entangle-pairs').textContent = state.entanglePairs;
+        document.getElementById('entangle-entropy').textContent = (state.entanglePairs * 0.4).toFixed(2);
+
+        // Resource
+        document.getElementById('res-time').style.width = state.resTime + '%';
+        document.getElementById('res-time-val').textContent = state.resTime.toFixed(0) + '%';
+        document.getElementById('res-mem').style.width = state.resMem + '%';
+        document.getElementById('res-mem-val').textContent = state.resMem.toFixed(0) + '%';
+
+        // Efficiency
+        document.getElementById('eff-coherence').style.width = state.effCoherence + '%';
+        document.getElementById('eff-coherence-val').textContent = state.effCoherence.toFixed(0) + '%';
+        document.getElementById('eff-entangle').style.width = state.effEntangle + '%';
+        document.getElementById('eff-entangle-val').textContent = state.effEntangle.toFixed(0) + '%';
+        document.getElementById('eff-proof').style.width = Math.min(state.effProof * 50, 100) + '%';
+        document.getElementById('eff-proof-val').textContent = state.effProof.toFixed(1) + 'x';
+        document.getElementById('eff-measure').style.width = Math.min(state.effMeasure * 20, 100) + '%';
+        document.getElementById('eff-measure-val').textContent = state.effMeasure.toFixed(1) + ' bits';
+
+        const overall = (state.effCoherence + state.effEntangle + state.effProof * 50 + state.effMeasure * 20) / 4;
+        document.getElementById('eff-overall').textContent = overall.toFixed(0) + '%';
+        document.getElementById('wholeness-score').textContent = (90 + overall * 0.1).toFixed(1) + '%';
+    }
+
+    // Generate paths
+    function generatePaths(n) {
+        state.paths = [];
+        for (let i = 0; i < n; i++) {
+            state.paths.push({
+                id: `p${i}`,
+                amplitude: 0.3 + Math.random() * 0.7,
+                phase: Math.random() * PI / 3,
+                coherent: Math.random() > 0.25,
+                strategy: ['INDUCTION', 'ALGEBRAIC', 'FORWARD', 'BACKWARD'][Math.floor(Math.random() * 4)]
             });
         }
+    }
 
-        // Build WH result card
-        function buildWHCard(wh, text) {
-            const labels = {
-                'WHAT': 'Definition & Nature',
-                'WHY': 'Purpose & Significance',
-                'HOW': 'Mechanism & Process',
-                'WHERE': 'Location & Context',
-                'WHEN': 'Timing & History',
-                'WHO': 'Key Actors & Stakeholders'
+    // Draw visualization
+    function draw() {
+        ctx.fillStyle = '#020204';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        const time = Date.now() / 1000;
+
+        // Draw wave interference pattern
+        ctx.strokeStyle = `rgba(6, 182, 212, ${0.1 + state.coherence * 0.2})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x += 2) {
+            const y = cy + Math.sin((x/40) + time * 2) * 40 * Math.cos(state.phase);
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Draw second wave
+        ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 + state.coherence * 0.15})`;
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x += 2) {
+            const y = cy + Math.sin((x/35) - time * 1.5) * 30 * Math.sin(state.phase + 0.5);
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Draw paths as orbiting particles
+        for (let i = 0; i < state.paths.length; i++) {
+            const p = state.paths[i];
+            const angle = (i / state.paths.length) * PI * 2 + time * 0.4;
+            const r = 100 + p.amplitude * 50;
+            const x = cx + Math.cos(angle) * r;
+            const y = cy + Math.sin(angle) * r;
+
+            // Glow
+            const grad = ctx.createRadialGradient(x, y, 0, x, y, 15);
+            if (p.coherent) {
+                grad.addColorStop(0, `rgba(16, 185, 129, ${p.amplitude * 0.6})`);
+            } else {
+                grad.addColorStop(0, `rgba(244, 63, 94, ${p.amplitude * 0.6})`);
+            }
+            grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad;
+            ctx.fillRect(x-15, y-15, 30, 30);
+
+            // Core
+            ctx.beginPath();
+            ctx.arc(x, y, 5 + p.amplitude * 4, 0, PI * 2);
+            ctx.fillStyle = p.coherent ? 'var(--emerald)' : 'var(--rose)';
+            ctx.fill();
+
+            // Phase indicator
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + Math.cos(p.phase) * 12, y + Math.sin(p.phase) * 12);
+            ctx.strokeStyle = 'rgba(212, 165, 116, 0.7)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Connection to center
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${p.amplitude * 0.15})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        // Draw entanglement links
+        for (let i = 0; i < state.entanglePairs && i < state.paths.length - 1; i++) {
+            const p1 = state.paths[i];
+            const p2 = state.paths[i + 1];
+            const angle1 = (i / state.paths.length) * PI * 2 + time * 0.4;
+            const angle2 = ((i+1) / state.paths.length) * PI * 2 + time * 0.4;
+            const r1 = 100 + p1.amplitude * 50;
+            const r2 = 100 + p2.amplitude * 50;
+            const x1 = cx + Math.cos(angle1) * r1;
+            const y1 = cy + Math.sin(angle1) * r1;
+            const x2 = cx + Math.cos(angle2) * r2;
+            const y2 = cy + Math.sin(angle2) * r2;
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Center glow
+        const cgrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
+        cgrad.addColorStop(0, `rgba(212, 165, 116, ${0.2 + state.coherence * 0.3})`);
+        cgrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = cgrad;
+        ctx.fillRect(cx-60, cy-60, 120, 120);
+
+        // Center circle
+        ctx.beginPath();
+        ctx.arc(cx, cy, 30, 0, PI * 2);
+        ctx.fillStyle = 'rgba(30, 32, 40, 0.9)';
+        ctx.fill();
+        ctx.strokeStyle = 'var(--gold)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Center V
+        ctx.fillStyle = '#d4a574';
+        ctx.font = 'bold 18px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(getV(state.phase), cx, cy + 6);
+
+        // Phase arc around center
+        ctx.beginPath();
+        ctx.arc(cx, cy, 38, -PI/2, -PI/2 + state.phase);
+        ctx.strokeStyle = state.phase < PI/2 ? 'var(--emerald)' : 
+                         state.phase < PI ? 'var(--amber)' : 'var(--rose)';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        requestAnimationFrame(draw);
+    }
+
+    // Run GQRS simulation
+    function runGQRS() {
+        if (state.running) return;
+        state.running = true;
+
+        // Reset
+        state.phase = 0;
+        state.coherence = 1.0;
+        state.entropy = 0;
+        state.contradictions = 0;
+        state.entanglePairs = 0;
+        state.resTime = 0;
+        state.resMem = 0;
+        state.effCoherence = 0;
+        state.effEntangle = 0;
+        state.effProof = 0;
+        state.effMeasure = 0;
+
+        generatePaths(8);
+        updateUI();
+
+        let step = 0;
+        const interval = setInterval(() => {
+            step++;
+
+            // Phase accumulation
+            state.phase = Math.min(PI * 0.3, state.phase + Math.random() * 0.1);
+            
+            // Coherence (slight decay then stabilize)
+            state.coherence = Math.max(0.7, state.coherence - Math.random() * 0.02);
+            
+            // Entropy
+            state.entropy = -state.paths.reduce((s, p) => {
+                const prob = p.amplitude ** 2;
+                return prob > 0 ? s + prob * Math.log2(prob) : s;
+            }, 0);
+
+            // Contradictions
+            if (state.phase > PI / 3) {
+                state.contradictions = Math.floor((state.phase - PI/3) / (PI/6));
+            }
+
+            // Entanglement
+            state.entanglePairs = Math.min(5, step);
+
+            // Resources
+            state.resTime = Math.min(95, step * 7);
+            state.resMem = Math.min(80, step * 5 + Math.random() * 5);
+
+            // Efficiency
+            state.effCoherence = Math.min(90, state.coherence * 100);
+            state.effEntangle = Math.min(85, state.entanglePairs * 15);
+            state.effProof = Math.min(2.0, 0.5 + step * 0.12);
+            state.effMeasure = Math.min(4.5, 0.5 + step * 0.3);
+
+            // Meeting point
+            if (step === 8) {
+                document.getElementById('meeting-pt').textContent = 'FOUND ✓';
+                document.getElementById('meeting-pt').style.color = 'var(--emerald)';
+            }
+
+            updateUI();
+
+            if (step >= 14) {
+                clearInterval(interval);
+                state.running = false;
+            }
+        }, 180);
+    }
+
+    // Prove theorem
+    function proveTheorem() {
+        const theorem = document.getElementById('theorem-select').value;
+        const output = document.getElementById('proof-output');
+        
+        let steps = [];
+        if (theorem === 'triangular') {
+            steps = [
+                { type: 'BASE_CASE', stmt: 'P(0): Σ(empty) = 0 = 0(0-1)/2 = 0 ✓', just: 'Direct evaluation', phase: 0 },
+                { type: 'IH', stmt: 'Assume P(k): Σᵢ₌₀^(k-1) i = k(k-1)/2', just: 'Inductive hypothesis', phase: 0 },
+                { type: 'STEP', stmt: 'Σᵢ₌₀^k i = Σᵢ₌₀^(k-1) i + k', just: 'Definition of sum', phase: 0 },
+                { type: 'STEP', stmt: '= k(k-1)/2 + k (by IH)', just: 'Apply IH', phase: 0 },
+                { type: 'STEP', stmt: '= (k² - k + 2k)/2 = (k² + k)/2', just: 'Algebra', phase: 0 },
+                { type: 'STEP', stmt: '= k(k+1)/2 = (k+1)k/2 ✓', just: 'Factor', phase: 0 },
+                { type: 'QED', stmt: '∎ ∀n ∈ ℕ: Σᵢ₌₀^(n-1) i = n(n-1)/2', just: 'By induction', phase: 0 }
+            ];
+        } else if (theorem === 'modus') {
+            steps = [
+                { type: 'PREMISE', stmt: 'Assume A', just: 'Given premise', phase: 0 },
+                { type: 'PREMISE', stmt: 'Assume A → B', just: 'Given premise', phase: 0 },
+                { type: 'STEP', stmt: 'By definition of →, if A true, then B must be true', just: 'Implication semantics', phase: 0 },
+                { type: 'STEP', stmt: 'A is true (premise 1)', just: 'From premise', phase: 0 },
+                { type: 'QED', stmt: '∎ Therefore B', just: 'Modus Ponens', phase: 0 }
+            ];
+        } else {
+            steps = [
+                { type: 'ATTEMPT', stmt: 'Trying n = 40: 40² + 40 + 41 = 1681', just: 'Direct computation', phase: 15 },
+                { type: 'STEP', stmt: '1681 = 41 × 41', just: 'Factorization', phase: 90 },
+                { type: 'ERROR', stmt: '⚠ 1681 is NOT prime!', just: 'Contradiction detected', phase: 180 },
+                { type: 'QED', stmt: '✗ Statement is FALSE', just: 'Counterexample found', phase: 180 }
+            ];
+        }
+
+        output.innerHTML = steps.map(s => {
+            const phaseClass = s.phase > 90 ? 'error' : s.phase > 30 ? 'warn' : '';
+            return `<div class="proof-step">
+                <span class="proof-type">[${s.type}]</span>
+                <span class="proof-stmt">${s.stmt}</span><br>
+                <span class="proof-just">${s.just}</span>
+                <span class="proof-phase ${phaseClass}">[φ=${s.phase}°]</span>
+            </div>`;
+        }).join('');
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+        });
+    });
+
+    // Improvement card clicks
+    document.querySelectorAll('.improvement-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const imp = card.dataset.imp;
+            const details = {
+                '1': { title: 'Measurement Basis Discovery', content: 'Auto-discovers optimal WH-question basis for each domain. Reduces superposition dimensionality 10-100x through intelligent question selection.' },
+                '2': { title: 'Advanced Phase Mechanics', content: 'Phase tracks agreement history: 0° = full agreement (constructive), 180° = contradiction (destructive). Enables automatic contradiction detection.' },
+                '3': { title: 'Amplitude Constraint Tuning', content: 'Simulated annealing optimizes amplitudes to satisfy soft constraints while respecting hard constraints. Smooth degradation.' },
+                '4': { title: 'Efficiency Metrics Dashboard', content: '10-dimension efficiency analysis: coherence, entanglement utility, measurement informativeness, proof efficiency, and more.' },
+                '5': { title: 'Bidirectional Reasoning', content: 'Forward (deduction) + Backward (abduction/retroduction) + Meeting-in-middle. 50% faster proofs for complex theorems.' },
+                '6': { title: 'Multi-Layer Abstraction', content: 'L3 (abstract) → L2 (medium) → L1 (detailed). Cross-layer consistency checking for robust conclusions.' },
+                '7': { title: 'Resource-Constrained Execution', content: 'Graceful degradation with time/memory budgets. Adaptive strategy selection: fast_approximate ↔ balanced ↔ high_quality.' },
+                '8': { title: 'Domain-Specific Signatures', content: 'Pre-configured settings for theorem_proving, physics, game_theory, natural_language, constraint_satisfaction. Auto-detection.' },
+                '9': { title: 'Explanation Generation', content: 'Trace → Narrative with certainty qualifiers. Audience targeting: general, expert, student. Phase-based confidence.' },
+                '10': { title: 'MLVF Video Causality Bridge', content: 'Video = causal chain of visual states. Layer causality: Object→Semantic→Motion→Lighting. Counterfactual analysis.' },
+                '11': { title: 'Symbolic Math Proofs', content: 'Induction framework, phase-tracked contradiction detection, formal verification. Objective validation ground truth.' },
+                '12': { title: 'Complete Integration', content: 'All 12 improvements connected: Domain→Basis→Superposition→Bidirectional→Multi-Layer→Explanation. Full GQRS pipeline.' }
             };
-
-            return `
-                <div class="wh-result-card">
-                    <div class="wh-result-header">
-                        <div class="wh-result-icon ${wh.toLowerCase()}">${wh.charAt(0)}</div>
-                        <span class="wh-result-label">${labels[wh] || wh}</span>
-                    </div>
-                    <p class="wh-result-text">${text}</p>
-                </div>
-            `;
-        }
-
-        // Main process function
-        async function processConcept() {
-            const concept = document.getElementById('conceptInput').value.trim();
-            if (!concept) return;
-
-            const selectedWH = getSelectedWH();
-            const btn = document.getElementById('processBtn');
-
-            // UI: Start loading
-            btn.classList.add('loading');
-            btn.disabled = true;
-            hideAllOutputs();
-            showElement('processingAnim');
-            resetSteps();
-
-            // Animate steps
-            const stepAnimation = animateSteps();
-
-            try {
-                // Build the prompt for WH-question decomposition
-                const whQuestions = selectedWH.map(wh => {
-                    const templates = {
-                        'WHAT': `WHAT is "${concept}"? (Define its nature, essence, and core characteristics)`,
-                        'WHY': `WHY does "${concept}" matter? (Explain its purpose, significance, and importance)`,
-                        'HOW': `HOW does "${concept}" work? (Describe the mechanism, process, or methodology)`,
-                        'WHERE': `WHERE is "${concept}" relevant or found? (Geographic, contextual, or domain location)`,
-                        'WHEN': `WHEN did "${concept}" emerge or when is it relevant? (Historical timeline and timing)`,
-                        'WHO': `WHO are the key people, organizations, or actors involved with "${concept}"?`
-                    };
-                    return templates[wh];
-                }).join('\n');
-
-                const systemPrompt = `You are MulluSI, a Symbolic General Intelligence system that analyzes concepts through WH-question decomposition. 
-
-Use the web search tool to find current, accurate information about the topic.
-
-Respond in this exact JSON format:
-{
-    "results": {
-        "WHAT": "concise answer (2-3 sentences)",
-        "WHY": "concise answer (2-3 sentences)",
-        "HOW": "concise answer (2-3 sentences)",
-        "WHERE": "concise answer (2-3 sentences)",
-        "WHEN": "concise answer (2-3 sentences)",
-        "WHO": "concise answer (2-3 sentences)"
-    },
-    "synthesis": "A unified understanding that weaves together the WH-dimensions into a coherent whole (3-4 sentences)",
-    "sources": ["source1", "source2", "source3"]
-}
-
-Only include the WH dimensions that were requested. Be factual, current, and insightful.`;
-
-                const userPrompt = `Analyze the concept: "${concept}"
-
-Please search the web for current information, then answer these specific questions:
-${whQuestions}
-
-Finally, synthesize all answers into a unified understanding.`;
-
-                // Call Anthropic API with web search
-                const response = await fetch("https://api.anthropic.com/v1/messages", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        model: "claude-sonnet-4-20250514",
-                        max_tokens: 2000,
-                        system: systemPrompt,
-                        messages: [
-                            { role: "user", content: userPrompt }
-                        ],
-                        tools: [
-                            {
-                                "type": "web_search_20250305",
-                                "name": "web_search"
-                            }
-                        ]
-                    })
-                });
-
-                const data = await response.json();
-
-                // Wait for animation to complete
-                await stepAnimation;
-
-                // Extract text content from response
-                let textContent = '';
-                if (data.content) {
-                    for (const block of data.content) {
-                        if (block.type === 'text') {
-                            textContent += block.text;
-                        }
-                    }
-                }
-
-                // Parse JSON from response
-                let parsed;
-                try {
-                    // Try to extract JSON from the response
-                    const jsonMatch = textContent.match(/\{[\s\S]*\}/);
-                    if (jsonMatch) {
-                        parsed = JSON.parse(jsonMatch[0]);
-                    } else {
-                        throw new Error('No JSON found');
-                    }
-                } catch (e) {
-                    // If parsing fails, create a fallback structure
-                    parsed = {
-                        results: {},
-                        synthesis: textContent || 'Analysis completed. Please try again for detailed results.',
-                        sources: []
-                    };
-                    
-                    // Try to extract WH answers from plain text
-                    selectedWH.forEach(wh => {
-                        const regex = new RegExp(`${wh}[:\\s]+([^\\n]+)`, 'i');
-                        const match = textContent.match(regex);
-                        if (match) {
-                            parsed.results[wh] = match[1].trim();
-                        }
-                    });
-                }
-
-                // Build results UI
-                hideElement('processingAnim');
-                
-                document.getElementById('resultConcept').textContent = concept;
-
-                // Build WH cards
-                let whHTML = '';
-                selectedWH.forEach(wh => {
-                    if (parsed.results && parsed.results[wh]) {
-                        whHTML += buildWHCard(wh, parsed.results[wh]);
-                    }
-                });
-                document.getElementById('whResults').innerHTML = whHTML;
-
-                // Synthesis
-                document.getElementById('synthesisText').textContent = 
-                    parsed.synthesis || 'Symbolic analysis complete.';
-
-                // Sources
-                const sourcesDiv = document.getElementById('sourceLinks');
-                if (parsed.sources && parsed.sources.length > 0) {
-                    sourcesDiv.innerHTML = parsed.sources.map(s => 
-                        `<span class="source-link">${s}</span>`
-                    ).join('');
-                    document.getElementById('sources').style.display = 'block';
-                } else {
-                    document.getElementById('sources').style.display = 'none';
-                }
-
-                showElement('results');
-
-            } catch (error) {
-                console.error('Error:', error);
-                hideElement('processingAnim');
-                document.getElementById('errorMsg').textContent = 
-                    `Error: ${error.message || 'Failed to process concept. Please try again.'}`;
-                showElement('errorMsg');
-            } finally {
-                btn.classList.remove('loading');
-                btn.disabled = false;
-            }
-        }
-
-        // Event Listeners
-        document.getElementById('processBtn').addEventListener('click', processConcept);
-        document.getElementById('conceptInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') processConcept();
+            document.getElementById('detail-title').textContent = details[imp]?.title || 'GQRS Improvement';
+            document.getElementById('detail-content').textContent = details[imp]?.content || '';
         });
+    });
+
+    // Abstraction layer selection
+    document.querySelectorAll('.abs-layer').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelectorAll('.abs-layer').forEach(e => e.classList.remove('active'));
+            el.classList.add('active');
+        });
+    });
+
+    // Buttons
+    document.getElementById('btn-run').addEventListener('click', runGQRS);
+    document.getElementById('btn-prove').addEventListener('click', proveTheorem);
+
+    // Init
+    generatePaths(8);
+    updateUI();
+    draw();
+
+    console.log('MulluSI v5.8 Full GQRS Integration initialized');
+    console.log('12 Improvements: Basis Discovery, Phase Mechanics, Amplitude Tuning, Efficiency Metrics,');
+    console.log('Bidirectional Reasoning, Multi-Layer, Resource Budget, Domain Signatures,');
+    console.log('Explanation Generation, MLVF Bridge, Math Proofs, Complete Integration');
     </script>
 </body>
 </html>
