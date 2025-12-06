@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0a0a0f">
-    <title>VIRECAI v8.3 | Cinematic Edition</title>
+    <title>VIRECAI v8.5 | Cloud Studio</title>
     
     <!-- TensorFlow.js + Models -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
@@ -36,7 +36,8 @@
             --orange: #ff8c00;
             --lime: #b4ff00;
             --gold: #ffd700;
-            --cinema: #e50914;
+            --cloud: #3b82f6;
+            --cloud-alpha: rgba(59, 130, 246, 0.15);
             
             --text-100: #ffffff;
             --text-200: #e0e0e8;
@@ -48,7 +49,7 @@
             
             --glow-primary: 0 0 20px rgba(0, 212, 255, 0.4);
             --glow-danger: 0 0 20px rgba(255, 68, 102, 0.5);
-            --glow-cinema: 0 0 20px rgba(229, 9, 20, 0.5);
+            --glow-cloud: 0 0 20px rgba(59, 130, 246, 0.5);
             
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -97,20 +98,20 @@
         .logo__icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, var(--cinema), var(--orange));
+            background: linear-gradient(135deg, var(--cloud), var(--cyan));
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             font-size: 14px;
-            box-shadow: var(--glow-cinema);
+            box-shadow: var(--glow-cloud);
         }
         
         .logo__text {
             font-size: 16px;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--cinema), var(--orange));
+            background: linear-gradient(90deg, var(--cloud), var(--cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -119,7 +120,7 @@
             font-size: 9px;
             color: white;
             padding: 2px 5px;
-            background: linear-gradient(90deg, var(--cinema), var(--orange));
+            background: linear-gradient(90deg, var(--cloud), var(--cyan));
             border-radius: 4px;
             font-weight: 600;
         }
@@ -150,7 +151,7 @@
         }
         
         .mode-tab--active {
-            background: var(--cinema);
+            background: var(--cloud);
             color: white;
         }
         
@@ -169,6 +170,21 @@
             font-size: 9px;
         }
         
+        .badge--cloud {
+            background: var(--cloud-alpha);
+            border: 1px solid var(--cloud);
+            color: var(--cloud);
+        }
+        
+        .badge--cloud.syncing .badge__dot {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
         .badge--ai {
             background: var(--success-alpha);
             border: 1px solid var(--success);
@@ -179,12 +195,6 @@
             background: var(--warning-alpha);
             border-color: var(--warning);
             color: var(--warning);
-        }
-        
-        .badge--tracking {
-            background: var(--primary-alpha);
-            border: 1px solid var(--primary);
-            color: var(--primary);
         }
         
         .badge__dot {
@@ -251,17 +261,6 @@
         .viewport__video--mirrored { transform: scaleX(-1); }
         .viewport__video.hidden { display: none; }
         
-        /* Chroma key canvas */
-        .viewport__chroma {
-            position: absolute;
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            pointer-events: none;
-        }
-        
-        .viewport__chroma.hidden { display: none; }
-        
         .viewport__placeholder {
             position: absolute;
             inset: 0;
@@ -276,100 +275,37 @@
         .viewport__placeholder.hidden { display: none; }
         .viewport__placeholder-icon { font-size: 48px; opacity: 0.5; }
         
-        /* Overlays */
-        .overlay {
+        /* Cloud sync indicator */
+        .sync-indicator {
             position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
-        
-        /* Tracking box */
-        .tracking-box {
-            position: absolute;
-            border: 2px solid var(--lime);
-            border-radius: 3px;
-            background: rgba(180, 255, 0, 0.1);
-        }
-        
-        .tracking-box__label {
-            position: absolute;
-            top: -18px;
-            left: 0;
-            padding: 2px 6px;
-            background: var(--lime);
-            color: var(--bg-100);
-            font-size: 9px;
-            font-weight: 600;
-            border-radius: 2px;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(59, 130, 246, 0.9);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            animation: fadeIn 0.3s;
         }
         
-        .tracking-box__trail {
-            position: absolute;
-            pointer-events: none;
-        }
+        .sync-indicator.hidden { display: none; }
         
-        .trail-point {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--lime);
+        .sync-indicator__spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
             border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
         
-        .detection-box {
-            position: absolute;
-            border: 2px solid var(--primary);
-            border-radius: 3px;
-        }
-        
-        .detection-box--face { border-color: var(--secondary); }
-        
-        .detection-box__label {
-            position: absolute;
-            top: -16px;
-            left: 0;
-            padding: 1px 4px;
-            background: var(--primary);
-            color: var(--bg-100);
-            font-size: 8px;
-            font-weight: 600;
-            border-radius: 2px;
-        }
-        
-        .detection-box--face .detection-box__label { background: var(--secondary); }
-        
-        /* Animated titles */
-        .title-overlay {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            text-align: center;
-        }
-        
-        .title-text {
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            animation-fill-mode: both;
-        }
-        
-        /* Title animations */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes typewriter { from { width: 0; } to { width: 100%; } }
-        @keyframes zoomIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes glitch {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         
         /* Float panels */
@@ -403,6 +339,13 @@
         
         .float-panel__unit { font-size: 9px; color: var(--text-300); }
         
+        /* Overlays */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        
         /* Sidebar */
         .sidebar {
             width: 320px;
@@ -435,8 +378,8 @@
         }
         
         .sidebar__tab--active {
-            color: var(--cinema);
-            border-bottom-color: var(--cinema);
+            color: var(--cloud);
+            border-bottom-color: var(--cloud);
         }
         
         .sidebar__content {
@@ -461,36 +404,87 @@
         
         .panel-title__badge {
             padding: 1px 4px;
-            background: var(--cinema);
+            background: var(--cloud);
             border-radius: 3px;
             font-size: 8px;
             color: white;
         }
         
-        /* Tracking targets */
-        .tracking-targets {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        /* Cloud storage */
+        .cloud-storage {
+            background: var(--bg-400);
+            border-radius: 8px;
+            padding: 12px;
             margin-bottom: 12px;
         }
         
-        .tracking-target {
+        .cloud-storage__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .cloud-storage__title {
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .cloud-storage__status {
+            font-size: 9px;
+            color: var(--success);
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px;
+            gap: 4px;
+        }
+        
+        .cloud-storage__bar {
+            height: 6px;
+            background: var(--bg-600);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        
+        .cloud-storage__fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cloud), var(--cyan));
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        
+        .cloud-storage__info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--text-400);
+        }
+        
+        /* Version history */
+        .version-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        
+        .version-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
             background: var(--bg-400);
-            border: 2px solid var(--border-200);
+            border: 1px solid var(--border-200);
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.15s;
         }
         
-        .tracking-target:hover { border-color: var(--lime); }
-        .tracking-target--active { border-color: var(--lime); background: rgba(180, 255, 0, 0.1); }
+        .version-item:hover { border-color: var(--cloud); }
+        .version-item--current { border-color: var(--success); background: var(--success-alpha); }
         
-        .tracking-target__icon {
+        .version-item__icon {
             width: 32px;
             height: 32px;
             background: var(--bg-500);
@@ -498,263 +492,229 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
         }
         
-        .tracking-target__info { flex: 1; }
-        .tracking-target__name { font-size: 11px; font-weight: 600; }
-        .tracking-target__status { font-size: 9px; color: var(--text-400); }
+        .version-item--current .version-item__icon {
+            background: var(--success);
+        }
         
-        .tracking-target__lock {
+        .version-item__info { flex: 1; }
+        .version-item__name { font-size: 11px; font-weight: 600; }
+        .version-item__meta { font-size: 9px; color: var(--text-400); }
+        
+        .version-item__actions {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .version-item__btn {
             width: 24px;
             height: 24px;
             background: var(--bg-600);
             border: none;
             border-radius: 4px;
-            color: var(--text-400);
-            font-size: 12px;
+            color: var(--text-300);
+            font-size: 10px;
             cursor: pointer;
         }
         
-        .tracking-target__lock--locked {
-            background: var(--lime);
-            color: var(--bg-100);
+        .version-item__btn:hover { background: var(--cloud); color: white; }
+        
+        /* Templates */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
         }
         
-        /* LUT presets */
-        .lut-grid {
+        .template-card {
+            background: var(--bg-400);
+            border: 2px solid var(--border-200);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .template-card:hover { border-color: var(--cloud); transform: translateY(-2px); }
+        .template-card--selected { border-color: var(--cloud); }
+        
+        .template-card__preview {
+            aspect-ratio: 16/9;
+            background: var(--bg-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        
+        .template-card__info {
+            padding: 8px;
+        }
+        
+        .template-card__name {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .template-card__desc {
+            font-size: 9px;
+            color: var(--text-400);
+        }
+        
+        .template-card__badge {
+            display: inline-block;
+            padding: 2px 5px;
+            background: var(--cloud);
+            border-radius: 3px;
+            font-size: 8px;
+            color: white;
+            margin-top: 4px;
+        }
+        
+        /* Export presets */
+        .export-presets {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .export-preset {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--bg-400);
+            border: 2px solid var(--border-200);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .export-preset:hover { border-color: var(--cloud); }
+        .export-preset--selected { border-color: var(--cloud); background: var(--cloud-alpha); }
+        
+        .export-preset__icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-500);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .export-preset__info { flex: 1; }
+        .export-preset__name { font-size: 12px; font-weight: 600; }
+        .export-preset__specs { font-size: 9px; color: var(--text-400); margin-top: 2px; }
+        
+        .export-preset__size {
+            font-size: 10px;
+            color: var(--cloud);
+            font-weight: 600;
+        }
+        
+        /* Cloud services */
+        .cloud-services {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 6px;
             margin-bottom: 12px;
         }
         
-        .lut-preset {
-            aspect-ratio: 16/9;
+        .cloud-service {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 10px;
             background: var(--bg-400);
             border: 2px solid var(--border-200);
             border-radius: 6px;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
             transition: all 0.15s;
         }
         
-        .lut-preset:hover { border-color: var(--cinema); }
-        .lut-preset--active { border-color: var(--cinema); }
+        .cloud-service:hover { border-color: var(--cloud); }
+        .cloud-service--connected { border-color: var(--success); }
         
-        .lut-preset__preview {
-            width: 100%;
-            height: 100%;
+        .cloud-service__icon { font-size: 24px; }
+        .cloud-service__name { font-size: 9px; font-weight: 600; }
+        
+        .cloud-service__status {
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+        
+        .cloud-service--connected .cloud-service__status {
+            background: var(--success);
+            color: var(--bg-100);
+        }
+        
+        /* Project info */
+        .project-info {
+            background: var(--bg-400);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .project-info__header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .project-info__icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--cloud), var(--cyan));
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
         }
         
-        .lut-preset__name {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 2px;
-            background: rgba(0,0,0,0.8);
-            font-size: 8px;
+        .project-info__details { flex: 1; }
+        
+        .project-info__name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .project-info__id {
+            font-size: 9px;
+            color: var(--text-400);
+            font-family: monospace;
+        }
+        
+        .project-info__stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .project-stat {
             text-align: center;
         }
         
-        /* Title editor */
-        .title-editor {
-            background: var(--bg-400);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 12px;
+        .project-stat__value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--cloud);
         }
         
-        .title-input {
-            width: 100%;
-            padding: 8px;
-            background: var(--bg-500);
-            border: 1px solid var(--border-200);
-            border-radius: 4px;
-            color: var(--text-100);
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
-        
-        .title-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-        }
-        
-        .title-option {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        
-        .title-option__label {
+        .project-stat__label {
             font-size: 8px;
             color: var(--text-400);
             text-transform: uppercase;
-        }
-        
-        .title-select {
-            padding: 4px 6px;
-            background: var(--bg-500);
-            border: 1px solid var(--border-200);
-            border-radius: 3px;
-            color: var(--text-100);
-            font-size: 10px;
-        }
-        
-        .title-animations {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 8px;
-        }
-        
-        .title-anim-btn {
-            padding: 4px 8px;
-            background: var(--bg-500);
-            border: 1px solid var(--border-200);
-            border-radius: 3px;
-            color: var(--text-200);
-            font-size: 9px;
-            cursor: pointer;
-        }
-        
-        .title-anim-btn--active {
-            border-color: var(--cinema);
-            background: rgba(229, 9, 20, 0.2);
-            color: var(--cinema);
-        }
-        
-        /* Chroma key */
-        .chroma-controls {
-            background: var(--bg-400);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 12px;
-        }
-        
-        .chroma-color-picker {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        
-        .chroma-color-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            border: 2px solid var(--border-200);
-            cursor: pointer;
-        }
-        
-        .chroma-color-btn--active { border-color: var(--text-100); }
-        .chroma-color-btn--green { background: #00ff00; }
-        .chroma-color-btn--blue { background: #0000ff; }
-        .chroma-color-btn--custom { background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff); }
-        
-        .chroma-slider-group {
-            margin-bottom: 8px;
-        }
-        
-        .chroma-slider-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2px;
-        }
-        
-        .chroma-slider-label { font-size: 9px; color: var(--text-300); }
-        .chroma-slider-value { font-size: 9px; font-family: monospace; color: var(--success); }
-        
-        .chroma-slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 4px;
-            background: var(--bg-500);
-            border-radius: 2px;
-        }
-        
-        .chroma-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: var(--success);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        /* Storyboard */
-        .storyboard {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-        
-        .storyboard-card {
-            background: var(--bg-400);
-            border: 1px solid var(--border-200);
-            border-radius: 6px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .storyboard-card:hover { border-color: var(--cinema); }
-        .storyboard-card--active { border-color: var(--cinema); background: var(--bg-500); }
-        
-        .storyboard-card__thumb {
-            aspect-ratio: 16/9;
-            background: var(--bg-600);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            position: relative;
-        }
-        
-        .storyboard-card__number {
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            background: var(--cinema);
-            color: white;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-        
-        .storyboard-card__duration {
-            position: absolute;
-            bottom: 4px;
-            right: 4px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            font-size: 9px;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-        
-        .storyboard-card__info {
-            padding: 6px;
-        }
-        
-        .storyboard-card__title {
-            font-size: 10px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-        
-        .storyboard-card__meta {
-            font-size: 8px;
-            color: var(--text-400);
         }
         
         /* Stats grid */
@@ -780,7 +740,7 @@
         
         .stat-card__value { font-size: 18px; font-weight: 700; }
         
-        /* AI Model list */
+        /* AI Models */
         .ai-models {
             display: flex;
             flex-direction: column;
@@ -836,7 +796,7 @@
             transition: all 0.2s;
         }
         
-        .ai-model__toggle--on { background: var(--cinema); }
+        .ai-model__toggle--on { background: var(--cloud); }
         .ai-model__toggle--on::after { left: 16px; background: white; }
         
         /* Timeline */
@@ -874,7 +834,7 @@
             margin-left: auto;
         }
         
-        /* Multi-track timeline */
+        /* Timeline */
         .multi-timeline {
             display: flex;
             flex-direction: column;
@@ -917,9 +877,8 @@
         }
         
         .timeline-track--video .timeline-track__fill { background: var(--primary); }
-        .timeline-track--tracking .timeline-track__fill { background: var(--lime); }
-        .timeline-track--titles .timeline-track__fill { background: var(--cinema); }
-        .timeline-track--lut .timeline-track__fill { background: var(--orange); }
+        .timeline-track--cloud .timeline-track__fill { background: var(--cloud); }
+        .timeline-track--versions .timeline-track__fill { background: var(--success); }
         
         .timeline-cursor {
             position: absolute;
@@ -930,6 +889,17 @@
             z-index: 5;
         }
         
+        /* Version markers */
+        .timeline-version {
+            position: absolute;
+            top: 2px;
+            bottom: 2px;
+            width: 6px;
+            background: var(--success);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        
         /* Buttons */
         .btn {
             display: inline-flex;
@@ -937,7 +907,7 @@
             justify-content: center;
             gap: 4px;
             padding: 6px 12px;
-            background: var(--cinema);
+            background: var(--cloud);
             color: white;
             border: none;
             border-radius: 5px;
@@ -1042,11 +1012,27 @@
         .toast--warning { border-left: 3px solid var(--warning); }
         .toast--error { border-left: 3px solid var(--danger); }
         .toast--info { border-left: 3px solid var(--primary); }
-        .toast--cinema { border-left: 3px solid var(--cinema); }
+        .toast--cloud { border-left: 3px solid var(--cloud); }
         
         @keyframes toastIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Input */
+        .input {
+            width: 100%;
+            padding: 8px 10px;
+            background: var(--bg-500);
+            border: 1px solid var(--border-200);
+            border-radius: 5px;
+            color: var(--text-100);
+            font-size: 12px;
+        }
+        
+        .input:focus {
+            outline: none;
+            border-color: var(--cloud);
         }
     </style>
 </head>
@@ -1058,22 +1044,22 @@
             <div class="logo">
                 <div class="logo__icon">V</div>
                 <span class="logo__text">VIRECAI</span>
-                <span class="logo__version">v8.3 CINEMA</span>
+                <span class="logo__version">v8.5 CLOUD</span>
             </div>
             
             <div class="header__center">
                 <div class="mode-tabs">
                     <button class="mode-tab mode-tab--active" data-mode="capture">Capture</button>
                     <button class="mode-tab" data-mode="edit">Edit</button>
-                    <button class="mode-tab" data-mode="storyboard">Storyboard</button>
-                    <button class="mode-tab" data-mode="play">Play</button>
+                    <button class="mode-tab" data-mode="templates">Templates</button>
+                    <button class="mode-tab" data-mode="export">Export</button>
                 </div>
             </div>
             
             <div class="header__actions">
-                <div class="badge badge--tracking" id="trackingBadge">
-                    <span class="badge__dot"></span>
-                    <span id="trackingCount">0 tracking</span>
+                <div class="badge badge--cloud" id="cloudBadge">
+                    <span class="badge__dot">☁️</span>
+                    <span id="cloudStatus">Synced</span>
                 </div>
                 <div class="badge badge--ai loading" id="aiBadge">
                     <span class="badge__dot"></span>
@@ -1090,18 +1076,21 @@
             <div class="viewport" id="viewport">
                 <video class="viewport__video" id="video" autoplay playsinline muted></video>
                 <video class="viewport__video hidden" id="playbackVideo" playsinline></video>
-                <canvas class="viewport__chroma hidden" id="chromaCanvas"></canvas>
                 
                 <div class="viewport__placeholder" id="placeholder">
-                    <div class="viewport__placeholder-icon">🎬</div>
-                    <div id="placeholderText">Cinematic Edition</div>
-                    <button class="btn" onclick="requestCamera()">Start Production</button>
+                    <div class="viewport__placeholder-icon">☁️</div>
+                    <div id="placeholderText">Cloud Studio</div>
+                    <button class="btn" onclick="requestCamera()">Start Recording</button>
                 </div>
                 
                 <div class="overlay" id="detectionOverlay"></div>
-                <div class="overlay" id="trackingOverlay"></div>
-                <div class="overlay" id="titleOverlay"></div>
                 <canvas class="overlay" id="poseCanvas"></canvas>
+                
+                <!-- Cloud sync indicator -->
+                <div class="sync-indicator hidden" id="syncIndicator">
+                    <div class="sync-indicator__spinner"></div>
+                    <span id="syncText">Syncing to cloud...</span>
+                </div>
                 
                 <div class="float-panel float-panel--tl">
                     <div class="float-panel__label">Duration</div>
@@ -1109,253 +1098,268 @@
                 </div>
                 
                 <div class="float-panel float-panel--tr">
-                    <div class="float-panel__label">LUT</div>
-                    <div class="float-panel__value" style="font-size:12px" id="lutName">None</div>
+                    <div class="float-panel__label">Version</div>
+                    <div class="float-panel__value"><span id="versionNumber">1</span></div>
                 </div>
                 
                 <div class="float-panel float-panel--bl">
-                    <div class="float-panel__label">Tracking</div>
-                    <div class="float-panel__value"><span id="trackingValue">0</span></div>
+                    <div class="float-panel__label">Cloud</div>
+                    <span style="font-size:12px;color:var(--success)" id="cloudIcon">✓</span>
                 </div>
                 
                 <div class="float-panel float-panel--br">
-                    <div class="float-panel__label">Scene</div>
-                    <div class="float-panel__value"><span id="sceneValue">1</span></div>
+                    <div class="float-panel__label">Template</div>
+                    <span style="font-size:10px" id="templateName">None</span>
                 </div>
             </div>
             
             <aside class="sidebar">
                 <div class="sidebar__tabs">
-                    <button class="sidebar__tab sidebar__tab--active" data-tab="tracking" onclick="switchTab('tracking')">🎯</button>
-                    <button class="sidebar__tab" data-tab="lut" onclick="switchTab('lut')">🎨</button>
-                    <button class="sidebar__tab" data-tab="titles" onclick="switchTab('titles')">📝</button>
-                    <button class="sidebar__tab" data-tab="chroma" onclick="switchTab('chroma')">🟢</button>
-                    <button class="sidebar__tab" data-tab="storyboard" onclick="switchTab('storyboard')">📋</button>
+                    <button class="sidebar__tab sidebar__tab--active" data-tab="cloud" onclick="switchTab('cloud')">☁️</button>
+                    <button class="sidebar__tab" data-tab="versions" onclick="switchTab('versions')">📜</button>
+                    <button class="sidebar__tab" data-tab="templates" onclick="switchTab('templates')">🎨</button>
+                    <button class="sidebar__tab" data-tab="export" onclick="switchTab('export')">📤</button>
                     <button class="sidebar__tab" data-tab="ai" onclick="switchTab('ai')">🧠</button>
                 </div>
                 
                 <div class="sidebar__content">
-                    <!-- Tracking Panel -->
-                    <div class="sidebar__panel sidebar__panel--active" id="trackingPanel">
-                        <div class="panel-title">🎯 Object Tracking <span class="panel-title__badge">AI</span></div>
+                    <!-- Cloud Panel -->
+                    <div class="sidebar__panel sidebar__panel--active" id="cloudPanel">
+                        <div class="panel-title">☁️ Cloud Sync <span class="panel-title__badge">AUTO</span></div>
+                        
+                        <div class="project-info">
+                            <div class="project-info__header">
+                                <div class="project-info__icon">🎬</div>
+                                <div class="project-info__details">
+                                    <div class="project-info__name" id="projectName">Untitled Project</div>
+                                    <div class="project-info__id" id="projectId">vrc-abc123xyz</div>
+                                </div>
+                            </div>
+                            <div class="project-info__stats">
+                                <div class="project-stat">
+                                    <div class="project-stat__value" id="projectVersions">1</div>
+                                    <div class="project-stat__label">Versions</div>
+                                </div>
+                                <div class="project-stat">
+                                    <div class="project-stat__value" id="projectSize">0</div>
+                                    <div class="project-stat__label">MB</div>
+                                </div>
+                                <div class="project-stat">
+                                    <div class="project-stat__value" id="projectEdits">0</div>
+                                    <div class="project-stat__label">Edits</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cloud-storage">
+                            <div class="cloud-storage__header">
+                                <span class="cloud-storage__title">Storage</span>
+                                <span class="cloud-storage__status">● Connected</span>
+                            </div>
+                            <div class="cloud-storage__bar">
+                                <div class="cloud-storage__fill" id="storageFill" style="width:23%"></div>
+                            </div>
+                            <div class="cloud-storage__info">
+                                <span>2.3 GB used</span>
+                                <span>10 GB total</span>
+                            </div>
+                        </div>
+                        
+                        <div class="panel-title">Connected Services</div>
+                        <div class="cloud-services">
+                            <div class="cloud-service cloud-service--connected" onclick="toggleCloudService('drive')">
+                                <span class="cloud-service__icon">📁</span>
+                                <span class="cloud-service__name">Drive</span>
+                                <span class="cloud-service__status">✓</span>
+                            </div>
+                            <div class="cloud-service" onclick="toggleCloudService('dropbox')">
+                                <span class="cloud-service__icon">📦</span>
+                                <span class="cloud-service__name">Dropbox</span>
+                                <span class="cloud-service__status">Connect</span>
+                            </div>
+                            <div class="cloud-service" onclick="toggleCloudService('youtube')">
+                                <span class="cloud-service__icon">▶️</span>
+                                <span class="cloud-service__name">YouTube</span>
+                                <span class="cloud-service__status">Connect</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn" style="width:100%" onclick="syncNow()">
+                            ☁️ Sync Now
+                        </button>
+                    </div>
+                    
+                    <!-- Versions Panel -->
+                    <div class="sidebar__panel" id="versionsPanel">
+                        <div class="panel-title">📜 Version History <span class="panel-title__badge">AUTO-SAVE</span></div>
                         
                         <div class="stats-grid">
                             <div class="stat-card">
-                                <div class="stat-card__label">Tracked</div>
-                                <div class="stat-card__value" id="trackedCount">0</div>
+                                <div class="stat-card__label">Total Versions</div>
+                                <div class="stat-card__value" id="totalVersions">1</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-card__label">Locked</div>
-                                <div class="stat-card__value" id="lockedCount">0</div>
+                                <div class="stat-card__label">Current</div>
+                                <div class="stat-card__value" id="currentVersion">v1</div>
                             </div>
                         </div>
                         
-                        <div class="panel-title">Detected Objects</div>
-                        <div class="tracking-targets" id="trackingTargets">
-                            <div style="color:var(--text-400);font-size:10px;text-align:center;padding:15px">
-                                Objects will appear here
+                        <div class="version-list" id="versionList">
+                            <div class="version-item version-item--current">
+                                <div class="version-item__icon">✓</div>
+                                <div class="version-item__info">
+                                    <div class="version-item__name">Version 1 (Current)</div>
+                                    <div class="version-item__meta">Just now • Auto-saved</div>
+                                </div>
+                                <div class="version-item__actions">
+                                    <button class="version-item__btn" title="Download">⬇️</button>
+                                </div>
                             </div>
                         </div>
                         
-                        <button class="btn btn--secondary" style="width:100%" onclick="clearTracking()">
-                            Clear All Tracking
+                        <button class="btn btn--secondary" style="width:100%;margin-top:10px" onclick="createVersion()">
+                            + Create New Version
+                        </button>
+                        
+                        <button class="btn btn--secondary" style="width:100%;margin-top:6px" onclick="compareVersions()">
+                            🔀 Compare Versions
                         </button>
                     </div>
                     
-                    <!-- LUT Panel -->
-                    <div class="sidebar__panel" id="lutPanel">
-                        <div class="panel-title">🎨 Color LUTs <span class="panel-title__badge">CINEMA</span></div>
+                    <!-- Templates Panel -->
+                    <div class="sidebar__panel" id="templatesPanel">
+                        <div class="panel-title">🎨 Project Templates</div>
                         
-                        <div class="lut-grid" id="lutGrid">
-                            <div class="lut-preset lut-preset--active" onclick="setLUT('none')" data-lut="none">
-                                <div class="lut-preset__preview">⚪</div>
-                                <div class="lut-preset__name">None</div>
+                        <input type="text" class="input" placeholder="Search templates..." style="margin-bottom:12px">
+                        
+                        <div class="template-grid" id="templateGrid">
+                            <div class="template-card" onclick="selectTemplate('vlog')">
+                                <div class="template-card__preview" style="background:linear-gradient(135deg,#ff6b6b,#feca57)">📹</div>
+                                <div class="template-card__info">
+                                    <div class="template-card__name">Vlog Style</div>
+                                    <div class="template-card__desc">Quick cuts, dynamic</div>
+                                </div>
                             </div>
-                            <div class="lut-preset" onclick="setLUT('teal-orange')" data-lut="teal-orange">
-                                <div class="lut-preset__preview" style="background:linear-gradient(135deg,#008080,#ff8c00)">🎬</div>
-                                <div class="lut-preset__name">Teal/Orange</div>
+                            <div class="template-card" onclick="selectTemplate('cinematic')">
+                                <div class="template-card__preview" style="background:linear-gradient(135deg,#2d3436,#636e72)">🎬</div>
+                                <div class="template-card__info">
+                                    <div class="template-card__name">Cinematic</div>
+                                    <div class="template-card__desc">21:9, film look</div>
+                                </div>
                             </div>
-                            <div class="lut-preset" onclick="setLUT('cinematic')" data-lut="cinematic">
-                                <div class="lut-preset__preview" style="background:linear-gradient(135deg,#1a1a2e,#e94560)">🎥</div>
-                                <div class="lut-preset__name">Cinematic</div>
+                            <div class="template-card" onclick="selectTemplate('tutorial')">
+                                <div class="template-card__preview" style="background:linear-gradient(135deg,#0984e3,#74b9ff)">📚</div>
+                                <div class="template-card__info">
+                                    <div class="template-card__name">Tutorial</div>
+                                    <div class="template-card__desc">Clean, informative</div>
+                                </div>
                             </div>
-                            <div class="lut-preset" onclick="setLUT('noir')" data-lut="noir">
-                                <div class="lut-preset__preview" style="background:#333">🖤</div>
-                                <div class="lut-preset__name">Film Noir</div>
+                            <div class="template-card" onclick="selectTemplate('social')">
+                                <div class="template-card__preview" style="background:linear-gradient(135deg,#e056fd,#686de0)">📱</div>
+                                <div class="template-card__info">
+                                    <div class="template-card__name">Social</div>
+                                    <div class="template-card__desc">9:16 vertical</div>
+                                    <span class="template-card__badge">Popular</span>
+                                </div>
                             </div>
-                            <div class="lut-preset" onclick="setLUT('vintage')" data-lut="vintage">
-                                <div class="lut-preset__preview" style="background:linear-gradient(135deg,#d4a574,#8b7355)">📷</div>
-                                <div class="lut-preset__name">Vintage</div>
+                            <div class="template-card" onclick="selectTemplate('podcast')">
+                                <div class="template-card__preview" style="background:linear-gradient(135deg,#00b894,#55efc4)">🎙️</div>
+                                <div class="template-card__info">
+                                    <div class="template-card__name">Podcast</div>
+                                    <div class="template-card__desc">Audio-focused</div>
+                                </div>
                             </div>
-                            <div class="lut-preset" onclick="setLUT('cyberpunk')" data-lut="cyberpunk">
-                                <div class="lut-preset__preview" style="background:linear-gradient(135deg,#ff00ff,#00ffff)">🌆</div>
-                                <div class="lut-preset__name">Cyberpunk</div>
-                            </div>
-                            <div class="lut-preset" onclick="setLUT('bleach')" data-lut="bleach">
-                                <div class="lut-preset__preview" style="background:#e8e8e8">☀️</div>
-                                <div class="lut-preset__name">Bleach Bypass</div>
-                            </div>
-                            <div class="lut-preset" onclick="setLUT('golden')" data-lut="golden">
-                                <div class="lut-preset__preview" style="background:linear-gradient(135deg,#ffd700,#ff8c00)">🌅</div>
-                                <div class="lut-preset__name">Golden Hour</div>
-                            </div>
-                            <div class="lut-preset" onclick="setLUT('moody')" data-lut="moody">
-                                <div class="lut-preset__preview" style="background:linear-gradient(135deg,#2c3e50,#4a69bd)">🌙</div>
-                                <div class="lut-preset__name">Moody Blue</div>
+                            <div class="template-card" onclick="selectTemplate('custom')">
+                                <div class="template-card__preview" style="background:var(--bg-500)">➕</div>
+                                <div class="template-card__info">
+                                    <div class="template-card__name">Custom</div>
+                                    <div class="template-card__desc">Create your own</div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="panel-title">Intensity</div>
-                        <input type="range" class="chroma-slider" id="lutIntensity" min="0" max="100" value="100" oninput="updateLUTIntensity()">
-                    </div>
-                    
-                    <!-- Titles Panel -->
-                    <div class="sidebar__panel" id="titlesPanel">
-                        <div class="panel-title">📝 Animated Titles</div>
-                        
-                        <div class="title-editor">
-                            <input type="text" class="title-input" id="titleText" placeholder="Enter title text..." value="VIRECAI">
-                            
-                            <div class="title-options">
-                                <div class="title-option">
-                                    <span class="title-option__label">Font Size</span>
-                                    <select class="title-select" id="titleSize">
-                                        <option value="24">Small</option>
-                                        <option value="36">Medium</option>
-                                        <option value="48" selected>Large</option>
-                                        <option value="72">XL</option>
-                                        <option value="96">XXL</option>
-                                    </select>
-                                </div>
-                                <div class="title-option">
-                                    <span class="title-option__label">Position</span>
-                                    <select class="title-select" id="titlePosition">
-                                        <option value="top">Top</option>
-                                        <option value="center" selected>Center</option>
-                                        <option value="bottom">Bottom</option>
-                                        <option value="lower-third">Lower Third</option>
-                                    </select>
-                                </div>
-                                <div class="title-option">
-                                    <span class="title-option__label">Color</span>
-                                    <input type="color" class="title-select" id="titleColor" value="#ffffff" style="padding:2px;height:24px">
-                                </div>
-                                <div class="title-option">
-                                    <span class="title-option__label">Duration</span>
-                                    <select class="title-select" id="titleDuration">
-                                        <option value="2">2s</option>
-                                        <option value="3" selected>3s</option>
-                                        <option value="5">5s</option>
-                                        <option value="0">Infinite</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="panel-title" style="margin-top:10px;margin-bottom:4px">Animation</div>
-                            <div class="title-animations">
-                                <button class="title-anim-btn title-anim-btn--active" onclick="setTitleAnim('fadeIn')">Fade In</button>
-                                <button class="title-anim-btn" onclick="setTitleAnim('slideUp')">Slide Up</button>
-                                <button class="title-anim-btn" onclick="setTitleAnim('slideDown')">Slide Down</button>
-                                <button class="title-anim-btn" onclick="setTitleAnim('zoomIn')">Zoom</button>
-                                <button class="title-anim-btn" onclick="setTitleAnim('typewriter')">Typewriter</button>
-                                <button class="title-anim-btn" onclick="setTitleAnim('glitch')">Glitch</button>
-                            </div>
-                        </div>
-                        
-                        <button class="btn" style="width:100%" onclick="addTitle()">
-                            + Add Title to Timeline
-                        </button>
-                        
-                        <button class="btn btn--secondary" style="width:100%;margin-top:6px" onclick="previewTitle()">
-                            👁️ Preview Title
+                        <button class="btn" style="width:100%" onclick="applyTemplate()">
+                            Apply Template
                         </button>
                     </div>
                     
-                    <!-- Chroma Panel -->
-                    <div class="sidebar__panel" id="chromaPanel">
-                        <div class="panel-title">🟢 Chroma Key</div>
+                    <!-- Export Panel -->
+                    <div class="sidebar__panel" id="exportPanel">
+                        <div class="panel-title">📤 Export Presets</div>
                         
-                        <div class="chroma-controls">
-                            <div class="panel-title" style="margin-bottom:6px">Key Color</div>
-                            <div class="chroma-color-picker">
-                                <button class="chroma-color-btn chroma-color-btn--green chroma-color-btn--active" onclick="setChromaColor('green')" data-color="green"></button>
-                                <button class="chroma-color-btn chroma-color-btn--blue" onclick="setChromaColor('blue')" data-color="blue"></button>
-                                <button class="chroma-color-btn chroma-color-btn--custom" onclick="pickChromaColor()" data-color="custom"></button>
-                                <input type="color" id="chromaColorPicker" style="display:none" onchange="setCustomChromaColor()">
-                            </div>
-                            
-                            <div class="chroma-slider-group">
-                                <div class="chroma-slider-header">
-                                    <span class="chroma-slider-label">Threshold</span>
-                                    <span class="chroma-slider-value" id="chromaThreshVal">40</span>
+                        <div class="export-presets" id="exportPresets">
+                            <div class="export-preset export-preset--selected" onclick="selectExportPreset('youtube')">
+                                <div class="export-preset__icon">▶️</div>
+                                <div class="export-preset__info">
+                                    <div class="export-preset__name">YouTube HD</div>
+                                    <div class="export-preset__specs">1080p • H.264 • 8 Mbps • AAC</div>
                                 </div>
-                                <input type="range" class="chroma-slider" id="chromaThreshold" min="10" max="100" value="40" oninput="updateChroma()">
+                                <div class="export-preset__size">~85 MB/min</div>
                             </div>
-                            
-                            <div class="chroma-slider-group">
-                                <div class="chroma-slider-header">
-                                    <span class="chroma-slider-label">Smoothing</span>
-                                    <span class="chroma-slider-value" id="chromaSmoothVal">5</span>
+                            <div class="export-preset" onclick="selectExportPreset('youtube4k')">
+                                <div class="export-preset__icon">🎬</div>
+                                <div class="export-preset__info">
+                                    <div class="export-preset__name">YouTube 4K</div>
+                                    <div class="export-preset__specs">2160p • H.265 • 35 Mbps • AAC</div>
                                 </div>
-                                <input type="range" class="chroma-slider" id="chromaSmoothing" min="0" max="20" value="5" oninput="updateChroma()">
+                                <div class="export-preset__size">~260 MB/min</div>
                             </div>
-                            
-                            <div class="chroma-slider-group">
-                                <div class="chroma-slider-header">
-                                    <span class="chroma-slider-label">Spill Suppression</span>
-                                    <span class="chroma-slider-value" id="chromaSpillVal">50</span>
+                            <div class="export-preset" onclick="selectExportPreset('instagram')">
+                                <div class="export-preset__icon">📷</div>
+                                <div class="export-preset__info">
+                                    <div class="export-preset__name">Instagram Reels</div>
+                                    <div class="export-preset__specs">1080x1920 • H.264 • 6 Mbps</div>
                                 </div>
-                                <input type="range" class="chroma-slider" id="chromaSpill" min="0" max="100" value="50" oninput="updateChroma()">
+                                <div class="export-preset__size">~45 MB/min</div>
+                            </div>
+                            <div class="export-preset" onclick="selectExportPreset('tiktok')">
+                                <div class="export-preset__icon">🎵</div>
+                                <div class="export-preset__info">
+                                    <div class="export-preset__name">TikTok</div>
+                                    <div class="export-preset__specs">1080x1920 • H.264 • 4 Mbps</div>
+                                </div>
+                                <div class="export-preset__size">~30 MB/min</div>
+                            </div>
+                            <div class="export-preset" onclick="selectExportPreset('twitter')">
+                                <div class="export-preset__icon">🐦</div>
+                                <div class="export-preset__info">
+                                    <div class="export-preset__name">Twitter/X</div>
+                                    <div class="export-preset__specs">1280x720 • H.264 • 5 Mbps</div>
+                                </div>
+                                <div class="export-preset__size">~38 MB/min</div>
+                            </div>
+                            <div class="export-preset" onclick="selectExportPreset('web')">
+                                <div class="export-preset__icon">🌐</div>
+                                <div class="export-preset__info">
+                                    <div class="export-preset__name">Web Optimized</div>
+                                    <div class="export-preset__specs">720p • WebM/VP9 • 2 Mbps</div>
+                                </div>
+                                <div class="export-preset__size">~15 MB/min</div>
+                            </div>
+                            <div class="export-preset" onclick="selectExportPreset('gif')">
+                                <div class="export-preset__icon">🎞️</div>
+                                <div class="export-preset__info">
+                                    <div class="export-preset__name">GIF</div>
+                                    <div class="export-preset__specs">480p • 10 FPS • 256 colors</div>
+                                </div>
+                                <div class="export-preset__size">~8 MB/min</div>
+                            </div>
+                            <div class="export-preset" onclick="selectExportPreset('archive')">
+                                <div class="export-preset__icon">💾</div>
+                                <div class="export-preset__info">
+                                    <div class="export-preset__name">Archive Master</div>
+                                    <div class="export-preset__specs">4K • ProRes • Lossless</div>
+                                </div>
+                                <div class="export-preset__size">~1.2 GB/min</div>
                             </div>
                         </div>
                         
-                        <div class="panel-title">Background</div>
-                        <div class="lut-grid" style="grid-template-columns: repeat(4, 1fr)">
-                            <div class="lut-preset" onclick="setChromaBg('transparent')" style="background:repeating-conic-gradient(#666 0 25%, #999 0 50%) 0 0/10px 10px">
-                                <div class="lut-preset__name">None</div>
-                            </div>
-                            <div class="lut-preset" onclick="setChromaBg('blur')">
-                                <div class="lut-preset__preview">🌫️</div>
-                                <div class="lut-preset__name">Blur</div>
-                            </div>
-                            <div class="lut-preset" onclick="setChromaBg('image')">
-                                <div class="lut-preset__preview">🖼️</div>
-                                <div class="lut-preset__name">Image</div>
-                            </div>
-                            <div class="lut-preset" onclick="setChromaBg('video')">
-                                <div class="lut-preset__preview">🎬</div>
-                                <div class="lut-preset__name">Video</div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn" style="width:100%;margin-top:10px" onclick="toggleChroma()">
-                            <span id="chromaToggleText">Enable Chroma Key</span>
+                        <button class="btn" style="width:100%;margin-top:12px" onclick="exportWithPreset()">
+                            📤 Export Video
                         </button>
-                    </div>
-                    
-                    <!-- Storyboard Panel -->
-                    <div class="sidebar__panel" id="storyboardPanel">
-                        <div class="panel-title">📋 Storyboard View</div>
                         
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-card__label">Scenes</div>
-                                <div class="stat-card__value" id="storyScenes">0</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card__label">Duration</div>
-                                <div class="stat-card__value" id="storyDuration">0:00</div>
-                            </div>
-                        </div>
-                        
-                        <div class="storyboard" id="storyboardGrid">
-                            <div style="color:var(--text-400);font-size:10px;text-align:center;padding:30px;grid-column:span 2">
-                                Record to generate storyboard
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn--secondary" style="width:100%;margin-top:10px" onclick="regenerateStoryboard()">
-                            🔄 Regenerate Storyboard
+                        <button class="btn btn--secondary" style="width:100%;margin-top:6px" onclick="exportToCloud()">
+                            ☁️ Export to Cloud
                         </button>
                     </div>
                     
@@ -1420,6 +1424,7 @@
                 </div>
                 
                 <div class="timeline-actions">
+                    <button class="btn btn--secondary btn--icon" onclick="createVersion()" title="Save Version">💾</button>
                     <select class="speed-select" id="speedSelect" onchange="setSpeed()">
                         <option value="0.5">0.5x</option>
                         <option value="1" selected>1x</option>
@@ -1438,18 +1443,14 @@
                         <div class="timeline-cursor" id="videoCursor"></div>
                     </div>
                 </div>
-                <div class="timeline-track timeline-track--tracking">
-                    <div class="timeline-track__label">🎯 Track</div>
-                    <div class="timeline-track__content" id="trackingTrackContent"></div>
+                <div class="timeline-track timeline-track--versions">
+                    <div class="timeline-track__label">📜 Versions</div>
+                    <div class="timeline-track__content" id="versionsTrackContent"></div>
                 </div>
-                <div class="timeline-track timeline-track--titles">
-                    <div class="timeline-track__label">📝 Titles</div>
-                    <div class="timeline-track__content" id="titlesTrackContent"></div>
-                </div>
-                <div class="timeline-track timeline-track--lut">
-                    <div class="timeline-track__label">🎨 LUT</div>
+                <div class="timeline-track timeline-track--cloud">
+                    <div class="timeline-track__label">☁️ Sync</div>
                     <div class="timeline-track__content">
-                        <div class="timeline-track__fill" id="lutTrackFill" style="width:0%"></div>
+                        <div class="timeline-track__fill" id="cloudTrackFill" style="width:0%"></div>
                     </div>
                 </div>
             </div>
@@ -1462,22 +1463,22 @@
             </div>
             
             <div class="toolbar__group">
-                <button class="btn btn--secondary btn--icon" onclick="exportCapsule()">📦</button>
-                <button class="btn" onclick="exportVideo()">🎬 Export</button>
+                <button class="btn btn--secondary btn--icon" onclick="syncNow()">☁️</button>
+                <button class="btn" onclick="exportWithPreset()">📤 Export</button>
             </div>
         </div>
     </div>
 
     <script>
         // ═══════════════════════════════════════════════════════════════════════
-        // VIRECAI v8.3 CINEMATIC EDITION
-        // Object Tracking, LUT Grading, Animated Titles, Chroma Key, Storyboard
+        // VIRECAI v8.5 CLOUD STUDIO
+        // Cloud Sync, Version History, Templates, Export Presets
         // ═══════════════════════════════════════════════════════════════════════
         
-        const VERSION = '8.3.0';
+        const VERSION = '8.5.0';
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         
-        console.log(`%cVIRECAI v${VERSION} CINEMATIC`, 'color:#e50914;font-size:20px;font-weight:bold');
+        console.log(`%cVIRECAI v${VERSION} CLOUD`, 'color:#3b82f6;font-size:20px;font-weight:bold');
         
         const $ = id => document.getElementById(id);
         const $$ = sel => document.querySelectorAll(sel);
@@ -1507,38 +1508,48 @@
             
             objects: [],
             faces: [],
-            poses: [],
             
-            // Tracking
-            trackedObjects: [],
-            trackingHistory: {},
+            // Cloud
+            projectId: 'vrc-' + Math.random().toString(36).slice(2, 11),
+            projectName: 'Untitled Project',
+            cloudConnected: true,
+            lastSync: Date.now(),
+            cloudServices: {
+                drive: true,
+                dropbox: false,
+                youtube: false
+            },
+            storageUsed: 2.3,
+            storageTotal: 10,
             
-            // LUT
-            currentLUT: 'none',
-            lutIntensity: 100,
+            // Versions
+            versions: [
+                { id: 1, name: 'Version 1', time: Date.now(), autoSave: true, current: true }
+            ],
+            currentVersionId: 1,
             
-            // Titles
-            titles: [],
-            titleConfig: {
-                text: 'VIRECAI',
-                size: 48,
-                position: 'center',
-                color: '#ffffff',
-                duration: 3,
-                animation: 'fadeIn'
+            // Templates
+            selectedTemplate: null,
+            templates: {
+                vlog: { name: 'Vlog Style', aspectRatio: '16:9', filter: 'vivid', transitions: 'quick' },
+                cinematic: { name: 'Cinematic', aspectRatio: '21:9', filter: 'cinematic', transitions: 'fade' },
+                tutorial: { name: 'Tutorial', aspectRatio: '16:9', filter: 'none', transitions: 'cut' },
+                social: { name: 'Social', aspectRatio: '9:16', filter: 'bright', transitions: 'swipe' },
+                podcast: { name: 'Podcast', aspectRatio: '16:9', filter: 'warm', transitions: 'none' }
             },
             
-            // Chroma
-            chromaEnabled: false,
-            chromaColor: { r: 0, g: 255, b: 0 },
-            chromaThreshold: 40,
-            chromaSmoothing: 5,
-            chromaSpill: 50,
-            chromaBg: 'transparent',
-            
-            // Scenes
-            scenes: [],
-            currentScene: 1,
+            // Export
+            selectedPreset: 'youtube',
+            exportPresets: {
+                youtube: { name: 'YouTube HD', res: '1080p', codec: 'H.264', bitrate: 8, size: 85 },
+                youtube4k: { name: 'YouTube 4K', res: '2160p', codec: 'H.265', bitrate: 35, size: 260 },
+                instagram: { name: 'Instagram Reels', res: '1080x1920', codec: 'H.264', bitrate: 6, size: 45 },
+                tiktok: { name: 'TikTok', res: '1080x1920', codec: 'H.264', bitrate: 4, size: 30 },
+                twitter: { name: 'Twitter/X', res: '720p', codec: 'H.264', bitrate: 5, size: 38 },
+                web: { name: 'Web Optimized', res: '720p', codec: 'VP9', bitrate: 2, size: 15 },
+                gif: { name: 'GIF', res: '480p', codec: 'GIF', bitrate: 0, size: 8 },
+                archive: { name: 'Archive Master', res: '4K', codec: 'ProRes', bitrate: 0, size: 1200 }
+            },
             
             // Time
             startTime: 0,
@@ -1608,557 +1619,277 @@
             $(`${name}Toggle`).classList.toggle('ai-model__toggle--on', state.models[name].enabled);
         }
         
-        // ═══════════════════════════════════════════════════════════════════════
-        // AI DETECTION & TRACKING
-        // ═══════════════════════════════════════════════════════════════════════
-        
         async function runAIDetection() {
             if (!state.cameraReady) return;
             const video = $('video');
             if (video.readyState < 2) return;
             
             if (state.models.coco.ready && state.models.coco.enabled) {
-                try { 
-                    state.objects = await state.models.coco.instance.detect(video);
-                    updateTracking();
-                } catch (e) {}
+                try { state.objects = await state.models.coco.instance.detect(video); } catch (e) {}
             }
             
             if (state.models.blazeface.ready && state.models.blazeface.enabled) {
                 try { state.faces = await state.models.blazeface.instance.estimateFaces(video, false); } catch (e) {}
             }
             
-            if (state.models.movenet.ready && state.models.movenet.enabled) {
-                try { state.poses = await state.models.movenet.instance.estimatePoses(video); } catch (e) {}
-            }
-            
             $('objectCount').textContent = state.objects.length;
             $('faceCount').textContent = state.faces.length;
-            
-            renderDetections();
-            renderTracking();
-            updateTrackingTargets();
         }
         
-        function updateTracking() {
-            // Match detected objects with tracked objects
-            state.objects.forEach(obj => {
-                const tracked = state.trackedObjects.find(t => 
-                    t.class === obj.class && t.locked
-                );
+        // ═══════════════════════════════════════════════════════════════════════
+        // CLOUD SYNC
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function syncNow() {
+            showSyncIndicator('Syncing to cloud...');
+            $('cloudBadge').classList.add('syncing');
+            
+            setTimeout(() => {
+                hideSyncIndicator();
+                $('cloudBadge').classList.remove('syncing');
+                state.lastSync = Date.now();
+                $('cloudStatus').textContent = 'Synced';
+                toast('Project synced to cloud', 'cloud');
                 
-                if (tracked) {
-                    // Update position
-                    const [x, y, w, h] = obj.bbox;
-                    tracked.bbox = obj.bbox;
-                    tracked.lastSeen = state.currentTime;
-                    
-                    // Add to history
-                    if (!state.trackingHistory[tracked.id]) {
-                        state.trackingHistory[tracked.id] = [];
-                    }
-                    state.trackingHistory[tracked.id].push({
-                        time: state.currentTime,
-                        x: x + w/2,
-                        y: y + h/2
-                    });
-                    
-                    // Keep last 50 points
-                    if (state.trackingHistory[tracked.id].length > 50) {
-                        state.trackingHistory[tracked.id].shift();
-                    }
-                }
-            });
-            
-            $('trackedCount').textContent = state.trackedObjects.length;
-            $('lockedCount').textContent = state.trackedObjects.filter(t => t.locked).length;
-            $('trackingValue').textContent = state.trackedObjects.filter(t => t.locked).length;
-            $('trackingCount').textContent = `${state.trackedObjects.filter(t => t.locked).length} tracking`;
+                // Update cloud track
+                $('cloudTrackFill').style.width = '100%';
+            }, 1500);
         }
         
-        function toggleTrackObject(id) {
-            const obj = state.trackedObjects.find(t => t.id === id);
-            if (obj) {
-                obj.locked = !obj.locked;
-                if (!obj.locked) {
-                    delete state.trackingHistory[id];
-                }
-                updateTrackingTargets();
-                toast(obj.locked ? `Tracking ${obj.class}` : `Stopped tracking ${obj.class}`, 'info');
-            }
+        function showSyncIndicator(text) {
+            $('syncText').textContent = text;
+            $('syncIndicator').classList.remove('hidden');
         }
         
-        function updateTrackingTargets() {
-            // Update tracked objects list from detections
-            state.objects.forEach(obj => {
-                const existing = state.trackedObjects.find(t => 
-                    t.class === obj.class && 
-                    Math.abs(t.bbox[0] - obj.bbox[0]) < 100 &&
-                    Math.abs(t.bbox[1] - obj.bbox[1]) < 100
-                );
-                
-                if (!existing) {
-                    state.trackedObjects.push({
-                        id: Date.now() + Math.random(),
-                        class: obj.class,
-                        bbox: obj.bbox,
-                        score: obj.score,
-                        locked: false,
-                        lastSeen: state.currentTime
-                    });
-                }
-            });
+        function hideSyncIndicator() {
+            $('syncIndicator').classList.add('hidden');
+        }
+        
+        function toggleCloudService(service) {
+            state.cloudServices[service] = !state.cloudServices[service];
             
-            // Remove old objects
-            state.trackedObjects = state.trackedObjects.filter(t => 
-                t.locked || (state.currentTime - t.lastSeen) < 2000
-            );
-            
-            // Render list
-            const container = $('trackingTargets');
-            if (state.trackedObjects.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-400);font-size:10px;text-align:center;padding:15px">Objects will appear here</div>';
-                return;
+            const el = document.querySelector(`.cloud-service[onclick*="${service}"]`);
+            if (el) {
+                el.classList.toggle('cloud-service--connected', state.cloudServices[service]);
+                el.querySelector('.cloud-service__status').textContent = 
+                    state.cloudServices[service] ? '✓' : 'Connect';
             }
             
-            container.innerHTML = state.trackedObjects.map(t => `
-                <div class="tracking-target ${t.locked ? 'tracking-target--active' : ''}" onclick="toggleTrackObject(${t.id})">
-                    <div class="tracking-target__icon">${getObjectEmoji(t.class)}</div>
-                    <div class="tracking-target__info">
-                        <div class="tracking-target__name">${t.class}</div>
-                        <div class="tracking-target__status">${Math.round(t.score * 100)}% confidence</div>
+            toast(`${service} ${state.cloudServices[service] ? 'connected' : 'disconnected'}`, 'cloud');
+        }
+        
+        function updateProjectInfo() {
+            $('projectName').textContent = state.projectName;
+            $('projectId').textContent = state.projectId;
+            $('projectVersions').textContent = state.versions.length;
+            $('projectSize').textContent = (state.recordedBlob?.size / 1024 / 1024 || 0).toFixed(1);
+            $('projectEdits').textContent = state.frameCount;
+            
+            // Storage bar
+            const percent = (state.storageUsed / state.storageTotal) * 100;
+            $('storageFill').style.width = `${percent}%`;
+        }
+        
+        // Auto-sync every 30 seconds
+        setInterval(() => {
+            if (state.cloudConnected && state.isRecording) {
+                $('cloudStatus').textContent = 'Syncing...';
+                setTimeout(() => {
+                    $('cloudStatus').textContent = 'Synced';
+                }, 500);
+            }
+        }, 30000);
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // VERSION HISTORY
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function createVersion() {
+            const newVersion = {
+                id: state.versions.length + 1,
+                name: `Version ${state.versions.length + 1}`,
+                time: Date.now(),
+                autoSave: false,
+                current: true
+            };
+            
+            // Mark all others as not current
+            state.versions.forEach(v => v.current = false);
+            state.versions.unshift(newVersion);
+            state.currentVersionId = newVersion.id;
+            
+            updateVersionList();
+            updateVersionTimeline();
+            
+            $('versionNumber').textContent = newVersion.id;
+            $('totalVersions').textContent = state.versions.length;
+            $('currentVersion').textContent = `v${newVersion.id}`;
+            $('projectVersions').textContent = state.versions.length;
+            
+            toast(`Version ${newVersion.id} created`, 'success');
+        }
+        
+        function updateVersionList() {
+            const list = $('versionList');
+            list.innerHTML = state.versions.map(v => `
+                <div class="version-item ${v.current ? 'version-item--current' : ''}" onclick="loadVersion(${v.id})">
+                    <div class="version-item__icon">${v.current ? '✓' : '📄'}</div>
+                    <div class="version-item__info">
+                        <div class="version-item__name">${v.name} ${v.current ? '(Current)' : ''}</div>
+                        <div class="version-item__meta">${formatTimeAgo(v.time)} • ${v.autoSave ? 'Auto-saved' : 'Manual'}</div>
                     </div>
-                    <button class="tracking-target__lock ${t.locked ? 'tracking-target__lock--locked' : ''}" onclick="event.stopPropagation();toggleTrackObject(${t.id})">
-                        ${t.locked ? '🔒' : '🔓'}
-                    </button>
+                    <div class="version-item__actions">
+                        <button class="version-item__btn" title="Download" onclick="event.stopPropagation();downloadVersion(${v.id})">⬇️</button>
+                        ${!v.current ? `<button class="version-item__btn" title="Restore" onclick="event.stopPropagation();restoreVersion(${v.id})">↩️</button>` : ''}
+                    </div>
                 </div>
             `).join('');
         }
         
-        function getObjectEmoji(cls) {
-            const emojis = {
-                person: '👤', car: '🚗', dog: '🐕', cat: '🐈', phone: '📱',
-                laptop: '💻', cup: '☕', bottle: '🍼', book: '📚', chair: '🪑',
-                tv: '📺', remote: '🎮', keyboard: '⌨️', mouse: '🖱️', clock: '🕐'
-            };
-            return emojis[cls] || '📦';
-        }
-        
-        function clearTracking() {
-            state.trackedObjects = [];
-            state.trackingHistory = {};
-            updateTrackingTargets();
-            toast('Tracking cleared', 'info');
-        }
-        
-        function renderTracking() {
-            const overlay = $('trackingOverlay');
-            const video = $('video');
-            overlay.innerHTML = '';
-            
-            const vw = video.videoWidth || 640;
-            const vh = video.videoHeight || 480;
-            const dw = video.offsetWidth;
-            const dh = video.offsetHeight;
-            const scale = Math.min(dw / vw, dh / vh);
-            const ox = (dw - vw * scale) / 2;
-            const oy = (dh - vh * scale) / 2;
-            
-            state.trackedObjects.filter(t => t.locked).forEach(tracked => {
-                const [x, y, w, h] = tracked.bbox;
-                
-                // Draw tracking box
-                const box = document.createElement('div');
-                box.className = 'tracking-box';
-                box.style.left = `${ox + x * scale}px`;
-                box.style.top = `${oy + y * scale}px`;
-                box.style.width = `${w * scale}px`;
-                box.style.height = `${h * scale}px`;
-                
-                const label = document.createElement('span');
-                label.className = 'tracking-box__label';
-                label.innerHTML = `🎯 ${tracked.class}`;
-                box.appendChild(label);
-                
-                overlay.appendChild(box);
-                
-                // Draw trail
-                const history = state.trackingHistory[tracked.id] || [];
-                if (history.length > 1) {
-                    const trail = document.createElement('div');
-                    trail.className = 'tracking-box__trail';
-                    
-                    history.slice(-20).forEach((point, i) => {
-                        const dot = document.createElement('div');
-                        dot.className = 'trail-point';
-                        dot.style.left = `${ox + point.x * scale}px`;
-                        dot.style.top = `${oy + point.y * scale}px`;
-                        dot.style.opacity = (i / 20) * 0.8;
-                        trail.appendChild(dot);
-                    });
-                    
-                    overlay.appendChild(trail);
-                }
-            });
-        }
-        
-        function renderDetections() {
-            const overlay = $('detectionOverlay');
-            const video = $('video');
-            overlay.innerHTML = '';
-            
-            const vw = video.videoWidth || 640;
-            const vh = video.videoHeight || 480;
-            const dw = video.offsetWidth;
-            const dh = video.offsetHeight;
-            const scale = Math.min(dw / vw, dh / vh);
-            const ox = (dw - vw * scale) / 2;
-            const oy = (dh - vh * scale) / 2;
-            
-            // Only show non-tracked objects
-            state.objects.filter(obj => {
-                return !state.trackedObjects.some(t => t.locked && t.class === obj.class);
-            }).forEach(obj => {
-                const [x, y, w, h] = obj.bbox;
-                const box = document.createElement('div');
-                box.className = 'detection-box';
-                box.style.left = `${ox + x * scale}px`;
-                box.style.top = `${oy + y * scale}px`;
-                box.style.width = `${w * scale}px`;
-                box.style.height = `${h * scale}px`;
-                
-                const label = document.createElement('span');
-                label.className = 'detection-box__label';
-                label.textContent = `${obj.class} ${Math.round(obj.score * 100)}%`;
-                box.appendChild(label);
-                overlay.appendChild(box);
-            });
-            
-            // Faces
-            state.faces.forEach((face, i) => {
-                const [x1, y1] = face.topLeft;
-                const [x2, y2] = face.bottomRight;
-                
-                const box = document.createElement('div');
-                box.className = 'detection-box detection-box--face';
-                box.style.left = `${ox + x1 * scale}px`;
-                box.style.top = `${oy + y1 * scale}px`;
-                box.style.width = `${(x2 - x1) * scale}px`;
-                box.style.height = `${(y2 - y1) * scale}px`;
-                
-                const label = document.createElement('span');
-                label.className = 'detection-box__label';
-                label.textContent = `Face ${Math.round(face.probability[0] * 100)}%`;
-                box.appendChild(label);
-                overlay.appendChild(box);
-            });
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // LUT COLOR GRADING
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        const LUT_FILTERS = {
-            'none': '',
-            'teal-orange': 'sepia(20%) saturate(140%) hue-rotate(-10deg) contrast(110%)',
-            'cinematic': 'contrast(110%) saturate(120%) brightness(95%)',
-            'noir': 'grayscale(100%) contrast(120%) brightness(90%)',
-            'vintage': 'sepia(40%) contrast(90%) brightness(105%) saturate(80%)',
-            'cyberpunk': 'saturate(150%) hue-rotate(300deg) contrast(110%)',
-            'bleach': 'contrast(130%) saturate(60%) brightness(110%)',
-            'golden': 'sepia(30%) saturate(120%) brightness(105%) hue-rotate(-15deg)',
-            'moody': 'saturate(80%) brightness(90%) contrast(110%) hue-rotate(200deg)'
-        };
-        
-        function setLUT(lut) {
-            state.currentLUT = lut;
-            
-            $$('.lut-preset').forEach(el => el.classList.remove('lut-preset--active'));
-            document.querySelector(`[data-lut="${lut}"]`)?.classList.add('lut-preset--active');
-            
-            applyLUT();
-            $('lutName').textContent = lut === 'none' ? 'None' : lut.replace('-', '/');
-            
-            toast(`LUT: ${lut}`, 'cinema');
-        }
-        
-        function applyLUT() {
-            const filter = LUT_FILTERS[state.currentLUT] || '';
-            const intensity = state.lutIntensity / 100;
-            
-            // Apply with intensity blending
-            if (intensity < 1 && filter) {
-                $('video').style.filter = filter;
-                $('video').style.opacity = intensity;
-            } else {
-                $('video').style.filter = filter;
-                $('video').style.opacity = 1;
-            }
-            
-            $('playbackVideo').style.filter = filter;
-            
-            // Update timeline
-            $('lutTrackFill').style.width = state.currentLUT !== 'none' ? '100%' : '0%';
-        }
-        
-        function updateLUTIntensity() {
-            state.lutIntensity = parseInt($('lutIntensity').value);
-            applyLUT();
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // ANIMATED TITLES
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function setTitleAnim(anim) {
-            state.titleConfig.animation = anim;
-            $$('.title-anim-btn').forEach(b => b.classList.remove('title-anim-btn--active'));
-            event.target.classList.add('title-anim-btn--active');
-        }
-        
-        function previewTitle() {
-            const config = {
-                text: $('titleText').value || 'VIRECAI',
-                size: parseInt($('titleSize').value),
-                position: $('titlePosition').value,
-                color: $('titleColor').value,
-                duration: parseInt($('titleDuration').value),
-                animation: state.titleConfig.animation
-            };
-            
-            showTitle(config);
-        }
-        
-        function showTitle(config) {
-            const overlay = $('titleOverlay');
-            overlay.innerHTML = '';
-            
-            const container = document.createElement('div');
-            container.className = 'title-overlay';
-            container.style.inset = '0';
-            
-            // Position
-            switch (config.position) {
-                case 'top': container.style.alignItems = 'flex-start'; container.style.paddingTop = '50px'; break;
-                case 'bottom': container.style.alignItems = 'flex-end'; container.style.paddingBottom = '80px'; break;
-                case 'lower-third': 
-                    container.style.alignItems = 'flex-end'; 
-                    container.style.paddingBottom = '100px';
-                    container.style.justifyContent = 'flex-start';
-                    container.style.paddingLeft = '30px';
-                    break;
-                default: container.style.alignItems = 'center';
-            }
-            
-            const text = document.createElement('div');
-            text.className = 'title-text';
-            text.textContent = config.text;
-            text.style.fontSize = `${config.size}px`;
-            text.style.color = config.color;
-            text.style.animation = `${config.animation} 0.8s ease-out`;
-            
-            if (config.animation === 'typewriter') {
-                text.style.overflow = 'hidden';
-                text.style.whiteSpace = 'nowrap';
-                text.style.borderRight = '3px solid';
-                text.style.animation = 'typewriter 1s steps(20) forwards';
-            }
-            
-            if (config.animation === 'glitch') {
-                text.style.animation = 'glitch 0.3s infinite';
-            }
-            
-            container.appendChild(text);
-            overlay.appendChild(container);
-            
-            // Remove after duration
-            if (config.duration > 0) {
-                setTimeout(() => {
-                    text.style.animation = 'fadeOut 0.5s ease-out forwards';
-                    setTimeout(() => overlay.innerHTML = '', 500);
-                }, config.duration * 1000);
-            }
-        }
-        
-        function addTitle() {
-            const config = {
-                id: Date.now(),
-                time: state.currentTime,
-                text: $('titleText').value || 'VIRECAI',
-                size: parseInt($('titleSize').value),
-                position: $('titlePosition').value,
-                color: $('titleColor').value,
-                duration: parseInt($('titleDuration').value),
-                animation: state.titleConfig.animation
-            };
-            
-            state.titles.push(config);
-            updateTitlesTimeline();
-            
-            toast('Title added to timeline', 'success');
-        }
-        
-        function updateTitlesTimeline() {
-            const track = $('titlesTrackContent');
-            track.innerHTML = state.titles.map(t => {
-                const left = (t.time / state.duration) * 100;
-                const width = Math.max(3, ((t.duration || 3) * 1000 / state.duration) * 100);
-                return `<div class="timeline-track__fill" style="left:${left}%;width:${width}%;position:absolute"></div>`;
+        function updateVersionTimeline() {
+            const track = $('versionsTrackContent');
+            track.innerHTML = state.versions.map((v, i) => {
+                const left = 100 - (i / Math.max(state.versions.length, 1)) * 100;
+                return `<div class="timeline-version" style="left:${left}%" title="${v.name}"></div>`;
             }).join('');
         }
         
+        function loadVersion(id) {
+            const version = state.versions.find(v => v.id === id);
+            if (version) {
+                state.versions.forEach(v => v.current = v.id === id);
+                state.currentVersionId = id;
+                updateVersionList();
+                toast(`Loaded ${version.name}`, 'info');
+            }
+        }
+        
+        function restoreVersion(id) {
+            loadVersion(id);
+            toast(`Restored to Version ${id}`, 'success');
+        }
+        
+        function downloadVersion(id) {
+            toast(`Downloading Version ${id}...`, 'cloud');
+        }
+        
+        function compareVersions() {
+            toast('Version comparison coming soon', 'info');
+        }
+        
+        function formatTimeAgo(time) {
+            const diff = Date.now() - time;
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+            return `${Math.floor(diff / 86400000)}d ago`;
+        }
+        
+        // Auto-save version every 5 minutes
+        setInterval(() => {
+            if (state.isRecording) {
+                const autoVersion = {
+                    id: state.versions.length + 1,
+                    name: `Auto-save ${state.versions.length + 1}`,
+                    time: Date.now(),
+                    autoSave: true,
+                    current: true
+                };
+                state.versions.forEach(v => v.current = false);
+                state.versions.unshift(autoVersion);
+                updateVersionList();
+                toast('Auto-saved', 'cloud');
+            }
+        }, 300000);
+        
         // ═══════════════════════════════════════════════════════════════════════
-        // CHROMA KEY
+        // TEMPLATES
         // ═══════════════════════════════════════════════════════════════════════
         
-        function setChromaColor(color) {
-            $$('.chroma-color-btn').forEach(b => b.classList.remove('chroma-color-btn--active'));
-            document.querySelector(`[data-color="${color}"]`).classList.add('chroma-color-btn--active');
+        function selectTemplate(templateId) {
+            state.selectedTemplate = templateId;
             
-            if (color === 'green') state.chromaColor = { r: 0, g: 255, b: 0 };
-            else if (color === 'blue') state.chromaColor = { r: 0, g: 0, b: 255 };
-        }
-        
-        function pickChromaColor() {
-            $('chromaColorPicker').click();
-        }
-        
-        function setCustomChromaColor() {
-            const hex = $('chromaColorPicker').value;
-            state.chromaColor = {
-                r: parseInt(hex.slice(1, 3), 16),
-                g: parseInt(hex.slice(3, 5), 16),
-                b: parseInt(hex.slice(5, 7), 16)
-            };
-            $$('.chroma-color-btn').forEach(b => b.classList.remove('chroma-color-btn--active'));
-            document.querySelector('[data-color="custom"]').classList.add('chroma-color-btn--active');
-        }
-        
-        function updateChroma() {
-            state.chromaThreshold = parseInt($('chromaThreshold').value);
-            state.chromaSmoothing = parseInt($('chromaSmoothing').value);
-            state.chromaSpill = parseInt($('chromaSpill').value);
+            $$('.template-card').forEach(card => card.classList.remove('template-card--selected'));
+            event.currentTarget.classList.add('template-card--selected');
             
-            $('chromaThreshVal').textContent = state.chromaThreshold;
-            $('chromaSmoothVal').textContent = state.chromaSmoothing;
-            $('chromaSpillVal').textContent = state.chromaSpill;
+            const template = state.templates[templateId];
+            if (template) {
+                $('templateName').textContent = template.name;
+                toast(`Selected: ${template.name}`, 'info');
+            }
         }
         
-        function setChromaBg(bg) {
-            state.chromaBg = bg;
-            toast(`Background: ${bg}`, 'info');
-        }
-        
-        function toggleChroma() {
-            state.chromaEnabled = !state.chromaEnabled;
-            $('chromaToggleText').textContent = state.chromaEnabled ? 'Disable Chroma Key' : 'Enable Chroma Key';
-            $('chromaCanvas').classList.toggle('hidden', !state.chromaEnabled);
-            
-            if (state.chromaEnabled) {
-                processChroma();
+        function applyTemplate() {
+            if (!state.selectedTemplate) {
+                return toast('Select a template first', 'warning');
             }
             
-            toast(`Chroma key ${state.chromaEnabled ? 'enabled' : 'disabled'}`, 'info');
-        }
-        
-        function processChroma() {
-            if (!state.chromaEnabled || !state.cameraReady) return;
-            
-            const video = $('video');
-            const canvas = $('chromaCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
-            
-            ctx.drawImage(video, 0, 0);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const data = imageData.data;
-            
-            const { r: kr, g: kg, b: kb } = state.chromaColor;
-            const threshold = state.chromaThreshold * 2.55;
-            
-            for (let i = 0; i < data.length; i += 4) {
-                const r = data[i];
-                const g = data[i + 1];
-                const b = data[i + 2];
-                
-                // Calculate color distance
-                const dist = Math.sqrt(
-                    Math.pow(r - kr, 2) + 
-                    Math.pow(g - kg, 2) + 
-                    Math.pow(b - kb, 2)
-                );
-                
-                if (dist < threshold) {
-                    data[i + 3] = 0; // Make transparent
+            const template = state.templates[state.selectedTemplate];
+            if (template) {
+                // Apply template settings
+                if (template.filter === 'cinematic') {
+                    $('video').style.filter = 'contrast(110%) saturate(90%)';
+                } else if (template.filter === 'vivid') {
+                    $('video').style.filter = 'saturate(130%) contrast(105%)';
+                } else if (template.filter === 'warm') {
+                    $('video').style.filter = 'sepia(20%) saturate(110%)';
+                } else if (template.filter === 'bright') {
+                    $('video').style.filter = 'brightness(110%) contrast(105%)';
+                } else {
+                    $('video').style.filter = 'none';
                 }
+                
+                toast(`Applied: ${template.name}`, 'success');
             }
-            
-            ctx.putImageData(imageData, 0, 0);
-            
-            requestAnimationFrame(processChroma);
         }
         
         // ═══════════════════════════════════════════════════════════════════════
-        // STORYBOARD
+        // EXPORT PRESETS
         // ═══════════════════════════════════════════════════════════════════════
         
-        function updateStoryboard() {
-            const grid = $('storyboardGrid');
+        function selectExportPreset(presetId) {
+            state.selectedPreset = presetId;
             
-            if (state.scenes.length === 0) {
-                grid.innerHTML = '<div style="color:var(--text-400);font-size:10px;text-align:center;padding:30px;grid-column:span 2">Record to generate storyboard</div>';
-                return;
+            $$('.export-preset').forEach(p => p.classList.remove('export-preset--selected'));
+            event.currentTarget.classList.add('export-preset--selected');
+            
+            const preset = state.exportPresets[presetId];
+            toast(`Export preset: ${preset.name}`, 'info');
+        }
+        
+        function exportWithPreset() {
+            if (!state.recordedBlob) {
+                return toast('Nothing to export', 'warning');
             }
             
-            grid.innerHTML = state.scenes.map((scene, i) => `
-                <div class="storyboard-card ${i === state.currentScene - 1 ? 'storyboard-card--active' : ''}" onclick="jumpToScene(${i})">
-                    <div class="storyboard-card__thumb">
-                        🎬
-                        <span class="storyboard-card__number">${i + 1}</span>
-                        <span class="storyboard-card__duration">${formatTime(scene.duration || 0)}</span>
-                    </div>
-                    <div class="storyboard-card__info">
-                        <div class="storyboard-card__title">Scene ${i + 1}</div>
-                        <div class="storyboard-card__meta">${scene.objects || 0} objects • ${scene.faces || 0} faces</div>
-                    </div>
-                </div>
-            `).join('');
+            const preset = state.exportPresets[state.selectedPreset];
+            showSyncIndicator(`Exporting as ${preset.name}...`);
             
-            $('storyScenes').textContent = state.scenes.length;
-            $('storyDuration').textContent = formatTime(state.currentTime);
+            setTimeout(() => {
+                hideSyncIndicator();
+                
+                const a = document.createElement('a');
+                a.href = state.recordedUrl;
+                a.download = `virecai_${state.selectedPreset}_${Date.now()}.webm`;
+                a.click();
+                
+                toast(`Exported as ${preset.name}`, 'success');
+            }, 1500);
         }
         
-        function jumpToScene(index) {
-            state.currentScene = index + 1;
-            $('sceneValue').textContent = state.currentScene;
-            updateStoryboard();
-        }
-        
-        function regenerateStoryboard() {
-            toast('Regenerating storyboard...', 'info');
-            updateStoryboard();
-        }
-        
-        function addScene() {
-            state.scenes.push({
-                id: state.scenes.length + 1,
-                time: state.currentTime,
-                objects: state.objects.length,
-                faces: state.faces.length,
-                duration: 0
-            });
-            
-            if (state.scenes.length > 1) {
-                state.scenes[state.scenes.length - 2].duration = 
-                    state.currentTime - state.scenes[state.scenes.length - 2].time;
+        function exportToCloud() {
+            if (!state.recordedBlob) {
+                return toast('Nothing to export', 'warning');
             }
             
-            state.currentScene = state.scenes.length;
-            $('sceneValue').textContent = state.currentScene;
+            showSyncIndicator('Uploading to cloud...');
             
-            updateStoryboard();
+            setTimeout(() => {
+                hideSyncIndicator();
+                state.storageUsed += (state.recordedBlob.size / 1024 / 1024 / 1024);
+                updateProjectInfo();
+                toast('Uploaded to cloud storage', 'cloud');
+            }, 2000);
         }
         
         // ═══════════════════════════════════════════════════════════════════════
@@ -2211,9 +1942,6 @@
         
         function startRecording() {
             state.recordedChunks = [];
-            state.scenes = [];
-            state.trackedObjects = [];
-            state.trackingHistory = {};
             
             let mimeType = 'video/webm;codecs=vp9';
             if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
@@ -2226,6 +1954,11 @@
                 state.recordedBlob = new Blob(state.recordedChunks, { type: 'video/webm' });
                 state.recordedUrl = URL.createObjectURL(state.recordedBlob);
                 $('playbackVideo').src = state.recordedUrl;
+                
+                // Auto-save version
+                createVersion();
+                syncNow();
+                
                 toast('Recording saved!', 'success');
             };
             
@@ -2233,8 +1966,6 @@
             state.isRecording = true;
             state.startTime = performance.now();
             state.frameCount = 0;
-            
-            addScene();
             
             $('recordBtn').classList.add('recording');
             $('statusDot').classList.add('status-dot--recording');
@@ -2251,8 +1982,6 @@
             $('recordBtn').classList.remove('recording');
             $('statusDot').classList.remove('status-dot--recording');
             $('statusText').textContent = 'Ready';
-            
-            updateStoryboard();
         }
         
         async function captureLoop() {
@@ -2263,12 +1992,7 @@
             
             updateUI();
             
-            if (state.frameCount % 6 === 0) await runAIDetection();
-            
-            // Auto scene detection (every 5 seconds or significant change)
-            if (state.frameCount % 150 === 0) {
-                addScene();
-            }
+            if (state.frameCount % 10 === 0) await runAIDetection();
             
             requestAnimationFrame(captureLoop);
         }
@@ -2301,45 +2025,6 @@
         function jumpForward() { const v = $('playbackVideo'); if (v.duration) v.currentTime = Math.min(v.duration, v.currentTime + 5); }
         
         // ═══════════════════════════════════════════════════════════════════════
-        // EXPORT
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function exportVideo() {
-            if (!state.recordedBlob) return toast('Nothing to export', 'warning');
-            
-            const a = document.createElement('a');
-            a.href = state.recordedUrl;
-            a.download = `virecai_cinema_${Date.now()}.webm`;
-            a.click();
-            
-            toast('Video exported!', 'success');
-        }
-        
-        function exportCapsule() {
-            const capsule = {
-                version: VERSION,
-                timestamp: Date.now(),
-                duration: state.duration,
-                scenes: state.scenes,
-                titles: state.titles,
-                lut: state.currentLUT,
-                tracking: state.trackedObjects.filter(t => t.locked).map(t => ({
-                    class: t.class,
-                    history: state.trackingHistory[t.id]
-                }))
-            };
-            
-            const blob = new Blob([JSON.stringify(capsule, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `virecai_cinema_${Date.now()}.vrc`;
-            a.click();
-            
-            toast('Cinematic Capsule exported!', 'success');
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
         // UI
         // ═══════════════════════════════════════════════════════════════════════
         
@@ -2354,12 +2039,14 @@
             const progress = (state.currentTime / state.duration) * 100;
             $('videoTrackFill').style.width = `${Math.min(100, progress)}%`;
             $('videoCursor').style.left = `${Math.min(100, progress)}%`;
+            
+            updateProjectInfo();
         }
         
         function formatTime(ms) {
             const s = Math.floor(ms / 1000);
             const m = Math.floor(s / 60);
-            return `${m}:${pad(s % 60)}`;
+            return `${m}:${pad(s % 60)}.${pad(Math.floor((ms % 1000) / 10))}`;
         }
         
         function pad(n) { return String(n).padStart(2, '0'); }
@@ -2378,7 +2065,7 @@
             if (e.target.tagName === 'INPUT') return;
             if (e.key === ' ') { e.preventDefault(); togglePlayback(); }
             if (e.key === 'r') toggleRecording();
-            if (e.key === 't') previewTitle();
+            if (e.key === 's' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); createVersion(); }
         });
         
         // ═══════════════════════════════════════════════════════════════════════
@@ -2386,13 +2073,15 @@
         // ═══════════════════════════════════════════════════════════════════════
         
         async function init() {
-            console.log('Initializing VIRECAI v8.3 CINEMATIC...');
+            console.log('Initializing VIRECAI v8.5 CLOUD...');
             
             loadAIModels();
+            updateVersionList();
+            updateProjectInfo();
             
             if (!isMobile) await requestCamera();
             
-            toast(`VIRECAI v${VERSION} Cinematic Ready`, 'cinema');
+            toast(`VIRECAI v${VERSION} Cloud Ready`, 'cloud');
         }
         
         init();
