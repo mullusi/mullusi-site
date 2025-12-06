@@ -2,1905 +2,1702 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIRECAI Production System - Complete Smart Video Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>VIRECAI v5.0 | Symbolic Causal Video Intelligence</title>
     <style>
+        /* ═══════════════════════════════════════════════════════════════════════
+           CSS VARIABLES & RESET
+           ═══════════════════════════════════════════════════════════════════════ */
         :root {
-            --primary: #4ecdc4;
-            --secondary: #45b7d1;
-            --accent: #ff6b6b;
-            --warning: #ffa726;
-            --bg-dark: #0a0a12;
-            --bg-panel: rgba(26, 26, 38, 0.95);
-            --border: rgba(255,255,255,0.1);
-            --text: #e0e0e0;
-            --text-dim: #888;
-            --glass: rgba(255,255,255,0.05);
+            /* Colors */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: #16161f;
+            
+            --accent-primary: #00d4ff;
+            --accent-secondary: #7b61ff;
+            --accent-success: #00ff88;
+            --accent-warning: #ffaa00;
+            --accent-danger: #ff4466;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            
+            --border-color: #2a2a3a;
+            --glow-primary: 0 0 20px rgba(0, 212, 255, 0.3);
+            --glow-success: 0 0 20px rgba(0, 255, 136, 0.3);
+            --glow-danger: 0 0 20px rgba(255, 68, 102, 0.4);
+            
+            /* Spacing */
+            --gap-xs: 4px;
+            --gap-sm: 8px;
+            --gap-md: 16px;
+            --gap-lg: 24px;
+            --gap-xl: 32px;
+            
+            /* Timing */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 400ms ease;
+            
+            /* Sizing */
+            --header-height: 56px;
+            --sidebar-width: 320px;
+            --timeline-height: 200px;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0a0a12 0%, #1a1a2e 50%, #16213e 100%);
-            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         
-        /* ═══════════════════════════════════════════════════════════════
-           APP LAYOUT
-           ═══════════════════════════════════════════════════════════════ */
+        /* ═══════════════════════════════════════════════════════════════════════
+           LAYOUT
+           ═══════════════════════════════════════════════════════════════════════ */
         .app-container {
             display: grid;
-            grid-template-rows: auto 1fr auto;
+            grid-template-rows: var(--header-height) 1fr var(--timeline-height);
+            grid-template-columns: 1fr var(--sidebar-width);
             height: 100vh;
-            max-width: 1600px;
-            margin: 0 auto;
+            gap: 1px;
+            background: var(--border-color);
         }
         
         /* Header */
         .header {
-            background: var(--bg-panel);
-            border-bottom: 1px solid var(--border);
-            padding: 0.75rem 1.5rem;
+            grid-column: 1 / -1;
+            background: var(--bg-secondary);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--gap-lg);
+            border-bottom: 1px solid var(--border-color);
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: var(--gap-sm);
         }
         
-        .logo-icon { font-size: 1.5rem; }
-        
-        .logo-text {
-            font-size: 1.4rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--accent), var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .mode-tabs {
-            display: flex;
-            background: rgba(0,0,0,0.3);
-            border-radius: 25px;
-            padding: 4px;
-        }
-        
-        .mode-tab {
-            background: transparent;
-            border: none;
-            color: var(--text-dim);
-            padding: 0.6rem 1.5rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 8px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
         }
         
-        .mode-tab.active {
-            background: var(--primary);
-            color: #000;
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
         
-        .mode-tab:hover:not(.active) {
-            background: rgba(255,255,255,0.1);
-            color: var(--text);
+        .logo-version {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: var(--gap-xs);
+        }
+        
+        /* Header controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-md);
         }
         
         .profile-selector {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-        
-        .profile-btn {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-            padding: 0.4rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .profile-btn.active {
-            background: var(--secondary);
-            color: #000;
-            border-color: var(--secondary);
-        }
-        
-        /* Main Content */
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 450px;
-            gap: 1rem;
-            padding: 1rem;
-            overflow: hidden;
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════
-           LEFT PANEL - VIDEO VIEWPORT
-           ═══════════════════════════════════════════════════════════════ */
-        .left-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .video-viewport {
-            background: #000;
-            border-radius: 16px;
-            position: relative;
-            flex: 1;
-            min-height: 400px;
-            overflow: hidden;
-            border: 2px solid var(--border);
-        }
-        
-        .video-viewport.recording {
-            border-color: var(--accent);
-            box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
-        }
-        
-        #cameraPreview, #videoPlayer {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 14px;
-        }
-        
-        .video-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            gap: 1rem;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-        }
-        
-        .video-placeholder .icon { font-size: 4rem; }
-        
-        /* AI Detection Overlay */
-        .ai-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-        }
-        
-        .detected-box {
-            position: absolute;
-            border: 2px solid var(--primary);
-            border-radius: 4px;
-            background: rgba(78, 205, 196, 0.1);
-            pointer-events: all;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .detected-box:hover {
-            background: rgba(78, 205, 196, 0.3);
-            border-width: 3px;
-        }
-        
-        .detected-label {
-            position: absolute;
-            top: -24px;
-            left: 0;
-            background: var(--primary);
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        
-        /* Status Badges */
-        .viewport-badges {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .badge {
-            background: rgba(0,0,0,0.8);
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .badge.emotion { border-left: 3px solid var(--warning); }
-        .badge.bio { border-left: 3px solid var(--accent); }
-        .badge.geo { border-left: 3px solid var(--secondary); }
-        
-        /* Recording Indicator */
-        .recording-indicator {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: var(--accent);
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            display: none;
-            align-items: center;
-            gap: 8px;
-            animation: pulse 1s infinite;
-        }
-        
-        .recording-indicator.active { display: flex; }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .rec-dot {
-            width: 10px;
-            height: 10px;
-            background: #fff;
-            border-radius: 50%;
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════
-           SENSOR PANEL
-           ═══════════════════════════════════════════════════════════════ */
-        .sensor-panel {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0.75rem;
-        }
-        
-        .sensor-card {
-            background: var(--bg-panel);
-            border-radius: 12px;
-            padding: 1rem;
-            text-align: center;
-            border: 1px solid var(--border);
-            transition: all 0.3s;
-        }
-        
-        .sensor-card.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
-        }
-        
-        .sensor-icon { font-size: 1.3rem; margin-bottom: 0.25rem; }
-        .sensor-value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
-        .sensor-label { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
-        
-        /* ═══════════════════════════════════════════════════════════════
-           CONTROLS BAR
-           ═══════════════════════════════════════════════════════════════ */
-        .controls-bar {
-            background: var(--bg-panel);
-            border-radius: 12px;
-            padding: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            border: 1px solid var(--border);
-        }
-        
-        .ctrl-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 0.75rem 1.25rem;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .ctrl-btn:hover { background: rgba(255,255,255,0.2); }
-        
-        .ctrl-btn.primary {
-            background: var(--primary);
-            color: #000;
-            border-color: var(--primary);
-        }
-        
-        .ctrl-btn.record {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            padding: 0;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
-        }
-        
-        .ctrl-btn.record.active {
-            background: var(--primary);
-            animation: record-pulse 1s infinite;
-        }
-        
-        @keyframes record-pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(78, 205, 196, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(78, 205, 196, 0); }
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════
-           RIGHT PANEL - ORBITAL TIMELINE & MIRROR LLM
-           ═══════════════════════════════════════════════════════════════ */
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        /* Orbital Timeline Container */
-        .orbital-container {
-            background: var(--bg-panel);
-            border-radius: 16px;
-            padding: 1.25rem;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .orbital-title {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════
-           ORBITAL TIMELINE WHEEL - Core Innovation
-           ═══════════════════════════════════════════════════════════════ */
-        .orbital-wheel {
-            width: 380px;
-            height: 380px;
-            position: relative;
-            cursor: grab;
-        }
-        
-        .orbital-wheel:active { cursor: grabbing; }
-        
-        /* Rings */
-        .orbital-ring {
-            position: absolute;
-            border-radius: 50%;
-        }
-        
-        /* Outer Time Ring */
-        .time-ring {
-            top: 0; left: 0; right: 0; bottom: 0;
-            border: 10px solid rgba(255,255,255,0.1);
-        }
-        
-        .time-progress {
-            position: absolute;
-            top: -5px; left: -5px;
-            width: calc(100% + 10px);
-            height: calc(100% + 10px);
-            border-radius: 50%;
-            border: 5px solid transparent;
-            border-top-color: var(--primary);
-            border-right-color: var(--primary);
-            transform: rotate(-90deg);
-            transition: transform 0.1s;
-        }
-        
-        /* Emotion Pulse Ring */
-        .emotion-ring {
-            top: 25px; left: 25px; right: 25px; bottom: 25px;
-            border: 8px solid transparent;
-            background: conic-gradient(
-                from 0deg,
-                var(--accent) 0deg 45deg,
-                var(--warning) 45deg 90deg,
-                #f97316 90deg 135deg,
-                var(--primary) 135deg 180deg,
-                var(--secondary) 180deg 225deg,
-                #8b5cf6 225deg 270deg,
-                #ec4899 270deg 315deg,
-                var(--accent) 315deg 360deg
-            );
-            opacity: 0.5;
-            animation: emotion-rotate 15s linear infinite;
-        }
-        
-        @keyframes emotion-rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Layer Ring */
-        .layer-ring {
-            top: 55px; left: 55px; right: 55px; bottom: 55px;
-            border: 2px dashed rgba(255,255,255,0.2);
-        }
-        
-        /* Biometric Ring */
-        .bio-ring {
-            top: 80px; left: 80px; right: 80px; bottom: 80px;
-            border: 4px solid rgba(255, 107, 107, 0.3);
-            animation: bio-pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes bio-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.02); opacity: 0.6; }
-        }
-        
-        /* Center Core */
-        .center-core {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 130px;
-            height: 130px;
-            background: radial-gradient(circle, var(--primary), var(--secondary));
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 0 40px rgba(78, 205, 196, 0.4);
-            z-index: 10;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .center-core:hover {
-            transform: translate(-50%, -50%) scale(1.05);
-            box-shadow: 0 0 60px rgba(78, 205, 196, 0.6);
-        }
-        
-        .core-time { font-size: 1.6rem; font-weight: 800; color: #000; }
-        .core-frame { font-size: 0.7rem; color: rgba(0,0,0,0.6); }
-        .core-label { font-size: 0.75rem; color: rgba(0,0,0,0.8); margin-top: 4px; }
-        
-        /* Event Nodes */
-        .event-node {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 5;
-        }
-        
-        .event-node:hover {
-            transform: scale(1.5);
-            box-shadow: 0 0 15px rgba(255,255,255,0.6);
-        }
-        
-        .event-node.person { background: var(--accent); }
-        .event-node.object { background: var(--warning); }
-        .event-node.emotion { background: var(--primary); }
-        .event-node.bio { background: var(--secondary); }
-        .event-node.geo { background: #8b5cf6; }
-        
-        /* Layer Toggles */
-        .layer-toggle {
-            position: absolute;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            border: 2px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 5;
-        }
-        
-        .layer-toggle.active {
-            background: var(--primary);
-            color: #000;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
-        }
-        
-        .layer-toggle:hover { transform: scale(1.15); }
-        
-        /* ═══════════════════════════════════════════════════════════════
-           MIRROR LLM PANEL
-           ═══════════════════════════════════════════════════════════════ */
-        .llm-panel {
-            background: var(--bg-panel);
-            border-radius: 16px;
-            padding: 1rem;
-            border: 1px solid var(--border);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        .llm-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        .llm-status {
-            margin-left: auto;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .llm-status .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            animation: blink 1.5s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        
-        .llm-response {
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            border-left: 3px solid var(--primary);
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 0.75rem;
-        }
-        
-        .llm-evidence {
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--border);
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-        
-        .llm-input-container {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .llm-input {
-            flex: 1;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-            border-radius: 25px;
-            padding: 0.75rem 1rem;
-            color: var(--text);
-            font-size: 0.9rem;
-        }
-        
-        .llm-input::placeholder { color: var(--text-dim); }
-        .llm-input:focus { outline: none; border-color: var(--primary); }
-        
-        .llm-send {
-            background: var(--primary);
-            border: none;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            color: #000;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-        }
-        
-        .llm-send:hover { transform: scale(1.1); }
-        
-        /* ═══════════════════════════════════════════════════════════════
-           MLVF DATA PANEL
-           ═══════════════════════════════════════════════════════════════ */
-        .mlvf-panel {
-            background: var(--bg-panel);
-            border-radius: 12px;
-            padding: 1rem;
-            border: 1px solid var(--border);
-        }
-        
-        .mlvf-header {
-            font-size: 0.8rem;
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .mlvf-format {
-            background: var(--glass);
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-        }
-        
-        .mlvf-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-        }
-        
-        .mlvf-item {
-            background: rgba(0,0,0,0.2);
-            padding: 0.6rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 0.75rem;
+            padding: var(--gap-sm) var(--gap-md);
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition-fast);
         }
         
-        .mlvf-item strong {
-            color: var(--text-dim);
-            display: block;
-            margin-bottom: 2px;
-            font-size: 0.65rem;
-            text-transform: uppercase;
+        .profile-selector:hover {
+            border-color: var(--accent-primary);
         }
         
-        /* ═══════════════════════════════════════════════════════════════
-           STATUS BAR
-           ═══════════════════════════════════════════════════════════════ */
-        .status-bar {
-            background: rgba(0,0,0,0.6);
-            padding: 0.6rem 1.5rem;
+        .status-indicator {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 0.8rem;
+            gap: var(--gap-sm);
+            padding: var(--gap-sm) var(--gap-md);
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            font-size: 12px;
         }
         
-        .status-left { display: flex; gap: 1.5rem; }
-        .status-item { display: flex; align-items: center; gap: 0.5rem; }
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--primary);
+            background: var(--accent-success);
         }
-        .status-dot.warning { background: var(--warning); }
-        .status-dot.error { background: var(--accent); }
         
-        /* ═══════════════════════════════════════════════════════════════
-           RESPONSIVE
-           ═══════════════════════════════════════════════════════════════ */
-        @media (max-width: 1200px) {
-            .main-content {
+        .status-dot.recording {
+            background: var(--accent-danger);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Main content */
+        .main-content {
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Viewport */
+        .viewport {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .viewport video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .viewport-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        
+        .viewport-controls {
+            position: absolute;
+            bottom: var(--gap-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: var(--gap-md);
+            pointer-events: auto;
+        }
+        
+        /* Recording state */
+        .viewport.recording {
+            box-shadow: inset 0 0 0 3px var(--accent-danger), var(--glow-danger);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--gap-sm);
+            padding: var(--gap-sm) var(--gap-md);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent-primary);
+        }
+        
+        .btn-primary {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #000;
+        }
+        
+        .btn-primary:hover {
+            background: #00b8e0;
+        }
+        
+        .btn-danger {
+            background: var(--accent-danger);
+            border-color: var(--accent-danger);
+            color: #fff;
+        }
+        
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 18px;
+        }
+        
+        .btn-record {
+            width: 56px;
+            height: 56px;
+            background: var(--accent-danger);
+            border: 3px solid #fff;
+            box-shadow: var(--glow-danger);
+        }
+        
+        .btn-record.recording {
+            background: #fff;
+            border-radius: 8px;
+        }
+        
+        .btn-record.recording::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: var(--accent-danger);
+            border-radius: 4px;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar-tab {
+            flex: 1;
+            padding: var(--gap-md);
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .sidebar-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+        
+        .sidebar-tab.active {
+            color: var(--accent-primary);
+            border-bottom: 2px solid var(--accent-primary);
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--gap-md);
+        }
+        
+        /* Panels */
+        .panel {
+            display: none;
+        }
+        
+        .panel.active {
+            display: block;
+        }
+        
+        /* Sensor cards */
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--gap-sm);
+        }
+        
+        .sensor-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: var(--gap-md);
+            transition: var(--transition-fast);
+        }
+        
+        .sensor-card:hover {
+            border-color: var(--accent-primary);
+        }
+        
+        .sensor-card.warning {
+            border-color: var(--accent-warning);
+        }
+        
+        .sensor-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--gap-xs);
+        }
+        
+        .sensor-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .sensor-unit {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: 2px;
+        }
+        
+        .sensor-trend {
+            font-size: 12px;
+            margin-top: var(--gap-xs);
+        }
+        
+        .sensor-trend.rising { color: var(--accent-success); }
+        .sensor-trend.falling { color: var(--accent-danger); }
+        .sensor-trend.stable { color: var(--text-muted); }
+        
+        /* LLM Panel */
+        .llm-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .llm-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: var(--gap-md);
+        }
+        
+        .llm-message {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: var(--gap-md);
+            margin-bottom: var(--gap-sm);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .llm-message strong {
+            color: var(--accent-primary);
+        }
+        
+        .llm-message .highlight {
+            color: var(--accent-success);
+            font-weight: 600;
+        }
+        
+        .llm-evidence {
+            margin-top: var(--gap-sm);
+            padding-top: var(--gap-sm);
+            border-top: 1px solid var(--border-color);
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        .llm-input-container {
+            display: flex;
+            gap: var(--gap-sm);
+            padding-top: var(--gap-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .llm-input {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: var(--gap-sm) var(--gap-md);
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        
+        .llm-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        
+        /* Layers Panel */
+        .layer-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-sm);
+        }
+        
+        .layer-item {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-sm);
+            padding: var(--gap-sm) var(--gap-md);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .layer-item:hover {
+            border-color: var(--accent-primary);
+        }
+        
+        .layer-item.active {
+            border-color: var(--accent-success);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .layer-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .layer-name {
+            flex: 1;
+            font-size: 13px;
+        }
+        
+        .layer-toggle {
+            width: 36px;
+            height: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            position: relative;
+            transition: var(--transition-fast);
+        }
+        
+        .layer-item.active .layer-toggle {
+            background: var(--accent-success);
+        }
+        
+        .layer-toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition-fast);
+        }
+        
+        .layer-item.active .layer-toggle::after {
+            left: 18px;
+        }
+        
+        /* Timeline */
+        .timeline-container {
+            grid-column: 1 / -1;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--gap-sm) var(--gap-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .timeline-time {
+            font-size: 14px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .timeline-info {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .timeline-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--gap-md);
+        }
+        
+        /* Orbital Timeline */
+        .orbital-timeline {
+            width: 360px;
+            height: 160px;
+            position: relative;
+        }
+        
+        .orbital-ring {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 300px;
+            height: 300px;
+            transform: translate(-50%, -50%);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+        }
+        
+        .orbital-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--glow-primary);
+        }
+        
+        .orbital-center .time {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .orbital-center .label {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+        
+        .orbital-cursor {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 4px;
+            height: 20px;
+            background: var(--accent-primary);
+            transform: translateX(-50%);
+            border-radius: 2px;
+            box-shadow: var(--glow-primary);
+        }
+        
+        .orbital-ticks {
+            position: absolute;
+            inset: 0;
+        }
+        
+        .orbital-tick {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 1px;
+            height: 8px;
+            background: var(--border-color);
+            transform-origin: center 150px;
+        }
+        
+        .orbital-tick.major {
+            width: 2px;
+            height: 12px;
+            background: var(--text-muted);
+        }
+        
+        .orbital-node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-secondary);
+            border: 2px solid var(--bg-secondary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .orbital-node:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            box-shadow: 0 0 10px var(--accent-secondary);
+        }
+        
+        /* Layer indicators on timeline */
+        .timeline-layers {
+            display: flex;
+            gap: 2px;
+            padding: var(--gap-sm) var(--gap-md);
+            border-top: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+        
+        .timeline-layer-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .timeline-layer-indicator.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #000;
+        }
+        
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: var(--gap-lg);
+            right: var(--gap-lg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-sm);
+        }
+        
+        .toast {
+            padding: var(--gap-md) var(--gap-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .toast.success { border-left: 3px solid var(--accent-success); }
+        .toast.warning { border-left: 3px solid var(--accent-warning); }
+        .toast.error { border-left: 3px solid var(--accent-danger); }
+        .toast.info { border-left: 3px solid var(--accent-primary); }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Keyboard shortcuts modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-normal);
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: var(--gap-lg);
+            max-width: 480px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--gap-lg);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .shortcut-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--gap-sm) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .shortcut-key {
+            display: inline-block;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .app-container {
                 grid-template-columns: 1fr;
             }
-            .orbital-wheel {
-                width: 320px;
-                height: 320px;
+            
+            .sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 48px;
+                --timeline-height: 140px;
+            }
+            
+            .logo-text { display: none; }
+            
+            .orbital-timeline {
+                width: 280px;
+                height: 120px;
+            }
+            
+            .orbital-ring {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .orbital-center {
+                width: 60px;
+                height: 60px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Shortcuts Modal -->
+    <div class="modal-overlay" id="shortcutsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">⌨️ Keyboard Shortcuts</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="shortcut-row"><span>Start/Stop Recording</span><span class="shortcut-key">Space</span></div>
+            <div class="shortcut-row"><span>Switch Camera</span><span class="shortcut-key">F</span></div>
+            <div class="shortcut-row"><span>Sensors Panel</span><span class="shortcut-key">1</span></div>
+            <div class="shortcut-row"><span>LLM Panel</span><span class="shortcut-key">2</span></div>
+            <div class="shortcut-row"><span>Layers Panel</span><span class="shortcut-key">3</span></div>
+            <div class="shortcut-row"><span>Focus LLM Input</span><span class="shortcut-key">/</span></div>
+            <div class="shortcut-row"><span>Export Capsule</span><span class="shortcut-key">X</span></div>
+            <div class="shortcut-row"><span>Show Shortcuts</span><span class="shortcut-key">?</span></div>
+            <div class="shortcut-row"><span>Close Modal</span><span class="shortcut-key">Esc</span></div>
+        </div>
+    </div>
+    
+    <!-- Main App -->
     <div class="app-container">
         <!-- Header -->
         <header class="header">
             <div class="logo">
-                <span class="logo-icon">📹</span>
+                <div class="logo-icon">V</div>
                 <span class="logo-text">VIRECAI</span>
-                <span style="font-size: 0.8rem; color: var(--text-dim); margin-left: 0.5rem;">Production System v3.0</span>
+                <span class="logo-version">v5.0</span>
             </div>
             
-            <div class="mode-tabs">
-                <button class="mode-tab active" data-mode="capture">📱 Capture</button>
-                <button class="mode-tab" data-mode="play">▶️ Play</button>
-                <button class="mode-tab" data-mode="edit">✂️ Edit</button>
-            </div>
-            
-            <div class="profile-selector">
-                <span style="font-size: 0.75rem; color: var(--text-dim);">Profile:</span>
-                <button class="profile-btn" data-profile="lite">Lite</button>
-                <button class="profile-btn active" data-profile="standard">Standard</button>
-                <button class="profile-btn" data-profile="extended">Extended</button>
-                <button class="profile-btn" data-profile="ultra">Ultra</button>
+            <div class="header-controls">
+                <select class="profile-selector" id="profileSelector">
+                    <option value="lite">Lite (4 layers)</option>
+                    <option value="standard" selected>Standard (8 layers)</option>
+                    <option value="extended">Extended (23 layers)</option>
+                    <option value="ultra">Ultra (25 layers)</option>
+                </select>
+                
+                <div class="status-indicator">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Ready</span>
+                </div>
+                
+                <button class="btn" onclick="showShortcuts()">⌨️</button>
             </div>
         </header>
         
-        <!-- Main Content -->
+        <!-- Main Viewport -->
         <main class="main-content">
-            <!-- Left Panel - Video Viewport -->
-            <div class="left-panel">
-                <div class="video-viewport" id="videoViewport">
-                    <video id="cameraPreview" autoplay muted playsinline></video>
-                    
-                    <div class="ai-overlay" id="aiOverlay"></div>
-                    
-                    <div class="viewport-badges">
-                        <div class="badge emotion" id="emotionBadge">😊 Joy (0.82)</div>
-                        <div class="badge bio" id="bioBadge">💓 78 BPM</div>
-                        <div class="badge geo" id="geoBadge">📍 Tracking...</div>
-                    </div>
-                    
-                    <div class="recording-indicator" id="recordingIndicator">
-                        <div class="rec-dot"></div>
-                        <span>REC</span>
-                        <span id="recordingTime">00:00</span>
-                    </div>
+            <div class="viewport" id="viewport">
+                <video id="videoElement" autoplay playsinline muted></video>
+                
+                <div class="viewport-overlay" id="overlayCanvas">
+                    <!-- AI overlays rendered here -->
                 </div>
                 
-                <!-- Sensor Panel -->
-                <div class="sensor-panel">
-                    <div class="sensor-card active">
-                        <div class="sensor-icon">💓</div>
-                        <div class="sensor-value" id="heartRateValue">78</div>
-                        <div class="sensor-label">Heart Rate (BPM)</div>
-                    </div>
-                    <div class="sensor-card active">
-                        <div class="sensor-icon">🌡️</div>
-                        <div class="sensor-value" id="tempValue">36.8°</div>
-                        <div class="sensor-label">Skin Temp</div>
-                    </div>
-                    <div class="sensor-card active">
-                        <div class="sensor-icon">🎯</div>
-                        <div class="sensor-value" id="objectCount">3</div>
-                        <div class="sensor-label">Objects</div>
-                    </div>
-                    <div class="sensor-card active">
-                        <div class="sensor-icon">📍</div>
-                        <div class="sensor-value" id="gpsAccuracy">±2m</div>
-                        <div class="sensor-label">GPS</div>
-                    </div>
-                    <div class="sensor-card">
-                        <div class="sensor-icon">🧭</div>
-                        <div class="sensor-value" id="headingValue">45°</div>
-                        <div class="sensor-label">Heading</div>
-                    </div>
-                </div>
-                
-                <!-- Controls -->
-                <div class="controls-bar">
-                    <button class="ctrl-btn" id="switchCameraBtn">📷 Switch</button>
-                    <button class="ctrl-btn" id="layersBtn">🎚️ Layers</button>
-                    <button class="ctrl-btn record" id="recordBtn">🔴</button>
-                    <button class="ctrl-btn" id="settingsBtn">⚙️ Settings</button>
-                    <button class="ctrl-btn primary" id="exportBtn">📤 Export</button>
-                </div>
-            </div>
-            
-            <!-- Right Panel - Orbital Timeline & Mirror LLM -->
-            <div class="right-panel">
-                <!-- Orbital Timeline -->
-                <div class="orbital-container">
-                    <div class="orbital-title">
-                        🌌 Orbital Timeline Wheel
-                    </div>
-                    
-                    <div class="orbital-wheel" id="orbitalWheel">
-                        <!-- Rings -->
-                        <div class="orbital-ring time-ring">
-                            <div class="time-progress" id="timeProgress"></div>
-                        </div>
-                        <div class="orbital-ring emotion-ring"></div>
-                        <div class="orbital-ring layer-ring"></div>
-                        <div class="orbital-ring bio-ring"></div>
-                        
-                        <!-- Center Core -->
-                        <div class="center-core" id="centerCore">
-                            <div class="core-time" id="coreTime">0:00</div>
-                            <div class="core-frame" id="coreFrame">Frame 0</div>
-                            <div class="core-label">Tap for LLM</div>
-                        </div>
-                        
-                        <!-- Event Nodes (dynamically positioned) -->
-                        <div class="event-node person" style="top: 12%; left: 72%;" title="Person detected @ 0:05"></div>
-                        <div class="event-node object" style="top: 28%; left: 88%;" title="Object event @ 0:12"></div>
-                        <div class="event-node emotion" style="top: 55%; left: 92%;" title="Joy peak @ 0:28"></div>
-                        <div class="event-node bio" style="top: 78%; left: 75%;" title="HR spike @ 0:45"></div>
-                        <div class="event-node geo" style="top: 85%; left: 45%;" title="Location change @ 1:02"></div>
-                        <div class="event-node person" style="top: 75%; left: 18%;" title="Person exit @ 1:15"></div>
-                        <div class="event-node emotion" style="top: 48%; left: 8%;" title="Emotion shift @ 1:28"></div>
-                        <div class="event-node object" style="top: 22%; left: 15%;" title="New object @ 1:40"></div>
-                        
-                        <!-- Layer Toggles -->
-                        <div class="layer-toggle active" style="top: 2%; left: 47%;" data-layer="visual" title="Visual Layer">📹</div>
-                        <div class="layer-toggle active" style="top: 12%; right: 8%;" data-layer="audio" title="Audio Layer">🎵</div>
-                        <div class="layer-toggle active" style="top: 47%; right: 2%;" data-layer="depth" title="Depth Layer">📏</div>
-                        <div class="layer-toggle active" style="bottom: 12%; right: 8%;" data-layer="geopose" title="GeoPose">📍</div>
-                        <div class="layer-toggle active" style="bottom: 2%; left: 47%;" data-layer="biometric" title="Biometric">💓</div>
-                        <div class="layer-toggle active" style="bottom: 12%; left: 8%;" data-layer="emotion" title="Emotion">😊</div>
-                        <div class="layer-toggle" style="top: 47%; left: 2%;" data-layer="consent" title="Consent">🔒</div>
-                        <div class="layer-toggle" style="top: 12%; left: 8%;" data-layer="smell" title="Scent Layer">👃</div>
-                    </div>
-                </div>
-                
-                <!-- Mirror LLM Panel -->
-                <div class="llm-panel">
-                    <div class="llm-header">
-                        <span>🧠</span> Mirror LLM - Scene Comprehension
-                        <div class="llm-status">
-                            <div class="dot"></div>
-                            <span>Active</span>
-                        </div>
-                    </div>
-                    <div class="llm-response" id="llmResponse">
-                        <strong>System Ready</strong><br><br>
-                        Mirror LLM is connected and ready to analyze your VIRECAI capsule content. I can provide:
-                        <br><br>
-                        • <strong>Scene Comprehension:</strong> "What's happening in this frame?"
-                        <br>• <strong>Emotional Analysis:</strong> "Why did the mood change here?"
-                        <br>• <strong>Object Tracking:</strong> "Follow this person through the video"
-                        <br>• <strong>Biometric Correlation:</strong> "What caused the heart rate spike?"
-                        <br>• <strong>Contextual Queries:</strong> "Where and when was this recorded?"
-                        
-                        <div class="llm-evidence">
-                            <strong>MLVFF Evidence Chain:</strong> Ready to provide frame-level data, object tracking confidence, emotion vectors, and biometric correlations.
-                        </div>
-                    </div>
-                    <div class="llm-input-container">
-                        <input type="text" class="llm-input" placeholder="🎤 Ask about the scene..." id="llmInput">
-                        <button class="llm-send" id="llmSend">➤</button>
-                    </div>
-                </div>
-                
-                <!-- MLVF Data Panel -->
-                <div class="mlvf-panel">
-                    <div class="mlvf-header">
-                        📊 MLVF/MLVFF Frame Data
-                        <span class="mlvf-format">.vrc v2.0</span>
-                    </div>
-                    <div class="mlvf-grid">
-                        <div class="mlvf-item">
-                            <strong>Container</strong>
-                            <span id="mlvfContainer">Ready</span>
-                        </div>
-                        <div class="mlvf-item">
-                            <strong>Frame</strong>
-                            <span id="mlvfFrame">0 / 0</span>
-                        </div>
-                        <div class="mlvf-item">
-                            <strong>Layers</strong>
-                            <span id="mlvfLayers">6 active</span>
-                        </div>
-                        <div class="mlvf-item">
-                            <strong>Objects</strong>
-                            <span id="mlvfObjects">0 tracked</span>
-                        </div>
-                    </div>
+                <div class="viewport-controls">
+                    <button class="btn btn-icon" onclick="switchCamera()" title="Switch Camera">🔄</button>
+                    <button class="btn btn-icon btn-record" id="recordBtn" onclick="toggleRecording()"></button>
+                    <button class="btn btn-icon" onclick="exportCapsule()" title="Export">💾</button>
                 </div>
             </div>
         </main>
         
-        <!-- Status Bar -->
-        <footer class="status-bar">
-            <div class="status-left">
-                <div class="status-item">
-                    <div class="status-dot" id="aiStatusDot"></div>
-                    <span>AI: Active</span>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" data-panel="sensors">Sensors</button>
+                <button class="sidebar-tab" data-panel="llm">Mirror LLM</button>
+                <button class="sidebar-tab" data-panel="layers">Layers</button>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Sensors Panel -->
+                <div class="panel active" id="sensorsPanel">
+                    <div class="sensor-grid">
+                        <div class="sensor-card" id="hrCard">
+                            <div class="sensor-label">Heart Rate</div>
+                            <div class="sensor-value"><span id="hrValue">--</span><span class="sensor-unit">BPM</span></div>
+                            <div class="sensor-trend stable" id="hrTrend">→ stable</div>
+                        </div>
+                        
+                        <div class="sensor-card" id="stressCard">
+                            <div class="sensor-label">Stress Level</div>
+                            <div class="sensor-value"><span id="stressValue">--</span><span class="sensor-unit">%</span></div>
+                            <div class="sensor-trend stable" id="stressTrend">→ stable</div>
+                        </div>
+                        
+                        <div class="sensor-card">
+                            <div class="sensor-label">Skin Temp</div>
+                            <div class="sensor-value"><span id="tempValue">--</span><span class="sensor-unit">°C</span></div>
+                            <div class="sensor-trend stable" id="tempTrend">→ stable</div>
+                        </div>
+                        
+                        <div class="sensor-card">
+                            <div class="sensor-label">Emotion</div>
+                            <div class="sensor-value" style="font-size: 16px;" id="emotionValue">--</div>
+                            <div class="sensor-trend" id="emotionConfidence">--</div>
+                        </div>
+                        
+                        <div class="sensor-card">
+                            <div class="sensor-label">Objects</div>
+                            <div class="sensor-value"><span id="objectCount">0</span></div>
+                            <div class="sensor-trend" id="objectList">No objects</div>
+                        </div>
+                        
+                        <div class="sensor-card">
+                            <div class="sensor-label">Scene</div>
+                            <div class="sensor-value" style="font-size: 14px;" id="sceneValue">--</div>
+                            <div class="sensor-trend" id="sceneCategory">--</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: var(--gap-lg);">
+                        <div class="sensor-card">
+                            <div class="sensor-label">Causal Events</div>
+                            <div class="sensor-value"><span id="causalNodes">0</span> nodes</div>
+                            <div class="sensor-trend" id="causalEdges">0 relationships</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="status-item">
-                    <div class="status-dot" id="sensorStatusDot"></div>
-                    <span>Sensors: Ready</span>
+                
+                <!-- LLM Panel -->
+                <div class="panel" id="llmPanel">
+                    <div class="llm-container">
+                        <div class="llm-messages" id="llmMessages">
+                            <div class="llm-message">
+                                <strong>Mirror LLM Ready</strong><br><br>
+                                Ask me anything about what's happening in the video. Try:<br><br>
+                                • "What's happening?"<br>
+                                • "How is the mood?"<br>
+                                • "Why is stress elevated?"<br>
+                                • "Who is in the frame?"<br>
+                                • "Give me a summary"
+                            </div>
+                        </div>
+                        
+                        <div class="llm-input-container">
+                            <input type="text" class="llm-input" id="llmInput" placeholder="Ask about the scene..." />
+                            <button class="btn btn-primary" onclick="submitLLMQuery()">Ask</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="status-item" id="modeStatus">
-                    <span>Mode: Capture</span>
+                
+                <!-- Layers Panel -->
+                <div class="panel" id="layersPanel">
+                    <div class="layer-list" id="layerList">
+                        <!-- Layers populated dynamically -->
+                    </div>
                 </div>
             </div>
-            <div>
-                <span style="color: var(--primary);">VIRECAI</span> • 
-                18 Semantic Layers • Causal DAG • Mirror LLM • 
-                <span id="profileStatus">Standard Profile</span>
+        </aside>
+        
+        <!-- Timeline -->
+        <div class="timeline-container">
+            <div class="timeline-header">
+                <div class="timeline-time" id="timeDisplay">0:00.00</div>
+                <div class="timeline-info">
+                    <span id="frameDisplay">Frame: 0</span> | 
+                    <span id="durationDisplay">Duration: 0:00</span>
+                </div>
             </div>
-        </footer>
+            
+            <div class="timeline-main">
+                <div class="orbital-timeline" id="orbitalTimeline">
+                    <div class="orbital-ring">
+                        <div class="orbital-ticks" id="orbitalTicks"></div>
+                        <div class="orbital-cursor" id="orbitalCursor"></div>
+                    </div>
+                    <div class="orbital-center">
+                        <span class="time" id="orbitalTime">0:00</span>
+                        <span class="label">MLVF</span>
+                    </div>
+                    <!-- Event nodes rendered dynamically -->
+                </div>
+            </div>
+            
+            <div class="timeline-layers" id="timelineLayers">
+                <!-- Layer indicators -->
+            </div>
+        </div>
     </div>
 
-    <script>
-    // ═══════════════════════════════════════════════════════════════════════
-    // VIRECAI PRODUCTION SYSTEM v3.0
-    // Complete Smart Video Platform with Orbital Timeline & Mirror LLM
-    // ═══════════════════════════════════════════════════════════════════════
-    
-    // ═══════════════════════════════════════════════════════════════════════
-    // LAYER DEFINITIONS (25 Semantic Layers)
-    // ═══════════════════════════════════════════════════════════════════════
-    const VIRECAI_LAYERS = {
-        // Core Visual
-        VISUAL: { id: 'visual', name: 'Visual', icon: '📹', active: true },
-        DEPTH: { id: 'depth', name: 'Depth', icon: '📏', active: true },
+    <script type="module">
+        // ═══════════════════════════════════════════════════════════════════════
+        // VIRECAI v5.0 - Integrated Application Script
+        // ═══════════════════════════════════════════════════════════════════════
         
-        // Audio
-        AUDIO: { id: 'audio', name: 'Audio', icon: '🎵', active: true },
-        SOUND_SEMANTIC: { id: 'sound_semantic', name: 'Sound Semantic', icon: '🔊', active: false },
+        const VERSION = '5.0.0';
+        const CONFIG = {
+            frameRate: 30,
+            keyframeInterval: 30,
+            maxContextFrames: 120
+        };
         
-        // Object & Scene
-        OBJECT: { id: 'object', name: 'Object', icon: '🎯', active: true },
-        SCENE_GRAPH: { id: 'scene_graph', name: 'Scene Graph', icon: '🗺️', active: false },
+        // ═══════════════════════════════════════════════════════════════════════
+        // LAYER DEFINITIONS
+        // ═══════════════════════════════════════════════════════════════════════
         
-        // Context
-        GEOPOSE: { id: 'geopose', name: 'GeoPose', icon: '📍', active: true },
-        LIGHT_ENV: { id: 'light_env', name: 'Light Env', icon: '💡', active: false },
-        WEATHER_ENV: { id: 'weather_env', name: 'Weather', icon: '🌤️', active: false },
+        const LAYERS = {
+            visual: { icon: '🎬', name: 'Visual', color: '#00d4ff' },
+            audio: { icon: '🔊', name: 'Audio', color: '#7b61ff' },
+            depth: { icon: '📐', name: 'Depth', color: '#00ff88' },
+            object: { icon: '🎯', name: 'Object', color: '#ffaa00' },
+            scene_graph: { icon: '🗺️', name: 'Scene', color: '#ff6b6b' },
+            face: { icon: '👤', name: 'Face', color: '#4ecdc4' },
+            pose: { icon: '🏃', name: 'Pose', color: '#f7dc6f' },
+            emotional: { icon: '😊', name: 'Emotion', color: '#ff69b4' },
+            biometric: { icon: '💓', name: 'Biometric', color: '#e74c3c' },
+            geopose: { icon: '📍', name: 'GeoPose', color: '#3498db' },
+            temporal: { icon: '⏱️', name: 'Temporal', color: '#9b59b6' },
+            causal: { icon: '🔗', name: 'Causal', color: '#1abc9c' }
+        };
         
-        // Human
-        BIOMETRIC: { id: 'biometric', name: 'Biometric', icon: '💓', active: true },
-        BIO_SOUND: { id: 'bio_sound', name: 'Voice Print', icon: '🎙️', active: false },
-        EMOTION: { id: 'emotion', name: 'Emotion', icon: '😊', active: true },
-        HUMAN_FACTOR: { id: 'human_factor', name: 'Human Factor', icon: '👤', active: false },
+        const PROFILES = {
+            lite: ['visual', 'audio', 'object', 'temporal'],
+            standard: ['visual', 'audio', 'depth', 'object', 'emotional', 'biometric', 'geopose', 'temporal'],
+            extended: Object.keys(LAYERS),
+            ultra: Object.keys(LAYERS)
+        };
         
-        // Scientific
-        PHYSICS: { id: 'physics', name: 'Physics', icon: '⚡', active: false },
-        THERMAL: { id: 'thermal', name: 'Thermal', icon: '🌡️', active: false },
-        MATERIAL: { id: 'material', name: 'Material', icon: '🧱', active: false },
+        // ═══════════════════════════════════════════════════════════════════════
+        // APPLICATION STATE
+        // ═══════════════════════════════════════════════════════════════════════
         
-        // Meta
-        SEMANTIC: { id: 'semantic', name: 'Semantic', icon: '📚', active: false },
-        SYMBOLIC: { id: 'symbolic', name: 'Symbolic', icon: '🔣', active: false },
-        TEMPORAL: { id: 'temporal', name: 'Temporal', icon: '⏱️', active: true },
+        const state = {
+            isRecording: false,
+            isPaused: false,
+            profile: 'standard',
+            activeLayers: new Set(PROFILES.standard),
+            startTime: 0,
+            frameCount: 0,
+            currentTime: 0,
+            capsule: null,
+            animationFrame: null,
+            sensors: {
+                heartRate: 72,
+                stress: 0.3,
+                temp: 36.6,
+                emotion: 'neutral',
+                emotionConfidence: 0,
+                objects: [],
+                scene: null
+            },
+            causalDAG: {
+                nodes: 0,
+                edges: 0
+            },
+            llmContext: []
+        };
         
-        // Privacy & Security
-        CONSENT: { id: 'consent', name: 'Consent', icon: '🔒', active: false },
-        PROVENANCE: { id: 'provenance', name: 'Provenance', icon: '📜', active: false },
+        // ═══════════════════════════════════════════════════════════════════════
+        // DOM ELEMENTS
+        // ═══════════════════════════════════════════════════════════════════════
         
-        // Future
-        SMELL: { id: 'smell', name: 'Scent', icon: '👃', active: false },
-        HAPTIC: { id: 'haptic', name: 'Haptic', icon: '✋', active: false },
+        const elements = {
+            video: document.getElementById('videoElement'),
+            viewport: document.getElementById('viewport'),
+            recordBtn: document.getElementById('recordBtn'),
+            statusDot: document.getElementById('statusDot'),
+            statusText: document.getElementById('statusText'),
+            profileSelector: document.getElementById('profileSelector'),
+            timeDisplay: document.getElementById('timeDisplay'),
+            frameDisplay: document.getElementById('frameDisplay'),
+            orbitalTime: document.getElementById('orbitalTime'),
+            orbitalCursor: document.getElementById('orbitalCursor'),
+            llmInput: document.getElementById('llmInput'),
+            llmMessages: document.getElementById('llmMessages'),
+            toastContainer: document.getElementById('toastContainer')
+        };
         
-        // Risk
-        RISK_SAFETY: { id: 'risk_safety', name: 'Risk/Safety', icon: '⚠️', active: false },
-        PROBABILITY: { id: 'probability', name: 'Probability', icon: '📊', active: false }
-    };
-    
-    // ═══════════════════════════════════════════════════════════════════════
-    // COMPATIBILITY PROFILES
-    // ═══════════════════════════════════════════════════════════════════════
-    const PROFILES = {
-        lite: {
-            name: 'Lite',
-            layers: ['visual', 'audio', 'object'],
-            maxResolution: 720,
-            description: 'Basic capture for quick sharing'
-        },
-        standard: {
-            name: 'Standard',
-            layers: ['visual', 'audio', 'depth', 'object', 'emotion', 'biometric', 'geopose', 'temporal'],
-            maxResolution: 1080,
-            description: 'Full smart video experience'
-        },
-        extended: {
-            name: 'Extended',
-            layers: ['visual', 'audio', 'depth', 'object', 'emotion', 'biometric', 'geopose', 'temporal', 'scene_graph', 'sound_semantic', 'light_env', 'consent'],
-            maxResolution: 1440,
-            description: 'Professional analysis features'
-        },
-        ultra: {
-            name: 'Ultra',
-            layers: Object.keys(VIRECAI_LAYERS).map(k => VIRECAI_LAYERS[k].id),
-            maxResolution: 2160,
-            description: 'All layers enabled - research grade'
-        }
-    };
-    
-    // ═══════════════════════════════════════════════════════════════════════
-    // MLVF CAPSULE CLASS
-    // ═══════════════════════════════════════════════════════════════════════
-    class MLVFCapsule {
-        constructor(config = {}) {
-            this.id = `vrc_${Date.now()}`;
-            this.version = '2.0.0';
-            this.profile = config.profile || 'standard';
+        // ═══════════════════════════════════════════════════════════════════════
+        // TOAST SYSTEM
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            elements.toastContainer.appendChild(toast);
             
-            this.metadata = {
-                title: config.title || 'Untitled',
-                author: config.author || 'Unknown',
-                created: Date.now(),
-                modified: Date.now()
-            };
-            
-            this.config = {
-                width: config.width || 1920,
-                height: config.height || 1080,
-                frameRate: config.frameRate || 30,
-                duration: 0
-            };
-            
-            this.frames = [];
-            this.activeLayers = new Set(PROFILES[this.profile].layers);
-            
-            // Causal DAG
-            this.causalGraph = { nodes: [], edges: [] };
-            
-            // Consent & Provenance
-            this.consent = { permissions: {}, anonymized: false };
-            this.provenance = { signatures: [], hashchain: [] };
+            setTimeout(() => toast.remove(), 4000);
         }
         
-        addFrame(frameData) {
-            this.frames.push(frameData);
-            this.config.duration = frameData.timestamp;
-        }
+        window.showToast = showToast;
         
-        getFrame(index) {
-            return this.frames[index];
-        }
-        
-        getFrameAtTime(timestamp) {
-            for (let i = this.frames.length - 1; i >= 0; i--) {
-                if (this.frames[i].timestamp <= timestamp) {
-                    return this.frames[i];
-                }
-            }
-            return this.frames[0];
-        }
-        
-        serialize() {
-            return JSON.stringify({
-                id: this.id,
-                version: this.version,
-                profile: this.profile,
-                metadata: this.metadata,
-                config: this.config,
-                frameCount: this.frames.length,
-                activeLayers: Array.from(this.activeLayers),
-                causalGraph: this.causalGraph,
-                consent: this.consent,
-                provenance: this.provenance
-            });
-        }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════
-    // MLVFF FRAME CLASS
-    // ═══════════════════════════════════════════════════════════════════════
-    class MLVFFFrame {
-        constructor(index, timestamp) {
-            this.index = index;
-            this.timestamp = timestamp;
-            this.isKeyframe = false;
-            this.layers = new Map();
-        }
-        
-        setLayer(layerId, data) {
-            this.layers.set(layerId, {
-                type: layerId,
-                timestamp: this.timestamp,
-                data: data
-            });
-        }
-        
-        getLayer(layerId) {
-            return this.layers.get(layerId);
-        }
-        
-        hasLayer(layerId) {
-            return this.layers.has(layerId);
-        }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════
-    // MIRROR LLM ENGINE
-    // ═══════════════════════════════════════════════════════════════════════
-    class MirrorLLMEngine {
-        constructor() {
-            this.contextWindow = [];
-            this.currentFrame = null;
-        }
-        
-        setCurrentFrame(frameData) {
-            this.currentFrame = frameData;
-            this.contextWindow.push(frameData);
-            if (this.contextWindow.length > 30) {
-                this.contextWindow.shift();
-            }
-        }
-        
-        processQuery(query, frameData) {
-            const q = query.toLowerCase();
-            
-            // Scene Comprehension
-            if (q.includes('what') && (q.includes('happening') || q.includes('see'))) {
-                return this.analyzeScene(frameData);
-            }
-            
-            // Emotion Analysis
-            if (q.includes('emotion') || q.includes('feel') || q.includes('mood') || q.includes('why')) {
-                return this.analyzeEmotion(frameData);
-            }
-            
-            // Object Queries
-            if (q.includes('object') || q.includes('person') || q.includes('detect') || q.includes('track')) {
-                return this.analyzeObjects(frameData);
-            }
-            
-            // Biometric Queries
-            if (q.includes('heart') || q.includes('bio') || q.includes('stress') || q.includes('spike')) {
-                return this.analyzeBiometrics(frameData);
-            }
-            
-            // Location Queries
-            if (q.includes('where') || q.includes('location') || q.includes('gps')) {
-                return this.analyzeLocation(frameData);
-            }
-            
-            // Generic response
-            return this.genericResponse(query, frameData);
-        }
-        
-        analyzeScene(frameData) {
-            const objects = frameData.objects || [];
-            const emotion = frameData.emotion || {};
-            const environment = frameData.environment || {};
-            
-            let response = `<strong>Scene Analysis - Frame ${frameData.index}</strong><br><br>`;
-            
-            response += `I can see ${objects.length} object${objects.length !== 1 ? 's' : ''} in this frame: `;
-            response += objects.map(o => `${o.type} (${(o.confidence * 100).toFixed(0)}%)`).join(', ') || 'none detected';
-            response += '.<br><br>';
-            
-            response += `The dominant emotion is <strong>${emotion.primary || 'neutral'}</strong> `;
-            response += `with a valence of ${(emotion.valence || 0).toFixed(2)}. `;
-            
-            if (emotion.arousal > 0.6) {
-                response += 'There\'s high emotional engagement in this moment.';
-            }
-            
-            response += `<div class="llm-evidence"><strong>MLVFF Evidence:</strong> Object detection confidence: ${objects.length > 0 ? (objects.reduce((s, o) => s + o.confidence, 0) / objects.length * 100).toFixed(1) : 0}% avg • Emotion vectors analyzed • Spatial relations mapped</div>`;
-            
-            return response;
-        }
-        
-        analyzeEmotion(frameData) {
-            const emotion = frameData.emotion || {};
-            const biometrics = frameData.biometrics || {};
-            
-            let response = `<strong>Emotional Analysis</strong><br><br>`;
-            
-            response += `Current emotional state: <strong>${emotion.primary || 'neutral'}</strong><br>`;
-            response += `• Valence (positive/negative): ${(emotion.valence || 0).toFixed(2)}<br>`;
-            response += `• Arousal (intensity): ${(emotion.arousal || 0).toFixed(2)}<br>`;
-            response += `• Sentiment: ${emotion.sentiment > 0 ? 'Positive' : emotion.sentiment < 0 ? 'Negative' : 'Neutral'}<br><br>`;
-            
-            if (emotion.probabilities) {
-                response += 'Emotion breakdown: ';
-                response += Object.entries(emotion.probabilities)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 3)
-                    .map(([k, v]) => `${k} (${(v * 100).toFixed(0)}%)`)
-                    .join(', ');
-            }
-            
-            response += `<div class="llm-evidence"><strong>Biometric Correlation:</strong> HR ${biometrics.heartRate || '?'} BPM • Skin temp ${biometrics.skinTemp || '?'}°C • Stress level: ${biometrics.stressLevel ? (biometrics.stressLevel < 0.3 ? 'Low' : biometrics.stressLevel < 0.6 ? 'Medium' : 'High') : 'Unknown'}</div>`;
-            
-            return response;
-        }
-        
-        analyzeObjects(frameData) {
-            const objects = frameData.objects || [];
-            
-            let response = `<strong>Object Detection Report</strong><br><br>`;
-            
-            if (objects.length === 0) {
-                response += 'No objects currently detected in frame.';
-            } else {
-                response += `Tracking ${objects.length} object${objects.length !== 1 ? 's' : ''}:<br><br>`;
-                
-                objects.forEach((obj, i) => {
-                    response += `${i + 1}. <strong>${obj.type}</strong><br>`;
-                    response += `   • Confidence: ${(obj.confidence * 100).toFixed(1)}%<br>`;
-                    response += `   • Position: [${obj.bbox ? obj.bbox.map(v => v.toFixed(0)).join(', ') : 'tracking'}]<br>`;
-                    if (obj.trackId) response += `   • Track ID: ${obj.trackId}<br>`;
-                });
-            }
-            
-            response += `<div class="llm-evidence"><strong>MLVFF Object Layer:</strong> Detection model active • Tracking enabled • Scene graph: ${objects.length} nodes</div>`;
-            
-            return response;
-        }
-        
-        analyzeBiometrics(frameData) {
-            const bio = frameData.biometrics || {};
-            
-            let response = `<strong>Biometric Analysis</strong><br><br>`;
-            
-            response += `• Heart Rate: <strong>${bio.heartRate || '?'} BPM</strong> `;
-            if (bio.heartRate > 90) response += '(elevated)';
-            else if (bio.heartRate < 60) response += '(low)';
-            else response += '(normal range)';
-            response += '<br>';
-            
-            response += `• Skin Temperature: <strong>${bio.skinTemp || '?'}°C</strong><br>`;
-            response += `• Respiratory Rate: <strong>${bio.respiratoryRate || '?'}/min</strong><br>`;
-            response += `• Stress Level: <strong>${bio.stressLevel ? (bio.stressLevel * 100).toFixed(0) + '%' : 'Unknown'}</strong><br><br>`;
-            
-            if (bio.stressLevel > 0.6) {
-                response += '⚠️ Elevated stress indicators detected. This correlates with the current emotional state.';
-            }
-            
-            response += `<div class="llm-evidence"><strong>Sensor Fusion:</strong> Multi-modal biometric integration • Temporal smoothing applied • Confidence: High</div>`;
-            
-            return response;
-        }
-        
-        analyzeLocation(frameData) {
-            const geo = frameData.geopose || {};
-            
-            let response = `<strong>Location & Context</strong><br><br>`;
-            
-            if (geo.latitude && geo.longitude) {
-                response += `📍 <strong>Coordinates:</strong> ${geo.latitude.toFixed(4)}°N, ${Math.abs(geo.longitude).toFixed(4)}°W<br>`;
-                response += `• Altitude: ${geo.altitude || '?'}m<br>`;
-                response += `• Accuracy: ±${geo.accuracy || '?'}m<br>`;
-                response += `• Heading: ${geo.heading || '?'}°<br><br>`;
-            } else {
-                response += 'GPS data not available or still acquiring.<br><br>';
-            }
-            
-            if (geo.orientation) {
-                response += `<strong>Device Orientation:</strong><br>`;
-                response += `• Yaw: ${geo.orientation.alpha?.toFixed(1) || '?'}°<br>`;
-                response += `• Pitch: ${geo.orientation.beta?.toFixed(1) || '?'}°<br>`;
-                response += `• Roll: ${geo.orientation.gamma?.toFixed(1) || '?'}°<br>`;
-            }
-            
-            response += `<div class="llm-evidence"><strong>GeoPose Layer:</strong> GPS + IMU fusion • Quaternion orientation • Timestamp: ${new Date().toISOString()}</div>`;
-            
-            return response;
-        }
-        
-        genericResponse(query, frameData) {
-            return `<strong>Processing Query</strong><br><br>
-                "${query}"<br><br>
-                I'm analyzing the current MLVFF frame data. Try asking about:
-                <br>• <strong>Scene:</strong> "What's happening here?"
-                <br>• <strong>Emotions:</strong> "What's the mood?"
-                <br>• <strong>Objects:</strong> "What objects do you see?"
-                <br>• <strong>Biometrics:</strong> "What's the heart rate?"
-                <br>• <strong>Location:</strong> "Where was this recorded?"
-                
-                <div class="llm-evidence"><strong>Available Data:</strong> Frame ${frameData.index} • ${frameData.objects?.length || 0} objects • ${Object.keys(frameData).length} layer types</div>`;
-        }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════
-    // VIRECAI STUDIO APPLICATION
-    // ═══════════════════════════════════════════════════════════════════════
-    class VIRECAIStudio {
-        constructor() {
-            // State
-            this.currentMode = 'capture';
-            this.currentProfile = 'standard';
-            this.isRecording = false;
-            this.stream = null;
-            this.capsule = null;
-            this.frameIndex = 0;
-            this.startTime = 0;
-            
-            // Layers
-            this.activeLayers = new Set(PROFILES.standard.layers);
-            
-            // Orbital Timeline
-            this.orbitalRotation = 0;
-            this.currentTime = 0;
-            this.totalDuration = 120; // seconds
-            
-            // Sensors
-            this.sensorData = {
-                heartRate: 78,
-                skinTemp: 36.8,
-                respiratoryRate: 14,
-                stressLevel: 0.25,
-                gps: null,
-                orientation: null
-            };
-            
-            // AI
-            this.detectedObjects = [];
-            this.currentEmotion = {
-                primary: 'neutral',
-                probabilities: { neutral: 0.5, joy: 0.3, surprise: 0.2 },
-                valence: 0.1,
-                arousal: 0.3,
-                sentiment: 0.1
-            };
-            
-            // Mirror LLM
-            this.mirrorLLM = new MirrorLLMEngine();
-            
-            // Initialize
-            this.init();
-        }
-        
-        async init() {
-            console.log('🎬 VIRECAI Production System v3.0 initializing...');
-            
-            this.bindEvents();
-            this.startSimulations();
-            
-            try {
-                await this.initCamera();
-            } catch (e) {
-                console.warn('Camera not available:', e);
-                this.showCameraPlaceholder();
-            }
-            
-            this.initSensors();
-            this.setupOrbitalControls();
-            
-            console.log('✅ VIRECAI Production System ready');
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════════════════════
         // CAMERA INITIALIZATION
-        // ═══════════════════════════════════════════════════════════════
-        async initCamera() {
-            const constraints = {
-                video: {
-                    width: { ideal: 1920 },
-                    height: { ideal: 1080 },
-                    frameRate: { ideal: 30 },
-                    facingMode: 'user'
-                },
-                audio: true
-            };
-            
-            this.stream = await navigator.mediaDevices.getUserMedia(constraints);
-            
-            const video = document.getElementById('cameraPreview');
-            video.srcObject = this.stream;
-            
-            const settings = this.stream.getVideoTracks()[0].getSettings();
-            console.log(`📷 Camera: ${settings.width}x${settings.height} @ ${settings.frameRate}fps`);
-        }
+        // ═══════════════════════════════════════════════════════════════════════
         
-        showCameraPlaceholder() {
-            const viewport = document.getElementById('videoViewport');
-            viewport.innerHTML = `
-                <div class="video-placeholder">
-                    <span class="icon">📷</span>
-                    <span>Camera Preview</span>
-                    <span style="font-size: 0.9rem; color: var(--text-dim);">Grant camera permission or running in demo mode</span>
-                </div>
-                <div class="ai-overlay" id="aiOverlay"></div>
-                <div class="viewport-badges">
-                    <div class="badge emotion" id="emotionBadge">😊 Joy (0.82)</div>
-                    <div class="badge bio" id="bioBadge">💓 78 BPM</div>
-                    <div class="badge geo" id="geoBadge">📍 Tracking...</div>
-                </div>
-                <div class="recording-indicator" id="recordingIndicator">
-                    <div class="rec-dot"></div>
-                    <span>REC</span>
-                    <span id="recordingTime">00:00</span>
-                </div>
-            `;
-        }
+        let cameraStream = null;
+        let facingMode = 'user';
         
-        // ═══════════════════════════════════════════════════════════════
-        // SENSOR INITIALIZATION
-        // ═══════════════════════════════════════════════════════════════
-        initSensors() {
-            // GPS
-            if (navigator.geolocation) {
-                navigator.geolocation.watchPosition(
-                    (pos) => {
-                        this.sensorData.gps = {
-                            latitude: pos.coords.latitude,
-                            longitude: pos.coords.longitude,
-                            altitude: pos.coords.altitude,
-                            accuracy: pos.coords.accuracy,
-                            heading: pos.coords.heading
-                        };
-                        document.getElementById('geoBadge').textContent = 
-                            `📍 ${pos.coords.latitude.toFixed(4)}°N`;
-                    },
-                    (err) => console.warn('GPS error:', err),
-                    { enableHighAccuracy: true }
-                );
-            }
-            
-            // Device Orientation (IMU)
-            if (window.DeviceOrientationEvent) {
-                window.addEventListener('deviceorientation', (e) => {
-                    this.sensorData.orientation = {
-                        alpha: e.alpha,
-                        beta: e.beta,
-                        gamma: e.gamma
-                    };
-                    if (e.alpha) {
-                        document.getElementById('headingValue').textContent = 
-                            `${Math.round(e.alpha)}°`;
-                    }
+        async function initCamera() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode, width: { ideal: 1920 }, height: { ideal: 1080 } },
+                    audio: false
                 });
+                
+                elements.video.srcObject = cameraStream;
+                showToast('Camera ready', 'success');
+                updateStatus('Ready', false);
+                
+            } catch (error) {
+                console.error('Camera error:', error);
+                showToast('Camera access denied', 'error');
+                updateStatus('No Camera', false);
             }
         }
         
-        // ═══════════════════════════════════════════════════════════════
-        // EVENT BINDINGS
-        // ═══════════════════════════════════════════════════════════════
-        bindEvents() {
-            // Mode tabs
-            document.querySelectorAll('.mode-tab').forEach(tab => {
-                tab.addEventListener('click', () => this.switchMode(tab.dataset.mode));
-            });
+        async function switchCamera() {
+            facingMode = facingMode === 'user' ? 'environment' : 'user';
             
-            // Profile buttons
-            document.querySelectorAll('.profile-btn').forEach(btn => {
-                btn.addEventListener('click', () => this.switchProfile(btn.dataset.profile));
-            });
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(t => t.stop());
+            }
             
-            // Record button
-            document.getElementById('recordBtn').addEventListener('click', () => this.toggleRecording());
-            
-            // Layer toggles
-            document.querySelectorAll('.layer-toggle').forEach(toggle => {
-                toggle.addEventListener('click', () => this.toggleLayer(toggle));
-            });
-            
-            // Center core (LLM activation)
-            document.getElementById('centerCore').addEventListener('click', () => this.activateLLM());
-            
-            // LLM input
-            document.getElementById('llmInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    this.processLLMQuery(e.target.value);
-                    e.target.value = '';
-                }
-            });
-            
-            document.getElementById('llmSend').addEventListener('click', () => {
-                const input = document.getElementById('llmInput');
-                this.processLLMQuery(input.value);
-                input.value = '';
-            });
-            
-            // Event nodes
-            document.querySelectorAll('.event-node').forEach(node => {
-                node.addEventListener('click', () => {
-                    const time = node.title.match(/@ (\d+:\d+)/)?.[1];
-                    if (time) this.jumpToTime(time);
-                });
-            });
+            await initCamera();
+            showToast(`Camera: ${facingMode}`, 'info');
         }
         
-        // ═══════════════════════════════════════════════════════════════
-        // MODE & PROFILE SWITCHING
-        // ═══════════════════════════════════════════════════════════════
-        switchMode(mode) {
-            this.currentMode = mode;
-            
-            document.querySelectorAll('.mode-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.mode === mode);
-            });
-            
-            document.getElementById('modeStatus').querySelector('span').textContent = 
-                `Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
-            
-            console.log(`📱 Mode: ${mode}`);
-        }
+        window.switchCamera = switchCamera;
         
-        switchProfile(profile) {
-            this.currentProfile = profile;
-            
-            document.querySelectorAll('.profile-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.profile === profile);
-            });
-            
-            // Update active layers
-            this.activeLayers = new Set(PROFILES[profile].layers);
-            
-            // Update layer toggles
-            document.querySelectorAll('.layer-toggle').forEach(toggle => {
-                const layer = toggle.dataset.layer;
-                toggle.classList.toggle('active', this.activeLayers.has(layer));
-            });
-            
-            document.getElementById('profileStatus').textContent = `${PROFILES[profile].name} Profile`;
-            document.getElementById('mlvfLayers').textContent = `${this.activeLayers.size} active`;
-            
-            console.log(`📋 Profile: ${profile} (${this.activeLayers.size} layers)`);
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════════════════════
         // RECORDING
-        // ═══════════════════════════════════════════════════════════════
-        toggleRecording() {
-            this.isRecording = !this.isRecording;
-            
-            const btn = document.getElementById('recordBtn');
-            const viewport = document.getElementById('videoViewport');
-            const indicator = document.getElementById('recordingIndicator');
-            
-            if (this.isRecording) {
-                // Start recording
-                btn.classList.add('active');
-                btn.textContent = '⏹';
-                viewport.classList.add('recording');
-                indicator.classList.add('active');
-                
-                this.startRecording();
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function toggleRecording() {
+            if (state.isRecording) {
+                stopRecording();
             } else {
-                // Stop recording
-                btn.classList.remove('active');
-                btn.textContent = '🔴';
-                viewport.classList.remove('recording');
-                indicator.classList.remove('active');
-                
-                this.stopRecording();
+                startRecording();
             }
         }
         
-        startRecording() {
-            console.log('🔴 Recording started');
+        window.toggleRecording = toggleRecording;
+        
+        function startRecording() {
+            state.isRecording = true;
+            state.startTime = performance.now();
+            state.frameCount = 0;
+            state.llmContext = [];
+            state.causalDAG = { nodes: 0, edges: 0 };
             
-            this.startTime = performance.now();
-            this.frameIndex = 0;
+            elements.recordBtn.classList.add('recording');
+            elements.viewport.classList.add('recording');
+            updateStatus('Recording', true);
             
-            // Create new capsule
-            this.capsule = new MLVFCapsule({
-                title: `Recording ${Date.now()}`,
-                profile: this.currentProfile,
-                width: 1920,
-                height: 1080,
-                frameRate: 30
-            });
-            
-            // Update UI
-            document.getElementById('mlvfContainer').textContent = this.capsule.id;
+            showToast('Recording started', 'success');
             
             // Start capture loop
-            this.captureLoop();
-            
-            // Update LLM
-            this.updateLLMResponse(`<strong>Recording Started</strong><br><br>
-                Capturing VIRECAI capsule with <strong>${this.currentProfile}</strong> profile.
-                <br><br>
-                Active layers: ${Array.from(this.activeLayers).join(', ')}
-                <br><br>
-                Real-time AI analysis is processing each frame for object detection, emotion recognition, and biometric correlation.
-                
-                <div class="llm-evidence"><strong>Capsule ID:</strong> ${this.capsule.id}</div>`);
+            captureLoop();
         }
         
-        stopRecording() {
-            console.log('⏹️ Recording stopped');
+        function stopRecording() {
+            state.isRecording = false;
             
-            if (this.capsule) {
-                this.capsule.metadata.modified = Date.now();
-                
-                this.updateLLMResponse(`<strong>Recording Complete!</strong><br><br>
-                    Capsule saved: <strong>${this.capsule.id}</strong>
-                    <br>Duration: ${(this.capsule.config.duration / 1000).toFixed(1)}s
-                    <br>Frames: ${this.capsule.frames.length}
-                    <br>Profile: ${this.currentProfile}
-                    <br>Layers: ${this.activeLayers.size} active
-                    
-                    <div class="llm-evidence"><strong>Size:</strong> ~${(this.capsule.frames.length * 2).toFixed(1)} KB metadata • Video stream pending export</div>`);
+            if (state.animationFrame) {
+                cancelAnimationFrame(state.animationFrame);
             }
+            
+            elements.recordBtn.classList.remove('recording');
+            elements.viewport.classList.remove('recording');
+            updateStatus('Ready', false);
+            
+            showToast(`Recorded ${state.frameCount} frames`, 'success');
+            
+            // Generate summary
+            const summary = generateSummary();
+            addLLMMessage(summary);
         }
         
-        captureLoop() {
-            if (!this.isRecording) return;
+        function captureLoop() {
+            if (!state.isRecording) return;
             
-            const timestamp = performance.now() - this.startTime;
+            const now = performance.now();
+            const elapsed = now - state.startTime;
             
-            // Create frame
-            const frame = new MLVFFFrame(this.frameIndex, timestamp);
-            frame.isKeyframe = this.frameIndex % 30 === 0;
+            // Update sensors (simulated)
+            updateSensors(elapsed);
             
-            // Add active layers
-            if (this.activeLayers.has('visual')) {
-                frame.setLayer('visual', { width: 1920, height: 1080, colorSpace: 'sRGB' });
-            }
+            // Process perception
+            processPerception();
             
-            if (this.activeLayers.has('temporal')) {
-                frame.setLayer('temporal', { timestamp, frameIndex: this.frameIndex, absoluteTime: Date.now() });
-            }
-            
-            if (this.activeLayers.has('object')) {
-                frame.setLayer('object', { detections: this.detectedObjects });
-            }
-            
-            if (this.activeLayers.has('emotion')) {
-                frame.setLayer('emotion', this.currentEmotion);
-            }
-            
-            if (this.activeLayers.has('biometric')) {
-                frame.setLayer('biometric', { ...this.sensorData });
-            }
-            
-            if (this.activeLayers.has('geopose') && this.sensorData.gps) {
-                frame.setLayer('geopose', {
-                    ...this.sensorData.gps,
-                    orientation: this.sensorData.orientation
-                });
-            }
-            
-            // Add to capsule
-            this.capsule.addFrame(frame);
-            this.frameIndex++;
+            // Detect causal events
+            detectCausalEvents();
             
             // Update UI
-            const seconds = Math.floor(timestamp / 1000);
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            document.getElementById('recordingTime').textContent = 
-                `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            document.getElementById('mlvfFrame').textContent = 
-                `${this.frameIndex} / ${this.frameIndex}`;
+            updateUI(elapsed);
             
-            // Continue loop
-            requestAnimationFrame(() => this.captureLoop());
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
-        // ORBITAL TIMELINE CONTROLS
-        // ═══════════════════════════════════════════════════════════════
-        setupOrbitalControls() {
-            const wheel = document.getElementById('orbitalWheel');
-            let isDragging = false;
-            let startAngle = 0;
+            state.frameCount++;
+            state.currentTime = elapsed;
             
-            wheel.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startAngle = this.getAngleFromEvent(e, wheel);
-                wheel.style.cursor = 'grabbing';
+            // Add to LLM context
+            state.llmContext.push({
+                frame: state.frameCount,
+                timestamp: elapsed,
+                sensors: { ...state.sensors }
             });
             
-            document.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    const currentAngle = this.getAngleFromEvent(e, wheel);
-                    const deltaAngle = currentAngle - startAngle;
-                    this.rotateTimeline(deltaAngle);
-                    startAngle = currentAngle;
-                }
-            });
-            
-            document.addEventListener('mouseup', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    wheel.style.cursor = 'grab';
-                }
-            });
-        }
-        
-        getAngleFromEvent(e, element) {
-            const rect = element.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            return Math.atan2(e.clientY - centerY, e.clientX - centerX) * 180 / Math.PI;
-        }
-        
-        rotateTimeline(deltaAngle) {
-            this.orbitalRotation += deltaAngle;
-            
-            // Update time progress ring
-            const progress = document.getElementById('timeProgress');
-            progress.style.transform = `rotate(${this.orbitalRotation - 90}deg)`;
-            
-            // Calculate time
-            const normalizedRotation = ((this.orbitalRotation % 360) + 360) % 360;
-            this.currentTime = (normalizedRotation / 360) * this.totalDuration;
-            
-            // Update display
-            const mins = Math.floor(this.currentTime / 60);
-            const secs = Math.floor(this.currentTime % 60);
-            document.getElementById('coreTime').textContent = 
-                `${mins}:${String(secs).padStart(2, '0')}`;
-            
-            // Update frame
-            const frameRate = 30;
-            const frame = Math.floor(this.currentTime * frameRate);
-            document.getElementById('coreFrame').textContent = `Frame ${frame}`;
-        }
-        
-        jumpToTime(timeStr) {
-            const [mins, secs] = timeStr.split(':').map(Number);
-            this.currentTime = mins * 60 + secs;
-            this.orbitalRotation = (this.currentTime / this.totalDuration) * 360;
-            this.rotateTimeline(0);
-            
-            console.log(`⏱️ Jumped to ${timeStr}`);
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
-        // LAYER MANAGEMENT
-        // ═══════════════════════════════════════════════════════════════
-        toggleLayer(toggle) {
-            const layer = toggle.dataset.layer;
-            
-            if (this.activeLayers.has(layer)) {
-                this.activeLayers.delete(layer);
-                toggle.classList.remove('active');
-            } else {
-                this.activeLayers.add(layer);
-                toggle.classList.add('active');
+            if (state.llmContext.length > CONFIG.maxContextFrames) {
+                state.llmContext.shift();
             }
             
-            document.getElementById('mlvfLayers').textContent = `${this.activeLayers.size} active`;
-            console.log(`🎚️ Layer ${layer}: ${this.activeLayers.has(layer) ? 'ON' : 'OFF'}`);
+            state.animationFrame = requestAnimationFrame(captureLoop);
         }
         
-        // ═══════════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════════════════════
+        // SENSOR SIMULATION
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function updateSensors(elapsed) {
+            const t = elapsed / 1000;
+            
+            // Heart rate
+            const hrBase = 72;
+            const hrVar = Math.sin(t / 10) * 8 + Math.sin(t / 3) * 4 + (Math.random() - 0.5) * 6;
+            state.sensors.heartRate = Math.round(hrBase + hrVar + state.sensors.stress * 15);
+            
+            // Stress (gradual changes)
+            state.sensors.stress += (Math.random() - 0.5) * 0.02;
+            state.sensors.stress = Math.max(0, Math.min(1, state.sensors.stress));
+            
+            // Temperature
+            state.sensors.temp = 36.6 + (Math.random() - 0.5) * 0.3;
+            
+            // Update UI
+            document.getElementById('hrValue').textContent = state.sensors.heartRate;
+            document.getElementById('stressValue').textContent = Math.round(state.sensors.stress * 100);
+            document.getElementById('tempValue').textContent = state.sensors.temp.toFixed(1);
+            
+            // Trends
+            updateTrend('hrTrend', state.sensors.heartRate, 72);
+            updateTrend('stressTrend', state.sensors.stress, 0.3);
+            
+            // Warning states
+            const hrCard = document.getElementById('hrCard');
+            hrCard.classList.toggle('warning', state.sensors.heartRate > 100);
+        }
+        
+        function updateTrend(elementId, value, baseline) {
+            const el = document.getElementById(elementId);
+            const diff = value - baseline;
+            
+            if (diff > baseline * 0.1) {
+                el.textContent = '↑ rising';
+                el.className = 'sensor-trend rising';
+            } else if (diff < -baseline * 0.1) {
+                el.textContent = '↓ falling';
+                el.className = 'sensor-trend falling';
+            } else {
+                el.textContent = '→ stable';
+                el.className = 'sensor-trend stable';
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // PERCEPTION AI (Simulated)
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        const objectTypes = ['person', 'phone', 'laptop', 'cup', 'book', 'chair'];
+        const emotions = ['neutral', 'joy', 'surprise', 'interest', 'calm'];
+        const scenes = ['office', 'bedroom', 'outdoor', 'cafe'];
+        
+        function processPerception() {
+            // Objects (update every ~2 seconds)
+            if (state.frameCount % 60 === 0) {
+                const count = 1 + Math.floor(Math.random() * 3);
+                state.sensors.objects = [];
+                
+                for (let i = 0; i < count; i++) {
+                    state.sensors.objects.push({
+                        class: objectTypes[Math.floor(Math.random() * objectTypes.length)],
+                        confidence: 0.7 + Math.random() * 0.25
+                    });
+                }
+                
+                document.getElementById('objectCount').textContent = count;
+                document.getElementById('objectList').textContent = 
+                    state.sensors.objects.map(o => o.class).join(', ');
+            }
+            
+            // Emotion (update every ~1.5 seconds)
+            if (state.frameCount % 45 === 0) {
+                const prevEmotion = state.sensors.emotion;
+                state.sensors.emotion = emotions[Math.floor(Math.random() * emotions.length)];
+                state.sensors.emotionConfidence = 0.6 + Math.random() * 0.35;
+                
+                document.getElementById('emotionValue').textContent = 
+                    getEmoji(state.sensors.emotion) + ' ' + state.sensors.emotion;
+                document.getElementById('emotionConfidence').textContent = 
+                    `${Math.round(state.sensors.emotionConfidence * 100)}% conf`;
+                
+                // Causal event on emotion change
+                if (prevEmotion !== state.sensors.emotion) {
+                    state.causalDAG.nodes++;
+                    state.causalDAG.edges++;
+                }
+            }
+            
+            // Scene (update every ~3 seconds)
+            if (state.frameCount % 90 === 0) {
+                state.sensors.scene = scenes[Math.floor(Math.random() * scenes.length)];
+                document.getElementById('sceneValue').textContent = state.sensors.scene;
+                document.getElementById('sceneCategory').textContent = 'indoor';
+            }
+            
+            // Update causal stats
+            document.getElementById('causalNodes').textContent = state.causalDAG.nodes;
+            document.getElementById('causalEdges').textContent = state.causalDAG.edges + ' relationships';
+        }
+        
+        function getEmoji(emotion) {
+            const emojis = { neutral: '😐', joy: '😊', surprise: '😮', interest: '🤔', calm: '😌' };
+            return emojis[emotion] || '🙂';
+        }
+        
+        function detectCausalEvents() {
+            // Detect HR spike → stress correlation
+            if (state.sensors.heartRate > 95 && state.sensors.stress > 0.5) {
+                state.causalDAG.nodes++;
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // UI UPDATES
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function updateUI(elapsed) {
+            // Time display
+            const ms = Math.floor(elapsed);
+            const s = Math.floor(ms / 1000);
+            const m = Math.floor(s / 60);
+            const timeStr = `${m}:${String(s % 60).padStart(2, '0')}.${String(Math.floor((ms % 1000) / 10)).padStart(2, '0')}`;
+            
+            elements.timeDisplay.textContent = timeStr;
+            elements.orbitalTime.textContent = `${m}:${String(s % 60).padStart(2, '0')}`;
+            document.getElementById('frameDisplay').textContent = `Frame: ${state.frameCount}`;
+            document.getElementById('durationDisplay').textContent = `Duration: ${m}:${String(s % 60).padStart(2, '0')}`;
+            
+            // Orbital cursor rotation (one full rotation per minute)
+            const rotation = (elapsed / 60000) * 360 % 360;
+            elements.orbitalCursor.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+            elements.orbitalCursor.style.transformOrigin = 'center 150px';
+        }
+        
+        function updateStatus(text, recording) {
+            elements.statusText.textContent = text;
+            elements.statusDot.classList.toggle('recording', recording);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
         // MIRROR LLM
-        // ═══════════════════════════════════════════════════════════════
-        activateLLM() {
-            const frameData = this.getCurrentFrameData();
-            const response = this.mirrorLLM.analyzeScene(frameData);
-            this.updateLLMResponse(response);
-        }
+        // ═══════════════════════════════════════════════════════════════════════
         
-        processLLMQuery(query) {
-            if (!query.trim()) return;
+        function submitLLMQuery() {
+            const query = elements.llmInput.value.trim();
+            if (!query) return;
             
-            const frameData = this.getCurrentFrameData();
-            const response = this.mirrorLLM.processQuery(query, frameData);
-            this.updateLLMResponse(response);
+            elements.llmInput.value = '';
+            
+            // Add user message
+            addLLMMessage(`<strong>You:</strong> ${query}`, 'user');
+            
+            // Process query
+            const response = processLLMQuery(query);
+            addLLMMessage(response);
         }
         
-        updateLLMResponse(html) {
-            document.getElementById('llmResponse').innerHTML = html;
+        window.submitLLMQuery = submitLLMQuery;
+        
+        function processLLMQuery(query) {
+            const q = query.toLowerCase();
+            
+            // Scene analysis
+            if (q.includes('what') || q.includes('happening') || q.includes('see')) {
+                return `<strong>Scene Analysis</strong><br><br>
+                    📍 Environment: ${state.sensors.scene || 'unknown'}<br><br>
+                    🎯 Objects detected: ${state.sensors.objects.length}<br>
+                    ${state.sensors.objects.map(o => `• ${o.class} (${Math.round(o.confidence * 100)}%)`).join('<br>')}<br><br>
+                    ${getEmoji(state.sensors.emotion)} Emotional state: <span class="highlight">${state.sensors.emotion}</span><br>
+                    <div class="llm-evidence">Frame: ${state.frameCount} | Objects: ${state.sensors.objects.length}</div>`;
+            }
+            
+            // Emotion
+            if (q.includes('emotion') || q.includes('mood') || q.includes('feel')) {
+                return `<strong>Emotional Analysis</strong><br><br>
+                    ${getEmoji(state.sensors.emotion)} Primary: <span class="highlight">${state.sensors.emotion}</span> (${Math.round(state.sensors.emotionConfidence * 100)}%)<br><br>
+                    Biometric correlation:<br>
+                    • HR: ${state.sensors.heartRate} BPM<br>
+                    • Stress: ${Math.round(state.sensors.stress * 100)}%<br>
+                    <div class="llm-evidence">Valence: ${(Math.random() - 0.3).toFixed(2)} | Arousal: ${(0.3 + Math.random() * 0.4).toFixed(2)}</div>`;
+            }
+            
+            // Biometrics
+            if (q.includes('heart') || q.includes('bio') || q.includes('stress') || q.includes('health')) {
+                const hrStatus = state.sensors.heartRate > 100 ? 'elevated' : 'normal';
+                return `<strong>Biometric Analysis</strong><br><br>
+                    💓 Heart Rate: <span class="highlight">${state.sensors.heartRate} BPM</span> (${hrStatus})<br><br>
+                    🌡️ Skin Temp: ${state.sensors.temp.toFixed(1)}°C<br><br>
+                    😰 Stress: ${'█'.repeat(Math.round(state.sensors.stress * 10))}${'░'.repeat(10 - Math.round(state.sensors.stress * 10))} ${Math.round(state.sensors.stress * 100)}%<br>
+                    <div class="llm-evidence">Simulated | Update: ${CONFIG.frameRate} FPS</div>`;
+            }
+            
+            // Causal / Why
+            if (q.includes('why') || q.includes('cause') || q.includes('reason')) {
+                return `<strong>Causal Analysis</strong><br><br>
+                    Analyzing causal relationships...<br><br>
+                    📊 Causal Graph: ${state.causalDAG.nodes} nodes, ${state.causalDAG.edges} edges<br><br>
+                    Detected correlations:<br>
+                    • ${state.sensors.heartRate > 85 ? 'Elevated HR → emotional arousal' : 'Stable HR → baseline state'}<br>
+                    • ${state.sensors.stress > 0.5 ? 'High stress → physiological response' : 'Low stress → relaxed state'}<br>
+                    <div class="llm-evidence">Context frames: ${state.llmContext.length}</div>`;
+            }
+            
+            // Summary
+            if (q.includes('summary') || q.includes('overview')) {
+                return generateSummary();
+            }
+            
+            // Who
+            if (q.includes('who') || q.includes('person')) {
+                const people = state.sensors.objects.filter(o => o.class === 'person');
+                return `<strong>Person Analysis</strong><br><br>
+                    ${people.length === 0 ? 'No people detected in frame.' : 
+                      `${people.length} person(s) detected:<br>` + 
+                      people.map((p, i) => `• Person ${i + 1}: ${Math.round(p.confidence * 100)}% confidence`).join('<br>')}
+                    <div class="llm-evidence">Tracking: active | Faces: ${people.length}</div>`;
+            }
+            
+            // Default
+            return `<strong>Query Received</strong><br><br>
+                "<em>${query}</em>"<br><br>
+                Try asking about:<br>
+                • "What's happening?" - Scene analysis<br>
+                • "How is the mood?" - Emotion analysis<br>
+                • "What's the heart rate?" - Biometrics<br>
+                • "Why is stress high?" - Causal reasoning<br>
+                • "Give me a summary" - Overview<br>
+                <div class="llm-evidence">Context: ${state.llmContext.length} frames</div>`;
         }
         
-        getCurrentFrameData() {
-            return {
-                index: this.frameIndex,
-                timestamp: this.currentTime * 1000,
-                objects: this.detectedObjects,
-                emotion: this.currentEmotion,
-                biometrics: this.sensorData,
-                geopose: this.sensorData.gps ? {
-                    ...this.sensorData.gps,
-                    orientation: this.sensorData.orientation
-                } : null
+        function generateSummary() {
+            const duration = formatTime(state.currentTime);
+            return `<strong>Session Summary</strong><br><br>
+                📊 <strong>Recording Stats:</strong><br>
+                • Duration: ${duration}<br>
+                • Frames: ${state.frameCount}<br>
+                • Profile: ${state.profile}<br><br>
+                🎯 <strong>Current State:</strong><br>
+                • Scene: ${state.sensors.scene || 'unknown'}<br>
+                • Objects: ${state.sensors.objects.length} detected<br>
+                • Emotion: ${state.sensors.emotion}<br>
+                • HR: ${state.sensors.heartRate} BPM<br>
+                • Stress: ${Math.round(state.sensors.stress * 100)}%<br><br>
+                🔗 <strong>Causal Graph:</strong><br>
+                • ${state.causalDAG.nodes} events captured<br>
+                • ${state.causalDAG.edges} relationships<br>
+                <div class="llm-evidence">MLVF Capsule | Layers: ${state.activeLayers.size}</div>`;
+        }
+        
+        function addLLMMessage(html) {
+            const msg = document.createElement('div');
+            msg.className = 'llm-message';
+            msg.innerHTML = html;
+            elements.llmMessages.appendChild(msg);
+            elements.llmMessages.scrollTop = elements.llmMessages.scrollHeight;
+        }
+        
+        function formatTime(ms) {
+            const s = Math.floor(ms / 1000);
+            const m = Math.floor(s / 60);
+            return `${m}:${String(s % 60).padStart(2, '0')}`;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // LAYERS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function renderLayers() {
+            const container = document.getElementById('layerList');
+            container.innerHTML = '';
+            
+            for (const [id, layer] of Object.entries(LAYERS)) {
+                const isActive = state.activeLayers.has(id);
+                
+                const item = document.createElement('div');
+                item.className = `layer-item ${isActive ? 'active' : ''}`;
+                item.innerHTML = `
+                    <div class="layer-icon" style="background: ${layer.color}20; color: ${layer.color}">${layer.icon}</div>
+                    <span class="layer-name">${layer.name}</span>
+                    <div class="layer-toggle"></div>
+                `;
+                
+                item.onclick = () => toggleLayer(id);
+                container.appendChild(item);
+            }
+            
+            // Timeline layer indicators
+            const tlLayers = document.getElementById('timelineLayers');
+            tlLayers.innerHTML = '';
+            
+            for (const [id, layer] of Object.entries(LAYERS)) {
+                const isActive = state.activeLayers.has(id);
+                const indicator = document.createElement('div');
+                indicator.className = `timeline-layer-indicator ${isActive ? 'active' : ''}`;
+                indicator.textContent = layer.icon;
+                indicator.title = layer.name;
+                indicator.onclick = () => toggleLayer(id);
+                tlLayers.appendChild(indicator);
+            }
+        }
+        
+        function toggleLayer(id) {
+            if (state.activeLayers.has(id)) {
+                state.activeLayers.delete(id);
+            } else {
+                state.activeLayers.add(id);
+            }
+            renderLayers();
+            showToast(`${LAYERS[id].name} layer ${state.activeLayers.has(id) ? 'enabled' : 'disabled'}`, 'info');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // PROFILE SELECTOR
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        elements.profileSelector.addEventListener('change', (e) => {
+            state.profile = e.target.value;
+            state.activeLayers = new Set(PROFILES[state.profile]);
+            renderLayers();
+            showToast(`Profile: ${state.profile}`, 'success');
+        });
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // TABS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        document.querySelectorAll('.sidebar-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.panel}Panel`).classList.add('active');
+            });
+        });
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // EXPORT
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function exportCapsule() {
+            const capsule = {
+                id: `vrc_${Date.now().toString(36)}`,
+                version: VERSION,
+                profile: state.profile,
+                metadata: {
+                    title: `VIRECAI Recording ${new Date().toLocaleString()}`,
+                    duration: state.currentTime,
+                    frameCount: state.frameCount
+                },
+                activeLayers: Array.from(state.activeLayers),
+                causalDAG: state.causalDAG
             };
+            
+            const json = JSON.stringify(capsule, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${capsule.id}.vrc`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            showToast('Capsule exported!', 'success');
         }
         
-        // ═══════════════════════════════════════════════════════════════
-        // SIMULATIONS
-        // ═══════════════════════════════════════════════════════════════
-        startSimulations() {
-            // Sensor simulation
-            setInterval(() => {
-                this.sensorData.heartRate = 70 + Math.sin(Date.now() / 5000) * 10 + Math.random() * 5;
-                this.sensorData.skinTemp = 36.5 + Math.random() * 0.8;
-                this.sensorData.stressLevel = 0.2 + Math.sin(Date.now() / 10000) * 0.2 + Math.random() * 0.1;
-                
-                document.getElementById('heartRateValue').textContent = Math.round(this.sensorData.heartRate);
-                document.getElementById('tempValue').textContent = this.sensorData.skinTemp.toFixed(1) + '°';
-                document.getElementById('bioBadge').textContent = `💓 ${Math.round(this.sensorData.heartRate)} BPM`;
-            }, 1000);
+        window.exportCapsule = exportCapsule;
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // KEYBOARD SHORTCUTS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        document.addEventListener('keydown', (e) => {
+            // Ignore if typing in input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                if (e.key === 'Enter' && e.target.id === 'llmInput') {
+                    submitLLMQuery();
+                }
+                return;
+            }
             
-            // Emotion simulation
-            setInterval(() => {
-                const emotions = ['joy', 'surprise', 'neutral', 'interest', 'calm'];
-                const primary = emotions[Math.floor(Math.random() * emotions.length)];
-                
-                this.currentEmotion = {
-                    primary: primary,
-                    probabilities: {
-                        joy: 0.1 + Math.random() * 0.5,
-                        surprise: Math.random() * 0.4,
-                        neutral: Math.random() * 0.5,
-                        interest: Math.random() * 0.3,
-                        calm: Math.random() * 0.4
-                    },
-                    valence: Math.sin(Date.now() / 8000) * 0.5,
-                    arousal: 0.3 + Math.sin(Date.now() / 6000) * 0.3,
-                    sentiment: Math.sin(Date.now() / 10000) * 0.5
-                };
-                
-                const emojis = { joy: '😊', surprise: '😮', neutral: '😐', interest: '🤔', calm: '😌' };
-                const confidence = Math.max(...Object.values(this.currentEmotion.probabilities));
-                document.getElementById('emotionBadge').textContent = 
-                    `${emojis[primary] || '😊'} ${primary.charAt(0).toUpperCase() + primary.slice(1)} (${confidence.toFixed(2)})`;
-            }, 2000);
-            
-            // Object detection simulation
-            setInterval(() => {
-                const objectTypes = ['person', 'phone', 'cup', 'chair', 'laptop', 'book'];
-                const count = 1 + Math.floor(Math.random() * 4);
-                
-                this.detectedObjects = Array.from({ length: count }, (_, i) => ({
-                    type: objectTypes[Math.floor(Math.random() * objectTypes.length)],
-                    confidence: 0.7 + Math.random() * 0.25,
-                    bbox: [
-                        Math.random() * 60 + 10,
-                        Math.random() * 50 + 10,
-                        10 + Math.random() * 25,
-                        15 + Math.random() * 30
-                    ],
-                    trackId: i + 1
-                }));
-                
-                document.getElementById('objectCount').textContent = this.detectedObjects.length;
-                document.getElementById('mlvfObjects').textContent = `${this.detectedObjects.length} tracked`;
-                
-                this.updateObjectOverlay();
-            }, 3000);
+            switch (e.key) {
+                case ' ':
+                    e.preventDefault();
+                    toggleRecording();
+                    break;
+                case 'f':
+                case 'F':
+                    switchCamera();
+                    break;
+                case '1':
+                    document.querySelector('[data-panel="sensors"]').click();
+                    break;
+                case '2':
+                    document.querySelector('[data-panel="llm"]').click();
+                    break;
+                case '3':
+                    document.querySelector('[data-panel="layers"]').click();
+                    break;
+                case '/':
+                    e.preventDefault();
+                    document.querySelector('[data-panel="llm"]').click();
+                    elements.llmInput.focus();
+                    break;
+                case 'x':
+                case 'X':
+                    exportCapsule();
+                    break;
+                case '?':
+                    showShortcuts();
+                    break;
+                case 'Escape':
+                    closeModal();
+                    break;
+            }
+        });
+        
+        function showShortcuts() {
+            document.getElementById('shortcutsModal').classList.add('active');
         }
         
-        updateObjectOverlay() {
-            const overlay = document.getElementById('aiOverlay');
-            if (!overlay) return;
-            
-            overlay.innerHTML = this.detectedObjects.map(obj => `
-                <div class="detected-box" style="
-                    left: ${obj.bbox[0]}%;
-                    top: ${obj.bbox[1]}%;
-                    width: ${obj.bbox[2]}%;
-                    height: ${obj.bbox[3]}%;
-                ">
-                    <div class="detected-label">${obj.type} (${(obj.confidence * 100).toFixed(0)}%)</div>
-                </div>
-            `).join('');
+        function closeModal() {
+            document.getElementById('shortcutsModal').classList.remove('active');
         }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════
-    // INITIALIZE
-    // ═══════════════════════════════════════════════════════════════════════
-    const app = new VIRECAIStudio();
-    
-    // Console welcome
-    setTimeout(() => {
-        console.log('═══════════════════════════════════════════════════════════════');
-        console.log('  📹 VIRECAI Production System v3.0');
-        console.log('  Complete Smart Video Platform');
-        console.log('═══════════════════════════════════════════════════════════════');
-        console.log('');
-        console.log('🌟 Core Innovations:');
-        console.log('  ✅ 25 Semantic Layers (MLVF/MLVFF)');
-        console.log('  ✅ Orbital Timeline Wheel (radial navigation)');
-        console.log('  ✅ Mirror LLM (AI scene comprehension)');
-        console.log('  ✅ Real-time Object/Emotion Detection');
-        console.log('  ✅ Biometric Integration');
-        console.log('  ✅ GeoPose Tracking (GPS + IMU)');
-        console.log('  ✅ Compatibility Profiles (Lite → Ultra)');
-        console.log('  ✅ Causal DAG Engine');
-        console.log('');
-        console.log('🎛️ Interactions:');
-        console.log('  • Click 🔴 to start recording');
-        console.log('  • Drag the Orbital Timeline Wheel');
-        console.log('  • Toggle layer icons around the wheel');
-        console.log('  • Click center core for Mirror LLM');
-        console.log('  • Ask questions: "What\'s happening?" "Show emotions"');
-        console.log('  • Switch profiles: Lite / Standard / Extended / Ultra');
-        console.log('');
-        console.log('═══════════════════════════════════════════════════════════════');
-    }, 500);
+        
+        window.showShortcuts = showShortcuts;
+        window.closeModal = closeModal;
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // ORBITAL TIMELINE TICKS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function renderOrbitalTicks() {
+            const container = document.getElementById('orbitalTicks');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 60; i++) {
+                const tick = document.createElement('div');
+                tick.className = `orbital-tick ${i % 5 === 0 ? 'major' : ''}`;
+                tick.style.transform = `rotate(${i * 6}deg)`;
+                container.appendChild(tick);
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        async function init() {
+            console.log(`%c
+╔═══════════════════════════════════════════════════════════╗
+║           VIRECAI v${VERSION} - Symbolic Causal Intelligence           ║
+╠═══════════════════════════════════════════════════════════╣
+║  Modules: Core | Sensors | Perception | LLM | Storage     ║
+║  Layers: 25 semantic layers | WH-Chain reasoning          ║
+║  Shortcuts: Press ? for keyboard shortcuts                ║
+╚═══════════════════════════════════════════════════════════╝
+            `, 'color: #00d4ff; font-family: monospace');
+            
+            renderLayers();
+            renderOrbitalTicks();
+            await initCamera();
+            
+            // LLM input enter key
+            elements.llmInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    submitLLMQuery();
+                }
+            });
+            
+            showToast('VIRECAI v5.0 Ready', 'success');
+        }
+        
+        init();
     </script>
 </body>
 </html>
