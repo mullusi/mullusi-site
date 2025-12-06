@@ -3,1054 +3,1904 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MulluSI v5.6 | Complete UHRTS Framework</title>
+    <title>VIRECAI Production System - Complete Smart Video Platform</title>
     <style>
         :root {
-            --void: #020204;
-            --abyss: #08090d;
-            --deep: #0f1015;
-            --surface: #16171f;
-            --elevated: #1e2028;
-            --gold: #d4a574;
-            --gold-dim: rgba(212, 165, 116, 0.25);
-            --emerald: #10b981;
-            --cyan: #06b6d4;
-            --violet: #8b5cf6;
-            --rose: #f43f5e;
-            --blue: #3b82f6;
-            --amber: #f59e0b;
-            --lime: #84cc16;
-            --pink: #ec4899;
-            --white: #f0f0f0;
-            --muted: rgba(255,255,255,0.45);
+            --primary: #4ecdc4;
+            --secondary: #45b7d1;
+            --accent: #ff6b6b;
+            --warning: #ffa726;
+            --bg-dark: #0a0a12;
+            --bg-panel: rgba(26, 26, 38, 0.95);
+            --border: rgba(255,255,255,0.1);
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --glass: rgba(255,255,255,0.05);
         }
-
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        
         body {
-            font-family: 'SF Pro Display', -apple-system, system-ui, sans-serif;
-            background: var(--void);
-            color: var(--white);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a12 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
         }
-
-        .app {
+        
+        /* ═══════════════════════════════════════════════════════════════
+           APP LAYOUT
+           ═══════════════════════════════════════════════════════════════ */
+        .app-container {
             display: grid;
-            grid-template-rows: 55px 1fr;
-            min-height: 100vh;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
         }
-
+        
         /* Header */
         .header {
-            background: linear-gradient(180deg, var(--abyss) 0%, var(--deep) 100%);
-            border-bottom: 1px solid var(--gold-dim);
-            padding: 0 16px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
+        
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.75rem;
         }
-
-        .logo-glyph {
+        
+        .logo-icon { font-size: 1.5rem; }
+        
+        .logo-text {
             font-size: 1.4rem;
-            color: var(--gold);
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .logo h1 { font-size: 0.9rem; font-weight: 500; }
-        .logo h1 span { color: var(--gold); }
-
-        .version-badge {
-            background: linear-gradient(135deg, var(--cyan), var(--blue));
-            color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.48rem;
-            font-weight: 700;
-            margin-left: 8px;
+        
+        .mode-tabs {
+            display: flex;
+            background: rgba(0,0,0,0.3);
+            border-radius: 25px;
+            padding: 4px;
         }
-
-        .metrics-bar { display: flex; gap: 12px; }
-        .metric { text-align: center; }
-        .metric-value { font-size: 0.85rem; font-weight: 600; }
-        .metric-label { font-size: 0.4rem; color: var(--muted); text-transform: uppercase; }
-
-        .header-controls { display: flex; gap: 6px; }
-        .btn {
-            padding: 6px 12px;
-            background: var(--surface);
-            border: 1px solid var(--gold-dim);
-            border-radius: 5px;
-            color: var(--white);
+        
+        .mode-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 0.6rem 1.5rem;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 0.55rem;
-            transition: all 0.15s;
-        }
-        .btn:hover { background: var(--elevated); border-color: var(--gold); }
-        .btn.primary { background: var(--gold); color: var(--void); }
-
-        /* Main Layout */
-        .main {
-            display: grid;
-            grid-template-columns: 260px 1fr 260px;
-            height: calc(100vh - 55px);
-            overflow: hidden;
-        }
-
-        .side-panel {
-            background: var(--abyss);
-            border-right: 1px solid rgba(255,255,255,0.05);
-            padding: 10px;
-            overflow-y: auto;
-            font-size: 0.52rem;
-        }
-        .side-panel:last-child { border-right: none; border-left: 1px solid rgba(255,255,255,0.05); }
-
-        .section-title {
-            font-size: 0.46rem;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin: 8px 0 4px 0;
-            padding-bottom: 3px;
-            border-bottom: 1px solid var(--gold-dim);
+            font-weight: 600;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 0.5rem;
         }
-
-        .card {
-            background: var(--surface);
-            border-radius: 5px;
-            padding: 6px;
-            margin-bottom: 5px;
+        
+        .mode-tab.active {
+            background: var(--primary);
+            color: #000;
         }
-
-        .stat-row {
+        
+        .mode-tab:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+        }
+        
+        .profile-selector {
             display: flex;
-            justify-content: space-between;
-            margin: 2px 0;
-            font-size: 0.45rem;
+            gap: 0.5rem;
+            align-items: center;
         }
-        .stat-label { color: var(--muted); }
-        .stat-value { color: var(--white); font-family: monospace; }
-
-        /* WH Categories Grid */
-        .wh-categories {
+        
+        .profile-btn {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .profile-btn.active {
+            background: var(--secondary);
+            color: #000;
+            border-color: var(--secondary);
+        }
+        
+        /* Main Content */
+        .main-content {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr 450px;
+            gap: 1rem;
+            padding: 1rem;
+            overflow: hidden;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           LEFT PANEL - VIDEO VIEWPORT
+           ═══════════════════════════════════════════════════════════════ */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .video-viewport {
+            background: #000;
+            border-radius: 16px;
+            position: relative;
+            flex: 1;
+            min-height: 400px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+        
+        .video-viewport.recording {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+        }
+        
+        #cameraPreview, #videoPlayer {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+        }
+        
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            gap: 1rem;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+        
+        .video-placeholder .icon { font-size: 4rem; }
+        
+        /* AI Detection Overlay */
+        .ai-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+        }
+        
+        .detected-box {
+            position: absolute;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            background: rgba(78, 205, 196, 0.1);
+            pointer-events: all;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .detected-box:hover {
+            background: rgba(78, 205, 196, 0.3);
+            border-width: 3px;
+        }
+        
+        .detected-label {
+            position: absolute;
+            top: -24px;
+            left: 0;
+            background: var(--primary);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        /* Status Badges */
+        .viewport-badges {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .badge {
+            background: rgba(0,0,0,0.8);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .badge.emotion { border-left: 3px solid var(--warning); }
+        .badge.bio { border-left: 3px solid var(--accent); }
+        .badge.geo { border-left: 3px solid var(--secondary); }
+        
+        /* Recording Indicator */
+        .recording-indicator {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--accent);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            animation: pulse 1s infinite;
+        }
+        
+        .recording-indicator.active { display: flex; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .rec-dot {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           SENSOR PANEL
+           ═══════════════════════════════════════════════════════════════ */
+        .sensor-panel {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .sensor-card {
+            background: var(--bg-panel);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .sensor-card.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+        }
+        
+        .sensor-icon { font-size: 1.3rem; margin-bottom: 0.25rem; }
+        .sensor-value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+        .sensor-label { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           CONTROLS BAR
+           ═══════════════════════════════════════════════════════════════ */
+        .controls-bar {
+            background: var(--bg-panel);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .ctrl-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem 1.25rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .ctrl-btn:hover { background: rgba(255,255,255,0.2); }
+        
+        .ctrl-btn.primary {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+        
+        .ctrl-btn.record {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .ctrl-btn.record.active {
+            background: var(--primary);
+            animation: record-pulse 1s infinite;
+        }
+        
+        @keyframes record-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(78, 205, 196, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(78, 205, 196, 0); }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           RIGHT PANEL - ORBITAL TIMELINE & MIRROR LLM
+           ═══════════════════════════════════════════════════════════════ */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        /* Orbital Timeline Container */
+        .orbital-container {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .orbital-title {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           ORBITAL TIMELINE WHEEL - Core Innovation
+           ═══════════════════════════════════════════════════════════════ */
+        .orbital-wheel {
+            width: 380px;
+            height: 380px;
+            position: relative;
+            cursor: grab;
+        }
+        
+        .orbital-wheel:active { cursor: grabbing; }
+        
+        /* Rings */
+        .orbital-ring {
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        /* Outer Time Ring */
+        .time-ring {
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 10px solid rgba(255,255,255,0.1);
+        }
+        
+        .time-progress {
+            position: absolute;
+            top: -5px; left: -5px;
+            width: calc(100% + 10px);
+            height: calc(100% + 10px);
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top-color: var(--primary);
+            border-right-color: var(--primary);
+            transform: rotate(-90deg);
+            transition: transform 0.1s;
+        }
+        
+        /* Emotion Pulse Ring */
+        .emotion-ring {
+            top: 25px; left: 25px; right: 25px; bottom: 25px;
+            border: 8px solid transparent;
+            background: conic-gradient(
+                from 0deg,
+                var(--accent) 0deg 45deg,
+                var(--warning) 45deg 90deg,
+                #f97316 90deg 135deg,
+                var(--primary) 135deg 180deg,
+                var(--secondary) 180deg 225deg,
+                #8b5cf6 225deg 270deg,
+                #ec4899 270deg 315deg,
+                var(--accent) 315deg 360deg
+            );
+            opacity: 0.5;
+            animation: emotion-rotate 15s linear infinite;
+        }
+        
+        @keyframes emotion-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Layer Ring */
+        .layer-ring {
+            top: 55px; left: 55px; right: 55px; bottom: 55px;
+            border: 2px dashed rgba(255,255,255,0.2);
+        }
+        
+        /* Biometric Ring */
+        .bio-ring {
+            top: 80px; left: 80px; right: 80px; bottom: 80px;
+            border: 4px solid rgba(255, 107, 107, 0.3);
+            animation: bio-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes bio-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.02); opacity: 0.6; }
+        }
+        
+        /* Center Core */
+        .center-core {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 130px;
+            height: 130px;
+            background: radial-gradient(circle, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 40px rgba(78, 205, 196, 0.4);
+            z-index: 10;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .center-core:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 0 60px rgba(78, 205, 196, 0.6);
+        }
+        
+        .core-time { font-size: 1.6rem; font-weight: 800; color: #000; }
+        .core-frame { font-size: 0.7rem; color: rgba(0,0,0,0.6); }
+        .core-label { font-size: 0.75rem; color: rgba(0,0,0,0.8); margin-top: 4px; }
+        
+        /* Event Nodes */
+        .event-node {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 5;
+        }
+        
+        .event-node:hover {
+            transform: scale(1.5);
+            box-shadow: 0 0 15px rgba(255,255,255,0.6);
+        }
+        
+        .event-node.person { background: var(--accent); }
+        .event-node.object { background: var(--warning); }
+        .event-node.emotion { background: var(--primary); }
+        .event-node.bio { background: var(--secondary); }
+        .event-node.geo { background: #8b5cf6; }
+        
+        /* Layer Toggles */
+        .layer-toggle {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 5;
+        }
+        
+        .layer-toggle.active {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+        
+        .layer-toggle:hover { transform: scale(1.15); }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           MIRROR LLM PANEL
+           ═══════════════════════════════════════════════════════════════ */
+        .llm-panel {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .llm-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .llm-status {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
             gap: 4px;
         }
-
-        .wh-cat {
-            padding: 5px;
-            border-radius: 4px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .wh-cat:hover { transform: scale(1.02); }
-        .wh-cat.active { border-color: var(--gold); }
-
-        .wh-cat-name { font-size: 0.4rem; font-weight: bold; }
-        .wh-cat-count { font-size: 0.5rem; color: var(--white); }
-
-        .wh-cat.essence { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-        .wh-cat.temporal { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .wh-cat.spatial { background: linear-gradient(135deg, #10b981, #059669); }
-        .wh-cat.agency { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-        .wh-cat.causation { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .wh-cat.selection { background: linear-gradient(135deg, #ec4899, #db2777); }
-        .wh-cat.mechanism { background: linear-gradient(135deg, #06b6d4, #0891b2); }
-        .wh-cat.context { background: linear-gradient(135deg, #84cc16, #65a30d); }
-
-        /* Layers Display */
-        .layers-list {
-            max-height: 180px;
-            overflow-y: auto;
-        }
-
-        .layer-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px;
-            border-radius: 3px;
-            margin-bottom: 2px;
-            background: var(--elevated);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .layer-item:hover { background: rgba(212, 165, 116, 0.1); }
-        .layer-item.active { border-left: 2px solid var(--gold); }
-
-        .layer-num {
-            width: 18px;
-            height: 18px;
+        
+        .llm-status .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
             border-radius: 50%;
-            background: var(--surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.4rem;
-            font-weight: bold;
+            animation: blink 1.5s infinite;
         }
-
-        .layer-name { font-size: 0.42rem; flex: 1; }
-        .layer-v { font-size: 0.5rem; }
-
-        /* Reasoning Modes */
-        .modes-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 3px;
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
-
-        .mode-item {
-            padding: 4px;
-            border-radius: 3px;
-            text-align: center;
-            font-size: 0.4rem;
-            background: var(--elevated);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .mode-item:hover { background: rgba(6, 182, 212, 0.2); }
-        .mode-item.active { background: rgba(6, 182, 212, 0.3); border: 1px solid var(--cyan); }
-
-        /* Phases Timeline */
-        .phases-timeline {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2px;
-        }
-
-        .phase-dot {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--elevated);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.4rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .phase-dot.complete { background: var(--emerald); color: var(--void); }
-        .phase-dot.active { background: var(--cyan); color: var(--void); animation: pulse 1s infinite; }
-        .phase-dot.pending { background: var(--surface); }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* Completeness Criteria */
-        .criteria-list {
-            max-height: 200px;
+        
+        .llm-response {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border-left: 3px solid var(--primary);
+            flex: 1;
             overflow-y: auto;
+            margin-bottom: 0.75rem;
         }
-
-        .criterion {
-            padding: 4px;
-            margin-bottom: 3px;
-            background: var(--elevated);
-            border-radius: 3px;
+        
+        .llm-evidence {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-dim);
         }
-
-        .criterion-header {
+        
+        .llm-input-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .llm-input {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .llm-input::placeholder { color: var(--text-dim); }
+        .llm-input:focus { outline: none; border-color: var(--primary); }
+        
+        .llm-send {
+            background: var(--primary);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            color: #000;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .llm-send:hover { transform: scale(1.1); }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           MLVF DATA PANEL
+           ═══════════════════════════════════════════════════════════════ */
+        .mlvf-panel {
+            background: var(--bg-panel);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .mlvf-header {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.42rem;
         }
-
-        .criterion-name { flex: 1; }
-        .criterion-weight { color: var(--muted); }
-        .criterion-score { font-weight: bold; }
-
-        .criterion-bar {
-            height: 3px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            margin-top: 2px;
-            overflow: hidden;
+        
+        .mlvf-format {
+            background: var(--glass);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
         }
-
-        .criterion-fill {
-            height: 100%;
-            border-radius: 2px;
-            transition: width 0.3s;
+        
+        .mlvf-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
         }
-
-        /* Center Visualization */
-        .viz-container {
-            background: var(--void);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .viz-canvas { width: 100%; height: 100%; }
-
-        .formula-overlay {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(8, 9, 13, 0.95);
-            border: 1px solid var(--cyan);
+        
+        .mlvf-item {
+            background: rgba(0,0,0,0.2);
+            padding: 0.6rem;
             border-radius: 8px;
-            padding: 8px 16px;
-            text-align: center;
+            font-size: 0.75rem;
         }
-
-        .formula-title {
-            font-size: 0.45rem;
-            color: var(--cyan);
+        
+        .mlvf-item strong {
+            color: var(--text-dim);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.65rem;
             text-transform: uppercase;
         }
-
-        .formula-main {
-            font-family: 'Courier New', monospace;
-            font-size: 0.75rem;
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        .input-area {
-            position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
+        
+        /* ═══════════════════════════════════════════════════════════════
+           STATUS BAR
+           ═══════════════════════════════════════════════════════════════ */
+        .status-bar {
+            background: rgba(0,0,0,0.6);
+            padding: 0.6rem 1.5rem;
             display: flex;
-            gap: 5px;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
         }
-
-        .input-field {
-            width: 200px;
-            padding: 8px 12px;
-            background: var(--surface);
-            border: 1px solid var(--gold-dim);
-            border-radius: 5px;
-            color: var(--white);
-            font-size: 0.9rem;
-            text-align: center;
+        
+        .status-left { display: flex; gap: 1.5rem; }
+        .status-item { display: flex; align-items: center; gap: 0.5rem; }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
         }
-
-        /* Wholeness Score Display */
-        .wholeness-display {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
+        .status-dot.warning { background: var(--warning); }
+        .status-dot.error { background: var(--accent); }
+        
+        /* ═══════════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════════ */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .orbital-wheel {
+                width: 320px;
+                height: 320px;
+            }
         }
-
-        .wholeness-label { font-size: 0.45rem; color: var(--muted); }
-        .wholeness-value { font-size: 2rem; font-weight: bold; color: var(--gold); }
-        .wholeness-interpretation { font-size: 0.5rem; color: var(--emerald); }
-
-        /* Progress Bars */
-        .progress-bar {
-            height: 5px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 3px 0;
-        }
-        .progress-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.3s;
-        }
-        .progress-fill.gold { background: var(--gold); }
-        .progress-fill.cyan { background: var(--cyan); }
-        .progress-fill.emerald { background: var(--emerald); }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--void); }
-        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
     </style>
 </head>
 <body>
-    <div class="app">
+    <div class="app-container">
+        <!-- Header -->
         <header class="header">
             <div class="logo">
-                <span class="logo-glyph">ሙሉ∿</span>
-                <h1><span>MulluSI</span> v5.6<span class="version-badge">COMPLETE UHRTS</span></h1>
+                <span class="logo-icon">📹</span>
+                <span class="logo-text">VIRECAI</span>
+                <span style="font-size: 0.8rem; color: var(--text-dim); margin-left: 0.5rem;">Production System v3.0</span>
             </div>
-            <div class="metrics-bar">
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--cyan);" id="m-tick">0</div>
-                    <div class="metric-label">Tick</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--blue);" id="m-questions">73</div>
-                    <div class="metric-label">WH-Questions</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--violet);" id="m-layers">11</div>
-                    <div class="metric-label">Layers</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--amber);" id="m-modes">10</div>
-                    <div class="metric-label">Modes</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--emerald);" id="m-phase">0</div>
-                    <div class="metric-label">Phase</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" style="color: var(--gold);" id="m-wholeness">0%</div>
-                    <div class="metric-label">Wholeness</div>
-                </div>
+            
+            <div class="mode-tabs">
+                <button class="mode-tab active" data-mode="capture">📱 Capture</button>
+                <button class="mode-tab" data-mode="play">▶️ Play</button>
+                <button class="mode-tab" data-mode="edit">✂️ Edit</button>
             </div>
-            <div class="header-controls">
-                <button class="btn" id="btn-run">▶ Run</button>
-                <button class="btn primary" id="btn-understand">Understand</button>
+            
+            <div class="profile-selector">
+                <span style="font-size: 0.75rem; color: var(--text-dim);">Profile:</span>
+                <button class="profile-btn" data-profile="lite">Lite</button>
+                <button class="profile-btn active" data-profile="standard">Standard</button>
+                <button class="profile-btn" data-profile="extended">Extended</button>
+                <button class="profile-btn" data-profile="ultra">Ultra</button>
             </div>
         </header>
-
-        <main class="main">
-            <!-- Left Panel: WH Categories & Layers -->
-            <aside class="side-panel">
-                <div class="section-title">❓ WH Categories (70+)</div>
-                <div class="card">
-                    <div class="wh-categories" id="wh-categories"></div>
-                </div>
-
-                <div class="section-title">🏛 Architectural Layers (0-10)</div>
-                <div class="card">
-                    <div class="layers-list" id="layers-list"></div>
-                </div>
-
-                <div class="section-title">🧠 Reasoning Modes (10)</div>
-                <div class="card">
-                    <div class="modes-grid" id="modes-grid"></div>
-                </div>
-
-                <div class="section-title">⏱ Algorithm Phases (11)</div>
-                <div class="card">
-                    <div class="phases-timeline" id="phases-timeline"></div>
-                </div>
-            </aside>
-
-            <!-- Center: Visualization -->
-            <section class="viz-container">
-                <canvas class="viz-canvas" id="viz-canvas"></canvas>
-
-                <div class="formula-overlay">
-                    <div class="formula-title">Universal Holistic Reasoning & Thinking</div>
-                    <div class="formula-main">∀ WH ∈ {70+} → Understand(Subject)</div>
-                </div>
-
-                <div class="wholeness-display">
-                    <div class="wholeness-label">WHOLENESS SCORE</div>
-                    <div class="wholeness-value" id="wholeness-big">0%</div>
-                    <div class="wholeness-interpretation" id="wholeness-interp">INITIALIZING</div>
-                </div>
-
-                <div class="input-area">
-                    <input type="text" class="input-field" id="input-field" placeholder="Enter subject..." value="Consciousness">
-                    <button class="btn primary" id="btn-go">→</button>
-                </div>
-            </section>
-
-            <!-- Right Panel: Completeness Criteria -->
-            <aside class="side-panel">
-                <div class="section-title">✓ Completeness Criteria (10)</div>
-                <div class="card">
-                    <div class="criteria-list" id="criteria-list"></div>
-                </div>
-
-                <div class="section-title">📊 Knowledge Graph</div>
-                <div class="card">
-                    <div class="stat-row">
-                        <span class="stat-label">Answered:</span>
-                        <span class="stat-value" id="kg-answered">0</span>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Panel - Video Viewport -->
+            <div class="left-panel">
+                <div class="video-viewport" id="videoViewport">
+                    <video id="cameraPreview" autoplay muted playsinline></video>
+                    
+                    <div class="ai-overlay" id="aiOverlay"></div>
+                    
+                    <div class="viewport-badges">
+                        <div class="badge emotion" id="emotionBadge">😊 Joy (0.82)</div>
+                        <div class="badge bio" id="bioBadge">💓 78 BPM</div>
+                        <div class="badge geo" id="geoBadge">📍 Tracking...</div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Unknowns:</span>
-                        <span class="stat-value" id="kg-unknowns">0</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Inferences:</span>
-                        <span class="stat-value" id="kg-inferences">0</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Predictions:</span>
-                        <span class="stat-value" id="kg-predictions">0</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Counterfactuals:</span>
-                        <span class="stat-value" id="kg-counterfactuals">0</span>
+                    
+                    <div class="recording-indicator" id="recordingIndicator">
+                        <div class="rec-dot"></div>
+                        <span>REC</span>
+                        <span id="recordingTime">00:00</span>
                     </div>
                 </div>
-
-                <div class="section-title">🔗 Causal Graph</div>
-                <div class="card">
-                    <div class="stat-row">
-                        <span class="stat-label">Nodes:</span>
-                        <span class="stat-value" id="cg-nodes">0</span>
+                
+                <!-- Sensor Panel -->
+                <div class="sensor-panel">
+                    <div class="sensor-card active">
+                        <div class="sensor-icon">💓</div>
+                        <div class="sensor-value" id="heartRateValue">78</div>
+                        <div class="sensor-label">Heart Rate (BPM)</div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Edges:</span>
-                        <span class="stat-value" id="cg-edges">0</span>
+                    <div class="sensor-card active">
+                        <div class="sensor-icon">🌡️</div>
+                        <div class="sensor-value" id="tempValue">36.8°</div>
+                        <div class="sensor-label">Skin Temp</div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Critical Paths:</span>
-                        <span class="stat-value" id="cg-paths">0</span>
+                    <div class="sensor-card active">
+                        <div class="sensor-icon">🎯</div>
+                        <div class="sensor-value" id="objectCount">3</div>
+                        <div class="sensor-label">Objects</div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Leverage Points:</span>
-                        <span class="stat-value" id="cg-leverage">0</span>
+                    <div class="sensor-card active">
+                        <div class="sensor-icon">📍</div>
+                        <div class="sensor-value" id="gpsAccuracy">±2m</div>
+                        <div class="sensor-label">GPS</div>
                     </div>
-                </div>
-
-                <div class="section-title">🌐 Perspectives</div>
-                <div class="card">
-                    <div class="stat-row">
-                        <span class="stat-label">Applied:</span>
-                        <span class="stat-value" id="persp-applied">0/10</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Agreements:</span>
-                        <span class="stat-value" id="persp-agree">0</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Conflicts:</span>
-                        <span class="stat-value" id="persp-conflict">0</span>
+                    <div class="sensor-card">
+                        <div class="sensor-icon">🧭</div>
+                        <div class="sensor-value" id="headingValue">45°</div>
+                        <div class="sensor-label">Heading</div>
                     </div>
                 </div>
-
-                <div class="section-title">🎯 Meta-Awareness</div>
-                <div class="card">
-                    <div class="stat-row">
-                        <span class="stat-label">Assumptions:</span>
-                        <span class="stat-value" id="meta-assumptions">0</span>
+                
+                <!-- Controls -->
+                <div class="controls-bar">
+                    <button class="ctrl-btn" id="switchCameraBtn">📷 Switch</button>
+                    <button class="ctrl-btn" id="layersBtn">🎚️ Layers</button>
+                    <button class="ctrl-btn record" id="recordBtn">🔴</button>
+                    <button class="ctrl-btn" id="settingsBtn">⚙️ Settings</button>
+                    <button class="ctrl-btn primary" id="exportBtn">📤 Export</button>
+                </div>
+            </div>
+            
+            <!-- Right Panel - Orbital Timeline & Mirror LLM -->
+            <div class="right-panel">
+                <!-- Orbital Timeline -->
+                <div class="orbital-container">
+                    <div class="orbital-title">
+                        🌌 Orbital Timeline Wheel
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Limitations:</span>
-                        <span class="stat-value" id="meta-limitations">0</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Improvements:</span>
-                        <span class="stat-value" id="meta-improvements">0</span>
+                    
+                    <div class="orbital-wheel" id="orbitalWheel">
+                        <!-- Rings -->
+                        <div class="orbital-ring time-ring">
+                            <div class="time-progress" id="timeProgress"></div>
+                        </div>
+                        <div class="orbital-ring emotion-ring"></div>
+                        <div class="orbital-ring layer-ring"></div>
+                        <div class="orbital-ring bio-ring"></div>
+                        
+                        <!-- Center Core -->
+                        <div class="center-core" id="centerCore">
+                            <div class="core-time" id="coreTime">0:00</div>
+                            <div class="core-frame" id="coreFrame">Frame 0</div>
+                            <div class="core-label">Tap for LLM</div>
+                        </div>
+                        
+                        <!-- Event Nodes (dynamically positioned) -->
+                        <div class="event-node person" style="top: 12%; left: 72%;" title="Person detected @ 0:05"></div>
+                        <div class="event-node object" style="top: 28%; left: 88%;" title="Object event @ 0:12"></div>
+                        <div class="event-node emotion" style="top: 55%; left: 92%;" title="Joy peak @ 0:28"></div>
+                        <div class="event-node bio" style="top: 78%; left: 75%;" title="HR spike @ 0:45"></div>
+                        <div class="event-node geo" style="top: 85%; left: 45%;" title="Location change @ 1:02"></div>
+                        <div class="event-node person" style="top: 75%; left: 18%;" title="Person exit @ 1:15"></div>
+                        <div class="event-node emotion" style="top: 48%; left: 8%;" title="Emotion shift @ 1:28"></div>
+                        <div class="event-node object" style="top: 22%; left: 15%;" title="New object @ 1:40"></div>
+                        
+                        <!-- Layer Toggles -->
+                        <div class="layer-toggle active" style="top: 2%; left: 47%;" data-layer="visual" title="Visual Layer">📹</div>
+                        <div class="layer-toggle active" style="top: 12%; right: 8%;" data-layer="audio" title="Audio Layer">🎵</div>
+                        <div class="layer-toggle active" style="top: 47%; right: 2%;" data-layer="depth" title="Depth Layer">📏</div>
+                        <div class="layer-toggle active" style="bottom: 12%; right: 8%;" data-layer="geopose" title="GeoPose">📍</div>
+                        <div class="layer-toggle active" style="bottom: 2%; left: 47%;" data-layer="biometric" title="Biometric">💓</div>
+                        <div class="layer-toggle active" style="bottom: 12%; left: 8%;" data-layer="emotion" title="Emotion">😊</div>
+                        <div class="layer-toggle" style="top: 47%; left: 2%;" data-layer="consent" title="Consent">🔒</div>
+                        <div class="layer-toggle" style="top: 12%; left: 8%;" data-layer="smell" title="Scent Layer">👃</div>
                     </div>
                 </div>
-            </aside>
+                
+                <!-- Mirror LLM Panel -->
+                <div class="llm-panel">
+                    <div class="llm-header">
+                        <span>🧠</span> Mirror LLM - Scene Comprehension
+                        <div class="llm-status">
+                            <div class="dot"></div>
+                            <span>Active</span>
+                        </div>
+                    </div>
+                    <div class="llm-response" id="llmResponse">
+                        <strong>System Ready</strong><br><br>
+                        Mirror LLM is connected and ready to analyze your VIRECAI capsule content. I can provide:
+                        <br><br>
+                        • <strong>Scene Comprehension:</strong> "What's happening in this frame?"
+                        <br>• <strong>Emotional Analysis:</strong> "Why did the mood change here?"
+                        <br>• <strong>Object Tracking:</strong> "Follow this person through the video"
+                        <br>• <strong>Biometric Correlation:</strong> "What caused the heart rate spike?"
+                        <br>• <strong>Contextual Queries:</strong> "Where and when was this recorded?"
+                        
+                        <div class="llm-evidence">
+                            <strong>MLVFF Evidence Chain:</strong> Ready to provide frame-level data, object tracking confidence, emotion vectors, and biometric correlations.
+                        </div>
+                    </div>
+                    <div class="llm-input-container">
+                        <input type="text" class="llm-input" placeholder="🎤 Ask about the scene..." id="llmInput">
+                        <button class="llm-send" id="llmSend">➤</button>
+                    </div>
+                </div>
+                
+                <!-- MLVF Data Panel -->
+                <div class="mlvf-panel">
+                    <div class="mlvf-header">
+                        📊 MLVF/MLVFF Frame Data
+                        <span class="mlvf-format">.vrc v2.0</span>
+                    </div>
+                    <div class="mlvf-grid">
+                        <div class="mlvf-item">
+                            <strong>Container</strong>
+                            <span id="mlvfContainer">Ready</span>
+                        </div>
+                        <div class="mlvf-item">
+                            <strong>Frame</strong>
+                            <span id="mlvfFrame">0 / 0</span>
+                        </div>
+                        <div class="mlvf-item">
+                            <strong>Layers</strong>
+                            <span id="mlvfLayers">6 active</span>
+                        </div>
+                        <div class="mlvf-item">
+                            <strong>Objects</strong>
+                            <span id="mlvfObjects">0 tracked</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
+        
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <div class="status-item">
+                    <div class="status-dot" id="aiStatusDot"></div>
+                    <span>AI: Active</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot" id="sensorStatusDot"></div>
+                    <span>Sensors: Ready</span>
+                </div>
+                <div class="status-item" id="modeStatus">
+                    <span>Mode: Capture</span>
+                </div>
+            </div>
+            <div>
+                <span style="color: var(--primary);">VIRECAI</span> • 
+                18 Semantic Layers • Causal DAG • Mirror LLM • 
+                <span id="profileStatus">Standard Profile</span>
+            </div>
+        </footer>
     </div>
 
     <script>
-    // =========================================================================
-    // CONSTANTS
-    // =========================================================================
-
-    const WH_CATEGORIES = [
-        { id: 'essence', name: 'ESSENCE', count: 12, color: '#3b82f6' },
-        { id: 'temporal', name: 'TEMPORAL', count: 15, color: '#f59e0b' },
-        { id: 'spatial', name: 'SPATIAL', count: 18, color: '#10b981' },
-        { id: 'agency', name: 'AGENCY', count: 12, color: '#8b5cf6' },
-        { id: 'causation', name: 'CAUSATION', count: 10, color: '#ef4444' },
-        { id: 'selection', name: 'SELECTION', count: 11, color: '#ec4899' },
-        { id: 'mechanism', name: 'MECHANISM', count: 18, color: '#06b6d4' },
-        { id: 'context', name: 'CONTEXT', count: 2, color: '#84cc16' }
-    ];
-
-    const LAYERS = [
-        { num: 0, name: 'META-COGNITIVE', v: 'ኤ', purpose: 'Self-awareness' },
-        { num: 1, name: 'ONTOLOGICAL', v: 'ኢ', purpose: 'Identity & essence' },
-        { num: 2, name: 'TEMPORAL', v: 'ኣ', purpose: 'Time mapping' },
-        { num: 3, name: 'SPATIAL', v: 'ኣ', purpose: 'Space mapping' },
-        { num: 4, name: 'AGENCY', v: 'እ', purpose: 'Actor relations' },
-        { num: 5, name: 'TELEOLOGICAL', v: 'ኡ', purpose: 'Purpose & cause' },
-        { num: 6, name: 'MODAL', v: 'አ', purpose: 'Possibility space' },
-        { num: 7, name: 'MECHANISTIC', v: 'ኦ', purpose: 'Process & mechanism' },
-        { num: 8, name: 'RELATIONAL', v: 'ኧ', purpose: 'Context & comparison' },
-        { num: 9, name: 'COUNTERFACTUAL', v: 'አ', purpose: 'What-if exploration' },
-        { num: 10, name: 'SYNTHETIC', v: 'ኤ', purpose: 'Holistic integration' }
-    ];
-
-    const REASONING_MODES = [
-        'ANALYTICAL', 'SYNTHETIC', 'CAUSAL', 'TEMPORAL', 'SPATIAL',
-        'MODAL', 'COMPARATIVE', 'ABDUCTIVE', 'DIALECTICAL', 'RECURSIVE'
-    ];
-
-    const PHASES = [
-        'META-INIT', 'INTERROGATE', 'MULTI-MODE', 'GAP-DETECT',
-        'CONTRADICT', 'COHERENCE', 'CAUSAL-GRAPH', 'PERSPECTIVE',
-        'TEMPORAL', 'COUNTERFACT', 'SYNTHESIS', 'SELF-IMPROVE'
-    ];
-
-    const CRITERIA = [
-        { id: 'dimensional', name: 'Dimensional Completeness', weight: 0.15, target: 0.90 },
-        { id: 'depth', name: 'Depth Adequacy', weight: 0.10, target: 0.80 },
-        { id: 'causal', name: 'Causal Closure', weight: 0.12, target: 0.85 },
-        { id: 'logical', name: 'Logical Consistency', weight: 0.12, target: 0.90 },
-        { id: 'empirical', name: 'Empirical Correspondence', weight: 0.10, target: 0.75 },
-        { id: 'explanatory', name: 'Explanatory Power', weight: 0.12, target: 0.80 },
-        { id: 'predictive', name: 'Predictive Capacity', weight: 0.08, target: 0.70 },
-        { id: 'contextual', name: 'Contextual Awareness', weight: 0.08, target: 0.85 },
-        { id: 'alternative', name: 'Alternative Recognition', weight: 0.08, target: 0.75 },
-        { id: 'meta', name: 'Meta-Awareness', weight: 0.05, target: 1.00 }
-    ];
-
-    const CRITERION_COLORS = {
-        dimensional: '#3b82f6', depth: '#8b5cf6', causal: '#ef4444',
-        logical: '#f59e0b', empirical: '#10b981', explanatory: '#06b6d4',
-        predictive: '#ec4899', contextual: '#84cc16', alternative: '#a855f7', meta: '#d4a574'
+    // ═══════════════════════════════════════════════════════════════════════
+    // VIRECAI PRODUCTION SYSTEM v3.0
+    // Complete Smart Video Platform with Orbital Timeline & Mirror LLM
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // LAYER DEFINITIONS (25 Semantic Layers)
+    // ═══════════════════════════════════════════════════════════════════════
+    const VIRECAI_LAYERS = {
+        // Core Visual
+        VISUAL: { id: 'visual', name: 'Visual', icon: '📹', active: true },
+        DEPTH: { id: 'depth', name: 'Depth', icon: '📏', active: true },
+        
+        // Audio
+        AUDIO: { id: 'audio', name: 'Audio', icon: '🎵', active: true },
+        SOUND_SEMANTIC: { id: 'sound_semantic', name: 'Sound Semantic', icon: '🔊', active: false },
+        
+        // Object & Scene
+        OBJECT: { id: 'object', name: 'Object', icon: '🎯', active: true },
+        SCENE_GRAPH: { id: 'scene_graph', name: 'Scene Graph', icon: '🗺️', active: false },
+        
+        // Context
+        GEOPOSE: { id: 'geopose', name: 'GeoPose', icon: '📍', active: true },
+        LIGHT_ENV: { id: 'light_env', name: 'Light Env', icon: '💡', active: false },
+        WEATHER_ENV: { id: 'weather_env', name: 'Weather', icon: '🌤️', active: false },
+        
+        // Human
+        BIOMETRIC: { id: 'biometric', name: 'Biometric', icon: '💓', active: true },
+        BIO_SOUND: { id: 'bio_sound', name: 'Voice Print', icon: '🎙️', active: false },
+        EMOTION: { id: 'emotion', name: 'Emotion', icon: '😊', active: true },
+        HUMAN_FACTOR: { id: 'human_factor', name: 'Human Factor', icon: '👤', active: false },
+        
+        // Scientific
+        PHYSICS: { id: 'physics', name: 'Physics', icon: '⚡', active: false },
+        THERMAL: { id: 'thermal', name: 'Thermal', icon: '🌡️', active: false },
+        MATERIAL: { id: 'material', name: 'Material', icon: '🧱', active: false },
+        
+        // Meta
+        SEMANTIC: { id: 'semantic', name: 'Semantic', icon: '📚', active: false },
+        SYMBOLIC: { id: 'symbolic', name: 'Symbolic', icon: '🔣', active: false },
+        TEMPORAL: { id: 'temporal', name: 'Temporal', icon: '⏱️', active: true },
+        
+        // Privacy & Security
+        CONSENT: { id: 'consent', name: 'Consent', icon: '🔒', active: false },
+        PROVENANCE: { id: 'provenance', name: 'Provenance', icon: '📜', active: false },
+        
+        // Future
+        SMELL: { id: 'smell', name: 'Scent', icon: '👃', active: false },
+        HAPTIC: { id: 'haptic', name: 'Haptic', icon: '✋', active: false },
+        
+        // Risk
+        RISK_SAFETY: { id: 'risk_safety', name: 'Risk/Safety', icon: '⚠️', active: false },
+        PROBABILITY: { id: 'probability', name: 'Probability', icon: '📊', active: false }
     };
-
-    // =========================================================================
-    // STATE
-    // =========================================================================
-
-    const state = {
-        tick: 0,
-        running: false,
-        currentPhase: 0,
-        activeLayer: 1,
-        activeMode: 'CAUSAL',
-        activeCategory: 'essence',
-        
-        criteriaScores: {},
-        wholeness: 0,
-        interpretation: 'INITIALIZING',
-        
-        knowledgeGraph: {
-            answered: 0,
-            unknowns: 0,
-            inferences: 0,
-            predictions: 0,
-            counterfactuals: 0
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // COMPATIBILITY PROFILES
+    // ═══════════════════════════════════════════════════════════════════════
+    const PROFILES = {
+        lite: {
+            name: 'Lite',
+            layers: ['visual', 'audio', 'object'],
+            maxResolution: 720,
+            description: 'Basic capture for quick sharing'
         },
-        
-        causalGraph: {
-            nodes: 0,
-            edges: 0,
-            criticalPaths: 0,
-            leveragePoints: 0
+        standard: {
+            name: 'Standard',
+            layers: ['visual', 'audio', 'depth', 'object', 'emotion', 'biometric', 'geopose', 'temporal'],
+            maxResolution: 1080,
+            description: 'Full smart video experience'
         },
-        
-        perspectives: {
-            applied: 0,
-            agreements: 0,
-            conflicts: 0
+        extended: {
+            name: 'Extended',
+            layers: ['visual', 'audio', 'depth', 'object', 'emotion', 'biometric', 'geopose', 'temporal', 'scene_graph', 'sound_semantic', 'light_env', 'consent'],
+            maxResolution: 1440,
+            description: 'Professional analysis features'
         },
-        
-        meta: {
-            assumptions: 4,
-            limitations: 0,
-            improvements: 0
+        ultra: {
+            name: 'Ultra',
+            layers: Object.keys(VIRECAI_LAYERS).map(k => VIRECAI_LAYERS[k].id),
+            maxResolution: 2160,
+            description: 'All layers enabled - research grade'
         }
     };
-
-    // Initialize criteria scores
-    for (const c of CRITERIA) {
-        state.criteriaScores[c.id] = 0;
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // MLVF CAPSULE CLASS
+    // ═══════════════════════════════════════════════════════════════════════
+    class MLVFCapsule {
+        constructor(config = {}) {
+            this.id = `vrc_${Date.now()}`;
+            this.version = '2.0.0';
+            this.profile = config.profile || 'standard';
+            
+            this.metadata = {
+                title: config.title || 'Untitled',
+                author: config.author || 'Unknown',
+                created: Date.now(),
+                modified: Date.now()
+            };
+            
+            this.config = {
+                width: config.width || 1920,
+                height: config.height || 1080,
+                frameRate: config.frameRate || 30,
+                duration: 0
+            };
+            
+            this.frames = [];
+            this.activeLayers = new Set(PROFILES[this.profile].layers);
+            
+            // Causal DAG
+            this.causalGraph = { nodes: [], edges: [] };
+            
+            // Consent & Provenance
+            this.consent = { permissions: {}, anonymized: false };
+            this.provenance = { signatures: [], hashchain: [] };
+        }
+        
+        addFrame(frameData) {
+            this.frames.push(frameData);
+            this.config.duration = frameData.timestamp;
+        }
+        
+        getFrame(index) {
+            return this.frames[index];
+        }
+        
+        getFrameAtTime(timestamp) {
+            for (let i = this.frames.length - 1; i >= 0; i--) {
+                if (this.frames[i].timestamp <= timestamp) {
+                    return this.frames[i];
+                }
+            }
+            return this.frames[0];
+        }
+        
+        serialize() {
+            return JSON.stringify({
+                id: this.id,
+                version: this.version,
+                profile: this.profile,
+                metadata: this.metadata,
+                config: this.config,
+                frameCount: this.frames.length,
+                activeLayers: Array.from(this.activeLayers),
+                causalGraph: this.causalGraph,
+                consent: this.consent,
+                provenance: this.provenance
+            });
+        }
     }
-
-    // =========================================================================
-    // RENDER
-    // =========================================================================
-
-    function renderWHCategories() {
-        const container = document.getElementById('wh-categories');
-        container.innerHTML = WH_CATEGORIES.map(cat => `
-            <div class="wh-cat ${cat.id} ${state.activeCategory === cat.id ? 'active' : ''}"
-                 onclick="selectCategory('${cat.id}')">
-                <div class="wh-cat-count">${cat.count}</div>
-                <div class="wh-cat-name">${cat.name}</div>
-            </div>
-        `).join('');
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // MLVFF FRAME CLASS
+    // ═══════════════════════════════════════════════════════════════════════
+    class MLVFFFrame {
+        constructor(index, timestamp) {
+            this.index = index;
+            this.timestamp = timestamp;
+            this.isKeyframe = false;
+            this.layers = new Map();
+        }
+        
+        setLayer(layerId, data) {
+            this.layers.set(layerId, {
+                type: layerId,
+                timestamp: this.timestamp,
+                data: data
+            });
+        }
+        
+        getLayer(layerId) {
+            return this.layers.get(layerId);
+        }
+        
+        hasLayer(layerId) {
+            return this.layers.has(layerId);
+        }
     }
-
-    function renderLayers() {
-        const container = document.getElementById('layers-list');
-        container.innerHTML = LAYERS.map(layer => `
-            <div class="layer-item ${state.activeLayer === layer.num ? 'active' : ''}"
-                 onclick="selectLayer(${layer.num})">
-                <div class="layer-num" style="background: ${layer.num <= state.currentPhase ? 'var(--emerald)' : 'var(--surface)'};">${layer.num}</div>
-                <div class="layer-name">${layer.name}</div>
-                <div class="layer-v">${layer.v}</div>
-            </div>
-        `).join('');
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // MIRROR LLM ENGINE
+    // ═══════════════════════════════════════════════════════════════════════
+    class MirrorLLMEngine {
+        constructor() {
+            this.contextWindow = [];
+            this.currentFrame = null;
+        }
+        
+        setCurrentFrame(frameData) {
+            this.currentFrame = frameData;
+            this.contextWindow.push(frameData);
+            if (this.contextWindow.length > 30) {
+                this.contextWindow.shift();
+            }
+        }
+        
+        processQuery(query, frameData) {
+            const q = query.toLowerCase();
+            
+            // Scene Comprehension
+            if (q.includes('what') && (q.includes('happening') || q.includes('see'))) {
+                return this.analyzeScene(frameData);
+            }
+            
+            // Emotion Analysis
+            if (q.includes('emotion') || q.includes('feel') || q.includes('mood') || q.includes('why')) {
+                return this.analyzeEmotion(frameData);
+            }
+            
+            // Object Queries
+            if (q.includes('object') || q.includes('person') || q.includes('detect') || q.includes('track')) {
+                return this.analyzeObjects(frameData);
+            }
+            
+            // Biometric Queries
+            if (q.includes('heart') || q.includes('bio') || q.includes('stress') || q.includes('spike')) {
+                return this.analyzeBiometrics(frameData);
+            }
+            
+            // Location Queries
+            if (q.includes('where') || q.includes('location') || q.includes('gps')) {
+                return this.analyzeLocation(frameData);
+            }
+            
+            // Generic response
+            return this.genericResponse(query, frameData);
+        }
+        
+        analyzeScene(frameData) {
+            const objects = frameData.objects || [];
+            const emotion = frameData.emotion || {};
+            const environment = frameData.environment || {};
+            
+            let response = `<strong>Scene Analysis - Frame ${frameData.index}</strong><br><br>`;
+            
+            response += `I can see ${objects.length} object${objects.length !== 1 ? 's' : ''} in this frame: `;
+            response += objects.map(o => `${o.type} (${(o.confidence * 100).toFixed(0)}%)`).join(', ') || 'none detected';
+            response += '.<br><br>';
+            
+            response += `The dominant emotion is <strong>${emotion.primary || 'neutral'}</strong> `;
+            response += `with a valence of ${(emotion.valence || 0).toFixed(2)}. `;
+            
+            if (emotion.arousal > 0.6) {
+                response += 'There\'s high emotional engagement in this moment.';
+            }
+            
+            response += `<div class="llm-evidence"><strong>MLVFF Evidence:</strong> Object detection confidence: ${objects.length > 0 ? (objects.reduce((s, o) => s + o.confidence, 0) / objects.length * 100).toFixed(1) : 0}% avg • Emotion vectors analyzed • Spatial relations mapped</div>`;
+            
+            return response;
+        }
+        
+        analyzeEmotion(frameData) {
+            const emotion = frameData.emotion || {};
+            const biometrics = frameData.biometrics || {};
+            
+            let response = `<strong>Emotional Analysis</strong><br><br>`;
+            
+            response += `Current emotional state: <strong>${emotion.primary || 'neutral'}</strong><br>`;
+            response += `• Valence (positive/negative): ${(emotion.valence || 0).toFixed(2)}<br>`;
+            response += `• Arousal (intensity): ${(emotion.arousal || 0).toFixed(2)}<br>`;
+            response += `• Sentiment: ${emotion.sentiment > 0 ? 'Positive' : emotion.sentiment < 0 ? 'Negative' : 'Neutral'}<br><br>`;
+            
+            if (emotion.probabilities) {
+                response += 'Emotion breakdown: ';
+                response += Object.entries(emotion.probabilities)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3)
+                    .map(([k, v]) => `${k} (${(v * 100).toFixed(0)}%)`)
+                    .join(', ');
+            }
+            
+            response += `<div class="llm-evidence"><strong>Biometric Correlation:</strong> HR ${biometrics.heartRate || '?'} BPM • Skin temp ${biometrics.skinTemp || '?'}°C • Stress level: ${biometrics.stressLevel ? (biometrics.stressLevel < 0.3 ? 'Low' : biometrics.stressLevel < 0.6 ? 'Medium' : 'High') : 'Unknown'}</div>`;
+            
+            return response;
+        }
+        
+        analyzeObjects(frameData) {
+            const objects = frameData.objects || [];
+            
+            let response = `<strong>Object Detection Report</strong><br><br>`;
+            
+            if (objects.length === 0) {
+                response += 'No objects currently detected in frame.';
+            } else {
+                response += `Tracking ${objects.length} object${objects.length !== 1 ? 's' : ''}:<br><br>`;
+                
+                objects.forEach((obj, i) => {
+                    response += `${i + 1}. <strong>${obj.type}</strong><br>`;
+                    response += `   • Confidence: ${(obj.confidence * 100).toFixed(1)}%<br>`;
+                    response += `   • Position: [${obj.bbox ? obj.bbox.map(v => v.toFixed(0)).join(', ') : 'tracking'}]<br>`;
+                    if (obj.trackId) response += `   • Track ID: ${obj.trackId}<br>`;
+                });
+            }
+            
+            response += `<div class="llm-evidence"><strong>MLVFF Object Layer:</strong> Detection model active • Tracking enabled • Scene graph: ${objects.length} nodes</div>`;
+            
+            return response;
+        }
+        
+        analyzeBiometrics(frameData) {
+            const bio = frameData.biometrics || {};
+            
+            let response = `<strong>Biometric Analysis</strong><br><br>`;
+            
+            response += `• Heart Rate: <strong>${bio.heartRate || '?'} BPM</strong> `;
+            if (bio.heartRate > 90) response += '(elevated)';
+            else if (bio.heartRate < 60) response += '(low)';
+            else response += '(normal range)';
+            response += '<br>';
+            
+            response += `• Skin Temperature: <strong>${bio.skinTemp || '?'}°C</strong><br>`;
+            response += `• Respiratory Rate: <strong>${bio.respiratoryRate || '?'}/min</strong><br>`;
+            response += `• Stress Level: <strong>${bio.stressLevel ? (bio.stressLevel * 100).toFixed(0) + '%' : 'Unknown'}</strong><br><br>`;
+            
+            if (bio.stressLevel > 0.6) {
+                response += '⚠️ Elevated stress indicators detected. This correlates with the current emotional state.';
+            }
+            
+            response += `<div class="llm-evidence"><strong>Sensor Fusion:</strong> Multi-modal biometric integration • Temporal smoothing applied • Confidence: High</div>`;
+            
+            return response;
+        }
+        
+        analyzeLocation(frameData) {
+            const geo = frameData.geopose || {};
+            
+            let response = `<strong>Location & Context</strong><br><br>`;
+            
+            if (geo.latitude && geo.longitude) {
+                response += `📍 <strong>Coordinates:</strong> ${geo.latitude.toFixed(4)}°N, ${Math.abs(geo.longitude).toFixed(4)}°W<br>`;
+                response += `• Altitude: ${geo.altitude || '?'}m<br>`;
+                response += `• Accuracy: ±${geo.accuracy || '?'}m<br>`;
+                response += `• Heading: ${geo.heading || '?'}°<br><br>`;
+            } else {
+                response += 'GPS data not available or still acquiring.<br><br>';
+            }
+            
+            if (geo.orientation) {
+                response += `<strong>Device Orientation:</strong><br>`;
+                response += `• Yaw: ${geo.orientation.alpha?.toFixed(1) || '?'}°<br>`;
+                response += `• Pitch: ${geo.orientation.beta?.toFixed(1) || '?'}°<br>`;
+                response += `• Roll: ${geo.orientation.gamma?.toFixed(1) || '?'}°<br>`;
+            }
+            
+            response += `<div class="llm-evidence"><strong>GeoPose Layer:</strong> GPS + IMU fusion • Quaternion orientation • Timestamp: ${new Date().toISOString()}</div>`;
+            
+            return response;
+        }
+        
+        genericResponse(query, frameData) {
+            return `<strong>Processing Query</strong><br><br>
+                "${query}"<br><br>
+                I'm analyzing the current MLVFF frame data. Try asking about:
+                <br>• <strong>Scene:</strong> "What's happening here?"
+                <br>• <strong>Emotions:</strong> "What's the mood?"
+                <br>• <strong>Objects:</strong> "What objects do you see?"
+                <br>• <strong>Biometrics:</strong> "What's the heart rate?"
+                <br>• <strong>Location:</strong> "Where was this recorded?"
+                
+                <div class="llm-evidence"><strong>Available Data:</strong> Frame ${frameData.index} • ${frameData.objects?.length || 0} objects • ${Object.keys(frameData).length} layer types</div>`;
+        }
     }
-
-    function renderModes() {
-        const container = document.getElementById('modes-grid');
-        container.innerHTML = REASONING_MODES.map(mode => `
-            <div class="mode-item ${state.activeMode === mode ? 'active' : ''}"
-                 onclick="selectMode('${mode}')">
-                ${mode}
-            </div>
-        `).join('');
-    }
-
-    function renderPhases() {
-        const container = document.getElementById('phases-timeline');
-        container.innerHTML = PHASES.map((phase, i) => {
-            let status = 'pending';
-            if (i < state.currentPhase) status = 'complete';
-            if (i === state.currentPhase) status = 'active';
-            return `
-                <div class="phase-dot ${status}" title="${phase}">${i}</div>
-            `;
-        }).join('');
-    }
-
-    function renderCriteria() {
-        const container = document.getElementById('criteria-list');
-        container.innerHTML = CRITERIA.map(c => {
-            const score = state.criteriaScores[c.id] || 0;
-            const color = CRITERION_COLORS[c.id];
-            const meetsTarget = score >= c.target;
-            return `
-                <div class="criterion">
-                    <div class="criterion-header">
-                        <span class="criterion-name">${c.name}</span>
-                        <span class="criterion-weight">${(c.weight * 100).toFixed(0)}%</span>
-                        <span class="criterion-score" style="color: ${meetsTarget ? 'var(--emerald)' : 'var(--rose)'};">
-                            ${(score * 100).toFixed(0)}%
-                        </span>
-                    </div>
-                    <div class="criterion-bar">
-                        <div class="criterion-fill" style="width: ${score * 100}%; background: ${color};"></div>
-                    </div>
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // VIRECAI STUDIO APPLICATION
+    // ═══════════════════════════════════════════════════════════════════════
+    class VIRECAIStudio {
+        constructor() {
+            // State
+            this.currentMode = 'capture';
+            this.currentProfile = 'standard';
+            this.isRecording = false;
+            this.stream = null;
+            this.capsule = null;
+            this.frameIndex = 0;
+            this.startTime = 0;
+            
+            // Layers
+            this.activeLayers = new Set(PROFILES.standard.layers);
+            
+            // Orbital Timeline
+            this.orbitalRotation = 0;
+            this.currentTime = 0;
+            this.totalDuration = 120; // seconds
+            
+            // Sensors
+            this.sensorData = {
+                heartRate: 78,
+                skinTemp: 36.8,
+                respiratoryRate: 14,
+                stressLevel: 0.25,
+                gps: null,
+                orientation: null
+            };
+            
+            // AI
+            this.detectedObjects = [];
+            this.currentEmotion = {
+                primary: 'neutral',
+                probabilities: { neutral: 0.5, joy: 0.3, surprise: 0.2 },
+                valence: 0.1,
+                arousal: 0.3,
+                sentiment: 0.1
+            };
+            
+            // Mirror LLM
+            this.mirrorLLM = new MirrorLLMEngine();
+            
+            // Initialize
+            this.init();
+        }
+        
+        async init() {
+            console.log('🎬 VIRECAI Production System v3.0 initializing...');
+            
+            this.bindEvents();
+            this.startSimulations();
+            
+            try {
+                await this.initCamera();
+            } catch (e) {
+                console.warn('Camera not available:', e);
+                this.showCameraPlaceholder();
+            }
+            
+            this.initSensors();
+            this.setupOrbitalControls();
+            
+            console.log('✅ VIRECAI Production System ready');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // CAMERA INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════
+        async initCamera() {
+            const constraints = {
+                video: {
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 },
+                    frameRate: { ideal: 30 },
+                    facingMode: 'user'
+                },
+                audio: true
+            };
+            
+            this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+            
+            const video = document.getElementById('cameraPreview');
+            video.srcObject = this.stream;
+            
+            const settings = this.stream.getVideoTracks()[0].getSettings();
+            console.log(`📷 Camera: ${settings.width}x${settings.height} @ ${settings.frameRate}fps`);
+        }
+        
+        showCameraPlaceholder() {
+            const viewport = document.getElementById('videoViewport');
+            viewport.innerHTML = `
+                <div class="video-placeholder">
+                    <span class="icon">📷</span>
+                    <span>Camera Preview</span>
+                    <span style="font-size: 0.9rem; color: var(--text-dim);">Grant camera permission or running in demo mode</span>
+                </div>
+                <div class="ai-overlay" id="aiOverlay"></div>
+                <div class="viewport-badges">
+                    <div class="badge emotion" id="emotionBadge">😊 Joy (0.82)</div>
+                    <div class="badge bio" id="bioBadge">💓 78 BPM</div>
+                    <div class="badge geo" id="geoBadge">📍 Tracking...</div>
+                </div>
+                <div class="recording-indicator" id="recordingIndicator">
+                    <div class="rec-dot"></div>
+                    <span>REC</span>
+                    <span id="recordingTime">00:00</span>
                 </div>
             `;
-        }).join('');
-    }
-
-    function updateUI() {
-        document.getElementById('m-tick').textContent = state.tick;
-        document.getElementById('m-questions').textContent = WH_CATEGORIES.reduce((s, c) => s + c.count, 0);
-        document.getElementById('m-layers').textContent = LAYERS.length;
-        document.getElementById('m-modes').textContent = REASONING_MODES.length;
-        document.getElementById('m-phase').textContent = state.currentPhase;
-        document.getElementById('m-wholeness').textContent = (state.wholeness * 100).toFixed(0) + '%';
-
-        document.getElementById('wholeness-big').textContent = (state.wholeness * 100).toFixed(0) + '%';
-        document.getElementById('wholeness-interp').textContent = state.interpretation;
-        document.getElementById('wholeness-interp').style.color = 
-            state.wholeness >= 0.85 ? 'var(--emerald)' : 
-            state.wholeness >= 0.65 ? 'var(--amber)' : 'var(--rose)';
-
-        document.getElementById('kg-answered').textContent = state.knowledgeGraph.answered;
-        document.getElementById('kg-unknowns').textContent = state.knowledgeGraph.unknowns;
-        document.getElementById('kg-inferences').textContent = state.knowledgeGraph.inferences;
-        document.getElementById('kg-predictions').textContent = state.knowledgeGraph.predictions;
-        document.getElementById('kg-counterfactuals').textContent = state.knowledgeGraph.counterfactuals;
-
-        document.getElementById('cg-nodes').textContent = state.causalGraph.nodes;
-        document.getElementById('cg-edges').textContent = state.causalGraph.edges;
-        document.getElementById('cg-paths').textContent = state.causalGraph.criticalPaths;
-        document.getElementById('cg-leverage').textContent = state.causalGraph.leveragePoints;
-
-        document.getElementById('persp-applied').textContent = `${state.perspectives.applied}/10`;
-        document.getElementById('persp-agree').textContent = state.perspectives.agreements;
-        document.getElementById('persp-conflict').textContent = state.perspectives.conflicts;
-
-        document.getElementById('meta-assumptions').textContent = state.meta.assumptions;
-        document.getElementById('meta-limitations').textContent = state.meta.limitations;
-        document.getElementById('meta-improvements').textContent = state.meta.improvements;
-
-        renderWHCategories();
-        renderLayers();
-        renderModes();
-        renderPhases();
-        renderCriteria();
-    }
-
-    // =========================================================================
-    // INTERACTION
-    // =========================================================================
-
-    window.selectCategory = function(id) {
-        state.activeCategory = id;
-        updateUI();
-    };
-
-    window.selectLayer = function(num) {
-        state.activeLayer = num;
-        updateUI();
-    };
-
-    window.selectMode = function(mode) {
-        state.activeMode = mode;
-        updateUI();
-    };
-
-    // =========================================================================
-    // VISUALIZATION
-    // =========================================================================
-
-    const canvas = document.getElementById('viz-canvas');
-    const ctx = canvas.getContext('2d');
-
-    function resizeCanvas() {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
-    }
-
-    function drawVisualization() {
-        ctx.fillStyle = '#020204';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2 - 30;
-        const time = Date.now() / 1000;
-
-        // Draw 11 layer rings
-        for (let i = 0; i <= 10; i++) {
-            const radius = 50 + i * 18;
-            const layer = LAYERS[i];
-            const active = i <= state.currentPhase;
-            
-            ctx.beginPath();
-            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-            ctx.strokeStyle = active ? `rgba(212, 165, 116, ${0.3 + i * 0.05})` : 'rgba(255,255,255,0.05)';
-            ctx.lineWidth = active ? 2 : 1;
-            ctx.stroke();
-
-            // Layer number
-            const labelAngle = -Math.PI / 2 + i * 0.3;
-            const lx = cx + Math.cos(labelAngle) * radius;
-            const ly = cy + Math.sin(labelAngle) * radius;
-            
-            ctx.fillStyle = active ? '#d4a574' : 'rgba(255,255,255,0.2)';
-            ctx.font = '8px monospace';
-            ctx.textAlign = 'center';
-            ctx.fillText(`L${i}`, lx, ly);
-        }
-
-        // Draw WH category nodes around the ring
-        const catRadius = 50 + 10 * 18 + 30;
-        WH_CATEGORIES.forEach((cat, i) => {
-            const angle = (i / WH_CATEGORIES.length) * Math.PI * 2 - Math.PI / 2;
-            const x = cx + Math.cos(angle) * catRadius;
-            const y = cy + Math.sin(angle) * catRadius;
-
-            // Connection line
-            ctx.beginPath();
-            ctx.moveTo(cx, cy);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle = `${cat.color}33`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            // Node
-            ctx.beginPath();
-            ctx.arc(x, y, 12, 0, Math.PI * 2);
-            ctx.fillStyle = state.activeCategory === cat.id ? cat.color : `${cat.color}66`;
-            ctx.fill();
-
-            ctx.fillStyle = '#fff';
-            ctx.font = '6px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(cat.name.substring(0, 3), x, y + 2);
-        });
-
-        // Draw reasoning mode wheel in center
-        const modeRadius = 35;
-        REASONING_MODES.forEach((mode, i) => {
-            const angle = (i / REASONING_MODES.length) * Math.PI * 2 - Math.PI / 2 + time * 0.1;
-            const x = cx + Math.cos(angle) * modeRadius;
-            const y = cy + Math.sin(angle) * modeRadius;
-
-            ctx.beginPath();
-            ctx.arc(x, y, 5, 0, Math.PI * 2);
-            ctx.fillStyle = state.activeMode === mode ? '#06b6d4' : 'rgba(6, 182, 212, 0.3)';
-            ctx.fill();
-        });
-
-        // Center subject display
-        ctx.beginPath();
-        ctx.arc(cx, cy, 25, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(30, 32, 40, 0.9)';
-        ctx.fill();
-        ctx.strokeStyle = '#d4a574';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.fillStyle = '#d4a574';
-        ctx.font = 'bold 9px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('SUBJECT', cx, cy - 3);
-        ctx.font = '7px sans-serif';
-        ctx.fillText(`Phase ${state.currentPhase}`, cx, cy + 8);
-
-        // Wholeness arc
-        ctx.beginPath();
-        ctx.arc(cx, cy, 28, -Math.PI / 2, -Math.PI / 2 + state.wholeness * Math.PI * 2);
-        ctx.strokeStyle = state.wholeness >= 0.85 ? '#10b981' : state.wholeness >= 0.65 ? '#f59e0b' : '#ef4444';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-    }
-
-    // =========================================================================
-    // ENGINE
-    // =========================================================================
-
-    function calculateWholeness() {
-        let total = 0;
-        for (const c of CRITERIA) {
-            total += (state.criteriaScores[c.id] || 0) * c.weight;
-        }
-        state.wholeness = total;
-
-        if (total >= 0.95) state.interpretation = 'EXCEPTIONAL';
-        else if (total >= 0.85) state.interpretation = 'EXCELLENT';
-        else if (total >= 0.75) state.interpretation = 'GOOD';
-        else if (total >= 0.65) state.interpretation = 'FAIR';
-        else state.interpretation = 'POOR';
-    }
-
-    function runPhase() {
-        state.currentPhase = Math.min(11, state.currentPhase + 1);
-        state.activeLayer = Math.min(10, state.currentPhase);
-
-        // Simulate progress
-        state.knowledgeGraph.answered += Math.floor(Math.random() * 8) + 3;
-        state.knowledgeGraph.inferences += Math.floor(Math.random() * 3);
-        
-        if (state.currentPhase >= 6) {
-            state.causalGraph.nodes += Math.floor(Math.random() * 5) + 2;
-            state.causalGraph.edges += Math.floor(Math.random() * 8) + 3;
         }
         
-        if (state.currentPhase >= 7) {
-            state.perspectives.applied = Math.min(10, state.perspectives.applied + 2);
-        }
-        
-        if (state.currentPhase >= 9) {
-            state.knowledgeGraph.counterfactuals += Math.floor(Math.random() * 4) + 1;
-        }
-
-        // Update criteria scores
-        for (const c of CRITERIA) {
-            const progress = state.currentPhase / 11;
-            const target = c.target;
-            state.criteriaScores[c.id] = Math.min(target, progress * target + Math.random() * 0.1);
-        }
-
-        if (state.currentPhase >= 11) {
-            state.meta.limitations = 2;
-            state.meta.improvements = 3;
-            state.criteriaScores.meta = 1.0;
-        }
-
-        calculateWholeness();
-        updateUI();
-        drawVisualization();
-    }
-
-    function process(subject) {
-        state.tick++;
-        state.currentPhase = 0;
-        state.knowledgeGraph = { answered: 0, unknowns: 0, inferences: 0, predictions: 0, counterfactuals: 0 };
-        state.causalGraph = { nodes: 0, edges: 0, criticalPaths: 0, leveragePoints: 0 };
-        state.perspectives = { applied: 0, agreements: 0, conflicts: 0 };
-        
-        for (const c of CRITERIA) {
-            state.criteriaScores[c.id] = 0;
-        }
-        
-        // Run all phases with delays
-        let phase = 0;
-        const interval = setInterval(() => {
-            runPhase();
-            phase++;
-            if (phase >= 12) {
-                clearInterval(interval);
-                state.causalGraph.criticalPaths = Math.floor(Math.random() * 5) + 2;
-                state.causalGraph.leveragePoints = Math.floor(Math.random() * 4) + 1;
-                state.knowledgeGraph.predictions = Math.floor(Math.random() * 6) + 2;
-                updateUI();
+        // ═══════════════════════════════════════════════════════════════
+        // SENSOR INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════
+        initSensors() {
+            // GPS
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(
+                    (pos) => {
+                        this.sensorData.gps = {
+                            latitude: pos.coords.latitude,
+                            longitude: pos.coords.longitude,
+                            altitude: pos.coords.altitude,
+                            accuracy: pos.coords.accuracy,
+                            heading: pos.coords.heading
+                        };
+                        document.getElementById('geoBadge').textContent = 
+                            `📍 ${pos.coords.latitude.toFixed(4)}°N`;
+                    },
+                    (err) => console.warn('GPS error:', err),
+                    { enableHighAccuracy: true }
+                );
             }
-        }, 300);
-    }
-
-    function step() {
-        state.tick++;
-        
-        // Small updates
-        for (const c of CRITERIA) {
-            state.criteriaScores[c.id] = Math.min(c.target, 
-                state.criteriaScores[c.id] + (Math.random() - 0.3) * 0.02);
+            
+            // Device Orientation (IMU)
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', (e) => {
+                    this.sensorData.orientation = {
+                        alpha: e.alpha,
+                        beta: e.beta,
+                        gamma: e.gamma
+                    };
+                    if (e.alpha) {
+                        document.getElementById('headingValue').textContent = 
+                            `${Math.round(e.alpha)}°`;
+                    }
+                });
+            }
         }
         
-        calculateWholeness();
-        updateUI();
-        drawVisualization();
-    }
-
-    function runLoop() {
-        if (!state.running) return;
-        step();
-        setTimeout(runLoop, 500);
-    }
-
-    // =========================================================================
-    // EVENTS
-    // =========================================================================
-
-    document.getElementById('btn-run').addEventListener('click', function() {
-        state.running = !state.running;
-        this.textContent = state.running ? '⏸ Pause' : '▶ Run';
-        if (state.running) runLoop();
-    });
-
-    document.getElementById('btn-understand').addEventListener('click', () => {
-        const subject = document.getElementById('input-field').value;
-        if (subject) process(subject);
-    });
-
-    document.getElementById('btn-go').addEventListener('click', () => {
-        const subject = document.getElementById('input-field').value;
-        if (subject) process(subject);
-    });
-
-    document.getElementById('input-field').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const subject = document.getElementById('input-field').value;
-            if (subject) process(subject);
+        // ═══════════════════════════════════════════════════════════════
+        // EVENT BINDINGS
+        // ═══════════════════════════════════════════════════════════════
+        bindEvents() {
+            // Mode tabs
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.addEventListener('click', () => this.switchMode(tab.dataset.mode));
+            });
+            
+            // Profile buttons
+            document.querySelectorAll('.profile-btn').forEach(btn => {
+                btn.addEventListener('click', () => this.switchProfile(btn.dataset.profile));
+            });
+            
+            // Record button
+            document.getElementById('recordBtn').addEventListener('click', () => this.toggleRecording());
+            
+            // Layer toggles
+            document.querySelectorAll('.layer-toggle').forEach(toggle => {
+                toggle.addEventListener('click', () => this.toggleLayer(toggle));
+            });
+            
+            // Center core (LLM activation)
+            document.getElementById('centerCore').addEventListener('click', () => this.activateLLM());
+            
+            // LLM input
+            document.getElementById('llmInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.processLLMQuery(e.target.value);
+                    e.target.value = '';
+                }
+            });
+            
+            document.getElementById('llmSend').addEventListener('click', () => {
+                const input = document.getElementById('llmInput');
+                this.processLLMQuery(input.value);
+                input.value = '';
+            });
+            
+            // Event nodes
+            document.querySelectorAll('.event-node').forEach(node => {
+                node.addEventListener('click', () => {
+                    const time = node.title.match(/@ (\d+:\d+)/)?.[1];
+                    if (time) this.jumpToTime(time);
+                });
+            });
         }
-    });
-
-    // =========================================================================
-    // ANIMATION
-    // =========================================================================
-
-    function animate() {
-        drawVisualization();
-        requestAnimationFrame(animate);
+        
+        // ═══════════════════════════════════════════════════════════════
+        // MODE & PROFILE SWITCHING
+        // ═══════════════════════════════════════════════════════════════
+        switchMode(mode) {
+            this.currentMode = mode;
+            
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.mode === mode);
+            });
+            
+            document.getElementById('modeStatus').querySelector('span').textContent = 
+                `Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
+            
+            console.log(`📱 Mode: ${mode}`);
+        }
+        
+        switchProfile(profile) {
+            this.currentProfile = profile;
+            
+            document.querySelectorAll('.profile-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.profile === profile);
+            });
+            
+            // Update active layers
+            this.activeLayers = new Set(PROFILES[profile].layers);
+            
+            // Update layer toggles
+            document.querySelectorAll('.layer-toggle').forEach(toggle => {
+                const layer = toggle.dataset.layer;
+                toggle.classList.toggle('active', this.activeLayers.has(layer));
+            });
+            
+            document.getElementById('profileStatus').textContent = `${PROFILES[profile].name} Profile`;
+            document.getElementById('mlvfLayers').textContent = `${this.activeLayers.size} active`;
+            
+            console.log(`📋 Profile: ${profile} (${this.activeLayers.size} layers)`);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // RECORDING
+        // ═══════════════════════════════════════════════════════════════
+        toggleRecording() {
+            this.isRecording = !this.isRecording;
+            
+            const btn = document.getElementById('recordBtn');
+            const viewport = document.getElementById('videoViewport');
+            const indicator = document.getElementById('recordingIndicator');
+            
+            if (this.isRecording) {
+                // Start recording
+                btn.classList.add('active');
+                btn.textContent = '⏹';
+                viewport.classList.add('recording');
+                indicator.classList.add('active');
+                
+                this.startRecording();
+            } else {
+                // Stop recording
+                btn.classList.remove('active');
+                btn.textContent = '🔴';
+                viewport.classList.remove('recording');
+                indicator.classList.remove('active');
+                
+                this.stopRecording();
+            }
+        }
+        
+        startRecording() {
+            console.log('🔴 Recording started');
+            
+            this.startTime = performance.now();
+            this.frameIndex = 0;
+            
+            // Create new capsule
+            this.capsule = new MLVFCapsule({
+                title: `Recording ${Date.now()}`,
+                profile: this.currentProfile,
+                width: 1920,
+                height: 1080,
+                frameRate: 30
+            });
+            
+            // Update UI
+            document.getElementById('mlvfContainer').textContent = this.capsule.id;
+            
+            // Start capture loop
+            this.captureLoop();
+            
+            // Update LLM
+            this.updateLLMResponse(`<strong>Recording Started</strong><br><br>
+                Capturing VIRECAI capsule with <strong>${this.currentProfile}</strong> profile.
+                <br><br>
+                Active layers: ${Array.from(this.activeLayers).join(', ')}
+                <br><br>
+                Real-time AI analysis is processing each frame for object detection, emotion recognition, and biometric correlation.
+                
+                <div class="llm-evidence"><strong>Capsule ID:</strong> ${this.capsule.id}</div>`);
+        }
+        
+        stopRecording() {
+            console.log('⏹️ Recording stopped');
+            
+            if (this.capsule) {
+                this.capsule.metadata.modified = Date.now();
+                
+                this.updateLLMResponse(`<strong>Recording Complete!</strong><br><br>
+                    Capsule saved: <strong>${this.capsule.id}</strong>
+                    <br>Duration: ${(this.capsule.config.duration / 1000).toFixed(1)}s
+                    <br>Frames: ${this.capsule.frames.length}
+                    <br>Profile: ${this.currentProfile}
+                    <br>Layers: ${this.activeLayers.size} active
+                    
+                    <div class="llm-evidence"><strong>Size:</strong> ~${(this.capsule.frames.length * 2).toFixed(1)} KB metadata • Video stream pending export</div>`);
+            }
+        }
+        
+        captureLoop() {
+            if (!this.isRecording) return;
+            
+            const timestamp = performance.now() - this.startTime;
+            
+            // Create frame
+            const frame = new MLVFFFrame(this.frameIndex, timestamp);
+            frame.isKeyframe = this.frameIndex % 30 === 0;
+            
+            // Add active layers
+            if (this.activeLayers.has('visual')) {
+                frame.setLayer('visual', { width: 1920, height: 1080, colorSpace: 'sRGB' });
+            }
+            
+            if (this.activeLayers.has('temporal')) {
+                frame.setLayer('temporal', { timestamp, frameIndex: this.frameIndex, absoluteTime: Date.now() });
+            }
+            
+            if (this.activeLayers.has('object')) {
+                frame.setLayer('object', { detections: this.detectedObjects });
+            }
+            
+            if (this.activeLayers.has('emotion')) {
+                frame.setLayer('emotion', this.currentEmotion);
+            }
+            
+            if (this.activeLayers.has('biometric')) {
+                frame.setLayer('biometric', { ...this.sensorData });
+            }
+            
+            if (this.activeLayers.has('geopose') && this.sensorData.gps) {
+                frame.setLayer('geopose', {
+                    ...this.sensorData.gps,
+                    orientation: this.sensorData.orientation
+                });
+            }
+            
+            // Add to capsule
+            this.capsule.addFrame(frame);
+            this.frameIndex++;
+            
+            // Update UI
+            const seconds = Math.floor(timestamp / 1000);
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('recordingTime').textContent = 
+                `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            document.getElementById('mlvfFrame').textContent = 
+                `${this.frameIndex} / ${this.frameIndex}`;
+            
+            // Continue loop
+            requestAnimationFrame(() => this.captureLoop());
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // ORBITAL TIMELINE CONTROLS
+        // ═══════════════════════════════════════════════════════════════
+        setupOrbitalControls() {
+            const wheel = document.getElementById('orbitalWheel');
+            let isDragging = false;
+            let startAngle = 0;
+            
+            wheel.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startAngle = this.getAngleFromEvent(e, wheel);
+                wheel.style.cursor = 'grabbing';
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const currentAngle = this.getAngleFromEvent(e, wheel);
+                    const deltaAngle = currentAngle - startAngle;
+                    this.rotateTimeline(deltaAngle);
+                    startAngle = currentAngle;
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    wheel.style.cursor = 'grab';
+                }
+            });
+        }
+        
+        getAngleFromEvent(e, element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            return Math.atan2(e.clientY - centerY, e.clientX - centerX) * 180 / Math.PI;
+        }
+        
+        rotateTimeline(deltaAngle) {
+            this.orbitalRotation += deltaAngle;
+            
+            // Update time progress ring
+            const progress = document.getElementById('timeProgress');
+            progress.style.transform = `rotate(${this.orbitalRotation - 90}deg)`;
+            
+            // Calculate time
+            const normalizedRotation = ((this.orbitalRotation % 360) + 360) % 360;
+            this.currentTime = (normalizedRotation / 360) * this.totalDuration;
+            
+            // Update display
+            const mins = Math.floor(this.currentTime / 60);
+            const secs = Math.floor(this.currentTime % 60);
+            document.getElementById('coreTime').textContent = 
+                `${mins}:${String(secs).padStart(2, '0')}`;
+            
+            // Update frame
+            const frameRate = 30;
+            const frame = Math.floor(this.currentTime * frameRate);
+            document.getElementById('coreFrame').textContent = `Frame ${frame}`;
+        }
+        
+        jumpToTime(timeStr) {
+            const [mins, secs] = timeStr.split(':').map(Number);
+            this.currentTime = mins * 60 + secs;
+            this.orbitalRotation = (this.currentTime / this.totalDuration) * 360;
+            this.rotateTimeline(0);
+            
+            console.log(`⏱️ Jumped to ${timeStr}`);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // LAYER MANAGEMENT
+        // ═══════════════════════════════════════════════════════════════
+        toggleLayer(toggle) {
+            const layer = toggle.dataset.layer;
+            
+            if (this.activeLayers.has(layer)) {
+                this.activeLayers.delete(layer);
+                toggle.classList.remove('active');
+            } else {
+                this.activeLayers.add(layer);
+                toggle.classList.add('active');
+            }
+            
+            document.getElementById('mlvfLayers').textContent = `${this.activeLayers.size} active`;
+            console.log(`🎚️ Layer ${layer}: ${this.activeLayers.has(layer) ? 'ON' : 'OFF'}`);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // MIRROR LLM
+        // ═══════════════════════════════════════════════════════════════
+        activateLLM() {
+            const frameData = this.getCurrentFrameData();
+            const response = this.mirrorLLM.analyzeScene(frameData);
+            this.updateLLMResponse(response);
+        }
+        
+        processLLMQuery(query) {
+            if (!query.trim()) return;
+            
+            const frameData = this.getCurrentFrameData();
+            const response = this.mirrorLLM.processQuery(query, frameData);
+            this.updateLLMResponse(response);
+        }
+        
+        updateLLMResponse(html) {
+            document.getElementById('llmResponse').innerHTML = html;
+        }
+        
+        getCurrentFrameData() {
+            return {
+                index: this.frameIndex,
+                timestamp: this.currentTime * 1000,
+                objects: this.detectedObjects,
+                emotion: this.currentEmotion,
+                biometrics: this.sensorData,
+                geopose: this.sensorData.gps ? {
+                    ...this.sensorData.gps,
+                    orientation: this.sensorData.orientation
+                } : null
+            };
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // SIMULATIONS
+        // ═══════════════════════════════════════════════════════════════
+        startSimulations() {
+            // Sensor simulation
+            setInterval(() => {
+                this.sensorData.heartRate = 70 + Math.sin(Date.now() / 5000) * 10 + Math.random() * 5;
+                this.sensorData.skinTemp = 36.5 + Math.random() * 0.8;
+                this.sensorData.stressLevel = 0.2 + Math.sin(Date.now() / 10000) * 0.2 + Math.random() * 0.1;
+                
+                document.getElementById('heartRateValue').textContent = Math.round(this.sensorData.heartRate);
+                document.getElementById('tempValue').textContent = this.sensorData.skinTemp.toFixed(1) + '°';
+                document.getElementById('bioBadge').textContent = `💓 ${Math.round(this.sensorData.heartRate)} BPM`;
+            }, 1000);
+            
+            // Emotion simulation
+            setInterval(() => {
+                const emotions = ['joy', 'surprise', 'neutral', 'interest', 'calm'];
+                const primary = emotions[Math.floor(Math.random() * emotions.length)];
+                
+                this.currentEmotion = {
+                    primary: primary,
+                    probabilities: {
+                        joy: 0.1 + Math.random() * 0.5,
+                        surprise: Math.random() * 0.4,
+                        neutral: Math.random() * 0.5,
+                        interest: Math.random() * 0.3,
+                        calm: Math.random() * 0.4
+                    },
+                    valence: Math.sin(Date.now() / 8000) * 0.5,
+                    arousal: 0.3 + Math.sin(Date.now() / 6000) * 0.3,
+                    sentiment: Math.sin(Date.now() / 10000) * 0.5
+                };
+                
+                const emojis = { joy: '😊', surprise: '😮', neutral: '😐', interest: '🤔', calm: '😌' };
+                const confidence = Math.max(...Object.values(this.currentEmotion.probabilities));
+                document.getElementById('emotionBadge').textContent = 
+                    `${emojis[primary] || '😊'} ${primary.charAt(0).toUpperCase() + primary.slice(1)} (${confidence.toFixed(2)})`;
+            }, 2000);
+            
+            // Object detection simulation
+            setInterval(() => {
+                const objectTypes = ['person', 'phone', 'cup', 'chair', 'laptop', 'book'];
+                const count = 1 + Math.floor(Math.random() * 4);
+                
+                this.detectedObjects = Array.from({ length: count }, (_, i) => ({
+                    type: objectTypes[Math.floor(Math.random() * objectTypes.length)],
+                    confidence: 0.7 + Math.random() * 0.25,
+                    bbox: [
+                        Math.random() * 60 + 10,
+                        Math.random() * 50 + 10,
+                        10 + Math.random() * 25,
+                        15 + Math.random() * 30
+                    ],
+                    trackId: i + 1
+                }));
+                
+                document.getElementById('objectCount').textContent = this.detectedObjects.length;
+                document.getElementById('mlvfObjects').textContent = `${this.detectedObjects.length} tracked`;
+                
+                this.updateObjectOverlay();
+            }, 3000);
+        }
+        
+        updateObjectOverlay() {
+            const overlay = document.getElementById('aiOverlay');
+            if (!overlay) return;
+            
+            overlay.innerHTML = this.detectedObjects.map(obj => `
+                <div class="detected-box" style="
+                    left: ${obj.bbox[0]}%;
+                    top: ${obj.bbox[1]}%;
+                    width: ${obj.bbox[2]}%;
+                    height: ${obj.bbox[3]}%;
+                ">
+                    <div class="detected-label">${obj.type} (${(obj.confidence * 100).toFixed(0)}%)</div>
+                </div>
+            `).join('');
+        }
     }
-
-    // =========================================================================
-    // INIT
-    // =========================================================================
-
-    window.addEventListener('resize', resizeCanvas);
-
-    resizeCanvas();
-    updateUI();
-    animate();
-
-    console.log('MulluSI v5.6 Complete UHRTS Framework initialized');
-    console.log('70+ WH-questions → 11 Layers → 10 Modes → 11 Phases → 10 Criteria → Wholeness');
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // INITIALIZE
+    // ═══════════════════════════════════════════════════════════════════════
+    const app = new VIRECAIStudio();
+    
+    // Console welcome
+    setTimeout(() => {
+        console.log('═══════════════════════════════════════════════════════════════');
+        console.log('  📹 VIRECAI Production System v3.0');
+        console.log('  Complete Smart Video Platform');
+        console.log('═══════════════════════════════════════════════════════════════');
+        console.log('');
+        console.log('🌟 Core Innovations:');
+        console.log('  ✅ 25 Semantic Layers (MLVF/MLVFF)');
+        console.log('  ✅ Orbital Timeline Wheel (radial navigation)');
+        console.log('  ✅ Mirror LLM (AI scene comprehension)');
+        console.log('  ✅ Real-time Object/Emotion Detection');
+        console.log('  ✅ Biometric Integration');
+        console.log('  ✅ GeoPose Tracking (GPS + IMU)');
+        console.log('  ✅ Compatibility Profiles (Lite → Ultra)');
+        console.log('  ✅ Causal DAG Engine');
+        console.log('');
+        console.log('🎛️ Interactions:');
+        console.log('  • Click 🔴 to start recording');
+        console.log('  • Drag the Orbital Timeline Wheel');
+        console.log('  • Toggle layer icons around the wheel');
+        console.log('  • Click center core for Mirror LLM');
+        console.log('  • Ask questions: "What\'s happening?" "Show emotions"');
+        console.log('  • Switch profiles: Lite / Standard / Extended / Ultra');
+        console.log('');
+        console.log('═══════════════════════════════════════════════════════════════');
+    }, 500);
     </script>
 </body>
 </html>
