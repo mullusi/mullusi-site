@@ -1,2325 +1,1056 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MulluSI — Dynamic Canvas v4.0 | Full-Feature SGI Visualization</title>
-  <style>
-    :root {
-      --layer-0: #a855f7;
-      --layer-1: #22d3ee;
-      --layer-2: #3b82f6;
-      --layer-3: #22c55e;
-      --layer-4: #f97316;
-      --layer-5: #ec4899;
-      --layer-6: #cbd5e1;
-      --layer-7: #84cc16;
-      --layer-8: #fbbf24;
-      --layer-9: #ffffff;
-      
-      --bg-primary: #020617;
-      --bg-secondary: #0f172a;
-      --bg-tertiary: #1e293b;
-      --bg-quaternary: #334155;
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --border-color: #334155;
-      --border-hover: #475569;
-    }
-    
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-primary); }
-    ::-webkit-scrollbar-thumb { background: var(--bg-quaternary); border-radius: 3px; }
-    
-    .header {
-      background: var(--bg-secondary);
-      padding: 0.625rem 1rem;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-    
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-    }
-    
-    .logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, var(--layer-0), var(--layer-1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-    }
-    
-    .header h1 {
-      font-size: 1rem;
-      font-weight: 600;
-      background: linear-gradient(135deg, var(--layer-0), var(--layer-1), var(--layer-5));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .header .subtitle {
-      font-size: 0.5625rem;
-      color: var(--text-muted);
-    }
-    
-    .header-stats {
-      display: flex;
-      gap: 0.75rem;
-      font-size: 0.5625rem;
-      color: var(--text-muted);
-      background: var(--bg-tertiary);
-      padding: 0.25rem 0.625rem;
-      border-radius: 4px;
-      border: 1px solid var(--border-color);
-    }
-    
-    .stat { display: flex; align-items: center; gap: 0.25rem; }
-    .stat-value { color: var(--layer-1); font-weight: 600; font-family: monospace; }
-    
-    .main-container {
-      display: grid;
-      grid-template-columns: 220px 1fr 260px;
-      gap: 0.625rem;
-      padding: 0.625rem;
-      height: calc(100vh - 52px);
-    }
-    
-    .panel {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .panel-header {
-      padding: 0.5rem 0.625rem;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--bg-tertiary);
-    }
-    
-    .panel-title {
-      font-size: 0.5625rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
-    }
-    
-    .panel-badge {
-      font-size: 0.5rem;
-      padding: 0.0625rem 0.3125rem;
-      border-radius: 3px;
-      background: var(--layer-3);
-      color: var(--bg-primary);
-      font-weight: 600;
-    }
-    
-    .panel-content {
-      padding: 0.5rem;
-      flex: 1;
-      overflow-y: auto;
-    }
-    
-    .layer-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 0.1875rem;
-    }
-    
-    .layer-card {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border-color);
-      border-radius: 5px;
-      padding: 0.3125rem 0.4375rem;
-      cursor: pointer;
-      transition: all 0.15s;
-      display: grid;
-      grid-template-columns: 22px 1fr 32px;
-      align-items: center;
-      gap: 0.3125rem;
-      position: relative;
-    }
-    
-    .layer-card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--layer-color);
-      border-radius: 2px 0 0 2px;
-      transition: width 0.15s;
-    }
-    
-    .layer-card:hover {
-      border-color: var(--layer-color);
-      background: color-mix(in srgb, var(--layer-color) 10%, var(--bg-tertiary));
-    }
-    
-    .layer-card:hover::before { width: 3px; }
-    
-    .layer-card.active {
-      border-color: var(--layer-color);
-      box-shadow: 0 0 10px color-mix(in srgb, var(--layer-color) 25%, transparent);
-    }
-    
-    .layer-card.isolated {
-      opacity: 0.3;
-    }
-    
-    .layer-card.isolated.active {
-      opacity: 1;
-    }
-    
-    .layer-icon {
-      font-size: 0.8125rem;
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-quaternary);
-      border-radius: 4px;
-    }
-    
-    .layer-info { min-width: 0; }
-    
-    .layer-name {
-      font-size: 0.5625rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-    
-    .layer-meta {
-      font-size: 0.4375rem;
-      color: var(--text-muted);
-    }
-    
-    .layer-count {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      color: var(--layer-color);
-      font-family: monospace;
-      text-align: right;
-    }
-    
-    .canvas-area {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4375rem;
-    }
-    
-    .canvas-wrapper {
-      position: relative;
-      flex: 1;
-      border-radius: 8px;
-      overflow: hidden;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-    }
-    
-    #mainCanvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-    
-    .canvas-overlay {
-      position: absolute;
-      top: 0.4375rem;
-      left: 0.4375rem;
-      right: 0.4375rem;
-      display: flex;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-    
-    .canvas-badge {
-      background: rgba(15, 23, 42, 0.9);
-      padding: 0.1875rem 0.4375rem;
-      border-radius: 3px;
-      font-size: 0.5rem;
-      color: var(--text-secondary);
-      border: 1px solid var(--border-color);
-      font-family: monospace;
-    }
-    
-    /* Entity Tooltip */
-    .entity-tooltip {
-      position: absolute;
-      background: var(--bg-secondary);
-      border: 1px solid var(--layer-1);
-      border-radius: 6px;
-      padding: 0.5rem;
-      font-size: 0.5625rem;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.15s;
-      z-index: 100;
-      min-width: 150px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
-    
-    .entity-tooltip.visible { opacity: 1; }
-    
-    .entity-tooltip-header {
-      display: flex;
-      align-items: center;
-      gap: 0.375rem;
-      margin-bottom: 0.375rem;
-      padding-bottom: 0.375rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-    
-    .entity-tooltip-char {
-      font-size: 1.25rem;
-      line-height: 1;
-    }
-    
-    .entity-tooltip-id {
-      font-family: monospace;
-      color: var(--layer-1);
-    }
-    
-    .entity-tooltip-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.125rem 0;
-    }
-    
-    .entity-tooltip-label { color: var(--text-muted); }
-    .entity-tooltip-value { color: var(--text-primary); font-family: monospace; }
-    
-    .controls-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3125rem;
-    }
-    
-    .controls-row {
-      display: flex;
-      gap: 0.3125rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    
-    .controls-group {
-      display: flex;
-      gap: 0.125rem;
-      background: var(--bg-tertiary);
-      padding: 0.1875rem;
-      border-radius: 5px;
-      border: 1px solid var(--border-color);
-    }
-    
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.1875rem;
-      padding: 0.1875rem 0.375rem;
-      font-size: 0.5625rem;
-      font-weight: 500;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: all 0.15s;
-      background: var(--bg-quaternary);
-      color: var(--text-secondary);
-      white-space: nowrap;
-    }
-    
-    .btn:hover {
-      background: var(--border-hover);
-      color: var(--text-primary);
-    }
-    
-    .btn.active {
-      background: var(--layer-1);
-      color: var(--bg-primary);
-    }
-    
-    .btn.primary {
-      background: var(--layer-0);
-      color: white;
-    }
-    
-    .btn.danger {
-      background: #dc2626;
-      color: white;
-    }
-    
-    .btn.success {
-      background: var(--layer-3);
-      color: var(--bg-primary);
-    }
-    
-    .speed-control {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0 0.25rem;
-    }
-    
-    .speed-control label {
-      font-size: 0.5rem;
-      color: var(--text-muted);
-    }
-    
-    .speed-slider {
-      width: 50px;
-      height: 3px;
-      -webkit-appearance: none;
-      background: var(--bg-quaternary);
-      border-radius: 2px;
-    }
-    
-    .speed-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 8px;
-      height: 8px;
-      background: var(--layer-1);
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    
-    .speed-value {
-      font-size: 0.5rem;
-      color: var(--layer-1);
-      font-family: monospace;
-      min-width: 1.75rem;
-    }
-    
-    .toggle-group {
-      display: flex;
-      gap: 0.25rem;
-      align-items: center;
-      padding: 0 0.25rem;
-      font-size: 0.5rem;
-      color: var(--text-muted);
-    }
-    
-    .toggle {
-      width: 28px;
-      height: 14px;
-      background: var(--bg-quaternary);
-      border-radius: 7px;
-      position: relative;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    
-    .toggle.on { background: var(--layer-1); }
-    
-    .toggle::after {
-      content: '';
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: white;
-      border-radius: 50%;
-      top: 2px;
-      left: 2px;
-      transition: left 0.2s;
-    }
-    
-    .toggle.on::after { left: 16px; }
-    
-    .wholeness-meter {
-      background: var(--bg-tertiary);
-      border-radius: 6px;
-      padding: 0.625rem;
-      text-align: center;
-      margin-bottom: 0.625rem;
-    }
-    
-    .wholeness-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--layer-0), var(--layer-1), var(--layer-3));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-family: monospace;
-    }
-    
-    .wholeness-label {
-      font-size: 0.4375rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    
-    .wholeness-bar {
-      height: 3px;
-      background: var(--bg-primary);
-      border-radius: 2px;
-      margin-top: 0.375rem;
-      overflow: hidden;
-    }
-    
-    .wholeness-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--layer-0), var(--layer-1), var(--layer-3));
-      border-radius: 2px;
-      transition: width 0.3s;
-    }
-    
-    .info-section {
-      margin-bottom: 0.625rem;
-    }
-    
-    .info-title {
-      font-size: 0.4375rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 0.3125rem;
-    }
-    
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.1875rem;
-    }
-    
-    .metric-item {
-      background: var(--bg-tertiary);
-      padding: 0.3125rem;
-      border-radius: 4px;
-      text-align: center;
-    }
-    
-    .metric-value {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--layer-1);
-      font-family: monospace;
-    }
-    
-    .metric-label {
-      font-size: 0.375rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-    
-    .selected-entity {
-      background: var(--bg-tertiary);
-      border-radius: 6px;
-      padding: 0.5rem;
-      margin-bottom: 0.625rem;
-      display: none;
-    }
-    
-    .selected-entity.visible { display: block; }
-    
-    .selected-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.375rem;
-    }
-    
-    .selected-char {
-      font-size: 1.5rem;
-      background: var(--bg-quaternary);
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-    }
-    
-    .selected-info { flex: 1; }
-    
-    .selected-id {
-      font-family: monospace;
-      color: var(--layer-1);
-      font-size: 0.625rem;
-    }
-    
-    .selected-layer {
-      font-size: 0.5rem;
-      color: var(--text-muted);
-    }
-    
-    .selected-close {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.75rem;
-    }
-    
-    .selected-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.25rem;
-      font-size: 0.5rem;
-    }
-    
-    .selected-stat {
-      text-align: center;
-      padding: 0.25rem;
-      background: var(--bg-quaternary);
-      border-radius: 3px;
-    }
-    
-    .selected-stat-value {
-      color: var(--text-primary);
-      font-family: monospace;
-    }
-    
-    .selected-stat-label {
-      color: var(--text-muted);
-      font-size: 0.4375rem;
-    }
-    
-    .cdg-container {
-      background: var(--bg-tertiary);
-      border-radius: 5px;
-      overflow: hidden;
-    }
-    
-    .cdg-canvas {
-      width: 100%;
-      height: 80px;
-      display: block;
-    }
-    
-    .keyboard-hint {
-      font-size: 0.4375rem;
-      color: var(--text-muted);
-      text-align: center;
-      padding: 0.375rem;
-      background: var(--bg-tertiary);
-      border-radius: 4px;
-      margin-top: 0.5rem;
-    }
-    
-    .keyboard-hint kbd {
-      background: var(--bg-quaternary);
-      padding: 0.0625rem 0.25rem;
-      border-radius: 2px;
-      margin: 0 0.125rem;
-    }
-    
-    @media (max-width: 1000px) {
-      .main-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto;
-        height: auto;
-        min-height: calc(100vh - 52px);
-      }
-      .layer-cards {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-      .layer-card {
-        flex: 1 1 calc(20% - 0.1875rem);
-        min-width: 80px;
-      }
-      .canvas-wrapper { min-height: 300px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MulluSI v5.6 | Complete UHRTS Framework</title>
+    <style>
+        :root {
+            --void: #020204;
+            --abyss: #08090d;
+            --deep: #0f1015;
+            --surface: #16171f;
+            --elevated: #1e2028;
+            --gold: #d4a574;
+            --gold-dim: rgba(212, 165, 116, 0.25);
+            --emerald: #10b981;
+            --cyan: #06b6d4;
+            --violet: #8b5cf6;
+            --rose: #f43f5e;
+            --blue: #3b82f6;
+            --amber: #f59e0b;
+            --lime: #84cc16;
+            --pink: #ec4899;
+            --white: #f0f0f0;
+            --muted: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, system-ui, sans-serif;
+            background: var(--void);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app {
+            display: grid;
+            grid-template-rows: 55px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--abyss) 0%, var(--deep) 100%);
+            border-bottom: 1px solid var(--gold-dim);
+            padding: 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-glyph {
+            font-size: 1.4rem;
+            color: var(--gold);
+        }
+
+        .logo h1 { font-size: 0.9rem; font-weight: 500; }
+        .logo h1 span { color: var(--gold); }
+
+        .version-badge {
+            background: linear-gradient(135deg, var(--cyan), var(--blue));
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.48rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .metrics-bar { display: flex; gap: 12px; }
+        .metric { text-align: center; }
+        .metric-value { font-size: 0.85rem; font-weight: 600; }
+        .metric-label { font-size: 0.4rem; color: var(--muted); text-transform: uppercase; }
+
+        .header-controls { display: flex; gap: 6px; }
+        .btn {
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--gold-dim);
+            border-radius: 5px;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 0.55rem;
+            transition: all 0.15s;
+        }
+        .btn:hover { background: var(--elevated); border-color: var(--gold); }
+        .btn.primary { background: var(--gold); color: var(--void); }
+
+        /* Main Layout */
+        .main {
+            display: grid;
+            grid-template-columns: 260px 1fr 260px;
+            height: calc(100vh - 55px);
+            overflow: hidden;
+        }
+
+        .side-panel {
+            background: var(--abyss);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 0.52rem;
+        }
+        .side-panel:last-child { border-right: none; border-left: 1px solid rgba(255,255,255,0.05); }
+
+        .section-title {
+            font-size: 0.46rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 8px 0 4px 0;
+            padding-bottom: 3px;
+            border-bottom: 1px solid var(--gold-dim);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 5px;
+            padding: 6px;
+            margin-bottom: 5px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0;
+            font-size: 0.45rem;
+        }
+        .stat-label { color: var(--muted); }
+        .stat-value { color: var(--white); font-family: monospace; }
+
+        /* WH Categories Grid */
+        .wh-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+        }
+
+        .wh-cat {
+            padding: 5px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .wh-cat:hover { transform: scale(1.02); }
+        .wh-cat.active { border-color: var(--gold); }
+
+        .wh-cat-name { font-size: 0.4rem; font-weight: bold; }
+        .wh-cat-count { font-size: 0.5rem; color: var(--white); }
+
+        .wh-cat.essence { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .wh-cat.temporal { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .wh-cat.spatial { background: linear-gradient(135deg, #10b981, #059669); }
+        .wh-cat.agency { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .wh-cat.causation { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .wh-cat.selection { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .wh-cat.mechanism { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .wh-cat.context { background: linear-gradient(135deg, #84cc16, #65a30d); }
+
+        /* Layers Display */
+        .layers-list {
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .layer-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px;
+            border-radius: 3px;
+            margin-bottom: 2px;
+            background: var(--elevated);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .layer-item:hover { background: rgba(212, 165, 116, 0.1); }
+        .layer-item.active { border-left: 2px solid var(--gold); }
+
+        .layer-num {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.4rem;
+            font-weight: bold;
+        }
+
+        .layer-name { font-size: 0.42rem; flex: 1; }
+        .layer-v { font-size: 0.5rem; }
+
+        /* Reasoning Modes */
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3px;
+        }
+
+        .mode-item {
+            padding: 4px;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 0.4rem;
+            background: var(--elevated);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-item:hover { background: rgba(6, 182, 212, 0.2); }
+        .mode-item.active { background: rgba(6, 182, 212, 0.3); border: 1px solid var(--cyan); }
+
+        /* Phases Timeline */
+        .phases-timeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+
+        .phase-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .phase-dot.complete { background: var(--emerald); color: var(--void); }
+        .phase-dot.active { background: var(--cyan); color: var(--void); animation: pulse 1s infinite; }
+        .phase-dot.pending { background: var(--surface); }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Completeness Criteria */
+        .criteria-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .criterion {
+            padding: 4px;
+            margin-bottom: 3px;
+            background: var(--elevated);
+            border-radius: 3px;
+        }
+
+        .criterion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.42rem;
+        }
+
+        .criterion-name { flex: 1; }
+        .criterion-weight { color: var(--muted); }
+        .criterion-score { font-weight: bold; }
+
+        .criterion-bar {
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-top: 2px;
+            overflow: hidden;
+        }
+
+        .criterion-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Center Visualization */
+        .viz-container {
+            background: var(--void);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viz-canvas { width: 100%; height: 100%; }
+
+        .formula-overlay {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(8, 9, 13, 0.95);
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            padding: 8px 16px;
+            text-align: center;
+        }
+
+        .formula-title {
+            font-size: 0.45rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+        }
+
+        .formula-main {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .input-area {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-field {
+            width: 200px;
+            padding: 8px 12px;
+            background: var(--surface);
+            border: 1px solid var(--gold-dim);
+            border-radius: 5px;
+            color: var(--white);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Wholeness Score Display */
+        .wholeness-display {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .wholeness-label { font-size: 0.45rem; color: var(--muted); }
+        .wholeness-value { font-size: 2rem; font-weight: bold; color: var(--gold); }
+        .wholeness-interpretation { font-size: 0.5rem; color: var(--emerald); }
+
+        /* Progress Bars */
+        .progress-bar {
+            height: 5px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 3px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        .progress-fill.gold { background: var(--gold); }
+        .progress-fill.cyan { background: var(--cyan); }
+        .progress-fill.emerald { background: var(--emerald); }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+    </style>
 </head>
 <body>
-  <header class="header">
-    <div class="header-left">
-      <div class="logo">🌌</div>
-      <div>
-        <h1>MulluSI Dynamic Canvas v4.0</h1>
-        <div class="subtitle">Full-Feature SGI • Mfidel Substrate</div>
-      </div>
-    </div>
-    <div class="header-stats">
-      <div class="stat"><span>FPS:</span><span class="stat-value" id="fps">60</span></div>
-      <div class="stat"><span>Entities:</span><span class="stat-value" id="entity-count">0</span></div>
-      <div class="stat"><span>Tick:</span><span class="stat-value" id="tick">0</span></div>
-      <div class="stat"><span>Mode:</span><span class="stat-value" id="strategy-name">wave</span></div>
-      <div class="stat"><span>Audio:</span><span class="stat-value" id="audio-status">Off</span></div>
-    </div>
-  </header>
-  
-  <main class="main-container">
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">10-Layer Architecture</span>
-        <span class="panel-badge">LIVE</span>
-      </div>
-      <div class="panel-content">
-        <div class="layer-cards" id="layer-cards"></div>
-        <div class="keyboard-hint">
-          <kbd>Shift+Click</kbd> isolate layer
-        </div>
-      </div>
-    </div>
-    
-    <div class="canvas-area">
-      <div class="canvas-wrapper" id="canvas-wrapper">
-        <canvas id="mainCanvas"></canvas>
-        <div class="canvas-overlay">
-          <div class="canvas-badge" id="canvas-info">Mfidel Glyphs</div>
-          <div class="canvas-badge" id="frame-hash">0x00000000</div>
-        </div>
-        <div class="entity-tooltip" id="entity-tooltip">
-          <div class="entity-tooltip-header">
-            <span class="entity-tooltip-char" id="tooltip-char">ሀ</span>
-            <span class="entity-tooltip-id" id="tooltip-id">e_0</span>
-          </div>
-          <div class="entity-tooltip-row">
-            <span class="entity-tooltip-label">Layer</span>
-            <span class="entity-tooltip-value" id="tooltip-layer">0 (Acoustic)</span>
-          </div>
-          <div class="entity-tooltip-row">
-            <span class="entity-tooltip-label">Mfidel</span>
-            <span class="entity-tooltip-value" id="tooltip-mfidel">Row 0, Col 0</span>
-          </div>
-          <div class="entity-tooltip-row">
-            <span class="entity-tooltip-label">Dependencies</span>
-            <span class="entity-tooltip-value" id="tooltip-deps">0</span>
-          </div>
-          <div class="entity-tooltip-row">
-            <span class="entity-tooltip-label">Children</span>
-            <span class="entity-tooltip-value" id="tooltip-children">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="controls-container">
-        <div class="controls-row">
-          <div class="controls-group">
-            <button class="btn active" id="btn-wave" onclick="setStrategy('wave')">🌊 Wave</button>
-            <button class="btn" id="btn-pulse" onclick="setStrategy('pulse')">💓 Pulse</button>
-            <button class="btn" id="btn-orbital" onclick="setStrategy('orbital')">🌀 Orbital</button>
-            <button class="btn" id="btn-resonance" onclick="setStrategy('resonance')">🎵 Resonance</button>
-            <button class="btn" id="btn-causal" onclick="setStrategy('causal')">⛓️ Causal</button>
-            <button class="btn" id="btn-emergence" onclick="setStrategy('emergence')">✨ Emergence</button>
-            <button class="btn" id="btn-gravity" onclick="setStrategy('gravity')">🪐 Gravity</button>
-          </div>
-          
-          <div class="speed-control">
-            <label>Speed</label>
-            <input type="range" class="speed-slider" id="speed-slider" min="0.1" max="3" step="0.1" value="1">
-            <span class="speed-value" id="speed-value">1.0x</span>
-          </div>
-        </div>
-        
-        <div class="controls-row">
-          <div class="controls-group">
-            <button class="btn primary" id="btn-toggle" onclick="toggleAnimation()">⏸ Pause</button>
-            <button class="btn" onclick="stepFrame()">⏭ Step</button>
-            <button class="btn" onclick="resetSimulation()">⏮ Reset</button>
-          </div>
-          
-          <div class="controls-group">
-            <button class="btn" onclick="addEntities(1)">+1</button>
-            <button class="btn" onclick="addEntities(10)">+10</button>
-            <button class="btn" onclick="addEntities(50)">+50</button>
-            <button class="btn danger" onclick="clearEntities()">Clear</button>
-          </div>
-          
-          <div class="controls-group">
-            <button class="btn" onclick="toggleFullscreen()">⛶</button>
-            <button class="btn" onclick="takeScreenshot()">📷</button>
-            <button class="btn" onclick="exportState()">💾</button>
-            <button class="btn" onclick="importState()">📂</button>
-          </div>
-          
-          <div class="toggle-group">
-            <span>Trails</span>
-            <div class="toggle on" id="toggle-trails" onclick="toggleTrails()"></div>
-          </div>
-          
-          <div class="toggle-group">
-            <span>Flow</span>
-            <div class="toggle" id="toggle-flow" onclick="toggleFlow()"></div>
-          </div>
-          
-          <div class="toggle-group">
-            <span>Audio</span>
-            <div class="toggle" id="toggle-audio" onclick="toggleAudio()"></div>
-          </div>
-          
-          <div class="toggle-group">
-            <span>Glyphs</span>
-            <div class="toggle on" id="toggle-glyphs" onclick="toggleGlyphs()"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">System State</span>
-      </div>
-      <div class="panel-content">
-        <div class="wholeness-meter">
-          <div class="wholeness-value" id="wholeness-value">0.50</div>
-          <div class="wholeness-label">Wholeness Index</div>
-          <div class="wholeness-bar">
-            <div class="wholeness-bar-fill" id="wholeness-bar" style="width: 50%"></div>
-          </div>
-        </div>
-        
-        <div class="selected-entity" id="selected-entity">
-          <div class="selected-header">
-            <span class="selected-char" id="selected-char">ሀ</span>
-            <div class="selected-info">
-              <div class="selected-id" id="selected-id">e_0</div>
-              <div class="selected-layer" id="selected-layer">Layer 0: Acoustic</div>
+    <div class="app">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-glyph">ሙሉ∿</span>
+                <h1><span>MulluSI</span> v5.6<span class="version-badge">COMPLETE UHRTS</span></h1>
             </div>
-            <button class="selected-close" onclick="deselectEntity()">✕</button>
-          </div>
-          <div class="selected-stats">
-            <div class="selected-stat">
-              <div class="selected-stat-value" id="selected-deps">0</div>
-              <div class="selected-stat-label">Deps</div>
+            <div class="metrics-bar">
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--cyan);" id="m-tick">0</div>
+                    <div class="metric-label">Tick</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--blue);" id="m-questions">73</div>
+                    <div class="metric-label">WH-Questions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--violet);" id="m-layers">11</div>
+                    <div class="metric-label">Layers</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--amber);" id="m-modes">10</div>
+                    <div class="metric-label">Modes</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--emerald);" id="m-phase">0</div>
+                    <div class="metric-label">Phase</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" style="color: var(--gold);" id="m-wholeness">0%</div>
+                    <div class="metric-label">Wholeness</div>
+                </div>
             </div>
-            <div class="selected-stat">
-              <div class="selected-stat-value" id="selected-children">0</div>
-              <div class="selected-stat-label">Children</div>
+            <div class="header-controls">
+                <button class="btn" id="btn-run">▶ Run</button>
+                <button class="btn primary" id="btn-understand">Understand</button>
             </div>
-            <div class="selected-stat">
-              <div class="selected-stat-value" id="selected-mfidel">0,0</div>
-              <div class="selected-stat-label">Mfidel</div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="info-section">
-          <div class="info-title">Metrics</div>
-          <div class="metrics-grid">
-            <div class="metric-item">
-              <div class="metric-value" id="metric-nodes">0</div>
-              <div class="metric-label">Nodes</div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-value" id="metric-edges">0</div>
-              <div class="metric-label">Edges</div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-value" id="metric-depth">0</div>
-              <div class="metric-label">Depth</div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-value" id="metric-particles">0</div>
-              <div class="metric-label">Particles</div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="info-section">
-          <div class="info-title">Causal Graph</div>
-          <div class="cdg-container">
-            <canvas class="cdg-canvas" id="cdg-canvas"></canvas>
-          </div>
-        </div>
-        
-        <div class="keyboard-hint">
-          <kbd>Space</kbd> pause <kbd>F</kbd> fullscreen <kbd>1-7</kbd> strategy<br>
-          <kbd>Click</kbd> select <kbd>Shift+Click</kbd> trace chain
-        </div>
-      </div>
-    </div>
-  </main>
-  
-  <input type="file" id="file-input" style="display: none" accept=".json">
+        </header>
 
-  <script>
-    'use strict';
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // MFIDEL CHARACTER SET (Ge'ez Fidel - 34 consonants × 8 vowel forms)
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    const FIDEL = [
-      'ሀሁሂሃሄህሆሇ', // h
-      'ለሉሊላሌልሎሏ', // l
-      'ሐሑሒሓሔሕሖሗ', // ḥ
-      'መሙሚማሜምሞሟ', // m
-      'ሠሡሢሣሤሥሦሧ', // ś
-      'ረሩሪራሬርሮሯ', // r
-      'ሰሱሲሳሴስሶሷ', // s
-      'ሸሹሺሻሼሽሾሿ', // š
-      'ቀቁቂቃቄቅቆቇ', // q
-      'ቐቑቒቓቔቕቖ቗', // qʷ
-      'በቡቢባቤብቦቧ', // b
-      'ቨቩቪቫቬቭቮቯ', // v
-      'ተቱቲታቴትቶቷ', // t
-      'ቸቹቺቻቼችቾቿ', // č
-      'ኀኁኂኃኄኅኆኇ', // ḫ
-      'ነኑኒናኔንኖኗ', // n
-      'ኘኙኚኛኜኝኞኟ', // ñ
-      'አኡኢኣኤእኦኧ', // '
-      'ከኩኪካኬክኮኯ', // k
-      'ኸኹኺኻኼኽኾ኿', // kʷ
-      'ወዉዊዋዌውዎዏ', // w
-      'ዐዑዒዓዔዕዖ዗', // ʿ
-      'ዘዙዚዛዜዝዞዟ', // z
-      'ዠዡዢዣዤዥዦዧ', // ž
-      'የዩዪያዬይዮዯ', // y
-      'ደዱዲዳዴድዶዷ', // d
-      'ጀጁጂጃጄጅጆጇ', // ǧ
-      'ገጉጊጋጌግጎጏ', // g
-      'ጠጡጢጣጤጥጦጧ', // ṭ
-      'ጨጩጪጫጬጭጮጯ', // č̣
-      'ጰጱጲጳጴጵጶጷ', // p̣
-      'ጸጹጺጻጼጽጾጿ', // ṣ
-      'ፀፁፂፃፄፅፆፇ', // ṣ́
-      'ፈፉፊፋፌፍፎፏ', // f
+        <main class="main">
+            <!-- Left Panel: WH Categories & Layers -->
+            <aside class="side-panel">
+                <div class="section-title">❓ WH Categories (70+)</div>
+                <div class="card">
+                    <div class="wh-categories" id="wh-categories"></div>
+                </div>
+
+                <div class="section-title">🏛 Architectural Layers (0-10)</div>
+                <div class="card">
+                    <div class="layers-list" id="layers-list"></div>
+                </div>
+
+                <div class="section-title">🧠 Reasoning Modes (10)</div>
+                <div class="card">
+                    <div class="modes-grid" id="modes-grid"></div>
+                </div>
+
+                <div class="section-title">⏱ Algorithm Phases (11)</div>
+                <div class="card">
+                    <div class="phases-timeline" id="phases-timeline"></div>
+                </div>
+            </aside>
+
+            <!-- Center: Visualization -->
+            <section class="viz-container">
+                <canvas class="viz-canvas" id="viz-canvas"></canvas>
+
+                <div class="formula-overlay">
+                    <div class="formula-title">Universal Holistic Reasoning & Thinking</div>
+                    <div class="formula-main">∀ WH ∈ {70+} → Understand(Subject)</div>
+                </div>
+
+                <div class="wholeness-display">
+                    <div class="wholeness-label">WHOLENESS SCORE</div>
+                    <div class="wholeness-value" id="wholeness-big">0%</div>
+                    <div class="wholeness-interpretation" id="wholeness-interp">INITIALIZING</div>
+                </div>
+
+                <div class="input-area">
+                    <input type="text" class="input-field" id="input-field" placeholder="Enter subject..." value="Consciousness">
+                    <button class="btn primary" id="btn-go">→</button>
+                </div>
+            </section>
+
+            <!-- Right Panel: Completeness Criteria -->
+            <aside class="side-panel">
+                <div class="section-title">✓ Completeness Criteria (10)</div>
+                <div class="card">
+                    <div class="criteria-list" id="criteria-list"></div>
+                </div>
+
+                <div class="section-title">📊 Knowledge Graph</div>
+                <div class="card">
+                    <div class="stat-row">
+                        <span class="stat-label">Answered:</span>
+                        <span class="stat-value" id="kg-answered">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Unknowns:</span>
+                        <span class="stat-value" id="kg-unknowns">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Inferences:</span>
+                        <span class="stat-value" id="kg-inferences">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Predictions:</span>
+                        <span class="stat-value" id="kg-predictions">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Counterfactuals:</span>
+                        <span class="stat-value" id="kg-counterfactuals">0</span>
+                    </div>
+                </div>
+
+                <div class="section-title">🔗 Causal Graph</div>
+                <div class="card">
+                    <div class="stat-row">
+                        <span class="stat-label">Nodes:</span>
+                        <span class="stat-value" id="cg-nodes">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Edges:</span>
+                        <span class="stat-value" id="cg-edges">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Critical Paths:</span>
+                        <span class="stat-value" id="cg-paths">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Leverage Points:</span>
+                        <span class="stat-value" id="cg-leverage">0</span>
+                    </div>
+                </div>
+
+                <div class="section-title">🌐 Perspectives</div>
+                <div class="card">
+                    <div class="stat-row">
+                        <span class="stat-label">Applied:</span>
+                        <span class="stat-value" id="persp-applied">0/10</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Agreements:</span>
+                        <span class="stat-value" id="persp-agree">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Conflicts:</span>
+                        <span class="stat-value" id="persp-conflict">0</span>
+                    </div>
+                </div>
+
+                <div class="section-title">🎯 Meta-Awareness</div>
+                <div class="card">
+                    <div class="stat-row">
+                        <span class="stat-label">Assumptions:</span>
+                        <span class="stat-value" id="meta-assumptions">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Limitations:</span>
+                        <span class="stat-value" id="meta-limitations">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Improvements:</span>
+                        <span class="stat-value" id="meta-improvements">0</span>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script>
+    // =========================================================================
+    // CONSTANTS
+    // =========================================================================
+
+    const WH_CATEGORIES = [
+        { id: 'essence', name: 'ESSENCE', count: 12, color: '#3b82f6' },
+        { id: 'temporal', name: 'TEMPORAL', count: 15, color: '#f59e0b' },
+        { id: 'spatial', name: 'SPATIAL', count: 18, color: '#10b981' },
+        { id: 'agency', name: 'AGENCY', count: 12, color: '#8b5cf6' },
+        { id: 'causation', name: 'CAUSATION', count: 10, color: '#ef4444' },
+        { id: 'selection', name: 'SELECTION', count: 11, color: '#ec4899' },
+        { id: 'mechanism', name: 'MECHANISM', count: 18, color: '#06b6d4' },
+        { id: 'context', name: 'CONTEXT', count: 2, color: '#84cc16' }
     ];
-    
-    function getFidel(row, col) {
-      if (row < 0 || row >= FIDEL.length || col < 0 || col >= 8) return '◯';
-      const rowStr = FIDEL[row];
-      return rowStr ? rowStr[col] || '◯' : '◯';
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // CONFIGURATION
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    const CONFIG = {
-      maxEntities: 500,
-      entityBaseSize: 10,
-      glowMultiplier: 3.5,
-      connectionWidth: 1.2,
-      trailAlpha: 0.06,
-      positionLerp: 0.1,
-      flowParticleSpeed: 0.015,
-      maxFlowParticles: 200
-    };
-    
+
     const LAYERS = [
-      { id: 0, name: 'Acoustic',   icon: '🎵', r: 168, g: 85,  b: 247 },
-      { id: 1, name: 'Symbolic',   icon: '🔮', r: 34,  g: 211, b: 238 },
-      { id: 2, name: 'Visual',     icon: '👁️', r: 59,  g: 130, b: 246 },
-      { id: 3, name: 'Spatial',    icon: '🌍', r: 34,  g: 197, b: 94  },
-      { id: 4, name: 'Temporal',   icon: '⏱️', r: 249, g: 115, b: 22  },
-      { id: 5, name: 'Emotional',  icon: '💜', r: 236, g: 72,  b: 153 },
-      { id: 6, name: 'Physical',   icon: '⚛️', r: 203, g: 213, b: 225 },
-      { id: 7, name: 'Biological', icon: '🧬', r: 132, g: 204, b: 22  },
-      { id: 8, name: 'Social',     icon: '👥', r: 251, g: 191, b: 36  },
-      { id: 9, name: 'Wholeness',  icon: '🌌', r: 255, g: 255, b: 255 }
+        { num: 0, name: 'META-COGNITIVE', v: 'ኤ', purpose: 'Self-awareness' },
+        { num: 1, name: 'ONTOLOGICAL', v: 'ኢ', purpose: 'Identity & essence' },
+        { num: 2, name: 'TEMPORAL', v: 'ኣ', purpose: 'Time mapping' },
+        { num: 3, name: 'SPATIAL', v: 'ኣ', purpose: 'Space mapping' },
+        { num: 4, name: 'AGENCY', v: 'እ', purpose: 'Actor relations' },
+        { num: 5, name: 'TELEOLOGICAL', v: 'ኡ', purpose: 'Purpose & cause' },
+        { num: 6, name: 'MODAL', v: 'አ', purpose: 'Possibility space' },
+        { num: 7, name: 'MECHANISTIC', v: 'ኦ', purpose: 'Process & mechanism' },
+        { num: 8, name: 'RELATIONAL', v: 'ኧ', purpose: 'Context & comparison' },
+        { num: 9, name: 'COUNTERFACTUAL', v: 'አ', purpose: 'What-if exploration' },
+        { num: 10, name: 'SYNTHETIC', v: 'ኤ', purpose: 'Holistic integration' }
     ];
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // UTILITIES
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const dist = (x1, y1, x2, y2) => Math.sqrt((x2-x1)**2 + (y2-y1)**2);
-    
-    function rgba(layer, alpha = 1) {
-      const l = LAYERS[layer];
-      return `rgba(${l.r}, ${l.g}, ${l.b}, ${alpha})`;
-    }
-    
-    function rainbow(time, alpha = 1) {
-      const hue = (time * 60) % 360;
-      const c = 1, x = c * (1 - Math.abs((hue / 60) % 2 - 1));
-      let r = 0, g = 0, b = 0;
-      if (hue < 60) { r = c; g = x; }
-      else if (hue < 120) { r = x; g = c; }
-      else if (hue < 180) { g = c; b = x; }
-      else if (hue < 240) { g = x; b = c; }
-      else if (hue < 300) { r = x; b = c; }
-      else { r = c; b = x; }
-      return `rgba(${Math.round(r*255)}, ${Math.round(g*255)}, ${Math.round(b*255)}, ${alpha})`;
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // AUDIO ENGINE
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    class AudioEngine {
-      constructor() {
-        this.ctx = null;
-        this.enabled = false;
-        this.oscillators = new Map();
-        this.masterGain = null;
-      }
-      
-      init() {
-        if (this.ctx) return;
-        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.value = 0.15;
-        this.masterGain.connect(this.ctx.destination);
-      }
-      
-      enable() {
-        this.init();
-        this.enabled = true;
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-      }
-      
-      disable() {
-        this.enabled = false;
-        this.oscillators.forEach(osc => {
-          osc.gain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.1);
-        });
-      }
-      
-      playEntity(entity) {
-        if (!this.enabled || !this.ctx) return;
-        
-        // Frequency based on Mfidel position
-        const baseFreq = 220; // A3
-        const consonantMult = 1 + entity.mfidelRow * 0.05;
-        const vowelMult = 1 + entity.mfidelCol * 0.1;
-        const freq = baseFreq * consonantMult * vowelMult;
-        
-        // Create or update oscillator
-        let oscData = this.oscillators.get(entity.id);
-        if (!oscData) {
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.type = 'sine';
-          osc.connect(gain);
-          gain.connect(this.masterGain);
-          osc.start();
-          gain.gain.value = 0;
-          oscData = { osc, gain };
-          this.oscillators.set(entity.id, oscData);
-        }
-        
-        oscData.osc.frequency.setTargetAtTime(freq, this.ctx.currentTime, 0.05);
-        oscData.gain.gain.setTargetAtTime(entity.opacity * 0.1, this.ctx.currentTime, 0.05);
-      }
-      
-      removeEntity(entityId) {
-        const oscData = this.oscillators.get(entityId);
-        if (oscData) {
-          oscData.gain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.1);
-          setTimeout(() => {
-            oscData.osc.stop();
-            this.oscillators.delete(entityId);
-          }, 200);
-        }
-      }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // CAUSAL DEPENDENCY GRAPH
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    class CausalGraph {
-      constructor() {
-        this.nodes = new Map();
-        this.edges = new Map();
-        this.tick = 0;
-      }
-      
-      addNode(id, layer) {
-        if (!this.nodes.has(id)) {
-          this.nodes.set(id, { id, layer, deps: [], children: [] });
-        }
-      }
-      
-      addEdge(from, to, type) {
-        const key = `${from}→${to}`;
-        if (this.edges.has(key) || this.wouldCycle(from, to)) return false;
-        
-        this.edges.set(key, { from, to, type });
-        const fromNode = this.nodes.get(from);
-        const toNode = this.nodes.get(to);
-        if (fromNode) fromNode.children.push(to);
-        if (toNode) toNode.deps.push(from);
-        return true;
-      }
-      
-      removeNode(id) {
-        const node = this.nodes.get(id);
-        if (!node) return;
-        
-        for (const dep of node.deps) {
-          const n = this.nodes.get(dep);
-          if (n) n.children = n.children.filter(c => c !== id);
-          this.edges.delete(`${dep}→${id}`);
-        }
-        for (const child of node.children) {
-          const n = this.nodes.get(child);
-          if (n) n.deps = n.deps.filter(d => d !== id);
-          this.edges.delete(`${id}→${child}`);
-        }
-        this.nodes.delete(id);
-      }
-      
-      wouldCycle(from, to) {
-        if (from === to) return true;
-        const visited = new Set();
-        const stack = [to];
-        while (stack.length) {
-          const curr = stack.pop();
-          if (curr === from) return true;
-          if (visited.has(curr)) continue;
-          visited.add(curr);
-          const node = this.nodes.get(curr);
-          if (node) stack.push(...node.children);
-        }
-        return false;
-      }
-      
-      getAncestors(id) {
-        const ancestors = new Set();
-        const stack = [id];
-        while (stack.length) {
-          const curr = stack.pop();
-          const node = this.nodes.get(curr);
-          if (node) {
-            for (const dep of node.deps) {
-              if (!ancestors.has(dep)) {
-                ancestors.add(dep);
-                stack.push(dep);
-              }
-            }
-          }
-        }
-        return ancestors;
-      }
-      
-      getDescendants(id) {
-        const descendants = new Set();
-        const stack = [id];
-        while (stack.length) {
-          const curr = stack.pop();
-          const node = this.nodes.get(curr);
-          if (node) {
-            for (const child of node.children) {
-              if (!descendants.has(child)) {
-                descendants.add(child);
-                stack.push(child);
-              }
-            }
-          }
-        }
-        return descendants;
-      }
-      
-      getMaxDepth() {
-        let max = 0;
-        for (const node of this.nodes.values()) {
-          let depth = 0, curr = node;
-          while (curr && curr.deps.length > 0 && depth < 20) {
-            depth++;
-            curr = this.nodes.get(curr.deps[0]);
-          }
-          max = Math.max(max, depth);
-        }
-        return max;
-      }
-      
-      clear() {
-        this.nodes.clear();
-        this.edges.clear();
-        this.tick = 0;
-      }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // FLOW PARTICLE
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    class FlowParticle {
-      constructor(edge, entities) {
-        this.edge = edge;
-        this.progress = 0;
-        this.speed = CONFIG.flowParticleSpeed * (0.8 + Math.random() * 0.4);
-        this.from = entities.find(e => e.id === edge.from);
-        this.to = entities.find(e => e.id === edge.to);
-        this.alive = true;
-      }
-      
-      update() {
-        this.progress += this.speed;
-        if (this.progress >= 1) {
-          this.alive = false;
-        }
-      }
-      
-      getPosition() {
-        if (!this.from || !this.to) return null;
-        return {
-          x: lerp(this.from.x, this.to.x, this.progress),
-          y: lerp(this.from.y, this.to.y, this.progress)
-        };
-      }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // ENTITY
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    let entityCounter = 0;
-    
-    class Entity {
-      constructor(layer, x, y, index) {
-        this.id = `e_${entityCounter++}`;
-        this.layer = layer;
-        this.index = index;
-        
-        this.x = x;
-        this.y = y;
-        this.targetX = x;
-        this.targetY = y;
-        this.vx = 0;
-        this.vy = 0;
-        
-        this.phase = Math.random() * Math.PI * 2;
-        this.mfidelRow = Math.floor(Math.random() * 34);
-        this.mfidelCol = Math.floor(Math.random() * 8);
-        
-        this.scale = 1;
-        this.opacity = 1;
-        this.glow = 0.5;
-        
-        // Trail
-        this.trail = [];
-        this.maxTrail = 8;
-        
-        // Selection state
-        this.selected = false;
-        this.highlighted = false;
-      }
-      
-      get char() {
-        return getFidel(this.mfidelRow, this.mfidelCol);
-      }
-      
-      updatePosition() {
-        // Store trail
-        if (this.trail.length >= this.maxTrail) this.trail.shift();
-        this.trail.push({ x: this.x, y: this.y, opacity: this.opacity });
-        
-        this.x = lerp(this.x, this.targetX, CONFIG.positionLerp);
-        this.y = lerp(this.y, this.targetY, CONFIG.positionLerp);
-      }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // STRATEGIES
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    const Strategies = {
-      wave: {
-        name: 'wave',
-        compute(entity, time, ctx) {
-          const dx = entity.x - ctx.centerX;
-          const dy = entity.y - ctx.centerY;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          
-          const wavePhase = time * 3 - d * 0.02;
-          const wave = Math.sin(wavePhase);
-          const layerMod = Math.sin(time * 2 + entity.layer * 0.5);
-          
-          entity.scale = 1 + wave * 0.4 + layerMod * 0.15;
-          entity.opacity = clamp(0.5 + wave * 0.4, 0.3, 1);
-          entity.glow = clamp(0.3 + wave * 0.5, 0.1, 0.9);
-          
-          const breathe = Math.sin(time * 0.5 + entity.phase) * 12;
-          entity.targetX = ctx.centerX + dx + breathe * (dx / Math.max(d, 1)) * 0.1;
-          entity.targetY = ctx.centerY + dy + breathe * (dy / Math.max(d, 1)) * 0.1;
-        }
-      },
-      
-      pulse: {
-        name: 'pulse',
-        compute(entity, time, ctx) {
-          const layerPhase = entity.layer * (Math.PI / 5);
-          const pulse = Math.sin(time * 4 + layerPhase);
-          const personal = Math.sin(time * 2 + entity.phase);
-          const combined = pulse * 0.6 + personal * 0.4;
-          
-          entity.scale = 1 + combined * 0.5;
-          entity.opacity = clamp(0.4 + Math.abs(combined) * 0.6, 0.3, 1);
-          entity.glow = clamp(0.2 + Math.abs(combined) * 0.6, 0.1, 0.9);
-          
-          const dx = entity.x - ctx.centerX;
-          const dy = entity.y - ctx.centerY;
-          const expansion = 1 + combined * 0.12;
-          entity.targetX = ctx.centerX + dx * expansion;
-          entity.targetY = ctx.centerY + dy * expansion;
-        }
-      },
-      
-      orbital: {
-        name: 'orbital',
-        compute(entity, time, ctx) {
-          const baseRadius = 50 + entity.layer * 28;
-          const speed = 0.5 + (9 - entity.layer) * 0.07;
-          const count = ctx.layerCounts[entity.layer] || 1;
-          const angleOffset = (entity.index / count) * Math.PI * 2;
-          const angle = time * speed + angleOffset;
-          
-          entity.targetX = ctx.centerX + Math.cos(angle) * baseRadius;
-          entity.targetY = ctx.centerY + Math.sin(angle) * baseRadius * 0.6;
-          
-          entity.scale = 0.8 + Math.sin(angle) * 0.25;
-          entity.opacity = clamp(0.5 + Math.sin(angle) * 0.3, 0.4, 1);
-          entity.glow = 0.4 + Math.abs(Math.cos(angle)) * 0.3;
-        }
-      },
-      
-      resonance: {
-        name: 'resonance',
-        compute(entity, time, ctx) {
-          const cFreq = 0.8 + entity.mfidelRow * 0.05;
-          const vFreq = 1.2 + entity.mfidelCol * 0.12;
-          
-          const consonant = Math.sin(time * cFreq * 2);
-          const vowel = Math.cos(time * vFreq * 2);
-          const interference = Math.sin(time * 0.3 + entity.mfidelRow * 0.1) * 
-                              Math.cos(time * 0.5 + entity.mfidelCol * 0.15);
-          
-          const resonance = (consonant + vowel) / 2;
-          const combined = resonance * 0.7 + interference * 0.3;
-          
-          entity.scale = 1 + combined * 0.5;
-          entity.opacity = clamp(0.4 + Math.abs(resonance) * 0.5, 0.3, 1);
-          entity.glow = clamp(0.2 + Math.abs(combined) * 0.7, 0.1, 0.95);
-          
-          const vibX = Math.sin(time * cFreq * 3) * (8 + entity.mfidelRow * 0.2);
-          const vibY = Math.cos(time * vFreq * 3) * (8 + entity.mfidelCol * 0.4);
-          
-          const dx = entity.x - ctx.centerX;
-          const dy = entity.y - ctx.centerY;
-          entity.targetX = ctx.centerX + dx + vibX * 0.25;
-          entity.targetY = ctx.centerY + dy + vibY * 0.25;
-        }
-      },
-      
-      causal: {
-        name: 'causal',
-        compute(entity, time, ctx) {
-          const waveSpeed = 1.5;
-          const cycleLen = 12;
-          const waveFront = (time * waveSpeed) % cycleLen;
-          
-          const layer = entity.layer;
-          const distToWave = Math.min(
-            Math.abs(layer - waveFront),
-            Math.abs(layer - (waveFront - cycleLen)),
-            Math.abs(layer - (waveFront + cycleLen))
-          );
-          
-          const activation = clamp(1 - distToWave / 3, 0, 1);
-          const pulse = activation > 0.3 ? Math.sin(time * 15) * activation : 0;
-          
-          entity.scale = 1 + activation * 0.6 + pulse * 0.2;
-          entity.opacity = clamp(0.2 + activation * 0.8, 0.15, 1);
-          entity.glow = activation * 0.9;
-          
-          const dx = entity.x - ctx.centerX;
-          const dy = entity.y - ctx.centerY;
-          const pull = activation * 0.08;
-          entity.targetX = ctx.centerX + dx * (1 - pull);
-          entity.targetY = ctx.centerY + dy * (1 - pull);
-        }
-      },
-      
-      emergence: {
-        name: 'emergence',
-        compute(entity, time, ctx) {
-          if (entity.layer === 9) {
-            const mega = Math.sin(time * 0.8);
-            entity.scale = 1.5 + mega * 0.7;
-            entity.opacity = 0.9 + mega * 0.1;
-            entity.glow = 0.8 + mega * 0.2;
-            entity.targetX = ctx.centerX;
-            entity.targetY = ctx.centerY;
-            return;
-          }
-          
-          const convergence = ctx.wholeness;
-          const pulse = Math.sin(time * 2 + entity.layer * 0.4);
-          
-          entity.scale = 1 + pulse * 0.3;
-          entity.opacity = clamp(0.5 + convergence * 0.4 + pulse * 0.1, 0.3, 1);
-          entity.glow = 0.3 + convergence * 0.5;
-          
-          const dx = entity.x - ctx.centerX;
-          const dy = entity.y - ctx.centerY;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          const angle = Math.atan2(dy, dx);
-          
-          const spiralSpeed = 0.3 + convergence * 0.4;
-          const newAngle = angle + spiralSpeed * 0.015;
-          const shrink = 1 - convergence * 0.0015;
-          
-          entity.targetX = ctx.centerX + Math.cos(newAngle) * d * shrink;
-          entity.targetY = ctx.centerY + Math.sin(newAngle) * d * shrink;
-          
-          const minDist = 40 + entity.layer * 12;
-          const newD = dist(entity.targetX, entity.targetY, ctx.centerX, ctx.centerY);
-          if (newD < minDist) {
-            const scale = minDist / Math.max(newD, 1);
-            entity.targetX = ctx.centerX + (entity.targetX - ctx.centerX) * scale;
-            entity.targetY = ctx.centerY + (entity.targetY - ctx.centerY) * scale;
-          }
-        }
-      },
-      
-      gravity: {
-        name: 'gravity',
-        compute(entity, time, ctx) {
-          // N-body gravity simulation
-          const G = 0.5;
-          let ax = 0, ay = 0;
-          
-          for (const other of ctx.entities) {
-            if (other.id === entity.id) continue;
-            
-            const dx = other.x - entity.x;
-            const dy = other.y - entity.y;
-            const d = Math.sqrt(dx * dx + dy * dy);
-            if (d < 20) continue; // Avoid singularity
-            
-            const mass = (other.layer + 1) * 2;
-            const force = G * mass / (d * d);
-            ax += (dx / d) * force;
-            ay += (dy / d) * force;
-          }
-          
-          // Central attractor
-          const cdx = ctx.centerX - entity.x;
-          const cdy = ctx.centerY - entity.y;
-          const cd = Math.sqrt(cdx * cdx + cdy * cdy);
-          if (cd > 10) {
-            const centerForce = 0.3 / cd;
-            ax += (cdx / cd) * centerForce;
-            ay += (cdy / cd) * centerForce;
-          }
-          
-          // Apply with damping
-          entity.vx = (entity.vx + ax) * 0.98;
-          entity.vy = (entity.vy + ay) * 0.98;
-          
-          // Clamp velocity
-          const v = Math.sqrt(entity.vx**2 + entity.vy**2);
-          if (v > 5) {
-            entity.vx = (entity.vx / v) * 5;
-            entity.vy = (entity.vy / v) * 5;
-          }
-          
-          entity.targetX = entity.x + entity.vx;
-          entity.targetY = entity.y + entity.vy;
-          
-          // Keep in bounds
-          const margin = 50;
-          if (entity.targetX < margin) entity.targetX = margin;
-          if (entity.targetX > ctx.width - margin) entity.targetX = ctx.width - margin;
-          if (entity.targetY < margin) entity.targetY = margin;
-          if (entity.targetY > ctx.height - margin) entity.targetY = ctx.height - margin;
-          
-          // Visual based on velocity
-          const speed = Math.sqrt(entity.vx**2 + entity.vy**2);
-          entity.scale = 1 + speed * 0.1;
-          entity.opacity = clamp(0.5 + speed * 0.1, 0.4, 1);
-          entity.glow = 0.3 + speed * 0.15;
-        }
-      }
+
+    const REASONING_MODES = [
+        'ANALYTICAL', 'SYNTHETIC', 'CAUSAL', 'TEMPORAL', 'SPATIAL',
+        'MODAL', 'COMPARATIVE', 'ABDUCTIVE', 'DIALECTICAL', 'RECURSIVE'
+    ];
+
+    const PHASES = [
+        'META-INIT', 'INTERROGATE', 'MULTI-MODE', 'GAP-DETECT',
+        'CONTRADICT', 'COHERENCE', 'CAUSAL-GRAPH', 'PERSPECTIVE',
+        'TEMPORAL', 'COUNTERFACT', 'SYNTHESIS', 'SELF-IMPROVE'
+    ];
+
+    const CRITERIA = [
+        { id: 'dimensional', name: 'Dimensional Completeness', weight: 0.15, target: 0.90 },
+        { id: 'depth', name: 'Depth Adequacy', weight: 0.10, target: 0.80 },
+        { id: 'causal', name: 'Causal Closure', weight: 0.12, target: 0.85 },
+        { id: 'logical', name: 'Logical Consistency', weight: 0.12, target: 0.90 },
+        { id: 'empirical', name: 'Empirical Correspondence', weight: 0.10, target: 0.75 },
+        { id: 'explanatory', name: 'Explanatory Power', weight: 0.12, target: 0.80 },
+        { id: 'predictive', name: 'Predictive Capacity', weight: 0.08, target: 0.70 },
+        { id: 'contextual', name: 'Contextual Awareness', weight: 0.08, target: 0.85 },
+        { id: 'alternative', name: 'Alternative Recognition', weight: 0.08, target: 0.75 },
+        { id: 'meta', name: 'Meta-Awareness', weight: 0.05, target: 1.00 }
+    ];
+
+    const CRITERION_COLORS = {
+        dimensional: '#3b82f6', depth: '#8b5cf6', causal: '#ef4444',
+        logical: '#f59e0b', empirical: '#10b981', explanatory: '#06b6d4',
+        predictive: '#ec4899', contextual: '#84cc16', alternative: '#a855f7', meta: '#d4a574'
     };
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // ORCHESTRATOR
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    class Orchestrator {
-      constructor(canvas, cdgCanvas) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
-        this.cdgCanvas = cdgCanvas;
-        this.cdgCtx = cdgCanvas?.getContext('2d');
+
+    // =========================================================================
+    // STATE
+    // =========================================================================
+
+    const state = {
+        tick: 0,
+        running: false,
+        currentPhase: 0,
+        activeLayer: 1,
+        activeMode: 'CAUSAL',
+        activeCategory: 'essence',
         
-        this.entities = [];
-        this.cdg = new CausalGraph();
-        this.strategy = Strategies.wave;
-        this.audio = new AudioEngine();
+        criteriaScores: {},
+        wholeness: 0,
+        interpretation: 'INITIALIZING',
         
-        this.flowParticles = [];
+        knowledgeGraph: {
+            answered: 0,
+            unknowns: 0,
+            inferences: 0,
+            predictions: 0,
+            counterfactuals: 0
+        },
         
-        this.time = 0;
-        this.frame = 0;
-        this.speed = 1;
-        this.isRunning = true;
-        this.frameHash = '00000000';
+        causalGraph: {
+            nodes: 0,
+            edges: 0,
+            criticalPaths: 0,
+            leveragePoints: 0
+        },
         
-        this.layerCounts = new Array(10).fill(0);
-        this.layerIndices = new Array(10).fill(0);
-        this.isolatedLayers = new Set();
+        perspectives: {
+            applied: 0,
+            agreements: 0,
+            conflicts: 0
+        },
         
-        // Feature toggles
-        this.showTrails = true;
-        this.showFlow = false;
-        this.showGlyphs = true;
-        
-        // Selection
-        this.selectedEntity = null;
-        this.highlightedChain = new Set();
-        this.hoveredEntity = null;
-        
-        // Performance
-        this.lastTime = performance.now();
-        this.frameCount = 0;
-        this.fps = 60;
-        this.fpsTimer = 0;
-        
-        this.dpr = window.devicePixelRatio || 1;
-        
-        this.resize();
-        window.addEventListener('resize', () => this.resize());
-        
-        // Mouse interaction
-        this.canvas.addEventListener('mousemove', e => this.onMouseMove(e));
-        this.canvas.addEventListener('click', e => this.onClick(e));
-        this.canvas.addEventListener('mouseleave', () => this.onMouseLeave());
-      }
-      
-      resize() {
-        const rect = this.canvas.parentElement.getBoundingClientRect();
-        this.width = rect.width;
-        this.height = rect.height;
-        this.centerX = this.width / 2;
-        this.centerY = this.height / 2;
-        
-        this.canvas.width = this.width * this.dpr;
-        this.canvas.height = this.height * this.dpr;
-        this.canvas.style.width = this.width + 'px';
-        this.canvas.style.height = this.height + 'px';
-        
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-        this.ctx.scale(this.dpr, this.dpr);
-        
-        if (this.cdgCanvas) {
-          const r = this.cdgCanvas.parentElement.getBoundingClientRect();
-          this.cdgCanvas.width = r.width;
-          this.cdgCanvas.height = 80;
+        meta: {
+            assumptions: 4,
+            limitations: 0,
+            improvements: 0
         }
-      }
-      
-      getEntityAt(x, y) {
-        // Reverse order to get topmost first
-        for (let i = this.entities.length - 1; i >= 0; i--) {
-          const e = this.entities[i];
-          if (this.isolatedLayers.size > 0 && !this.isolatedLayers.has(e.layer)) continue;
-          const d = dist(x, y, e.x, e.y);
-          if (d < CONFIG.entityBaseSize * e.scale * 1.5) {
-            return e;
-          }
-        }
-        return null;
-      }
-      
-      onMouseMove(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const entity = this.getEntityAt(x, y);
-        this.hoveredEntity = entity;
-        
-        const tooltip = document.getElementById('entity-tooltip');
-        if (entity) {
-          tooltip.classList.add('visible');
-          tooltip.style.left = (x + 15) + 'px';
-          tooltip.style.top = (y - 10) + 'px';
-          
-          document.getElementById('tooltip-char').textContent = entity.char;
-          document.getElementById('tooltip-id').textContent = entity.id;
-          document.getElementById('tooltip-layer').textContent = `${entity.layer} (${LAYERS[entity.layer].name})`;
-          document.getElementById('tooltip-mfidel').textContent = `Row ${entity.mfidelRow}, Col ${entity.mfidelCol}`;
-          
-          const node = this.cdg.nodes.get(entity.id);
-          document.getElementById('tooltip-deps').textContent = node?.deps.length || 0;
-          document.getElementById('tooltip-children').textContent = node?.children.length || 0;
-        } else {
-          tooltip.classList.remove('visible');
-        }
-      }
-      
-      onClick(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const entity = this.getEntityAt(x, y);
-        
-        if (e.shiftKey && entity) {
-          // Trace causal chain
-          this.highlightCausalChain(entity);
-        } else if (entity) {
-          this.selectEntity(entity);
-        } else {
-          this.deselectEntity();
-        }
-      }
-      
-      onMouseLeave() {
-        this.hoveredEntity = null;
-        document.getElementById('entity-tooltip').classList.remove('visible');
-      }
-      
-      selectEntity(entity) {
-        if (this.selectedEntity) this.selectedEntity.selected = false;
-        this.selectedEntity = entity;
-        entity.selected = true;
-        
-        const panel = document.getElementById('selected-entity');
-        panel.classList.add('visible');
-        
-        document.getElementById('selected-char').textContent = entity.char;
-        document.getElementById('selected-id').textContent = entity.id;
-        document.getElementById('selected-layer').textContent = `Layer ${entity.layer}: ${LAYERS[entity.layer].name}`;
-        
-        const node = this.cdg.nodes.get(entity.id);
-        document.getElementById('selected-deps').textContent = node?.deps.length || 0;
-        document.getElementById('selected-children').textContent = node?.children.length || 0;
-        document.getElementById('selected-mfidel').textContent = `${entity.mfidelRow},${entity.mfidelCol}`;
-      }
-      
-      deselectEntity() {
-        if (this.selectedEntity) this.selectedEntity.selected = false;
-        this.selectedEntity = null;
-        this.highlightedChain.clear();
-        this.entities.forEach(e => e.highlighted = false);
-        document.getElementById('selected-entity').classList.remove('visible');
-      }
-      
-      highlightCausalChain(entity) {
-        this.highlightedChain.clear();
-        this.entities.forEach(e => e.highlighted = false);
-        
-        const ancestors = this.cdg.getAncestors(entity.id);
-        const descendants = this.cdg.getDescendants(entity.id);
-        
-        this.highlightedChain = new Set([entity.id, ...ancestors, ...descendants]);
-        
-        for (const e of this.entities) {
-          e.highlighted = this.highlightedChain.has(e.id);
-        }
-        
-        this.selectEntity(entity);
-      }
-      
-      addEntity(layer) {
-        if (this.entities.length >= CONFIG.maxEntities) return null;
-        
-        const index = this.layerIndices[layer]++;
-        this.layerCounts[layer]++;
-        
-        const count = this.layerCounts[layer];
-        const angle = (index / Math.max(count, 1)) * Math.PI * 2 + layer * 0.3;
-        const radius = 70 + layer * 22 + Math.random() * 25;
-        
-        const x = this.centerX + Math.cos(angle) * radius;
-        const y = this.centerY + Math.sin(angle) * radius;
-        
-        const entity = new Entity(layer, x, y, index);
-        this.entities.push(entity);
-        
-        this.cdg.addNode(entity.id, layer);
-        
-        const sameLayer = this.entities.filter(e => e.layer === layer && e.id !== entity.id);
-        if (sameLayer.length > 0) {
-          this.cdg.addEdge(sameLayer[sameLayer.length - 1].id, entity.id, 'sequential');
-        }
-        
-        if (layer > 0) {
-          const lower = this.entities.filter(e => e.layer === layer - 1);
-          if (lower.length > 0) {
-            const target = lower[Math.floor(Math.random() * lower.length)];
-            this.cdg.addEdge(target.id, entity.id, 'hierarchical');
-          }
-        }
-        
-        return entity;
-      }
-      
-      removeEntity(entityId) {
-        const idx = this.entities.findIndex(e => e.id === entityId);
-        if (idx === -1) return;
-        
-        const entity = this.entities[idx];
-        this.layerCounts[entity.layer]--;
-        this.entities.splice(idx, 1);
-        this.cdg.removeNode(entityId);
-        this.audio.removeEntity(entityId);
-      }
-      
-      clearEntities() {
-        this.entities.forEach(e => this.audio.removeEntity(e.id));
-        this.entities = [];
-        this.layerCounts.fill(0);
-        this.layerIndices.fill(0);
-        this.cdg.clear();
-        this.flowParticles = [];
-        this.deselectEntity();
-        entityCounter = 0;
-      }
-      
-      getWholeness() {
-        if (this.entities.length === 0) return 0.5;
-        
-        const activeLayers = this.layerCounts.filter(c => c > 0).length;
-        const coverage = activeLayers / 10;
-        
-        const nonZero = this.layerCounts.filter(c => c > 0);
-        const avg = nonZero.reduce((a, b) => a + b, 0) / nonZero.length;
-        const variance = nonZero.reduce((s, c) => s + Math.pow(c - avg, 2), 0) / nonZero.length;
-        const balance = 1 / (1 + variance / 10);
-        
-        const connectivity = Math.min(1, this.cdg.edges.size / Math.max(this.entities.length, 1));
-        
-        return coverage * 0.4 + balance * 0.35 + connectivity * 0.25;
-      }
-      
-      setStrategy(name) {
-        if (Strategies[name]) this.strategy = Strategies[name];
-      }
-      
-      toggleLayer(layer, shift) {
-        if (shift) {
-          if (this.isolatedLayers.has(layer)) {
-            this.isolatedLayers.delete(layer);
-          } else {
-            this.isolatedLayers.add(layer);
-          }
-          if (this.isolatedLayers.size === 10) this.isolatedLayers.clear();
-        } else {
-          this.addEntity(layer);
-        }
-      }
-      
-      spawnFlowParticles() {
-        if (!this.showFlow) return;
-        
-        // Spawn particles on random edges
-        const edgeArr = Array.from(this.cdg.edges.values());
-        if (edgeArr.length === 0) return;
-        
-        if (this.flowParticles.length < CONFIG.maxFlowParticles && Math.random() < 0.3) {
-          const edge = edgeArr[Math.floor(Math.random() * edgeArr.length)];
-          this.flowParticles.push(new FlowParticle(edge, this.entities));
-        }
-      }
-      
-      update() {
-        const wholeness = this.getWholeness();
-        
-        const ctx = {
-          centerX: this.centerX,
-          centerY: this.centerY,
-          width: this.width,
-          height: this.height,
-          wholeness,
-          layerCounts: this.layerCounts,
-          time: this.time,
-          entities: this.entities
-        };
-        
-        for (const entity of this.entities) {
-          if (this.isolatedLayers.size > 0 && !this.isolatedLayers.has(entity.layer)) continue;
-          this.strategy.compute(entity, this.time, ctx);
-          entity.updatePosition();
-          
-          if (this.audio.enabled) {
-            this.audio.playEntity(entity);
-          }
-        }
-        
-        // Update flow particles
-        this.spawnFlowParticles();
-        for (const p of this.flowParticles) p.update();
-        this.flowParticles = this.flowParticles.filter(p => p.alive);
-      }
-      
-      render() {
-        const ctx = this.ctx;
-        
-        // Clear
-        if (this.showTrails) {
-          ctx.fillStyle = `rgba(2, 6, 23, ${CONFIG.trailAlpha})`;
-        } else {
-          ctx.fillStyle = '#020617';
-        }
-        ctx.fillRect(0, 0, this.width, this.height);
-        
-        // Draw connections
-        ctx.lineWidth = CONFIG.connectionWidth;
-        for (const [key, edge] of this.cdg.edges) {
-          const from = this.entities.find(e => e.id === edge.from);
-          const to = this.entities.find(e => e.id === edge.to);
-          if (!from || !to) continue;
-          
-          if (this.isolatedLayers.size > 0) {
-            if (!this.isolatedLayers.has(from.layer) || !this.isolatedLayers.has(to.layer)) continue;
-          }
-          
-          const inChain = this.highlightedChain.has(from.id) && this.highlightedChain.has(to.id);
-          const avgOpacity = (from.opacity + to.opacity) / 2;
-          const layer = Math.min(from.layer, to.layer);
-          
-          if (inChain) {
-            ctx.strokeStyle = `rgba(255, 255, 255, ${avgOpacity * 0.6})`;
-            ctx.lineWidth = 2;
-          } else {
-            ctx.strokeStyle = rgba(layer, avgOpacity * 0.2);
-            ctx.lineWidth = CONFIG.connectionWidth;
-          }
-          
-          ctx.beginPath();
-          ctx.moveTo(from.x, from.y);
-          ctx.lineTo(to.x, to.y);
-          ctx.stroke();
-        }
-        
-        // Draw flow particles
-        if (this.showFlow) {
-          ctx.fillStyle = 'rgba(34, 211, 238, 0.9)';
-          for (const p of this.flowParticles) {
-            const pos = p.getPosition();
-            if (pos) {
-              ctx.beginPath();
-              ctx.arc(pos.x, pos.y, 2, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-        }
-        
-        // Sort by layer
-        const sorted = [...this.entities].sort((a, b) => a.layer - b.layer);
-        
-        // Draw entities
-        for (const entity of sorted) {
-          if (this.isolatedLayers.size > 0 && !this.isolatedLayers.has(entity.layer)) continue;
-          
-          const size = CONFIG.entityBaseSize * entity.scale;
-          const isWholeness = entity.layer === 9;
-          const dimmed = this.highlightedChain.size > 0 && !entity.highlighted;
-          
-          ctx.save();
-          ctx.globalAlpha = dimmed ? entity.opacity * 0.2 : entity.opacity;
-          
-          // Draw trail
-          if (this.showTrails && entity.trail.length > 1) {
-            ctx.strokeStyle = rgba(entity.layer, 0.3);
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(entity.trail[0].x, entity.trail[0].y);
-            for (let i = 1; i < entity.trail.length; i++) {
-              ctx.lineTo(entity.trail[i].x, entity.trail[i].y);
-            }
-            ctx.stroke();
-          }
-          
-          // Glow
-          if (entity.glow > 0.1) {
-            const glowSize = size * CONFIG.glowMultiplier;
-            const gradient = ctx.createRadialGradient(entity.x, entity.y, 0, entity.x, entity.y, glowSize);
-            
-            if (isWholeness) {
-              gradient.addColorStop(0, rainbow(this.time, entity.glow * 0.5));
-            } else {
-              gradient.addColorStop(0, rgba(entity.layer, entity.glow * 0.6));
-            }
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(entity.x, entity.y, glowSize, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          
-          // Selection ring
-          if (entity.selected || entity.highlighted) {
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(entity.x, entity.y, size + 4, 0, Math.PI * 2);
-            ctx.stroke();
-          }
-          
-          // Core
-          if (isWholeness) {
-            ctx.fillStyle = rainbow(this.time, entity.opacity);
-          } else {
-            ctx.fillStyle = rgba(entity.layer, entity.opacity);
-          }
-          
-          ctx.beginPath();
-          ctx.arc(entity.x, entity.y, size, 0, Math.PI * 2);
-          ctx.fill();
-          
-          // Glyph
-          if (this.showGlyphs) {
-            ctx.fillStyle = `rgba(255, 255, 255, ${entity.opacity * 0.9})`;
-            ctx.font = `bold ${size * 1.3}px serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(entity.char, entity.x, entity.y + 1);
-          } else {
-            // Highlight dot
-            ctx.fillStyle = `rgba(255, 255, 255, ${entity.opacity * 0.4})`;
-            ctx.beginPath();
-            ctx.arc(entity.x - size * 0.3, entity.y - size * 0.3, size * 0.3, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          
-          ctx.restore();
-        }
-        
-        this.frameHash = this.computeHash();
-        this.frame++;
-        this.cdg.tick++;
-      }
-      
-      computeHash() {
-        let hash = 0;
-        for (let i = 0; i < Math.min(this.entities.length, 20); i++) {
-          const e = this.entities[i];
-          hash = ((hash << 5) - hash + Math.floor(e.x * 100)) | 0;
-          hash = ((hash << 5) - hash + Math.floor(e.y * 100)) | 0;
-        }
-        return Math.abs(hash).toString(16).padStart(8, '0');
-      }
-      
-      renderCDG() {
-        if (!this.cdgCtx) return;
-        
-        const ctx = this.cdgCtx;
-        const w = this.cdgCanvas.width;
-        const h = this.cdgCanvas.height;
-        
-        ctx.fillStyle = '#1e293b';
-        ctx.fillRect(0, 0, w, h);
-        
-        const byLayer = new Map();
-        for (const e of this.entities) {
-          if (!byLayer.has(e.layer)) byLayer.set(e.layer, []);
-          byLayer.get(e.layer).push(e);
-        }
-        
-        const layerH = (h - 16) / 10;
-        
-        // Edges
-        ctx.strokeStyle = 'rgba(34, 211, 238, 0.25)';
-        ctx.lineWidth = 0.5;
-        for (const [key, edge] of this.cdg.edges) {
-          const from = this.entities.find(e => e.id === edge.from);
-          const to = this.entities.find(e => e.id === edge.to);
-          if (!from || !to) continue;
-          
-          const fromList = byLayer.get(from.layer) || [];
-          const toList = byLayer.get(to.layer) || [];
-          const fromIdx = fromList.indexOf(from);
-          const toIdx = toList.indexOf(to);
-          
-          const x1 = 8 + (fromIdx + 0.5) * ((w - 16) / Math.max(fromList.length, 1));
-          const y1 = 8 + (from.layer + 0.5) * layerH;
-          const x2 = 8 + (toIdx + 0.5) * ((w - 16) / Math.max(toList.length, 1));
-          const y2 = 8 + (to.layer + 0.5) * layerH;
-          
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.stroke();
-        }
-        
-        // Nodes
-        for (const [layer, entities] of byLayer) {
-          const y = 8 + (layer + 0.5) * layerH;
-          ctx.fillStyle = rgba(layer, 0.9);
-          
-          for (let i = 0; i < entities.length; i++) {
-            const x = 8 + (i + 0.5) * ((w - 16) / entities.length);
-            ctx.beginPath();
-            ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-      }
-      
-      exportState() {
-        return {
-          entities: this.entities.map(e => ({
-            layer: e.layer,
-            x: e.x,
-            y: e.y,
-            mfidelRow: e.mfidelRow,
-            mfidelCol: e.mfidelCol,
-            phase: e.phase
-          })),
-          strategy: this.strategy.name,
-          time: this.time,
-          showTrails: this.showTrails,
-          showFlow: this.showFlow,
-          showGlyphs: this.showGlyphs,
-          speed: this.speed
-        };
-      }
-      
-      importState(state) {
-        this.clearEntities();
-        
-        for (const e of state.entities) {
-          const entity = this.addEntity(e.layer);
-          if (entity) {
-            entity.x = e.x;
-            entity.y = e.y;
-            entity.targetX = e.x;
-            entity.targetY = e.y;
-            entity.mfidelRow = e.mfidelRow;
-            entity.mfidelCol = e.mfidelCol;
-            entity.phase = e.phase;
-          }
-        }
-        
-        if (Strategies[state.strategy]) {
-          this.strategy = Strategies[state.strategy];
-        }
-        
-        this.time = state.time || 0;
-        this.showTrails = state.showTrails ?? true;
-        this.showFlow = state.showFlow ?? false;
-        this.showGlyphs = state.showGlyphs ?? true;
-        this.speed = state.speed || 1;
-      }
+    };
+
+    // Initialize criteria scores
+    for (const c of CRITERIA) {
+        state.criteriaScores[c.id] = 0;
     }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // INITIALIZATION
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    const canvas = document.getElementById('mainCanvas');
-    const cdgCanvas = document.getElementById('cdg-canvas');
-    const orchestrator = new Orchestrator(canvas, cdgCanvas);
-    
-    function initLayerCards() {
-      const container = document.getElementById('layer-cards');
-      container.innerHTML = '';
-      
-      LAYERS.forEach(layer => {
-        const card = document.createElement('div');
-        card.className = 'layer-card';
-        card.style.setProperty('--layer-color', `rgb(${layer.r}, ${layer.g}, ${layer.b})`);
-        card.dataset.layer = layer.id;
-        card.innerHTML = `
-          <span class="layer-icon">${layer.icon}</span>
-          <div class="layer-info">
-            <div class="layer-name">L${layer.id}: ${layer.name}</div>
-            <div class="layer-meta">${getFidel(layer.id * 3, 0)}${getFidel(layer.id * 3, 1)}${getFidel(layer.id * 3, 2)}</div>
-          </div>
-          <span class="layer-count" style="color: rgb(${layer.r}, ${layer.g}, ${layer.b})">0</span>
-        `;
-        card.onclick = (e) => {
-          orchestrator.toggleLayer(layer.id, e.shiftKey);
-          updateUI();
-        };
-        container.appendChild(card);
-      });
+
+    // =========================================================================
+    // RENDER
+    // =========================================================================
+
+    function renderWHCategories() {
+        const container = document.getElementById('wh-categories');
+        container.innerHTML = WH_CATEGORIES.map(cat => `
+            <div class="wh-cat ${cat.id} ${state.activeCategory === cat.id ? 'active' : ''}"
+                 onclick="selectCategory('${cat.id}')">
+                <div class="wh-cat-count">${cat.count}</div>
+                <div class="wh-cat-name">${cat.name}</div>
+            </div>
+        `).join('');
     }
-    
-    function initEntities() {
-      for (let layer = 0; layer < 10; layer++) {
-        const count = layer === 9 ? 1 : 3;
-        for (let i = 0; i < count; i++) {
-          orchestrator.addEntity(layer);
-        }
-      }
+
+    function renderLayers() {
+        const container = document.getElementById('layers-list');
+        container.innerHTML = LAYERS.map(layer => `
+            <div class="layer-item ${state.activeLayer === layer.num ? 'active' : ''}"
+                 onclick="selectLayer(${layer.num})">
+                <div class="layer-num" style="background: ${layer.num <= state.currentPhase ? 'var(--emerald)' : 'var(--surface)'};">${layer.num}</div>
+                <div class="layer-name">${layer.name}</div>
+                <div class="layer-v">${layer.v}</div>
+            </div>
+        `).join('');
     }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // UI UPDATE
-    // ═══════════════════════════════════════════════════════════════════════════
-    
+
+    function renderModes() {
+        const container = document.getElementById('modes-grid');
+        container.innerHTML = REASONING_MODES.map(mode => `
+            <div class="mode-item ${state.activeMode === mode ? 'active' : ''}"
+                 onclick="selectMode('${mode}')">
+                ${mode}
+            </div>
+        `).join('');
+    }
+
+    function renderPhases() {
+        const container = document.getElementById('phases-timeline');
+        container.innerHTML = PHASES.map((phase, i) => {
+            let status = 'pending';
+            if (i < state.currentPhase) status = 'complete';
+            if (i === state.currentPhase) status = 'active';
+            return `
+                <div class="phase-dot ${status}" title="${phase}">${i}</div>
+            `;
+        }).join('');
+    }
+
+    function renderCriteria() {
+        const container = document.getElementById('criteria-list');
+        container.innerHTML = CRITERIA.map(c => {
+            const score = state.criteriaScores[c.id] || 0;
+            const color = CRITERION_COLORS[c.id];
+            const meetsTarget = score >= c.target;
+            return `
+                <div class="criterion">
+                    <div class="criterion-header">
+                        <span class="criterion-name">${c.name}</span>
+                        <span class="criterion-weight">${(c.weight * 100).toFixed(0)}%</span>
+                        <span class="criterion-score" style="color: ${meetsTarget ? 'var(--emerald)' : 'var(--rose)'};">
+                            ${(score * 100).toFixed(0)}%
+                        </span>
+                    </div>
+                    <div class="criterion-bar">
+                        <div class="criterion-fill" style="width: ${score * 100}%; background: ${color};"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
     function updateUI() {
-      LAYERS.forEach(layer => {
-        const card = document.querySelector(`[data-layer="${layer.id}"]`);
-        if (!card) return;
-        
-        const count = orchestrator.layerCounts[layer.id];
-        const isolated = orchestrator.isolatedLayers.size > 0;
-        const isIsolated = orchestrator.isolatedLayers.has(layer.id);
-        
-        card.querySelector('.layer-count').textContent = count;
-        card.classList.toggle('active', count > 0);
-        card.classList.toggle('isolated', isolated && !isIsolated);
-      });
-      
-      document.getElementById('entity-count').textContent = orchestrator.entities.length;
-      document.getElementById('tick').textContent = orchestrator.cdg.tick;
-      document.getElementById('fps').textContent = orchestrator.fps;
-      document.getElementById('strategy-name').textContent = orchestrator.strategy.name;
-      document.getElementById('audio-status').textContent = orchestrator.audio.enabled ? 'On' : 'Off';
-      
-      const wholeness = orchestrator.getWholeness();
-      document.getElementById('wholeness-value').textContent = wholeness.toFixed(2);
-      document.getElementById('wholeness-bar').style.width = `${wholeness * 100}%`;
-      
-      document.getElementById('metric-nodes').textContent = orchestrator.cdg.nodes.size;
-      document.getElementById('metric-edges').textContent = orchestrator.cdg.edges.size;
-      document.getElementById('metric-depth').textContent = orchestrator.cdg.getMaxDepth();
-      document.getElementById('metric-particles').textContent = orchestrator.flowParticles.length;
-      
-      document.getElementById('frame-hash').textContent = '0x' + orchestrator.frameHash;
+        document.getElementById('m-tick').textContent = state.tick;
+        document.getElementById('m-questions').textContent = WH_CATEGORIES.reduce((s, c) => s + c.count, 0);
+        document.getElementById('m-layers').textContent = LAYERS.length;
+        document.getElementById('m-modes').textContent = REASONING_MODES.length;
+        document.getElementById('m-phase').textContent = state.currentPhase;
+        document.getElementById('m-wholeness').textContent = (state.wholeness * 100).toFixed(0) + '%';
+
+        document.getElementById('wholeness-big').textContent = (state.wholeness * 100).toFixed(0) + '%';
+        document.getElementById('wholeness-interp').textContent = state.interpretation;
+        document.getElementById('wholeness-interp').style.color = 
+            state.wholeness >= 0.85 ? 'var(--emerald)' : 
+            state.wholeness >= 0.65 ? 'var(--amber)' : 'var(--rose)';
+
+        document.getElementById('kg-answered').textContent = state.knowledgeGraph.answered;
+        document.getElementById('kg-unknowns').textContent = state.knowledgeGraph.unknowns;
+        document.getElementById('kg-inferences').textContent = state.knowledgeGraph.inferences;
+        document.getElementById('kg-predictions').textContent = state.knowledgeGraph.predictions;
+        document.getElementById('kg-counterfactuals').textContent = state.knowledgeGraph.counterfactuals;
+
+        document.getElementById('cg-nodes').textContent = state.causalGraph.nodes;
+        document.getElementById('cg-edges').textContent = state.causalGraph.edges;
+        document.getElementById('cg-paths').textContent = state.causalGraph.criticalPaths;
+        document.getElementById('cg-leverage').textContent = state.causalGraph.leveragePoints;
+
+        document.getElementById('persp-applied').textContent = `${state.perspectives.applied}/10`;
+        document.getElementById('persp-agree').textContent = state.perspectives.agreements;
+        document.getElementById('persp-conflict').textContent = state.perspectives.conflicts;
+
+        document.getElementById('meta-assumptions').textContent = state.meta.assumptions;
+        document.getElementById('meta-limitations').textContent = state.meta.limitations;
+        document.getElementById('meta-improvements').textContent = state.meta.improvements;
+
+        renderWHCategories();
+        renderLayers();
+        renderModes();
+        renderPhases();
+        renderCriteria();
     }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // ANIMATION LOOP
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    let uiCounter = 0;
-    
-    function animate() {
-      const now = performance.now();
-      const delta = now - orchestrator.lastTime;
-      orchestrator.lastTime = now;
-      
-      orchestrator.frameCount++;
-      orchestrator.fpsTimer += delta;
-      if (orchestrator.fpsTimer >= 1000) {
-        orchestrator.fps = orchestrator.frameCount;
-        orchestrator.frameCount = 0;
-        orchestrator.fpsTimer = 0;
-      }
-      
-      if (orchestrator.isRunning) {
-        orchestrator.time += 0.016 * orchestrator.speed;
-        orchestrator.update();
-        orchestrator.render();
-        orchestrator.renderCDG();
-        
-        if (++uiCounter >= 3) {
-          updateUI();
-          uiCounter = 0;
-        }
-      }
-      
-      requestAnimationFrame(animate);
-    }
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // GLOBAL FUNCTIONS
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    function setStrategy(name) {
-      orchestrator.setStrategy(name);
-      document.querySelectorAll('.controls-group .btn').forEach(btn => {
-        btn.classList.toggle('active', btn.id === `btn-${name}`);
-      });
-      document.getElementById('strategy-name').textContent = name;
-    }
-    
-    function toggleAnimation() {
-      orchestrator.isRunning = !orchestrator.isRunning;
-      document.getElementById('btn-toggle').textContent = orchestrator.isRunning ? '⏸ Pause' : '▶ Play';
-    }
-    
-    function stepFrame() {
-      if (!orchestrator.isRunning) {
-        orchestrator.time += 0.016;
-        orchestrator.update();
-        orchestrator.render();
-        orchestrator.renderCDG();
+
+    // =========================================================================
+    // INTERACTION
+    // =========================================================================
+
+    window.selectCategory = function(id) {
+        state.activeCategory = id;
         updateUI();
-      }
+    };
+
+    window.selectLayer = function(num) {
+        state.activeLayer = num;
+        updateUI();
+    };
+
+    window.selectMode = function(mode) {
+        state.activeMode = mode;
+        updateUI();
+    };
+
+    // =========================================================================
+    // VISUALIZATION
+    // =========================================================================
+
+    const canvas = document.getElementById('viz-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
     }
-    
-    function resetSimulation() {
-      orchestrator.time = 0;
-      orchestrator.frame = 0;
-      orchestrator.clearEntities();
-      initEntities();
-      updateUI();
-    }
-    
-    function addEntities(count) {
-      for (let i = 0; i < count; i++) {
-        orchestrator.addEntity(Math.floor(Math.random() * 10));
-      }
-      updateUI();
-    }
-    
-    function clearEntities() {
-      orchestrator.clearEntities();
-      updateUI();
-    }
-    
-    function deselectEntity() {
-      orchestrator.deselectEntity();
-    }
-    
-    function toggleFullscreen() {
-      const wrapper = document.getElementById('canvas-wrapper');
-      if (wrapper.style.position === 'fixed') {
-        wrapper.style.cssText = '';
-      } else {
-        wrapper.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; border-radius: 0;';
-      }
-      setTimeout(() => orchestrator.resize(), 100);
-    }
-    
-    function toggleTrails() {
-      orchestrator.showTrails = !orchestrator.showTrails;
-      document.getElementById('toggle-trails').classList.toggle('on', orchestrator.showTrails);
-    }
-    
-    function toggleFlow() {
-      orchestrator.showFlow = !orchestrator.showFlow;
-      document.getElementById('toggle-flow').classList.toggle('on', orchestrator.showFlow);
-    }
-    
-    function toggleAudio() {
-      if (orchestrator.audio.enabled) {
-        orchestrator.audio.disable();
-      } else {
-        orchestrator.audio.enable();
-      }
-      document.getElementById('toggle-audio').classList.toggle('on', orchestrator.audio.enabled);
-      document.getElementById('audio-status').textContent = orchestrator.audio.enabled ? 'On' : 'Off';
-    }
-    
-    function toggleGlyphs() {
-      orchestrator.showGlyphs = !orchestrator.showGlyphs;
-      document.getElementById('toggle-glyphs').classList.toggle('on', orchestrator.showGlyphs);
-    }
-    
-    function takeScreenshot() {
-      const link = document.createElement('a');
-      link.download = `mullusi-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    }
-    
-    function exportState() {
-      const state = orchestrator.exportState();
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      const link = document.createElement('a');
-      link.download = `mullusi-state-${Date.now()}.json`;
-      link.href = URL.createObjectURL(blob);
-      link.click();
-      URL.revokeObjectURL(link.href);
-    }
-    
-    function importState() {
-      document.getElementById('file-input').click();
-    }
-    
-    document.getElementById('file-input').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        try {
-          const state = JSON.parse(ev.target.result);
-          orchestrator.importState(state);
-          setStrategy(state.strategy);
-          document.getElementById('speed-slider').value = state.speed;
-          document.getElementById('speed-value').textContent = state.speed.toFixed(1) + 'x';
-          document.getElementById('toggle-trails').classList.toggle('on', orchestrator.showTrails);
-          document.getElementById('toggle-flow').classList.toggle('on', orchestrator.showFlow);
-          document.getElementById('toggle-glyphs').classList.toggle('on', orchestrator.showGlyphs);
-          updateUI();
-        } catch (err) {
-          console.error('Failed to import:', err);
-          alert('Failed to import state file');
+
+    function drawVisualization() {
+        ctx.fillStyle = '#020204';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2 - 30;
+        const time = Date.now() / 1000;
+
+        // Draw 11 layer rings
+        for (let i = 0; i <= 10; i++) {
+            const radius = 50 + i * 18;
+            const layer = LAYERS[i];
+            const active = i <= state.currentPhase;
+            
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = active ? `rgba(212, 165, 116, ${0.3 + i * 0.05})` : 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = active ? 2 : 1;
+            ctx.stroke();
+
+            // Layer number
+            const labelAngle = -Math.PI / 2 + i * 0.3;
+            const lx = cx + Math.cos(labelAngle) * radius;
+            const ly = cy + Math.sin(labelAngle) * radius;
+            
+            ctx.fillStyle = active ? '#d4a574' : 'rgba(255,255,255,0.2)';
+            ctx.font = '8px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(`L${i}`, lx, ly);
         }
-      };
-      reader.readAsText(file);
-      e.target.value = '';
+
+        // Draw WH category nodes around the ring
+        const catRadius = 50 + 10 * 18 + 30;
+        WH_CATEGORIES.forEach((cat, i) => {
+            const angle = (i / WH_CATEGORIES.length) * Math.PI * 2 - Math.PI / 2;
+            const x = cx + Math.cos(angle) * catRadius;
+            const y = cy + Math.sin(angle) * catRadius;
+
+            // Connection line
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = `${cat.color}33`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Node
+            ctx.beginPath();
+            ctx.arc(x, y, 12, 0, Math.PI * 2);
+            ctx.fillStyle = state.activeCategory === cat.id ? cat.color : `${cat.color}66`;
+            ctx.fill();
+
+            ctx.fillStyle = '#fff';
+            ctx.font = '6px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(cat.name.substring(0, 3), x, y + 2);
+        });
+
+        // Draw reasoning mode wheel in center
+        const modeRadius = 35;
+        REASONING_MODES.forEach((mode, i) => {
+            const angle = (i / REASONING_MODES.length) * Math.PI * 2 - Math.PI / 2 + time * 0.1;
+            const x = cx + Math.cos(angle) * modeRadius;
+            const y = cy + Math.sin(angle) * modeRadius;
+
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = state.activeMode === mode ? '#06b6d4' : 'rgba(6, 182, 212, 0.3)';
+            ctx.fill();
+        });
+
+        // Center subject display
+        ctx.beginPath();
+        ctx.arc(cx, cy, 25, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(30, 32, 40, 0.9)';
+        ctx.fill();
+        ctx.strokeStyle = '#d4a574';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#d4a574';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('SUBJECT', cx, cy - 3);
+        ctx.font = '7px sans-serif';
+        ctx.fillText(`Phase ${state.currentPhase}`, cx, cy + 8);
+
+        // Wholeness arc
+        ctx.beginPath();
+        ctx.arc(cx, cy, 28, -Math.PI / 2, -Math.PI / 2 + state.wholeness * Math.PI * 2);
+        ctx.strokeStyle = state.wholeness >= 0.85 ? '#10b981' : state.wholeness >= 0.65 ? '#f59e0b' : '#ef4444';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+    }
+
+    // =========================================================================
+    // ENGINE
+    // =========================================================================
+
+    function calculateWholeness() {
+        let total = 0;
+        for (const c of CRITERIA) {
+            total += (state.criteriaScores[c.id] || 0) * c.weight;
+        }
+        state.wholeness = total;
+
+        if (total >= 0.95) state.interpretation = 'EXCEPTIONAL';
+        else if (total >= 0.85) state.interpretation = 'EXCELLENT';
+        else if (total >= 0.75) state.interpretation = 'GOOD';
+        else if (total >= 0.65) state.interpretation = 'FAIR';
+        else state.interpretation = 'POOR';
+    }
+
+    function runPhase() {
+        state.currentPhase = Math.min(11, state.currentPhase + 1);
+        state.activeLayer = Math.min(10, state.currentPhase);
+
+        // Simulate progress
+        state.knowledgeGraph.answered += Math.floor(Math.random() * 8) + 3;
+        state.knowledgeGraph.inferences += Math.floor(Math.random() * 3);
+        
+        if (state.currentPhase >= 6) {
+            state.causalGraph.nodes += Math.floor(Math.random() * 5) + 2;
+            state.causalGraph.edges += Math.floor(Math.random() * 8) + 3;
+        }
+        
+        if (state.currentPhase >= 7) {
+            state.perspectives.applied = Math.min(10, state.perspectives.applied + 2);
+        }
+        
+        if (state.currentPhase >= 9) {
+            state.knowledgeGraph.counterfactuals += Math.floor(Math.random() * 4) + 1;
+        }
+
+        // Update criteria scores
+        for (const c of CRITERIA) {
+            const progress = state.currentPhase / 11;
+            const target = c.target;
+            state.criteriaScores[c.id] = Math.min(target, progress * target + Math.random() * 0.1);
+        }
+
+        if (state.currentPhase >= 11) {
+            state.meta.limitations = 2;
+            state.meta.improvements = 3;
+            state.criteriaScores.meta = 1.0;
+        }
+
+        calculateWholeness();
+        updateUI();
+        drawVisualization();
+    }
+
+    function process(subject) {
+        state.tick++;
+        state.currentPhase = 0;
+        state.knowledgeGraph = { answered: 0, unknowns: 0, inferences: 0, predictions: 0, counterfactuals: 0 };
+        state.causalGraph = { nodes: 0, edges: 0, criticalPaths: 0, leveragePoints: 0 };
+        state.perspectives = { applied: 0, agreements: 0, conflicts: 0 };
+        
+        for (const c of CRITERIA) {
+            state.criteriaScores[c.id] = 0;
+        }
+        
+        // Run all phases with delays
+        let phase = 0;
+        const interval = setInterval(() => {
+            runPhase();
+            phase++;
+            if (phase >= 12) {
+                clearInterval(interval);
+                state.causalGraph.criticalPaths = Math.floor(Math.random() * 5) + 2;
+                state.causalGraph.leveragePoints = Math.floor(Math.random() * 4) + 1;
+                state.knowledgeGraph.predictions = Math.floor(Math.random() * 6) + 2;
+                updateUI();
+            }
+        }, 300);
+    }
+
+    function step() {
+        state.tick++;
+        
+        // Small updates
+        for (const c of CRITERIA) {
+            state.criteriaScores[c.id] = Math.min(c.target, 
+                state.criteriaScores[c.id] + (Math.random() - 0.3) * 0.02);
+        }
+        
+        calculateWholeness();
+        updateUI();
+        drawVisualization();
+    }
+
+    function runLoop() {
+        if (!state.running) return;
+        step();
+        setTimeout(runLoop, 500);
+    }
+
+    // =========================================================================
+    // EVENTS
+    // =========================================================================
+
+    document.getElementById('btn-run').addEventListener('click', function() {
+        state.running = !state.running;
+        this.textContent = state.running ? '⏸ Pause' : '▶ Run';
+        if (state.running) runLoop();
     });
-    
-    document.getElementById('speed-slider').addEventListener('input', e => {
-      orchestrator.speed = parseFloat(e.target.value);
-      document.getElementById('speed-value').textContent = orchestrator.speed.toFixed(1) + 'x';
+
+    document.getElementById('btn-understand').addEventListener('click', () => {
+        const subject = document.getElementById('input-field').value;
+        if (subject) process(subject);
     });
-    
-    document.addEventListener('keydown', e => {
-      if (e.target.tagName === 'INPUT') return;
-      
-      switch (e.key.toLowerCase()) {
-        case ' ':
-          e.preventDefault();
-          toggleAnimation();
-          break;
-        case 'f':
-          toggleFullscreen();
-          break;
-        case 'r':
-          resetSimulation();
-          break;
-        case 't':
-          toggleTrails();
-          break;
-        case 'g':
-          toggleGlyphs();
-          break;
-        case 'a':
-          toggleAudio();
-          break;
-        case 'p':
-          toggleFlow();
-          break;
-        case 's':
-          if (e.ctrlKey || e.metaKey) {
-            e.preventDefault();
-            exportState();
-          }
-          break;
-        case '1': setStrategy('wave'); break;
-        case '2': setStrategy('pulse'); break;
-        case '3': setStrategy('orbital'); break;
-        case '4': setStrategy('resonance'); break;
-        case '5': setStrategy('causal'); break;
-        case '6': setStrategy('emergence'); break;
-        case '7': setStrategy('gravity'); break;
-        case 'escape':
-          if (document.getElementById('canvas-wrapper').style.position === 'fixed') {
-            toggleFullscreen();
-          } else {
-            deselectEntity();
-          }
-          break;
-      }
+
+    document.getElementById('btn-go').addEventListener('click', () => {
+        const subject = document.getElementById('input-field').value;
+        if (subject) process(subject);
     });
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // START
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    initLayerCards();
-    initEntities();
+
+    document.getElementById('input-field').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const subject = document.getElementById('input-field').value;
+            if (subject) process(subject);
+        }
+    });
+
+    // =========================================================================
+    // ANIMATION
+    // =========================================================================
+
+    function animate() {
+        drawVisualization();
+        requestAnimationFrame(animate);
+    }
+
+    // =========================================================================
+    // INIT
+    // =========================================================================
+
+    window.addEventListener('resize', resizeCanvas);
+
+    resizeCanvas();
     updateUI();
     animate();
-  </script>
+
+    console.log('MulluSI v5.6 Complete UHRTS Framework initialized');
+    console.log('70+ WH-questions → 11 Layers → 10 Modes → 11 Phases → 10 Criteria → Wholeness');
+    </script>
 </body>
 </html>
