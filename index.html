@@ -5,17 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0a0a0f">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="description" content="VIRECAI v5.2 - Symbolic Causal Video Intelligence Platform">
-    <title>VIRECAI v5.2 | Symbolic Causal Intelligence</title>
+    <title>VIRECAI v6.1 | Advanced Video Intelligence</title>
     
     <style>
-        /* ═══════════════════════════════════════════════════════════════════════
-           CSS DESIGN SYSTEM v5.2 - Mobile-First Responsive
-           ═══════════════════════════════════════════════════════════════════════ */
         :root {
-            /* Color Palette */
             --bg-100: #05050a;
             --bg-200: #0a0a0f;
             --bg-300: #0f0f16;
@@ -26,7 +19,6 @@
             
             --primary: #00d4ff;
             --primary-dark: #00a8cc;
-            --primary-light: #4de4ff;
             --primary-alpha: rgba(0, 212, 255, 0.15);
             
             --secondary: #7b61ff;
@@ -49,69 +41,31 @@
             --glow-primary: 0 0 20px rgba(0, 212, 255, 0.4);
             --glow-danger: 0 0 20px rgba(255, 68, 102, 0.5);
             
-            /* Spacing */
-            --space-1: 4px;
-            --space-2: 8px;
-            --space-3: 12px;
-            --space-4: 16px;
-            --space-5: 20px;
-            --space-6: 24px;
-            
-            /* Mobile-first sizing */
-            --header-height: 48px;
-            --controls-height: 72px;
-            --bottom-nav-height: 56px;
-            
-            /* Safe areas for notched phones */
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
-            --safe-left: env(safe-area-inset-left, 0px);
-            --safe-right: env(safe-area-inset-right, 0px);
         }
         
-        /* Reset */
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         
-        html {
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-            -webkit-text-size-adjust: 100%;
-        }
-        
-        body {
+        html, body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-200);
+            background: var(--bg-100);
             color: var(--text-100);
-            min-height: 100vh;
-            min-height: 100dvh; /* Dynamic viewport height for mobile */
-            overflow: hidden;
-            touch-action: manipulation;
-            position: fixed;
-            width: 100%;
             height: 100%;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-400); }
-        ::-webkit-scrollbar-thumb { background: var(--border-100); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-100); border-radius: 3px; }
         
-        /* ═══════════════════════════════════════════════════════════════════════
-           MOBILE-FIRST LAYOUT
-           ═══════════════════════════════════════════════════════════════════════ */
+        /* Layout */
         .app {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-rows: auto 1fr auto auto auto;
             height: 100%;
-            height: 100dvh;
             padding-top: var(--safe-top);
-            padding-bottom: var(--safe-bottom);
-            background: var(--bg-100);
         }
         
         /* Header */
@@ -119,53 +73,84 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: var(--space-2) var(--space-3);
+            padding: 8px 16px;
             background: var(--bg-300);
             border-bottom: 1px solid var(--border-200);
-            height: var(--header-height);
-            flex-shrink: 0;
-            z-index: 100;
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            gap: 10px;
         }
         
         .logo__icon {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 16px;
             box-shadow: var(--glow-primary);
         }
         
         .logo__text {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--text-100), var(--text-300));
+            background: linear-gradient(90deg, var(--text-100), var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
         .logo__version {
-            font-size: 10px;
+            font-size: 11px;
             color: var(--text-400);
-            padding: 2px 4px;
+            padding: 2px 6px;
             background: var(--bg-500);
             border-radius: 4px;
         }
         
-        .header__controls {
+        .header__actions {
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            gap: 8px;
+        }
+        
+        .mode-tabs {
+            display: flex;
+            background: var(--bg-500);
+            border-radius: 8px;
+            padding: 3px;
+        }
+        
+        .mode-tab {
+            padding: 6px 14px;
+            background: none;
+            border: none;
+            color: var(--text-400);
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .mode-tab--active {
+            background: var(--primary);
+            color: var(--bg-100);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--bg-500);
+            border-radius: 20px;
+            font-size: 12px;
         }
         
         .status-dot {
@@ -173,13 +158,11 @@
             height: 8px;
             border-radius: 50%;
             background: var(--success);
-            box-shadow: 0 0 8px var(--success);
         }
         
         .status-dot--recording {
             background: var(--danger);
-            box-shadow: 0 0 8px var(--danger);
-            animation: pulse 1.2s ease-in-out infinite;
+            animation: pulse 1.2s infinite;
         }
         
         @keyframes pulse {
@@ -187,14 +170,10 @@
             50% { opacity: 0.6; transform: scale(1.3); }
         }
         
-        /* ═══════════════════════════════════════════════════════════════════════
-           MAIN VIEWPORT - Fullscreen camera
-           ═══════════════════════════════════════════════════════════════════════ */
+        /* Main viewport */
         .main {
-            flex: 1;
             position: relative;
             display: flex;
-            flex-direction: column;
             background: #000;
             overflow: hidden;
         }
@@ -205,26 +184,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #000;
-            overflow: hidden;
         }
         
         .viewport__video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            background: #000;
         }
         
-        /* Mirror for front camera */
         .viewport__video--mirrored {
             transform: scaleX(-1);
         }
         
-        .viewport--recording {
-            box-shadow: inset 0 0 0 3px var(--danger);
+        .viewport__video.hidden {
+            display: none;
         }
         
-        /* Camera loading/error states */
+        /* Video filters */
+        .filter-none { filter: none; }
+        .filter-grayscale { filter: grayscale(100%); }
+        .filter-sepia { filter: sepia(80%); }
+        .filter-vintage { filter: sepia(40%) contrast(1.1) brightness(0.9); }
+        .filter-warm { filter: sepia(30%) saturate(1.4); }
+        .filter-cool { filter: hue-rotate(180deg) saturate(0.8); }
+        .filter-dramatic { filter: contrast(1.4) saturate(1.3); }
+        .filter-noir { filter: grayscale(100%) contrast(1.4); }
+        .filter-vivid { filter: saturate(1.8) contrast(1.1); }
+        .filter-fade { filter: brightness(1.1) saturate(0.8) contrast(0.9); }
+        .filter-cinema { filter: contrast(1.2) saturate(0.9) brightness(0.95); }
+        .filter-sunset { filter: sepia(20%) saturate(1.5) hue-rotate(-10deg); }
+        
         .viewport__placeholder {
             position: absolute;
             inset: 0;
@@ -233,28 +223,27 @@
             align-items: center;
             justify-content: center;
             background: var(--bg-300);
-            color: var(--text-300);
-            gap: var(--space-4);
-            z-index: 5;
+            gap: 16px;
         }
         
-        .viewport__placeholder.hidden {
-            display: none;
-        }
+        .viewport__placeholder.hidden { display: none; }
         
-        .viewport__placeholder-icon {
-            font-size: 48px;
-            opacity: 0.5;
-        }
+        .viewport__placeholder-icon { font-size: 64px; opacity: 0.5; }
         
         .viewport__placeholder-text {
-            font-size: 14px;
+            font-size: 16px;
+            color: var(--text-300);
             text-align: center;
-            max-width: 280px;
+            max-width: 300px;
         }
         
-        .viewport__placeholder-btn {
-            padding: var(--space-3) var(--space-5);
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
             background: var(--primary);
             color: var(--bg-100);
             border: none;
@@ -262,14 +251,59 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.15s;
         }
         
-        /* Detection overlay */
-        .viewport__overlay {
+        .btn:hover { filter: brightness(1.1); }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .btn--secondary {
+            background: var(--bg-500);
+            color: var(--text-100);
+            border: 1px solid var(--border-200);
+        }
+        
+        .btn--icon {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 18px;
+        }
+        
+        .btn--icon-sm {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+        }
+        
+        .btn--record {
+            width: 56px;
+            height: 56px;
+            background: var(--danger);
+            border: 3px solid var(--text-100);
+            box-shadow: var(--glow-danger);
+        }
+        
+        .btn--record.recording {
+            border-radius: 12px;
+            background: var(--text-100);
+        }
+        
+        .btn--record.recording::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: var(--danger);
+            border-radius: 4px;
+        }
+        
+        /* Overlay elements */
+        .overlay {
             position: absolute;
             inset: 0;
             pointer-events: none;
-            z-index: 10;
         }
         
         .detection-box {
@@ -281,9 +315,9 @@
         
         .detection-box__label {
             position: absolute;
-            top: -22px;
+            top: -24px;
             left: 0;
-            padding: 2px 6px;
+            padding: 3px 8px;
             background: var(--primary);
             color: var(--bg-100);
             font-size: 11px;
@@ -292,312 +326,138 @@
             white-space: nowrap;
         }
         
-        /* ═══════════════════════════════════════════════════════════════════════
-           FLOATING CONTROLS
-           ═══════════════════════════════════════════════════════════════════════ */
-        .controls {
+        /* Text overlays */
+        .text-overlay {
             position: absolute;
-            bottom: var(--space-4);
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-2) var(--space-3);
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 40px;
-            border: 1px solid var(--border-200);
-            z-index: 20;
+            padding: 8px 16px;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            cursor: move;
+            user-select: none;
+            pointer-events: auto;
         }
         
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            -webkit-tap-highlight-color: transparent;
+        .text-overlay--editing {
+            outline: 2px dashed var(--primary);
+            outline-offset: 4px;
         }
         
-        .btn--icon {
-            width: 44px;
-            height: 44px;
-            background: var(--bg-500);
-            border: 1px solid var(--border-200);
-            border-radius: 50%;
-            color: var(--text-100);
-            font-size: 18px;
-        }
-        
-        .btn--icon:active {
-            transform: scale(0.95);
-            background: var(--bg-600);
-        }
-        
-        .btn--record {
-            width: 60px;
-            height: 60px;
-            background: var(--danger);
-            border: 3px solid var(--text-100);
-            border-radius: 50%;
-            box-shadow: var(--glow-danger);
-        }
-        
-        .btn--record:active {
-            transform: scale(0.95);
-        }
-        
-        .btn--record.recording {
-            border-radius: 12px;
-            background: var(--text-100);
-        }
-        
-        .btn--record.recording::after {
-            content: '';
-            width: 22px;
-            height: 22px;
-            background: var(--danger);
-            border-radius: 4px;
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════════════
-           FLOATING INFO PANELS
-           ═══════════════════════════════════════════════════════════════════════ */
-        .info-panel {
+        /* Float panels */
+        .float-panel {
             position: absolute;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             border-radius: 12px;
             border: 1px solid var(--border-200);
-            padding: var(--space-3);
-            z-index: 15;
-            max-width: 160px;
+            padding: 12px;
+            z-index: 10;
         }
         
-        .info-panel--top-left {
-            top: var(--space-3);
-            left: var(--space-3);
-        }
+        .float-panel--tl { top: 12px; left: 12px; }
+        .float-panel--tr { top: 12px; right: 12px; }
+        .float-panel--bl { bottom: 12px; left: 12px; }
+        .float-panel--br { bottom: 12px; right: 12px; }
         
-        .info-panel--top-right {
-            top: var(--space-3);
-            right: var(--space-3);
-        }
-        
-        .info-panel--bottom-left {
-            bottom: calc(var(--controls-height) + var(--space-4));
-            left: var(--space-3);
-        }
-        
-        .info-label {
+        .float-panel__label {
             font-size: 10px;
             font-weight: 600;
             color: var(--text-400);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 2px;
         }
         
-        .info-value {
-            font-size: 20px;
+        .float-panel__value {
+            font-size: 24px;
             font-weight: 700;
-            font-variant-numeric: tabular-nums;
+            font-family: 'SF Mono', monospace;
         }
         
-        .info-unit {
+        .float-panel__unit {
             font-size: 12px;
-            font-weight: 400;
             color: var(--text-300);
         }
-        
-        .info-trend {
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 2px;
-        }
-        
-        .info-trend--up { color: var(--success); }
-        .info-trend--down { color: var(--danger); }
-        .info-trend--stable { color: var(--text-400); }
         
         /* Mini chart */
         .mini-chart {
             display: flex;
             align-items: flex-end;
             gap: 2px;
-            height: 20px;
-            margin-top: var(--space-2);
+            height: 24px;
+            margin-top: 8px;
         }
         
         .mini-chart__bar {
             flex: 1;
             background: var(--primary);
-            border-radius: 1px;
-            min-height: 2px;
-        }
-        
-        /* Emotion display */
-        .emotion-display {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-        }
-        
-        .emotion-emoji {
-            font-size: 24px;
-        }
-        
-        .emotion-label {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
-        
-        /* Time display */
-        .time-display {
-            font-family: 'SF Mono', 'Roboto Mono', monospace;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            text-shadow: var(--glow-primary);
-        }
-        
-        .frame-count {
-            font-size: 11px;
-            color: var(--text-400);
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════════════
-           BOTTOM NAVIGATION (Mobile)
-           ═══════════════════════════════════════════════════════════════════════ */
-        .bottom-nav {
-            display: flex;
-            background: var(--bg-300);
-            border-top: 1px solid var(--border-200);
-            height: var(--bottom-nav-height);
-            flex-shrink: 0;
-        }
-        
-        .nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            background: transparent;
-            border: none;
-            color: var(--text-400);
-            font-size: 10px;
-            cursor: pointer;
-            transition: color 0.15s ease;
-        }
-        
-        .nav-item--active {
-            color: var(--primary);
-        }
-        
-        .nav-item__icon {
-            font-size: 20px;
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════════════
-           SLIDE-UP PANELS
-           ═══════════════════════════════════════════════════════════════════════ */
-        .panel-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 200;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .panel-overlay--active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .slide-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-300);
-            border-radius: 20px 20px 0 0;
-            max-height: 70vh;
-            max-height: 70dvh;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            z-index: 201;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: var(--safe-bottom);
-        }
-        
-        .panel-overlay--active .slide-panel {
-            transform: translateY(0);
-        }
-        
-        .panel__handle {
-            width: 40px;
-            height: 4px;
-            background: var(--border-100);
             border-radius: 2px;
-            margin: var(--space-3) auto;
-            flex-shrink: 0;
+            min-height: 2px;
+            transition: height 0.1s;
         }
         
-        .panel__header {
+        /* Sidebar */
+        .sidebar {
+            width: 340px;
+            background: var(--bg-300);
+            border-left: 1px solid var(--border-200);
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 var(--space-4) var(--space-3);
-            border-bottom: 1px solid var(--border-200);
-            flex-shrink: 0;
+            flex-direction: column;
         }
         
-        .panel__title {
-            font-size: 16px;
-            font-weight: 600;
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
         }
         
-        .panel__close {
-            width: 32px;
-            height: 32px;
-            background: var(--bg-500);
+        .sidebar__tabs {
+            display: flex;
+            background: var(--bg-400);
+        }
+        
+        .sidebar__tab {
+            flex: 1;
+            padding: 12px 8px;
+            background: none;
             border: none;
-            border-radius: 50%;
-            color: var(--text-300);
-            font-size: 18px;
+            border-bottom: 2px solid transparent;
+            color: var(--text-400);
+            font-size: 11px;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.15s;
         }
         
-        .panel__content {
+        .sidebar__tab--active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .sidebar__content {
             flex: 1;
             overflow-y: auto;
-            padding: var(--space-4);
+            padding: 16px;
         }
         
-        /* Sensors Grid */
-        .sensors-grid {
+        .sidebar__panel {
+            display: none;
+        }
+        
+        .sidebar__panel--active {
+            display: block;
+        }
+        
+        /* Sensor cards */
+        .sensor-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-3);
+            gap: 12px;
         }
         
         .sensor-card {
             background: var(--bg-400);
             border: 1px solid var(--border-200);
             border-radius: 12px;
-            padding: var(--space-3);
+            padding: 12px;
         }
         
         .sensor-card--warning {
@@ -614,216 +474,178 @@
         }
         
         .sensor-card__value {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 1;
         }
         
         .sensor-card__unit {
             font-size: 12px;
-            font-weight: 400;
             color: var(--text-300);
         }
         
-        /* LLM Panel */
-        .llm-messages {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: var(--space-3);
+        /* Filter grid */
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
         
-        .llm-message {
-            background: var(--bg-400);
-            border-radius: 12px;
-            padding: var(--space-3);
-            margin-bottom: var(--space-2);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .llm-message strong {
-            color: var(--primary);
-        }
-        
-        .llm-suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-2);
-            margin-top: var(--space-3);
-        }
-        
-        .llm-suggestion {
-            padding: var(--space-1) var(--space-3);
+        .filter-item {
+            aspect-ratio: 1;
             background: var(--bg-500);
-            border: 1px solid var(--border-200);
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--text-200);
-            cursor: pointer;
-        }
-        
-        .llm-suggestion:active {
-            background: var(--primary-alpha);
-            border-color: var(--primary);
-        }
-        
-        .llm-input-row {
+            border: 2px solid transparent;
+            border-radius: 8px;
             display: flex;
-            gap: var(--space-2);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            padding: 8px;
         }
         
-        .llm-input {
+        .filter-item:hover {
+            border-color: var(--border-100);
+        }
+        
+        .filter-item--active {
+            border-color: var(--primary);
+            background: var(--primary-alpha);
+        }
+        
+        .filter-item__preview {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            margin-bottom: 4px;
+        }
+        
+        .filter-item__name {
+            font-size: 10px;
+            color: var(--text-300);
+            text-align: center;
+        }
+        
+        /* Text overlay panel */
+        .text-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .text-controls__row {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .form-group {
             flex: 1;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-400);
+            margin-bottom: 4px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 8px 10px;
             background: var(--bg-400);
             border: 1px solid var(--border-200);
-            border-radius: 12px;
-            padding: var(--space-3);
+            border-radius: 6px;
             color: var(--text-100);
-            font-size: 14px;
+            font-size: 13px;
         }
         
-        .llm-input:focus {
+        .form-input:focus {
             outline: none;
             border-color: var(--primary);
         }
         
-        .llm-send {
-            width: 44px;
-            height: 44px;
-            background: var(--primary);
-            border: none;
-            border-radius: 12px;
-            color: var(--bg-100);
-            font-size: 18px;
+        .form-select {
+            width: 100%;
+            padding: 8px 10px;
+            background: var(--bg-400);
+            border: 1px solid var(--border-200);
+            border-radius: 6px;
+            color: var(--text-100);
+            font-size: 13px;
             cursor: pointer;
         }
         
-        /* Layers Panel */
-        .layer-item {
+        .color-picker {
+            width: 100%;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        /* Audio controls */
+        .audio-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .volume-control {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-3);
+            gap: 12px;
+        }
+        
+        .volume-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            background: var(--bg-500);
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .audio-waveform {
+            height: 60px;
             background: var(--bg-400);
-            border: 1px solid var(--border-200);
-            border-radius: 12px;
-            margin-bottom: var(--space-2);
-        }
-        
-        .layer-item--active {
-            border-color: var(--success);
-            background: var(--success-alpha);
-        }
-        
-        .layer-icon {
-            width: 36px;
-            height: 36px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            gap: 2px;
+            padding: 8px;
         }
         
-        .layer-info {
-            flex: 1;
+        .audio-waveform__bar {
+            width: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: height 0.05s;
         }
         
-        .layer-name {
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .layer-toggle {
-            width: 44px;
-            height: 24px;
-            background: var(--bg-600);
-            border-radius: 12px;
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .layer-toggle::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.15s ease;
-        }
-        
-        .layer-item--active .layer-toggle {
-            background: var(--success);
-        }
-        
-        .layer-item--active .layer-toggle::after {
-            transform: translateX(20px);
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════════════
-           TOAST NOTIFICATIONS
-           ═══════════════════════════════════════════════════════════════════════ */
-        .toast-container {
-            position: fixed;
-            top: calc(var(--safe-top) + var(--header-height) + var(--space-3));
-            left: var(--space-3);
-            right: var(--space-3);
-            z-index: 300;
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-2);
-            pointer-events: none;
-        }
-        
-        .toast {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-3) var(--space-4);
-            background: var(--bg-400);
-            border: 1px solid var(--border-200);
-            border-radius: 12px;
-            font-size: 14px;
-            animation: toastIn 0.3s ease;
-            pointer-events: auto;
-        }
-        
-        .toast--success { border-left: 3px solid var(--success); }
-        .toast--warning { border-left: 3px solid var(--warning); }
-        .toast--error { border-left: 3px solid var(--danger); }
-        .toast--info { border-left: 3px solid var(--primary); }
-        
-        .toast--exit { animation: toastOut 0.2s ease forwards; }
-        
-        @keyframes toastIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes toastOut {
-            from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(-20px); opacity: 0; }
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════════════
-           WH-CHAIN BADGES
-           ═══════════════════════════════════════════════════════════════════════ */
+        /* WH Chain */
         .wh-chain {
             display: flex;
             flex-wrap: wrap;
-            gap: var(--space-1);
-            margin-top: var(--space-3);
+            gap: 6px;
+            margin-top: 12px;
         }
         
         .wh-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-size: 11px;
             font-weight: 500;
         }
@@ -835,106 +657,424 @@
         .wh-badge--why { background: var(--danger-alpha); color: var(--danger); }
         .wh-badge--how { background: rgba(0, 188, 212, 0.2); color: #00bcd4; }
         
-        /* ═══════════════════════════════════════════════════════════════════════
-           DESKTOP OVERRIDES
-           ═══════════════════════════════════════════════════════════════════════ */
-        @media (min-width: 768px) {
-            :root {
-                --header-height: 56px;
-            }
-            
-            .bottom-nav {
-                display: none;
-            }
-            
-            .main {
-                padding-bottom: 0;
-            }
-            
-            /* Show sidebar on desktop */
-            .app {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            
-            .header {
-                width: 100%;
-            }
-            
-            .main {
-                flex: 1;
-                min-width: 0;
-            }
-            
-            .desktop-sidebar {
-                display: flex;
-                flex-direction: column;
-                width: 320px;
-                background: var(--bg-300);
-                border-left: 1px solid var(--border-200);
-            }
-            
-            .desktop-sidebar__tabs {
-                display: flex;
-                border-bottom: 1px solid var(--border-200);
-            }
-            
-            .desktop-sidebar__tab {
-                flex: 1;
-                padding: var(--space-3);
-                background: transparent;
-                border: none;
-                border-bottom: 2px solid transparent;
-                color: var(--text-300);
-                font-size: 13px;
-                cursor: pointer;
-            }
-            
-            .desktop-sidebar__tab--active {
-                color: var(--primary);
-                border-bottom-color: var(--primary);
-            }
-            
-            .desktop-sidebar__content {
-                flex: 1;
-                overflow-y: auto;
-                padding: var(--space-4);
-            }
-            
-            .info-panel {
-                max-width: 180px;
-            }
+        /* Timeline */
+        .timeline-container {
+            background: var(--bg-300);
+            border-top: 1px solid var(--border-200);
+            padding: 12px 16px;
         }
         
-        @media (max-width: 767px) {
-            .desktop-sidebar {
-                display: none;
-            }
+        .timeline-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
         }
         
-        /* Landscape mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .info-panel {
-                padding: var(--space-2);
-            }
-            
-            .info-value {
-                font-size: 16px;
-            }
-            
-            .controls {
-                bottom: var(--space-2);
-            }
-            
-            .btn--record {
-                width: 48px;
-                height: 48px;
-            }
-            
-            .btn--icon {
-                width: 36px;
-                height: 36px;
-            }
+        .time-display {
+            font-family: 'SF Mono', monospace;
+            font-size: 14px;
+            color: var(--text-200);
+            min-width: 140px;
+        }
+        
+        .playback-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .timeline-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+        
+        .speed-select {
+            background: var(--bg-500);
+            border: 1px solid var(--border-200);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-100);
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .timeline {
+            position: relative;
+            height: 80px;
+            background: var(--bg-400);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .timeline__layers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 20px;
+        }
+        
+        .timeline__layer {
+            position: relative;
+            height: 20px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline__layer-label {
+            position: absolute;
+            left: 4px;
+            font-size: 9px;
+            color: var(--text-400);
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        
+        .timeline__layer-track {
+            position: absolute;
+            left: 50px;
+            right: 0;
+            height: 16px;
+            background: var(--bg-500);
+            border-radius: 4px;
+        }
+        
+        .timeline__layer-content {
+            height: 100%;
+            background: var(--primary);
+            opacity: 0.6;
+            border-radius: 4px;
+        }
+        
+        .timeline__waveform {
+            position: absolute;
+            left: 50px;
+            right: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 1px;
+        }
+        
+        .timeline__waveform-bar {
+            flex: 1;
+            background: var(--success);
+            opacity: 0.5;
+            border-radius: 1px;
+        }
+        
+        .timeline__progress {
+            position: absolute;
+            top: 0;
+            left: 50px;
+            bottom: 0;
+            background: var(--primary-alpha);
+            pointer-events: none;
+        }
+        
+        .timeline__cursor {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+            cursor: ew-resize;
+            z-index: 5;
+            left: 50px;
+        }
+        
+        .timeline__cursor::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -5px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .timeline__markers {
+            position: absolute;
+            top: 0;
+            left: 50px;
+            right: 0;
+            height: 8px;
+        }
+        
+        .timeline__marker {
+            position: absolute;
+            width: 4px;
+            height: 8px;
+            background: var(--warning);
+            cursor: pointer;
+        }
+        
+        .timeline__ruler {
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            right: 0;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 9px;
+            color: var(--text-400);
+            background: var(--bg-500);
+        }
+        
+        .timeline__ruler-mark {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .timeline__ruler-tick {
+            width: 1px;
+            height: 6px;
+            background: var(--border-100);
+        }
+        
+        /* Trim handles */
+        .timeline__trim-start,
+        .timeline__trim-end {
+            position: absolute;
+            top: 0;
+            bottom: 20px;
+            width: 8px;
+            background: var(--warning);
+            cursor: ew-resize;
+            z-index: 4;
+            display: none;
+        }
+        
+        .timeline__trim-start { left: 50px; border-radius: 4px 0 0 4px; }
+        .timeline__trim-end { right: 0; border-radius: 0 4px 4px 0; }
+        
+        .timeline__trim-region {
+            position: absolute;
+            top: 0;
+            bottom: 20px;
+            background: var(--warning-alpha);
+            pointer-events: none;
+            display: none;
+        }
+        
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-400);
+            border-top: 1px solid var(--border-200);
+            padding-bottom: calc(12px + var(--safe-bottom));
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .toolbar__group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .toolbar__divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border-200);
+            margin: 0 4px;
+        }
+        
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+        }
+        
+        .modal-overlay--active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--bg-300);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.2s;
+        }
+        
+        .modal-overlay--active .modal {
+            transform: scale(1);
+        }
+        
+        .modal__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-200);
+        }
+        
+        .modal__title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal__close {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-500);
+            border: none;
+            border-radius: 50%;
+            color: var(--text-300);
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .modal__body {
+            padding: 20px;
+        }
+        
+        .modal__footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 20px;
+            border-top: 1px solid var(--border-200);
+        }
+        
+        /* Export options */
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .export-option {
+            padding: 16px;
+            background: var(--bg-400);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .export-option--active {
+            border-color: var(--primary);
+            background: var(--primary-alpha);
+        }
+        
+        .export-option__icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .export-option__name {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-500);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        
+        .progress-bar__fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 16px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-400);
+            border: 1px solid var(--border-200);
+            border-radius: 12px;
+            font-size: 14px;
+            animation: toastIn 0.3s ease;
+            min-width: 250px;
+        }
+        
+        .toast--success { border-left: 3px solid var(--success); }
+        .toast--warning { border-left: 3px solid var(--warning); }
+        .toast--error { border-left: 3px solid var(--danger); }
+        .toast--info { border-left: 3px solid var(--primary); }
+        
+        .toast--exit { animation: toastOut 0.2s forwards; }
+        
+        @keyframes toastIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes toastOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        /* Keyboard shortcuts */
+        .shortcuts-grid {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .shortcut-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--bg-400);
+            border-radius: 8px;
+        }
+        
+        .shortcut-key kbd {
+            padding: 4px 8px;
+            background: var(--bg-600);
+            border: 1px solid var(--border-100);
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-left: 4px;
         }
     </style>
 </head>
@@ -942,107 +1082,105 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
     
-    <!-- Panel Overlays -->
-    <div class="panel-overlay" id="sensorsOverlay">
-        <div class="slide-panel">
-            <div class="panel__handle"></div>
-            <div class="panel__header">
-                <h2 class="panel__title">📊 Sensors</h2>
-                <button class="panel__close" onclick="closePanel('sensors')">×</button>
+    <!-- Export Modal -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal">
+            <div class="modal__header">
+                <h2 class="modal__title">📤 Export Video</h2>
+                <button class="modal__close" onclick="closeExportModal()">×</button>
             </div>
-            <div class="panel__content">
-                <div class="sensors-grid">
-                    <div class="sensor-card" id="hrCard">
-                        <div class="sensor-card__label">Heart Rate</div>
-                        <div class="sensor-card__value"><span id="hrValue">--</span><span class="sensor-card__unit"> BPM</span></div>
-                        <div class="info-trend info-trend--stable" id="hrTrend">→ stable</div>
-                        <div class="mini-chart" id="hrChart"></div>
+            <div class="modal__body">
+                <div class="export-options">
+                    <div class="export-option export-option--active" data-format="mp4" onclick="selectExportFormat('mp4')">
+                        <div class="export-option__icon">🎬</div>
+                        <div class="export-option__name">MP4</div>
                     </div>
-                    <div class="sensor-card" id="stressCard">
-                        <div class="sensor-card__label">Stress Level</div>
-                        <div class="sensor-card__value"><span id="stressValue">--</span><span class="sensor-card__unit">%</span></div>
-                        <div class="info-trend info-trend--stable" id="stressTrend">→ stable</div>
-                        <div class="mini-chart" id="stressChart"></div>
+                    <div class="export-option" data-format="webm" onclick="selectExportFormat('webm')">
+                        <div class="export-option__icon">🌐</div>
+                        <div class="export-option__name">WebM</div>
                     </div>
-                    <div class="sensor-card">
-                        <div class="sensor-card__label">Skin Temp</div>
-                        <div class="sensor-card__value"><span id="tempValue">--</span><span class="sensor-card__unit">°C</span></div>
-                    </div>
-                    <div class="sensor-card">
-                        <div class="sensor-card__label">Emotion</div>
-                        <div class="emotion-display">
-                            <span class="emotion-emoji" id="emotionEmoji">😐</span>
-                            <span class="emotion-label" id="emotionLabel">neutral</span>
-                        </div>
-                    </div>
-                    <div class="sensor-card">
-                        <div class="sensor-card__label">Objects</div>
-                        <div class="sensor-card__value"><span id="objectCount">0</span></div>
-                        <div style="font-size:11px;color:var(--text-400);margin-top:4px" id="objectList">No detections</div>
-                    </div>
-                    <div class="sensor-card">
-                        <div class="sensor-card__label">Scene</div>
-                        <div class="sensor-card__value" style="font-size:14px" id="sceneValue">--</div>
+                    <div class="export-option" data-format="gif" onclick="selectExportFormat('gif')">
+                        <div class="export-option__icon">🎞️</div>
+                        <div class="export-option__name">GIF</div>
                     </div>
                 </div>
                 
-                <div style="margin-top:var(--space-4)">
-                    <div class="sensor-card">
-                        <div class="sensor-card__label">WH-Chain</div>
-                        <div class="wh-chain" id="whChainDisplay">
-                            <span class="wh-badge wh-badge--what">WHAT: waiting</span>
-                        </div>
+                <div class="form-group">
+                    <label class="form-label">Resolution</label>
+                    <select class="form-select" id="exportResolution">
+                        <option value="original">Original</option>
+                        <option value="1080p">1080p (1920×1080)</option>
+                        <option value="720p" selected>720p (1280×720)</option>
+                        <option value="480p">480p (854×480)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Quality</label>
+                    <select class="form-select" id="exportQuality">
+                        <option value="high">High</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Include</label>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+                        <label style="display:flex;align-items:center;gap:4px;font-size:12px">
+                            <input type="checkbox" id="exportVisual" checked> Visual
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-size:12px">
+                            <input type="checkbox" id="exportAudio" checked> Audio
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-size:12px">
+                            <input type="checkbox" id="exportOverlays"> Overlays
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-size:12px">
+                            <input type="checkbox" id="exportCaptions"> Captions
+                        </label>
                     </div>
                 </div>
                 
-                <div style="margin-top:var(--space-3)">
-                    <div class="sensor-card">
-                        <div class="sensor-card__label">Causal Graph</div>
-                        <div class="sensor-card__value" style="font-size:14px">
-                            <span id="causalNodes">0</span> nodes · <span id="causalEdges">0</span> edges
-                        </div>
+                <div id="exportProgress" style="display:none">
+                    <div style="font-size:13px;color:var(--text-300);margin-bottom:8px">
+                        Exporting... <span id="exportPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar__fill" id="exportProgressBar" style="width:0%"></div>
                     </div>
                 </div>
+            </div>
+            <div class="modal__footer">
+                <button class="btn btn--secondary" onclick="closeExportModal()">Cancel</button>
+                <button class="btn" id="exportBtn" onclick="startExport()">Export</button>
             </div>
         </div>
     </div>
     
-    <div class="panel-overlay" id="llmOverlay">
-        <div class="slide-panel">
-            <div class="panel__handle"></div>
-            <div class="panel__header">
-                <h2 class="panel__title">💬 Mirror LLM</h2>
-                <button class="panel__close" onclick="closePanel('llm')">×</button>
+    <!-- Shortcuts Modal -->
+    <div class="modal-overlay" id="shortcutsModal">
+        <div class="modal">
+            <div class="modal__header">
+                <h2 class="modal__title">⌨️ Keyboard Shortcuts</h2>
+                <button class="modal__close" onclick="closeShortcutsModal()">×</button>
             </div>
-            <div class="panel__content" style="display:flex;flex-direction:column">
-                <div class="llm-messages" id="llmMessages">
-                    <div class="llm-message">
-                        <strong>🧠 Mirror LLM v5.2 Ready</strong><br><br>
-                        Ask me about the scene using WH questions:
-                        <div class="llm-suggestions">
-                            <span class="llm-suggestion" onclick="askLLM('What is happening?')">What's happening?</span>
-                            <span class="llm-suggestion" onclick="askLLM('How is the mood?')">How's the mood?</span>
-                            <span class="llm-suggestion" onclick="askLLM('Who is here?')">Who is here?</span>
-                            <span class="llm-suggestion" onclick="askLLM('Why did it change?')">Why?</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="llm-input-row">
-                    <input type="text" class="llm-input" id="llmInput" placeholder="Ask about the scene..." />
-                    <button class="llm-send" onclick="submitLLM()">➤</button>
+            <div class="modal__body">
+                <div class="shortcuts-grid">
+                    <div class="shortcut-item"><span>Play/Pause</span><span class="shortcut-key"><kbd>Space</kbd></span></div>
+                    <div class="shortcut-item"><span>Record</span><span class="shortcut-key"><kbd>R</kbd></span></div>
+                    <div class="shortcut-item"><span>Prev/Next Frame</span><span class="shortcut-key"><kbd>←</kbd><kbd>→</kbd></span></div>
+                    <div class="shortcut-item"><span>Jump ±5s</span><span class="shortcut-key"><kbd>J</kbd><kbd>L</kbd></span></div>
+                    <div class="shortcut-item"><span>Trim Start/End</span><span class="shortcut-key"><kbd>I</kbd><kbd>O</kbd></span></div>
+                    <div class="shortcut-item"><span>Add Marker</span><span class="shortcut-key"><kbd>M</kbd></span></div>
+                    <div class="shortcut-item"><span>Add Text</span><span class="shortcut-key"><kbd>T</kbd></span></div>
+                    <div class="shortcut-item"><span>Mute/Unmute</span><span class="shortcut-key"><kbd>U</kbd></span></div>
+                    <div class="shortcut-item"><span>Switch Camera</span><span class="shortcut-key"><kbd>F</kbd></span></div>
+                    <div class="shortcut-item"><span>Undo/Redo</span><span class="shortcut-key"><kbd>Ctrl</kbd><kbd>Z</kbd>/<kbd>Y</kbd></span></div>
+                    <div class="shortcut-item"><span>Export</span><span class="shortcut-key"><kbd>Ctrl</kbd><kbd>E</kbd></span></div>
+                    <div class="shortcut-item"><span>Shortcuts</span><span class="shortcut-key"><kbd>?</kbd></span></div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <div class="panel-overlay" id="layersOverlay">
-        <div class="slide-panel">
-            <div class="panel__handle"></div>
-            <div class="panel__header">
-                <h2 class="panel__title">🎚️ Layers</h2>
-                <button class="panel__close" onclick="closePanel('layers')">×</button>
-            </div>
-            <div class="panel__content" id="layersList"></div>
         </div>
     </div>
     
@@ -1053,161 +1191,404 @@
             <div class="logo">
                 <div class="logo__icon">V</div>
                 <span class="logo__text">VIRECAI</span>
-                <span class="logo__version">v5.2</span>
+                <span class="logo__version">v6.1</span>
             </div>
-            <div class="header__controls">
-                <select id="profileSelect" style="background:var(--bg-500);border:1px solid var(--border-200);border-radius:6px;padding:4px 8px;color:var(--text-100);font-size:12px">
+            
+            <div class="mode-tabs">
+                <button class="mode-tab mode-tab--active" data-mode="capture">Capture</button>
+                <button class="mode-tab" data-mode="edit">Edit</button>
+                <button class="mode-tab" data-mode="playback">Playback</button>
+            </div>
+            
+            <div class="header__actions">
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Ready</span>
+                </div>
+                <button class="btn btn--secondary btn--icon-sm" onclick="showShortcutsModal()" title="Shortcuts">⌨️</button>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Viewport -->
+            <div class="viewport" id="viewport">
+                <video class="viewport__video" id="video" autoplay playsinline muted></video>
+                <video class="viewport__video hidden" id="playbackVideo" playsinline></video>
+                
+                <div class="viewport__placeholder" id="placeholder">
+                    <div class="viewport__placeholder-icon">📹</div>
+                    <div class="viewport__placeholder-text" id="placeholderText">Enable camera to start</div>
+                    <button class="btn" onclick="requestCamera()">Enable Camera</button>
+                </div>
+                
+                <div class="overlay" id="overlay"></div>
+                <div class="overlay" id="textOverlayContainer"></div>
+                
+                <!-- Float Panels -->
+                <div class="float-panel float-panel--tl">
+                    <div class="float-panel__label">Duration</div>
+                    <div class="float-panel__value" id="timeDisplay">0:00<span class="float-panel__unit">.00</span></div>
+                    <div style="font-size:11px;color:var(--text-400);margin-top:4px">Frame: <span id="frameCount">0</span></div>
+                </div>
+                
+                <div class="float-panel float-panel--tr" id="hrPanel">
+                    <div class="float-panel__label">Heart Rate</div>
+                    <div class="float-panel__value"><span id="hrValue">--</span><span class="float-panel__unit"> BPM</span></div>
+                    <div class="mini-chart" id="hrChart"></div>
+                </div>
+                
+                <div class="float-panel float-panel--bl" id="emotionPanel">
+                    <span style="font-size:28px" id="emotionEmoji">😐</span>
+                    <span style="font-size:14px;font-weight:500;margin-left:8px" id="emotionLabel">neutral</span>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar__tabs">
+                    <button class="sidebar__tab sidebar__tab--active" data-tab="sensors" onclick="switchSidebarTab('sensors')">📊</button>
+                    <button class="sidebar__tab" data-tab="filters" onclick="switchSidebarTab('filters')">🎨</button>
+                    <button class="sidebar__tab" data-tab="text" onclick="switchSidebarTab('text')">📝</button>
+                    <button class="sidebar__tab" data-tab="audio" onclick="switchSidebarTab('audio')">🔊</button>
+                    <button class="sidebar__tab" data-tab="layers" onclick="switchSidebarTab('layers')">🎚️</button>
+                </div>
+                
+                <div class="sidebar__content">
+                    <!-- Sensors Panel -->
+                    <div class="sidebar__panel sidebar__panel--active" id="sensorsPanel">
+                        <div class="sensor-grid">
+                            <div class="sensor-card" id="hrCard">
+                                <div class="sensor-card__label">Heart Rate</div>
+                                <div class="sensor-card__value"><span id="hrValue2">--</span><span class="sensor-card__unit"> BPM</span></div>
+                            </div>
+                            <div class="sensor-card" id="stressCard">
+                                <div class="sensor-card__label">Stress</div>
+                                <div class="sensor-card__value"><span id="stressValue">--</span><span class="sensor-card__unit">%</span></div>
+                            </div>
+                            <div class="sensor-card">
+                                <div class="sensor-card__label">Temperature</div>
+                                <div class="sensor-card__value"><span id="tempValue">--</span><span class="sensor-card__unit">°C</span></div>
+                            </div>
+                            <div class="sensor-card">
+                                <div class="sensor-card__label">Objects</div>
+                                <div class="sensor-card__value"><span id="objectCount">0</span></div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top:16px">
+                            <div class="sensor-card">
+                                <div class="sensor-card__label">Scene</div>
+                                <div style="font-size:16px;font-weight:600" id="sceneValue">--</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top:16px">
+                            <div class="sensor-card">
+                                <div class="sensor-card__label">WH-Chain</div>
+                                <div class="wh-chain" id="whChain">
+                                    <span class="wh-badge wh-badge--what">WHAT: waiting</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top:16px">
+                            <div class="sensor-card">
+                                <div class="sensor-card__label">Causal Graph</div>
+                                <div style="font-size:14px">
+                                    <span id="causalNodes">0</span> nodes · <span id="causalEdges">0</span> edges
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Filters Panel -->
+                    <div class="sidebar__panel" id="filtersPanel">
+                        <div class="form-label" style="margin-bottom:12px">Video Filters</div>
+                        <div class="filter-grid" id="filterGrid"></div>
+                    </div>
+                    
+                    <!-- Text Panel -->
+                    <div class="sidebar__panel" id="textPanel">
+                        <div class="text-controls">
+                            <div class="form-group">
+                                <label class="form-label">Text Content</label>
+                                <input type="text" class="form-input" id="textContent" placeholder="Enter text..." value="Sample Text">
+                            </div>
+                            
+                            <div class="text-controls__row">
+                                <div class="form-group">
+                                    <label class="form-label">Font Size</label>
+                                    <select class="form-select" id="textSize">
+                                        <option value="16">Small</option>
+                                        <option value="24" selected>Medium</option>
+                                        <option value="36">Large</option>
+                                        <option value="48">XL</option>
+                                        <option value="72">XXL</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Font</label>
+                                    <select class="form-select" id="textFont">
+                                        <option value="system-ui">System</option>
+                                        <option value="Arial">Arial</option>
+                                        <option value="Georgia">Georgia</option>
+                                        <option value="monospace">Monospace</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="text-controls__row">
+                                <div class="form-group">
+                                    <label class="form-label">Text Color</label>
+                                    <input type="color" class="color-picker" id="textColor" value="#ffffff">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Background</label>
+                                    <input type="color" class="color-picker" id="textBg" value="#000000">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Position</label>
+                                <select class="form-select" id="textPosition">
+                                    <option value="top-left">Top Left</option>
+                                    <option value="top-center">Top Center</option>
+                                    <option value="top-right">Top Right</option>
+                                    <option value="center" selected>Center</option>
+                                    <option value="bottom-left">Bottom Left</option>
+                                    <option value="bottom-center">Bottom Center</option>
+                                    <option value="bottom-right">Bottom Right</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn" onclick="addTextOverlay()">Add Text Overlay</button>
+                            <button class="btn btn--secondary" onclick="clearTextOverlays()">Clear All</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Audio Panel -->
+                    <div class="sidebar__panel" id="audioPanel">
+                        <div class="audio-controls">
+                            <div class="form-group">
+                                <label class="form-label">Master Volume</label>
+                                <div class="volume-control">
+                                    <button class="btn btn--secondary btn--icon-sm" onclick="toggleMute()" id="muteBtn">🔊</button>
+                                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80" oninput="setVolume()">
+                                    <span id="volumeValue">80%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Audio Waveform</label>
+                                <div class="audio-waveform" id="audioWaveform"></div>
+                            </div>
+                            
+                            <div class="sensor-card">
+                                <div class="sensor-card__label">Audio Level</div>
+                                <div class="sensor-card__value"><span id="audioLevel">--</span><span class="sensor-card__unit"> dB</span></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Audio Effects</label>
+                                <select class="form-select" id="audioEffect">
+                                    <option value="none">None</option>
+                                    <option value="reverb">Reverb</option>
+                                    <option value="echo">Echo</option>
+                                    <option value="bass">Bass Boost</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Layers Panel -->
+                    <div class="sidebar__panel" id="layersPanel">
+                        <div class="form-label" style="margin-bottom:12px">Active Layers</div>
+                        <div id="layersList"></div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+        
+        <!-- Timeline -->
+        <div class="timeline-container" id="timelineContainer">
+            <div class="timeline-controls">
+                <div class="time-display">
+                    <span id="currentTime">0:00.00</span> / <span id="totalTime">0:00.00</span>
+                </div>
+                
+                <div class="playback-controls">
+                    <button class="btn btn--secondary btn--icon-sm" onclick="jumpBack()" title="Jump Back 5s [J]">⏪</button>
+                    <button class="btn btn--secondary btn--icon-sm" onclick="prevFrame()" title="Previous Frame [←]">⬅️</button>
+                    <button class="btn btn--record" id="recordBtn" onclick="toggleRecording()" title="Record [R]"></button>
+                    <button class="btn btn--secondary btn--icon-sm" onclick="togglePlayback()" title="Play/Pause [Space]" id="playBtn">▶️</button>
+                    <button class="btn btn--secondary btn--icon-sm" onclick="nextFrame()" title="Next Frame [→]">➡️</button>
+                    <button class="btn btn--secondary btn--icon-sm" onclick="jumpForward()" title="Jump Forward 5s [L]">⏩</button>
+                </div>
+                
+                <div class="timeline-actions">
+                    <button class="btn btn--secondary btn--icon-sm" onclick="setTrimStart()" title="Trim Start [I]">⬅️</button>
+                    <button class="btn btn--secondary btn--icon-sm" onclick="setTrimEnd()" title="Trim End [O]">➡️</button>
+                    <button class="btn btn--secondary btn--icon-sm" onclick="addMarker()" title="Add Marker [M]">📍</button>
+                    <select class="speed-select" id="speedSelect" onchange="setPlaybackSpeed()">
+                        <option value="0.25">0.25x</option>
+                        <option value="0.5">0.5x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="2">2x</option>
+                    </select>
+                    <button class="btn btn--secondary btn--icon-sm" onclick="switchCamera()" title="Switch Camera [F]">🔄</button>
+                </div>
+            </div>
+            
+            <div class="timeline" id="timeline">
+                <div class="timeline__markers" id="timelineMarkers"></div>
+                <div class="timeline__layers">
+                    <div class="timeline__layer">
+                        <span class="timeline__layer-label">Video</span>
+                        <div class="timeline__layer-track">
+                            <div class="timeline__layer-content" id="videoTrack" style="width:100%"></div>
+                        </div>
+                    </div>
+                    <div class="timeline__layer">
+                        <span class="timeline__layer-label">Audio</span>
+                        <div class="timeline__layer-track">
+                            <div class="timeline__waveform" id="audioTrack"></div>
+                        </div>
+                    </div>
+                    <div class="timeline__layer">
+                        <span class="timeline__layer-label">Text</span>
+                        <div class="timeline__layer-track">
+                            <div class="timeline__layer-content" id="textTrack" style="width:0%;background:var(--warning)"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline__trim-region" id="trimRegion"></div>
+                <div class="timeline__trim-start" id="trimStart"></div>
+                <div class="timeline__trim-end" id="trimEnd"></div>
+                <div class="timeline__progress" id="timelineProgress" style="width:0%"></div>
+                <div class="timeline__cursor" id="timelineCursor"></div>
+                <div class="timeline__ruler" id="timelineRuler"></div>
+            </div>
+        </div>
+        
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar__group">
+                <button class="btn btn--secondary btn--icon-sm" onclick="undo()" title="Undo [Ctrl+Z]">↩️</button>
+                <button class="btn btn--secondary btn--icon-sm" onclick="redo()" title="Redo [Ctrl+Y]">↪️</button>
+                <div class="toolbar__divider"></div>
+                <button class="btn btn--secondary btn--icon-sm" onclick="addTextOverlay()" title="Add Text [T]">📝</button>
+            </div>
+            
+            <div class="toolbar__group">
+                <select class="speed-select" id="profileSelect" onchange="changeProfile()">
                     <option value="lite">Lite</option>
                     <option value="standard" selected>Standard</option>
                     <option value="extended">Extended</option>
                     <option value="ultra">Ultra</option>
                 </select>
-                <div class="status-dot" id="statusDot"></div>
             </div>
-        </header>
-        
-        <!-- Main Viewport -->
-        <main class="main">
-            <div class="viewport" id="viewport">
-                <video class="viewport__video" id="video" autoplay playsinline muted></video>
-                
-                <div class="viewport__placeholder" id="placeholder">
-                    <div class="viewport__placeholder-icon">📷</div>
-                    <div class="viewport__placeholder-text" id="placeholderText">Tap to enable camera</div>
-                    <button class="viewport__placeholder-btn" id="enableCameraBtn" onclick="requestCamera()">Enable Camera</button>
-                </div>
-                
-                <div class="viewport__overlay" id="overlay"></div>
-                
-                <!-- Floating Info Panels -->
-                <div class="info-panel info-panel--top-left">
-                    <div class="time-display" id="timeDisplay">0:00</div>
-                    <div class="frame-count">Frame: <span id="frameCount">0</span></div>
-                </div>
-                
-                <div class="info-panel info-panel--top-right" id="hrPanel">
-                    <div class="info-label">Heart Rate</div>
-                    <div class="info-value"><span id="hrValueFloat">--</span><span class="info-unit"> BPM</span></div>
-                    <div class="mini-chart" id="hrChartFloat"></div>
-                </div>
-                
-                <div class="info-panel info-panel--bottom-left" id="emotionPanel">
-                    <div class="emotion-display">
-                        <span class="emotion-emoji" id="emotionEmojiFloat">😐</span>
-                        <span class="emotion-label" id="emotionLabelFloat">neutral</span>
-                    </div>
-                </div>
-                
-                <!-- Controls -->
-                <div class="controls">
-                    <button class="btn btn--icon" onclick="switchCamera()" title="Switch Camera">🔄</button>
-                    <button class="btn btn--record" id="recordBtn" onclick="toggleRecording()"></button>
-                    <button class="btn btn--icon" onclick="exportCapsule()" title="Export">💾</button>
-                </div>
+            
+            <div class="toolbar__group">
+                <button class="btn btn--secondary btn--icon-sm" onclick="exportCapsule()" title="Export Capsule">📦</button>
+                <button class="btn" onclick="showExportModal()">
+                    <span>📤</span>
+                    <span>Export</span>
+                </button>
             </div>
-        </main>
-        
-        <!-- Desktop Sidebar -->
-        <aside class="desktop-sidebar">
-            <div class="desktop-sidebar__tabs">
-                <button class="desktop-sidebar__tab desktop-sidebar__tab--active" data-tab="sensors">📊 Sensors</button>
-                <button class="desktop-sidebar__tab" data-tab="llm">💬 LLM</button>
-                <button class="desktop-sidebar__tab" data-tab="layers">🎚️ Layers</button>
-            </div>
-            <div class="desktop-sidebar__content" id="desktopSidebarContent">
-                <!-- Content injected by JS -->
-            </div>
-        </aside>
-        
-        <!-- Bottom Navigation (Mobile) -->
-        <nav class="bottom-nav">
-            <button class="nav-item nav-item--active" onclick="openPanel('sensors')">
-                <span class="nav-item__icon">📊</span>
-                <span>Sensors</span>
-            </button>
-            <button class="nav-item" onclick="openPanel('llm')">
-                <span class="nav-item__icon">💬</span>
-                <span>LLM</span>
-            </button>
-            <button class="nav-item" onclick="openPanel('layers')">
-                <span class="nav-item__icon">🎚️</span>
-                <span>Layers</span>
-            </button>
-            <button class="nav-item" onclick="showSettings()">
-                <span class="nav-item__icon">⚙️</span>
-                <span>Settings</span>
-            </button>
-        </nav>
+        </div>
     </div>
 
     <script>
         // ═══════════════════════════════════════════════════════════════════════
-        // VIRECAI v5.2 - Mobile-Optimized with Android Camera Fix
+        // VIRECAI v6.1 - Advanced Video Intelligence
         // ═══════════════════════════════════════════════════════════════════════
         
-        const VERSION = '5.2.0';
+        const VERSION = '6.1.0';
         
-        // Detect platform
         const isAndroid = /Android/i.test(navigator.userAgent);
         const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
         const isMobile = isAndroid || isIOS;
         
-        console.log(`%cVIRECAI v${VERSION}`, 'color:#00d4ff;font-size:20px;font-weight:bold');
-        console.log(`Platform: ${isAndroid ? 'Android' : isIOS ? 'iOS' : 'Desktop'}`);
+        console.log(`%cVIRECAI v${VERSION}`, 'color:#00d4ff;font-size:24px;font-weight:bold');
         
-        // Layer definitions
-        const LAYERS = {
-            visual: { icon: '🎬', name: 'Visual', color: '#00d4ff' },
-            audio: { icon: '🔊', name: 'Audio', color: '#7b61ff' },
-            depth: { icon: '📐', name: 'Depth', color: '#00ff88' },
-            object: { icon: '🎯', name: 'Object', color: '#ffaa00' },
-            face: { icon: '👤', name: 'Face', color: '#4ecdc4' },
-            pose: { icon: '🏃', name: 'Pose', color: '#f7dc6f' },
-            emotional: { icon: '😊', name: 'Emotion', color: '#ff69b4' },
-            biometric: { icon: '💓', name: 'Biometric', color: '#e74c3c' },
-            geopose: { icon: '📍', name: 'GeoPose', color: '#3498db' },
-            temporal: { icon: '⏱️', name: 'Temporal', color: '#9b59b6' },
-            causal: { icon: '🔗', name: 'Causal', color: '#1abc9c' },
-            semantic: { icon: '🏷️', name: 'Semantic', color: '#2ecc71' }
-        };
-        
-        const PROFILES = {
-            lite: ['visual', 'audio', 'object', 'temporal'],
-            standard: ['visual', 'audio', 'depth', 'object', 'emotional', 'biometric', 'geopose', 'temporal', 'causal'],
-            extended: Object.keys(LAYERS),
-            ultra: Object.keys(LAYERS)
-        };
-        
-        // State
-        const state = {
-            isRecording: false,
-            cameraReady: false,
-            profile: 'standard',
-            activeLayers: new Set(PROFILES.standard),
-            startTime: 0,
-            frameCount: 0,
-            currentTime: 0,
-            facingMode: 'user',
-            sensors: {
-                hr: 72, hrHistory: [],
-                stress: 0.3, stressHistory: [],
-                temp: 36.6,
-                emotion: 'neutral', emotionConf: 0.8,
-                objects: [],
-                scene: 'indoor'
-            },
-            causal: { nodes: 0, edges: 0 },
-            animationId: null
-        };
-        
-        let stream = null;
-        
-        // DOM helpers
         const $ = id => document.getElementById(id);
         const $$ = sel => document.querySelectorAll(sel);
         
         // ═══════════════════════════════════════════════════════════════════════
-        // TOAST SYSTEM
+        // FILTERS DEFINITION
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        const FILTERS = [
+            { id: 'none', name: 'None', class: 'filter-none' },
+            { id: 'grayscale', name: 'B&W', class: 'filter-grayscale' },
+            { id: 'sepia', name: 'Sepia', class: 'filter-sepia' },
+            { id: 'vintage', name: 'Vintage', class: 'filter-vintage' },
+            { id: 'warm', name: 'Warm', class: 'filter-warm' },
+            { id: 'cool', name: 'Cool', class: 'filter-cool' },
+            { id: 'dramatic', name: 'Dramatic', class: 'filter-dramatic' },
+            { id: 'noir', name: 'Noir', class: 'filter-noir' },
+            { id: 'vivid', name: 'Vivid', class: 'filter-vivid' },
+            { id: 'fade', name: 'Fade', class: 'filter-fade' },
+            { id: 'cinema', name: 'Cinema', class: 'filter-cinema' },
+            { id: 'sunset', name: 'Sunset', class: 'filter-sunset' }
+        ];
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        const state = {
+            mode: 'capture',
+            isRecording: false,
+            isPlaying: false,
+            cameraReady: false,
+            facingMode: 'user',
+            
+            startTime: 0,
+            currentTime: 0,
+            duration: 0,
+            frameCount: 0,
+            
+            stream: null,
+            mediaRecorder: null,
+            recordedChunks: [],
+            recordedBlob: null,
+            recordedUrl: null,
+            
+            audioContext: null,
+            analyser: null,
+            audioData: new Uint8Array(64),
+            
+            activeFilter: 'none',
+            textOverlays: [],
+            volume: 0.8,
+            isMuted: false,
+            
+            trimStart: 0,
+            trimEnd: 1,
+            markers: [],
+            playbackSpeed: 1,
+            
+            history: [],
+            historyIndex: -1,
+            
+            sensors: {
+                hr: 72, hrHistory: [],
+                stress: 0.3, stressHistory: [],
+                temp: 36.6,
+                emotion: 'neutral',
+                objects: [],
+                scene: 'indoor'
+            },
+            
+            causal: { nodes: 0, edges: 0 },
+            exportFormat: 'mp4'
+        };
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // TOAST
         // ═══════════════════════════════════════════════════════════════════════
         
         function toast(message, type = 'info') {
@@ -1224,128 +1605,137 @@
         }
         
         // ═══════════════════════════════════════════════════════════════════════
-        // CAMERA SYSTEM - Android/iOS Fixed
+        // CAMERA
         // ═══════════════════════════════════════════════════════════════════════
         
         async function requestCamera() {
             const placeholder = $('placeholder');
             const video = $('video');
-            const placeholderText = $('placeholderText');
             
-            placeholderText.textContent = 'Requesting camera access...';
-            $('enableCameraBtn').disabled = true;
+            $('placeholderText').textContent = 'Requesting camera...';
             
             try {
-                // Stop any existing stream
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
+                if (state.stream) {
+                    state.stream.getTracks().forEach(t => t.stop());
                 }
                 
-                // Build constraints - different for Android
                 const constraints = {
                     video: {
-                        facingMode: state.facingMode,
+                        facingMode: isAndroid ? state.facingMode : { ideal: state.facingMode },
                         width: { ideal: isMobile ? 1280 : 1920 },
-                        height: { ideal: isMobile ? 720 : 1080 }
+                        height: { ideal: isMobile ? 720 : 1080 },
+                        frameRate: { ideal: 30 }
                     },
-                    audio: false
+                    audio: true
                 };
                 
-                // On Android, we need to be more flexible with constraints
-                if (isAndroid) {
-                    // First try with exact facingMode
-                    try {
-                        constraints.video.facingMode = { exact: state.facingMode };
-                        stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    } catch (e) {
-                        // Fall back to ideal
-                        console.log('Exact facingMode failed, trying ideal...');
-                        constraints.video.facingMode = state.facingMode;
-                        stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    }
-                } else {
-                    stream = await navigator.mediaDevices.getUserMedia(constraints);
+                try {
+                    state.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                } catch (e) {
+                    state.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 }
                 
-                video.srcObject = stream;
+                video.srcObject = state.stream;
                 
-                // Wait for video to be ready
                 await new Promise((resolve, reject) => {
-                    video.onloadedmetadata = () => {
-                        video.play()
-                            .then(resolve)
-                            .catch(reject);
-                    };
-                    video.onerror = reject;
-                    
-                    // Timeout
-                    setTimeout(() => reject(new Error('Video load timeout')), 10000);
+                    video.onloadedmetadata = () => video.play().then(resolve).catch(reject);
+                    setTimeout(() => reject(new Error('Timeout')), 10000);
                 });
                 
-                // Apply mirroring for front camera
                 if (state.facingMode === 'user') {
                     video.classList.add('viewport__video--mirrored');
                 } else {
                     video.classList.remove('viewport__video--mirrored');
                 }
                 
+                // Setup audio analysis
+                setupAudioAnalyzer();
+                
                 placeholder.classList.add('hidden');
                 state.cameraReady = true;
+                
                 toast('Camera ready', 'success');
                 
             } catch (error) {
                 console.error('Camera error:', error);
-                
-                let errorMessage = 'Camera access denied';
-                
-                if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
-                    errorMessage = 'No camera found on this device';
-                } else if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                    errorMessage = 'Camera permission denied. Please allow camera access in settings.';
-                } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
-                    errorMessage = 'Camera is in use by another app';
-                } else if (error.name === 'OverconstrainedError') {
-                    // Try again with minimal constraints
-                    try {
-                        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                        video.srcObject = stream;
-                        await video.play();
-                        placeholder.classList.add('hidden');
-                        state.cameraReady = true;
-                        toast('Camera ready (fallback mode)', 'success');
-                        return;
-                    } catch (e) {
-                        errorMessage = 'Camera configuration not supported';
-                    }
-                }
-                
-                placeholderText.textContent = errorMessage;
-                $('enableCameraBtn').disabled = false;
-                $('enableCameraBtn').textContent = 'Try Again';
-                toast(errorMessage, 'error');
+                $('placeholderText').textContent = error.message || 'Camera failed';
+                toast('Camera error', 'error');
             }
         }
         
         async function switchCamera() {
-            if (!state.cameraReady) {
-                toast('Camera not ready', 'warning');
-                return;
-            }
+            if (!state.cameraReady) return;
             
             state.facingMode = state.facingMode === 'user' ? 'environment' : 'user';
+            toast(`Switching camera...`);
             
-            toast(`Switching to ${state.facingMode === 'user' ? 'front' : 'back'} camera...`, 'info');
-            
-            // Stop current stream
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
+            if (state.stream) {
+                state.stream.getTracks().forEach(t => t.stop());
             }
             
-            // Show placeholder briefly
             $('placeholder').classList.remove('hidden');
-            $('placeholderText').textContent = 'Switching camera...';
-            
             await requestCamera();
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // AUDIO ANALYZER
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function setupAudioAnalyzer() {
+            try {
+                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                state.analyser = state.audioContext.createAnalyser();
+                state.analyser.fftSize = 128;
+                
+                const source = state.audioContext.createMediaStreamSource(state.stream);
+                source.connect(state.analyser);
+                
+                state.audioData = new Uint8Array(state.analyser.frequencyBinCount);
+                
+                // Generate waveform bars
+                const waveform = $('audioWaveform');
+                waveform.innerHTML = '';
+                for (let i = 0; i < 32; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'audio-waveform__bar';
+                    bar.style.height = '10%';
+                    waveform.appendChild(bar);
+                }
+                
+                // Generate timeline audio track
+                const audioTrack = $('audioTrack');
+                audioTrack.innerHTML = '';
+                for (let i = 0; i < 100; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'timeline__waveform-bar';
+                    bar.style.height = `${20 + Math.random() * 60}%`;
+                    audioTrack.appendChild(bar);
+                }
+                
+            } catch (e) {
+                console.warn('Audio analyzer failed:', e);
+            }
+        }
+        
+        function updateAudioVisualization() {
+            if (!state.analyser) return;
+            
+            state.analyser.getByteFrequencyData(state.audioData);
+            
+            const waveform = $('audioWaveform');
+            const bars = waveform.querySelectorAll('.audio-waveform__bar');
+            
+            bars.forEach((bar, i) => {
+                const value = state.audioData[i * 2] || 0;
+                const height = (value / 255) * 100;
+                bar.style.height = `${Math.max(5, height)}%`;
+            });
+            
+            // Calculate dB level
+            const sum = state.audioData.reduce((a, b) => a + b, 0);
+            const avg = sum / state.audioData.length;
+            const db = avg > 0 ? Math.round(20 * Math.log10(avg / 255) + 90) : -60;
+            $('audioLevel').textContent = db;
         }
         
         // ═══════════════════════════════════════════════════════════════════════
@@ -1354,21 +1744,65 @@
         
         function toggleRecording() {
             if (!state.cameraReady) {
-                toast('Please enable camera first', 'warning');
+                toast('Enable camera first', 'warning');
                 return;
             }
+            
             state.isRecording ? stopRecording() : startRecording();
         }
         
         function startRecording() {
+            state.recordedChunks = [];
+            
+            let mimeType = 'video/webm;codecs=vp9';
+            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                mimeType = 'video/webm;codecs=vp8';
+            }
+            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                mimeType = 'video/webm';
+            }
+            
+            try {
+                state.mediaRecorder = new MediaRecorder(state.stream, {
+                    mimeType,
+                    videoBitsPerSecond: 5000000
+                });
+            } catch (e) {
+                state.mediaRecorder = new MediaRecorder(state.stream);
+            }
+            
+            state.mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) {
+                    state.recordedChunks.push(e.data);
+                }
+            };
+            
+            state.mediaRecorder.onstop = () => {
+                state.recordedBlob = new Blob(state.recordedChunks, { type: 'video/webm' });
+                state.recordedUrl = URL.createObjectURL(state.recordedBlob);
+                
+                const playbackVideo = $('playbackVideo');
+                playbackVideo.src = state.recordedUrl;
+                playbackVideo.volume = state.volume;
+                
+                playbackVideo.onloadedmetadata = () => {
+                    state.duration = playbackVideo.duration * 1000;
+                    updateTimeDisplay();
+                };
+                
+                toast(`Recording saved: ${formatFileSize(state.recordedBlob.size)}`, 'success');
+            };
+            
+            state.mediaRecorder.start(100);
+            
             state.isRecording = true;
             state.startTime = performance.now();
             state.frameCount = 0;
             state.causal = { nodes: 0, edges: 0 };
             
             $('recordBtn').classList.add('recording');
-            $('viewport').classList.add('viewport--recording');
             $('statusDot').classList.add('status-dot--recording');
+            $('statusText').textContent = 'Recording';
             
             toast('Recording started', 'success');
             captureLoop();
@@ -1376,11 +1810,14 @@
         
         function stopRecording() {
             state.isRecording = false;
-            cancelAnimationFrame(state.animationId);
+            
+            if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
+                state.mediaRecorder.stop();
+            }
             
             $('recordBtn').classList.remove('recording');
-            $('viewport').classList.remove('viewport--recording');
             $('statusDot').classList.remove('status-dot--recording');
+            $('statusText').textContent = 'Ready';
             
             toast(`Recorded ${state.frameCount} frames`, 'success');
         }
@@ -1395,62 +1832,573 @@
             updateSensors(elapsed);
             updatePerception();
             updateUI(elapsed);
+            updateAudioVisualization();
             
             if (state.frameCount % 30 === 0) {
                 state.causal.nodes++;
                 if (state.sensors.hr > 85) state.causal.edges++;
             }
             
-            state.animationId = requestAnimationFrame(captureLoop);
+            requestAnimationFrame(captureLoop);
         }
         
         // ═══════════════════════════════════════════════════════════════════════
-        // SENSOR SIMULATION
+        // PLAYBACK
         // ═══════════════════════════════════════════════════════════════════════
+        
+        function togglePlayback() {
+            if (!state.recordedUrl) {
+                toast('No recording to play', 'warning');
+                return;
+            }
+            
+            const playbackVideo = $('playbackVideo');
+            const liveVideo = $('video');
+            
+            if (state.isPlaying) {
+                playbackVideo.pause();
+                state.isPlaying = false;
+                $('playBtn').textContent = '▶️';
+            } else {
+                liveVideo.classList.add('hidden');
+                playbackVideo.classList.remove('hidden');
+                
+                // Apply current filter
+                playbackVideo.className = `viewport__video ${FILTERS.find(f => f.id === state.activeFilter)?.class || ''}`;
+                
+                playbackVideo.play();
+                state.isPlaying = true;
+                $('playBtn').textContent = '⏸️';
+                
+                playbackLoop();
+            }
+        }
+        
+        function playbackLoop() {
+            if (!state.isPlaying) return;
+            
+            const playbackVideo = $('playbackVideo');
+            const progress = playbackVideo.currentTime / playbackVideo.duration;
+            
+            const trackWidth = $('timeline').offsetWidth - 50;
+            $('timelineProgress').style.width = `${progress * trackWidth}px`;
+            $('timelineCursor').style.left = `${50 + progress * trackWidth}px`;
+            $('currentTime').textContent = formatTime(playbackVideo.currentTime * 1000);
+            
+            if (playbackVideo.ended) {
+                state.isPlaying = false;
+                $('playBtn').textContent = '▶️';
+                return;
+            }
+            
+            requestAnimationFrame(playbackLoop);
+        }
+        
+        function setPlaybackSpeed() {
+            const speed = parseFloat($('speedSelect').value);
+            state.playbackSpeed = speed;
+            $('playbackVideo').playbackRate = speed;
+            toast(`Speed: ${speed}x`, 'info');
+        }
+        
+        function prevFrame() {
+            const video = $('playbackVideo');
+            if (video.duration) video.currentTime = Math.max(0, video.currentTime - 1/30);
+        }
+        
+        function nextFrame() {
+            const video = $('playbackVideo');
+            if (video.duration) video.currentTime = Math.min(video.duration, video.currentTime + 1/30);
+        }
+        
+        function jumpBack() {
+            const video = $('playbackVideo');
+            if (video.duration) video.currentTime = Math.max(0, video.currentTime - 5);
+        }
+        
+        function jumpForward() {
+            const video = $('playbackVideo');
+            if (video.duration) video.currentTime = Math.min(video.duration, video.currentTime + 5);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // FILTERS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function renderFilters() {
+            const grid = $('filterGrid');
+            grid.innerHTML = '';
+            
+            FILTERS.forEach(filter => {
+                const item = document.createElement('div');
+                item.className = `filter-item ${filter.id === state.activeFilter ? 'filter-item--active' : ''}`;
+                item.innerHTML = `
+                    <div class="filter-item__preview ${filter.class}"></div>
+                    <div class="filter-item__name">${filter.name}</div>
+                `;
+                item.onclick = () => applyFilter(filter.id);
+                grid.appendChild(item);
+            });
+        }
+        
+        function applyFilter(filterId) {
+            state.activeFilter = filterId;
+            
+            const filter = FILTERS.find(f => f.id === filterId);
+            const video = $('video');
+            const playbackVideo = $('playbackVideo');
+            
+            // Remove all filter classes
+            FILTERS.forEach(f => {
+                video.classList.remove(f.class);
+                playbackVideo.classList.remove(f.class);
+            });
+            
+            // Apply new filter
+            if (filter) {
+                video.classList.add(filter.class);
+                playbackVideo.classList.add(filter.class);
+            }
+            
+            renderFilters();
+            saveHistory(`Apply filter: ${filter?.name}`);
+            toast(`Filter: ${filter?.name}`, 'success');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // TEXT OVERLAYS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function addTextOverlay() {
+            const text = $('textContent').value || 'Sample Text';
+            const size = $('textSize').value;
+            const font = $('textFont').value;
+            const color = $('textColor').value;
+            const bg = $('textBg').value;
+            const position = $('textPosition').value;
+            
+            const overlay = {
+                id: Date.now(),
+                text,
+                size: parseInt(size),
+                font,
+                color,
+                bg,
+                position,
+                x: 50,
+                y: 50
+            };
+            
+            state.textOverlays.push(overlay);
+            renderTextOverlays();
+            
+            // Update text track
+            $('textTrack').style.width = '100%';
+            
+            saveHistory('Add text overlay');
+            toast('Text added', 'success');
+        }
+        
+        function renderTextOverlays() {
+            const container = $('textOverlayContainer');
+            container.innerHTML = '';
+            
+            state.textOverlays.forEach(overlay => {
+                const el = document.createElement('div');
+                el.className = 'text-overlay';
+                el.textContent = overlay.text;
+                el.style.fontSize = `${overlay.size}px`;
+                el.style.fontFamily = overlay.font;
+                el.style.color = overlay.color;
+                el.style.backgroundColor = overlay.bg + '80';
+                el.style.pointerEvents = 'auto';
+                
+                // Position
+                switch (overlay.position) {
+                    case 'top-left': el.style.top = '10%'; el.style.left = '5%'; break;
+                    case 'top-center': el.style.top = '10%'; el.style.left = '50%'; el.style.transform = 'translateX(-50%)'; break;
+                    case 'top-right': el.style.top = '10%'; el.style.right = '5%'; break;
+                    case 'center': el.style.top = '50%'; el.style.left = '50%'; el.style.transform = 'translate(-50%, -50%)'; break;
+                    case 'bottom-left': el.style.bottom = '10%'; el.style.left = '5%'; break;
+                    case 'bottom-center': el.style.bottom = '10%'; el.style.left = '50%'; el.style.transform = 'translateX(-50%)'; break;
+                    case 'bottom-right': el.style.bottom = '10%'; el.style.right = '5%'; break;
+                }
+                
+                // Make draggable
+                el.onmousedown = (e) => startDragText(e, el, overlay);
+                el.ontouchstart = (e) => startDragText(e.touches[0], el, overlay);
+                
+                container.appendChild(el);
+            });
+        }
+        
+        function startDragText(e, el, overlay) {
+            e.preventDefault();
+            el.classList.add('text-overlay--editing');
+            
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const rect = el.getBoundingClientRect();
+            const containerRect = el.parentElement.getBoundingClientRect();
+            
+            const onMove = (e) => {
+                const clientX = e.clientX || e.touches?.[0]?.clientX;
+                const clientY = e.clientY || e.touches?.[0]?.clientY;
+                
+                const dx = clientX - startX;
+                const dy = clientY - startY;
+                
+                el.style.left = `${((rect.left - containerRect.left + dx) / containerRect.width) * 100}%`;
+                el.style.top = `${((rect.top - containerRect.top + dy) / containerRect.height) * 100}%`;
+                el.style.transform = 'none';
+                el.style.right = 'auto';
+                el.style.bottom = 'auto';
+            };
+            
+            const onUp = () => {
+                el.classList.remove('text-overlay--editing');
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onUp);
+            };
+            
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+            document.addEventListener('touchmove', onMove);
+            document.addEventListener('touchend', onUp);
+        }
+        
+        function clearTextOverlays() {
+            state.textOverlays = [];
+            renderTextOverlays();
+            $('textTrack').style.width = '0%';
+            saveHistory('Clear text overlays');
+            toast('Text cleared', 'info');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // AUDIO CONTROLS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function setVolume() {
+            const value = parseInt($('volumeSlider').value);
+            state.volume = value / 100;
+            $('volumeValue').textContent = `${value}%`;
+            
+            $('playbackVideo').volume = state.volume;
+            
+            if (state.isMuted && value > 0) {
+                state.isMuted = false;
+                $('muteBtn').textContent = '🔊';
+            }
+        }
+        
+        function toggleMute() {
+            state.isMuted = !state.isMuted;
+            
+            $('playbackVideo').muted = state.isMuted;
+            $('muteBtn').textContent = state.isMuted ? '🔇' : '🔊';
+            
+            toast(state.isMuted ? 'Muted' : 'Unmuted', 'info');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // EDITING
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function setTrimStart() {
+            if (!state.recordedUrl) return;
+            
+            const video = $('playbackVideo');
+            state.trimStart = video.currentTime / video.duration;
+            
+            const trackWidth = $('timeline').offsetWidth - 50;
+            $('trimStart').style.display = 'block';
+            $('trimStart').style.left = `${50 + state.trimStart * trackWidth}px`;
+            $('trimRegion').style.display = 'block';
+            updateTrimRegion();
+            
+            saveHistory('Set trim start');
+            toast(`Trim start: ${formatTime(video.currentTime * 1000)}`, 'info');
+        }
+        
+        function setTrimEnd() {
+            if (!state.recordedUrl) return;
+            
+            const video = $('playbackVideo');
+            state.trimEnd = video.currentTime / video.duration;
+            
+            const trackWidth = $('timeline').offsetWidth - 50;
+            $('trimEnd').style.display = 'block';
+            $('trimEnd').style.left = `${50 + state.trimEnd * trackWidth}px`;
+            $('trimRegion').style.display = 'block';
+            updateTrimRegion();
+            
+            saveHistory('Set trim end');
+            toast(`Trim end: ${formatTime(video.currentTime * 1000)}`, 'info');
+        }
+        
+        function updateTrimRegion() {
+            const trackWidth = $('timeline').offsetWidth - 50;
+            const region = $('trimRegion');
+            region.style.left = `${50 + state.trimStart * trackWidth}px`;
+            region.style.width = `${(state.trimEnd - state.trimStart) * trackWidth}px`;
+        }
+        
+        function addMarker() {
+            if (state.isRecording) {
+                const position = state.currentTime / (state.duration || state.currentTime);
+                state.markers.push({ position, time: state.currentTime, type: 'event' });
+                toast('Marker added', 'success');
+                return;
+            }
+            
+            if (!state.recordedUrl) return;
+            
+            const video = $('playbackVideo');
+            const position = video.currentTime / video.duration;
+            
+            state.markers.push({ position, time: video.currentTime * 1000, type: 'user' });
+            renderMarkers();
+            
+            saveHistory('Add marker');
+            toast(`Marker added`, 'success');
+        }
+        
+        function renderMarkers() {
+            const container = $('timelineMarkers');
+            const trackWidth = $('timeline').offsetWidth - 50;
+            container.innerHTML = '';
+            
+            state.markers.forEach((marker, i) => {
+                const el = document.createElement('div');
+                el.className = 'timeline__marker';
+                el.style.left = `${marker.position * trackWidth}px`;
+                el.title = formatTime(marker.time);
+                el.onclick = () => {
+                    const video = $('playbackVideo');
+                    video.currentTime = marker.time / 1000;
+                };
+                container.appendChild(el);
+            });
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // HISTORY
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function saveHistory(action) {
+            state.history = state.history.slice(0, state.historyIndex + 1);
+            
+            state.history.push({
+                action,
+                timestamp: Date.now(),
+                state: {
+                    trimStart: state.trimStart,
+                    trimEnd: state.trimEnd,
+                    markers: [...state.markers],
+                    textOverlays: JSON.parse(JSON.stringify(state.textOverlays)),
+                    activeFilter: state.activeFilter
+                }
+            });
+            
+            state.historyIndex = state.history.length - 1;
+        }
+        
+        function undo() {
+            if (state.historyIndex <= 0) {
+                toast('Nothing to undo', 'warning');
+                return;
+            }
+            
+            state.historyIndex--;
+            restoreState(state.history[state.historyIndex]);
+            toast(`Undo: ${state.history[state.historyIndex + 1].action}`, 'info');
+        }
+        
+        function redo() {
+            if (state.historyIndex >= state.history.length - 1) {
+                toast('Nothing to redo', 'warning');
+                return;
+            }
+            
+            state.historyIndex++;
+            restoreState(state.history[state.historyIndex]);
+            toast(`Redo: ${state.history[state.historyIndex].action}`, 'info');
+        }
+        
+        function restoreState(historyEntry) {
+            state.trimStart = historyEntry.state.trimStart;
+            state.trimEnd = historyEntry.state.trimEnd;
+            state.markers = [...historyEntry.state.markers];
+            state.textOverlays = JSON.parse(JSON.stringify(historyEntry.state.textOverlays));
+            state.activeFilter = historyEntry.state.activeFilter;
+            
+            updateTrimRegion();
+            renderMarkers();
+            renderTextOverlays();
+            applyFilter(state.activeFilter);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // SIDEBAR
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function switchSidebarTab(tabId) {
+            $$('.sidebar__tab').forEach(t => t.classList.remove('sidebar__tab--active'));
+            $$('.sidebar__panel').forEach(p => p.classList.remove('sidebar__panel--active'));
+            
+            document.querySelector(`.sidebar__tab[data-tab="${tabId}"]`).classList.add('sidebar__tab--active');
+            $(`${tabId}Panel`).classList.add('sidebar__panel--active');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // EXPORT
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function showExportModal() {
+            if (!state.recordedBlob) {
+                toast('Nothing to export', 'warning');
+                return;
+            }
+            $('exportModal').classList.add('modal-overlay--active');
+        }
+        
+        function closeExportModal() {
+            $('exportModal').classList.remove('modal-overlay--active');
+        }
+        
+        function selectExportFormat(format) {
+            state.exportFormat = format;
+            $$('.export-option').forEach(el => {
+                el.classList.toggle('export-option--active', el.dataset.format === format);
+            });
+        }
+        
+        async function startExport() {
+            if (!state.recordedBlob) return;
+            
+            $('exportProgress').style.display = 'block';
+            $('exportBtn').disabled = true;
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                
+                $('exportPercent').textContent = `${Math.round(progress)}%`;
+                $('exportProgressBar').style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    finishExport();
+                }
+            }, 200);
+        }
+        
+        function finishExport() {
+            const a = document.createElement('a');
+            a.href = state.recordedUrl;
+            a.download = `virecai_${Date.now()}.webm`;
+            a.click();
+            
+            closeExportModal();
+            $('exportProgress').style.display = 'none';
+            $('exportBtn').disabled = false;
+            
+            toast('Video exported!', 'success');
+        }
+        
+        function exportCapsule() {
+            const capsule = {
+                id: `vrc_${Date.now().toString(36)}`,
+                version: VERSION,
+                metadata: {
+                    duration: state.duration,
+                    frameCount: state.frameCount,
+                    created: Date.now()
+                },
+                editing: {
+                    trimStart: state.trimStart,
+                    trimEnd: state.trimEnd,
+                    markers: state.markers,
+                    filter: state.activeFilter,
+                    textOverlays: state.textOverlays
+                },
+                causal: state.causal
+            };
+            
+            const blob = new Blob([JSON.stringify(capsule, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${capsule.id}.vrc`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            toast('Capsule exported!', 'success');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // MODALS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        function showShortcutsModal() {
+            $('shortcutsModal').classList.add('modal-overlay--active');
+        }
+        
+        function closeShortcutsModal() {
+            $('shortcutsModal').classList.remove('modal-overlay--active');
+        }
+        
+        $$('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('modal-overlay--active');
+                }
+            });
+        });
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // SENSORS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        const EMOTIONS = ['neutral', 'joy', 'surprise', 'calm', 'focus'];
+        const EMOTION_EMOJI = { neutral: '😐', joy: '😊', surprise: '😮', calm: '😌', focus: '🎯' };
+        const SCENES = ['office', 'bedroom', 'living room', 'outdoor'];
+        const OBJECTS = ['person', 'phone', 'laptop', 'cup', 'book'];
         
         function updateSensors(elapsed) {
             const t = elapsed / 1000;
             
-            // Heart rate
             const hrBase = 72;
             const hrVar = Math.sin(t / 8) * 6 + Math.sin(t / 2.5) * 3 + (Math.random() - 0.5) * 4;
             state.sensors.hr = Math.round(hrBase + hrVar + state.sensors.stress * 20);
             state.sensors.hrHistory.push(state.sensors.hr);
             if (state.sensors.hrHistory.length > 20) state.sensors.hrHistory.shift();
             
-            // Stress
             state.sensors.stress += (Math.random() - 0.5) * 0.015;
             state.sensors.stress = Math.max(0, Math.min(1, state.sensors.stress));
-            state.sensors.stressHistory.push(state.sensors.stress);
-            if (state.sensors.stressHistory.length > 20) state.sensors.stressHistory.shift();
             
-            // Temperature
-            state.sensors.temp = 36.6 + Math.sin(t / 20) * 0.2 + (Math.random() - 0.5) * 0.1;
+            state.sensors.temp = 36.6 + Math.sin(t / 20) * 0.2;
             
-            // Update displays
-            const hrValue = state.sensors.hr;
-            $('hrValue').textContent = hrValue;
-            $('hrValueFloat').textContent = hrValue;
+            $('hrValue').textContent = state.sensors.hr;
+            $('hrValue2').textContent = state.sensors.hr;
             $('stressValue').textContent = Math.round(state.sensors.stress * 100);
             $('tempValue').textContent = state.sensors.temp.toFixed(1);
             
-            // Warning states
-            $('hrCard')?.classList.toggle('sensor-card--warning', hrValue > 100);
-            $('stressCard')?.classList.toggle('sensor-card--warning', state.sensors.stress > 0.7);
-            
-            // Mini charts
             renderMiniChart('hrChart', state.sensors.hrHistory, 60, 120);
-            renderMiniChart('hrChartFloat', state.sensors.hrHistory, 60, 120);
-            renderMiniChart('stressChart', state.sensors.stressHistory.map(s => s * 100), 0, 100);
         }
         
-        function renderMiniChart(elementId, data, min, max) {
-            const container = $(elementId);
+        function renderMiniChart(id, data, min, max) {
+            const container = $(id);
             if (!container) return;
             
             container.innerHTML = '';
-            const barCount = Math.min(data.length, 12);
-            const subset = data.slice(-barCount);
+            const count = Math.min(data.length, 15);
+            const subset = data.slice(-count);
             
             subset.forEach(val => {
                 const height = ((val - min) / (max - min)) * 100;
@@ -1461,20 +2409,7 @@
             });
         }
         
-        // ═══════════════════════════════════════════════════════════════════════
-        // PERCEPTION SIMULATION
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        const OBJECTS = ['person', 'phone', 'laptop', 'cup', 'book', 'chair'];
-        const EMOTIONS = ['neutral', 'joy', 'surprise', 'calm', 'focus'];
-        const SCENES = ['office', 'bedroom', 'living room', 'outdoor'];
-        
-        const EMOTION_EMOJI = {
-            neutral: '😐', joy: '😊', surprise: '😮', calm: '😌', focus: '🎯'
-        };
-        
         function updatePerception() {
-            // Objects
             if (state.frameCount % 60 === 0) {
                 const count = 1 + Math.floor(Math.random() * 3);
                 state.sensors.objects = [];
@@ -1491,29 +2426,20 @@
                 }
                 
                 $('objectCount').textContent = count;
-                $('objectList').textContent = state.sensors.objects.map(o => o.class).join(', ');
                 renderDetectionBoxes();
             }
             
-            // Emotion
             if (state.frameCount % 45 === 0) {
                 state.sensors.emotion = EMOTIONS[Math.floor(Math.random() * EMOTIONS.length)];
-                state.sensors.emotionConf = 0.6 + Math.random() * 0.35;
-                
-                const emoji = EMOTION_EMOJI[state.sensors.emotion];
-                $('emotionEmoji').textContent = emoji;
+                $('emotionEmoji').textContent = EMOTION_EMOJI[state.sensors.emotion];
                 $('emotionLabel').textContent = state.sensors.emotion;
-                $('emotionEmojiFloat').textContent = emoji;
-                $('emotionLabelFloat').textContent = state.sensors.emotion;
             }
             
-            // Scene
             if (state.frameCount % 90 === 0) {
                 state.sensors.scene = SCENES[Math.floor(Math.random() * SCENES.length)];
                 $('sceneValue').textContent = state.sensors.scene;
             }
             
-            // Update WH chain
             updateWHChain();
         }
         
@@ -1536,10 +2462,10 @@
         }
         
         function updateWHChain() {
-            const container = $('whChainDisplay');
-            if (!container) return;
+            const chain = $('whChain');
+            if (!chain) return;
             
-            container.innerHTML = `
+            chain.innerHTML = `
                 <span class="wh-badge wh-badge--what">WHAT: ${state.sensors.emotion}</span>
                 <span class="wh-badge wh-badge--where">WHERE: ${state.sensors.scene}</span>
                 <span class="wh-badge wh-badge--when">WHEN: ${formatTime(state.currentTime)}</span>
@@ -1547,271 +2473,155 @@
             `;
         }
         
-        // ═══════════════════════════════════════════════════════════════════════
-        // UI UPDATES
-        // ═══════════════════════════════════════════════════════════════════════
-        
         function updateUI(elapsed) {
             const s = Math.floor(elapsed / 1000);
+            const ms = Math.floor((elapsed % 1000) / 10);
             const m = Math.floor(s / 60);
             
-            $('timeDisplay').textContent = `${m}:${String(s % 60).padStart(2, '0')}`;
+            $('timeDisplay').innerHTML = `${m}:${String(s % 60).padStart(2, '0')}<span class="float-panel__unit">.${String(ms).padStart(2, '0')}</span>`;
             $('frameCount').textContent = state.frameCount;
+            $('currentTime').textContent = formatTime(elapsed);
+            $('totalTime').textContent = formatTime(state.duration || elapsed);
             
             $('causalNodes').textContent = state.causal.nodes;
             $('causalEdges').textContent = state.causal.edges;
         }
         
+        function updateTimeDisplay() {
+            $('totalTime').textContent = formatTime(state.duration);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // UTILS
+        // ═══════════════════════════════════════════════════════════════════════
+        
         function formatTime(ms) {
             const s = Math.floor(ms / 1000);
+            const cs = Math.floor((ms % 1000) / 10);
             const m = Math.floor(s / 60);
-            return `${m}:${String(s % 60).padStart(2, '0')}`;
+            return `${m}:${String(s % 60).padStart(2, '0')}.${String(cs).padStart(2, '0')}`;
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+        }
+        
+        function changeProfile() {
+            toast(`Profile: ${$('profileSelect').value}`, 'success');
         }
         
         // ═══════════════════════════════════════════════════════════════════════
-        // PANELS
+        // KEYBOARD SHORTCUTS
         // ═══════════════════════════════════════════════════════════════════════
         
-        function openPanel(panel) {
-            const overlay = $(`${panel}Overlay`);
-            if (overlay) {
-                overlay.classList.add('panel-overlay--active');
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch (e.key.toLowerCase()) {
+                case ' ':
+                    e.preventDefault();
+                    togglePlayback();
+                    break;
+                case 'r':
+                    toggleRecording();
+                    break;
+                case 'f':
+                    switchCamera();
+                    break;
+                case 'i':
+                    setTrimStart();
+                    break;
+                case 'o':
+                    setTrimEnd();
+                    break;
+                case 'm':
+                    addMarker();
+                    break;
+                case 't':
+                    addTextOverlay();
+                    break;
+                case 'u':
+                    toggleMute();
+                    break;
+                case 'j':
+                    jumpBack();
+                    break;
+                case 'l':
+                    jumpForward();
+                    break;
+                case 'arrowleft':
+                    prevFrame();
+                    break;
+                case 'arrowright':
+                    nextFrame();
+                    break;
+                case '?':
+                    showShortcutsModal();
+                    break;
+                case 'escape':
+                    $$('.modal-overlay').forEach(m => m.classList.remove('modal-overlay--active'));
+                    break;
+                case 'z':
+                    if (e.ctrlKey || e.metaKey) { e.preventDefault(); undo(); }
+                    break;
+                case 'y':
+                    if (e.ctrlKey || e.metaKey) { e.preventDefault(); redo(); }
+                    break;
+                case 'e':
+                    if (e.ctrlKey || e.metaKey) { e.preventDefault(); showExportModal(); }
+                    break;
             }
-        }
+        });
         
-        function closePanel(panel) {
-            const overlay = $(`${panel}Overlay`);
-            if (overlay) {
-                overlay.classList.remove('panel-overlay--active');
-            }
-        }
+        // ═══════════════════════════════════════════════════════════════════════
+        // TIMELINE CLICK
+        // ═══════════════════════════════════════════════════════════════════════
         
-        // Close on backdrop click
-        $$('.panel-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    overlay.classList.remove('panel-overlay--active');
-                }
+        $('timeline').addEventListener('click', (e) => {
+            if (!state.recordedUrl) return;
+            
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left - 50;
+            const trackWidth = rect.width - 50;
+            const position = Math.max(0, Math.min(1, clickX / trackWidth));
+            
+            const video = $('playbackVideo');
+            video.currentTime = position * video.duration;
+            
+            $('timelineProgress').style.width = `${position * trackWidth}px`;
+            $('timelineCursor').style.left = `${50 + position * trackWidth}px`;
+        });
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // MODE TABS
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        $$('.mode-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                $$('.mode-tab').forEach(t => t.classList.remove('mode-tab--active'));
+                tab.classList.add('mode-tab--active');
+                state.mode = tab.dataset.mode;
             });
         });
         
-        function showSettings() {
-            toast('Settings coming soon', 'info');
-        }
-        
         // ═══════════════════════════════════════════════════════════════════════
-        // LLM
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function submitLLM() {
-            const input = $('llmInput');
-            const query = input.value.trim();
-            if (!query) return;
-            
-            input.value = '';
-            askLLM(query);
-        }
-        
-        function askLLM(query) {
-            addLLMMessage(`<strong>You:</strong> ${query}`, true);
-            const response = processLLMQuery(query);
-            setTimeout(() => addLLMMessage(response), 200);
-        }
-        
-        function processLLMQuery(query) {
-            const q = query.toLowerCase();
-            
-            if (q.includes('what') || q.includes('happening')) {
-                return `<strong>🎬 Scene Analysis</strong><br><br>
-                    📍 Environment: ${state.sensors.scene}<br>
-                    🎯 Objects: ${state.sensors.objects.map(o => o.class).join(', ')}<br>
-                    😊 Emotion: ${state.sensors.emotion}<br>
-                    💓 HR: ${state.sensors.hr} BPM`;
-            }
-            
-            if (q.includes('emotion') || q.includes('mood') || q.includes('how')) {
-                return `<strong>😊 Emotional State</strong><br><br>
-                    Primary: ${state.sensors.emotion} (${Math.round(state.sensors.emotionConf * 100)}%)<br>
-                    Stress: ${Math.round(state.sensors.stress * 100)}%<br>
-                    HR: ${state.sensors.hr} BPM`;
-            }
-            
-            if (q.includes('who') || q.includes('person')) {
-                const people = state.sensors.objects.filter(o => o.class === 'person');
-                return `<strong>👤 People</strong><br><br>
-                    ${people.length === 0 ? 'No people detected' : `${people.length} person(s) detected`}`;
-            }
-            
-            if (q.includes('why')) {
-                return `<strong>🔗 Causal Analysis</strong><br><br>
-                    Causal Graph: ${state.causal.nodes} nodes, ${state.causal.edges} edges<br>
-                    ${state.sensors.hr > 85 ? 'Elevated HR → emotional arousal' : 'Stable state'}`;
-            }
-            
-            return `<strong>🧠 Query</strong>: "${query}"<br><br>
-                Try: What, How, Who, Why questions`;
-        }
-        
-        function addLLMMessage(html, isUser = false) {
-            const container = $('llmMessages');
-            const msg = document.createElement('div');
-            msg.className = 'llm-message';
-            if (isUser) msg.style.background = 'var(--bg-500)';
-            msg.innerHTML = html;
-            container.appendChild(msg);
-            container.scrollTop = container.scrollHeight;
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // LAYERS
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function renderLayers() {
-            const container = $('layersList');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            for (const [id, layer] of Object.entries(LAYERS)) {
-                const isActive = state.activeLayers.has(id);
-                
-                const item = document.createElement('div');
-                item.className = `layer-item ${isActive ? 'layer-item--active' : ''}`;
-                item.innerHTML = `
-                    <div class="layer-icon" style="background:${layer.color}22;color:${layer.color}">${layer.icon}</div>
-                    <div class="layer-info">
-                        <div class="layer-name">${layer.name}</div>
-                    </div>
-                    <div class="layer-toggle"></div>
-                `;
-                item.onclick = () => toggleLayer(id);
-                container.appendChild(item);
-            }
-        }
-        
-        function toggleLayer(id) {
-            if (state.activeLayers.has(id)) {
-                state.activeLayers.delete(id);
-            } else {
-                state.activeLayers.add(id);
-            }
-            renderLayers();
-            toast(`${LAYERS[id].name}: ${state.activeLayers.has(id) ? 'ON' : 'OFF'}`, 'info');
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // EXPORT
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function exportCapsule() {
-            const capsule = {
-                id: `vrc_${Date.now().toString(36)}`,
-                version: VERSION,
-                profile: state.profile,
-                metadata: {
-                    duration: state.currentTime,
-                    frameCount: state.frameCount,
-                    created: Date.now()
-                },
-                activeLayers: Array.from(state.activeLayers),
-                causal: state.causal
-            };
-            
-            const blob = new Blob([JSON.stringify(capsule, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${capsule.id}.vrc`;
-            a.click();
-            
-            URL.revokeObjectURL(url);
-            toast('Capsule exported!', 'success');
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // DESKTOP SIDEBAR
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function setupDesktopSidebar() {
-            const tabs = $$('.desktop-sidebar__tab');
-            const content = $('desktopSidebarContent');
-            
-            if (!content) return;
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('desktop-sidebar__tab--active'));
-                    tab.classList.add('desktop-sidebar__tab--active');
-                    
-                    const tabName = tab.dataset.tab;
-                    
-                    // Clone content from mobile panels
-                    const panel = $(`${tabName}Overlay`)?.querySelector('.panel__content');
-                    if (panel) {
-                        content.innerHTML = panel.innerHTML;
-                    }
-                });
-            });
-            
-            // Initial load
-            const sensorsContent = $('sensorsOverlay')?.querySelector('.panel__content');
-            if (sensorsContent) {
-                content.innerHTML = sensorsContent.innerHTML;
-            }
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // PROFILE CHANGE
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        $('profileSelect').addEventListener('change', (e) => {
-            state.profile = e.target.value;
-            state.activeLayers = new Set(PROFILES[state.profile]);
-            renderLayers();
-            toast(`Profile: ${state.profile}`, 'success');
-        });
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // LLM INPUT ENTER KEY
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        $('llmInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') submitLLM();
-        });
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // INITIALIZE
+        // INIT
         // ═══════════════════════════════════════════════════════════════════════
         
         async function init() {
-            console.log('Initializing VIRECAI v5.2...');
+            console.log('Initializing VIRECAI v6.1...');
             
-            renderLayers();
-            setupDesktopSidebar();
+            renderFilters();
+            saveHistory('Initial state');
             
-            // Auto-request camera on desktop
             if (!isMobile) {
                 await requestCamera();
             }
             
             toast(`VIRECAI v${VERSION} Ready`, 'success');
         }
-        
-        // Handle visibility change (pause/resume)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && state.isRecording) {
-                // Optionally pause on background
-            }
-        });
-        
-        // Prevent pull-to-refresh on mobile
-        document.body.addEventListener('touchmove', (e) => {
-            if (e.target.closest('.panel__content') || e.target.closest('.llm-messages')) {
-                return;
-            }
-            e.preventDefault();
-        }, { passive: false });
         
         init();
     </script>
