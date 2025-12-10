@@ -1,2090 +1,1048 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#0a0a0f">
-    <title>VIRECAI v8.5 | Cloud Studio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MulluOS — SCCM Math Solver</title>
+  <style>
+    :root {
+      --bg-primary: #0a0a12;
+      --bg-secondary: #12121f;
+      --bg-tertiary: #1a1a2e;
+      --accent-purple: #9d4edd;
+      --accent-cyan: #00d4ff;
+      --accent-green: #00ff88;
+      --accent-gold: #ffd700;
+      --accent-red: #ff4757;
+      --text-primary: #e8e8ff;
+      --text-secondary: #a0a0c0;
+      --border-color: #2a2a4e;
+    }
     
-    <!-- TensorFlow.js + Models -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface@0.0.7/dist/blazeface.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@2.1.0/dist/pose-detection.min.js"></script>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     
-    <style>
-        :root {
-            --bg-100: #05050a;
-            --bg-200: #0a0a0f;
-            --bg-300: #0f0f16;
-            --bg-400: #14141d;
-            --bg-500: #1a1a25;
-            --bg-600: #22222f;
-            
-            --primary: #00d4ff;
-            --primary-alpha: rgba(0, 212, 255, 0.15);
-            --secondary: #7b61ff;
-            --secondary-alpha: rgba(123, 97, 255, 0.15);
-            --success: #00ff88;
-            --success-alpha: rgba(0, 255, 136, 0.15);
-            --warning: #ffaa00;
-            --warning-alpha: rgba(255, 170, 0, 0.15);
-            --danger: #ff4466;
-            --danger-alpha: rgba(255, 68, 102, 0.15);
-            --cyan: #00bcd4;
-            --pink: #ff69b4;
-            --orange: #ff8c00;
-            --lime: #b4ff00;
-            --gold: #ffd700;
-            --cloud: #3b82f6;
-            --cloud-alpha: rgba(59, 130, 246, 0.15);
-            
-            --text-100: #ffffff;
-            --text-200: #e0e0e8;
-            --text-300: #a0a0b0;
-            --text-400: #707080;
-            
-            --border-100: #3a3a4a;
-            --border-200: #2a2a3a;
-            
-            --glow-primary: 0 0 20px rgba(0, 212, 255, 0.4);
-            --glow-danger: 0 0 20px rgba(255, 68, 102, 0.5);
-            --glow-cloud: 0 0 20px rgba(59, 130, 246, 0.5);
-            
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
-        }
-        
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        html, body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-100);
-            color: var(--text-100);
-            height: 100%;
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg-400); }
-        ::-webkit-scrollbar-thumb { background: var(--border-100); border-radius: 3px; }
-        
-        .app {
-            display: grid;
-            grid-template-rows: auto 1fr auto auto;
-            height: 100vh;
-            height: 100dvh;
-            padding-top: var(--safe-top);
-        }
-        
-        /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 12px;
-            background: var(--bg-300);
-            border-bottom: 1px solid var(--border-200);
-            gap: 8px;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .logo__icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--cloud), var(--cyan));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: var(--glow-cloud);
-        }
-        
-        .logo__text {
-            font-size: 16px;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--cloud), var(--cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .logo__version {
-            font-size: 9px;
-            color: white;
-            padding: 2px 5px;
-            background: linear-gradient(90deg, var(--cloud), var(--cyan));
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        
-        .header__center {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .mode-tabs {
-            display: flex;
-            background: var(--bg-500);
-            border-radius: 6px;
-            padding: 2px;
-        }
-        
-        .mode-tab {
-            padding: 5px 10px;
-            background: none;
-            border: none;
-            color: var(--text-400);
-            font-size: 10px;
-            font-weight: 500;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .mode-tab--active {
-            background: var(--cloud);
-            color: white;
-        }
-        
-        .header__actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .badge {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 9px;
-        }
-        
-        .badge--cloud {
-            background: var(--cloud-alpha);
-            border: 1px solid var(--cloud);
-            color: var(--cloud);
-        }
-        
-        .badge--cloud.syncing .badge__dot {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .badge--ai {
-            background: var(--success-alpha);
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
-        
-        .badge--ai.loading {
-            background: var(--warning-alpha);
-            border-color: var(--warning);
-            color: var(--warning);
-        }
-        
-        .badge__dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-        
-        .badge.loading .badge__dot {
-            animation: pulse 1s infinite;
-        }
-        
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 8px;
-            background: var(--bg-500);
-            border-radius: 10px;
-            font-size: 10px;
-        }
-        
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--success);
-        }
-        
-        .status-dot--recording {
-            background: var(--danger);
-            animation: pulse 1s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        
-        /* Main */
-        .main {
-            display: flex;
-            background: #000;
-            overflow: hidden;
-        }
-        
-        .viewport {
-            flex: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        .viewport__video {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: filter 0.3s;
-        }
-        
-        .viewport__video--mirrored { transform: scaleX(-1); }
-        .viewport__video.hidden { display: none; }
-        
-        .viewport__placeholder {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-300);
-            gap: 12px;
-        }
-        
-        .viewport__placeholder.hidden { display: none; }
-        .viewport__placeholder-icon { font-size: 48px; opacity: 0.5; }
-        
-        /* Cloud sync indicator */
-        .sync-indicator {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: rgba(59, 130, 246, 0.9);
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            animation: fadeIn 0.3s;
-        }
-        
-        .sync-indicator.hidden { display: none; }
-        
-        .sync-indicator__spinner {
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        
-        /* Float panels */
-        .float-panel {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            border-radius: 8px;
-            border: 1px solid var(--border-200);
-            padding: 6px 8px;
-            z-index: 10;
-        }
-        
-        .float-panel--tl { top: 8px; left: 8px; }
-        .float-panel--tr { top: 8px; right: 8px; }
-        .float-panel--bl { bottom: 8px; left: 8px; }
-        .float-panel--br { bottom: 8px; right: 8px; }
-        
-        .float-panel__label {
-            font-size: 8px;
-            font-weight: 600;
-            color: var(--text-400);
-            text-transform: uppercase;
-        }
-        
-        .float-panel__value {
-            font-size: 16px;
-            font-weight: 700;
-            font-family: 'SF Mono', monospace;
-        }
-        
-        .float-panel__unit { font-size: 9px; color: var(--text-300); }
-        
-        /* Overlays */
-        .overlay {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 320px;
-            background: var(--bg-300);
-            border-left: 1px solid var(--border-200);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        @media (max-width: 900px) { .sidebar { width: 280px; } }
-        @media (max-width: 700px) { .sidebar { display: none; } }
-        
-        .sidebar__tabs {
-            display: flex;
-            background: var(--bg-400);
-            flex-wrap: wrap;
-        }
-        
-        .sidebar__tab {
-            flex: 1;
-            min-width: 40px;
-            padding: 8px 4px;
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            color: var(--text-400);
-            font-size: 12px;
-            cursor: pointer;
-        }
-        
-        .sidebar__tab--active {
-            color: var(--cloud);
-            border-bottom-color: var(--cloud);
-        }
-        
-        .sidebar__content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-        }
-        
-        .sidebar__panel { display: none; }
-        .sidebar__panel--active { display: block; }
-        
-        .panel-title {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--text-300);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .panel-title__badge {
-            padding: 1px 4px;
-            background: var(--cloud);
-            border-radius: 3px;
-            font-size: 8px;
-            color: white;
-        }
-        
-        /* Cloud storage */
-        .cloud-storage {
-            background: var(--bg-400);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-        
-        .cloud-storage__header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .cloud-storage__title {
-            font-size: 11px;
-            font-weight: 600;
-        }
-        
-        .cloud-storage__status {
-            font-size: 9px;
-            color: var(--success);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .cloud-storage__bar {
-            height: 6px;
-            background: var(--bg-600);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
-        
-        .cloud-storage__fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--cloud), var(--cyan));
-            border-radius: 3px;
-            transition: width 0.3s;
-        }
-        
-        .cloud-storage__info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 9px;
-            color: var(--text-400);
-        }
-        
-        /* Version history */
-        .version-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-        
-        .version-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: var(--bg-400);
-            border: 1px solid var(--border-200);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .version-item:hover { border-color: var(--cloud); }
-        .version-item--current { border-color: var(--success); background: var(--success-alpha); }
-        
-        .version-item__icon {
-            width: 32px;
-            height: 32px;
-            background: var(--bg-500);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        
-        .version-item--current .version-item__icon {
-            background: var(--success);
-        }
-        
-        .version-item__info { flex: 1; }
-        .version-item__name { font-size: 11px; font-weight: 600; }
-        .version-item__meta { font-size: 9px; color: var(--text-400); }
-        
-        .version-item__actions {
-            display: flex;
-            gap: 4px;
-        }
-        
-        .version-item__btn {
-            width: 24px;
-            height: 24px;
-            background: var(--bg-600);
-            border: none;
-            border-radius: 4px;
-            color: var(--text-300);
-            font-size: 10px;
-            cursor: pointer;
-        }
-        
-        .version-item__btn:hover { background: var(--cloud); color: white; }
-        
-        /* Templates */
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .template-card {
-            background: var(--bg-400);
-            border: 2px solid var(--border-200);
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .template-card:hover { border-color: var(--cloud); transform: translateY(-2px); }
-        .template-card--selected { border-color: var(--cloud); }
-        
-        .template-card__preview {
-            aspect-ratio: 16/9;
-            background: var(--bg-600);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-        
-        .template-card__info {
-            padding: 8px;
-        }
-        
-        .template-card__name {
-            font-size: 11px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-        
-        .template-card__desc {
-            font-size: 9px;
-            color: var(--text-400);
-        }
-        
-        .template-card__badge {
-            display: inline-block;
-            padding: 2px 5px;
-            background: var(--cloud);
-            border-radius: 3px;
-            font-size: 8px;
-            color: white;
-            margin-top: 4px;
-        }
-        
-        /* Export presets */
-        .export-presets {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        
-        .export-preset {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: var(--bg-400);
-            border: 2px solid var(--border-200);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .export-preset:hover { border-color: var(--cloud); }
-        .export-preset--selected { border-color: var(--cloud); background: var(--cloud-alpha); }
-        
-        .export-preset__icon {
-            width: 40px;
-            height: 40px;
-            background: var(--bg-500);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        
-        .export-preset__info { flex: 1; }
-        .export-preset__name { font-size: 12px; font-weight: 600; }
-        .export-preset__specs { font-size: 9px; color: var(--text-400); margin-top: 2px; }
-        
-        .export-preset__size {
-            font-size: 10px;
-            color: var(--cloud);
-            font-weight: 600;
-        }
-        
-        /* Cloud services */
-        .cloud-services {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-        
-        .cloud-service {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 10px;
-            background: var(--bg-400);
-            border: 2px solid var(--border-200);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .cloud-service:hover { border-color: var(--cloud); }
-        .cloud-service--connected { border-color: var(--success); }
-        
-        .cloud-service__icon { font-size: 24px; }
-        .cloud-service__name { font-size: 9px; font-weight: 600; }
-        
-        .cloud-service__status {
-            font-size: 8px;
-            padding: 1px 4px;
-            border-radius: 3px;
-        }
-        
-        .cloud-service--connected .cloud-service__status {
-            background: var(--success);
-            color: var(--bg-100);
-        }
-        
-        /* Project info */
-        .project-info {
-            background: var(--bg-400);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-        
-        .project-info__header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .project-info__icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--cloud), var(--cyan));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        
-        .project-info__details { flex: 1; }
-        
-        .project-info__name {
-            font-size: 13px;
-            font-weight: 600;
-        }
-        
-        .project-info__id {
-            font-size: 9px;
-            color: var(--text-400);
-            font-family: monospace;
-        }
-        
-        .project-info__stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        
-        .project-stat {
-            text-align: center;
-        }
-        
-        .project-stat__value {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--cloud);
-        }
-        
-        .project-stat__label {
-            font-size: 8px;
-            color: var(--text-400);
-            text-transform: uppercase;
-        }
-        
-        /* Stats grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-        
-        .stat-card {
-            background: var(--bg-400);
-            border-radius: 6px;
-            padding: 8px;
-            text-align: center;
-        }
-        
-        .stat-card__label {
-            font-size: 8px;
-            color: var(--text-400);
-            text-transform: uppercase;
-        }
-        
-        .stat-card__value { font-size: 18px; font-weight: 700; }
-        
-        /* AI Models */
-        .ai-models {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        
-        .ai-model {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px;
-            background: var(--bg-400);
-            border: 1px solid var(--border-200);
-            border-radius: 6px;
-        }
-        
-        .ai-model--active { border-color: var(--success); }
-        
-        .ai-model__icon {
-            width: 28px;
-            height: 28px;
-            background: var(--bg-500);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        
-        .ai-model__info { flex: 1; }
-        .ai-model__name { font-size: 11px; font-weight: 600; }
-        .ai-model__status { font-size: 9px; color: var(--text-400); }
-        
-        .ai-model__toggle {
-            width: 32px;
-            height: 18px;
-            background: var(--bg-600);
-            border: none;
-            border-radius: 9px;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .ai-model__toggle::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 14px;
-            height: 14px;
-            background: var(--text-300);
-            border-radius: 50%;
-            transition: all 0.2s;
-        }
-        
-        .ai-model__toggle--on { background: var(--cloud); }
-        .ai-model__toggle--on::after { left: 16px; background: white; }
-        
-        /* Timeline */
-        .timeline-container {
-            background: var(--bg-300);
-            border-top: 1px solid var(--border-200);
-            padding: 6px 10px;
-        }
-        
-        .timeline-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
-        }
-        
-        .time-display {
-            font-family: 'SF Mono', monospace;
-            font-size: 11px;
-            color: var(--text-200);
-            min-width: 100px;
-        }
-        
-        .playback-controls {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .timeline-actions {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: auto;
-        }
-        
-        /* Timeline */
-        .multi-timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            background: var(--bg-400);
-            border-radius: 5px;
-            padding: 4px;
-        }
-        
-        .timeline-track {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            height: 22px;
-        }
-        
-        .timeline-track__label {
-            width: 60px;
-            font-size: 8px;
-            font-weight: 600;
-            color: var(--text-400);
-            text-transform: uppercase;
-        }
-        
-        .timeline-track__content {
-            flex: 1;
-            height: 100%;
-            background: var(--bg-500);
-            border-radius: 3px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .timeline-track__fill {
-            position: absolute;
-            top: 2px;
-            bottom: 2px;
-            left: 0;
-            border-radius: 2px;
-        }
-        
-        .timeline-track--video .timeline-track__fill { background: var(--primary); }
-        .timeline-track--cloud .timeline-track__fill { background: var(--cloud); }
-        .timeline-track--versions .timeline-track__fill { background: var(--success); }
-        
-        .timeline-cursor {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: var(--text-100);
-            z-index: 5;
-        }
-        
-        /* Version markers */
-        .timeline-version {
-            position: absolute;
-            top: 2px;
-            bottom: 2px;
-            width: 6px;
-            background: var(--success);
-            border-radius: 2px;
-            cursor: pointer;
-        }
-        
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            padding: 6px 12px;
-            background: var(--cloud);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .btn:hover { filter: brightness(1.1); }
-        .btn:active { transform: scale(0.98); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        .btn--secondary {
-            background: var(--bg-500);
-            color: var(--text-100);
-            border: 1px solid var(--border-200);
-        }
-        
-        .btn--icon {
-            width: 28px;
-            height: 28px;
-            padding: 0;
-            border-radius: 50%;
-            font-size: 12px;
-        }
-        
-        .btn--sm { padding: 4px 8px; font-size: 9px; }
-        
-        .btn--record {
-            width: 38px;
-            height: 38px;
-            background: var(--danger);
-            border: 2px solid var(--text-100);
-            box-shadow: var(--glow-danger);
-        }
-        
-        .btn--record.recording {
-            border-radius: 6px;
-            background: var(--text-100);
-        }
-        
-        .btn--record.recording::after {
-            content: '';
-            width: 12px;
-            height: 12px;
-            background: var(--danger);
-            border-radius: 2px;
-        }
-        
-        .speed-select {
-            background: var(--bg-500);
-            border: 1px solid var(--border-200);
-            border-radius: 4px;
-            padding: 4px 6px;
-            color: var(--text-100);
-            font-size: 10px;
-        }
-        
-        /* Toolbar */
-        .toolbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 10px;
-            background: var(--bg-400);
-            border-top: 1px solid var(--border-200);
-            padding-bottom: calc(6px + var(--safe-bottom));
-            gap: 6px;
-        }
-        
-        .toolbar__group {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            top: 50px;
-            right: 8px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        
-        .toast {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            background: var(--bg-400);
-            border: 1px solid var(--border-200);
-            border-radius: 6px;
-            font-size: 11px;
-            animation: toastIn 0.3s ease;
-        }
-        
-        .toast--success { border-left: 3px solid var(--success); }
-        .toast--warning { border-left: 3px solid var(--warning); }
-        .toast--error { border-left: 3px solid var(--danger); }
-        .toast--info { border-left: 3px solid var(--primary); }
-        .toast--cloud { border-left: 3px solid var(--cloud); }
-        
-        @keyframes toastIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        /* Input */
-        .input {
-            width: 100%;
-            padding: 8px 10px;
-            background: var(--bg-500);
-            border: 1px solid var(--border-200);
-            border-radius: 5px;
-            color: var(--text-100);
-            font-size: 12px;
-        }
-        
-        .input:focus {
-            outline: none;
-            border-color: var(--cloud);
-        }
-    </style>
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      padding: 30px 0;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 30px;
+    }
+    
+    h1 {
+      font-size: 2.5em;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1em;
+    }
+    
+    .main-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr 350px;
+      gap: 20px;
+    }
+    
+    @media (max-width: 1200px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    
+    .panel-title {
+      font-size: 1.2em;
+      color: var(--accent-cyan);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    /* Category Buttons */
+    .categories {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .category-btn {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      font-size: 0.95em;
+    }
+    
+    .category-btn:hover {
+      background: var(--bg-primary);
+      border-color: var(--accent-purple);
+    }
+    
+    .category-btn.active {
+      background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(0, 212, 255, 0.2));
+      border-color: var(--accent-purple);
+    }
+    
+    .category-icon {
+      margin-right: 10px;
+    }
+    
+    /* Main Solver Area */
+    .solver-area {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .input-section {
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    
+    .input-section label {
+      display: block;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-size: 0.9em;
+    }
+    
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    input[type="text"], input[type="number"], textarea {
+      flex: 1;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 1em;
+      font-family: 'Fira Code', monospace;
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .solve-btn {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+    
+    .solve-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(157, 78, 221, 0.4);
+    }
+    
+    /* Results */
+    .result-section {
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    
+    .result-title {
+      color: var(--accent-green);
+      font-size: 1.1em;
+      margin-bottom: 15px;
+    }
+    
+    .result-value {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.4em;
+      color: var(--accent-gold);
+      padding: 15px;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      word-break: break-all;
+    }
+    
+    /* Causal Chain Display */
+    .causal-chain {
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .causal-step {
+      padding: 10px;
+      border-left: 3px solid var(--accent-purple);
+      margin-bottom: 10px;
+      background: var(--bg-secondary);
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .causal-step-number {
+      color: var(--accent-cyan);
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    
+    .causal-step-effect {
+      color: var(--text-primary);
+      font-family: 'Fira Code', monospace;
+    }
+    
+    .causal-step-reason {
+      color: var(--text-secondary);
+      font-size: 0.85em;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    
+    .causal-arrow {
+      text-align: center;
+      color: var(--accent-purple);
+      font-size: 1.2em;
+      margin: 5px 0;
+    }
+    
+    /* Examples Panel */
+    .examples-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .example-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .example-item:hover {
+      border-color: var(--accent-cyan);
+      background: var(--bg-primary);
+    }
+    
+    .example-title {
+      color: var(--accent-cyan);
+      font-size: 0.9em;
+      margin-bottom: 5px;
+    }
+    
+    .example-code {
+      font-family: 'Fira Code', monospace;
+      color: var(--text-secondary);
+      font-size: 0.85em;
+    }
+    
+    /* Quick Operations */
+    .quick-ops {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    
+    .quick-op-btn {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      transition: all 0.2s;
+    }
+    
+    .quick-op-btn:hover {
+      background: var(--bg-secondary);
+      border-color: var(--accent-purple);
+    }
+    
+    /* Status indicator */
+    .status {
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 0.9em;
+    }
+    
+    .status.success {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+    }
+    
+    .status.error {
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+    }
+    
+    .status.info {
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+    
+    /* Additional inputs for specific operations */
+    .extra-inputs {
+      display: none;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .extra-inputs.visible {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-    <div class="toast-container" id="toastContainer"></div>
+  <div class="container">
+    <header>
+      <h1>🔮 MulluOS SCCM Math Solver</h1>
+      <p class="subtitle">Symbolic Causal Chain Mathematics — Every computation is traceable</p>
+    </header>
     
-    <div class="app">
-        <header class="header">
-            <div class="logo">
-                <div class="logo__icon">V</div>
-                <span class="logo__text">VIRECAI</span>
-                <span class="logo__version">v8.5 CLOUD</span>
+    <div class="main-grid">
+      <!-- Left Panel: Categories -->
+      <div class="panel">
+        <h2 class="panel-title">📚 Math Categories</h2>
+        <div class="categories">
+          <button class="category-btn active" data-category="arithmetic">
+            <span class="category-icon">🔢</span> Arithmetic & Number Theory
+          </button>
+          <button class="category-btn" data-category="algebra">
+            <span class="category-icon">📐</span> Algebra & Expressions
+          </button>
+          <button class="category-btn" data-category="calculus">
+            <span class="category-icon">∫</span> Calculus
+          </button>
+          <button class="category-btn" data-category="linear">
+            <span class="category-icon">📊</span> Linear Algebra
+          </button>
+          <button class="category-btn" data-category="equations">
+            <span class="category-icon">⚖️</span> Equation Solving
+          </button>
+          <button class="category-btn" data-category="combinatorics">
+            <span class="category-icon">🎲</span> Combinatorics
+          </button>
+          <button class="category-btn" data-category="statistics">
+            <span class="category-icon">📈</span> Statistics
+          </button>
+          <button class="category-btn" data-category="graph">
+            <span class="category-icon">🕸️</span> Graph Theory
+          </button>
+        </div>
+      </div>
+      
+      <!-- Center: Main Solver -->
+      <div class="solver-area">
+        <div class="panel">
+          <h2 class="panel-title">🧮 Symbolic Math Solver</h2>
+          
+          <div class="input-section">
+            <label id="input-label">Enter expression or value:</label>
+            <div class="input-row">
+              <input type="text" id="main-input" placeholder="e.g., 2 + 3 * 4, gcd(48, 18), diff(x^2)">
             </div>
             
-            <div class="header__center">
-                <div class="mode-tabs">
-                    <button class="mode-tab mode-tab--active" data-mode="capture">Capture</button>
-                    <button class="mode-tab" data-mode="edit">Edit</button>
-                    <button class="mode-tab" data-mode="templates">Templates</button>
-                    <button class="mode-tab" data-mode="export">Export</button>
-                </div>
+            <div id="extra-inputs" class="extra-inputs">
+              <label id="extra-label">Additional parameters:</label>
+              <div class="input-row">
+                <input type="text" id="extra-input" placeholder="Variable or parameter">
+              </div>
             </div>
             
-            <div class="header__actions">
-                <div class="badge badge--cloud" id="cloudBadge">
-                    <span class="badge__dot">☁️</span>
-                    <span id="cloudStatus">Synced</span>
-                </div>
-                <div class="badge badge--ai loading" id="aiBadge">
-                    <span class="badge__dot"></span>
-                    <span id="aiStatus">0/3</span>
-                </div>
-                <div class="status-indicator">
-                    <div class="status-dot" id="statusDot"></div>
-                    <span id="statusText">Ready</span>
-                </div>
-            </div>
-        </header>
-        
-        <main class="main">
-            <div class="viewport" id="viewport">
-                <video class="viewport__video" id="video" autoplay playsinline muted></video>
-                <video class="viewport__video hidden" id="playbackVideo" playsinline></video>
-                
-                <div class="viewport__placeholder" id="placeholder">
-                    <div class="viewport__placeholder-icon">☁️</div>
-                    <div id="placeholderText">Cloud Studio</div>
-                    <button class="btn" onclick="requestCamera()">Start Recording</button>
-                </div>
-                
-                <div class="overlay" id="detectionOverlay"></div>
-                <canvas class="overlay" id="poseCanvas"></canvas>
-                
-                <!-- Cloud sync indicator -->
-                <div class="sync-indicator hidden" id="syncIndicator">
-                    <div class="sync-indicator__spinner"></div>
-                    <span id="syncText">Syncing to cloud...</span>
-                </div>
-                
-                <div class="float-panel float-panel--tl">
-                    <div class="float-panel__label">Duration</div>
-                    <div class="float-panel__value" id="timeDisplay">0:00<span class="float-panel__unit">.00</span></div>
-                </div>
-                
-                <div class="float-panel float-panel--tr">
-                    <div class="float-panel__label">Version</div>
-                    <div class="float-panel__value"><span id="versionNumber">1</span></div>
-                </div>
-                
-                <div class="float-panel float-panel--bl">
-                    <div class="float-panel__label">Cloud</div>
-                    <span style="font-size:12px;color:var(--success)" id="cloudIcon">✓</span>
-                </div>
-                
-                <div class="float-panel float-panel--br">
-                    <div class="float-panel__label">Template</div>
-                    <span style="font-size:10px" id="templateName">None</span>
-                </div>
+            <div class="quick-ops" id="quick-ops">
+              <!-- Populated by JS based on category -->
             </div>
             
-            <aside class="sidebar">
-                <div class="sidebar__tabs">
-                    <button class="sidebar__tab sidebar__tab--active" data-tab="cloud" onclick="switchTab('cloud')">☁️</button>
-                    <button class="sidebar__tab" data-tab="versions" onclick="switchTab('versions')">📜</button>
-                    <button class="sidebar__tab" data-tab="templates" onclick="switchTab('templates')">🎨</button>
-                    <button class="sidebar__tab" data-tab="export" onclick="switchTab('export')">📤</button>
-                    <button class="sidebar__tab" data-tab="ai" onclick="switchTab('ai')">🧠</button>
-                </div>
-                
-                <div class="sidebar__content">
-                    <!-- Cloud Panel -->
-                    <div class="sidebar__panel sidebar__panel--active" id="cloudPanel">
-                        <div class="panel-title">☁️ Cloud Sync <span class="panel-title__badge">AUTO</span></div>
-                        
-                        <div class="project-info">
-                            <div class="project-info__header">
-                                <div class="project-info__icon">🎬</div>
-                                <div class="project-info__details">
-                                    <div class="project-info__name" id="projectName">Untitled Project</div>
-                                    <div class="project-info__id" id="projectId">vrc-abc123xyz</div>
-                                </div>
-                            </div>
-                            <div class="project-info__stats">
-                                <div class="project-stat">
-                                    <div class="project-stat__value" id="projectVersions">1</div>
-                                    <div class="project-stat__label">Versions</div>
-                                </div>
-                                <div class="project-stat">
-                                    <div class="project-stat__value" id="projectSize">0</div>
-                                    <div class="project-stat__label">MB</div>
-                                </div>
-                                <div class="project-stat">
-                                    <div class="project-stat__value" id="projectEdits">0</div>
-                                    <div class="project-stat__label">Edits</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="cloud-storage">
-                            <div class="cloud-storage__header">
-                                <span class="cloud-storage__title">Storage</span>
-                                <span class="cloud-storage__status">● Connected</span>
-                            </div>
-                            <div class="cloud-storage__bar">
-                                <div class="cloud-storage__fill" id="storageFill" style="width:23%"></div>
-                            </div>
-                            <div class="cloud-storage__info">
-                                <span>2.3 GB used</span>
-                                <span>10 GB total</span>
-                            </div>
-                        </div>
-                        
-                        <div class="panel-title">Connected Services</div>
-                        <div class="cloud-services">
-                            <div class="cloud-service cloud-service--connected" onclick="toggleCloudService('drive')">
-                                <span class="cloud-service__icon">📁</span>
-                                <span class="cloud-service__name">Drive</span>
-                                <span class="cloud-service__status">✓</span>
-                            </div>
-                            <div class="cloud-service" onclick="toggleCloudService('dropbox')">
-                                <span class="cloud-service__icon">📦</span>
-                                <span class="cloud-service__name">Dropbox</span>
-                                <span class="cloud-service__status">Connect</span>
-                            </div>
-                            <div class="cloud-service" onclick="toggleCloudService('youtube')">
-                                <span class="cloud-service__icon">▶️</span>
-                                <span class="cloud-service__name">YouTube</span>
-                                <span class="cloud-service__status">Connect</span>
-                            </div>
-                        </div>
-                        
-                        <button class="btn" style="width:100%" onclick="syncNow()">
-                            ☁️ Sync Now
-                        </button>
-                    </div>
-                    
-                    <!-- Versions Panel -->
-                    <div class="sidebar__panel" id="versionsPanel">
-                        <div class="panel-title">📜 Version History <span class="panel-title__badge">AUTO-SAVE</span></div>
-                        
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-card__label">Total Versions</div>
-                                <div class="stat-card__value" id="totalVersions">1</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card__label">Current</div>
-                                <div class="stat-card__value" id="currentVersion">v1</div>
-                            </div>
-                        </div>
-                        
-                        <div class="version-list" id="versionList">
-                            <div class="version-item version-item--current">
-                                <div class="version-item__icon">✓</div>
-                                <div class="version-item__info">
-                                    <div class="version-item__name">Version 1 (Current)</div>
-                                    <div class="version-item__meta">Just now • Auto-saved</div>
-                                </div>
-                                <div class="version-item__actions">
-                                    <button class="version-item__btn" title="Download">⬇️</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn--secondary" style="width:100%;margin-top:10px" onclick="createVersion()">
-                            + Create New Version
-                        </button>
-                        
-                        <button class="btn btn--secondary" style="width:100%;margin-top:6px" onclick="compareVersions()">
-                            🔀 Compare Versions
-                        </button>
-                    </div>
-                    
-                    <!-- Templates Panel -->
-                    <div class="sidebar__panel" id="templatesPanel">
-                        <div class="panel-title">🎨 Project Templates</div>
-                        
-                        <input type="text" class="input" placeholder="Search templates..." style="margin-bottom:12px">
-                        
-                        <div class="template-grid" id="templateGrid">
-                            <div class="template-card" onclick="selectTemplate('vlog')">
-                                <div class="template-card__preview" style="background:linear-gradient(135deg,#ff6b6b,#feca57)">📹</div>
-                                <div class="template-card__info">
-                                    <div class="template-card__name">Vlog Style</div>
-                                    <div class="template-card__desc">Quick cuts, dynamic</div>
-                                </div>
-                            </div>
-                            <div class="template-card" onclick="selectTemplate('cinematic')">
-                                <div class="template-card__preview" style="background:linear-gradient(135deg,#2d3436,#636e72)">🎬</div>
-                                <div class="template-card__info">
-                                    <div class="template-card__name">Cinematic</div>
-                                    <div class="template-card__desc">21:9, film look</div>
-                                </div>
-                            </div>
-                            <div class="template-card" onclick="selectTemplate('tutorial')">
-                                <div class="template-card__preview" style="background:linear-gradient(135deg,#0984e3,#74b9ff)">📚</div>
-                                <div class="template-card__info">
-                                    <div class="template-card__name">Tutorial</div>
-                                    <div class="template-card__desc">Clean, informative</div>
-                                </div>
-                            </div>
-                            <div class="template-card" onclick="selectTemplate('social')">
-                                <div class="template-card__preview" style="background:linear-gradient(135deg,#e056fd,#686de0)">📱</div>
-                                <div class="template-card__info">
-                                    <div class="template-card__name">Social</div>
-                                    <div class="template-card__desc">9:16 vertical</div>
-                                    <span class="template-card__badge">Popular</span>
-                                </div>
-                            </div>
-                            <div class="template-card" onclick="selectTemplate('podcast')">
-                                <div class="template-card__preview" style="background:linear-gradient(135deg,#00b894,#55efc4)">🎙️</div>
-                                <div class="template-card__info">
-                                    <div class="template-card__name">Podcast</div>
-                                    <div class="template-card__desc">Audio-focused</div>
-                                </div>
-                            </div>
-                            <div class="template-card" onclick="selectTemplate('custom')">
-                                <div class="template-card__preview" style="background:var(--bg-500)">➕</div>
-                                <div class="template-card__info">
-                                    <div class="template-card__name">Custom</div>
-                                    <div class="template-card__desc">Create your own</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn" style="width:100%" onclick="applyTemplate()">
-                            Apply Template
-                        </button>
-                    </div>
-                    
-                    <!-- Export Panel -->
-                    <div class="sidebar__panel" id="exportPanel">
-                        <div class="panel-title">📤 Export Presets</div>
-                        
-                        <div class="export-presets" id="exportPresets">
-                            <div class="export-preset export-preset--selected" onclick="selectExportPreset('youtube')">
-                                <div class="export-preset__icon">▶️</div>
-                                <div class="export-preset__info">
-                                    <div class="export-preset__name">YouTube HD</div>
-                                    <div class="export-preset__specs">1080p • H.264 • 8 Mbps • AAC</div>
-                                </div>
-                                <div class="export-preset__size">~85 MB/min</div>
-                            </div>
-                            <div class="export-preset" onclick="selectExportPreset('youtube4k')">
-                                <div class="export-preset__icon">🎬</div>
-                                <div class="export-preset__info">
-                                    <div class="export-preset__name">YouTube 4K</div>
-                                    <div class="export-preset__specs">2160p • H.265 • 35 Mbps • AAC</div>
-                                </div>
-                                <div class="export-preset__size">~260 MB/min</div>
-                            </div>
-                            <div class="export-preset" onclick="selectExportPreset('instagram')">
-                                <div class="export-preset__icon">📷</div>
-                                <div class="export-preset__info">
-                                    <div class="export-preset__name">Instagram Reels</div>
-                                    <div class="export-preset__specs">1080x1920 • H.264 • 6 Mbps</div>
-                                </div>
-                                <div class="export-preset__size">~45 MB/min</div>
-                            </div>
-                            <div class="export-preset" onclick="selectExportPreset('tiktok')">
-                                <div class="export-preset__icon">🎵</div>
-                                <div class="export-preset__info">
-                                    <div class="export-preset__name">TikTok</div>
-                                    <div class="export-preset__specs">1080x1920 • H.264 • 4 Mbps</div>
-                                </div>
-                                <div class="export-preset__size">~30 MB/min</div>
-                            </div>
-                            <div class="export-preset" onclick="selectExportPreset('twitter')">
-                                <div class="export-preset__icon">🐦</div>
-                                <div class="export-preset__info">
-                                    <div class="export-preset__name">Twitter/X</div>
-                                    <div class="export-preset__specs">1280x720 • H.264 • 5 Mbps</div>
-                                </div>
-                                <div class="export-preset__size">~38 MB/min</div>
-                            </div>
-                            <div class="export-preset" onclick="selectExportPreset('web')">
-                                <div class="export-preset__icon">🌐</div>
-                                <div class="export-preset__info">
-                                    <div class="export-preset__name">Web Optimized</div>
-                                    <div class="export-preset__specs">720p • WebM/VP9 • 2 Mbps</div>
-                                </div>
-                                <div class="export-preset__size">~15 MB/min</div>
-                            </div>
-                            <div class="export-preset" onclick="selectExportPreset('gif')">
-                                <div class="export-preset__icon">🎞️</div>
-                                <div class="export-preset__info">
-                                    <div class="export-preset__name">GIF</div>
-                                    <div class="export-preset__specs">480p • 10 FPS • 256 colors</div>
-                                </div>
-                                <div class="export-preset__size">~8 MB/min</div>
-                            </div>
-                            <div class="export-preset" onclick="selectExportPreset('archive')">
-                                <div class="export-preset__icon">💾</div>
-                                <div class="export-preset__info">
-                                    <div class="export-preset__name">Archive Master</div>
-                                    <div class="export-preset__specs">4K • ProRes • Lossless</div>
-                                </div>
-                                <div class="export-preset__size">~1.2 GB/min</div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn" style="width:100%;margin-top:12px" onclick="exportWithPreset()">
-                            📤 Export Video
-                        </button>
-                        
-                        <button class="btn btn--secondary" style="width:100%;margin-top:6px" onclick="exportToCloud()">
-                            ☁️ Export to Cloud
-                        </button>
-                    </div>
-                    
-                    <!-- AI Panel -->
-                    <div class="sidebar__panel" id="aiPanel">
-                        <div class="panel-title">🧠 AI Models</div>
-                        <div class="ai-models">
-                            <div class="ai-model ai-model--active" id="cocoModel">
-                                <div class="ai-model__icon">🎯</div>
-                                <div class="ai-model__info">
-                                    <div class="ai-model__name">COCO-SSD</div>
-                                    <div class="ai-model__status" id="cocoStatus">Loading...</div>
-                                </div>
-                                <button class="ai-model__toggle ai-model__toggle--on" id="cocoToggle" onclick="toggleModel('coco')"></button>
-                            </div>
-                            <div class="ai-model" id="blazefaceModel">
-                                <div class="ai-model__icon">👤</div>
-                                <div class="ai-model__info">
-                                    <div class="ai-model__name">BlazeFace</div>
-                                    <div class="ai-model__status" id="blazefaceStatus">Loading...</div>
-                                </div>
-                                <button class="ai-model__toggle ai-model__toggle--on" id="blazefaceToggle" onclick="toggleModel('blazeface')"></button>
-                            </div>
-                            <div class="ai-model" id="movenetModel">
-                                <div class="ai-model__icon">🏃</div>
-                                <div class="ai-model__info">
-                                    <div class="ai-model__name">MoveNet</div>
-                                    <div class="ai-model__status" id="movenetStatus">Loading...</div>
-                                </div>
-                                <button class="ai-model__toggle ai-model__toggle--on" id="movenetToggle" onclick="toggleModel('movenet')"></button>
-                            </div>
-                        </div>
-                        
-                        <div class="panel-title" style="margin-top:12px">Detection Stats</div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-card__label">Objects</div>
-                                <div class="stat-card__value" id="objectCount">0</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card__label">Faces</div>
-                                <div class="stat-card__value" id="faceCount">0</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </main>
-        
-        <!-- Timeline -->
-        <div class="timeline-container">
-            <div class="timeline-controls">
-                <div class="time-display">
-                    <span id="currentTime">0:00.00</span> / <span id="totalTime">0:00.00</span>
-                </div>
-                
-                <div class="playback-controls">
-                    <button class="btn btn--secondary btn--icon" onclick="jumpBack()">⏪</button>
-                    <button class="btn btn--record" id="recordBtn" onclick="toggleRecording()"></button>
-                    <button class="btn btn--secondary btn--icon" id="playBtn" onclick="togglePlayback()">▶️</button>
-                    <button class="btn btn--secondary btn--icon" onclick="jumpForward()">⏩</button>
-                </div>
-                
-                <div class="timeline-actions">
-                    <button class="btn btn--secondary btn--icon" onclick="createVersion()" title="Save Version">💾</button>
-                    <select class="speed-select" id="speedSelect" onchange="setSpeed()">
-                        <option value="0.5">0.5x</option>
-                        <option value="1" selected>1x</option>
-                        <option value="1.5">1.5x</option>
-                        <option value="2">2x</option>
-                    </select>
-                    <button class="btn btn--secondary btn--icon" onclick="switchCamera()">🔄</button>
-                </div>
-            </div>
-            
-            <div class="multi-timeline">
-                <div class="timeline-track timeline-track--video">
-                    <div class="timeline-track__label">🎬 Video</div>
-                    <div class="timeline-track__content">
-                        <div class="timeline-track__fill" id="videoTrackFill" style="width:0%"></div>
-                        <div class="timeline-cursor" id="videoCursor"></div>
-                    </div>
-                </div>
-                <div class="timeline-track timeline-track--versions">
-                    <div class="timeline-track__label">📜 Versions</div>
-                    <div class="timeline-track__content" id="versionsTrackContent"></div>
-                </div>
-                <div class="timeline-track timeline-track--cloud">
-                    <div class="timeline-track__label">☁️ Sync</div>
-                    <div class="timeline-track__content">
-                        <div class="timeline-track__fill" id="cloudTrackFill" style="width:0%"></div>
-                    </div>
-                </div>
-            </div>
+            <button class="solve-btn" onclick="solve()">⚡ Solve with Causal Trace</button>
+          </div>
         </div>
         
-        <div class="toolbar">
-            <div class="toolbar__group">
-                <button class="btn btn--secondary btn--icon" onclick="undo()">↩️</button>
-                <button class="btn btn--secondary btn--icon" onclick="redo()">↪️</button>
+        <div class="panel">
+          <h2 class="panel-title">📋 Result</h2>
+          
+          <div id="status" class="status info">Ready to solve</div>
+          
+          <div class="result-section">
+            <div class="result-title">Answer:</div>
+            <div class="result-value" id="result">—</div>
+          </div>
+          
+          <div class="result-section">
+            <div class="result-title">Causal Chain (WHY this result):</div>
+            <div class="causal-chain" id="causal-chain">
+              <div class="causal-step">
+                <span class="causal-step-number">[0]</span>
+                <span class="causal-step-effect">Waiting for input...</span>
+              </div>
             </div>
-            
-            <div class="toolbar__group">
-                <button class="btn btn--secondary btn--icon" onclick="syncNow()">☁️</button>
-                <button class="btn" onclick="exportWithPreset()">📤 Export</button>
-            </div>
+          </div>
         </div>
+      </div>
+      
+      <!-- Right Panel: Examples -->
+      <div class="panel">
+        <h2 class="panel-title">💡 Examples</h2>
+        <div class="examples-list" id="examples">
+          <!-- Populated by JS based on category -->
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // ═══════════════════════════════════════════════════════════════════════
-        // VIRECAI v8.5 CLOUD STUDIO
-        // Cloud Sync, Version History, Templates, Export Presets
-        // ═══════════════════════════════════════════════════════════════════════
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════
+    // SCCM MATH ENGINE (Embedded)
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    class CausalChain {
+      constructor(name) {
+        this.name = name;
+        this.links = [];
+      }
+      
+      addLink(effect, result, reason) {
+        this.links.push({ effect, result, reason });
+        return result;
+      }
+      
+      getHTML() {
+        return this.links.map((link, i) => `
+          <div class="causal-step">
+            <span class="causal-step-number">[${i}]</span>
+            <span class="causal-step-effect">${link.effect}: ${this.formatResult(link.result)}</span>
+            <div class="causal-step-reason">↳ ${link.reason}</div>
+          </div>
+          ${i < this.links.length - 1 ? '<div class="causal-arrow">↓</div>' : ''}
+        `).join('');
+      }
+      
+      formatResult(r) {
+        if (r === null || r === undefined) return '—';
+        if (Array.isArray(r)) return '[' + r.join(', ') + ']';
+        if (typeof r === 'object') return JSON.stringify(r);
+        return String(r);
+      }
+    }
+    
+    const MathEngine = {
+      // NUMBER THEORY
+      isPrime(n) {
+        const chain = new CausalChain('isPrime');
+        chain.addLink('input', n, `Check if ${n} is prime`);
         
-        const VERSION = '8.5.0';
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (n < 2) {
+          chain.addLink('result', false, 'Numbers less than 2 are not prime by definition');
+          return { result: false, chain };
+        }
         
-        console.log(`%cVIRECAI v${VERSION} CLOUD`, 'color:#3b82f6;font-size:20px;font-weight:bold');
+        if (n === 2) {
+          chain.addLink('result', true, '2 is the only even prime');
+          return { result: true, chain };
+        }
         
-        const $ = id => document.getElementById(id);
-        const $$ = sel => document.querySelectorAll(sel);
+        if (n % 2 === 0) {
+          chain.addLink('divisibility', 2, `${n} is divisible by 2`);
+          chain.addLink('result', false, 'Even numbers > 2 are not prime');
+          return { result: false, chain };
+        }
         
-        // ═══════════════════════════════════════════════════════════════════════
-        // STATE
-        // ═══════════════════════════════════════════════════════════════════════
+        const sqrtN = Math.floor(Math.sqrt(n));
+        chain.addLink('search_bound', sqrtN, `Only need to check divisors up to √${n} ≈ ${sqrtN}`);
         
-        const state = {
-            isRecording: false,
-            isPlaying: false,
-            cameraReady: false,
-            facingMode: 'user',
-            
-            stream: null,
-            mediaRecorder: null,
-            recordedChunks: [],
-            recordedBlob: null,
-            recordedUrl: null,
-            
-            // AI
-            models: {
-                coco: { instance: null, ready: false, enabled: true },
-                blazeface: { instance: null, ready: false, enabled: true },
-                movenet: { instance: null, ready: false, enabled: true }
-            },
-            
-            objects: [],
-            faces: [],
-            
-            // Cloud
-            projectId: 'vrc-' + Math.random().toString(36).slice(2, 11),
-            projectName: 'Untitled Project',
-            cloudConnected: true,
-            lastSync: Date.now(),
-            cloudServices: {
-                drive: true,
-                dropbox: false,
-                youtube: false
-            },
-            storageUsed: 2.3,
-            storageTotal: 10,
-            
-            // Versions
-            versions: [
-                { id: 1, name: 'Version 1', time: Date.now(), autoSave: true, current: true }
-            ],
-            currentVersionId: 1,
-            
-            // Templates
-            selectedTemplate: null,
-            templates: {
-                vlog: { name: 'Vlog Style', aspectRatio: '16:9', filter: 'vivid', transitions: 'quick' },
-                cinematic: { name: 'Cinematic', aspectRatio: '21:9', filter: 'cinematic', transitions: 'fade' },
-                tutorial: { name: 'Tutorial', aspectRatio: '16:9', filter: 'none', transitions: 'cut' },
-                social: { name: 'Social', aspectRatio: '9:16', filter: 'bright', transitions: 'swipe' },
-                podcast: { name: 'Podcast', aspectRatio: '16:9', filter: 'warm', transitions: 'none' }
-            },
-            
-            // Export
-            selectedPreset: 'youtube',
-            exportPresets: {
-                youtube: { name: 'YouTube HD', res: '1080p', codec: 'H.264', bitrate: 8, size: 85 },
-                youtube4k: { name: 'YouTube 4K', res: '2160p', codec: 'H.265', bitrate: 35, size: 260 },
-                instagram: { name: 'Instagram Reels', res: '1080x1920', codec: 'H.264', bitrate: 6, size: 45 },
-                tiktok: { name: 'TikTok', res: '1080x1920', codec: 'H.264', bitrate: 4, size: 30 },
-                twitter: { name: 'Twitter/X', res: '720p', codec: 'H.264', bitrate: 5, size: 38 },
-                web: { name: 'Web Optimized', res: '720p', codec: 'VP9', bitrate: 2, size: 15 },
-                gif: { name: 'GIF', res: '480p', codec: 'GIF', bitrate: 0, size: 8 },
-                archive: { name: 'Archive Master', res: '4K', codec: 'ProRes', bitrate: 0, size: 1200 }
-            },
-            
-            // Time
-            startTime: 0,
-            currentTime: 0,
-            frameCount: 0,
-            duration: 60000
+        for (let i = 3; i <= sqrtN; i += 2) {
+          if (n % i === 0) {
+            chain.addLink('divisor_found', i, `${n} ÷ ${i} = ${n/i} (exact division)`);
+            chain.addLink('result', false, `${n} has divisor ${i}, so not prime`);
+            return { result: false, chain };
+          }
+        }
+        
+        chain.addLink('result', true, `No divisors found up to ${sqrtN}, so ${n} is prime`);
+        return { result: true, chain };
+      },
+      
+      gcd(a, b) {
+        const chain = new CausalChain('gcd');
+        chain.addLink('input', [a, b], `Compute gcd(${a}, ${b}) using Euclidean algorithm`);
+        
+        let origA = a, origB = b;
+        let step = 1;
+        
+        while (b !== 0) {
+          const r = a % b;
+          chain.addLink(`step_${step}`, `gcd(${a}, ${b}) = gcd(${b}, ${r})`,
+            `${a} = ${b} × ${Math.floor(a/b)} + ${r}, so gcd preserved`);
+          a = b;
+          b = r;
+          step++;
+        }
+        
+        chain.addLink('result', a, `When b = 0, gcd = a = ${a}`);
+        return { result: a, chain };
+      },
+      
+      factorize(n) {
+        const chain = new CausalChain('factorize');
+        chain.addLink('input', n, `Find prime factorization of ${n}`);
+        
+        const factors = [];
+        let num = n;
+        let d = 2;
+        
+        while (num > 1) {
+          while (num % d === 0) {
+            factors.push(d);
+            chain.addLink(`factor`, d, `${num} ÷ ${d} = ${num/d}`);
+            num /= d;
+          }
+          d++;
+          if (d * d > num && num > 1) {
+            factors.push(num);
+            chain.addLink(`factor`, num, `${num} is prime, add directly`);
+            break;
+          }
+        }
+        
+        chain.addLink('result', factors, `${n} = ${factors.join(' × ')}`);
+        return { result: factors, chain };
+      },
+      
+      // ARITHMETIC
+      evaluate(expr) {
+        const chain = new CausalChain('evaluate');
+        chain.addLink('input', expr, `Evaluate expression: ${expr}`);
+        
+        try {
+          // Safe evaluation with math functions
+          const safeExpr = expr
+            .replace(/\^/g, '**')
+            .replace(/sin/g, 'Math.sin')
+            .replace(/cos/g, 'Math.cos')
+            .replace(/tan/g, 'Math.tan')
+            .replace(/sqrt/g, 'Math.sqrt')
+            .replace(/log/g, 'Math.log')
+            .replace(/exp/g, 'Math.exp')
+            .replace(/abs/g, 'Math.abs')
+            .replace(/pi/gi, 'Math.PI')
+            .replace(/e(?![xp])/gi, 'Math.E');
+          
+          chain.addLink('parse', safeExpr, `Parsed to JavaScript: ${safeExpr}`);
+          
+          const result = Function(`"use strict"; return (${safeExpr})`)();
+          chain.addLink('result', result, `Computed via JavaScript engine`);
+          
+          return { result, chain };
+        } catch (e) {
+          chain.addLink('error', e.message, 'Evaluation failed');
+          return { result: 'Error: ' + e.message, chain };
+        }
+      },
+      
+      // CALCULUS
+      derivative(expr, x = 3) {
+        const chain = new CausalChain('derivative');
+        chain.addLink('input', expr, `Compute d/dx(${expr}) numerically at x=${x}`);
+        
+        const h = 1e-7;
+        const f = (val) => {
+          const e = expr.replace(/x/g, `(${val})`).replace(/\^/g, '**');
+          return Function(`"use strict"; return (${e})`)();
         };
         
-        // ═══════════════════════════════════════════════════════════════════════
-        // TOAST
-        // ═══════════════════════════════════════════════════════════════════════
+        const fxh = f(x + h);
+        const fxmh = f(x - h);
+        chain.addLink('f(x+h)', fxh, `f(${x + h}) = ${fxh}`);
+        chain.addLink('f(x-h)', fxmh, `f(${x - h}) = ${fxmh}`);
         
-        function toast(msg, type = 'info') {
-            const el = document.createElement('div');
-            el.className = `toast toast--${type}`;
-            el.textContent = msg;
-            $('toastContainer').appendChild(el);
-            setTimeout(() => el.remove(), 3000);
+        const deriv = (fxh - fxmh) / (2 * h);
+        chain.addLink('result', deriv, `[f(x+h) - f(x-h)] / 2h = ${deriv}`);
+        
+        return { result: deriv, chain };
+      },
+      
+      integrate(expr, a, b) {
+        const chain = new CausalChain('integrate');
+        chain.addLink('input', [expr, a, b], `Compute ∫${expr} dx from ${a} to ${b}`);
+        
+        const n = 1000;
+        const h = (b - a) / n;
+        chain.addLink('setup', { n, h }, `Using Simpson's rule with ${n} intervals, h = ${h}`);
+        
+        const f = (val) => {
+          const e = expr.replace(/x/g, `(${val})`).replace(/\^/g, '**');
+          return Function(`"use strict"; return (${e})`)();
+        };
+        
+        let sum = f(a) + f(b);
+        for (let i = 1; i < n; i++) {
+          sum += (i % 2 === 0 ? 2 : 4) * f(a + i * h);
         }
         
-        // ═══════════════════════════════════════════════════════════════════════
-        // AI MODELS
-        // ═══════════════════════════════════════════════════════════════════════
+        const result = (h / 3) * sum;
+        chain.addLink('result', result, `∫${expr} dx from ${a} to ${b} ≈ ${result}`);
         
-        async function loadAIModels() {
-            let loaded = 0;
-            const update = () => {
-                $('aiStatus').textContent = `${loaded}/3`;
-                if (loaded === 3) $('aiBadge').classList.remove('loading');
-            };
-            
-            try {
-                $('cocoStatus').textContent = 'Loading...';
-                state.models.coco.instance = await cocoSsd.load();
-                state.models.coco.ready = true;
-                $('cocoStatus').textContent = '80 classes';
-                $('cocoModel').classList.add('ai-model--active');
-                loaded++; update();
-            } catch (e) { $('cocoStatus').textContent = 'Failed'; loaded++; update(); }
-            
-            try {
-                $('blazefaceStatus').textContent = 'Loading...';
-                state.models.blazeface.instance = await blazeface.load();
-                state.models.blazeface.ready = true;
-                $('blazefaceStatus').textContent = '6 landmarks';
-                $('blazefaceModel').classList.add('ai-model--active');
-                loaded++; update();
-            } catch (e) { $('blazefaceStatus').textContent = 'Failed'; loaded++; update(); }
-            
-            try {
-                $('movenetStatus').textContent = 'Loading...';
-                state.models.movenet.instance = await poseDetection.createDetector(
-                    poseDetection.SupportedModels.MoveNet,
-                    { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING }
-                );
-                state.models.movenet.ready = true;
-                $('movenetStatus').textContent = '17 keypoints';
-                $('movenetModel').classList.add('ai-model--active');
-                loaded++; update();
-            } catch (e) { $('movenetStatus').textContent = 'Failed'; loaded++; update(); }
-            
-            toast(`${loaded} AI models loaded`, 'success');
+        return { result, chain };
+      },
+      
+      // LINEAR ALGEBRA
+      dot(a, b) {
+        const chain = new CausalChain('dot_product');
+        chain.addLink('input', [a, b], `Compute dot product of vectors`);
+        
+        let sum = 0;
+        for (let i = 0; i < a.length; i++) {
+          sum += a[i] * b[i];
+          chain.addLink(`component_${i}`, a[i] * b[i], `${a[i]} × ${b[i]} = ${a[i] * b[i]}`);
         }
         
-        function toggleModel(name) {
-            state.models[name].enabled = !state.models[name].enabled;
-            $(`${name}Toggle`).classList.toggle('ai-model__toggle--on', state.models[name].enabled);
-        }
+        chain.addLink('result', sum, `Sum of products = ${sum}`);
+        return { result: sum, chain };
+      },
+      
+      matmul(A, B) {
+        const chain = new CausalChain('matrix_multiply');
+        chain.addLink('input', { A, B }, `Multiply matrices`);
         
-        async function runAIDetection() {
-            if (!state.cameraReady) return;
-            const video = $('video');
-            if (video.readyState < 2) return;
-            
-            if (state.models.coco.ready && state.models.coco.enabled) {
-                try { state.objects = await state.models.coco.instance.detect(video); } catch (e) {}
+        const m = A.length, n = B[0].length, k = B.length;
+        const C = Array(m).fill(null).map(() => Array(n).fill(0));
+        
+        for (let i = 0; i < m; i++) {
+          for (let j = 0; j < n; j++) {
+            for (let l = 0; l < k; l++) {
+              C[i][j] += A[i][l] * B[l][j];
             }
-            
-            if (state.models.blazeface.ready && state.models.blazeface.enabled) {
-                try { state.faces = await state.models.blazeface.instance.estimateFaces(video, false); } catch (e) {}
-            }
-            
-            $('objectCount').textContent = state.objects.length;
-            $('faceCount').textContent = state.faces.length;
+          }
         }
         
-        // ═══════════════════════════════════════════════════════════════════════
-        // CLOUD SYNC
-        // ═══════════════════════════════════════════════════════════════════════
+        chain.addLink('result', C, `Result matrix computed`);
+        return { result: C, chain };
+      },
+      
+      determinant(M) {
+        const chain = new CausalChain('determinant');
+        chain.addLink('input', M, `Compute determinant`);
         
-        function syncNow() {
-            showSyncIndicator('Syncing to cloud...');
-            $('cloudBadge').classList.add('syncing');
-            
-            setTimeout(() => {
-                hideSyncIndicator();
-                $('cloudBadge').classList.remove('syncing');
-                state.lastSync = Date.now();
-                $('cloudStatus').textContent = 'Synced';
-                toast('Project synced to cloud', 'cloud');
-                
-                // Update cloud track
-                $('cloudTrackFill').style.width = '100%';
-            }, 1500);
+        const n = M.length;
+        if (n === 2) {
+          const det = M[0][0] * M[1][1] - M[0][1] * M[1][0];
+          chain.addLink('2x2_formula', det, `ad - bc = ${M[0][0]}×${M[1][1]} - ${M[0][1]}×${M[1][0]} = ${det}`);
+          return { result: det, chain };
         }
         
-        function showSyncIndicator(text) {
-            $('syncText').textContent = text;
-            $('syncIndicator').classList.remove('hidden');
+        // Expansion by first row
+        let det = 0;
+        for (let j = 0; j < n; j++) {
+          const minor = M.slice(1).map(row => [...row.slice(0, j), ...row.slice(j + 1)]);
+          const cofactor = Math.pow(-1, j) * M[0][j] * this.determinant(minor).result;
+          det += cofactor;
         }
         
-        function hideSyncIndicator() {
-            $('syncIndicator').classList.add('hidden');
+        chain.addLink('result', det, `Determinant = ${det}`);
+        return { result: det, chain };
+      },
+      
+      // EQUATION SOLVING
+      solveLinear(a, b) {
+        const chain = new CausalChain('solve_linear');
+        chain.addLink('input', `${a}x + ${b} = 0`, `Solve linear equation`);
+        
+        const x = -b / a;
+        chain.addLink('isolate', `x = -${b} / ${a}`, `Subtract ${b}, divide by ${a}`);
+        chain.addLink('result', x, `x = ${x}`);
+        
+        return { result: x, chain };
+      },
+      
+      solveQuadratic(a, b, c) {
+        const chain = new CausalChain('solve_quadratic');
+        chain.addLink('input', `${a}x² + ${b}x + ${c} = 0`, `Solve quadratic equation`);
+        
+        const discriminant = b * b - 4 * a * c;
+        chain.addLink('discriminant', discriminant, `Δ = b² - 4ac = ${b}² - 4×${a}×${c} = ${discriminant}`);
+        
+        if (discriminant < 0) {
+          const real = -b / (2 * a);
+          const imag = Math.sqrt(-discriminant) / (2 * a);
+          chain.addLink('complex_roots', true, `Δ < 0 means complex roots`);
+          chain.addLink('result', [`${real} + ${imag}i`, `${real} - ${imag}i`], `Two complex conjugate roots`);
+          return { result: [`${real.toFixed(4)} + ${imag.toFixed(4)}i`, `${real.toFixed(4)} - ${imag.toFixed(4)}i`], chain };
         }
         
-        function toggleCloudService(service) {
-            state.cloudServices[service] = !state.cloudServices[service];
-            
-            const el = document.querySelector(`.cloud-service[onclick*="${service}"]`);
-            if (el) {
-                el.classList.toggle('cloud-service--connected', state.cloudServices[service]);
-                el.querySelector('.cloud-service__status').textContent = 
-                    state.cloudServices[service] ? '✓' : 'Connect';
-            }
-            
-            toast(`${service} ${state.cloudServices[service] ? 'connected' : 'disconnected'}`, 'cloud');
+        const sqrtD = Math.sqrt(discriminant);
+        const x1 = (-b + sqrtD) / (2 * a);
+        const x2 = (-b - sqrtD) / (2 * a);
+        
+        chain.addLink('formula', `x = (-b ± √Δ) / 2a`, `Apply quadratic formula`);
+        chain.addLink('result', [x1, x2], discriminant === 0 ? `One repeated root: ${x1}` : `Two roots: ${x1}, ${x2}`);
+        
+        return { result: discriminant === 0 ? [x1] : [x1, x2], chain };
+      },
+      
+      // COMBINATORICS
+      factorial(n) {
+        const chain = new CausalChain('factorial');
+        chain.addLink('input', n, `Compute ${n}!`);
+        
+        let result = 1;
+        for (let i = 2; i <= n; i++) {
+          result *= i;
         }
         
-        function updateProjectInfo() {
-            $('projectName').textContent = state.projectName;
-            $('projectId').textContent = state.projectId;
-            $('projectVersions').textContent = state.versions.length;
-            $('projectSize').textContent = (state.recordedBlob?.size / 1024 / 1024 || 0).toFixed(1);
-            $('projectEdits').textContent = state.frameCount;
-            
-            // Storage bar
-            const percent = (state.storageUsed / state.storageTotal) * 100;
-            $('storageFill').style.width = `${percent}%`;
+        chain.addLink('definition', `${n}! = ${n} × ${n-1} × ... × 2 × 1`, `Product of all positive integers up to ${n}`);
+        chain.addLink('result', result, `${n}! = ${result}`);
+        
+        return { result, chain };
+      },
+      
+      C(n, r) {
+        const chain = new CausalChain('combination');
+        chain.addLink('input', [n, r], `Compute C(${n}, ${r})`);
+        
+        if (r > n) {
+          chain.addLink('result', 0, `r > n, so C(n,r) = 0`);
+          return { result: 0, chain };
         }
         
-        // Auto-sync every 30 seconds
-        setInterval(() => {
-            if (state.cloudConnected && state.isRecording) {
-                $('cloudStatus').textContent = 'Syncing...';
-                setTimeout(() => {
-                    $('cloudStatus').textContent = 'Synced';
-                }, 500);
-            }
-        }, 30000);
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // VERSION HISTORY
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function createVersion() {
-            const newVersion = {
-                id: state.versions.length + 1,
-                name: `Version ${state.versions.length + 1}`,
-                time: Date.now(),
-                autoSave: false,
-                current: true
-            };
-            
-            // Mark all others as not current
-            state.versions.forEach(v => v.current = false);
-            state.versions.unshift(newVersion);
-            state.currentVersionId = newVersion.id;
-            
-            updateVersionList();
-            updateVersionTimeline();
-            
-            $('versionNumber').textContent = newVersion.id;
-            $('totalVersions').textContent = state.versions.length;
-            $('currentVersion').textContent = `v${newVersion.id}`;
-            $('projectVersions').textContent = state.versions.length;
-            
-            toast(`Version ${newVersion.id} created`, 'success');
+        let num = 1, den = 1;
+        for (let i = 0; i < r; i++) {
+          num *= (n - i);
+          den *= (i + 1);
         }
         
-        function updateVersionList() {
-            const list = $('versionList');
-            list.innerHTML = state.versions.map(v => `
-                <div class="version-item ${v.current ? 'version-item--current' : ''}" onclick="loadVersion(${v.id})">
-                    <div class="version-item__icon">${v.current ? '✓' : '📄'}</div>
-                    <div class="version-item__info">
-                        <div class="version-item__name">${v.name} ${v.current ? '(Current)' : ''}</div>
-                        <div class="version-item__meta">${formatTimeAgo(v.time)} • ${v.autoSave ? 'Auto-saved' : 'Manual'}</div>
-                    </div>
-                    <div class="version-item__actions">
-                        <button class="version-item__btn" title="Download" onclick="event.stopPropagation();downloadVersion(${v.id})">⬇️</button>
-                        ${!v.current ? `<button class="version-item__btn" title="Restore" onclick="event.stopPropagation();restoreVersion(${v.id})">↩️</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
+        const result = num / den;
+        chain.addLink('formula', `n! / (r!(n-r)!)`, `C(n,r) = ${n}! / (${r}! × ${n-r}!)`);
+        chain.addLink('result', result, `C(${n}, ${r}) = ${result}`);
+        
+        return { result, chain };
+      },
+      
+      // STATISTICS
+      mean(data) {
+        const chain = new CausalChain('mean');
+        chain.addLink('input', data, `Compute mean of ${data.length} values`);
+        
+        const sum = data.reduce((a, b) => a + b, 0);
+        chain.addLink('sum', sum, `Sum = ${sum}`);
+        
+        const result = sum / data.length;
+        chain.addLink('result', result, `Mean = ${sum} / ${data.length} = ${result}`);
+        
+        return { result, chain };
+      },
+      
+      variance(data) {
+        const chain = new CausalChain('variance');
+        chain.addLink('input', data, `Compute variance`);
+        
+        const m = data.reduce((a, b) => a + b, 0) / data.length;
+        chain.addLink('mean', m, `Mean = ${m}`);
+        
+        const sumSqDiff = data.reduce((sum, x) => sum + (x - m) ** 2, 0);
+        chain.addLink('sum_squared_diff', sumSqDiff, `Σ(xᵢ - μ)² = ${sumSqDiff}`);
+        
+        const result = sumSqDiff / data.length;
+        chain.addLink('result', result, `Variance = ${result}`);
+        
+        return { result, chain };
+      },
+      
+      correlation(x, y) {
+        const chain = new CausalChain('correlation');
+        chain.addLink('input', { x, y }, `Compute Pearson correlation`);
+        
+        const n = x.length;
+        const mx = x.reduce((a, b) => a + b, 0) / n;
+        const my = y.reduce((a, b) => a + b, 0) / n;
+        
+        let num = 0, dx = 0, dy = 0;
+        for (let i = 0; i < n; i++) {
+          const xi = x[i] - mx, yi = y[i] - my;
+          num += xi * yi;
+          dx += xi * xi;
+          dy += yi * yi;
         }
         
-        function updateVersionTimeline() {
-            const track = $('versionsTrackContent');
-            track.innerHTML = state.versions.map((v, i) => {
-                const left = 100 - (i / Math.max(state.versions.length, 1)) * 100;
-                return `<div class="timeline-version" style="left:${left}%" title="${v.name}"></div>`;
-            }).join('');
+        const result = num / Math.sqrt(dx * dy);
+        chain.addLink('result', result, `r = ${result.toFixed(4)}`);
+        
+        return { result, chain };
+      }
+    };
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // UI LOGIC
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    const categories = {
+      arithmetic: {
+        label: 'Enter expression:',
+        quickOps: ['+', '-', '*', '/', '^', 'sqrt', 'sin', 'cos'],
+        examples: [
+          { title: 'Basic arithmetic', code: '2 + 3 * 4' },
+          { title: 'Exponentiation', code: '2^10' },
+          { title: 'Square root', code: 'sqrt(144)' },
+          { title: 'Trigonometry', code: 'sin(pi/2)' },
+          { title: 'Check prime', code: 'isPrime(17)' },
+          { title: 'GCD', code: 'gcd(48, 18)' },
+          { title: 'Factorize', code: 'factorize(60)' }
+        ]
+      },
+      algebra: {
+        label: 'Enter expression:',
+        quickOps: ['x', 'x^2', 'x^3', '()', 'sqrt', 'abs', 'e', 'pi'],
+        examples: [
+          { title: 'Polynomial', code: 'x^2 + 2*x + 1' },
+          { title: 'With x=3', code: 'x=3: x^2 + 2*x + 1' },
+          { title: 'Exponential', code: 'e^x, x=2' }
+        ]
+      },
+      calculus: {
+        label: 'Enter function f(x):',
+        quickOps: ['diff', 'int', 'x^2', 'sin(x)', 'cos(x)', 'e^x', 'ln(x)', '1/x'],
+        examples: [
+          { title: 'Derivative of x²', code: 'diff(x^2)' },
+          { title: 'Derivative at point', code: 'diff(x^3), x=2' },
+          { title: 'Definite integral', code: 'int(x^2, 0, 1)' },
+          { title: 'Integral of sin', code: 'int(sin(x), 0, pi)' }
+        ]
+      },
+      linear: {
+        label: 'Enter vector/matrix:',
+        quickOps: ['dot', 'cross', 'det', 'inv', 'T', 'norm', 'trace', 'rank'],
+        examples: [
+          { title: 'Dot product', code: 'dot([1,2,3], [4,5,6])' },
+          { title: 'Cross product', code: 'cross([1,0,0], [0,1,0])' },
+          { title: '2×2 determinant', code: 'det([[1,2],[3,4]])' },
+          { title: 'Matrix multiply', code: 'matmul([[1,2],[3,4]], [[5,6],[7,8]])' }
+        ]
+      },
+      equations: {
+        label: 'Enter equation (set = 0):',
+        quickOps: ['x', 'x^2', '=', '+', '-', '*', '/', 'solve'],
+        examples: [
+          { title: 'Linear', code: '2*x + 6 = 0' },
+          { title: 'Quadratic', code: 'x^2 - 5*x + 6 = 0' },
+          { title: 'With complex roots', code: 'x^2 + 1 = 0' }
+        ]
+      },
+      combinatorics: {
+        label: 'Enter combinatorial expression:',
+        quickOps: ['!', 'C', 'P', 'fib', 'cat', 'bell', 'part', 'stir'],
+        examples: [
+          { title: 'Factorial', code: '10!' },
+          { title: 'Combination', code: 'C(10, 3)' },
+          { title: 'Permutation', code: 'P(5, 3)' },
+          { title: 'Fibonacci', code: 'fib(10)' },
+          { title: 'Catalan', code: 'catalan(5)' }
+        ]
+      },
+      statistics: {
+        label: 'Enter data as [a, b, c, ...]:',
+        quickOps: ['mean', 'median', 'var', 'std', 'cor', 'reg', 'mode', 'sum'],
+        examples: [
+          { title: 'Mean', code: 'mean([1,2,3,4,5])' },
+          { title: 'Variance', code: 'var([2,4,4,4,5,5,7,9])' },
+          { title: 'Correlation', code: 'cor([1,2,3,4,5], [2,4,6,8,10])' }
+        ]
+      },
+      graph: {
+        label: 'Enter graph operation:',
+        quickOps: ['bfs', 'dfs', 'dijkstra', 'mst', 'scc', 'topsort', 'flow', 'match'],
+        examples: [
+          { title: 'Coming soon', code: 'Graph theory operations' }
+        ]
+      }
+    };
+    
+    let currentCategory = 'arithmetic';
+    
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.category === cat);
+      });
+      
+      const config = categories[cat];
+      document.getElementById('input-label').textContent = config.label;
+      document.getElementById('main-input').placeholder = config.examples[0]?.code || '';
+      
+      // Update quick ops
+      const quickOps = document.getElementById('quick-ops');
+      quickOps.innerHTML = config.quickOps.map(op => 
+        `<button class="quick-op-btn" onclick="insertOp('${op}')">${op}</button>`
+      ).join('');
+      
+      // Update examples
+      const examples = document.getElementById('examples');
+      examples.innerHTML = config.examples.map(ex => `
+        <div class="example-item" onclick="loadExample('${ex.code.replace(/'/g, "\\'")}')">
+          <div class="example-title">${ex.title}</div>
+          <div class="example-code">${ex.code}</div>
+        </div>
+      `).join('');
+    }
+    
+    function insertOp(op) {
+      const input = document.getElementById('main-input');
+      input.value += op;
+      input.focus();
+    }
+    
+    function loadExample(code) {
+      document.getElementById('main-input').value = code;
+      solve();
+    }
+    
+    function solve() {
+      const input = document.getElementById('main-input').value.trim();
+      if (!input) return;
+      
+      let result, chain;
+      
+      try {
+        // Parse and execute
+        if (input.startsWith('isPrime(')) {
+          const n = parseInt(input.match(/\d+/)[0]);
+          ({ result, chain } = MathEngine.isPrime(n));
+        } else if (input.startsWith('gcd(')) {
+          const nums = input.match(/\d+/g).map(Number);
+          ({ result, chain } = MathEngine.gcd(nums[0], nums[1]));
+        } else if (input.startsWith('factorize(')) {
+          const n = parseInt(input.match(/\d+/)[0]);
+          ({ result, chain } = MathEngine.factorize(n));
+        } else if (input.startsWith('diff(')) {
+          const match = input.match(/diff\((.+?)\)(?:,\s*x\s*=\s*(\d+))?/);
+          const expr = match[1];
+          const x = parseFloat(match[2] || '3');
+          ({ result, chain } = MathEngine.derivative(expr, x));
+        } else if (input.startsWith('int(')) {
+          const match = input.match(/int\((.+?),\s*(\d+(?:\.\d+)?),\s*(\d+(?:\.\d+)?|pi)\)/);
+          const expr = match[1];
+          const a = parseFloat(match[2]);
+          const b = match[3] === 'pi' ? Math.PI : parseFloat(match[3]);
+          ({ result, chain } = MathEngine.integrate(expr, a, b));
+        } else if (input.startsWith('dot(')) {
+          const match = input.match(/\[([\d,\s]+)\].*\[([\d,\s]+)\]/);
+          const a = match[1].split(',').map(Number);
+          const b = match[2].split(',').map(Number);
+          ({ result, chain } = MathEngine.dot(a, b));
+        } else if (input.startsWith('det(')) {
+          const match = input.match(/\[\[(.+)\]\]/);
+          const rows = match[1].split('],[').map(r => r.replace(/[\[\]]/g, '').split(',').map(Number));
+          ({ result, chain } = MathEngine.determinant(rows));
+        } else if (input.includes('!') && !input.includes('=')) {
+          const n = parseInt(input.match(/(\d+)!/)[1]);
+          ({ result, chain } = MathEngine.factorial(n));
+        } else if (input.startsWith('C(')) {
+          const nums = input.match(/\d+/g).map(Number);
+          ({ result, chain } = MathEngine.C(nums[0], nums[1]));
+        } else if (input.startsWith('mean(')) {
+          const match = input.match(/\[([\d,\s.]+)\]/);
+          const data = match[1].split(',').map(Number);
+          ({ result, chain } = MathEngine.mean(data));
+        } else if (input.startsWith('var(')) {
+          const match = input.match(/\[([\d,\s.]+)\]/);
+          const data = match[1].split(',').map(Number);
+          ({ result, chain } = MathEngine.variance(data));
+        } else if (input.includes('x^2') && input.includes('=')) {
+          // Quadratic equation
+          const match = input.match(/([\d.-]*)x\^2\s*([+-]\s*[\d.]*x)?\s*([+-]\s*[\d.]+)?\s*=\s*0/);
+          const a = parseFloat(match[1] || '1');
+          const bMatch = match[2]?.match(/([+-]?\s*[\d.]+)/);
+          const b = bMatch ? parseFloat(bMatch[1].replace(/\s/g, '')) : 0;
+          const cMatch = match[3]?.match(/([+-]?\s*[\d.]+)/);
+          const c = cMatch ? parseFloat(cMatch[1].replace(/\s/g, '')) : 0;
+          ({ result, chain } = MathEngine.solveQuadratic(a, b, c));
+        } else if (input.includes('x') && input.includes('=')) {
+          // Linear equation
+          const match = input.match(/([\d.-]*)x\s*([+-]\s*[\d.]+)?\s*=\s*0/);
+          const a = parseFloat(match[1] || '1');
+          const b = match[2] ? parseFloat(match[2].replace(/\s/g, '')) : 0;
+          ({ result, chain } = MathEngine.solveLinear(a, b));
+        } else {
+          // General expression
+          ({ result, chain } = MathEngine.evaluate(input));
         }
         
-        function loadVersion(id) {
-            const version = state.versions.find(v => v.id === id);
-            if (version) {
-                state.versions.forEach(v => v.current = v.id === id);
-                state.currentVersionId = id;
-                updateVersionList();
-                toast(`Loaded ${version.name}`, 'info');
-            }
-        }
+        // Display result
+        document.getElementById('result').textContent = Array.isArray(result) ? result.join(', ') : result;
+        document.getElementById('causal-chain').innerHTML = chain.getHTML();
+        document.getElementById('status').className = 'status success';
+        document.getElementById('status').textContent = '✓ Solved successfully';
         
-        function restoreVersion(id) {
-            loadVersion(id);
-            toast(`Restored to Version ${id}`, 'success');
-        }
-        
-        function downloadVersion(id) {
-            toast(`Downloading Version ${id}...`, 'cloud');
-        }
-        
-        function compareVersions() {
-            toast('Version comparison coming soon', 'info');
-        }
-        
-        function formatTimeAgo(time) {
-            const diff = Date.now() - time;
-            if (diff < 60000) return 'Just now';
-            if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-            if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-            return `${Math.floor(diff / 86400000)}d ago`;
-        }
-        
-        // Auto-save version every 5 minutes
-        setInterval(() => {
-            if (state.isRecording) {
-                const autoVersion = {
-                    id: state.versions.length + 1,
-                    name: `Auto-save ${state.versions.length + 1}`,
-                    time: Date.now(),
-                    autoSave: true,
-                    current: true
-                };
-                state.versions.forEach(v => v.current = false);
-                state.versions.unshift(autoVersion);
-                updateVersionList();
-                toast('Auto-saved', 'cloud');
-            }
-        }, 300000);
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // TEMPLATES
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function selectTemplate(templateId) {
-            state.selectedTemplate = templateId;
-            
-            $$('.template-card').forEach(card => card.classList.remove('template-card--selected'));
-            event.currentTarget.classList.add('template-card--selected');
-            
-            const template = state.templates[templateId];
-            if (template) {
-                $('templateName').textContent = template.name;
-                toast(`Selected: ${template.name}`, 'info');
-            }
-        }
-        
-        function applyTemplate() {
-            if (!state.selectedTemplate) {
-                return toast('Select a template first', 'warning');
-            }
-            
-            const template = state.templates[state.selectedTemplate];
-            if (template) {
-                // Apply template settings
-                if (template.filter === 'cinematic') {
-                    $('video').style.filter = 'contrast(110%) saturate(90%)';
-                } else if (template.filter === 'vivid') {
-                    $('video').style.filter = 'saturate(130%) contrast(105%)';
-                } else if (template.filter === 'warm') {
-                    $('video').style.filter = 'sepia(20%) saturate(110%)';
-                } else if (template.filter === 'bright') {
-                    $('video').style.filter = 'brightness(110%) contrast(105%)';
-                } else {
-                    $('video').style.filter = 'none';
-                }
-                
-                toast(`Applied: ${template.name}`, 'success');
-            }
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // EXPORT PRESETS
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function selectExportPreset(presetId) {
-            state.selectedPreset = presetId;
-            
-            $$('.export-preset').forEach(p => p.classList.remove('export-preset--selected'));
-            event.currentTarget.classList.add('export-preset--selected');
-            
-            const preset = state.exportPresets[presetId];
-            toast(`Export preset: ${preset.name}`, 'info');
-        }
-        
-        function exportWithPreset() {
-            if (!state.recordedBlob) {
-                return toast('Nothing to export', 'warning');
-            }
-            
-            const preset = state.exportPresets[state.selectedPreset];
-            showSyncIndicator(`Exporting as ${preset.name}...`);
-            
-            setTimeout(() => {
-                hideSyncIndicator();
-                
-                const a = document.createElement('a');
-                a.href = state.recordedUrl;
-                a.download = `virecai_${state.selectedPreset}_${Date.now()}.webm`;
-                a.click();
-                
-                toast(`Exported as ${preset.name}`, 'success');
-            }, 1500);
-        }
-        
-        function exportToCloud() {
-            if (!state.recordedBlob) {
-                return toast('Nothing to export', 'warning');
-            }
-            
-            showSyncIndicator('Uploading to cloud...');
-            
-            setTimeout(() => {
-                hideSyncIndicator();
-                state.storageUsed += (state.recordedBlob.size / 1024 / 1024 / 1024);
-                updateProjectInfo();
-                toast('Uploaded to cloud storage', 'cloud');
-            }, 2000);
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // CAMERA
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        async function requestCamera() {
-            $('placeholderText').textContent = 'Requesting...';
-            
-            try {
-                if (state.stream) state.stream.getTracks().forEach(t => t.stop());
-                
-                state.stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: state.facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
-                    audio: true
-                });
-                
-                const video = $('video');
-                video.srcObject = state.stream;
-                await video.play();
-                
-                if (state.facingMode === 'user') video.classList.add('viewport__video--mirrored');
-                else video.classList.remove('viewport__video--mirrored');
-                
-                $('placeholder').classList.add('hidden');
-                state.cameraReady = true;
-                
-                toast('Camera ready!', 'success');
-            } catch (e) {
-                $('placeholderText').textContent = e.message || 'Failed';
-                toast('Camera error', 'error');
-            }
-        }
-        
-        async function switchCamera() {
-            state.facingMode = state.facingMode === 'user' ? 'environment' : 'user';
-            if (state.stream) state.stream.getTracks().forEach(t => t.stop());
-            $('placeholder').classList.remove('hidden');
-            await requestCamera();
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // RECORDING
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function toggleRecording() {
-            if (!state.cameraReady) return toast('Enable camera first', 'warning');
-            state.isRecording ? stopRecording() : startRecording();
-        }
-        
-        function startRecording() {
-            state.recordedChunks = [];
-            
-            let mimeType = 'video/webm;codecs=vp9';
-            if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
-            
-            state.mediaRecorder = new MediaRecorder(state.stream, { mimeType, videoBitsPerSecond: 5000000 });
-            
-            state.mediaRecorder.ondataavailable = e => { if (e.data.size > 0) state.recordedChunks.push(e.data); };
-            
-            state.mediaRecorder.onstop = () => {
-                state.recordedBlob = new Blob(state.recordedChunks, { type: 'video/webm' });
-                state.recordedUrl = URL.createObjectURL(state.recordedBlob);
-                $('playbackVideo').src = state.recordedUrl;
-                
-                // Auto-save version
-                createVersion();
-                syncNow();
-                
-                toast('Recording saved!', 'success');
-            };
-            
-            state.mediaRecorder.start(100);
-            state.isRecording = true;
-            state.startTime = performance.now();
-            state.frameCount = 0;
-            
-            $('recordBtn').classList.add('recording');
-            $('statusDot').classList.add('status-dot--recording');
-            $('statusText').textContent = 'REC';
-            
-            captureLoop();
-        }
-        
-        function stopRecording() {
-            state.isRecording = false;
-            state.duration = state.currentTime;
-            if (state.mediaRecorder?.state !== 'inactive') state.mediaRecorder.stop();
-            
-            $('recordBtn').classList.remove('recording');
-            $('statusDot').classList.remove('status-dot--recording');
-            $('statusText').textContent = 'Ready';
-        }
-        
-        async function captureLoop() {
-            if (!state.isRecording) return;
-            
-            state.currentTime = performance.now() - state.startTime;
-            state.frameCount++;
-            
-            updateUI();
-            
-            if (state.frameCount % 10 === 0) await runAIDetection();
-            
-            requestAnimationFrame(captureLoop);
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // PLAYBACK
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function togglePlayback() {
-            if (!state.recordedUrl) return toast('Nothing to play', 'warning');
-            
-            const v = $('playbackVideo');
-            const live = $('video');
-            
-            if (state.isPlaying) {
-                v.pause();
-                state.isPlaying = false;
-                $('playBtn').textContent = '▶️';
-            } else {
-                live.classList.add('hidden');
-                v.classList.remove('hidden');
-                v.play();
-                state.isPlaying = true;
-                $('playBtn').textContent = '⏸️';
-            }
-        }
-        
-        function setSpeed() { $('playbackVideo').playbackRate = parseFloat($('speedSelect').value); }
-        function jumpBack() { const v = $('playbackVideo'); if (v.duration) v.currentTime = Math.max(0, v.currentTime - 5); }
-        function jumpForward() { const v = $('playbackVideo'); if (v.duration) v.currentTime = Math.min(v.duration, v.currentTime + 5); }
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // UI
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        function updateUI() {
-            const s = Math.floor(state.currentTime / 1000);
-            const ms = Math.floor((state.currentTime % 1000) / 10);
-            const m = Math.floor(s / 60);
-            
-            $('timeDisplay').innerHTML = `${m}:${pad(s % 60)}<span class="float-panel__unit">.${pad(ms)}</span>`;
-            $('currentTime').textContent = formatTime(state.currentTime);
-            
-            const progress = (state.currentTime / state.duration) * 100;
-            $('videoTrackFill').style.width = `${Math.min(100, progress)}%`;
-            $('videoCursor').style.left = `${Math.min(100, progress)}%`;
-            
-            updateProjectInfo();
-        }
-        
-        function formatTime(ms) {
-            const s = Math.floor(ms / 1000);
-            const m = Math.floor(s / 60);
-            return `${m}:${pad(s % 60)}.${pad(Math.floor((ms % 1000) / 10))}`;
-        }
-        
-        function pad(n) { return String(n).padStart(2, '0'); }
-        
-        function switchTab(id) {
-            $$('.sidebar__tab').forEach(t => t.classList.remove('sidebar__tab--active'));
-            $$('.sidebar__panel').forEach(p => p.classList.remove('sidebar__panel--active'));
-            document.querySelector(`.sidebar__tab[data-tab="${id}"]`).classList.add('sidebar__tab--active');
-            $(`${id}Panel`).classList.add('sidebar__panel--active');
-        }
-        
-        function undo() { toast('Undo', 'info'); }
-        function redo() { toast('Redo', 'info'); }
-        
-        document.addEventListener('keydown', e => {
-            if (e.target.tagName === 'INPUT') return;
-            if (e.key === ' ') { e.preventDefault(); togglePlayback(); }
-            if (e.key === 'r') toggleRecording();
-            if (e.key === 's' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); createVersion(); }
-        });
-        
-        // ═══════════════════════════════════════════════════════════════════════
-        // INIT
-        // ═══════════════════════════════════════════════════════════════════════
-        
-        async function init() {
-            console.log('Initializing VIRECAI v8.5 CLOUD...');
-            
-            loadAIModels();
-            updateVersionList();
-            updateProjectInfo();
-            
-            if (!isMobile) await requestCamera();
-            
-            toast(`VIRECAI v${VERSION} Cloud Ready`, 'cloud');
-        }
-        
-        init();
-    </script>
+      } catch (e) {
+        document.getElementById('result').textContent = 'Error';
+        document.getElementById('status').className = 'status error';
+        document.getElementById('status').textContent = '✗ ' + e.message;
+        console.error(e);
+      }
+    }
+    
+    // Initialize
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => setCategory(btn.dataset.category));
+    });
+    
+    document.getElementById('main-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') solve();
+    });
+    
+    setCategory('arithmetic');
+  </script>
 </body>
 </html>
