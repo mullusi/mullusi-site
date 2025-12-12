@@ -2150,6 +2150,322 @@
             width: 100%;
             height: 100%;
         }
+        /* Touch device specific styles */
+        body.touch-device .architect-credit {
+            cursor: pointer;
+        }
+        
+        body.touch-device .control-panel button {
+            min-height: 48px;
+            padding: 12px 18px;
+        }
+        
+        body.touch-device .node-label {
+            font-size: 1.1em;
+        }
+        
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            width: 44px;
+            height: 44px;
+            background: rgba(0,20,40,0.9);
+            border: 1px solid rgba(0,255,255,0.3);
+            border-radius: 8px;
+            color: #0ff;
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 1100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .mobile-menu-btn:active {
+            background: rgba(0,255,255,0.2);
+        }
+        
+        @media screen and (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* MOBILE RESPONSIVE STYLES                                        */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        /* Touch device detection */
+        @media (hover: none) and (pointer: coarse) {
+            .architect-credit {
+                /* Always show on touch devices */
+                opacity: 1 !important;
+            }
+            
+            .control-panel button,
+            .metrics-panel {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+        
+        /* Small phones */
+        @media screen and (max-width: 480px) {
+            .title-container h1 {
+                font-size: 1.8em;
+            }
+            
+            .title-container .subtitle {
+                font-size: 0.7em;
+                letter-spacing: 2px;
+            }
+            
+            .control-panel {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                padding: 10px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .control-panel button {
+                padding: 10px 14px;
+                font-size: 0.7em;
+                flex: 1 1 auto;
+                min-width: 80px;
+            }
+            
+            .metrics-panel {
+                top: auto;
+                bottom: 80px;
+                right: 10px;
+                left: 10px;
+                font-size: 0.65em;
+                padding: 8px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .metrics-panel > div {
+                flex: 0 0 auto;
+            }
+            
+            .help-panel {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                bottom: auto;
+                max-height: 60vh;
+                font-size: 0.75em;
+                padding: 15px;
+                display: none;
+            }
+            
+            .help-panel.visible {
+                display: block;
+            }
+            
+            .help-panel h3 {
+                font-size: 1.1em;
+            }
+            
+            .architect-credit {
+                bottom: 140px;
+                right: 10px;
+                left: 10px;
+                padding: 12px;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .architect-photo-container {
+                width: 60px !important;
+                height: 60px !important;
+                margin-bottom: 10px;
+            }
+            
+            .architect-photo {
+                width: 60px !important;
+                height: 60px !important;
+            }
+            
+            .architect-info {
+                margin-left: 0;
+            }
+            
+            .mfidel-frame {
+                inset: -25px !important;
+                font-size: 0.7em !important;
+            }
+            
+            #mfidelMainChar {
+                font-size: 2em !important;
+            }
+            
+            #mfidelFamilyRow {
+                font-size: 0.5em !important;
+            }
+            
+            /* Corner brackets - hide on small screens */
+            .corner-bracket {
+                display: none;
+            }
+            
+            /* Data streams - hide on small screens */
+            .data-stream {
+                display: none;
+            }
+            
+            /* Simplify post-processing on mobile */
+            .chromatic-aberration,
+            .film-grain {
+                display: none;
+            }
+        }
+        
+        /* Tablets and medium screens */
+        @media screen and (min-width: 481px) and (max-width: 768px) {
+            .title-container h1 {
+                font-size: 2.2em;
+            }
+            
+            .control-panel {
+                bottom: 15px;
+                left: 15px;
+                padding: 12px;
+            }
+            
+            .control-panel button {
+                padding: 10px 16px;
+                font-size: 0.75em;
+            }
+            
+            .metrics-panel {
+                font-size: 0.7em;
+            }
+            
+            .help-panel {
+                max-width: 350px;
+                font-size: 0.8em;
+            }
+            
+            .architect-credit {
+                bottom: 15px;
+                right: 15px;
+                padding: 14px 18px;
+            }
+            
+            .architect-photo-container {
+                width: 65px !important;
+                height: 65px !important;
+            }
+            
+            .mfidel-frame {
+                inset: -30px !important;
+            }
+        }
+        
+        /* Landscape phone orientation */
+        @media screen and (max-height: 480px) and (orientation: landscape) {
+            .title-container {
+                top: 5px;
+            }
+            
+            .title-container h1 {
+                font-size: 1.6em;
+            }
+            
+            .title-container .subtitle {
+                font-size: 0.6em;
+            }
+            
+            .control-panel {
+                bottom: 5px;
+                left: 5px;
+                padding: 8px;
+                flex-direction: row;
+            }
+            
+            .control-panel button {
+                padding: 8px 12px;
+                font-size: 0.65em;
+            }
+            
+            .metrics-panel {
+                top: 5px;
+                right: 5px;
+                font-size: 0.6em;
+                padding: 6px;
+            }
+            
+            .help-panel {
+                max-height: 80vh;
+                max-width: 300px;
+                font-size: 0.7em;
+            }
+            
+            .architect-credit {
+                bottom: 5px;
+                right: 5px;
+                padding: 10px;
+                transform: scale(0.85);
+                transform-origin: bottom right;
+            }
+        }
+        
+        /* Large screens */
+        @media screen and (min-width: 1200px) {
+            .title-container h1 {
+                font-size: 3.5em;
+            }
+            
+            .architect-credit {
+                padding: 18px 25px;
+            }
+            
+            .architect-photo-container {
+                width: 80px !important;
+                height: 80px !important;
+            }
+        }
+        
+        /* High DPI / Retina displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .architect-photo {
+                image-rendering: -webkit-optimize-contrast;
+            }
+        }
+        
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .floating-char,
+            .photo-ring,
+            .photo-particle {
+                animation: none !important;
+            }
+        }
+        
+        /* Dark mode enhancement */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #000;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2176,7 +2492,10 @@
     <button class="help-toggle" id="helpToggle" title="Keyboard Shortcuts">?</button>
     
     <!-- Help Panel -->
-    <div class="help-panel" id="helpPanel">
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+    
+    <div class="help-panel" id="helpPanel">>
         <div class="help-title">⌨ CONTROLS</div>
         
         <div class="help-section">
@@ -5702,272 +6021,657 @@
         }
         
         // ═══════════════════════════════════════════════════════════════
-        // FIDEL DISPLAY SYSTEM - Dynamic center + static frame decoration
+        // MFIDEL SYMBOLIC SYSTEM - Atomic Units of Mullu SGI
         // ═══════════════════════════════════════════════════════════════
         
-        const fidelFamilies = [
-            { name: 'ሀ-HOY', chars: ['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ'] },
-            { name: 'ለ-LAWI', chars: ['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ'] },
-            { name: 'ሐ-HAWT', chars: ['ሐ','ሑ','ሒ','ሓ','ሔ','ሕ','ሖ'] },
-            { name: 'መ-MAY', chars: ['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ'] },
-            { name: 'ሠ-SAWT', chars: ['ሠ','ሡ','ሢ','ሣ','ሤ','ሥ','ሦ'] },
-            { name: 'ረ-REYS', chars: ['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ'] },
-            { name: 'ሰ-SAT', chars: ['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ'] },
-            { name: 'ቀ-QAF', chars: ['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ'] },
-            { name: 'በ-BET', chars: ['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ'] },
-            { name: 'ተ-TAW', chars: ['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ'] },
-            { name: 'ነ-NAHAS', chars: ['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ'] },
-            { name: 'አ-ALF', chars: ['አ','ኡ','ኢ','ኣ','ኤ','እ','ኦ'] },
-            { name: 'ከ-KAF', chars: ['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ'] },
-            { name: 'ወ-WAWE', chars: ['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'] },
-            { name: 'ዘ-ZAY', chars: ['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ'] },
-            { name: 'የ-YAMAN', chars: ['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'] },
-            { name: 'ደ-DINT', chars: ['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ'] },
-            { name: 'ገ-GAML', chars: ['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ'] },
-            { name: 'ጠ-TAYT', chars: ['ጠ','ጡ','ጢ','ጣ','ጤ','ጥ','ጦ'] },
-            { name: 'ጸ-TSADIY', chars: ['ጸ','ጹ','ጺ','ጻ','ጼ','ጽ','ጾ'] },
-            { name: 'ፈ-AF', chars: ['ፈ','ፉ','ፊ','ፋ','ፌ','ፍ','ፎ'] },
-            { name: 'ፐ-PSA', chars: ['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ'] },
-        ];
+        // Complete MFIDEL structure with symbolic metadata
+        const MFIDEL = {
+            name: 'MFIDEL',
+            fullName: 'Mullu Fidel',
+            amharic: 'ሙሉ ፊደል',
+            description: 'Symbolic Atomic Units',
+            totalFamilies: 34,
+            vowelOrders: 7,
+            totalSymbols: 238,
+            
+            // 7 Vowel orders (ስርዓተ ፊደል)
+            orders: [
+                { id: 1, geez: 'ግዕዝ', name: 'Geez', sound: 'ä', desc: 'Base form' },
+                { id: 2, geez: 'ካዕብ', name: 'Kaeb', sound: 'u', desc: 'Second' },
+                { id: 3, geez: 'ሣልስ', name: 'Salis', sound: 'i', desc: 'Third' },
+                { id: 4, geez: 'ራብዕ', name: 'Rabi', sound: 'a', desc: 'Fourth' },
+                { id: 5, geez: 'ኃምስ', name: 'Hamis', sound: 'e', desc: 'Fifth' },
+                { id: 6, geez: 'ሳድስ', name: 'Sadis', sound: 'ə', desc: 'Sixth' },
+                { id: 7, geez: 'ሳብዕ', name: 'Sabi', sound: 'o', desc: 'Seventh' },
+            ],
+            
+            // Mfidel families with rich metadata
+            families: [
+                { id: 1, root: 'ሀ', name: 'HOY', amh: 'ሆይ', chars: ['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ'], 
+                  meaning: 'Being', category: 'existence', color: '#00ffff' },
+                { id: 2, root: 'ለ', name: 'LAWI', amh: 'ላዊ', chars: ['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ'], 
+                  meaning: 'To/For', category: 'relation', color: '#00ff88' },
+                { id: 3, root: 'ሐ', name: 'HAWT', amh: 'ሐውት', chars: ['ሐ','ሑ','ሒ','ሓ','ሔ','ሕ','ሖ'], 
+                  meaning: 'Life', category: 'existence', color: '#88ff00' },
+                { id: 4, root: 'መ', name: 'MAY', amh: 'ማይ', chars: ['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ'], 
+                  meaning: 'What', category: 'query', color: '#ffff00' },
+                { id: 5, root: 'ሠ', name: 'SAWT', amh: 'ሣውት', chars: ['ሠ','ሡ','ሢ','ሣ','ሤ','ሥ','ሦ'], 
+                  meaning: 'Voice', category: 'expression', color: '#ff8800' },
+                { id: 6, root: 'ረ', name: 'REYS', amh: 'ርእስ', chars: ['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ'], 
+                  meaning: 'Head', category: 'body', color: '#ff0088' },
+                { id: 7, root: 'ሰ', name: 'SAT', amh: 'ሳት', chars: ['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ'], 
+                  meaning: 'Give', category: 'action', color: '#ff00ff' },
+                { id: 8, root: 'ሸ', name: 'SHA', amh: 'ሻ', chars: ['ሸ','ሹ','ሺ','ሻ','ሼ','ሽ','ሾ'], 
+                  meaning: 'Thousand', category: 'quantity', color: '#8800ff' },
+                { id: 9, root: 'ቀ', name: 'QAF', amh: 'ቃፍ', chars: ['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ'], 
+                  meaning: 'Word', category: 'symbol', color: '#0088ff' },
+                { id: 10, root: 'በ', name: 'BET', amh: 'ቤት', chars: ['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ'], 
+                  meaning: 'House', category: 'structure', color: '#00ddff' },
+                { id: 11, root: 'ቨ', name: 'VE', amh: 'ቬ', chars: ['ቨ','ቩ','ቪ','ቫ','ቬ','ቭ','ቮ'], 
+                  meaning: 'Foreign', category: 'external', color: '#00ff99' },
+                { id: 12, root: 'ተ', name: 'TAW', amh: 'ታው', chars: ['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ'], 
+                  meaning: 'Sign', category: 'symbol', color: '#99ff00' },
+                { id: 13, root: 'ቸ', name: 'CHA', amh: 'ቻ', chars: ['ቸ','ቹ','ቺ','ቻ','ቼ','ች','ቾ'], 
+                  meaning: 'Able', category: 'capability', color: '#ffdd00' },
+                { id: 14, root: 'ኀ', name: 'HARM', amh: 'ኀርም', chars: ['ኀ','ኁ','ኂ','ኃ','ኄ','ኅ','ኆ'], 
+                  meaning: 'Silk', category: 'material', color: '#ff9900' },
+                { id: 15, root: 'ነ', name: 'NAHAS', amh: 'ንሐስ', chars: ['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ'], 
+                  meaning: 'Copper', category: 'material', color: '#ff0066' },
+                { id: 16, root: 'ኘ', name: 'NYA', amh: 'ኛ', chars: ['ኘ','ኙ','ኚ','ኛ','ኜ','ኝ','ኞ'], 
+                  meaning: 'Self', category: 'identity', color: '#ff00cc' },
+                { id: 17, root: 'አ', name: 'ALF', amh: 'አልፍ', chars: ['አ','ኡ','ኢ','ኣ','ኤ','እ','ኦ'], 
+                  meaning: 'First', category: 'order', color: '#9900ff' },
+                { id: 18, root: 'ከ', name: 'KAF', amh: 'ካፍ', chars: ['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ'], 
+                  meaning: 'Palm', category: 'body', color: '#0066ff' },
+                { id: 19, root: 'ኸ', name: 'KHA', amh: 'ኻ', chars: ['ኸ','ኹ','ኺ','ኻ','ኼ','ኽ','ኾ'], 
+                  meaning: 'Open', category: 'state', color: '#00ccff' },
+                { id: 20, root: 'ወ', name: 'WAWE', amh: 'ዋዌ', chars: ['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'], 
+                  meaning: 'And', category: 'connector', color: '#00ffcc' },
+                { id: 21, root: 'ዐ', name: 'AYN', amh: 'ዐይን', chars: ['ዐ','ዑ','ዒ','ዓ','ዔ','ዕ','ዖ'], 
+                  meaning: 'Eye', category: 'perception', color: '#66ff00' },
+                { id: 22, root: 'ዘ', name: 'ZAY', amh: 'ዛይ', chars: ['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ'], 
+                  meaning: 'This', category: 'reference', color: '#ccff00' },
+                { id: 23, root: 'ዠ', name: 'ZHA', amh: 'ዣ', chars: ['ዠ','ዡ','ዢ','ዣ','ዤ','ዥ','ዦ'], 
+                  meaning: 'Sharp', category: 'quality', color: '#ffcc00' },
+                { id: 24, root: 'የ', name: 'YAMAN', amh: 'የማን', chars: ['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'], 
+                  meaning: 'Right', category: 'direction', color: '#ff6600' },
+                { id: 25, root: 'ደ', name: 'DINT', amh: 'ድንት', chars: ['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ'], 
+                  meaning: 'Stone', category: 'material', color: '#ff0044' },
+                { id: 26, root: 'ጀ', name: 'JA', amh: 'ጃ', chars: ['ጀ','ጁ','ጂ','ጃ','ጄ','ጅ','ጆ'], 
+                  meaning: 'Start', category: 'action', color: '#ff00aa' },
+                { id: 27, root: 'ገ', name: 'GAML', amh: 'ገምል', chars: ['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ'], 
+                  meaning: 'Camel', category: 'creature', color: '#aa00ff' },
+                { id: 28, root: 'ጠ', name: 'TAYT', amh: 'ጣይት', chars: ['ጠ','ጡ','ጢ','ጣ','ጤ','ጥ','ጦ'], 
+                  meaning: 'Clay', category: 'material', color: '#4400ff' },
+                { id: 29, root: 'ጨ', name: 'TSA', amh: 'ጫ', chars: ['ጨ','ጩ','ጪ','ጫ','ጬ','ጭ','ጮ'], 
+                  meaning: 'Tight', category: 'quality', color: '#0044ff' },
+                { id: 30, root: 'ጰ', name: 'TSAPA', amh: 'ጳ', chars: ['ጰ','ጱ','ጲ','ጳ','ጴ','ጵ','ጶ'], 
+                  meaning: 'Light', category: 'element', color: '#00aaff' },
+                { id: 31, root: 'ጸ', name: 'TSADIY', amh: 'ጻድቅ', chars: ['ጸ','ጹ','ጺ','ጻ','ጼ','ጽ','ጾ'], 
+                  meaning: 'Righteous', category: 'virtue', color: '#00ffaa' },
+                { id: 32, root: 'ፀ', name: 'TSALAT', amh: 'ፀሎት', chars: ['ፀ','ፁ','ፂ','ፃ','ፄ','ፅ','ፆ'], 
+                  meaning: 'Prayer', category: 'spiritual', color: '#44ff00' },
+                { id: 33, root: 'ፈ', name: 'AF', amh: 'አፍ', chars: ['ፈ','ፉ','ፊ','ፋ','ፌ','ፍ','ፎ'], 
+                  meaning: 'Mouth', category: 'body', color: '#aaff00' },
+                { id: 34, root: 'ፐ', name: 'PSA', amh: 'ፕሳ', chars: ['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ'], 
+                  meaning: 'Letter', category: 'symbol', color: '#ffaa00' },
+            ],
+        };
         
-        const vowelNames = ['ግዕዝ', 'ካዕብ', 'ሣልስ', 'ራብዕ', 'ኃምስ', 'ሳድስ', 'ሳብዕ'];
-        
-        function initFidelDisplaySystem() {
+        function initMfidelDisplaySystem() {
             const box = document.querySelector('.architect-credit');
             const photoContainer = document.querySelector('.architect-photo-container');
             if (!box || !photoContainer) return;
             
             box.style.overflow = 'visible';
             
-            // ═══ STATIC FRAME DECORATION ═══
-            
-            // Top border Fidels
-            const topBorder = document.createElement('div');
-            topBorder.style.cssText = `
+            // ═══ MFIDEL FRAME ═══
+            const frame = document.createElement('div');
+            frame.className = 'mfidel-frame';
+            frame.style.cssText = `
                 position: absolute;
-                top: -20px; left: 10px; right: 10px;
+                inset: -35px;
+                pointer-events: none;
+                z-index: 1;
+            `;
+            box.appendChild(frame);
+            
+            // Top arc (first 8 roots)
+            const topArc = document.createElement('div');
+            topArc.style.cssText = `
+                position: absolute;
+                top: 0; left: 20px; right: 20px;
                 display: flex; justify-content: space-between;
                 font-family: 'Nyala', 'Abyssinica SIL', serif;
-                font-size: 0.9em;
-                color: rgba(0,255,255,0.4);
-                pointer-events: none;
+                font-size: 0.85em;
             `;
-            ['ሀ', 'ለ', 'መ', 'ረ', 'ሰ'].forEach(c => {
+            MFIDEL.families.slice(0, 9).forEach(f => {
                 const span = document.createElement('span');
-                span.textContent = c;
-                span.style.textShadow = '0 0 5px currentColor';
-                topBorder.appendChild(span);
+                span.textContent = f.root;
+                span.title = `${f.name}: ${f.meaning}`;
+                span.style.cssText = `color: ${f.color}; text-shadow: 0 0 6px ${f.color}; opacity: 0.7;`;
+                topArc.appendChild(span);
             });
-            box.appendChild(topBorder);
+            frame.appendChild(topArc);
             
-            // Bottom border Fidels
-            const bottomBorder = document.createElement('div');
-            bottomBorder.style.cssText = `
+            // Bottom arc
+            const bottomArc = document.createElement('div');
+            bottomArc.style.cssText = `
                 position: absolute;
-                bottom: -20px; left: 10px; right: 10px;
+                bottom: 0; left: 20px; right: 20px;
                 display: flex; justify-content: space-between;
                 font-family: 'Nyala', 'Abyssinica SIL', serif;
-                font-size: 0.9em;
-                color: rgba(255,0,255,0.4);
-                pointer-events: none;
+                font-size: 0.85em;
             `;
-            ['ቀ', 'በ', 'ተ', 'ነ', 'አ'].forEach(c => {
+            MFIDEL.families.slice(9, 18).forEach(f => {
                 const span = document.createElement('span');
-                span.textContent = c;
-                span.style.textShadow = '0 0 5px currentColor';
-                bottomBorder.appendChild(span);
+                span.textContent = f.root;
+                span.title = `${f.name}: ${f.meaning}`;
+                span.style.cssText = `color: ${f.color}; text-shadow: 0 0 6px ${f.color}; opacity: 0.7;`;
+                bottomArc.appendChild(span);
             });
-            box.appendChild(bottomBorder);
+            frame.appendChild(bottomArc);
             
-            // Corner accents
+            // Left column
+            const leftCol = document.createElement('div');
+            leftCol.style.cssText = `
+                position: absolute;
+                left: 0; top: 28px; bottom: 28px;
+                display: flex; flex-direction: column; justify-content: space-between;
+                font-family: 'Nyala', 'Abyssinica SIL', serif;
+                font-size: 0.8em;
+            `;
+            MFIDEL.families.slice(18, 26).forEach(f => {
+                const span = document.createElement('span');
+                span.textContent = f.root;
+                span.style.cssText = `color: ${f.color}; text-shadow: 0 0 5px ${f.color}; opacity: 0.6;`;
+                leftCol.appendChild(span);
+            });
+            frame.appendChild(leftCol);
+            
+            // Right column
+            const rightCol = document.createElement('div');
+            rightCol.style.cssText = `
+                position: absolute;
+                right: 0; top: 28px; bottom: 28px;
+                display: flex; flex-direction: column; justify-content: space-between;
+                font-family: 'Nyala', 'Abyssinica SIL', serif;
+                font-size: 0.8em;
+            `;
+            MFIDEL.families.slice(26, 34).forEach(f => {
+                const span = document.createElement('span');
+                span.textContent = f.root;
+                span.style.cssText = `color: ${f.color}; text-shadow: 0 0 5px ${f.color}; opacity: 0.6;`;
+                rightCol.appendChild(span);
+            });
+            frame.appendChild(rightCol);
+            
+            // Corner emblems - ሙሉ (MULLU)
             const corners = [
-                { pos: 'top: -25px; left: -25px;', char: 'ሙ', color: '#0ff' },
-                { pos: 'top: -25px; right: -25px;', char: 'ሉ', color: '#f0f' },
-                { pos: 'bottom: -25px; left: -25px;', char: 'ፊ', color: '#ff0' },
-                { pos: 'bottom: -25px; right: -25px;', char: 'ደ', color: '#0f8' },
+                { pos: 'top: -8px; left: -8px;', char: 'ሙ', hue: 180 },
+                { pos: 'top: -8px; right: -8px;', char: 'ሉ', hue: 300 },
+                { pos: 'bottom: -8px; left: -8px;', char: 'ሉ', hue: 60 },
+                { pos: 'bottom: -8px; right: -8px;', char: '፡', hue: 120 },
             ];
-            
-            corners.forEach(corner => {
+            corners.forEach(c => {
                 const el = document.createElement('div');
-                el.textContent = corner.char;
+                el.textContent = c.char;
                 el.style.cssText = `
-                    position: absolute;
-                    ${corner.pos}
+                    position: absolute; ${c.pos}
                     font-family: 'Nyala', 'Abyssinica SIL', serif;
-                    font-size: 1.6em;
-                    color: ${corner.color};
-                    text-shadow: 0 0 10px ${corner.color};
-                    opacity: 0.6;
+                    font-size: 1.3em;
+                    color: hsl(${c.hue}, 100%, 70%);
+                    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
                 `;
-                box.appendChild(el);
+                frame.appendChild(el);
             });
             
-            // ═══ DYNAMIC CENTER DISPLAY ═══
+            // ═══ HEADER ═══
+            const header = document.createElement('div');
+            header.style.cssText = `
+                position: absolute;
+                top: -52px; left: 50%;
+                transform: translateX(-50%);
+                display: flex; flex-direction: column; align-items: center;
+                pointer-events: none;
+            `;
             
-            // Create overlay on photo
-            const fidelOverlay = document.createElement('div');
-            fidelOverlay.id = 'fidelCenterDisplay';
-            fidelOverlay.style.cssText = `
+            const title = document.createElement('div');
+            title.id = 'mfidelTitle';
+            title.style.cssText = `
+                font-family: 'Orbitron', monospace;
+                font-size: 0.7em;
+                color: #0ff;
+                letter-spacing: 4px;
+                text-shadow: 0 0 10px currentColor;
+            `;
+            title.textContent = 'MFIDEL';
+            header.appendChild(title);
+            
+            const subtitle = document.createElement('div');
+            subtitle.style.cssText = `
+                font-family: 'Nyala', 'Abyssinica SIL', serif;
+                font-size: 0.55em;
+                color: rgba(255,255,255,0.5);
+                margin-top: 2px;
+            `;
+            subtitle.textContent = 'ሙሉ ፊደል';
+            header.appendChild(subtitle);
+            
+            box.appendChild(header);
+            
+            // ═══ STATS FOOTER ═══
+            const stats = document.createElement('div');
+            stats.style.cssText = `
+                position: absolute;
+                bottom: -50px; left: 50%;
+                transform: translateX(-50%);
+                display: flex; gap: 12px;
+                font-family: 'Orbitron', monospace;
+                font-size: 0.4em;
+                color: rgba(255,255,255,0.5);
+            `;
+            stats.innerHTML = `
+                <span><span style="color:#0ff">34</span> ቤተሰብ</span>
+                <span><span style="color:#f0f">×7</span> ስርዓት</span>
+                <span><span style="color:#ff0">=238</span> ፊደል</span>
+            `;
+            box.appendChild(stats);
+            
+            // Touch hint for mobile
+            const touchHint = document.createElement('div');
+            touchHint.id = 'mfidelTouchHint';
+            touchHint.style.cssText = `
+                position: absolute;
+                bottom: -65px; left: 50%;
+                transform: translateX(-50%);
+                font-family: 'Orbitron', monospace;
+                font-size: 0.35em;
+                color: rgba(0,255,255,0.5);
+                white-space: nowrap;
+                display: none;
+            `;
+            touchHint.textContent = 'TAP TO EXPLORE';
+            box.appendChild(touchHint);
+            
+            // Show hint on touch devices
+            if ('ontouchstart' in window) {
+                touchHint.style.display = 'block';
+            }
+            
+            // ═══ CENTER OVERLAY ═══
+            const overlay = document.createElement('div');
+            overlay.id = 'mfidelOverlay';
+            overlay.style.cssText = `
                 position: absolute;
                 top: 0; left: 0; right: 0; bottom: 0;
                 display: flex; flex-direction: column;
                 align-items: center; justify-content: center;
-                background: rgba(0,0,0,0.75);
+                background: radial-gradient(circle, rgba(0,5,15,0.95) 0%, rgba(0,10,20,0.98) 100%);
                 border-radius: 50%;
                 opacity: 0;
-                transition: opacity 0.4s ease;
+                transition: opacity 0.3s ease;
                 z-index: 5;
                 pointer-events: none;
             `;
             
-            // Main character display
+            // Main character
             const mainChar = document.createElement('div');
-            mainChar.id = 'fidelMainChar';
+            mainChar.id = 'mfidelMainChar';
             mainChar.style.cssText = `
                 font-family: 'Nyala', 'Abyssinica SIL', serif;
                 font-size: 2.5em;
                 color: #fff;
-                text-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+                text-shadow: 0 0 15px #0ff, 0 0 30px #0ff, 0 0 45px #08f;
                 line-height: 1;
-                transition: transform 0.15s ease, color 0.3s;
+                transition: transform 0.1s ease, color 0.15s, text-shadow 0.15s;
             `;
-            mainChar.textContent = 'ሀ';
-            fidelOverlay.appendChild(mainChar);
+            mainChar.textContent = 'ሙ';
+            overlay.appendChild(mainChar);
             
-            // Family row display
+            // Order name (ግዕዝ/ካዕብ/etc)
+            const orderName = document.createElement('div');
+            orderName.id = 'mfidelOrderName';
+            orderName.style.cssText = `
+                font-family: 'Nyala', 'Abyssinica SIL', serif;
+                font-size: 0.5em;
+                color: rgba(255,255,255,0.6);
+                margin-top: 2px;
+            `;
+            orderName.textContent = 'ካዕብ';
+            overlay.appendChild(orderName);
+            
+            // Family row (all 7 vowels)
             const familyRow = document.createElement('div');
-            familyRow.id = 'fidelFamilyRow';
+            familyRow.id = 'mfidelFamilyRow';
             familyRow.style.cssText = `
                 display: flex; gap: 3px;
                 margin-top: 5px;
                 font-family: 'Nyala', 'Abyssinica SIL', serif;
-                font-size: 0.7em;
+                font-size: 0.6em;
             `;
             for (let i = 0; i < 7; i++) {
                 const char = document.createElement('span');
-                char.className = 'family-char';
                 char.style.cssText = `
-                    color: rgba(255,255,255,0.4);
-                    text-shadow: 0 0 5px currentColor;
-                    transition: all 0.2s ease;
+                    color: rgba(255,255,255,0.25);
+                    text-shadow: 0 0 3px currentColor;
+                    transition: all 0.12s ease;
+                    padding: 0 1px;
                 `;
                 familyRow.appendChild(char);
             }
-            fidelOverlay.appendChild(familyRow);
+            overlay.appendChild(familyRow);
             
-            // Family name
+            // Info container
+            const info = document.createElement('div');
+            info.style.cssText = `
+                display: flex; flex-direction: column; align-items: center;
+                margin-top: 4px;
+            `;
+            
             const familyName = document.createElement('div');
-            familyName.id = 'fidelFamilyName';
+            familyName.id = 'mfidelFamilyName';
             familyName.style.cssText = `
-                font-size: 0.5em;
-                color: rgba(0,255,255,0.7);
-                margin-top: 3px;
                 font-family: 'Orbitron', monospace;
+                font-size: 0.38em;
+                color: #0ff;
                 letter-spacing: 1px;
             `;
-            fidelOverlay.appendChild(familyName);
+            info.appendChild(familyName);
             
-            photoContainer.appendChild(fidelOverlay);
+            const meaning = document.createElement('div');
+            meaning.id = 'mfidelMeaning';
+            meaning.style.cssText = `
+                font-size: 0.32em;
+                color: rgba(255,255,255,0.5);
+                margin-top: 1px;
+            `;
+            info.appendChild(meaning);
             
-            // ═══ ANIMATION STATE ═══
-            let currentFamily = 0;
-            let currentVowel = 0;
-            let isDisplayActive = false;
-            let cycleTimer = null;
-            let vowelTimer = null;
+            const category = document.createElement('div');
+            category.id = 'mfidelCategory';
+            category.style.cssText = `
+                font-size: 0.28em;
+                color: rgba(255,255,255,0.35);
+                margin-top: 1px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            `;
+            info.appendChild(category);
             
-            function updateDisplay() {
-                const family = fidelFamilies[currentFamily];
-                const chars = family.chars;
+            overlay.appendChild(info);
+            
+            // Progress
+            const progress = document.createElement('div');
+            progress.id = 'mfidelProgress';
+            progress.style.cssText = `
+                position: absolute;
+                bottom: 6px;
+                font-family: monospace;
+                font-size: 0.28em;
+                color: rgba(255,255,255,0.4);
+            `;
+            progress.textContent = '1/238';
+            overlay.appendChild(progress);
+            
+            photoContainer.appendChild(overlay);
+            
+            // ═══ STATE ═══
+            let familyIdx = 3;  // Start with መ (M in MULLU)
+            let orderIdx = 1;   // ካዕብ (u) for ሙ
+            let timer = null;
+            let persistent = false;
+            
+            function update() {
+                const family = MFIDEL.families[familyIdx];
+                const order = MFIDEL.orders[orderIdx];
+                const char = family.chars[orderIdx];
                 
-                // Update main character with animation
-                mainChar.style.transform = 'scale(1.3)';
-                mainChar.textContent = chars[currentVowel];
+                // Main character
+                mainChar.style.transform = 'scale(1.15)';
+                mainChar.textContent = char;
+                mainChar.style.color = family.color;
+                mainChar.style.textShadow = `0 0 15px ${family.color}, 0 0 30px ${family.color}, 0 0 45px ${family.color}80`;
+                setTimeout(() => mainChar.style.transform = 'scale(1)', 80);
                 
-                // Color based on vowel
-                const hue = (currentVowel / 7) * 360;
-                mainChar.style.color = `hsl(${hue}, 100%, 80%)`;
-                mainChar.style.textShadow = `0 0 20px hsl(${hue}, 100%, 60%), 0 0 40px hsl(${hue}, 100%, 40%)`;
+                // Order name
+                orderName.textContent = order.geez;
+                orderName.style.color = `${family.color}bb`;
                 
-                setTimeout(() => {
-                    mainChar.style.transform = 'scale(1)';
-                }, 100);
-                
-                // Update family row
-                const familyChars = familyRow.children;
-                for (let i = 0; i < 7; i++) {
-                    familyChars[i].textContent = chars[i];
-                    if (i === currentVowel) {
-                        familyChars[i].style.color = '#fff';
-                        familyChars[i].style.transform = 'scale(1.3)';
-                        familyChars[i].style.textShadow = '0 0 10px #fff';
+                // Family row
+                Array.from(familyRow.children).forEach((el, i) => {
+                    el.textContent = family.chars[i];
+                    if (i === orderIdx) {
+                        el.style.color = '#fff';
+                        el.style.transform = 'scale(1.3)';
+                        el.style.textShadow = `0 0 8px ${family.color}`;
                     } else {
-                        familyChars[i].style.color = 'rgba(255,255,255,0.4)';
-                        familyChars[i].style.transform = 'scale(1)';
-                        familyChars[i].style.textShadow = '0 0 5px currentColor';
+                        el.style.color = 'rgba(255,255,255,0.25)';
+                        el.style.transform = 'scale(1)';
+                        el.style.textShadow = '0 0 3px currentColor';
                     }
-                }
+                });
                 
-                // Update family name
-                familyName.textContent = family.name;
+                // Info
+                familyName.textContent = `${family.root}・${family.name}`;
+                familyName.style.color = family.color;
+                meaning.textContent = `"${family.meaning}"`;
+                category.textContent = family.category;
+                
+                // Progress
+                const total = familyIdx * 7 + orderIdx + 1;
+                progress.textContent = `${total}/${MFIDEL.totalSymbols}`;
             }
             
-            function cycleVowel() {
-                currentVowel = (currentVowel + 1) % 7;
-                if (currentVowel === 0) {
-                    // Move to next family after completing vowels
-                    currentFamily = (currentFamily + 1) % fidelFamilies.length;
+            function next() {
+                orderIdx = (orderIdx + 1) % 7;
+                if (orderIdx === 0) {
+                    familyIdx = (familyIdx + 1) % MFIDEL.families.length;
                 }
-                updateDisplay();
+                update();
             }
             
-            function startCycling() {
-                if (cycleTimer) return;
-                isDisplayActive = true;
-                fidelOverlay.style.opacity = '1';
-                updateDisplay();
-                cycleTimer = setInterval(cycleVowel, 400);
+            function start() {
+                if (timer) return;
+                overlay.style.opacity = '1';
+                update();
+                timer = setInterval(next, 280);
             }
             
-            function stopCycling() {
-                isDisplayActive = false;
-                fidelOverlay.style.opacity = '0';
-                if (cycleTimer) {
-                    clearInterval(cycleTimer);
-                    cycleTimer = null;
-                }
+            function stop() {
+                if (persistent) return;
+                overlay.style.opacity = '0';
+                if (timer) { clearInterval(timer); timer = null; }
             }
             
-            // ═══ INTERACTION ═══
+            // Interactions
+            box.addEventListener('mouseenter', start);
+            box.addEventListener('mouseleave', stop);
             
-            // Hover to activate
-            box.addEventListener('mouseenter', startCycling);
-            box.addEventListener('mouseleave', stopCycling);
-            
-            // Click to toggle persistent mode
-            let persistentMode = false;
             box.addEventListener('click', (e) => {
                 e.stopPropagation();
-                persistentMode = !persistentMode;
-                if (persistentMode) {
-                    startCycling();
-                    box.style.boxShadow = '0 0 30px rgba(0,255,255,0.5), inset 0 0 20px rgba(0,255,255,0.1)';
-                } else {
-                    stopCycling();
-                    box.style.boxShadow = '';
-                }
+                persistent = !persistent;
+                title.textContent = persistent ? 'MFIDEL ▶' : 'MFIDEL';
+                title.style.color = persistent ? '#fff' : '#0ff';
+                box.style.boxShadow = persistent 
+                    ? '0 0 40px rgba(0,255,255,0.5), inset 0 0 25px rgba(0,255,255,0.1)'
+                    : '';
+                if (persistent) start(); else stop();
             });
             
-            // Keep cycling if in persistent mode
-            box.addEventListener('mouseleave', () => {
-                if (!persistentMode) {
-                    stopCycling();
+            box.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                familyIdx = Math.floor(Math.random() * MFIDEL.families.length);
+                orderIdx = 0;
+                update();
+            });
+        }
+        
+        // Initialize Mfidel
+        setTimeout(initMfidelDisplaySystem, 1000);
+        
+        // ═══════════════════════════════════════════════════════════════
+        // MOBILE TOUCH SUPPORT
+        // ═══════════════════════════════════════════════════════════════
+        
+        const isTouchDevice = ('ontouchstart' in window) || 
+                              (navigator.maxTouchPoints > 0) ||
+                              (navigator.msMaxTouchPoints > 0);
+        
+        function initMobileSupport() {
+            if (!isTouchDevice) return;
+            
+            // Add touch class to body for CSS targeting
+            document.body.classList.add('touch-device');
+            
+            // Get architect box
+            const architectBox = document.querySelector('.architect-credit');
+            if (architectBox) {
+                // Convert hover to tap for MFIDEL display
+                let mfidelActive = false;
+                
+                architectBox.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    mfidelActive = !mfidelActive;
+                    
+                    // Trigger mouseenter/mouseleave
+                    if (mfidelActive) {
+                        architectBox.dispatchEvent(new Event('mouseenter'));
+                    } else {
+                        // Force stop even in persistent mode
+                        const overlay = document.getElementById('mfidelOverlay');
+                        if (overlay) overlay.style.opacity = '0';
+                    }
+                }, { passive: false });
+            }
+            
+            // Make help panel touch-scrollable
+            const helpPanel = document.getElementById('helpPanel');
+            if (helpPanel) {
+                helpPanel.style.overflowY = 'auto';
+                helpPanel.style.webkitOverflowScrolling = 'touch';
+            }
+            
+            // Improve canvas touch interactions
+            const canvas = document.getElementById('canvas');
+            if (canvas) {
+                let lastTap = 0;
+                
+                canvas.addEventListener('touchstart', (e) => {
+                    const touch = e.touches[0];
+                    const currentTime = new Date().getTime();
+                    const tapLength = currentTime - lastTap;
+                    
+                    // Convert touch to mouse event for existing handlers
+                    const mouseEvent = new MouseEvent('mousedown', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY,
+                        bubbles: true
+                    });
+                    canvas.dispatchEvent(mouseEvent);
+                    
+                    // Double tap detection
+                    if (tapLength < 300 && tapLength > 0) {
+                        const dblClickEvent = new MouseEvent('dblclick', {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            bubbles: true
+                        });
+                        canvas.dispatchEvent(dblClickEvent);
+                    }
+                    lastTap = currentTime;
+                }, { passive: true });
+                
+                canvas.addEventListener('touchmove', (e) => {
+                    const touch = e.touches[0];
+                    const mouseEvent = new MouseEvent('mousemove', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY,
+                        bubbles: true
+                    });
+                    canvas.dispatchEvent(mouseEvent);
+                }, { passive: true });
+                
+                canvas.addEventListener('touchend', (e) => {
+                    const mouseEvent = new MouseEvent('mouseup', {
+                        bubbles: true
+                    });
+                    canvas.dispatchEvent(mouseEvent);
+                }, { passive: true });
+            }
+            
+            // Add mobile-friendly button feedback
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('touchstart', () => {
+                    btn.style.transform = 'scale(0.95)';
+                    btn.style.opacity = '0.8';
+                }, { passive: true });
+                
+                btn.addEventListener('touchend', () => {
+                    btn.style.transform = '';
+                    btn.style.opacity = '';
+                }, { passive: true });
+            });
+            
+            // Prevent zoom on double-tap
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (e) => {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, { passive: false });
+            
+            // Adjust node sizes for touch
+            if (window.innerWidth < 768) {
+                // Will be picked up by animation loop
+                window.mobileNodeScale = 1.3;
+            }
+            
+            console.log('Mobile touch support initialized');
+        }
+        
+        // Initialize mobile support
+        initMobileSupport();
+        
+        // Mobile menu button
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileHelpPanel = document.getElementById('helpPanel');
+        
+        if (mobileMenuBtn && mobileHelpPanel) {
+            mobileMenuBtn.addEventListener('click', () => {
+                const isVisible = mobileHelpPanel.classList.contains('visible');
+                if (isVisible) {
+                    mobileHelpPanel.classList.remove('visible');
+                    mobileHelpPanel.style.display = 'none';
+                    mobileMenuBtn.textContent = '☰';
+                } else {
+                    mobileHelpPanel.classList.add('visible');
+                    mobileHelpPanel.style.display = 'block';
+                    mobileMenuBtn.textContent = '✕';
                 }
             });
         }
         
-        // Initialize Fidel display
-        setTimeout(initFidelDisplaySystem, 1000);
+        // Handle orientation changes
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                // Trigger window resize event which is handled by existing resize function
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
+        });
+        
+        // Handle resize debounced
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Canvas resize is handled by existing resize() function
+            }, 150);
+        });
+        
+        
         
         // Start main animation
         init();
