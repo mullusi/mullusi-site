@@ -7,6 +7,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600&display=swap');
         
+        :root {
+            --animation-state: running;
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
@@ -2495,8 +2499,14 @@
     <!-- Mobile Menu Button -->
     <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
     
-    <div class="help-panel" id="helpPanel">>
+    <div class="help-panel" id="helpPanel">
         <div class="help-title">⌨ CONTROLS</div>
+        
+        <div class="help-section">
+            <div class="help-section-title">EXEC Control</div>
+            <div class="help-row"><span class="help-key">SPACE</span><span class="help-desc">⏸ Pause / ▶ Resume</span></div>
+            <div class="help-row"><span class="help-key">Shift+L</span><span class="help-desc">Export event log</span></div>
+        </div>
         
         <div class="help-section">
             <div class="help-section-title">Navigation</div>
@@ -2516,7 +2526,7 @@
         
         <div class="help-section">
             <div class="help-section-title">Effects & Tools</div>
-            <div class="help-row"><span class="help-key">SPACE</span><span class="help-desc">Lightning storm</span></div>
+            <div class="help-row"><span class="help-key">B</span><span class="help-desc">Lightning blast</span></div>
             <div class="help-row"><span class="help-key">E</span><span class="help-desc">Toggle effects</span></div>
             <div class="help-row"><span class="help-key">G</span><span class="help-desc">Toggle grain</span></div>
             <div class="help-row"><span class="help-key">V</span><span class="help-desc">Toggle vignette</span></div>
@@ -2527,7 +2537,7 @@
         
         <div class="help-section">
             <div class="help-section-title">Architect</div>
-            <div class="help-row"><span class="help-key">Photo</span><span class="help-desc">Click to connect</span></div>
+            <div class="help-row"><span class="help-key">Photo</span><span class="help-desc">Tap for MFIDEL</span></div>
         </div>
     </div>
     
@@ -2558,6 +2568,14 @@
             <span class="metric-label">Wh-Entropy</span>
             <span class="metric-value" id="metricEntropy">—</span>
         </div>
+        <div class="metric-row">
+            <span class="metric-label">FPS</span>
+            <span class="metric-value" id="metricFPS">60</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Quality</span>
+            <span class="metric-value" id="metricQuality">100%</span>
+        </div>
         <div class="metric-row" style="flex-direction: column; align-items: stretch;">
             <div style="display: flex; justify-content: space-between;">
                 <span class="metric-label">System Load</span>
@@ -2566,6 +2584,10 @@
             <div class="metric-bar">
                 <div class="metric-bar-fill" id="metricLoadBar" style="width: 0%"></div>
             </div>
+        </div>
+        <div class="metric-row" style="margin-top: 8px; border-top: 1px solid rgba(0,255,255,0.2); padding-top: 8px;">
+            <span class="metric-label">EXEC State</span>
+            <span class="metric-value" id="metricExecState" style="color: #0f0;">RUNNING</span>
         </div>
     </div>
     
@@ -2880,6 +2902,233 @@
         const fxCanvas = document.getElementById('fxCanvas');
         const topCanvas = document.getElementById('topCanvas');
         
+        // ═══════════════════════════════════════════════════════════════
+        // PHASE 2: EXECUTION CONTROL AUTHORITY
+        // ═══════════════════════════════════════════════════════════════
+        
+        const EXEC = {
+            running: true,
+            paused: false,
+            quality: 1.0,
+            lastFrame: performance.now(),
+            fps: 60,
+            targetFPS: 60,
+            frameTime: 16.67,
+            frameBudget: 16,
+            qualityThresholds: {
+                high: 50,    // FPS above this = quality 1.0
+                medium: 30,  // FPS above this = quality 0.7
+                low: 20      // FPS above this = quality 0.5, below = 0.3
+            },
+            
+            // Quality scaling
+            updateQuality(currentFPS) {
+                if (currentFPS >= this.qualityThresholds.high) {
+                    this.quality = 1.0;
+                } else if (currentFPS >= this.qualityThresholds.medium) {
+                    this.quality = 0.7;
+                } else if (currentFPS >= this.qualityThresholds.low) {
+                    this.quality = 0.5;
+                } else {
+                    this.quality = 0.3;
+                }
+            },
+            
+            // Should render cosmetic effects?
+            shouldRenderCosmetic() {
+                return this.quality >= 0.7 && this.running && !this.paused;
+            },
+            
+            // Should render heavy effects?
+            shouldRenderHeavy() {
+                return this.quality >= 0.5 && this.running && !this.paused;
+            }
+        };
+        
+        // Visibility change handler - pause when tab hidden
+        document.addEventListener('visibilitychange', () => {
+            EXEC.running = !document.hidden;
+            
+            // Pause/resume CSS animations
+            document.body.style.setProperty('--animation-state', 
+                document.hidden ? 'paused' : 'running');
+            
+            if (document.hidden) {
+                console.log('[EXEC] Tab hidden - pausing execution');
+            } else {
+                console.log('[EXEC] Tab visible - resuming execution');
+                EXEC.lastFrame = performance.now();
+            }
+        });
+        
+        // ═══════════════════════════════════════════════════════════════
+        // PHASE 2: CANONICAL SYMBOL STATE MODEL
+        // ═══════════════════════════════════════════════════════════════
+        
+        const SYMBOL_STATE = {
+            // Current navigation state
+            depth: 0,
+            maxDepth: 7,
+            
+            // Active filters/modes
+            activeWH: null,           // Current WH gate: WHO, WHAT, WHY, etc.
+            activeStructure: null,    // Selected structure from tree
+            activeNode: null,         // Currently selected node
+            
+            // Causal reasoning path
+            causalPath: [],
+            causalDepth: 0,
+            
+            // DNA state
+            dnaSequence: [],
+            dnaActive: false,
+            
+            // Live metrics (truthful)
+            metrics: {
+                symbolCount: 0,
+                visibleSymbols: 0,
+                connectionCount: 0,
+                activeConnections: 0,
+                causalChainLength: 0,
+                whEntropy: 0,
+                currentDepth: 0,
+                fps: 60,
+                quality: 1.0,
+                frameTime: 0
+            },
+            
+            // Update metrics from actual state
+            updateMetrics(nodes, connections, fps, frameTime) {
+                this.metrics.symbolCount = nodes.length;
+                this.metrics.visibleSymbols = nodes.filter(n => n.visible !== false).length;
+                this.metrics.connectionCount = connections.length;
+                this.metrics.activeConnections = connections.filter(c => c.active).length;
+                this.metrics.causalChainLength = this.causalPath.length;
+                this.metrics.currentDepth = this.depth;
+                this.metrics.fps = Math.round(fps);
+                this.metrics.quality = EXEC.quality;
+                this.metrics.frameTime = frameTime.toFixed(1);
+                
+                // Calculate WH entropy (diversity of active WH gates)
+                const whCounts = {};
+                nodes.forEach(n => {
+                    if (n.whType) {
+                        whCounts[n.whType] = (whCounts[n.whType] || 0) + 1;
+                    }
+                });
+                const total = Object.values(whCounts).reduce((a, b) => a + b, 0) || 1;
+                this.metrics.whEntropy = Object.values(whCounts)
+                    .map(c => c / total)
+                    .filter(p => p > 0)
+                    .reduce((sum, p) => sum - p * Math.log2(p), 0)
+                    .toFixed(2);
+            },
+            
+            // Set active WH gate (constraint operator)
+            setWH(whType) {
+                this.activeWH = whType;
+                EVENT_LOG.push({
+                    t: performance.now(),
+                    type: 'WH_SELECT',
+                    value: whType
+                });
+                return this;
+            },
+            
+            // Set active structure filter
+            setStructure(structureId) {
+                this.activeStructure = structureId;
+                EVENT_LOG.push({
+                    t: performance.now(),
+                    type: 'STRUCTURE_SELECT',
+                    value: structureId
+                });
+                return this;
+            },
+            
+            // Navigate depth
+            setDepth(newDepth) {
+                this.depth = Math.max(0, Math.min(this.maxDepth, newDepth));
+                EVENT_LOG.push({
+                    t: performance.now(),
+                    type: 'DEPTH_CHANGE',
+                    value: this.depth
+                });
+                return this;
+            },
+            
+            // Add to causal path
+            pushCausal(nodeId, reason) {
+                this.causalPath.push({ nodeId, reason, t: performance.now() });
+                this.causalDepth = this.causalPath.length;
+                EVENT_LOG.push({
+                    t: performance.now(),
+                    type: 'CAUSAL_PUSH',
+                    value: { nodeId, reason }
+                });
+                return this;
+            },
+            
+            // Clear causal path
+            clearCausal() {
+                this.causalPath = [];
+                this.causalDepth = 0;
+                EVENT_LOG.push({
+                    t: performance.now(),
+                    type: 'CAUSAL_CLEAR'
+                });
+                return this;
+            }
+        };
+        
+        // ═══════════════════════════════════════════════════════════════
+        // PHASE 2: DETERMINISTIC EVENT LOG (Replay Foundation)
+        // ═══════════════════════════════════════════════════════════════
+        
+        const EVENT_LOG = [];
+        const MAX_LOG_SIZE = 10000;
+        
+        // Trim log if too large
+        function trimEventLog() {
+            if (EVENT_LOG.length > MAX_LOG_SIZE) {
+                EVENT_LOG.splice(0, EVENT_LOG.length - MAX_LOG_SIZE);
+            }
+        }
+        
+        // Export log for debugging/replay
+        window.exportEventLog = () => {
+            const blob = new Blob([JSON.stringify(EVENT_LOG, null, 2)], 
+                { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `mullu-event-log-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+        
+        // ═══════════════════════════════════════════════════════════════
+        // PHASE 2: DPR (Device Pixel Ratio) SCALING
+        // ═══════════════════════════════════════════════════════════════
+        
+        const DPR = window.devicePixelRatio || 1;
+        const MAX_DPR = 2; // Cap for performance
+        const EFFECTIVE_DPR = Math.min(DPR, MAX_DPR);
+        
+        function applyDPR(canvas, context) {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * EFFECTIVE_DPR;
+            canvas.height = rect.height * EFFECTIVE_DPR;
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+            context.scale(EFFECTIVE_DPR, EFFECTIVE_DPR);
+            return { width: rect.width, height: rect.height };
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // ORIGINAL CANVAS SETUP (with DPR)
+        // ═══════════════════════════════════════════════════════════════
+        
         const bgCtx = bgCanvas.getContext('2d');
         const ctx = mainCanvas.getContext('2d');
         const fxCtx = fxCanvas.getContext('2d');
@@ -2921,10 +3170,29 @@
         const geezChars = ['ሀ', 'ለ', 'ሐ', 'መ', 'ሠ', 'ረ', 'ሰ', 'ሸ', 'ቀ', 'በ', 'ተ', 'ኀ', 'ነ', 'አ', 'ከ', 'ወ', 'ዐ', 'ዘ', 'የ', 'ደ', 'ገ', 'ጠ', 'ጰ', 'ጸ', 'ፀ', 'ፈ', 'ፐ'];
         
         function resize() {
-            W = bgCanvas.width = mainCanvas.width = fxCanvas.width = topCanvas.width = window.innerWidth;
-            H = bgCanvas.height = mainCanvas.height = fxCanvas.height = topCanvas.height = window.innerHeight;
+            // Apply DPR scaling to all canvases
+            const canvases = [
+                { canvas: bgCanvas, ctx: bgCtx },
+                { canvas: mainCanvas, ctx: ctx },
+                { canvas: fxCanvas, ctx: fxCtx },
+                { canvas: topCanvas, ctx: topCtx }
+            ];
+            
+            canvases.forEach(({ canvas, ctx }) => {
+                ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+                canvas.width = window.innerWidth * EFFECTIVE_DPR;
+                canvas.height = window.innerHeight * EFFECTIVE_DPR;
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                ctx.scale(EFFECTIVE_DPR, EFFECTIVE_DPR);
+            });
+            
+            W = window.innerWidth;
+            H = window.innerHeight;
             cx = W / 2;
             cy = H / 2;
+            
+            console.log(`[RESIZE] ${W}x${H} @ DPR ${EFFECTIVE_DPR}`);
         }
         
         window.addEventListener('resize', resize);
@@ -4145,9 +4413,28 @@
         
         // ============ MAIN LOOP ============
         function animate(timestamp) {
+            // ═══ EXEC CONTROL ═══
+            if (!EXEC.running || EXEC.paused) {
+                requestAnimationFrame(animate);
+                return;
+            }
+            
             const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
+            const frameTime = timestamp - lastTime;
             lastTime = timestamp;
             t += dt;
+            
+            // Calculate FPS and update quality
+            const currentFPS = 1000 / (frameTime || 16.67);
+            EXEC.fps = EXEC.fps * 0.9 + currentFPS * 0.1; // Smoothed FPS
+            EXEC.updateQuality(EXEC.fps);
+            EXEC.frameTime = frameTime;
+            
+            // Update SYMBOL_STATE metrics (truthful)
+            SYMBOL_STATE.updateMetrics(nodes, connections, EXEC.fps, frameTime);
+            
+            // Trim event log periodically
+            if (t % 60 < dt) trimEventLog();
             
             // Clear canvases
             ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
@@ -4155,16 +4442,24 @@
             fxCtx.clearRect(0, 0, W, H);
             topCtx.clearRect(0, 0, W, H);
             
-            // Draw background
-            drawBackground();
+            // Draw background (skip heavy parts on low quality)
+            if (EXEC.shouldRenderHeavy()) {
+                drawBackground();
+            } else {
+                // Simple background fallback
+                bgCtx.fillStyle = '#000510';
+                bgCtx.fillRect(0, 0, W, H);
+            }
             
             // Update and draw connections (back layer)
             connections.forEach(c => {
                 c.update(dt);
-                c.draw();
+                if (EXEC.shouldRenderHeavy() || c.active) {
+                    c.draw();
+                }
             });
             
-            // Update and draw nodes
+            // Update and draw nodes (always render)
             nodes.sort((a, b) => a.z - b.z);
             nodes.forEach(n => {
                 n.update(dt);
@@ -4172,59 +4467,82 @@
             });
             
             // Update and draw inner structures (Structure of Structures)
-            innerStructures.forEach(s => {
-                s.update(dt);
-                s.draw();
-            });
+            if (EXEC.shouldRenderHeavy()) {
+                innerStructures.forEach(s => {
+                    s.update(dt);
+                    s.draw();
+                });
+            }
             
             // Update and draw meta structure overlay
             metaStructure.update(dt);
-            metaStructure.draw();
+            if (EXEC.shouldRenderHeavy()) {
+                metaStructure.draw();
+            }
             
-            // Update and draw particles
-            particles = particles.filter(p => {
-                p.update(dt);
-                p.draw();
-                return !p.isDead();
-            });
+            // Update and draw particles (cosmetic)
+            if (EXEC.shouldRenderCosmetic()) {
+                particles = particles.filter(p => {
+                    p.update(dt);
+                    p.draw();
+                    return !p.isDead();
+                });
+            } else {
+                particles = particles.filter(p => {
+                    p.update(dt);
+                    return !p.isDead();
+                });
+            }
             
-            // Update and draw energy waves
-            energyWaves = energyWaves.filter(w => {
-                w.update(dt);
-                w.draw();
-                return !w.isDead();
-            });
+            // Update and draw energy waves (cosmetic)
+            if (EXEC.shouldRenderCosmetic()) {
+                energyWaves = energyWaves.filter(w => {
+                    w.update(dt);
+                    w.draw();
+                    return !w.isDead();
+                });
+            } else {
+                energyWaves = [];
+            }
             
             // Update and draw explosions
             explosions = explosions.filter(e => {
                 e.update(dt);
-                e.draw();
+                if (EXEC.shouldRenderHeavy()) e.draw();
                 return !e.isDead();
             });
             
-            // Update and draw lightnings
-            lightnings = lightnings.filter(l => {
-                l.update(dt);
-                l.draw();
-                return !l.isDead();
-            });
+            // Update and draw lightnings (cosmetic)
+            if (EXEC.shouldRenderCosmetic()) {
+                lightnings = lightnings.filter(l => {
+                    l.update(dt);
+                    l.draw();
+                    return !l.isDead();
+                });
+            } else {
+                lightnings = [];
+            }
             
-            // Update and draw aurora waves
-            auroraWaves = auroraWaves.filter(a => {
-                a.update(dt);
-                a.draw();
-                return !a.isDead();
-            });
+            // Update and draw aurora waves (cosmetic)
+            if (EXEC.shouldRenderCosmetic()) {
+                auroraWaves = auroraWaves.filter(a => {
+                    a.update(dt);
+                    a.draw();
+                    return !a.isDead();
+                });
+            } else {
+                auroraWaves = [];
+            }
             
             // Update data streams
             dataStreams.forEach(s => {
                 s.update(dt);
-                s.draw();
+                if (EXEC.shouldRenderHeavy()) s.draw();
                 if (s.arrived) s.reset();
             });
             
-            // Spawn ambient particles
-            if (Math.random() < 0.05) {
+            // Spawn ambient particles (scaled by quality)
+            if (EXEC.shouldRenderCosmetic() && Math.random() < 0.05 * EXEC.quality) {
                 const angle = Math.random() * Math.PI * 2;
                 const dist = 200 + Math.random() * 200;
                 particles.push(new Particle(
@@ -4234,8 +4552,8 @@
                 ));
             }
             
-            // Spawn ambient energy waves
-            if (Math.random() < 0.01) {
+            // Spawn ambient energy waves (scaled by quality)
+            if (EXEC.shouldRenderCosmetic() && Math.random() < 0.01 * EXEC.quality) {
                 const node = nodes[Math.floor(Math.random() * nodes.length)];
                 if (node && isFinite(node.x)) {
                     energyWaves.push(new EnergyWave(node.x, node.y, node.color));
@@ -4243,8 +4561,8 @@
                 }
             }
             
-            // Spawn ambient lightning between random nodes
-            if (Math.random() < 0.008 && nodes.length > 1) {
+            // Spawn ambient lightning between random nodes (scaled by quality)
+            if (EXEC.shouldRenderCosmetic() && Math.random() < 0.008 * EXEC.quality && nodes.length > 1) {
                 const n1 = nodes[Math.floor(Math.random() * nodes.length)];
                 const n2 = nodes[Math.floor(Math.random() * nodes.length)];
                 if (n1 && n2 && n1 !== n2 && isFinite(n1.x) && isFinite(n2.x)) {
@@ -4254,8 +4572,8 @@
                 }
             }
             
-            // Spawn aurora waves
-            if (Math.random() < 0.005) {
+            // Spawn aurora waves (scaled by quality)
+            if (EXEC.shouldRenderCosmetic() && Math.random() < 0.005 * EXEC.quality) {
                 auroraWaves.push(new AuroraWave());
             }
             
@@ -4458,8 +4776,8 @@
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
+            // B key - Lightning storm / Blast
+            if (e.code === 'KeyB') {
                 // Energize all nodes
                 nodes.forEach(n => n.energize());
                 energyWaves.push(new EnergyWave(cx, cy, '#ffffff'));
@@ -4552,6 +4870,33 @@
                         s.toggle();
                     }
                 });
+            }
+            
+            // Space key - GLOBAL PAUSE/PLAY
+            if (e.code === 'Space') {
+                e.preventDefault();
+                EXEC.paused = !EXEC.paused;
+                
+                // Update CSS animation state
+                document.body.style.setProperty('--animation-state', 
+                    EXEC.paused ? 'paused' : 'running');
+                
+                // Visual feedback
+                showZoomIndicator(EXEC.paused ? '⏸ PAUSED' : '▶ RUNNING', '');
+                
+                // Log event
+                EVENT_LOG.push({
+                    t: performance.now(),
+                    type: EXEC.paused ? 'EXEC_PAUSE' : 'EXEC_RESUME'
+                });
+                
+                console.log(`[EXEC] ${EXEC.paused ? 'Paused' : 'Resumed'}`);
+            }
+            
+            // L key - Export event log
+            if (e.code === 'KeyL' && e.shiftKey) {
+                window.exportEventLog();
+                showZoomIndicator('EVENT LOG EXPORTED', `${EVENT_LOG.length} events`);
             }
         });
         
@@ -5664,34 +6009,74 @@
         const metricsPanel = document.getElementById('metricsPanel');
         let metricsVisible = false;
         
-        function updateMetrics() {
+        function updateMetricsDisplay() {
             if (!metricsVisible) return;
             
-            const symbolCount = nodes.length;
-            const connectionCount = connections.length;
+            // Use truthful metrics from SYMBOL_STATE
+            const m = SYMBOL_STATE.metrics;
+            
+            // Calculate system load from real values
             const particleCount = particles.length;
             const effectCount = lightnings.length + explosions.length + energyWaves.length;
-            const depth = currentDepth;
+            const load = Math.min(100, Math.round(
+                (particleCount / 800 * 30) + 
+                (effectCount / 100 * 20) + 
+                (m.symbolCount / 80 * 20) +
+                ((100 - m.fps) / 100 * 30) // FPS impact
+            ));
             
-            // Calculate Wh-Entropy (based on active gates and connections)
-            const activeGates = showWhLogic ? (activeWhGate ? 1 : 0) : 0;
-            const entropy = (activeGates * 0.2 + (selectedNode ? 0.3 : 0) + (showCausalChain ? 0.2 : 0) + (depth * 0.1)).toFixed(2);
-            
-            // System load estimate
-            const load = Math.min(100, Math.round((particleCount / 800 * 40) + (effectCount / 100 * 30) + (symbolCount / 80 * 30)));
-            
-            document.getElementById('metricSymbols').textContent = symbolCount;
-            document.getElementById('metricConnections').textContent = connectionCount;
+            // Update DOM with truthful values
+            document.getElementById('metricSymbols').textContent = m.symbolCount;
+            document.getElementById('metricConnections').textContent = m.connectionCount;
             document.getElementById('metricParticles').textContent = particleCount;
             document.getElementById('metricEffects').textContent = effectCount;
-            document.getElementById('metricDepth').textContent = depth;
-            document.getElementById('metricEntropy').textContent = entropy;
+            document.getElementById('metricDepth').textContent = m.currentDepth;
+            document.getElementById('metricEntropy').textContent = m.whEntropy;
             document.getElementById('metricLoad').textContent = load + '%';
             document.getElementById('metricLoadBar').style.width = load + '%';
+            
+            // Update FPS
+            const fpsEl = document.getElementById('metricFPS');
+            if (fpsEl) {
+                fpsEl.textContent = m.fps;
+                fpsEl.style.color = m.fps >= 50 ? '#0f0' : m.fps >= 30 ? '#ff0' : '#f00';
+            }
+            
+            // Update Quality
+            const qualityEl = document.getElementById('metricQuality');
+            if (qualityEl) {
+                qualityEl.textContent = (EXEC.quality * 100).toFixed(0) + '%';
+                qualityEl.style.color = EXEC.quality >= 0.7 ? '#0f0' : EXEC.quality >= 0.5 ? '#ff0' : '#f00';
+            }
+            
+            // Update EXEC state
+            const execEl = document.getElementById('metricExecState');
+            if (execEl) {
+                if (!EXEC.running) {
+                    execEl.textContent = 'HIDDEN';
+                    execEl.style.color = '#888';
+                } else if (EXEC.paused) {
+                    execEl.textContent = 'PAUSED';
+                    execEl.style.color = '#ff0';
+                } else {
+                    execEl.textContent = 'RUNNING';
+                    execEl.style.color = '#0f0';
+                }
+            }
+            
+            // Color-code load bar
+            const loadBar = document.getElementById('metricLoadBar');
+            if (load > 80) {
+                loadBar.style.background = 'linear-gradient(90deg, #ff0, #f00)';
+            } else if (load > 50) {
+                loadBar.style.background = 'linear-gradient(90deg, #0f0, #ff0)';
+            } else {
+                loadBar.style.background = 'linear-gradient(90deg, #0ff, #0f0)';
+            }
         }
         
         // Update metrics every 500ms
-        setInterval(updateMetrics, 500);
+        setInterval(updateMetricsDisplay, 500);
         
         // ═══════════════════════════════════════════════════════════════
         // FPS COUNTER
