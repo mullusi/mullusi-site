@@ -546,69 +546,666 @@
             50% { opacity: 0.5; }
         }
         
-        /* Architect credit */
+        /* Architect credit - Enhanced Holographic Display */
         .architect-credit {
             position: absolute;
             bottom: 25px;
             right: 40px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 12px 18px;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(0,255,255,0.3);
-            backdrop-filter: blur(10px);
+            gap: 20px;
+            padding: 20px 30px;
+            background: rgba(0,0,0,0.75);
+            border: 1px solid rgba(0,255,255,0.4);
+            backdrop-filter: blur(20px);
             animation: architect-glow 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            z-index: 100;
+            overflow: visible;
+        }
+        
+        /* Outer Fidel orbit container */
+        .architect-fidel-field {
+            position: absolute;
+            top: 50%;
+            left: -60px;
+            width: 200px;
+            height: 200px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Individual orbiting Fidel */
+        .orbit-fidel {
+            position: absolute;
+            font-family: 'Nyala', 'Abyssinica SIL', serif;
+            font-size: 1.2em;
+            color: #0ff;
+            text-shadow: 0 0 10px currentColor;
+            opacity: 0.7;
+            transition: opacity 0.3s, text-shadow 0.3s, transform 0.15s;
+            will-change: transform;
+        }
+        
+        .orbit-fidel.pulse {
+            opacity: 1;
+            text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+            transform: scale(1.3);
+        }
+        
+        /* Fidel stream - vertical cascade */
+        .fidel-stream {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .architect-credit:hover .fidel-stream {
+            opacity: 1;
+        }
+        
+        .stream-fidel {
+            font-family: 'Nyala', 'Abyssinica SIL', serif;
+            font-size: 0.9em;
+            color: rgba(0,255,255,0.6);
+            text-shadow: 0 0 8px currentColor;
+            animation: stream-float 2s ease-in-out infinite;
+        }
+        
+        .stream-fidel:nth-child(1) { animation-delay: 0s; }
+        .stream-fidel:nth-child(2) { animation-delay: 0.15s; }
+        .stream-fidel:nth-child(3) { animation-delay: 0.3s; }
+        .stream-fidel:nth-child(4) { animation-delay: 0.45s; }
+        .stream-fidel:nth-child(5) { animation-delay: 0.6s; }
+        .stream-fidel:nth-child(6) { animation-delay: 0.75s; }
+        .stream-fidel:nth-child(7) { animation-delay: 0.9s; }
+        
+        @keyframes stream-float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+            50% { transform: translateY(-5px) scale(1.1); opacity: 1; }
+        }
+        
+        /* Corner Fidel accents */
+        .fidel-corner {
+            position: absolute;
+            font-family: 'Nyala', 'Abyssinica SIL', serif;
+            font-size: 1.5em;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+        }
+        
+        .fidel-corner.top-left { top: -25px; left: -25px; color: #0ff; }
+        .fidel-corner.top-right { top: -25px; right: -25px; color: #f0f; }
+        .fidel-corner.bottom-left { bottom: -25px; left: -25px; color: #ff0; }
+        .fidel-corner.bottom-right { bottom: -25px; right: -25px; color: #0f8; }
+        
+        .architect-credit:hover .fidel-corner {
+            opacity: 0.9;
+            text-shadow: 0 0 15px currentColor;
+        }
+        
+        .fidel-corner.top-left { animation: corner-orbit-tl 8s linear infinite; }
+        .fidel-corner.top-right { animation: corner-orbit-tr 8s linear infinite; }
+        .fidel-corner.bottom-left { animation: corner-orbit-bl 8s linear infinite; }
+        .fidel-corner.bottom-right { animation: corner-orbit-br 8s linear infinite; }
+        
+        @keyframes corner-orbit-tl {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(5px, 5px) rotate(90deg); }
+            50% { transform: translate(0, 10px) rotate(180deg); }
+            75% { transform: translate(-5px, 5px) rotate(270deg); }
+        }
+        
+        @keyframes corner-orbit-tr {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5px, 5px) rotate(-90deg); }
+            50% { transform: translate(0, 10px) rotate(-180deg); }
+            75% { transform: translate(5px, 5px) rotate(-270deg); }
+        }
+        
+        @keyframes corner-orbit-bl {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(5px, -5px) rotate(90deg); }
+            50% { transform: translate(0, -10px) rotate(180deg); }
+            75% { transform: translate(-5px, -5px) rotate(270deg); }
+        }
+        
+        @keyframes corner-orbit-br {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5px, -5px) rotate(-90deg); }
+            50% { transform: translate(0, -10px) rotate(-180deg); }
+            75% { transform: translate(5px, -5px) rotate(-270deg); }
+        }
+        
+        /* Decorative border patterns */
+        .architect-credit::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border: 1px dashed rgba(0,255,255,0.2);
+            pointer-events: none;
+            animation: border-rotate 20s linear infinite;
+        }
+        
+        .architect-credit::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border: 1px dotted rgba(255,0,255,0.15);
+            pointer-events: none;
+            animation: border-rotate 30s linear infinite reverse;
+        }
+        
+        @keyframes border-rotate {
+            from { border-radius: 5px 15px 5px 15px; }
+            to { border-radius: 15px 5px 15px 5px; }
+        }
+        
+        .architect-credit:hover {
+            transform: scale(1.05);
+            border-color: #0ff;
+            box-shadow: 0 0 40px rgba(0,255,255,0.4), 0 0 80px rgba(255,0,255,0.2);
+        }
+        
+        .architect-credit.active {
+            transform: scale(1.1);
+            border-color: #f0f;
         }
         
         @keyframes architect-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(0,255,255,0.1); }
-            50% { box-shadow: 0 0 30px rgba(0,255,255,0.3), 0 0 50px rgba(255,0,255,0.1); }
+            0%, 100% { box-shadow: 0 0 20px rgba(0,255,255,0.15), inset 0 0 20px rgba(0,255,255,0.05); }
+            50% { box-shadow: 0 0 40px rgba(0,255,255,0.3), 0 0 60px rgba(255,0,255,0.15), inset 0 0 30px rgba(255,0,255,0.05); }
+        }
+        
+        /* Photo container with holographic rings */
+        .architect-photo-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
         }
         
         .architect-photo {
-            width: 55px;
-            height: 55px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             border: 2px solid #0ff;
             object-fit: cover;
-            box-shadow: 0 0 20px rgba(0,255,255,0.4);
+            box-shadow: 0 0 25px rgba(0,255,255,0.5);
             animation: photo-pulse 4s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .architect-credit:hover .architect-photo {
+            border-color: #fff;
+            box-shadow: 0 0 40px rgba(255,255,255,0.6);
         }
         
         @keyframes photo-pulse {
-            0%, 100% { border-color: #0ff; box-shadow: 0 0 20px rgba(0,255,255,0.4); }
-            50% { border-color: #f0f; box-shadow: 0 0 25px rgba(255,0,255,0.5); }
+            0%, 100% { border-color: #0ff; box-shadow: 0 0 25px rgba(0,255,255,0.5); }
+            33% { border-color: #0f8; box-shadow: 0 0 30px rgba(0,255,136,0.5); }
+            66% { border-color: #f0f; box-shadow: 0 0 30px rgba(255,0,255,0.5); }
+        }
+        
+        /* Holographic orbital rings */
+        .photo-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid;
+            pointer-events: none;
+        }
+        
+        .photo-ring-1 {
+            width: 90px;
+            height: 90px;
+            top: -10px;
+            left: -10px;
+            border-color: rgba(0,255,255,0.4);
+            animation: ring-orbit-1 6s linear infinite;
+        }
+        
+        .photo-ring-2 {
+            width: 100px;
+            height: 100px;
+            top: -15px;
+            left: -15px;
+            border-color: rgba(255,0,255,0.3);
+            border-style: dashed;
+            animation: ring-orbit-2 8s linear infinite reverse;
+        }
+        
+        .photo-ring-3 {
+            width: 110px;
+            height: 110px;
+            top: -20px;
+            left: -20px;
+            border-color: rgba(255,255,0,0.2);
+            border-style: dotted;
+            animation: ring-orbit-3 10s linear infinite;
+        }
+        
+        @keyframes ring-orbit-1 {
+            0% { transform: rotateX(60deg) rotateZ(0deg); }
+            100% { transform: rotateX(60deg) rotateZ(360deg); }
+        }
+        
+        @keyframes ring-orbit-2 {
+            0% { transform: rotateX(70deg) rotateY(20deg) rotateZ(0deg); }
+            100% { transform: rotateX(70deg) rotateY(20deg) rotateZ(360deg); }
+        }
+        
+        @keyframes ring-orbit-3 {
+            0% { transform: rotateX(50deg) rotateY(-30deg) rotateZ(0deg); }
+            100% { transform: rotateX(50deg) rotateY(-30deg) rotateZ(360deg); }
+        }
+        
+        /* Orbiting particles around photo */
+        .photo-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #0ff;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 6px #0ff;
+        }
+        
+        .photo-particle:nth-child(1) { animation: particle-orbit-1 3s linear infinite; }
+        .photo-particle:nth-child(2) { animation: particle-orbit-2 4s linear infinite; background: #f0f; box-shadow: 0 0 6px #f0f; }
+        .photo-particle:nth-child(3) { animation: particle-orbit-3 5s linear infinite; background: #ff0; box-shadow: 0 0 6px #ff0; }
+        .photo-particle:nth-child(4) { animation: particle-orbit-4 3.5s linear infinite; background: #0f8; box-shadow: 0 0 6px #0f8; }
+        .photo-particle:nth-child(5) { animation: particle-orbit-5 4.5s linear infinite; background: #f80; box-shadow: 0 0 6px #f80; }
+        
+        @keyframes particle-orbit-1 {
+            0% { transform: rotate(0deg) translateX(45px) rotate(0deg); opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { transform: rotate(360deg) translateX(45px) rotate(-360deg); opacity: 1; }
+        }
+        @keyframes particle-orbit-2 {
+            0% { transform: rotate(72deg) translateX(50px) rotate(-72deg); opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { transform: rotate(432deg) translateX(50px) rotate(-432deg); opacity: 1; }
+        }
+        @keyframes particle-orbit-3 {
+            0% { transform: rotate(144deg) translateX(55px) rotate(-144deg); opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { transform: rotate(504deg) translateX(55px) rotate(-504deg); opacity: 1; }
+        }
+        @keyframes particle-orbit-4 {
+            0% { transform: rotate(216deg) translateX(48px) rotate(-216deg); opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { transform: rotate(576deg) translateX(48px) rotate(-576deg); opacity: 1; }
+        }
+        @keyframes particle-orbit-5 {
+            0% { transform: rotate(288deg) translateX(52px) rotate(-288deg); opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { transform: rotate(648deg) translateX(52px) rotate(-648deg); opacity: 1; }
+        }
+        
+        /* Holographic scanline effect */
+        .photo-scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 3;
+        }
+        
+        .photo-scanline::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.8), transparent);
+            animation: scanline-move 2s linear infinite;
+        }
+        
+        @keyframes scanline-move {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+        
+        /* Energy burst on click */
+        .photo-energy-burst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff, #0ff);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 4;
+        }
+        
+        .photo-energy-burst.active {
+            animation: energy-burst 0.8s ease-out forwards;
+        }
+        
+        @keyframes energy-burst {
+            0% { width: 10px; height: 10px; opacity: 1; }
+            100% { width: 300px; height: 300px; opacity: 0; }
         }
         
         .architect-info {
             display: flex;
             flex-direction: column;
+            gap: 4px;
         }
         
         .architect-role {
-            font-size: 0.6em;
-            letter-spacing: 0.3em;
-            color: rgba(255,255,255,0.4);
+            font-size: 0.55em;
+            letter-spacing: 0.35em;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
         }
         
         .architect-name {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.2em;
-            font-weight: 600;
-            letter-spacing: 0.25em;
-            background: linear-gradient(90deg, #0ff, #f0f, #0ff);
-            background-size: 200% 100%;
+            font-size: 1.4em;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            background: linear-gradient(90deg, #0ff, #f0f, #ff0, #0ff);
+            background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: name-gradient 3s linear infinite;
+            animation: name-gradient 4s linear infinite;
+            text-shadow: 0 0 20px rgba(0,255,255,0.3);
         }
         
         @keyframes name-gradient {
             0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
+            100% { background-position: 300% 50%; }
         }
         
+        /* Architect title with Ge'ez */
+        .architect-title-geez {
+            font-size: 0.7em;
+            color: #f0f;
+            letter-spacing: 0.15em;
+            opacity: 0.7;
+        }
+        
+        /* Connection line to system (drawn via canvas) */
+        .architect-connector {
+            position: absolute;
+            bottom: 100%;
+            right: 50%;
+            width: 2px;
+            height: 0;
+            background: linear-gradient(to top, #0ff, transparent);
+            transition: height 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .architect-credit:hover .architect-connector {
+            height: 50px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* HELP PANEL                                                       */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .help-toggle {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(0,255,255,0.4);
+            border-radius: 50%;
+            color: #0ff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            cursor: pointer;
+            z-index: 200;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .help-toggle:hover {
+            background: rgba(0,255,255,0.15);
+            border-color: #0ff;
+            box-shadow: 0 0 20px rgba(0,255,255,0.4);
+            transform: scale(1.1);
+        }
+        
+        .help-panel {
+            position: fixed;
+            bottom: 70px;
+            left: 25px;
+            width: 280px;
+            background: rgba(0,0,0,0.85);
+            border: 1px solid rgba(0,255,255,0.3);
+            backdrop-filter: blur(15px);
+            padding: 15px;
+            z-index: 190;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
+        .help-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        .help-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            color: #0ff;
+            margin-bottom: 12px;
+            letter-spacing: 0.15em;
+            border-bottom: 1px solid rgba(0,255,255,0.2);
+            padding-bottom: 8px;
+        }
+        
+        .help-section {
+            margin-bottom: 12px;
+        }
+        
+        .help-section-title {
+            font-size: 0.65em;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+        
+        .help-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 0.75em;
+        }
+        
+        .help-key {
+            background: rgba(0,255,255,0.15);
+            border: 1px solid rgba(0,255,255,0.3);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #0ff;
+            min-width: 50px;
+            text-align: center;
+        }
+        
+        .help-desc {
+            color: rgba(255,255,255,0.7);
+            flex: 1;
+            margin-left: 12px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* METRICS OVERLAY                                                  */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .metrics-panel {
+            position: fixed;
+            top: 100px;
+            right: 25px;
+            width: 180px;
+            background: rgba(0,0,0,0.75);
+            border: 1px solid rgba(255,136,0,0.3);
+            backdrop-filter: blur(10px);
+            padding: 12px;
+            z-index: 150;
+            opacity: 0;
+            transform: translateX(20px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
+        .metrics-panel.visible {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+        
+        .metrics-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7em;
+            color: #f80;
+            margin-bottom: 10px;
+            letter-spacing: 0.15em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .metrics-title::before {
+            content: '◈';
+            color: #f80;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,136,0,0.1);
+            font-size: 0.7em;
+        }
+        
+        .metric-label {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .metric-value {
+            color: #f80;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+        }
+        
+        .metric-bar {
+            height: 4px;
+            background: rgba(255,136,0,0.2);
+            margin-top: 3px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .metric-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f80, #ff0);
+            transition: width 0.3s ease;
+        }
+        
+        /* FPS Counter */
+        .fps-counter {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7em;
+            color: #0f8;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border: 1px solid rgba(0,255,136,0.3);
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .fps-counter.visible {
+            opacity: 1;
+        }
+        
+        .fps-counter.warning {
+            color: #ff0;
+            border-color: rgba(255,255,0,0.3);
+        }
+        
+        .fps-counter.critical {
+            color: #f00;
+            border-color: rgba(255,0,0,0.3);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* SCREENSHOT FLASH                                                 */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .screenshot-flash {
+            position: fixed;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9998;
+        }
+        
+        .screenshot-flash.active {
+            animation: flash 0.3s ease-out;
+        }
+        
+        @keyframes flash {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+        
+        .screenshot-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(0,255,136,0.9);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8em;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.3s ease;
+        }
+        
+        .screenshot-toast.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         /* Structure Depth Indicator */
         .structure-indicator {
             display: flex;
@@ -804,21 +1401,276 @@
                 0deg,
                 transparent,
                 transparent 2px,
-                rgba(0,0,0,0.1) 2px,
-                rgba(0,0,0,0.1) 4px
+                rgba(0,0,0,0.15) 2px,
+                rgba(0,0,0,0.15) 4px
             );
-            opacity: 0.3;
+            opacity: 0.25;
+            animation: scanline-flicker 8s linear infinite;
         }
         
-        /* Vignette */
+        @keyframes scanline-flicker {
+            0%, 100% { opacity: 0.25; }
+            50% { opacity: 0.2; }
+            52% { opacity: 0.35; }
+            54% { opacity: 0.25; }
+        }
+        
+        /* Vignette - Enhanced */
         .vignette {
             position: fixed;
             inset: 0;
             z-index: 999;
             pointer-events: none;
-            background: radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(0,0,0,0.8) 100%);
+            background: radial-gradient(ellipse at center, transparent 0%, transparent 30%, rgba(0,0,10,0.4) 60%, rgba(0,0,5,0.85) 100%);
         }
         
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* POST-PROCESSING EFFECTS                                         */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        /* Chromatic Aberration Overlay */
+        .chromatic-aberration {
+            position: fixed;
+            inset: 0;
+            z-index: 998;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: screen;
+            animation: chromatic-pulse 10s ease-in-out infinite;
+        }
+        
+        .chromatic-aberration::before,
+        .chromatic-aberration::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+        }
+        
+        .chromatic-aberration::before {
+            background: linear-gradient(90deg, rgba(255,0,0,0.03) 0%, transparent 50%, rgba(0,255,255,0.03) 100%);
+            transform: translateX(-2px);
+        }
+        
+        .chromatic-aberration::after {
+            background: linear-gradient(90deg, rgba(0,255,255,0.03) 0%, transparent 50%, rgba(255,0,0,0.03) 100%);
+            transform: translateX(2px);
+        }
+        
+        @keyframes chromatic-pulse {
+            0%, 100% { opacity: 0.3; }
+            30% { opacity: 0.5; }
+            60% { opacity: 0.2; }
+        }
+        
+        /* Bloom / Glow Overlay */
+        .bloom-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 997;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(0,255,255,0.05) 0%, transparent 50%);
+            filter: blur(40px);
+            animation: bloom-breathe 6s ease-in-out infinite;
+        }
+        
+        @keyframes bloom-breathe {
+            0%, 100% { 
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.9;
+                transform: scale(1.05);
+            }
+        }
+        
+        /* Film Grain */
+        .film-grain {
+            position: fixed;
+            inset: 0;
+            z-index: 1001;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            animation: grain-shift 0.5s steps(10) infinite;
+        }
+        
+        @keyframes grain-shift {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-1%, -1%); }
+            20% { transform: translate(1%, 1%); }
+            30% { transform: translate(-1%, 1%); }
+            40% { transform: translate(1%, -1%); }
+            50% { transform: translate(-1%, 0); }
+            60% { transform: translate(1%, 0); }
+            70% { transform: translate(0, -1%); }
+            80% { transform: translate(0, 1%); }
+            90% { transform: translate(-1%, -1%); }
+        }
+        
+        /* Atmospheric Glow - Edge highlights */
+        .atmosphere-glow {
+            position: fixed;
+            inset: 0;
+            z-index: 996;
+            pointer-events: none;
+            box-shadow: 
+                inset 0 0 100px rgba(0,255,255,0.03),
+                inset 0 0 200px rgba(255,0,255,0.02),
+                inset 0 0 300px rgba(0,0,0,0.5);
+            animation: atmosphere-shift 15s ease-in-out infinite;
+        }
+        
+        @keyframes atmosphere-shift {
+            0%, 100% {
+                box-shadow: 
+                    inset 0 0 100px rgba(0,255,255,0.03),
+                    inset 0 0 200px rgba(255,0,255,0.02),
+                    inset 0 0 300px rgba(0,0,0,0.5);
+            }
+            33% {
+                box-shadow: 
+                    inset 0 0 100px rgba(255,0,255,0.03),
+                    inset 0 0 200px rgba(255,255,0,0.02),
+                    inset 0 0 300px rgba(0,0,0,0.5);
+            }
+            66% {
+                box-shadow: 
+                    inset 0 0 100px rgba(0,255,136,0.03),
+                    inset 0 0 200px rgba(0,255,255,0.02),
+                    inset 0 0 300px rgba(0,0,0,0.5);
+            }
+        }
+        
+        /* Corner Brackets - Enhanced HUD */
+        .corner-bracket {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            z-index: 1002;
+            pointer-events: none;
+        }
+        
+        .corner-bracket::before,
+        .corner-bracket::after {
+            content: '';
+            position: absolute;
+            background: linear-gradient(90deg, #0ff, transparent);
+        }
+        
+        .corner-bracket::before {
+            width: 100%;
+            height: 2px;
+            top: 0;
+            left: 0;
+        }
+        
+        .corner-bracket::after {
+            width: 2px;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: linear-gradient(180deg, #0ff, transparent);
+        }
+        
+        .corner-bracket.top-left { top: 20px; left: 20px; }
+        .corner-bracket.top-right { 
+            top: 20px; right: 20px; 
+            transform: scaleX(-1);
+        }
+        .corner-bracket.bottom-left { 
+            bottom: 20px; left: 20px; 
+            transform: scaleY(-1);
+        }
+        .corner-bracket.bottom-right { 
+            bottom: 20px; right: 20px; 
+            transform: scale(-1, -1);
+        }
+        
+        .corner-bracket.top-left::before,
+        .corner-bracket.top-left::after {
+            animation: corner-pulse-tl 4s ease-in-out infinite;
+        }
+        
+        .corner-bracket.top-right::before,
+        .corner-bracket.top-right::after {
+            animation: corner-pulse-tr 4s ease-in-out infinite 1s;
+        }
+        
+        .corner-bracket.bottom-left::before,
+        .corner-bracket.bottom-left::after {
+            animation: corner-pulse-bl 4s ease-in-out infinite 2s;
+        }
+        
+        .corner-bracket.bottom-right::before,
+        .corner-bracket.bottom-right::after {
+            animation: corner-pulse-br 4s ease-in-out infinite 3s;
+        }
+        
+        @keyframes corner-pulse-tl {
+            0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 5px #0ff); }
+            50% { opacity: 1; filter: drop-shadow(0 0 15px #0ff); }
+        }
+        
+        @keyframes corner-pulse-tr {
+            0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 5px #f0f); }
+            50% { opacity: 1; filter: drop-shadow(0 0 15px #f0f); }
+        }
+        
+        @keyframes corner-pulse-bl {
+            0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 5px #ff0); }
+            50% { opacity: 1; filter: drop-shadow(0 0 15px #ff0); }
+        }
+        
+        @keyframes corner-pulse-br {
+            0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 5px #0f8); }
+            50% { opacity: 1; filter: drop-shadow(0 0 15px #0f8); }
+        }
+        
+        /* Data Stream Lines */
+        .data-stream {
+            position: fixed;
+            z-index: 995;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .data-stream.left {
+            top: 0;
+            left: 30px;
+            width: 2px;
+            height: 100%;
+        }
+        
+        .data-stream.right {
+            top: 0;
+            right: 30px;
+            width: 2px;
+            height: 100%;
+        }
+        
+        .data-stream::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(180deg, transparent, #0ff, transparent);
+            animation: data-flow 3s linear infinite;
+        }
+        
+        .data-stream.right::before {
+            animation-delay: -1.5s;
+            background: linear-gradient(180deg, transparent, #f0f, transparent);
+        }
+        
+        @keyframes data-flow {
+            0% { top: -80px; opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { top: 100%; opacity: 0; }
+        }
+
         /* Floating Ge'ez characters */
         .floating-chars {
             position: fixed;
@@ -826,21 +1678,18 @@
             z-index: 50;
             pointer-events: none;
             overflow: hidden;
+            display: none; /* Disabled - Fidels now orbit architect */
         }
         
         .float-char {
             position: absolute;
             font-size: 1.5em;
-            color: rgba(0,255,255,0.15);
-            animation: float-up 15s linear infinite;
+            color: rgba(0,255,255,0.4);
             text-shadow: 0 0 10px currentColor;
-        }
-        
-        @keyframes float-up {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+            pointer-events: none;
+            z-index: 1;
+            will-change: transform, opacity, left, top, color, font-size;
+            font-family: 'Nyala', 'Abyssinica SIL', serif;
         }
         
         /* Structure of Structures Panel */
@@ -1323,8 +2172,109 @@
     
     <!-- Visual Overlays -->
     <div class="nebula"></div>
+    <!-- Help Toggle Button -->
+    <button class="help-toggle" id="helpToggle" title="Keyboard Shortcuts">?</button>
+    
+    <!-- Help Panel -->
+    <div class="help-panel" id="helpPanel">
+        <div class="help-title">⌨ CONTROLS</div>
+        
+        <div class="help-section">
+            <div class="help-section-title">Navigation</div>
+            <div class="help-row"><span class="help-key">Click</span><span class="help-desc">Select node / Energize</span></div>
+            <div class="help-row"><span class="help-key">Hold</span><span class="help-desc">Dive into structure</span></div>
+            <div class="help-row"><span class="help-key">Z</span><span class="help-desc">Zoom into selected</span></div>
+            <div class="help-row"><span class="help-key">X</span><span class="help-desc">Zoom out</span></div>
+        </div>
+        
+        <div class="help-section">
+            <div class="help-section-title">Visualization</div>
+            <div class="help-row"><span class="help-key">S</span><span class="help-desc">Structure fractals</span></div>
+            <div class="help-row"><span class="help-key">W</span><span class="help-desc">Wh-Logic gates</span></div>
+            <div class="help-row"><span class="help-key">C</span><span class="help-desc">Causal chains</span></div>
+            <div class="help-row"><span class="help-key">D</span><span class="help-desc">Cycle depth level</span></div>
+        </div>
+        
+        <div class="help-section">
+            <div class="help-section-title">Effects & Tools</div>
+            <div class="help-row"><span class="help-key">SPACE</span><span class="help-desc">Lightning storm</span></div>
+            <div class="help-row"><span class="help-key">E</span><span class="help-desc">Toggle effects</span></div>
+            <div class="help-row"><span class="help-key">G</span><span class="help-desc">Toggle grain</span></div>
+            <div class="help-row"><span class="help-key">V</span><span class="help-desc">Toggle vignette</span></div>
+            <div class="help-row"><span class="help-key">M</span><span class="help-desc">Metrics panel</span></div>
+            <div class="help-row"><span class="help-key">F</span><span class="help-desc">FPS counter</span></div>
+            <div class="help-row"><span class="help-key">P</span><span class="help-desc">Screenshot</span></div>
+        </div>
+        
+        <div class="help-section">
+            <div class="help-section-title">Architect</div>
+            <div class="help-row"><span class="help-key">Photo</span><span class="help-desc">Click to connect</span></div>
+        </div>
+    </div>
+    
+    <!-- Metrics Panel -->
+    <div class="metrics-panel" id="metricsPanel">
+        <div class="metrics-title">SYSTEM METRICS</div>
+        <div class="metric-row">
+            <span class="metric-label">Symbols</span>
+            <span class="metric-value" id="metricSymbols">0</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Connections</span>
+            <span class="metric-value" id="metricConnections">0</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Particles</span>
+            <span class="metric-value" id="metricParticles">0</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Active Effects</span>
+            <span class="metric-value" id="metricEffects">0</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Causal Depth</span>
+            <span class="metric-value" id="metricDepth">0</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Wh-Entropy</span>
+            <span class="metric-value" id="metricEntropy">—</span>
+        </div>
+        <div class="metric-row" style="flex-direction: column; align-items: stretch;">
+            <div style="display: flex; justify-content: space-between;">
+                <span class="metric-label">System Load</span>
+                <span class="metric-value" id="metricLoad">0%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-bar-fill" id="metricLoadBar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FPS Counter -->
+    <div class="fps-counter" id="fpsCounter">60 FPS</div>
+    
+    <!-- Screenshot Flash -->
+    <div class="screenshot-flash" id="screenshotFlash"></div>
+    <div class="screenshot-toast" id="screenshotToast">📸 Screenshot saved!</div>
+
     <div class="scanlines"></div>
     <div class="vignette"></div>
+    
+    <!-- Post-Processing Effects -->
+    <div class="chromatic-aberration"></div>
+    <div class="bloom-overlay"></div>
+    <div class="film-grain"></div>
+    <div class="atmosphere-glow"></div>
+    
+    <!-- Corner Brackets HUD -->
+    <div class="corner-bracket top-left"></div>
+    <div class="corner-bracket top-right"></div>
+    <div class="corner-bracket bottom-left"></div>
+    <div class="corner-bracket bottom-right"></div>
+    
+    <!-- Data Stream Lines -->
+    <div class="data-stream left"></div>
+    <div class="data-stream right"></div>
     <div class="floating-chars" id="floatingChars"></div>
     
     <canvas id="bgCanvas"></canvas>
@@ -1526,41 +2476,6 @@
             <div class="waveform-container">
                 <div class="waveform" id="wave3"></div>
                 <div class="waveform-label">OUTPUT STREAM</div>
-            </div>
-        </div>
-        
-        <div class="structure-panel" id="structurePanel">
-            <div class="structure-title">STRUCTURE OF STRUCTURES</div>
-            <div class="structure-concept">"Every symbol contains universes. Every structure nests infinite architectures."</div>
-            <div class="structure-tree" id="structureTree">
-                <div class="structure-line level-0" data-depth="0">◆ <span class="symbol">ሙ</span> MULLU SGI</div>
-                <div class="structure-line level-1" data-depth="1"><span class="branch">├─</span> <span class="symbol">◈</span> Perception Layer</div>
-                <div class="structure-line level-2" data-depth="2"><span class="branch">│ ├─</span> Symbol Registry</div>
-                <div class="structure-line level-3" data-depth="3"><span class="branch">│ │ ├─</span> Atomic Units</div>
-                <div class="structure-line level-3" data-depth="3"><span class="branch">│ │ └─</span> Composite Forms</div>
-                <div class="structure-line level-2" data-depth="2"><span class="branch">│ └─</span> Feature Mesh</div>
-                <div class="structure-line level-1" data-depth="1"><span class="branch">├─</span> <span class="symbol">◈</span> Reasoning Engine</div>
-                <div class="structure-line level-2" data-depth="2"><span class="branch">│ ├─</span> Causal Chains</div>
-                <div class="structure-line level-3" data-depth="3"><span class="branch">│ │ ├─</span> Forward Flow</div>
-                <div class="structure-line level-3" data-depth="3"><span class="branch">│ │ └─</span> Inverse Gates</div>
-                <div class="structure-line level-2" data-depth="2"><span class="branch">│ └─</span> Wh-Logic Matrix</div>
-                <div class="structure-line level-1" data-depth="1"><span class="branch">├─</span> <span class="symbol">◈</span> Abstraction Core</div>
-                <div class="structure-line level-2" data-depth="2"><span class="branch">│ └─</span> Ontology Graph</div>
-                <div class="structure-line level-1" data-depth="1"><span class="branch">└─</span> <span class="symbol">◈</span> Meta-Cognition</div>
-                <div class="structure-line level-2" data-depth="2"><span class="branch">  ├─</span> Self-Model</div>
-                <div class="structure-line level-2" data-depth="2"><span class="branch">  └─</span> Coherence Field</div>
-            </div>
-            <div class="structure-depth">
-                <div class="depth-label">RECURSION DEPTH</div>
-                <div class="depth-bars" id="depthBars">
-                    <div class="depth-bar" style="height: 100%"></div>
-                    <div class="depth-bar" style="height: 80%"></div>
-                    <div class="depth-bar" style="height: 60%"></div>
-                    <div class="depth-bar" style="height: 40%"></div>
-                    <div class="depth-bar" style="height: 20%"></div>
-                    <div class="depth-bar" style="height: 10%"></div>
-                    <div class="depth-bar" style="height: 5%"></div>
-                </div>
             </div>
         </div>
         
@@ -2684,49 +3599,202 @@
         }
         
         // ============ BACKGROUND ============
+        // ═══════════════════════════════════════════════════════════════
+        // ENHANCED VISUAL SYSTEM - Nebula, Stars, Atmosphere
+        // ═══════════════════════════════════════════════════════════════
+        
+        // Star field layers (parallax)
+        const starLayers = [];
+        for (let layer = 0; layer < 3; layer++) {
+            const stars = [];
+            const count = 80 + layer * 40;
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * 2000,
+                    y: Math.random() * 2000,
+                    size: Math.random() * (1.5 - layer * 0.3) + 0.5,
+                    brightness: Math.random() * 0.5 + 0.2,
+                    twinkleSpeed: Math.random() * 3 + 1,
+                    twinkleOffset: Math.random() * Math.PI * 2
+                });
+            }
+            starLayers.push({ stars, speed: 0.1 + layer * 0.15, depth: layer });
+        }
+        
+        // Nebula clouds
+        const nebulaClouds = [];
+        for (let i = 0; i < 6; i++) {
+            nebulaClouds.push({
+                x: Math.random() * 2000,
+                y: Math.random() * 2000,
+                radius: 150 + Math.random() * 300,
+                color: ['#00ffff', '#ff00ff', '#ff8800', '#00ff88', '#8800ff', '#ff0066'][i],
+                opacity: 0.03 + Math.random() * 0.04,
+                speed: 0.02 + Math.random() * 0.03,
+                angle: Math.random() * Math.PI * 2,
+                pulse: Math.random() * Math.PI * 2
+            });
+        }
+        
+        // Global breathing state
+        let globalBreath = 0;
+        let breathDirection = 1;
+        
         function drawBackground() {
-            bgCtx.fillStyle = '#000';
+            // Update global breathing
+            globalBreath += 0.003 * breathDirection;
+            if (globalBreath > 1) breathDirection = -1;
+            if (globalBreath < 0) breathDirection = 1;
+            const breathScale = 1 + Math.sin(globalBreath * Math.PI) * 0.02;
+            const breathIntensity = 0.8 + Math.sin(globalBreath * Math.PI) * 0.2;
+            
+            // Deep space base
+            const spaceGrad = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H));
+            spaceGrad.addColorStop(0, '#0a0a18');
+            spaceGrad.addColorStop(0.4, '#050510');
+            spaceGrad.addColorStop(1, '#000005');
+            bgCtx.fillStyle = spaceGrad;
             bgCtx.fillRect(0, 0, W, H);
             
-            // Animated grid
-            const gridSize = 40;
-            const offset = (t * 15) % gridSize;
+            // ═══ NEBULA CLOUDS ═══
+            nebulaClouds.forEach(cloud => {
+                cloud.angle += cloud.speed * 0.01;
+                cloud.x += Math.cos(cloud.angle) * cloud.speed;
+                cloud.y += Math.sin(cloud.angle) * cloud.speed * 0.5;
+                cloud.pulse += 0.02;
+                
+                // Wrap around
+                if (cloud.x < -cloud.radius) cloud.x = W + cloud.radius;
+                if (cloud.x > W + cloud.radius) cloud.x = -cloud.radius;
+                if (cloud.y < -cloud.radius) cloud.y = H + cloud.radius;
+                if (cloud.y > H + cloud.radius) cloud.y = -cloud.radius;
+                
+                const pulseOpacity = cloud.opacity * (0.7 + Math.sin(cloud.pulse) * 0.3) * breathIntensity;
+                const grad = bgCtx.createRadialGradient(
+                    cloud.x, cloud.y, 0,
+                    cloud.x, cloud.y, cloud.radius * breathScale
+                );
+                grad.addColorStop(0, cloud.color + Math.floor(pulseOpacity * 255).toString(16).padStart(2, '0'));
+                grad.addColorStop(0.3, cloud.color + Math.floor(pulseOpacity * 150).toString(16).padStart(2, '0'));
+                grad.addColorStop(0.6, cloud.color + Math.floor(pulseOpacity * 50).toString(16).padStart(2, '0'));
+                grad.addColorStop(1, 'transparent');
+                
+                bgCtx.fillStyle = grad;
+                bgCtx.beginPath();
+                bgCtx.arc(cloud.x, cloud.y, cloud.radius * breathScale, 0, Math.PI * 2);
+                bgCtx.fill();
+            });
             
-            bgCtx.strokeStyle = 'rgba(0, 255, 255, 0.03)';
+            // ═══ STAR PARALLAX LAYERS ═══
+            starLayers.forEach(layer => {
+                const parallaxX = (mouseX - cx) * layer.speed * 0.05;
+                const parallaxY = (mouseY - cy) * layer.speed * 0.05;
+                
+                layer.stars.forEach(star => {
+                    const x = ((star.x + parallaxX + t * layer.speed * 10) % W + W) % W;
+                    const y = ((star.y + parallaxY + t * layer.speed * 5) % H + H) % H;
+                    
+                    // Twinkle effect
+                    const twinkle = Math.sin(t * star.twinkleSpeed + star.twinkleOffset) * 0.5 + 0.5;
+                    const alpha = star.brightness * twinkle * breathIntensity;
+                    
+                    bgCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                    bgCtx.beginPath();
+                    bgCtx.arc(x, y, star.size, 0, Math.PI * 2);
+                    bgCtx.fill();
+                    
+                    // Star glow for brighter stars
+                    if (star.brightness > 0.5 && twinkle > 0.7) {
+                        bgCtx.fillStyle = `rgba(200, 220, 255, ${alpha * 0.3})`;
+                        bgCtx.beginPath();
+                        bgCtx.arc(x, y, star.size * 3, 0, Math.PI * 2);
+                        bgCtx.fill();
+                    }
+                });
+            });
+            
+            // ═══ PERSPECTIVE GRID ═══
+            const gridSize = 50;
+            const gridOffset = (t * 20) % gridSize;
+            const gridFade = 0.04 * breathIntensity;
+            
+            bgCtx.strokeStyle = `rgba(0, 255, 255, ${gridFade})`;
             bgCtx.lineWidth = 1;
             
-            for (let x = offset; x < W; x += gridSize) {
+            // Vertical lines with perspective
+            for (let x = gridOffset; x < W; x += gridSize) {
+                const distFromCenter = Math.abs(x - cx) / cx;
+                const perspectiveAlpha = gridFade * (1 - distFromCenter * 0.5);
+                bgCtx.strokeStyle = `rgba(0, 255, 255, ${perspectiveAlpha})`;
                 bgCtx.beginPath();
                 bgCtx.moveTo(x, 0);
                 bgCtx.lineTo(x, H);
                 bgCtx.stroke();
             }
             
-            for (let y = offset; y < H; y += gridSize) {
+            // Horizontal lines
+            for (let y = gridOffset; y < H; y += gridSize) {
+                const distFromCenter = Math.abs(y - cy) / cy;
+                const perspectiveAlpha = gridFade * (1 - distFromCenter * 0.5);
+                bgCtx.strokeStyle = `rgba(0, 255, 255, ${perspectiveAlpha})`;
                 bgCtx.beginPath();
                 bgCtx.moveTo(0, y);
                 bgCtx.lineTo(W, y);
                 bgCtx.stroke();
             }
             
-            // Radial vignette
+            // ═══ LIGHT RAYS FROM CENTER ═══
             if (isFinite(cx) && isFinite(cy)) {
-                const grad = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.7);
-                grad.addColorStop(0, 'rgba(0, 20, 40, 0)');
-                grad.addColorStop(0.5, 'rgba(0, 10, 20, 0.3)');
-                grad.addColorStop(1, 'rgba(0, 0, 0, 0.95)');
-                bgCtx.fillStyle = grad;
+                const rayCount = 12;
+                for (let i = 0; i < rayCount; i++) {
+                    const angle = (i / rayCount) * Math.PI * 2 + t * 0.1;
+                    const rayLength = Math.max(W, H) * 0.8;
+                    const rayWidth = 0.15 + Math.sin(t * 2 + i) * 0.05;
+                    
+                    const grad = bgCtx.createLinearGradient(
+                        cx, cy,
+                        cx + Math.cos(angle) * rayLength,
+                        cy + Math.sin(angle) * rayLength
+                    );
+                    grad.addColorStop(0, `rgba(255, 255, 255, ${0.03 * breathIntensity})`);
+                    grad.addColorStop(0.3, `rgba(0, 255, 255, ${0.015 * breathIntensity})`);
+                    grad.addColorStop(1, 'transparent');
+                    
+                    bgCtx.fillStyle = grad;
+                    bgCtx.beginPath();
+                    bgCtx.moveTo(cx, cy);
+                    bgCtx.lineTo(
+                        cx + Math.cos(angle - rayWidth) * rayLength,
+                        cy + Math.sin(angle - rayWidth) * rayLength
+                    );
+                    bgCtx.lineTo(
+                        cx + Math.cos(angle + rayWidth) * rayLength,
+                        cy + Math.sin(angle + rayWidth) * rayLength
+                    );
+                    bgCtx.closePath();
+                    bgCtx.fill();
+                }
+            }
+            
+            // ═══ ENHANCED VIGNETTE ═══
+            if (isFinite(cx) && isFinite(cy)) {
+                const vignetteGrad = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.75);
+                vignetteGrad.addColorStop(0, 'rgba(0, 10, 20, 0)');
+                vignetteGrad.addColorStop(0.5, 'rgba(0, 5, 15, 0.2)');
+                vignetteGrad.addColorStop(0.75, 'rgba(0, 0, 10, 0.5)');
+                vignetteGrad.addColorStop(1, 'rgba(0, 0, 0, 0.9)');
+                bgCtx.fillStyle = vignetteGrad;
                 bgCtx.fillRect(0, 0, W, H);
             }
             
-            // Floating particles in background
-            bgCtx.fillStyle = 'rgba(0, 255, 255, 0.1)';
-            for (let i = 0; i < 50; i++) {
-                const x = (Math.sin(t * 0.1 + i * 0.5) * 0.5 + 0.5) * W;
-                const y = (Math.cos(t * 0.15 + i * 0.7) * 0.5 + 0.5) * H;
-                const size = Math.max(0.5, Math.sin(t + i) * 1 + 2);
+            // ═══ ATMOSPHERIC DUST PARTICLES ═══
+            bgCtx.fillStyle = `rgba(0, 255, 255, ${0.08 * breathIntensity})`;
+            for (let i = 0; i < 60; i++) {
+                const dustX = (Math.sin(t * 0.08 + i * 0.6) * 0.5 + 0.5) * W;
+                const dustY = (Math.cos(t * 0.12 + i * 0.8) * 0.5 + 0.5) * H;
+                const dustSize = Math.max(0.5, Math.sin(t * 1.5 + i) * 1.5 + 2);
                 bgCtx.beginPath();
-                bgCtx.arc(x, y, size, 0, Math.PI * 2);
+                bgCtx.arc(dustX, dustY, dustSize, 0, Math.PI * 2);
                 bgCtx.fill();
             }
         }
@@ -2887,17 +3955,47 @@
                 drawWhLogicOverlay();
             }
             
-            // Center glow
+            // ═══ ENHANCED CENTER GLOW ═══
             if (isFinite(cx) && isFinite(cy)) {
                 const pulse = Math.sin(t * 2) * 0.2 + 1;
-                const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80 * pulse);
-                grad.addColorStop(0, 'rgba(255,255,255,0.15)');
-                grad.addColorStop(0.3, 'rgba(0,255,255,0.08)');
-                grad.addColorStop(0.6, 'rgba(255,0,255,0.03)');
-                grad.addColorStop(1, 'transparent');
-                ctx.fillStyle = grad;
+                const breathPulse = Math.sin(t * 0.5) * 0.3 + 1;
+                
+                // Outer halo
+                const haloGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 200 * breathPulse);
+                haloGrad.addColorStop(0, 'rgba(0,255,255,0.02)');
+                haloGrad.addColorStop(0.5, 'rgba(255,0,255,0.01)');
+                haloGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = haloGrad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 200 * breathPulse, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Middle glow ring
+                const ringGrad = ctx.createRadialGradient(cx, cy, 50 * pulse, cx, cy, 120 * pulse);
+                ringGrad.addColorStop(0, 'transparent');
+                ringGrad.addColorStop(0.3, 'rgba(0,255,255,0.04)');
+                ringGrad.addColorStop(0.6, 'rgba(255,255,255,0.02)');
+                ringGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = ringGrad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 120 * pulse, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Core glow
+                const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80 * pulse);
+                coreGrad.addColorStop(0, 'rgba(255,255,255,0.2)');
+                coreGrad.addColorStop(0.2, 'rgba(0,255,255,0.12)');
+                coreGrad.addColorStop(0.5, 'rgba(255,0,255,0.05)');
+                coreGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = coreGrad;
                 ctx.beginPath();
                 ctx.arc(cx, cy, 80 * pulse, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Center point
+                ctx.fillStyle = `rgba(255,255,255,${0.3 + Math.sin(t * 4) * 0.2})`;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 3, 0, Math.PI * 2);
                 ctx.fill();
             }
             
@@ -2905,7 +4003,8 @@
             drawNestedPreview();
             
             updateUI();
-            requestAnimationFrame(animate);
+            // Use window.animate if set (allows enhancements), else self
+            requestAnimationFrame(window.animateLoop || animate);
         }
         
         // ============ INTERACTION ============
@@ -3669,6 +4768,9 @@
             const panel = document.getElementById('structurePanel');
             const treeEl = document.getElementById('structureTree');
             
+            // Panel was removed - skip if not present
+            if (!panel || !treeEl) return;
+            
             if (showAllStructures) {
                 panel.classList.add('expanded');
                 
@@ -3864,40 +4966,1008 @@
             }, totalDuration + 500);
         }
         
-        // ============ FLOATING GE'EZ CHARACTERS ============
+        // ============ FLOATING GE'EZ CHARACTERS - PHYSICS BASED ============
         function createFloatingChars() {
             const container = document.getElementById('floatingChars');
-            const allGeez = ['ሀ', 'ለ', 'ሐ', 'መ', 'ሠ', 'ረ', 'ሰ', 'ሸ', 'ቀ', 'በ', 'ተ', 'ኀ', 'ነ', 'አ', 'ከ', 'ወ', 'ዐ', 'ዘ', 'የ', 'ደ', 'ገ', 'ጠ', 'ጰ', 'ጸ', 'ፀ', 'ፈ', 'ፐ', 'ሙ', 'ሉ', 'ሉ'];
+            if (!container) { console.error('No floatingChars container'); return; }
+            
+            // Fidel families - each row is one consonant with all 7 vowel forms
+            const fidelFamilies = [
+                ['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ'],
+                ['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ'],
+                ['ሐ','ሑ','ሒ','ሓ','ሔ','ሕ','ሖ'],
+                ['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ'],
+                ['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ'],
+                ['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ'],
+                ['ሸ','ሹ','ሺ','ሻ','ሼ','ሽ','ሾ'],
+                ['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ'],
+                ['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ'],
+                ['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ'],
+                ['ቸ','ቹ','ቺ','ቻ','ቼ','ች','ቾ'],
+                ['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ'],
+                ['አ','ኡ','ኢ','ኣ','ኤ','እ','ኦ'],
+                ['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ'],
+                ['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'],
+                ['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ'],
+                ['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'],
+                ['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ'],
+                ['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ'],
+                ['ጠ','ጡ','ጢ','ጣ','ጤ','ጥ','ጦ'],
+                ['ጰ','ጱ','ጲ','ጳ','ጴ','ጵ','ጶ'],
+                ['ጸ','ጹ','ጺ','ጻ','ጼ','ጽ','ጾ'],
+                ['ፈ','ፉ','ፊ','ፋ','ፌ','ፍ','ፎ'],
+                ['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ'],
+            ];
+            
+            // Physics behavior types
+            const PHYSICS = {
+                FLOAT_UP: 0,      // Classic float upward
+                DRIFT: 1,         // Gentle horizontal drift
+                SPIRAL: 2,        // Spiral motion
+                WAVE: 3,          // Sine wave path
+                BOUNCE: 4,        // Bouncing motion
+                ORBIT: 5,         // Circular orbit
+                ZIGZAG: 6,        // Zigzag path
+                GRAVITY: 7,       // Fall then float
+            };
+            
+            // Random color palettes
+            const colorPalettes = [
+                ['#00ffff', '#00e5ff', '#00ccff'], // Cyan
+                ['#ff00ff', '#ff00cc', '#cc00ff'], // Magenta
+                ['#ffff00', '#ffcc00', '#ffaa00'], // Yellow/Gold
+                ['#00ff88', '#00ff66', '#00ffaa'], // Green
+                ['#ff8800', '#ff6600', '#ffaa00'], // Orange
+                ['#8800ff', '#aa00ff', '#6600ff'], // Purple
+                ['#ff0066', '#ff0088', '#ff00aa'], // Pink
+                ['#00ffff', '#ff00ff', '#ffff00'], // Rainbow mix
+            ];
+            
+            const activeChars = [];
+            let lastSpawn = 0;
+            
+            function randomRange(min, max) {
+                return min + Math.random() * (max - min);
+            }
             
             function spawnChar() {
-                const char = document.createElement('div');
-                char.className = 'float-char';
-                char.textContent = allGeez[Math.floor(Math.random() * allGeez.length)];
-                char.style.left = Math.random() * 100 + '%';
-                char.style.animationDuration = (10 + Math.random() * 10) + 's';
-                char.style.animationDelay = Math.random() * 2 + 's';
-                char.style.color = colors[Math.floor(Math.random() * colors.length)] + '25';
-                char.style.fontSize = (1 + Math.random() * 1.5) + 'em';
-                container.appendChild(char);
+                const el = document.createElement('div');
+                el.className = 'float-char';
                 
-                // Remove after animation
-                setTimeout(() => char.remove(), 20000);
+                const family = fidelFamilies[Math.floor(Math.random() * fidelFamilies.length)];
+                const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+                const physicsType = Math.floor(Math.random() * 8);
+                
+                // Random spawn position based on physics type
+                let startX, startY;
+                switch(physicsType) {
+                    case PHYSICS.GRAVITY:
+                        startX = randomRange(10, 90);
+                        startY = -5;
+                        break;
+                    case PHYSICS.DRIFT:
+                        startX = Math.random() < 0.5 ? -5 : 105;
+                        startY = randomRange(20, 80);
+                        break;
+                    default:
+                        startX = randomRange(5, 95);
+                        startY = 105;
+                }
+                
+                const charData = {
+                    el: el,
+                    family: family,
+                    order: Math.floor(Math.random() * 7), // Random starting vowel
+                    palette: palette,
+                    colorIndex: 0,
+                    
+                    // Position & physics
+                    x: startX,
+                    y: startY,
+                    vx: randomRange(-0.3, 0.3),
+                    vy: randomRange(-0.8, -0.3),
+                    ax: 0,
+                    ay: 0,
+                    physics: physicsType,
+                    
+                    // Rotation
+                    rotation: 0,
+                    rotationSpeed: randomRange(-2, 2),
+                    
+                    // Scale / zoom
+                    scale: randomRange(0.5, 1.5),
+                    targetScale: randomRange(0.5, 2),
+                    scaleSpeed: randomRange(0.001, 0.005),
+                    scaleDirection: Math.random() < 0.5 ? 1 : -1,
+                    minScale: randomRange(0.3, 0.8),
+                    maxScale: randomRange(1.5, 3),
+                    
+                    // Timing
+                    cycleInterval: randomRange(300, 1500),
+                    colorInterval: randomRange(500, 2000),
+                    lastCycle: performance.now(),
+                    lastColorChange: performance.now(),
+                    
+                    // Physics parameters
+                    spiralAngle: Math.random() * Math.PI * 2,
+                    spiralSpeed: randomRange(0.02, 0.08),
+                    spiralRadius: randomRange(0.5, 2),
+                    waveAmplitude: randomRange(1, 4),
+                    waveFrequency: randomRange(0.02, 0.08),
+                    bouncePhase: 0,
+                    orbitCenterX: randomRange(30, 70),
+                    orbitCenterY: randomRange(30, 70),
+                    orbitRadius: randomRange(10, 30),
+                    orbitSpeed: randomRange(0.01, 0.04),
+                    orbitAngle: Math.random() * Math.PI * 2,
+                    zigzagPhase: 0,
+                    zigzagWidth: randomRange(2, 8),
+                    gravityPhase: 0,
+                    
+                    // Lifetime
+                    created: performance.now(),
+                    duration: randomRange(8000, 25000),
+                    opacity: 0,
+                    fadeIn: true,
+                };
+                
+                el.textContent = family[charData.order];
+                el.style.color = palette[0];
+                el.style.fontSize = (1 + charData.scale) + 'em';
+                el.style.position = 'absolute';
+                el.style.left = charData.x + '%';
+                el.style.top = charData.y + '%';
+                el.style.opacity = '0';
+                el.style.textShadow = `0 0 10px currentColor`;
+                el.style.transition = 'none';
+                el.style.willChange = 'transform, opacity, color';
+                
+                container.appendChild(el);
+                activeChars.push(charData);
             }
             
-            // Spawn initial batch
+            function updatePhysics(c, dt, now) {
+                const t = (now - c.created) / 1000;
+                
+                switch(c.physics) {
+                    case PHYSICS.FLOAT_UP:
+                        c.vy = -randomRange(0.5, 1.2);
+                        c.vx += Math.sin(t * 2) * 0.01;
+                        break;
+                        
+                    case PHYSICS.DRIFT:
+                        c.vx = c.x < 50 ? 0.5 : -0.5;
+                        c.vy = Math.sin(t) * 0.3;
+                        break;
+                        
+                    case PHYSICS.SPIRAL:
+                        c.spiralAngle += c.spiralSpeed;
+                        c.vx = Math.cos(c.spiralAngle) * c.spiralRadius;
+                        c.vy = -0.5 + Math.sin(c.spiralAngle) * c.spiralRadius * 0.3;
+                        break;
+                        
+                    case PHYSICS.WAVE:
+                        c.vy = -0.6;
+                        c.x = c.x + Math.sin(t * c.waveFrequency * 10) * c.waveAmplitude * 0.1;
+                        break;
+                        
+                    case PHYSICS.BOUNCE:
+                        c.bouncePhase += 0.05;
+                        c.vy = -0.4 + Math.abs(Math.sin(c.bouncePhase)) * -0.8;
+                        c.vx = Math.sin(t * 0.5) * 0.3;
+                        break;
+                        
+                    case PHYSICS.ORBIT:
+                        c.orbitAngle += c.orbitSpeed;
+                        c.x = c.orbitCenterX + Math.cos(c.orbitAngle) * c.orbitRadius;
+                        c.y = c.orbitCenterY + Math.sin(c.orbitAngle) * c.orbitRadius;
+                        // Slowly move center upward
+                        c.orbitCenterY -= 0.1;
+                        c.vx = 0; c.vy = 0;
+                        break;
+                        
+                    case PHYSICS.ZIGZAG:
+                        c.zigzagPhase += 0.1;
+                        c.vy = -0.7;
+                        c.vx = Math.sign(Math.sin(c.zigzagPhase)) * c.zigzagWidth * 0.1;
+                        break;
+                        
+                    case PHYSICS.GRAVITY:
+                        c.gravityPhase += 0.02;
+                        if (c.gravityPhase < 1) {
+                            // Falling
+                            c.vy = Math.min(c.vy + 0.05, 2);
+                        } else {
+                            // Float up
+                            c.vy = Math.max(c.vy - 0.02, -0.8);
+                        }
+                        c.vx += Math.sin(t * 3) * 0.02;
+                        break;
+                }
+                
+                // Apply velocity
+                if (c.physics !== PHYSICS.ORBIT) {
+                    c.x += c.vx;
+                    c.y += c.vy;
+                }
+                
+                // Rotation
+                c.rotation += c.rotationSpeed;
+                
+                // Scale breathing / zoom
+                c.scale += c.scaleSpeed * c.scaleDirection;
+                if (c.scale >= c.maxScale) {
+                    c.scaleDirection = -1;
+                    c.targetScale = randomRange(c.minScale, c.scale);
+                } else if (c.scale <= c.minScale) {
+                    c.scaleDirection = 1;
+                    c.targetScale = randomRange(c.scale, c.maxScale);
+                }
+                
+                // Fade in/out
+                const age = now - c.created;
+                const remainingLife = c.duration - age;
+                if (age < 500) {
+                    c.opacity = age / 500;
+                } else if (remainingLife < 1000) {
+                    c.opacity = remainingLife / 1000;
+                } else {
+                    c.opacity = 0.6 + Math.sin(t * 2) * 0.3;
+                }
+            }
+            
+            function updateChars(now) {
+                const dt = 16; // ~60fps
+                
+                for (let i = activeChars.length - 1; i >= 0; i--) {
+                    const c = activeChars[i];
+                    const age = now - c.created;
+                    
+                    // Remove if expired or out of bounds
+                    if (age > c.duration || c.y < -20 || c.y > 120 || c.x < -20 || c.x > 120) {
+                        c.el.remove();
+                        activeChars.splice(i, 1);
+                        continue;
+                    }
+                    
+                    // Update physics
+                    updatePhysics(c, dt, now);
+                    
+                    // Cycle Fidel family (vowel order)
+                    if (now - c.lastCycle > c.cycleInterval) {
+                        c.order = (c.order + 1) % 7;
+                        c.el.textContent = c.family[c.order];
+                        c.lastCycle = now;
+                        
+                        // Randomize next cycle interval
+                        c.cycleInterval = randomRange(200, 1500);
+                        
+                        // Pulse effect
+                        c.el.style.textShadow = `0 0 ${20 + c.scale * 10}px currentColor, 0 0 ${40 + c.scale * 15}px currentColor`;
+                        setTimeout(() => {
+                            if (c.el.parentNode) {
+                                c.el.style.textShadow = `0 0 ${5 + c.scale * 5}px currentColor`;
+                            }
+                        }, 100);
+                    }
+                    
+                    // Cycle color
+                    if (now - c.lastColorChange > c.colorInterval) {
+                        c.colorIndex = (c.colorIndex + 1) % c.palette.length;
+                        c.el.style.color = c.palette[c.colorIndex];
+                        c.lastColorChange = now;
+                        c.colorInterval = randomRange(400, 2500);
+                    }
+                    
+                    // Apply transforms
+                    c.el.style.left = c.x + '%';
+                    c.el.style.top = c.y + '%';
+                    c.el.style.opacity = c.opacity;
+                    c.el.style.fontSize = (0.8 + c.scale * 1.5) + 'em';
+                    c.el.style.transform = `rotate(${c.rotation}deg) scale(${0.5 + c.scale * 0.5})`;
+                }
+                
+                requestAnimationFrame(updateChars);
+            }
+            
+            // Start update loop
+            requestAnimationFrame(updateChars);
+            
+            // Spawn initial batch with variety
             for (let i = 0; i < 15; i++) {
-                setTimeout(() => spawnChar(), i * 200);
+                setTimeout(spawnChar, i * 150);
             }
             
-            // Continue spawning
-            setInterval(spawnChar, 800);
+            // Continue spawning at random intervals
+            function scheduleNextSpawn() {
+                const delay = randomRange(400, 1200);
+                setTimeout(() => {
+                    if (activeChars.length < 30) {
+                        spawnChar();
+                    }
+                    scheduleNextSpawn();
+                }, delay);
+            }
+            scheduleNextSpawn();
         }
         
         // Start loading sequence
         runLoadingSequence();
         
         // Start floating chars after loading
-        setTimeout(createFloatingChars, 3500);
+        // Floating chars moved to architect area
+        // setTimeout(createFloatingChars, 3500);
+        
+        // ═══════════════════════════════════════════════════════════════
+        // PRODUCTION HARDENING
+        // ═══════════════════════════════════════════════════════════════
+        
+        // Pause animation when tab hidden (saves CPU/battery)
+        let RUNNING = true;
+        document.addEventListener('visibilitychange', () => {
+            RUNNING = !document.hidden;
+            if (RUNNING) requestAnimationFrame(animate);
+        });
+        
+        // Memory caps - prevent long-session degradation
+        function cap(arr, max) {
+            if (arr.length > max) arr.splice(0, arr.length - max);
+        }
+        
+        // Apply caps in animation loop (will be called periodically)
+        function enforceMemoryCaps() {
+            cap(particles, 800);
+            cap(lightnings, 50);
+            cap(explosions, 30);
+            cap(energyWaves, 20);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // HELP PANEL
+        // ═══════════════════════════════════════════════════════════════
+        
+        const helpToggle = document.getElementById('helpToggle');
+        const helpPanel = document.getElementById('helpPanel');
+        let helpVisible = false;
+        
+        if (helpToggle && helpPanel) {
+            helpToggle.addEventListener('click', () => {
+                helpVisible = !helpVisible;
+                helpPanel.classList.toggle('visible', helpVisible);
+                helpToggle.textContent = helpVisible ? '×' : '?';
+            });
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // METRICS PANEL
+        // ═══════════════════════════════════════════════════════════════
+        
+        const metricsPanel = document.getElementById('metricsPanel');
+        let metricsVisible = false;
+        
+        function updateMetrics() {
+            if (!metricsVisible) return;
+            
+            const symbolCount = nodes.length;
+            const connectionCount = connections.length;
+            const particleCount = particles.length;
+            const effectCount = lightnings.length + explosions.length + energyWaves.length;
+            const depth = currentDepth;
+            
+            // Calculate Wh-Entropy (based on active gates and connections)
+            const activeGates = showWhLogic ? (activeWhGate ? 1 : 0) : 0;
+            const entropy = (activeGates * 0.2 + (selectedNode ? 0.3 : 0) + (showCausalChain ? 0.2 : 0) + (depth * 0.1)).toFixed(2);
+            
+            // System load estimate
+            const load = Math.min(100, Math.round((particleCount / 800 * 40) + (effectCount / 100 * 30) + (symbolCount / 80 * 30)));
+            
+            document.getElementById('metricSymbols').textContent = symbolCount;
+            document.getElementById('metricConnections').textContent = connectionCount;
+            document.getElementById('metricParticles').textContent = particleCount;
+            document.getElementById('metricEffects').textContent = effectCount;
+            document.getElementById('metricDepth').textContent = depth;
+            document.getElementById('metricEntropy').textContent = entropy;
+            document.getElementById('metricLoad').textContent = load + '%';
+            document.getElementById('metricLoadBar').style.width = load + '%';
+        }
+        
+        // Update metrics every 500ms
+        setInterval(updateMetrics, 500);
+        
+        // ═══════════════════════════════════════════════════════════════
+        // FPS COUNTER
+        // ═══════════════════════════════════════════════════════════════
+        
+        const fpsCounter = document.getElementById('fpsCounter');
+        let fpsVisible = false;
+        let frameCount = 0;
+        let lastFpsTime = performance.now();
+        let currentFps = 60;
+        
+        function updateFps() {
+            frameCount++;
+            const now = performance.now();
+            const delta = now - lastFpsTime;
+            
+            if (delta >= 1000) {
+                currentFps = Math.round(frameCount * 1000 / delta);
+                frameCount = 0;
+                lastFpsTime = now;
+                
+                if (fpsVisible && fpsCounter) {
+                    fpsCounter.textContent = currentFps + ' FPS';
+                    fpsCounter.classList.remove('warning', 'critical');
+                    if (currentFps < 30) {
+                        fpsCounter.classList.add('critical');
+                    } else if (currentFps < 45) {
+                        fpsCounter.classList.add('warning');
+                    }
+                }
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // SCREENSHOT FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════════
+        
+        function takeScreenshot() {
+            // Create combined canvas
+            const combinedCanvas = document.createElement('canvas');
+            combinedCanvas.width = window.innerWidth;
+            combinedCanvas.height = window.innerHeight;
+            const ctx = combinedCanvas.getContext('2d');
+            
+            // Draw all canvas layers
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, combinedCanvas.width, combinedCanvas.height);
+            ctx.drawImage(bgCanvas, 0, 0);
+            ctx.drawImage(mainCanvas, 0, 0);
+            ctx.drawImage(fxCanvas, 0, 0);
+            ctx.drawImage(topCanvas, 0, 0);
+            
+            // Add watermark
+            ctx.font = '14px Orbitron';
+            ctx.fillStyle = 'rgba(0,255,255,0.5)';
+            ctx.fillText('MULLU SGI • mullusi.com', 20, combinedCanvas.height - 20);
+            
+            // Flash effect
+            const flash = document.getElementById('screenshotFlash');
+            flash.classList.add('active');
+            setTimeout(() => flash.classList.remove('active'), 300);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = `mullu-sgi-${Date.now()}.png`;
+            link.href = combinedCanvas.toDataURL('image/png');
+            link.click();
+            
+            // Toast notification
+            const toast = document.getElementById('screenshotToast');
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 2000);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // KEYBOARD EXTENSIONS (M, F, P, G, E)
+        // ═══════════════════════════════════════════════════════════════
+        
+        // Effect element references
+        const effectElements = {
+            scanlines: document.querySelector('.scanlines'),
+            grain: document.querySelector('.film-grain'),
+            chromatic: document.querySelector('.chromatic-aberration'),
+            bloom: document.querySelector('.bloom-overlay'),
+            atmosphere: document.querySelector('.atmosphere-glow'),
+            vignette: document.querySelector('.vignette')
+        };
+        
+        let effectsEnabled = true;
+        let grainEnabled = true;
+        
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            
+            // M - Toggle metrics
+            if (key === 'm') {
+                metricsVisible = !metricsVisible;
+                metricsPanel.classList.toggle('visible', metricsVisible);
+            }
+            
+            // F - Toggle FPS counter
+            if (key === 'f') {
+                fpsVisible = !fpsVisible;
+                fpsCounter.classList.toggle('visible', fpsVisible);
+            }
+            
+            // P - Screenshot
+            if (key === 'p') {
+                takeScreenshot();
+            }
+            
+            // H - Toggle help (alternative)
+            if (key === 'h') {
+                helpVisible = !helpVisible;
+                helpPanel.classList.toggle('visible', helpVisible);
+                helpToggle.textContent = helpVisible ? '×' : '?';
+            }
+            
+            // E - Toggle post-processing effects
+            if (key === 'e') {
+                effectsEnabled = !effectsEnabled;
+                const opacity = effectsEnabled ? '' : '0';
+                if (effectElements.chromatic) effectElements.chromatic.style.opacity = opacity;
+                if (effectElements.bloom) effectElements.bloom.style.opacity = opacity;
+                if (effectElements.atmosphere) effectElements.atmosphere.style.opacity = opacity;
+                if (effectElements.scanlines) effectElements.scanlines.style.opacity = effectsEnabled ? '0.25' : '0';
+            }
+            
+            // G - Toggle film grain
+            if (key === 'g') {
+                grainEnabled = !grainEnabled;
+                if (effectElements.grain) effectElements.grain.style.opacity = grainEnabled ? '0.04' : '0';
+            }
+            
+            // V - Toggle vignette
+            if (key === 'v') {
+                if (effectElements.vignette) {
+                    const current = effectElements.vignette.style.opacity;
+                    effectElements.vignette.style.opacity = current === '0' ? '' : '0';
+                }
+            }
+        });
+        
+        // ═══════════════════════════════════════════════════════════════
+        // ENHANCED ANIMATION LOOP WITH PRODUCTION FEATURES
+        // ═══════════════════════════════════════════════════════════════
+        
+        let frameCounter = 0;
+        
+        // Enhanced animate with production features + architect beams
+        function enhancedAnimateLoop(timestamp) {
+            if (!RUNNING) return;
+            
+            // Update FPS
+            updateFps();
+            
+            // Enforce memory caps every 60 frames
+            frameCounter++;
+            if (frameCounter % 60 === 0) {
+                enforceMemoryCaps();
+            }
+            
+            // Draw architect -> system connection when active
+            if (typeof architectActive !== 'undefined' && architectActive && architectCredit) {
+                const rect = architectCredit.getBoundingClientRect();
+                const ax = rect.left + rect.width / 2;
+                const ay = rect.top + rect.height / 2;
+                
+                // Draw beams to layer 0 nodes
+                fxCtx.save();
+                if (architectConnections) {
+                    architectConnections.forEach(node => {
+                        const gradient = fxCtx.createLinearGradient(ax, ay, node.x, node.y);
+                        gradient.addColorStop(0, 'rgba(0,255,255,0.6)');
+                        gradient.addColorStop(0.5, 'rgba(255,0,255,0.4)');
+                        gradient.addColorStop(1, 'rgba(255,255,0,0.2)');
+                        
+                        fxCtx.strokeStyle = gradient;
+                        fxCtx.lineWidth = 2;
+                        fxCtx.setLineDash([8, 4]);
+                        fxCtx.lineDashOffset = -timestamp * 0.02;
+                        fxCtx.beginPath();
+                        fxCtx.moveTo(ax, ay);
+                        fxCtx.lineTo(node.x, node.y);
+                        fxCtx.stroke();
+                        
+                        // Pulse at connection point
+                        const pulseSize = 4 + Math.sin(timestamp * 0.005) * 2;
+                        fxCtx.fillStyle = '#0ff';
+                        fxCtx.beginPath();
+                        fxCtx.arc(node.x, node.y, pulseSize, 0, Math.PI * 2);
+                        fxCtx.fill();
+                    });
+                }
+                fxCtx.setLineDash([]);
+                fxCtx.restore();
+            }
+            
+            // Call original animation
+            animate(timestamp);
+        }
+        
+        // Set the loop reference
+        window.animateLoop = enhancedAnimateLoop;
+        
+        // ═══════════════════════════════════════════════════════════════
+        // ARCHITECT HOLOGRAPHIC ENHANCEMENT
+        // ═══════════════════════════════════════════════════════════════
+        
+        const architectCredit = document.querySelector('.architect-credit');
+        const architectPhoto = document.querySelector('.architect-photo');
+        let architectActive = false;
+        let architectConnections = [];
+        
+        // Wrap photo in container and add holographic elements
+        if (architectPhoto && architectCredit) {
+            // Create container
+            const container = document.createElement('div');
+            container.className = 'architect-photo-container';
+            container.style.cssText = 'position:relative;width:70px;height:70px;';
+            
+            // Move photo into container
+            architectPhoto.parentNode.insertBefore(container, architectPhoto);
+            container.appendChild(architectPhoto);
+            
+            // Add orbital rings
+            for (let i = 1; i <= 3; i++) {
+                const ring = document.createElement('div');
+                ring.className = `photo-ring photo-ring-${i}`;
+                container.appendChild(ring);
+            }
+            
+            // Add orbiting particles
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'photo-particle';
+                container.appendChild(particle);
+            }
+            
+            // Add scanline
+            const scanline = document.createElement('div');
+            scanline.className = 'photo-scanline';
+            container.appendChild(scanline);
+            
+            // Add energy burst element
+            const burst = document.createElement('div');
+            burst.className = 'photo-energy-burst';
+            burst.id = 'photoBurst';
+            container.appendChild(burst);
+            
+            // Add Ge'ez title
+            const geezTitle = document.createElement('div');
+            geezTitle.className = 'architect-title-geez';
+            geezTitle.textContent = 'ሙሉ ፈጣሪ';
+            architectCredit.querySelector('.architect-info').appendChild(geezTitle);
+            
+            // Add ID for JS reference
+            architectCredit.id = 'architectCredit';
+        }
+        
+        // Architect click handler - energy burst + lightning to system
+        if (architectCredit) {
+            architectCredit.addEventListener('click', (e) => {
+                e.stopPropagation();
+                architectActive = !architectActive;
+                architectCredit.classList.toggle('active', architectActive);
+                
+                // Trigger energy burst
+                const burst = document.getElementById('photoBurst');
+                if (burst) {
+                    burst.classList.remove('active');
+                    void burst.offsetWidth; // Force reflow
+                    burst.classList.add('active');
+                }
+                
+                // Get architect position
+                const rect = architectCredit.getBoundingClientRect();
+                const ax = rect.left + rect.width / 2;
+                const ay = rect.top + rect.height / 2;
+                
+                // Create explosion at architect
+                explosions.push(new Explosion(ax, ay, architectActive ? '#0ff' : '#f0f'));
+                
+                // Lightning to random nodes
+                const targetNodes = nodes.slice().sort(() => Math.random() - 0.5).slice(0, 5);
+                targetNodes.forEach((node, i) => {
+                    setTimeout(() => {
+                        lightnings.push(new Lightning(ax, ay, node.x, node.y, architectActive ? '#0ff' : '#f0f'));
+                        // Energize target node
+                        node.energized = true;
+                        node.energyColor = architectActive ? '#0ff' : '#f0f';
+                        setTimeout(() => node.energized = false, 500);
+                    }, i * 100);
+                });
+                
+                // Create energy wave
+                energyWaves.push({
+                    x: ax,
+                    y: ay,
+                    radius: 0,
+                    maxRadius: 400,
+                    alpha: 1,
+                    color: architectActive ? '#0ff' : '#f0f'
+                });
+                
+                // If active, start drawing connections to center
+                if (architectActive) {
+                    architectConnections = nodes.filter(n => n.layer === 0);
+                }
+            });
+            
+            // Hover effect - subtle lightning preview
+            architectCredit.addEventListener('mouseenter', () => {
+                const rect = architectCredit.getBoundingClientRect();
+                const ax = rect.left + rect.width / 2;
+                const ay = rect.top + rect.height / 2;
+                
+                // Mini particles
+                for (let i = 0; i < 10; i++) {
+                    particles.push(new Particle(
+                        ax + (Math.random() - 0.5) * 50,
+                        ay + (Math.random() - 0.5) * 50,
+                        ['#0ff', '#f0f', '#ff0'][Math.floor(Math.random() * 3)]
+                    ));
+                }
+            });
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // FIDEL DISPLAY SYSTEM - Dynamic center + static frame decoration
+        // ═══════════════════════════════════════════════════════════════
+        
+        const fidelFamilies = [
+            { name: 'ሀ-HOY', chars: ['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ'] },
+            { name: 'ለ-LAWI', chars: ['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ'] },
+            { name: 'ሐ-HAWT', chars: ['ሐ','ሑ','ሒ','ሓ','ሔ','ሕ','ሖ'] },
+            { name: 'መ-MAY', chars: ['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ'] },
+            { name: 'ሠ-SAWT', chars: ['ሠ','ሡ','ሢ','ሣ','ሤ','ሥ','ሦ'] },
+            { name: 'ረ-REYS', chars: ['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ'] },
+            { name: 'ሰ-SAT', chars: ['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ'] },
+            { name: 'ቀ-QAF', chars: ['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ'] },
+            { name: 'በ-BET', chars: ['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ'] },
+            { name: 'ተ-TAW', chars: ['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ'] },
+            { name: 'ነ-NAHAS', chars: ['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ'] },
+            { name: 'አ-ALF', chars: ['አ','ኡ','ኢ','ኣ','ኤ','እ','ኦ'] },
+            { name: 'ከ-KAF', chars: ['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ'] },
+            { name: 'ወ-WAWE', chars: ['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'] },
+            { name: 'ዘ-ZAY', chars: ['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ'] },
+            { name: 'የ-YAMAN', chars: ['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'] },
+            { name: 'ደ-DINT', chars: ['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ'] },
+            { name: 'ገ-GAML', chars: ['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ'] },
+            { name: 'ጠ-TAYT', chars: ['ጠ','ጡ','ጢ','ጣ','ጤ','ጥ','ጦ'] },
+            { name: 'ጸ-TSADIY', chars: ['ጸ','ጹ','ጺ','ጻ','ጼ','ጽ','ጾ'] },
+            { name: 'ፈ-AF', chars: ['ፈ','ፉ','ፊ','ፋ','ፌ','ፍ','ፎ'] },
+            { name: 'ፐ-PSA', chars: ['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ'] },
+        ];
+        
+        const vowelNames = ['ግዕዝ', 'ካዕብ', 'ሣልስ', 'ራብዕ', 'ኃምስ', 'ሳድስ', 'ሳብዕ'];
+        
+        function initFidelDisplaySystem() {
+            const box = document.querySelector('.architect-credit');
+            const photoContainer = document.querySelector('.architect-photo-container');
+            if (!box || !photoContainer) return;
+            
+            box.style.overflow = 'visible';
+            
+            // ═══ STATIC FRAME DECORATION ═══
+            
+            // Top border Fidels
+            const topBorder = document.createElement('div');
+            topBorder.style.cssText = `
+                position: absolute;
+                top: -20px; left: 10px; right: 10px;
+                display: flex; justify-content: space-between;
+                font-family: 'Nyala', 'Abyssinica SIL', serif;
+                font-size: 0.9em;
+                color: rgba(0,255,255,0.4);
+                pointer-events: none;
+            `;
+            ['ሀ', 'ለ', 'መ', 'ረ', 'ሰ'].forEach(c => {
+                const span = document.createElement('span');
+                span.textContent = c;
+                span.style.textShadow = '0 0 5px currentColor';
+                topBorder.appendChild(span);
+            });
+            box.appendChild(topBorder);
+            
+            // Bottom border Fidels
+            const bottomBorder = document.createElement('div');
+            bottomBorder.style.cssText = `
+                position: absolute;
+                bottom: -20px; left: 10px; right: 10px;
+                display: flex; justify-content: space-between;
+                font-family: 'Nyala', 'Abyssinica SIL', serif;
+                font-size: 0.9em;
+                color: rgba(255,0,255,0.4);
+                pointer-events: none;
+            `;
+            ['ቀ', 'በ', 'ተ', 'ነ', 'አ'].forEach(c => {
+                const span = document.createElement('span');
+                span.textContent = c;
+                span.style.textShadow = '0 0 5px currentColor';
+                bottomBorder.appendChild(span);
+            });
+            box.appendChild(bottomBorder);
+            
+            // Corner accents
+            const corners = [
+                { pos: 'top: -25px; left: -25px;', char: 'ሙ', color: '#0ff' },
+                { pos: 'top: -25px; right: -25px;', char: 'ሉ', color: '#f0f' },
+                { pos: 'bottom: -25px; left: -25px;', char: 'ፊ', color: '#ff0' },
+                { pos: 'bottom: -25px; right: -25px;', char: 'ደ', color: '#0f8' },
+            ];
+            
+            corners.forEach(corner => {
+                const el = document.createElement('div');
+                el.textContent = corner.char;
+                el.style.cssText = `
+                    position: absolute;
+                    ${corner.pos}
+                    font-family: 'Nyala', 'Abyssinica SIL', serif;
+                    font-size: 1.6em;
+                    color: ${corner.color};
+                    text-shadow: 0 0 10px ${corner.color};
+                    opacity: 0.6;
+                `;
+                box.appendChild(el);
+            });
+            
+            // ═══ DYNAMIC CENTER DISPLAY ═══
+            
+            // Create overlay on photo
+            const fidelOverlay = document.createElement('div');
+            fidelOverlay.id = 'fidelCenterDisplay';
+            fidelOverlay.style.cssText = `
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                display: flex; flex-direction: column;
+                align-items: center; justify-content: center;
+                background: rgba(0,0,0,0.75);
+                border-radius: 50%;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                z-index: 5;
+                pointer-events: none;
+            `;
+            
+            // Main character display
+            const mainChar = document.createElement('div');
+            mainChar.id = 'fidelMainChar';
+            mainChar.style.cssText = `
+                font-family: 'Nyala', 'Abyssinica SIL', serif;
+                font-size: 2.5em;
+                color: #fff;
+                text-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+                line-height: 1;
+                transition: transform 0.15s ease, color 0.3s;
+            `;
+            mainChar.textContent = 'ሀ';
+            fidelOverlay.appendChild(mainChar);
+            
+            // Family row display
+            const familyRow = document.createElement('div');
+            familyRow.id = 'fidelFamilyRow';
+            familyRow.style.cssText = `
+                display: flex; gap: 3px;
+                margin-top: 5px;
+                font-family: 'Nyala', 'Abyssinica SIL', serif;
+                font-size: 0.7em;
+            `;
+            for (let i = 0; i < 7; i++) {
+                const char = document.createElement('span');
+                char.className = 'family-char';
+                char.style.cssText = `
+                    color: rgba(255,255,255,0.4);
+                    text-shadow: 0 0 5px currentColor;
+                    transition: all 0.2s ease;
+                `;
+                familyRow.appendChild(char);
+            }
+            fidelOverlay.appendChild(familyRow);
+            
+            // Family name
+            const familyName = document.createElement('div');
+            familyName.id = 'fidelFamilyName';
+            familyName.style.cssText = `
+                font-size: 0.5em;
+                color: rgba(0,255,255,0.7);
+                margin-top: 3px;
+                font-family: 'Orbitron', monospace;
+                letter-spacing: 1px;
+            `;
+            fidelOverlay.appendChild(familyName);
+            
+            photoContainer.appendChild(fidelOverlay);
+            
+            // ═══ ANIMATION STATE ═══
+            let currentFamily = 0;
+            let currentVowel = 0;
+            let isDisplayActive = false;
+            let cycleTimer = null;
+            let vowelTimer = null;
+            
+            function updateDisplay() {
+                const family = fidelFamilies[currentFamily];
+                const chars = family.chars;
+                
+                // Update main character with animation
+                mainChar.style.transform = 'scale(1.3)';
+                mainChar.textContent = chars[currentVowel];
+                
+                // Color based on vowel
+                const hue = (currentVowel / 7) * 360;
+                mainChar.style.color = `hsl(${hue}, 100%, 80%)`;
+                mainChar.style.textShadow = `0 0 20px hsl(${hue}, 100%, 60%), 0 0 40px hsl(${hue}, 100%, 40%)`;
+                
+                setTimeout(() => {
+                    mainChar.style.transform = 'scale(1)';
+                }, 100);
+                
+                // Update family row
+                const familyChars = familyRow.children;
+                for (let i = 0; i < 7; i++) {
+                    familyChars[i].textContent = chars[i];
+                    if (i === currentVowel) {
+                        familyChars[i].style.color = '#fff';
+                        familyChars[i].style.transform = 'scale(1.3)';
+                        familyChars[i].style.textShadow = '0 0 10px #fff';
+                    } else {
+                        familyChars[i].style.color = 'rgba(255,255,255,0.4)';
+                        familyChars[i].style.transform = 'scale(1)';
+                        familyChars[i].style.textShadow = '0 0 5px currentColor';
+                    }
+                }
+                
+                // Update family name
+                familyName.textContent = family.name;
+            }
+            
+            function cycleVowel() {
+                currentVowel = (currentVowel + 1) % 7;
+                if (currentVowel === 0) {
+                    // Move to next family after completing vowels
+                    currentFamily = (currentFamily + 1) % fidelFamilies.length;
+                }
+                updateDisplay();
+            }
+            
+            function startCycling() {
+                if (cycleTimer) return;
+                isDisplayActive = true;
+                fidelOverlay.style.opacity = '1';
+                updateDisplay();
+                cycleTimer = setInterval(cycleVowel, 400);
+            }
+            
+            function stopCycling() {
+                isDisplayActive = false;
+                fidelOverlay.style.opacity = '0';
+                if (cycleTimer) {
+                    clearInterval(cycleTimer);
+                    cycleTimer = null;
+                }
+            }
+            
+            // ═══ INTERACTION ═══
+            
+            // Hover to activate
+            box.addEventListener('mouseenter', startCycling);
+            box.addEventListener('mouseleave', stopCycling);
+            
+            // Click to toggle persistent mode
+            let persistentMode = false;
+            box.addEventListener('click', (e) => {
+                e.stopPropagation();
+                persistentMode = !persistentMode;
+                if (persistentMode) {
+                    startCycling();
+                    box.style.boxShadow = '0 0 30px rgba(0,255,255,0.5), inset 0 0 20px rgba(0,255,255,0.1)';
+                } else {
+                    stopCycling();
+                    box.style.boxShadow = '';
+                }
+            });
+            
+            // Keep cycling if in persistent mode
+            box.addEventListener('mouseleave', () => {
+                if (!persistentMode) {
+                    stopCycling();
+                }
+            });
+        }
+        
+        // Initialize Fidel display
+        setTimeout(initFidelDisplaySystem, 1000);
         
         // Start main animation
         init();
