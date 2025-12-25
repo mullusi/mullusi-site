@@ -1,757 +1,686 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MULLUSI — Building Symbolic Intelligence Systems</title>
-    <meta name="description" content="MULLUSI builds domain-specific products powered by MULLU, a symbolic intelligence system. Bounded. Persistent. Inspectable.">
+import React, { useState, useCallback } from 'react';
+
+// ============================================
+// MSMI Core (Embedded)
+// ============================================
+
+const UNIVERSAL_QUANTIFIERS = new Set(['all', 'every', 'each', 'any', 'for all', '∀']);
+const REASONING_MARKERS = ['because', 'therefore', 'thus', 'hence', 'implies', 'so', 'since', '→', '⇒', '∴'];
+const CONCLUSION_MARKERS = ['therefore', 'thus', 'hence', '∴', 'consequently'];
+
+const CONCEPT_DEPENDENCIES = {
+  'limit': ['real numbers', 'epsilon-delta definition'],
+  'derivative': ['limit', 'function', 'continuity'],
+  'integral': ['limit', 'partition', 'summation'],
+  'continuous': ['limit', 'function', 'topology'],
+  'infinity': ['limit', 'cardinality', 'ordinal'],
+  'irrational': ['real number', 'rational number'],
+  'rational': ['integer', 'ratio'],
+  'prime': ['integer', 'divisibility'],
+  'provable': ['formal system', 'axioms'],
+  'unprovable': ['formal system', 'Gödel numbering'],
+  'function': ['domain', 'codomain', 'mapping'],
+  'set': ['elements', 'membership', 'subset'],
+  'proof': ['axioms', 'inference rules', 'theorem'],
+  'theorem': ['proof', 'lemma', 'proposition'],
+  'algorithm': ['input', 'output', 'termination'],
+  'complexity': ['big-O', 'time', 'space']
+};
+
+const CONCEPT_LEADS = {
+  'limit': ['continuity', 'derivative', "L'Hôpital's rule"],
+  'derivative': ['chain rule', 'mean value theorem', 'Taylor series'],
+  'infinity': ['cardinality', "Cantor's diagonal", 'continuum hypothesis'],
+  'irrational': ['proof √2 irrational', 'transcendental numbers'],
+  'function': ['composition', 'inverse', 'bijection'],
+  'set': ['union', 'intersection', 'power set'],
+  'algorithm': ['correctness', 'efficiency', 'optimization'],
+  'proof': ['induction', 'contradiction', 'construction']
+};
+
+function classifyInput(text) {
+  const textLower = text.toLowerCase().trim();
+  const words = new Set(textLower.split(/\s+/));
+  
+  const hasReasoning = REASONING_MARKERS.some(m => textLower.includes(m));
+  const hasConclusion = CONCLUSION_MARKERS.some(m => textLower.includes(m));
+  
+  if (hasReasoning && hasConclusion) return 'argument';
+  
+  const hasQuantifier = [...UNIVERSAL_QUANTIFIERS].some(q => words.has(q) || textLower.includes(q));
+  const hasVerb = ['is', 'are', 'equals', 'equal'].some(v => words.has(v));
+  const hasEquation = /[=<>≤≥≠]/.test(text);
+  
+  if (hasQuantifier || (hasVerb && text.split(/\s+/).length > 3) || hasEquation) {
+    return 'statement';
+  }
+  
+  return 'concept';
+}
+
+function basicStem(word) {
+  word = word.toLowerCase();
+  if (word.endsWith('ing') && word.length > 4) return word.slice(0, -3);
+  if (word.endsWith('ed') && word.length > 3) {
+    const stem = word.slice(0, -2);
+    if (stem.length > 2 && stem[stem.length-1] === stem[stem.length-2]) return stem.slice(0, -1);
+    return stem;
+  }
+  if (word.endsWith('s') && word.length > 2) {
+    if (word.endsWith('es') && word.length > 3) return word.slice(0, -2);
+    return word.slice(0, -1);
+  }
+  return word;
+}
+
+function keyWordsMatch(s1, s2) {
+  const stopwords = new Set(['the', 'a', 'an', 'is', 'are', 'was', 'were', 'it', 'that', 'this', 'to', 'of', 'in', 'for', 'on', 'with', 'at', 'by', 'from']);
+  const words1 = new Set(s1.toLowerCase().split(/\s+/).filter(w => !stopwords.has(w)));
+  const words2 = new Set(s2.toLowerCase().split(/\s+/).filter(w => !stopwords.has(w)));
+  
+  if (words1.size === 0 || words2.size === 0) return false;
+  
+  const stems1 = new Set([...words1].map(basicStem));
+  const stems2 = new Set([...words2].map(basicStem));
+  return [...stems1].some(s => stems2.has(s));
+}
+
+function checkValidity(premises, conclusion, rawText) {
+  const fullText = [...premises, conclusion, rawText].join(' ').toLowerCase();
+  
+  if ((fullText.includes('a = b') || fullText.includes('a=b'))) {
+    if (fullText.includes('divide') || fullText.includes('(a-b)') || fullText.includes('a-b')) {
+      return { valid: false, reason: 'Division by zero' };
+    }
+  }
+  
+  if (premises.length >= 2) {
+    const p1 = premises[0].toLowerCase();
+    const p2 = premises[1]?.toLowerCase() || '';
+    const c = conclusion.toLowerCase().replace(/^,\s*/, '');
     
-    <!-- Open Graph -->
-    <meta property="og:title" content="MULLUSI — Symbolic Intelligence Systems">
-    <meta property="og:description" content="Software that observes, structures, and preserves meaning.">
-    <meta property="og:url" content="https://mullusi.com">
-    <meta property="og:type" content="website">
+    if (p1.includes('if') && (p1.includes('then') || p1.includes(','))) {
+      let antecedent = '', consequent = '';
+      const parts = p1.includes('then') 
+        ? p1.split('if')[1]?.split('then') 
+        : p1.split('if')[1]?.split(',');
+      
+      if (parts?.length >= 2) {
+        antecedent = parts[0].trim().replace(/,\s*$/, '');
+        consequent = parts.slice(1).join(',').trim().replace(/\.\s*$/, '');
+        
+        if (antecedent && consequent) {
+          const affirmsConsequent = consequent.includes(p2) || p2.includes(consequent) || keyWordsMatch(consequent, p2);
+          const concludesAntecedent = antecedent.includes(c) || c.includes(antecedent) || keyWordsMatch(antecedent, c);
+          
+          if (affirmsConsequent && concludesAntecedent) {
+            return { valid: false, reason: 'Affirming the Consequent' };
+          }
+        }
+      }
+    }
+  }
+  
+  return { valid: true, reason: null };
+}
+
+function inspectMath(text) {
+  const inputType = classifyInput(text);
+  const textLower = text.toLowerCase();
+  
+  const report = {
+    input: { text, type: inputType },
+    summary: '',
+    formal: '',
+    steps: [],
+    assumptions: [],
+    dependencies: [],
+    errors: [],
+    warnings: [],
+    leads: [],
+    isValid: true
+  };
+  
+  // Dependencies
+  for (const [concept, deps] of Object.entries(CONCEPT_DEPENDENCIES)) {
+    if (textLower.includes(concept)) {
+      deps.forEach(d => {
+        if (!report.dependencies.includes(d)) report.dependencies.push(d);
+      });
+    }
+  }
+  
+  // Where this leads
+  for (const [concept, leads] of Object.entries(CONCEPT_LEADS)) {
+    if (textLower.includes(concept)) {
+      leads.forEach(l => {
+        if (!report.leads.includes(l)) report.leads.push(l);
+      });
+    }
+  }
+  
+  // Process by type
+  if (inputType === 'concept') {
+    report.summary = `Concept: ${text}`;
+    report.formal = text;
+    report.steps = [
+      { n: 1, desc: `Identify: "${text}"`, valid: true },
+      { n: 2, desc: 'Determine domain context', valid: true },
+      { n: 3, desc: 'Retrieve formal definition', valid: true }
+    ];
+  } else if (inputType === 'statement') {
+    if (text.includes('=')) {
+      const [left, right] = text.split('=').map(s => s.trim());
+      report.summary = `Equation: ${left} = ${right}`;
+      report.formal = `${left} = ${right}`;
+      report.steps = [
+        { n: 1, desc: `LHS: ${left}`, valid: true },
+        { n: 2, desc: `RHS: ${right}`, valid: true },
+        { n: 3, desc: 'Assert equality', valid: true }
+      ];
+      report.assumptions.push('Variables defined in domain');
+    } else {
+      report.summary = `Statement: ${text}`;
+      report.formal = [...UNIVERSAL_QUANTIFIERS].some(q => textLower.includes(q)) ? `∀x: ${text}` : text;
+      report.steps = [
+        { n: 1, desc: 'Parse claim structure', valid: true },
+        { n: 2, desc: 'Identify predicate', valid: true }
+      ];
+    }
+  } else if (inputType === 'argument') {
+    let premises = [], conclusion = '';
+    for (const marker of CONCLUSION_MARKERS) {
+      if (textLower.includes(marker)) {
+        const parts = text.split(new RegExp(marker, 'i'));
+        premises = parts[0].split(/[.;]/).map(p => p.trim()).filter(p => p);
+        conclusion = parts[parts.length - 1].trim().replace(/^[,.\s]+/, '');
+        break;
+      }
+    }
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    const validity = checkValidity(premises, conclusion, text);
+    report.isValid = validity.valid;
+    report.summary = `Argument: ${premises.length} premises → conclusion`;
+    report.formal = `${premises.map((_, i) => `P${i+1}`).join(' ∧ ')} → C`;
     
-    <style>
-        :root {
-            --bg-primary: #0a0a0b;
-            --bg-secondary: #111113;
-            --bg-tertiary: #18181b;
-            --border: #27272a;
-            --border-light: #3f3f46;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --accent: #6366f1;
-            --accent-dim: #4f46e5;
-            --success: #22c55e;
-            --mono: 'JetBrains Mono', monospace;
-            --sans: 'IBM Plex Sans', -apple-system, sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: var(--sans);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Layout */
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(10, 10, 11, 0.9);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--border);
-            z-index: 100;
-        }
-
-        nav .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-        }
-
-        .logo {
-            font-family: var(--mono);
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            letter-spacing: 0.05em;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-family: var(--mono);
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        /* Hero */
-        .hero {
-            padding: 160px 0 120px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .hero-label {
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            color: var(--accent);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-
-        .hero h1 {
-            font-family: var(--mono);
-            font-size: 3rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-sub {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin-bottom: 48px;
-        }
-
-        .hero-cta {
-            display: inline-block;
-            font-family: var(--mono);
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            padding: 12px 24px;
-            border: 1px solid var(--border-light);
-            transition: all 0.2s;
-        }
-
-        .hero-cta:hover {
-            background: var(--bg-tertiary);
-            border-color: var(--text-muted);
-        }
-
-        /* Sections */
-        section {
-            padding: 80px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .section-label {
-            font-family: var(--mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-
-        section h2 {
-            font-family: var(--mono);
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-
-        section p {
-            color: var(--text-secondary);
-            max-width: 640px;
-            margin-bottom: 16px;
-        }
-
-        /* Pillars Grid */
-        .pillars {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-top: 48px;
-        }
-
-        .pillar {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 32px;
-        }
-
-        .pillar h3 {
-            font-family: var(--mono);
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-            letter-spacing: 0.02em;
-        }
-
-        .pillar p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 0;
-        }
-
-        /* MULLU Core */
-        .mullu-core {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 48px;
-            margin-top: 48px;
-        }
-
-        .mullu-core .core-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .core-symbol {
-            font-size: 1.5rem;
-            color: var(--accent);
-        }
-
-        .core-name {
-            font-family: var(--mono);
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .core-tag {
-            font-family: var(--mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-left: auto;
-            letter-spacing: 0.1em;
-        }
-
-        .core-flow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin: 32px 0;
-            font-family: var(--mono);
-            font-size: 0.85rem;
-        }
-
-        .core-flow span {
-            color: var(--text-secondary);
-            padding: 8px 16px;
-            border: 1px solid var(--border);
-            background: var(--bg-tertiary);
-        }
-
-        .core-flow .arrow {
-            color: var(--text-muted);
-            border: none;
-            background: none;
-            padding: 0;
-        }
-
-        .core-note {
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
-        }
-
-        /* Products */
-        .product-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            margin-top: 32px;
-        }
-
-        .product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px 32px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .product-name {
-            font-family: var(--mono);
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .product-version {
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            color: var(--success);
-            padding: 4px 8px;
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-
-        .product-body {
-            padding: 32px;
-        }
-
-        .product-body p {
-            margin-bottom: 24px;
-        }
-
-        .product-features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .product-features li {
-            font-family: var(--mono);
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            list-style: none;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .product-features li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: var(--text-muted);
-        }
-
-        .product-links {
-            display: flex;
-            gap: 16px;
-        }
-
-        .product-links a {
-            font-family: var(--mono);
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 8px 16px;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-        }
-
-        .product-links a:hover {
-            color: var(--text-primary);
-            border-color: var(--border-light);
-        }
-
-        .future-products {
-            margin-top: 32px;
-            padding: 24px 32px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-        }
-
-        .future-products h4 {
-            font-family: var(--mono);
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-
-        .future-products p {
-            font-size: 0.9rem;
-            margin-bottom: 0;
-        }
-
-        /* Philosophy */
-        .principles {
-            margin-top: 48px;
-        }
-
-        .principle {
-            padding: 24px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .principle:last-child {
-            border-bottom: none;
-        }
-
-        .principle-num {
-            font-family: var(--mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .principle h4 {
-            font-family: var(--mono);
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .principle p {
-            font-size: 0.9rem;
-            margin-bottom: 0;
-        }
-
-        /* Contact */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-top: 32px;
-        }
-
-        .contact-item {
-            font-family: var(--mono);
-        }
-
-        .contact-item .label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .contact-item a {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .contact-item a:hover {
-            color: var(--text-primary);
-        }
-
-        /* Footer */
-        footer {
-            padding: 48px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-left {
-            font-family: var(--mono);
-        }
-
-        .footer-brand {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .footer-tagline {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .footer-right {
-            font-family: var(--mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-align: right;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-            margin-bottom: 8px;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .footer-privacy {
-            font-size: 0.65rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .pillars {
-                grid-template-columns: 1fr;
-            }
-
-            .product-features {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                gap: 24px;
-                text-align: center;
-            }
-
-            .footer-right {
-                text-align: center;
-            }
-
-            .nav-links {
-                display: none;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="container">
-            <a href="/" class="logo">MULLUSI</a>
-            <ul class="nav-links">
-                <li><a href="#products">Products</a></li>
-                <li><a href="#philosophy">Philosophy</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="https://github.com/mullusi">GitHub</a></li>
-            </ul>
+    premises.forEach((p, i) => {
+      report.steps.push({ n: i + 1, desc: `Premise: ${p}`, valid: true });
+    });
+    
+    if (conclusion) {
+      report.steps.push({ 
+        n: premises.length + 1, 
+        desc: `Conclusion: ${conclusion}`, 
+        valid: validity.valid,
+        reason: validity.reason
+      });
+      
+      if (!validity.valid) {
+        report.errors.push(`INVALID: ${validity.reason}`);
+      }
+    }
+  }
+  
+  // Common warnings
+  if (textLower.includes('infinity') || text.includes('∞')) {
+    report.warnings.push('Infinity requires context (cardinal, ordinal, limit)');
+  }
+  if (textLower.includes('number') && !textLower.includes('real') && !textLower.includes('integer')) {
+    report.warnings.push('Number system unspecified (ℕ, ℤ, ℚ, ℝ, ℂ?)');
+  }
+  if (textLower.includes('this statement')) {
+    report.warnings.push('Self-reference requires formal system');
+  }
+  if (['boils', 'melts', 'temperature', '°C'].some(m => textLower.includes(m))) {
+    report.warnings.push('Empirical content — outside MSMI scope');
+  }
+  
+  return report;
+}
+
+// ============================================
+// Symbol Extraction (for web content)
+// ============================================
+
+function extractSymbolicContent(text) {
+  const items = [];
+  
+  // Mathematical equations (basic patterns)
+  const eqPatterns = [
+    /[a-zA-Z]\s*=\s*[a-zA-Z0-9+\-*/^().\s]+/g,
+    /\d+\s*[+\-*/^]\s*\d+\s*=\s*\d+/g,
+    /[∀∃][a-zA-Z].*?[:=]/g
+  ];
+  
+  eqPatterns.forEach(pattern => {
+    const matches = text.match(pattern) || [];
+    matches.forEach(m => {
+      if (m.length > 2 && m.length < 100) {
+        items.push({ type: 'equation', content: m.trim(), source: 'pattern' });
+      }
+    });
+  });
+  
+  // Mathematical terms
+  const mathTerms = [
+    'limit', 'derivative', 'integral', 'function', 'continuous', 'differentiable',
+    'convergent', 'divergent', 'infinity', 'prime', 'rational', 'irrational',
+    'theorem', 'proof', 'lemma', 'corollary', 'axiom', 'postulate',
+    'set', 'element', 'subset', 'union', 'intersection',
+    'algorithm', 'complexity', 'polynomial', 'exponential',
+    'matrix', 'vector', 'eigenvalue', 'determinant'
+  ];
+  
+  const textLower = text.toLowerCase();
+  mathTerms.forEach(term => {
+    if (textLower.includes(term)) {
+      items.push({ type: 'concept', content: term, source: 'vocabulary' });
+    }
+  });
+  
+  // Logical statements
+  const logicPatterns = [
+    /if\s+.+?\s+then\s+.+/gi,
+    /all\s+.+?\s+are\s+.+/gi,
+    /every\s+.+?\s+is\s+.+/gi,
+    /.+\s+implies\s+.+/gi,
+    /.+\s+therefore\s+.+/gi
+  ];
+  
+  logicPatterns.forEach(pattern => {
+    const matches = text.match(pattern) || [];
+    matches.forEach(m => {
+      if (m.length > 5 && m.length < 200) {
+        items.push({ type: 'statement', content: m.trim(), source: 'pattern' });
+      }
+    });
+  });
+  
+  // Deduplicate
+  const seen = new Set();
+  return items.filter(item => {
+    const key = `${item.type}:${item.content}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+// ============================================
+// UI Components
+// ============================================
+
+const Badge = ({ children, variant = 'default' }) => {
+  const styles = {
+    default: 'bg-slate-100 text-slate-700',
+    concept: 'bg-blue-100 text-blue-700',
+    statement: 'bg-purple-100 text-purple-700',
+    argument: 'bg-amber-100 text-amber-700',
+    equation: 'bg-emerald-100 text-emerald-700',
+    valid: 'bg-emerald-100 text-emerald-700',
+    invalid: 'bg-red-100 text-red-700',
+    warning: 'bg-amber-100 text-amber-700'
+  };
+  return (
+    <span className={`px-2 py-0.5 rounded text-xs font-medium ${styles[variant] || styles.default}`}>
+      {children}
+    </span>
+  );
+};
+
+const Panel = ({ title, icon, children, actions }) => (
+  <div className="bg-white rounded-lg border border-slate-200 mb-4 overflow-hidden">
+    <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+      <div className="flex items-center gap-2 font-medium text-slate-700">
+        <span>{icon}</span>
+        <span>{title}</span>
+      </div>
+      {actions}
+    </div>
+    <div className="p-4">{children}</div>
+  </div>
+);
+
+const StepIndicator = ({ step }) => (
+  <div className={`flex items-start gap-3 p-2 rounded ${step.valid ? 'bg-slate-50' : 'bg-red-50'}`}>
+    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white ${step.valid ? 'bg-emerald-500' : 'bg-red-500'}`}>
+      {step.valid ? '✓' : '✗'}
+    </div>
+    <div className="flex-1">
+      <div className="text-sm text-slate-700">{step.desc}</div>
+      {step.reason && <div className="text-xs text-red-600 mt-1">{step.reason}</div>}
+    </div>
+  </div>
+);
+
+const SymbolCard = ({ item, onInspect, isSelected }) => (
+  <div 
+    onClick={() => onInspect(item)}
+    className={`p-3 rounded-lg border cursor-pointer transition-all ${
+      isSelected 
+        ? 'border-blue-500 bg-blue-50 shadow-sm' 
+        : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
+    }`}
+  >
+    <div className="flex items-center justify-between mb-1">
+      <Badge variant={item.type}>{item.type}</Badge>
+      <span className="text-xs text-slate-400">{item.source}</span>
+    </div>
+    <div className="text-sm text-slate-800 font-mono truncate">{item.content}</div>
+  </div>
+);
+
+const InspectionPanel = ({ report }) => {
+  if (!report) return (
+    <div className="text-center text-slate-500 py-8">
+      <div className="text-4xl mb-2">🔍</div>
+      <div>Select a symbol to inspect</div>
+    </div>
+  );
+  
+  return (
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <Badge variant={report.input.type}>{report.input.type}</Badge>
+        <Badge variant={report.isValid ? 'valid' : 'invalid'}>
+          {report.isValid ? 'VALID' : 'INVALID'}
+        </Badge>
+      </div>
+      
+      {/* Summary */}
+      <div>
+        <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Summary</div>
+        <div className="text-slate-800">{report.summary}</div>
+      </div>
+      
+      {/* Formal */}
+      <div>
+        <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Formal</div>
+        <div className="font-mono text-sm bg-slate-100 p-2 rounded">{report.formal}</div>
+      </div>
+      
+      {/* Steps */}
+      {report.steps.length > 0 && (
+        <div>
+          <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">Logical Structure</div>
+          <div className="space-y-2">
+            {report.steps.map((step, i) => <StepIndicator key={i} step={step} />)}
+          </div>
         </div>
-    </nav>
-
-    <main>
-        <!-- Hero -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-label">Symbolic Intelligence Studio</div>
-                <h1>Building Symbolic<br>Intelligence Systems</h1>
-                <p class="hero-sub">
-                    We create software that observes, structures, and preserves meaning — without inference, without prediction, without hype.
-                </p>
-                <a href="#products" class="hero-cta">Explore Our Work →</a>
-            </div>
-        </section>
-
-        <!-- What We Do -->
-        <section id="about">
-            <div class="container">
-                <div class="section-label">What We Build</div>
-                <h2>Symbolic Intelligence</h2>
-                <p>
-                    MULLUSI is a product studio focused on symbolic intelligence — software that captures structure, not statistics.
-                </p>
-                <p>
-                    While the industry chases probabilistic models, we build systems that are bounded, inspectable, and verifiable. Our software doesn't guess. It observes, remembers, and exposes what it knows.
-                </p>
-                <p>
-                    We believe the next generation of intelligent tools won't replace human judgment. They'll make the structure of complex information visible, persistent, and queryable.
-                </p>
-
-                <div class="pillars">
-                    <div class="pillar">
-                        <h3>STRUCTURED</h3>
-                        <p>We transform raw information into queryable symbolic state.</p>
-                    </div>
-                    <div class="pillar">
-                        <h3>BOUNDED</h3>
-                        <p>Our systems have hard resource limits by construction.</p>
-                    </div>
-                    <div class="pillar">
-                        <h3>INSPECTABLE</h3>
-                        <p>Every internal state can be audited and verified.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- MULLU Core -->
-        <section id="mullu">
-            <div class="container">
-                <div class="section-label">The Core</div>
-                <h2>Powered by MULLU</h2>
-                <p>
-                    At the heart of everything we build is MULLU — a symbolic intelligence system designed for observation, not inference.
-                </p>
-                <p>
-                    MULLU doesn't learn from your data. It doesn't predict your behavior. It captures the structural relationships in information and makes them available for inspection and query.
-                </p>
-
-                <div class="mullu-core">
-                    <div class="core-header">
-                        <span class="core-symbol">◈</span>
-                        <span class="core-name">MULLU</span>
-                        <span class="core-tag">SYMBOLIC INTELLIGENCE CORE</span>
-                    </div>
-                    
-                    <div class="core-flow">
-                        <span>Observe</span>
-                        <span class="arrow">→</span>
-                        <span>Structure</span>
-                        <span class="arrow">→</span>
-                        <span>Persist</span>
-                    </div>
-                    
-                    <p class="core-note">No inference. No prediction. No magic.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Products -->
-        <section id="products">
-            <div class="container">
-                <div class="section-label">What We Ship</div>
-                <h2>Products</h2>
-                <p>
-                    We build domain-specific products that apply symbolic intelligence to real problems. Each product is independent, focused, and powered by the same core.
-                </p>
-
-                <div class="product-card">
-                    <div class="product-header">
-                        <span class="product-name">MULLU Inspect</span>
-                        <span class="product-version">v0.1.0 — MVP Certified</span>
-                    </div>
-                    <div class="product-body">
-                        <p>
-                            A symbolic mediation layer for the web. MULLU Inspect transforms browsing into structured, queryable, persistent symbolic state. It captures DOM elements, user interactions, and page structure — then preserves them across sessions.
-                        </p>
-                        <ul class="product-features">
-                            <li>Bounded symbol capture (cannot explode)</li>
-                            <li>Self-healing memory with automatic GC</li>
-                            <li>IndexedDB persistence across restarts</li>
-                            <li>Force-directed graph visualization</li>
-                            <li>Full internal audit at any time</li>
-                            <li>Deterministic, inspectable behavior</li>
-                        </ul>
-                        <div class="product-links">
-                            <a href="https://inspect.mullusi.com">Documentation →</a>
-                            <a href="https://github.com/mullusi/mullu-inspect">GitHub →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="future-products">
-                    <h4>Future Products</h4>
-                    <p>
-                        We're applying MULLU to additional domains: video and media intelligence, knowledge persistence and retrieval, scientific and biomedical structure. These are in research. We ship when they're ready, not when they're announced.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Philosophy -->
-        <section id="philosophy">
-            <div class="container">
-                <div class="section-label">How We Think</div>
-                <h2>Philosophy</h2>
-                <p>
-                    The dominant paradigm in software intelligence is statistical: large models trained on large data making probabilistic guesses. We take a different path.
-                </p>
-                <p>
-                    Symbolic intelligence is older than neural networks. It's the tradition of structured representation, explicit reasoning, and verifiable computation. It fell out of fashion not because it failed, but because it was hard and the hardware wasn't ready.
-                </p>
-                <p>
-                    The hardware is ready now. And the limitations of probabilistic systems — hallucination, opacity, unbounded resource consumption — are becoming clear.
-                </p>
-
-                <div class="principles">
-                    <div class="principle">
-                        <div class="principle-num">01</div>
-                        <h4>Bounded by construction</h4>
-                        <p>If it can explode, it will. We design limits in, not bolt them on.</p>
-                    </div>
-                    <div class="principle">
-                        <div class="principle-num">02</div>
-                        <h4>Observable at all times</h4>
-                        <p>If you can't inspect it, you can't trust it.</p>
-                    </div>
-                    <div class="principle">
-                        <div class="principle-num">03</div>
-                        <h4>Deterministic where possible</h4>
-                        <p>Same input should produce same output.</p>
-                    </div>
-                    <div class="principle">
-                        <div class="principle-num">04</div>
-                        <h4>No inference without consent</h4>
-                        <p>We capture structure. We don't guess meaning.</p>
-                    </div>
-                    <div class="principle">
-                        <div class="principle-num">05</div>
-                        <h4>Ship when ready</h4>
-                        <p>We don't announce roadmaps. We ship certified systems.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact -->
-        <section id="contact">
-            <div class="container">
-                <div class="section-label">Get In Touch</div>
-                <h2>Contact</h2>
-                <p>
-                    MULLUSI is a small team building serious software. We don't have a manifesto. We have working code.
-                </p>
-
-                <div class="contact-grid">
-                    <div class="contact-item">
-                        <div class="label">Partnerships</div>
-                        <a href="mailto:partners@mullusi.com">partners@mullusi.com</a>
-                    </div>
-                    <div class="contact-item">
-                        <div class="label">Engineering</div>
-                        <a href="mailto:engineering@mullusi.com">engineering@mullusi.com</a>
-                    </div>
-                    <div class="contact-item">
-                        <div class="label">General</div>
-                        <a href="mailto:hello@mullusi.com">hello@mullusi.com</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-left">
-                    <div class="footer-brand">MULLUSI</div>
-                    <div class="footer-tagline">Building symbolic intelligence systems.</div>
-                </div>
-                <div class="footer-right">
-                    <div class="footer-links">
-                        <a href="#products">Products</a>
-                        <a href="https://github.com/mullusi">GitHub</a>
-                        <a href="#contact">Contact</a>
-                    </div>
-                    <div class="footer-privacy">
-                        No tracking. No telemetry. No data leaves your device.
-                    </div>
-                    <div style="margin-top: 8px;">© 2024 MULLUSI. All rights reserved.</div>
-                </div>
-            </div>
+      )}
+      
+      {/* Errors */}
+      {report.errors.length > 0 && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="text-xs text-red-600 uppercase tracking-wide mb-1">Errors</div>
+          {report.errors.map((e, i) => (
+            <div key={i} className="text-red-700 text-sm">{e}</div>
+          ))}
         </div>
-    </footer>
-</body>
-</html>
+      )}
+      
+      {/* Warnings */}
+      {report.warnings.length > 0 && (
+        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="text-xs text-amber-600 uppercase tracking-wide mb-1">Warnings</div>
+          {report.warnings.map((w, i) => (
+            <div key={i} className="text-amber-700 text-sm">⚠ {w}</div>
+          ))}
+        </div>
+      )}
+      
+      {/* Dependencies */}
+      {report.dependencies.length > 0 && (
+        <div>
+          <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">Dependencies</div>
+          <div className="flex flex-wrap gap-1">
+            {report.dependencies.map((d, i) => (
+              <span key={i} className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">{d}</span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Where this leads */}
+      {report.leads.length > 0 && (
+        <div>
+          <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">Leads To</div>
+          <div className="flex flex-wrap gap-1">
+            {report.leads.map((l, i) => (
+              <span key={i} className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-xs">{l}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================
+// Main App: Mullu Inspect
+// ============================================
+
+const SAMPLE_CONTENT = `
+Mathematical Analysis Overview
+
+The limit of a function f(x) as x approaches a is L, written as:
+lim(x→a) f(x) = L
+
+This means that for every ε > 0, there exists δ > 0 such that if 0 < |x - a| < δ, then |f(x) - L| < ε.
+
+A function is continuous at a point if the limit equals the function value.
+
+Theorem: Every continuous function on a closed interval is bounded.
+
+Proof: If f is continuous on [a,b], then by the extreme value theorem, f attains its maximum and minimum.
+
+Common misconception: If it rains, the ground is wet. The ground is wet. Therefore, it rained.
+
+Note: 0.999... = 1 (exactly, not approximately)
+
+All real numbers are either rational or irrational.
+
+The derivative measures instantaneous rate of change.
+`;
+
+export default function MulluInspect() {
+  const [content, setContent] = useState(SAMPLE_CONTENT);
+  const [symbols, setSymbols] = useState([]);
+  const [selectedSymbol, setSelectedSymbol] = useState(null);
+  const [report, setReport] = useState(null);
+  const [manualInput, setManualInput] = useState('');
+  const [activeTab, setActiveTab] = useState('extract');
+  
+  const handleExtract = useCallback(() => {
+    const extracted = extractSymbolicContent(content);
+    setSymbols(extracted);
+    setSelectedSymbol(null);
+    setReport(null);
+  }, [content]);
+  
+  const handleInspect = useCallback((item) => {
+    setSelectedSymbol(item);
+    const result = inspectMath(item.content);
+    setReport(result);
+  }, []);
+  
+  const handleManualInspect = useCallback(() => {
+    if (!manualInput.trim()) return;
+    const item = { type: classifyInput(manualInput), content: manualInput, source: 'manual' };
+    setSelectedSymbol(item);
+    setReport(inspectMath(manualInput));
+    setSymbols(prev => [item, ...prev.filter(s => s.content !== manualInput)]);
+  }, [manualInput]);
+  
+  return (
+    <div className="min-h-screen bg-slate-100">
+      {/* Header */}
+      <header className="bg-slate-900 text-white">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-xl">
+              M
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">Mullu Inspect</h1>
+              <p className="text-slate-400 text-sm">Symbolic Content Analyzer</p>
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              <Badge variant="default">MSMI v0.1</Badge>
+              <span className="text-slate-500 text-sm">mullusi.com</span>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      {/* Main */}
+      <main className="max-w-6xl mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column: Content & Symbols */}
+          <div className="space-y-4">
+            {/* Tabs */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setActiveTab('extract')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === 'extract' 
+                    ? 'bg-slate-800 text-white' 
+                    : 'bg-white text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Extract from Text
+              </button>
+              <button
+                onClick={() => setActiveTab('manual')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === 'manual' 
+                    ? 'bg-slate-800 text-white' 
+                    : 'bg-white text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Manual Input
+              </button>
+            </div>
+            
+            {activeTab === 'extract' ? (
+              <>
+                {/* Content Input */}
+                <Panel title="Source Content" icon="📄">
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full h-48 p-3 border border-slate-300 rounded-lg text-sm font-mono resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Paste mathematical content here..."
+                  />
+                  <button
+                    onClick={handleExtract}
+                    className="mt-3 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors"
+                  >
+                    Extract Symbols
+                  </button>
+                </Panel>
+                
+                {/* Extracted Symbols */}
+                {symbols.length > 0 && (
+                  <Panel 
+                    title="Extracted Symbols" 
+                    icon="🔣"
+                    actions={<span className="text-xs text-slate-500">{symbols.length} found</span>}
+                  >
+                    <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto">
+                      {symbols.map((item, i) => (
+                        <SymbolCard 
+                          key={i} 
+                          item={item} 
+                          onInspect={handleInspect}
+                          isSelected={selectedSymbol?.content === item.content}
+                        />
+                      ))}
+                    </div>
+                  </Panel>
+                )}
+              </>
+            ) : (
+              <Panel title="Manual Input" icon="✏️">
+                <textarea
+                  value={manualInput}
+                  onChange={(e) => setManualInput(e.target.value)}
+                  className="w-full h-32 p-3 border border-slate-300 rounded-lg text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter mathematical expression, statement, or argument..."
+                />
+                <button
+                  onClick={handleManualInspect}
+                  disabled={!manualInput.trim()}
+                  className="mt-3 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Inspect
+                </button>
+                
+                {/* Quick Examples */}
+                <div className="mt-4">
+                  <div className="text-xs text-slate-500 mb-2">Quick examples:</div>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      '0.999... = 1',
+                      'infinity',
+                      'If it rains, wet. Wet. Therefore, rain.',
+                      'All primes > 2 are odd'
+                    ].map((ex, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setManualInput(ex)}
+                        className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs hover:bg-slate-200 transition-colors"
+                      >
+                        {ex.slice(0, 25)}{ex.length > 25 ? '...' : ''}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </Panel>
+            )}
+          </div>
+          
+          {/* Right Column: Inspection Report */}
+          <div>
+            <Panel title="MSMI Inspection" icon="🔍">
+              <InspectionPanel report={report} />
+            </Panel>
+            
+            {/* Stats */}
+            {symbols.length > 0 && (
+              <Panel title="Analysis Stats" icon="📊">
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-blue-600">
+                      {symbols.filter(s => s.type === 'concept').length}
+                    </div>
+                    <div className="text-xs text-slate-500">Concepts</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-purple-600">
+                      {symbols.filter(s => s.type === 'statement').length}
+                    </div>
+                    <div className="text-xs text-slate-500">Statements</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-emerald-600">
+                      {symbols.filter(s => s.type === 'equation').length}
+                    </div>
+                    <div className="text-xs text-slate-500">Equations</div>
+                  </div>
+                </div>
+              </Panel>
+            )}
+          </div>
+        </div>
+      </main>
+      
+      {/* Footer */}
+      <footer className="max-w-6xl mx-auto px-4 py-6 text-center text-slate-500 text-sm">
+        <p>Mullu Inspect • Symbolic Causal Chain Intelligence</p>
+        <p className="text-xs mt-1">Part of the Mullu ecosystem — mullusi.com</p>
+      </footer>
+    </div>
+  );
+}
