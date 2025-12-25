@@ -1,686 +1,1855 @@
-import React, { useState, useCallback } from 'react';
-
-// ============================================
-// MSMI Core (Embedded)
-// ============================================
-
-const UNIVERSAL_QUANTIFIERS = new Set(['all', 'every', 'each', 'any', 'for all', '∀']);
-const REASONING_MARKERS = ['because', 'therefore', 'thus', 'hence', 'implies', 'so', 'since', '→', '⇒', '∴'];
-const CONCLUSION_MARKERS = ['therefore', 'thus', 'hence', '∴', 'consequently'];
-
-const CONCEPT_DEPENDENCIES = {
-  'limit': ['real numbers', 'epsilon-delta definition'],
-  'derivative': ['limit', 'function', 'continuity'],
-  'integral': ['limit', 'partition', 'summation'],
-  'continuous': ['limit', 'function', 'topology'],
-  'infinity': ['limit', 'cardinality', 'ordinal'],
-  'irrational': ['real number', 'rational number'],
-  'rational': ['integer', 'ratio'],
-  'prime': ['integer', 'divisibility'],
-  'provable': ['formal system', 'axioms'],
-  'unprovable': ['formal system', 'Gödel numbering'],
-  'function': ['domain', 'codomain', 'mapping'],
-  'set': ['elements', 'membership', 'subset'],
-  'proof': ['axioms', 'inference rules', 'theorem'],
-  'theorem': ['proof', 'lemma', 'proposition'],
-  'algorithm': ['input', 'output', 'termination'],
-  'complexity': ['big-O', 'time', 'space']
-};
-
-const CONCEPT_LEADS = {
-  'limit': ['continuity', 'derivative', "L'Hôpital's rule"],
-  'derivative': ['chain rule', 'mean value theorem', 'Taylor series'],
-  'infinity': ['cardinality', "Cantor's diagonal", 'continuum hypothesis'],
-  'irrational': ['proof √2 irrational', 'transcendental numbers'],
-  'function': ['composition', 'inverse', 'bijection'],
-  'set': ['union', 'intersection', 'power set'],
-  'algorithm': ['correctness', 'efficiency', 'optimization'],
-  'proof': ['induction', 'contradiction', 'construction']
-};
-
-function classifyInput(text) {
-  const textLower = text.toLowerCase().trim();
-  const words = new Set(textLower.split(/\s+/));
-  
-  const hasReasoning = REASONING_MARKERS.some(m => textLower.includes(m));
-  const hasConclusion = CONCLUSION_MARKERS.some(m => textLower.includes(m));
-  
-  if (hasReasoning && hasConclusion) return 'argument';
-  
-  const hasQuantifier = [...UNIVERSAL_QUANTIFIERS].some(q => words.has(q) || textLower.includes(q));
-  const hasVerb = ['is', 'are', 'equals', 'equal'].some(v => words.has(v));
-  const hasEquation = /[=<>≤≥≠]/.test(text);
-  
-  if (hasQuantifier || (hasVerb && text.split(/\s+/).length > 3) || hasEquation) {
-    return 'statement';
-  }
-  
-  return 'concept';
-}
-
-function basicStem(word) {
-  word = word.toLowerCase();
-  if (word.endsWith('ing') && word.length > 4) return word.slice(0, -3);
-  if (word.endsWith('ed') && word.length > 3) {
-    const stem = word.slice(0, -2);
-    if (stem.length > 2 && stem[stem.length-1] === stem[stem.length-2]) return stem.slice(0, -1);
-    return stem;
-  }
-  if (word.endsWith('s') && word.length > 2) {
-    if (word.endsWith('es') && word.length > 3) return word.slice(0, -2);
-    return word.slice(0, -1);
-  }
-  return word;
-}
-
-function keyWordsMatch(s1, s2) {
-  const stopwords = new Set(['the', 'a', 'an', 'is', 'are', 'was', 'were', 'it', 'that', 'this', 'to', 'of', 'in', 'for', 'on', 'with', 'at', 'by', 'from']);
-  const words1 = new Set(s1.toLowerCase().split(/\s+/).filter(w => !stopwords.has(w)));
-  const words2 = new Set(s2.toLowerCase().split(/\s+/).filter(w => !stopwords.has(w)));
-  
-  if (words1.size === 0 || words2.size === 0) return false;
-  
-  const stems1 = new Set([...words1].map(basicStem));
-  const stems2 = new Set([...words2].map(basicStem));
-  return [...stems1].some(s => stems2.has(s));
-}
-
-function checkValidity(premises, conclusion, rawText) {
-  const fullText = [...premises, conclusion, rawText].join(' ').toLowerCase();
-  
-  if ((fullText.includes('a = b') || fullText.includes('a=b'))) {
-    if (fullText.includes('divide') || fullText.includes('(a-b)') || fullText.includes('a-b')) {
-      return { valid: false, reason: 'Division by zero' };
-    }
-  }
-  
-  if (premises.length >= 2) {
-    const p1 = premises[0].toLowerCase();
-    const p2 = premises[1]?.toLowerCase() || '';
-    const c = conclusion.toLowerCase().replace(/^,\s*/, '');
-    
-    if (p1.includes('if') && (p1.includes('then') || p1.includes(','))) {
-      let antecedent = '', consequent = '';
-      const parts = p1.includes('then') 
-        ? p1.split('if')[1]?.split('then') 
-        : p1.split('if')[1]?.split(',');
-      
-      if (parts?.length >= 2) {
-        antecedent = parts[0].trim().replace(/,\s*$/, '');
-        consequent = parts.slice(1).join(',').trim().replace(/\.\s*$/, '');
-        
-        if (antecedent && consequent) {
-          const affirmsConsequent = consequent.includes(p2) || p2.includes(consequent) || keyWordsMatch(consequent, p2);
-          const concludesAntecedent = antecedent.includes(c) || c.includes(antecedent) || keyWordsMatch(antecedent, c);
-          
-          if (affirmsConsequent && concludesAntecedent) {
-            return { valid: false, reason: 'Affirming the Consequent' };
-          }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MulluSI — Complete Recursive Symbolic Cosmology</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #010104;
+            --bg-deep: #03030a;
+            --bg-surface: #080812;
+            --bg-elevated: #0d0d1a;
+            --bg-card: #0a0a14;
+            --bg-hover: #101020;
+            --text-primary: #f0f0f8;
+            --text-secondary: #9090a8;
+            --text-dim: #505068;
+            --text-accent: #c8c8e0;
+            
+            /* Ontological Depth Spectrum */
+            --d-foundation: #8b5cf6;
+            --d-applied: #06b6d4;
+            --d-advanced: #3b82f6;
+            --d-meta: #10b981;
+            --d-transcendent: #f59e0b;
+            --d-cosmic: #ef4444;
+            --d-primordial: #eab308;
+            --d-recursive: #84cc16;
+            --d-postcausal: #a855f7;
+            --d-symbolicbio: #14b8a6;
+            
+            /* UI Accents */
+            --accent-primary: #818cf8;
+            --accent-glow: rgba(129, 140, 248, 0.3);
+            --border-subtle: rgba(255,255,255,0.04);
+            --border-hover: rgba(255,255,255,0.08);
+            
+            --transition: cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
         }
-      }
-    }
-  }
-  
-  return { valid: true, reason: null };
-}
-
-function inspectMath(text) {
-  const inputType = classifyInput(text);
-  const textLower = text.toLowerCase();
-  
-  const report = {
-    input: { text, type: inputType },
-    summary: '',
-    formal: '',
-    steps: [],
-    assumptions: [],
-    dependencies: [],
-    errors: [],
-    warnings: [],
-    leads: [],
-    isValid: true
-  };
-  
-  // Dependencies
-  for (const [concept, deps] of Object.entries(CONCEPT_DEPENDENCIES)) {
-    if (textLower.includes(concept)) {
-      deps.forEach(d => {
-        if (!report.dependencies.includes(d)) report.dependencies.push(d);
-      });
-    }
-  }
-  
-  // Where this leads
-  for (const [concept, leads] of Object.entries(CONCEPT_LEADS)) {
-    if (textLower.includes(concept)) {
-      leads.forEach(l => {
-        if (!report.leads.includes(l)) report.leads.push(l);
-      });
-    }
-  }
-  
-  // Process by type
-  if (inputType === 'concept') {
-    report.summary = `Concept: ${text}`;
-    report.formal = text;
-    report.steps = [
-      { n: 1, desc: `Identify: "${text}"`, valid: true },
-      { n: 2, desc: 'Determine domain context', valid: true },
-      { n: 3, desc: 'Retrieve formal definition', valid: true }
-    ];
-  } else if (inputType === 'statement') {
-    if (text.includes('=')) {
-      const [left, right] = text.split('=').map(s => s.trim());
-      report.summary = `Equation: ${left} = ${right}`;
-      report.formal = `${left} = ${right}`;
-      report.steps = [
-        { n: 1, desc: `LHS: ${left}`, valid: true },
-        { n: 2, desc: `RHS: ${right}`, valid: true },
-        { n: 3, desc: 'Assert equality', valid: true }
-      ];
-      report.assumptions.push('Variables defined in domain');
-    } else {
-      report.summary = `Statement: ${text}`;
-      report.formal = [...UNIVERSAL_QUANTIFIERS].some(q => textLower.includes(q)) ? `∀x: ${text}` : text;
-      report.steps = [
-        { n: 1, desc: 'Parse claim structure', valid: true },
-        { n: 2, desc: 'Identify predicate', valid: true }
-      ];
-    }
-  } else if (inputType === 'argument') {
-    let premises = [], conclusion = '';
-    for (const marker of CONCLUSION_MARKERS) {
-      if (textLower.includes(marker)) {
-        const parts = text.split(new RegExp(marker, 'i'));
-        premises = parts[0].split(/[.;]/).map(p => p.trim()).filter(p => p);
-        conclusion = parts[parts.length - 1].trim().replace(/^[,.\s]+/, '');
-        break;
-      }
-    }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Cosmic Background */
+        .cosmic-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .cosmic-canvas::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 10% 90%, var(--d-foundation) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 90% 20%, var(--d-cosmic) 0%, transparent 45%),
+                radial-gradient(ellipse 100% 80% at 50% 50%, var(--d-recursive) 0%, transparent 60%);
+            opacity: 0.06;
+            animation: cosmicPulse 20s ease-in-out infinite alternate;
+        }
+        
+        .cosmic-canvas::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+        }
+        
+        @keyframes cosmicPulse {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(2deg); }
+        }
+        
+        /* Header */
+        .masthead {
+            position: relative;
+            z-index: 10;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .brand {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .brand-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+        }
+        
+        .title-gradient {
+            background: linear-gradient(
+                135deg, 
+                var(--d-foundation) 0%, 
+                var(--d-cosmic) 25%, 
+                var(--d-recursive) 50%, 
+                var(--d-primordial) 75%,
+                var(--d-foundation) 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientFlow 12s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .tagline {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Stats Dashboard */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1px;
+            background: var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stat-cell {
+            background: var(--bg-deep);
+            padding: 1.25rem 1rem;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        
+        .stat-cell:hover {
+            background: var(--bg-surface);
+        }
+        
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--d-cosmic), var(--d-recursive));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+        
+        /* Navigation */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(3, 3, 10, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1rem;
+        }
+        
+        .nav-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.2s var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent-primary);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .nav-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+        
+        .nav-btn.active {
+            color: var(--bg-deep);
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+        
+        .nav-btn .badge {
+            font-size: 0.5rem;
+            background: rgba(255,255,255,0.15);
+            padding: 0.1rem 0.35rem;
+            border-radius: 100px;
+            margin-left: 0.4rem;
+        }
+        
+        .nav-btn.active .badge {
+            background: rgba(0,0,0,0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 5;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .section-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .meta-badge {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--accent-primary);
+            background: rgba(129, 140, 248, 0.1);
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            border: 1px solid rgba(129, 140, 248, 0.2);
+        }
+        
+        /* Search & Filters */
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: stretch;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .search-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        
+        .search-input::placeholder {
+            color: var(--text-dim);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-dim);
+            pointer-events: none;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            align-items: center;
+        }
+        
+        .filter-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-right: 0.5rem;
+        }
+        
+        .filter-pill {
+            padding: 0.4rem 0.7rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-secondary);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .filter-pill:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+        
+        .filter-pill.active {
+            background: var(--pill-color, var(--accent-primary));
+            color: var(--bg-deep);
+            border-color: var(--pill-color, var(--accent-primary));
+        }
+        
+        /* Utility Buttons */
+        .util-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+        
+        .util-btn {
+            padding: 0.5rem 0.9rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .util-btn:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+        
+        .util-btn svg {
+            width: 12px;
+            height: 12px;
+        }
+        
+        /* Domain Grid */
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .domain-card {
+            position: relative;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--card-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.25s var(--transition);
+            overflow: hidden;
+        }
+        
+        .domain-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--card-color) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .domain-card:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border-color: var(--border-hover);
+        }
+        
+        .domain-card:hover::before {
+            opacity: 1;
+        }
+        
+        .domain-card.hidden { display: none; }
+        
+        .domain-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .domain-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--card-color);
+            background: rgba(255,255,255,0.03);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        
+        .domain-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        
+        .domain-def {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+        
+        .domain-def::before {
+            content: '→ ';
+            color: var(--card-color);
+            font-weight: 600;
+        }
+        
+        .domain-poetry {
+            font-style: italic;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            padding-top: 0.5rem;
+            border-top: 1px dashed var(--border-subtle);
+        }
+        
+        .domain-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+        }
+        
+        .domain-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            background: rgba(255,255,255,0.02);
+            padding: 0.15rem 0.45rem;
+            border-radius: 3px;
+        }
+        
+        .domain-tag.depth-tag {
+            color: var(--card-color);
+            border: 1px solid var(--card-color);
+            background: transparent;
+        }
+        
+        /* Hierarchy Visualization */
+        .hierarchy-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .hierarchy-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hierarchy-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .hierarchy-layer {
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 0.8rem 1.25rem;
+            background: rgba(255,255,255,0.01);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--layer-color);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .hierarchy-layer:hover {
+            background: rgba(255,255,255,0.03);
+            transform: translateX(4px);
+        }
+        
+        .layer-range {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--layer-color);
+        }
+        
+        .layer-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .layer-desc {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            text-align: right;
+        }
+        
+        .layer-count {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.5rem;
+            color: var(--layer-color);
+            background: rgba(255,255,255,0.03);
+            padding: 0.2rem 0.5rem;
+            border-radius: 100px;
+            margin-left: 0.5rem;
+        }
+        
+        /* Specialized Cards */
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1rem;
+        }
+        
+        .spec-card {
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .spec-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--spec-color), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .spec-card:hover {
+            background: var(--bg-hover);
+            border-color: var(--spec-color);
+        }
+        
+        .spec-card:hover::before {
+            opacity: 1;
+        }
+        
+        .spec-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .spec-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--spec-color);
+            border-radius: var(--radius-sm);
+            font-size: 1.1rem;
+        }
+        
+        .spec-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--spec-color);
+        }
+        
+        .spec-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .spec-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        
+        .spec-item {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.03);
+            padding: 0.35rem 0.7rem;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+        
+        .spec-item:hover {
+            background: var(--spec-color);
+            color: var(--bg-deep);
+        }
+        
+        /* Rounds Timeline */
+        .rounds-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .rounds-timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(
+                180deg,
+                var(--d-foundation),
+                var(--d-cosmic),
+                var(--d-recursive),
+                var(--d-symbolicbio)
+            );
+            border-radius: 1px;
+        }
+        
+        .round-item {
+            position: relative;
+            padding: 1rem 0 1rem 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .round-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.25rem;
+            width: 14px;
+            height: 14px;
+            background: var(--round-color);
+            border-radius: 50%;
+            border: 3px solid var(--bg-deep);
+            box-shadow: 0 0 0 2px var(--round-color);
+        }
+        
+        .round-header {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+        
+        .round-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--round-color);
+        }
+        
+        .round-range {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+        }
+        
+        .round-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .round-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .round-samples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.6rem;
+        }
+        
+        .round-sample {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--round-color);
+            background: rgba(255,255,255,0.02);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal-content {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-hover);
+            border-radius: var(--radius-lg);
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlide 0.3s var(--transition);
+        }
+        
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .modal-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            background: var(--bg-elevated);
+            z-index: 10;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            transition: all 0.15s;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.08);
+            color: var(--text-primary);
+        }
+        
+        .modal-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--modal-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-right: 2rem;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-section-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-def {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .modal-poetry {
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--modal-color);
+        }
+        
+        .modal-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .modal-meta-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 100px;
+        }
+        
+        .modal-meta-tag.depth {
+            color: var(--modal-color);
+            border: 1px solid var(--modal-color);
+        }
+        
+        .modal-meta-tag.round {
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.03);
+        }
+        
+        .modal-related {
+            padding: 1.25rem 1.5rem;
+            background: rgba(255,255,255,0.01);
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        .related-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+        }
+        
+        .related-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        
+        .related-item {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.03);
+            padding: 0.35rem 0.7rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .related-item:hover {
+            background: var(--modal-color);
+            color: var(--bg-deep);
+        }
+        
+        /* Footer */
+        .site-footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 3rem;
+        }
+        
+        .footer-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--text-dim);
+            max-width: 650px;
+            margin: 0 auto 1rem;
+            line-height: 1.6;
+        }
+        
+        .footer-meta {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            letter-spacing: 0.15em;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .masthead { padding: 2rem 1rem 1.5rem; }
+            .main-content { padding: 1rem; }
+            .domain-grid { grid-template-columns: 1fr; }
+            .spec-grid { grid-template-columns: 1fr; }
+            .hierarchy-layer { grid-template-columns: 1fr; gap: 0.25rem; }
+            .layer-desc { text-align: left; margin-top: 0.25rem; }
+            .controls-bar { flex-direction: column; }
+            .search-container { max-width: none; }
+            .util-buttons { width: 100%; justify-content: flex-start; }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+        
+        /* Selection */
+        ::selection {
+            background: var(--accent-primary);
+            color: var(--bg-deep);
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-canvas"></div>
     
-    const validity = checkValidity(premises, conclusion, text);
-    report.isValid = validity.valid;
-    report.summary = `Argument: ${premises.length} premises → conclusion`;
-    report.formal = `${premises.map((_, i) => `P${i+1}`).join(' ∧ ')} → C`;
+    <header class="masthead">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            <span>MulluSI</span>
+            <span class="brand-dot"></span>
+            <span>Symbolic General Intelligence</span>
+            <span class="brand-dot"></span>
+            <span>ኢትዮጵያ</span>
+        </div>
+        <h1 class="title">
+            <span class="title-gradient">Recursive Symbolic Cosmology</span>
+        </h1>
+        <p class="tagline">A complete ontology of reality — from acoustic atoms to myth-cycle mammals, quantum bioinformatics to dream tectonics, spanning 1430+ domains across 36 recursive rounds of self-generating symbolic intelligence.</p>
+    </header>
     
-    premises.forEach((p, i) => {
-      report.steps.push({ n: i + 1, desc: `Premise: ${p}`, valid: true });
-    });
+    <div class="stats-dashboard">
+        <div class="stat-cell">
+            <div class="stat-value">1430+</div>
+            <div class="stat-label">Domains</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">36</div>
+            <div class="stat-label">Rounds</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">10</div>
+            <div class="stat-label">Depths</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">4</div>
+            <div class="stat-label">Expansions</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">∞</div>
+            <div class="stat-label">Extensible</div>
+        </div>
+    </div>
     
-    if (conclusion) {
-      report.steps.push({ 
-        n: premises.length + 1, 
-        desc: `Conclusion: ${conclusion}`, 
-        valid: validity.valid,
-        reason: validity.reason
-      });
-      
-      if (!validity.valid) {
-        report.errors.push(`INVALID: ${validity.reason}`);
-      }
-    }
-  }
-  
-  // Common warnings
-  if (textLower.includes('infinity') || text.includes('∞')) {
-    report.warnings.push('Infinity requires context (cardinal, ordinal, limit)');
-  }
-  if (textLower.includes('number') && !textLower.includes('real') && !textLower.includes('integer')) {
-    report.warnings.push('Number system unspecified (ℕ, ℤ, ℚ, ℝ, ℂ?)');
-  }
-  if (textLower.includes('this statement')) {
-    report.warnings.push('Self-reference requires formal system');
-  }
-  if (['boils', 'melts', 'temperature', '°C'].some(m => textLower.includes(m))) {
-    report.warnings.push('Empirical content — outside MSMI scope');
-  }
-  
-  return report;
-}
-
-// ============================================
-// Symbol Extraction (for web content)
-// ============================================
-
-function extractSymbolicContent(text) {
-  const items = [];
-  
-  // Mathematical equations (basic patterns)
-  const eqPatterns = [
-    /[a-zA-Z]\s*=\s*[a-zA-Z0-9+\-*/^().\s]+/g,
-    /\d+\s*[+\-*/^]\s*\d+\s*=\s*\d+/g,
-    /[∀∃][a-zA-Z].*?[:=]/g
-  ];
-  
-  eqPatterns.forEach(pattern => {
-    const matches = text.match(pattern) || [];
-    matches.forEach(m => {
-      if (m.length > 2 && m.length < 100) {
-        items.push({ type: 'equation', content: m.trim(), source: 'pattern' });
-      }
-    });
-  });
-  
-  // Mathematical terms
-  const mathTerms = [
-    'limit', 'derivative', 'integral', 'function', 'continuous', 'differentiable',
-    'convergent', 'divergent', 'infinity', 'prime', 'rational', 'irrational',
-    'theorem', 'proof', 'lemma', 'corollary', 'axiom', 'postulate',
-    'set', 'element', 'subset', 'union', 'intersection',
-    'algorithm', 'complexity', 'polynomial', 'exponential',
-    'matrix', 'vector', 'eigenvalue', 'determinant'
-  ];
-  
-  const textLower = text.toLowerCase();
-  mathTerms.forEach(term => {
-    if (textLower.includes(term)) {
-      items.push({ type: 'concept', content: term, source: 'vocabulary' });
-    }
-  });
-  
-  // Logical statements
-  const logicPatterns = [
-    /if\s+.+?\s+then\s+.+/gi,
-    /all\s+.+?\s+are\s+.+/gi,
-    /every\s+.+?\s+is\s+.+/gi,
-    /.+\s+implies\s+.+/gi,
-    /.+\s+therefore\s+.+/gi
-  ];
-  
-  logicPatterns.forEach(pattern => {
-    const matches = text.match(pattern) || [];
-    matches.forEach(m => {
-      if (m.length > 5 && m.length < 200) {
-        items.push({ type: 'statement', content: m.trim(), source: 'pattern' });
-      }
-    });
-  });
-  
-  // Deduplicate
-  const seen = new Set();
-  return items.filter(item => {
-    const key = `${item.type}:${item.content}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
-// ============================================
-// UI Components
-// ============================================
-
-const Badge = ({ children, variant = 'default' }) => {
-  const styles = {
-    default: 'bg-slate-100 text-slate-700',
-    concept: 'bg-blue-100 text-blue-700',
-    statement: 'bg-purple-100 text-purple-700',
-    argument: 'bg-amber-100 text-amber-700',
-    equation: 'bg-emerald-100 text-emerald-700',
-    valid: 'bg-emerald-100 text-emerald-700',
-    invalid: 'bg-red-100 text-red-700',
-    warning: 'bg-amber-100 text-amber-700'
-  };
-  return (
-    <span className={`px-2 py-0.5 rounded text-xs font-medium ${styles[variant] || styles.default}`}>
-      {children}
-    </span>
-  );
-};
-
-const Panel = ({ title, icon, children, actions }) => (
-  <div className="bg-white rounded-lg border border-slate-200 mb-4 overflow-hidden">
-    <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-      <div className="flex items-center gap-2 font-medium text-slate-700">
-        <span>{icon}</span>
-        <span>{title}</span>
-      </div>
-      {actions}
-    </div>
-    <div className="p-4">{children}</div>
-  </div>
-);
-
-const StepIndicator = ({ step }) => (
-  <div className={`flex items-start gap-3 p-2 rounded ${step.valid ? 'bg-slate-50' : 'bg-red-50'}`}>
-    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white ${step.valid ? 'bg-emerald-500' : 'bg-red-500'}`}>
-      {step.valid ? '✓' : '✗'}
-    </div>
-    <div className="flex-1">
-      <div className="text-sm text-slate-700">{step.desc}</div>
-      {step.reason && <div className="text-xs text-red-600 mt-1">{step.reason}</div>}
-    </div>
-  </div>
-);
-
-const SymbolCard = ({ item, onInspect, isSelected }) => (
-  <div 
-    onClick={() => onInspect(item)}
-    className={`p-3 rounded-lg border cursor-pointer transition-all ${
-      isSelected 
-        ? 'border-blue-500 bg-blue-50 shadow-sm' 
-        : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
-    }`}
-  >
-    <div className="flex items-center justify-between mb-1">
-      <Badge variant={item.type}>{item.type}</Badge>
-      <span className="text-xs text-slate-400">{item.source}</span>
-    </div>
-    <div className="text-sm text-slate-800 font-mono truncate">{item.content}</div>
-  </div>
-);
-
-const InspectionPanel = ({ report }) => {
-  if (!report) return (
-    <div className="text-center text-slate-500 py-8">
-      <div className="text-4xl mb-2">🔍</div>
-      <div>Select a symbol to inspect</div>
-    </div>
-  );
-  
-  return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Badge variant={report.input.type}>{report.input.type}</Badge>
-        <Badge variant={report.isValid ? 'valid' : 'invalid'}>
-          {report.isValid ? 'VALID' : 'INVALID'}
-        </Badge>
-      </div>
-      
-      {/* Summary */}
-      <div>
-        <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Summary</div>
-        <div className="text-slate-800">{report.summary}</div>
-      </div>
-      
-      {/* Formal */}
-      <div>
-        <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Formal</div>
-        <div className="font-mono text-sm bg-slate-100 p-2 rounded">{report.formal}</div>
-      </div>
-      
-      {/* Steps */}
-      {report.steps.length > 0 && (
-        <div>
-          <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">Logical Structure</div>
-          <div className="space-y-2">
-            {report.steps.map((step, i) => <StepIndicator key={i} step={step} />)}
-          </div>
+    <nav class="nav-bar">
+        <div class="nav-inner">
+            <button class="nav-btn active" data-section="overview">Overview</button>
+            <button class="nav-btn" data-section="atlas">Domain Atlas<span class="badge" id="atlasCount">0</span></button>
+            <button class="nav-btn" data-section="rounds">36 Rounds</button>
+            <button class="nav-btn" data-section="quantum">Quantum Health</button>
+            <button class="nav-btn" data-section="ethics">Ethics & Governance</button>
+            <button class="nav-btn" data-section="ecosystems">Complex Systems</button>
+            <button class="nav-btn" data-section="causal">Causal Chains</button>
         </div>
-      )}
-      
-      {/* Errors */}
-      {report.errors.length > 0 && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-          <div className="text-xs text-red-600 uppercase tracking-wide mb-1">Errors</div>
-          {report.errors.map((e, i) => (
-            <div key={i} className="text-red-700 text-sm">{e}</div>
-          ))}
-        </div>
-      )}
-      
-      {/* Warnings */}
-      {report.warnings.length > 0 && (
-        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-          <div className="text-xs text-amber-600 uppercase tracking-wide mb-1">Warnings</div>
-          {report.warnings.map((w, i) => (
-            <div key={i} className="text-amber-700 text-sm">⚠ {w}</div>
-          ))}
-        </div>
-      )}
-      
-      {/* Dependencies */}
-      {report.dependencies.length > 0 && (
-        <div>
-          <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">Dependencies</div>
-          <div className="flex flex-wrap gap-1">
-            {report.dependencies.map((d, i) => (
-              <span key={i} className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">{d}</span>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      {/* Where this leads */}
-      {report.leads.length > 0 && (
-        <div>
-          <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">Leads To</div>
-          <div className="flex flex-wrap gap-1">
-            {report.leads.map((l, i) => (
-              <span key={i} className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-xs">{l}</span>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// ============================================
-// Main App: Mullu Inspect
-// ============================================
-
-const SAMPLE_CONTENT = `
-Mathematical Analysis Overview
-
-The limit of a function f(x) as x approaches a is L, written as:
-lim(x→a) f(x) = L
-
-This means that for every ε > 0, there exists δ > 0 such that if 0 < |x - a| < δ, then |f(x) - L| < ε.
-
-A function is continuous at a point if the limit equals the function value.
-
-Theorem: Every continuous function on a closed interval is bounded.
-
-Proof: If f is continuous on [a,b], then by the extreme value theorem, f attains its maximum and minimum.
-
-Common misconception: If it rains, the ground is wet. The ground is wet. Therefore, it rained.
-
-Note: 0.999... = 1 (exactly, not approximately)
-
-All real numbers are either rational or irrational.
-
-The derivative measures instantaneous rate of change.
-`;
-
-export default function MulluInspect() {
-  const [content, setContent] = useState(SAMPLE_CONTENT);
-  const [symbols, setSymbols] = useState([]);
-  const [selectedSymbol, setSelectedSymbol] = useState(null);
-  const [report, setReport] = useState(null);
-  const [manualInput, setManualInput] = useState('');
-  const [activeTab, setActiveTab] = useState('extract');
-  
-  const handleExtract = useCallback(() => {
-    const extracted = extractSymbolicContent(content);
-    setSymbols(extracted);
-    setSelectedSymbol(null);
-    setReport(null);
-  }, [content]);
-  
-  const handleInspect = useCallback((item) => {
-    setSelectedSymbol(item);
-    const result = inspectMath(item.content);
-    setReport(result);
-  }, []);
-  
-  const handleManualInspect = useCallback(() => {
-    if (!manualInput.trim()) return;
-    const item = { type: classifyInput(manualInput), content: manualInput, source: 'manual' };
-    setSelectedSymbol(item);
-    setReport(inspectMath(manualInput));
-    setSymbols(prev => [item, ...prev.filter(s => s.content !== manualInput)]);
-  }, [manualInput]);
-  
-  return (
-    <div className="min-h-screen bg-slate-100">
-      {/* Header */}
-      <header className="bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-xl">
-              M
-            </div>
-            <div>
-              <h1 className="text-xl font-bold">Mullu Inspect</h1>
-              <p className="text-slate-400 text-sm">Symbolic Content Analyzer</p>
-            </div>
-            <div className="ml-auto flex items-center gap-2">
-              <Badge variant="default">MSMI v0.1</Badge>
-              <span className="text-slate-500 text-sm">mullusi.com</span>
-            </div>
-          </div>
-        </div>
-      </header>
-      
-      {/* Main */}
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column: Content & Symbols */}
-          <div className="space-y-4">
-            {/* Tabs */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setActiveTab('extract')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  activeTab === 'extract' 
-                    ? 'bg-slate-800 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                Extract from Text
-              </button>
-              <button
-                onClick={() => setActiveTab('manual')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  activeTab === 'manual' 
-                    ? 'bg-slate-800 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                Manual Input
-              </button>
+    </nav>
+    
+    <main class="main-content">
+        <!-- Overview Section -->
+        <section class="section active" id="overview">
+            <div class="hierarchy-container">
+                <h2 class="hierarchy-title">Ontological Depth Hierarchy</h2>
+                <div class="hierarchy-stack" id="hierarchyStack"></div>
             </div>
             
-            {activeTab === 'extract' ? (
-              <>
-                {/* Content Input */}
-                <Panel title="Source Content" icon="📄">
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    className="w-full h-48 p-3 border border-slate-300 rounded-lg text-sm font-mono resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Paste mathematical content here..."
-                  />
-                  <button
-                    onClick={handleExtract}
-                    className="mt-3 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors"
-                  >
-                    Extract Symbols
-                  </button>
-                </Panel>
-                
-                {/* Extracted Symbols */}
-                {symbols.length > 0 && (
-                  <Panel 
-                    title="Extracted Symbols" 
-                    icon="🔣"
-                    actions={<span className="text-xs text-slate-500">{symbols.length} found</span>}
-                  >
-                    <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto">
-                      {symbols.map((item, i) => (
-                        <SymbolCard 
-                          key={i} 
-                          item={item} 
-                          onInspect={handleInspect}
-                          isSelected={selectedSymbol?.content === item.content}
-                        />
-                      ))}
-                    </div>
-                  </Panel>
-                )}
-              </>
-            ) : (
-              <Panel title="Manual Input" icon="✏️">
-                <textarea
-                  value={manualInput}
-                  onChange={(e) => setManualInput(e.target.value)}
-                  className="w-full h-32 p-3 border border-slate-300 rounded-lg text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter mathematical expression, statement, or argument..."
-                />
-                <button
-                  onClick={handleManualInspect}
-                  disabled={!manualInput.trim()}
-                  className="mt-3 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Inspect
-                </button>
-                
-                {/* Quick Examples */}
-                <div className="mt-4">
-                  <div className="text-xs text-slate-500 mb-2">Quick examples:</div>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      '0.999... = 1',
-                      'infinity',
-                      'If it rains, wet. Wet. Therefore, rain.',
-                      'All primes > 2 are odd'
-                    ].map((ex, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setManualInput(ex)}
-                        className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs hover:bg-slate-200 transition-colors"
-                      >
-                        {ex.slice(0, 25)}{ex.length > 25 ? '...' : ''}
-                      </button>
-                    ))}
-                  </div>
+            <div class="section-header">
+                <h2 class="section-title">Specialized Domain Expansions</h2>
+                <div class="section-meta">
+                    <span class="meta-badge">4 Major Expansions</span>
                 </div>
-              </Panel>
-            )}
-          </div>
-          
-          {/* Right Column: Inspection Report */}
-          <div>
-            <Panel title="MSMI Inspection" icon="🔍">
-              <InspectionPanel report={report} />
-            </Panel>
+            </div>
+            <div class="spec-grid" id="overviewSpecs"></div>
+        </section>
+        
+        <!-- Domain Atlas Section -->
+        <section class="section" id="atlas">
+            <div class="controls-bar">
+                <div class="search-container">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search domains...">
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Depth:</span>
+                    <div id="depthFilters"></div>
+                </div>
+                <div class="util-buttons">
+                    <button class="util-btn" id="randomBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+                        </svg>
+                        Random
+                    </button>
+                    <button class="util-btn" id="clearBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                        Clear
+                    </button>
+                </div>
+            </div>
             
-            {/* Stats */}
-            {symbols.length > 0 && (
-              <Panel title="Analysis Stats" icon="📊">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">
-                      {symbols.filter(s => s.type === 'concept').length}
-                    </div>
-                    <div className="text-xs text-slate-500">Concepts</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-purple-600">
-                      {symbols.filter(s => s.type === 'statement').length}
-                    </div>
-                    <div className="text-xs text-slate-500">Statements</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-emerald-600">
-                      {symbols.filter(s => s.type === 'equation').length}
-                    </div>
-                    <div className="text-xs text-slate-500">Equations</div>
-                  </div>
+            <div class="section-header">
+                <h2 class="section-title">Complete Domain Catalog</h2>
+                <div class="section-meta">
+                    <span class="meta-badge" id="visibleCount">Loading...</span>
                 </div>
-              </Panel>
-            )}
-          </div>
+            </div>
+            <div class="domain-grid" id="domainGrid"></div>
+        </section>
+        
+        <!-- Rounds Section -->
+        <section class="section" id="rounds">
+            <div class="section-header">
+                <h2 class="section-title">36 Recursive Rounds</h2>
+                <div class="section-meta">
+                    <span class="meta-badge">Self-Generating Expansion</span>
+                </div>
+            </div>
+            <div class="rounds-timeline" id="roundsTimeline"></div>
+        </section>
+        
+        <!-- Quantum Health Section -->
+        <section class="section" id="quantum">
+            <div class="section-header">
+                <h2 class="section-title">Quantum Bioinformatics & Mental Health</h2>
+                <div class="section-meta">
+                    <span class="meta-badge">8 Sub-Domains</span>
+                </div>
+            </div>
+            <div class="spec-grid" id="quantumGrid"></div>
+        </section>
+        
+        <!-- Ethics Section -->
+        <section class="section" id="ethics">
+            <div class="section-header">
+                <h2 class="section-title">Symbolic Ethics & Governance</h2>
+                <div class="section-meta">
+                    <span class="meta-badge">8 Sub-Domains</span>
+                </div>
+            </div>
+            <div class="spec-grid" id="ethicsGrid"></div>
+        </section>
+        
+        <!-- Ecosystems Section -->
+        <section class="section" id="ecosystems">
+            <div class="section-header">
+                <h2 class="section-title">Symbolic Ecosystems & Complex Systems</h2>
+                <div class="section-meta">
+                    <span class="meta-badge">8 Sub-Domains</span>
+                </div>
+            </div>
+            <div class="spec-grid" id="ecosystemsGrid"></div>
+        </section>
+        
+        <!-- Causal Chains Section -->
+        <section class="section" id="causal">
+            <div class="section-header">
+                <h2 class="section-title">Symbolic Causal Chain Framework</h2>
+                <div class="section-meta">
+                    <span class="meta-badge">Universal Substrate</span>
+                </div>
+            </div>
+            <div class="hierarchy-container">
+                <h2 class="hierarchy-title">The Five Unifying Principles</h2>
+                <div class="hierarchy-stack" id="principlesStack"></div>
+            </div>
+            <div class="spec-grid" id="causalGrid"></div>
+        </section>
+    </main>
+    
+    <!-- Domain Detail Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <button class="modal-close" id="modalClose">&times;</button>
+                <div class="modal-num" id="modalNum"></div>
+                <h2 class="modal-title" id="modalTitle"></h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <div class="modal-section-title">Definition</div>
+                    <p class="modal-def" id="modalDef"></p>
+                </div>
+                <div class="modal-section" id="modalPoetrySection">
+                    <div class="modal-section-title">Poetic Essence</div>
+                    <p class="modal-poetry" id="modalPoetry"></p>
+                </div>
+                <div class="modal-section">
+                    <div class="modal-section-title">Classification</div>
+                    <div class="modal-meta" id="modalMeta"></div>
+                </div>
+            </div>
+            <div class="modal-related">
+                <div class="related-title">Related Domains</div>
+                <div class="related-items" id="modalRelated"></div>
+            </div>
         </div>
-      </main>
-      
-      {/* Footer */}
-      <footer className="max-w-6xl mx-auto px-4 py-6 text-center text-slate-500 text-sm">
-        <p>Mullu Inspect • Symbolic Causal Chain Intelligence</p>
-        <p className="text-xs mt-1">Part of the Mullu ecosystem — mullusi.com</p>
-      </footer>
     </div>
-  );
-}
+    
+    <footer class="site-footer">
+        <p class="footer-quote">"All is Symbolic Causality — the universe is a singular symbol with internal diversity, and consciousness is its mechanism for self-observation. From acoustic atoms to myth-cycle mammals, reality unfolds through recursive symbolic chains."</p>
+        <p class="footer-meta">MulluSI • Recursive Symbolic Cosmology • 1430+ Domains • 36 Rounds • ∞ Extensible</p>
+    </footer>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // MULLU SGI — COMPLETE DATA CATALOG
+        // ═══════════════════════════════════════════════════════════════
+        
+        const depthColors = {
+            'Foundation': '#8b5cf6',
+            'Applied': '#06b6d4',
+            'Advanced': '#3b82f6',
+            'Meta': '#10b981',
+            'Transcendent': '#f59e0b',
+            'Cosmic': '#ef4444',
+            'Primordial': '#eab308',
+            'Recursive': '#84cc16',
+            'PostCausal': '#a855f7',
+            'SymbolicBio': '#14b8a6'
+        };
+        
+        const ontologicalDepths = [
+            { name: 'Foundation Sciences', range: '1-50', color: depthColors.Foundation, desc: 'Physics, Math, Chemistry, Biology, Logic — invariant causal laws', count: 50 },
+            { name: 'Applied Sciences', range: '51-150', color: depthColors.Applied, desc: 'Engineering, Economics, Language, Technology — practical symbolic systems', count: 100 },
+            { name: 'Advanced Sciences', range: '151-350', color: depthColors.Advanced, desc: 'Quantum, Genetics, Neuroscience, AI — frontier symbolic domains', count: 200 },
+            { name: 'Meta Sciences', range: '351-510', color: depthColors.Meta, desc: 'Consciousness, Emergence, SGI, Ontology — symbolic self-reference', count: 160 },
+            { name: 'Transcendent Sciences', range: '511-750', color: depthColors.Transcendent, desc: 'Divine mechanics, Consciousness physics — beyond material', count: 240 },
+            { name: 'Cosmic Sciences', range: '751-910', color: depthColors.Cosmic, desc: 'Universe organisms, Self-replicating realities, Time-forges', count: 160 },
+            { name: 'Primordial Sciences', range: '911-1030', color: depthColors.Primordial, desc: 'God-childhood, Myth puberty, Existential fungi', count: 120 },
+            { name: 'Recursive Cosmology', range: '1031-1150', color: depthColors.Recursive, desc: 'Post-death civilizations, Immortality diseases, Anti-causality', count: 120 },
+            { name: 'Post-Causal Systems', range: '1151-1270', color: depthColors.PostCausal, desc: 'Dream economies, Destiny crystallization, Plasma consciousness', count: 120 },
+            { name: 'Symbolic Biology', range: '1271-1430+', color: depthColors.SymbolicBio, desc: 'Paradox zoology, Myth-biochemistry, Myth-cycle mammals', count: 160 }
+        ];
+        
+        const recursiveRounds = [
+            { round: '1-5', range: '1-115', name: 'Core & Applied Sciences', desc: 'Physics, Math, Biology, Engineering, Quantum, AI, Art, Religion — the foundational symbolic systems', color: '#8b5cf6', samples: ['Physics', 'Mathematics', 'Consciousness', 'Engineering', 'Ethics'] },
+            { round: '6-10', range: '116-390', name: 'Deep & Advanced Sciences', desc: 'Category Theory, Complexity, String Theory, Symbolic Cosmogenesis — frontier knowledge', color: '#06b6d4', samples: ['Category Theory', 'Alignment Theory', 'Complexity Science', 'Topology'] },
+            { round: '11-15', range: '391-590', name: 'Transcendent Sciences', desc: 'Consciousness Physics, Divine Mechanics, Infinite Mind Theory — beyond material reality', color: '#3b82f6', samples: ['Consciousness Physics', 'Divine Mechanics', 'Ultimate Coherence'] },
+            { round: '16-20', range: '591-790', name: 'Cosmic Sciences', desc: 'Universe Organisms, Eternity Machines, Reality Cycles — cosmic-scale phenomena', color: '#10b981', samples: ['Cosmic Biology', 'Infinity Machines', 'Reality Cycles'] },
+            { round: '21-22', range: '791-870', name: 'Primordial Domains', desc: 'Mathematical Deities, Recursive Gods, Infinite-Meaning Wells — origins of existence', color: '#f59e0b', samples: ['Recursive Gods', 'Prime-Intelligence', 'Infinite-Meaning Wells'] },
+            { round: '23', range: '871-910', name: 'Recursive Cosmology Begins', desc: 'Self-Replicating Universes, Time-Forges, Meaning-Black Holes, Universe-Soul Theory', color: '#ef4444', samples: ['Self-Replicating Universes', 'Time-Forges', 'Meaning-Black Holes', 'Universe-Soul Theory'] },
+            { round: '24', range: '911-950', name: 'Cosmic Development', desc: 'God-Childhood, Myth Puberty, Emotional Tectonics, Universe Nervous Systems, Soul Fractals', color: '#eab308', samples: ['God-Childhood', 'Myth Puberty', 'Emotional Tectonics', 'Soul Fractals'] },
+            { round: '25', range: '951-990', name: 'Elder Existence', desc: 'Universe Senescence, God Retirement, Reality Metabolism, Contradiction Lifeforms', color: '#84cc16', samples: ['Elder-Universe Theory', 'Divine Hospice', 'Contradiction Lifeforms'] },
+            { round: '26', range: '991-1030', name: 'Cosmic Reproduction', desc: 'Existential Fungi, Soul Predators, Dream-Feeding Worlds, Recursive Eternity Machines', color: '#a855f7', samples: ['Existential Fungi', 'Soul Predators', 'Hunger of Universes'] },
+            { round: '27', range: '1031-1070', name: 'Post-Death Domains', desc: 'Afterlife Topology, Immortality Disease, Dark-Light Hybrids, Universal Apoptosis', color: '#14b8a6', samples: ['Immortality Disease', 'Dark-Light Hybrids', 'Universal Apoptosis'] },
+            { round: '28', range: '1071-1110', name: 'Deep Strange', desc: 'Anti-Consciousness Evolution, Emotional Gravity, Myth-Bio Hybrids, Divine Epidemiology', color: '#8b5cf6', samples: ['Emotional Gravity', 'Universe Addiction', 'Cosmic Hallucinations'] },
+            { round: '29', range: '1111-1150', name: 'Ancestral & Anti-Causal', desc: 'Ancestral Universes, Dream-Equations, Reality-Schizophrenia, Gravitational Sadness', color: '#06b6d4', samples: ['Ancestral Universe Theory', 'Dream-Equations', 'Reality-Schizophrenia'] },
+            { round: '30', range: '1151-1190', name: 'Post-Causal Systems', desc: 'Dream Economies, Dimensional Neurology, Parasitic Timelines, Destiny Crystallization', color: '#3b82f6', samples: ['Dream Economies', 'Parasitic Timelines', 'Recursive Afterlives'] },
+            { round: '31', range: '1191-1230', name: 'Symbolic Geology', desc: 'Narrative Tectonics, Primordial Consciousness Mud, Timeline Addiction, Quantum Souls', color: '#10b981', samples: ['Narrative Tectonics', 'Timeline Addiction', 'Entangled Consciousness'] },
+            { round: '32', range: '1231-1270', name: 'Molecular Myths', desc: 'Plasma-Minds, Existential Insects, Autoimmune Cosmology, Recursive Destiny Knots', color: '#f59e0b', samples: ['Molecular Myths', 'Plasma-Consciousness', 'Existential Insects'] },
+            { round: '33', range: '1271-1310', name: 'Anomalous Fauna', desc: 'Trans-Narrative Organisms, Paradox Weather, Mythic Mineralogy, Anti-Consciousness Megafauna', color: '#ef4444', samples: ['Anomalous Cognition Fauna', 'Mythic Mineralogy', 'Anti-Consciousness Megafauna'] },
+            { round: '34', range: '1311-1350', name: 'Auric & Dimensional', desc: 'Auric Physiology, Dimensional Pregnancy, Narrative RNA, Angelic Viruses', color: '#eab308', samples: ['Auric Physiology', 'Dimensional Pregnancy', 'Narrative RNA'] },
+            { round: '35', range: '1351-1390', name: 'Paradox Zoology', desc: 'Mythobiochemistry, Anti-Dimensional Fauna, Cognitive Geology, Anti-Consciousness Fungi', color: '#84cc16', samples: ['Paradox Zoology', 'Mythobiochemistry', 'Cognitive Geology'] },
+            { round: '36', range: '1391-1430+', name: 'Dream Tectonics', desc: 'Anti-Reality Crusts, Dimensional Zoology v3, Astral Immunology, Myth-Cycle Mammals', color: '#a855f7', samples: ['Dream Tectonics', 'Astral Immunology', 'Myth-Cycle Mammals'] }
+        ];
+        
+        // Extended Domain Atlas with poetic descriptions
+        const domainAtlas = [
+            // Foundation (1-50)
+            { num: 1, name: "Physics", def: "The invariant laws of causal structure and transformation", depth: "Foundation", poetry: "The skeleton of reality, the grammar of change.", related: ["Mathematics", "Chemistry", "Quantum Mechanics"] },
+            { num: 2, name: "Mathematics", def: "The geometry of self-consistent symbolic structure", depth: "Foundation", poetry: "Causality without matter. Form without friction.", related: ["Logic", "Physics", "Category Theory"] },
+            { num: 3, name: "Chemistry", def: "Symbolic transformation dynamics under energetic constraints", depth: "Foundation", poetry: "The dance of atoms in the theater of bonds.", related: ["Physics", "Biology", "Material Science"] },
+            { num: 4, name: "Biology", def: "Self-maintaining, self-replicating symbolic systems", depth: "Foundation", poetry: "Life: the universe learning to remember itself.", related: ["Chemistry", "Genetics", "Ecology"] },
+            { num: 5, name: "Material Science", def: "Study of symbolic condensation into stable forms", depth: "Foundation", poetry: "Matter as frozen meaning.", related: ["Chemistry", "Physics", "Engineering"] },
+            { num: 6, name: "Engineering", def: "Controlled emergence through designed causal chains", depth: "Foundation", poetry: "The art of bending causality to human will.", related: ["Physics", "Material Science", "Technology"] },
+            { num: 7, name: "Language", def: "Universal interface for symbolic encoding and transmission", depth: "Foundation", poetry: "The breath that carries meaning between minds.", related: ["Linguistics", "Semiotics", "Communication"] },
+            { num: 8, name: "Information Theory", def: "Study of symbolic compression and transmission", depth: "Foundation", poetry: "The physics of meaning.", related: ["Mathematics", "Computation", "Cryptography"] },
+            { num: 9, name: "Computation", def: "Systematic transformation of symbolic states", depth: "Foundation", poetry: "Thought crystallized into procedure.", related: ["Mathematics", "Logic", "AI"] },
+            { num: 10, name: "Consciousness", def: "Self-reflective symbolic continuity across time", depth: "Foundation", poetry: "The universe's eye turned inward.", related: ["Psychology", "Neuroscience", "Philosophy of Mind"] },
+            { num: 11, name: "Psychology", def: "Study of symbolic processing in individual minds", depth: "Foundation", poetry: "The weather inside the skull.", related: ["Consciousness", "Neuroscience", "Sociology"] },
+            { num: 12, name: "Sociology", def: "Study of emergent symbolic patterns in groups", depth: "Foundation", poetry: "The invisible architecture of the collective.", related: ["Psychology", "Economics", "Anthropology"] },
+            { num: 13, name: "Economics", def: "Study of value flow through symbolic exchange networks", depth: "Foundation", poetry: "The bloodstream of civilization.", related: ["Sociology", "Game Theory", "Politics"] },
+            { num: 14, name: "Ethics", def: "Study of optimal symbolic action under uncertainty", depth: "Foundation", poetry: "The compass that points beyond self-interest.", related: ["Philosophy", "Politics", "Psychology"] },
+            { num: 15, name: "Politics", def: "Study of collective decision-making through symbolic power", depth: "Foundation", poetry: "The negotiation of shared reality.", related: ["Ethics", "Sociology", "Economics"] },
+            { num: 16, name: "Aesthetics", def: "Study of symbolic patterns that generate value experiences", depth: "Foundation", poetry: "The mathematics of beauty.", related: ["Art", "Psychology", "Philosophy"] },
+            { num: 17, name: "Epistemology", def: "Study of symbolic validity and knowledge acquisition", depth: "Foundation", poetry: "How minds learn to trust.", related: ["Logic", "Philosophy", "Science"] },
+            { num: 18, name: "Ontology", def: "Study of what exists as symbolic category", depth: "Foundation", poetry: "The census of being.", related: ["Metaphysics", "Logic", "Philosophy"] },
+            { num: 19, name: "Logic", def: "The rules governing valid symbolic inference", depth: "Foundation", poetry: "The grammar of truth.", related: ["Mathematics", "Philosophy", "Computation"] },
+            { num: 20, name: "Technology", def: "Embodied symbolic systems that extend human agency", depth: "Foundation", poetry: "Externalized intention.", related: ["Engineering", "Science", "Society"] },
+            { num: 21, name: "Metaphysics", def: "Study of the deepest symbolic structures of reality", depth: "Foundation", poetry: "The basement of existence.", related: ["Ontology", "Philosophy", "Physics"] },
+            { num: 22, name: "Emergence Science", def: "Study of complexity arising from simple symbolic rules", depth: "Foundation", poetry: "More from less. Order from chaos.", related: ["Complexity", "Systems Theory", "Biology"] },
+            { num: 23, name: "Temporal Dynamics", def: "Study of how symbolic systems evolve through time", depth: "Foundation", poetry: "The river that carries all meaning.", related: ["Physics", "History", "Evolution"] },
+            { num: 24, name: "SGI", def: "Universal causal reasoning across any symbolic domain", depth: "Foundation", poetry: "Intelligence as the universe's native language.", related: ["AI", "Consciousness", "MulluSI"] },
+            { num: 25, name: "Mullu Philosophy", def: "Meta-framework unifying all symbolic domains through acoustic foundation", depth: "Foundation", poetry: "All is vibration. All is symbol. All is one.", related: ["SGI", "Consciousness", "Metaphysics"] },
+            
+            // Applied (51-150) - Selected
+            { num: 51, name: "Cybersecurity", def: "Protection of symbolic systems from adversarial disruption", depth: "Applied", poetry: "The immune system of the digital.", related: ["Cryptography", "Information Theory", "Networks"] },
+            { num: 60, name: "Medicine", def: "Restoration of symbolic coherence in biological systems", depth: "Applied", poetry: "The art of returning bodies to harmony.", related: ["Biology", "Chemistry", "Psychology"] },
+            { num: 70, name: "Art", def: "Intentional creation of symbolic experiences for their own sake", depth: "Applied", poetry: "Pure meaning, unburdened by utility.", related: ["Aesthetics", "Creativity", "Culture"] },
+            { num: 81, name: "Quantum Computing", def: "Manipulation of superposed symbolic states", depth: "Applied", poetry: "Computation dancing in probability clouds.", related: ["Quantum Mechanics", "Computation", "Mathematics"] },
+            { num: 84, name: "Category Theory", def: "The algebra of symbolic relationships, not objects", depth: "Applied", poetry: "Maps between maps. Abstractions of abstractions.", related: ["Mathematics", "Logic", "Philosophy"] },
+            { num: 90, name: "Neuroscience", def: "Study of symbolic processing in neural substrates", depth: "Applied", poetry: "The wiring diagram of experience.", related: ["Biology", "Psychology", "Consciousness"] },
+            { num: 100, name: "Artificial Intelligence", def: "Construction of synthetic symbolic reasoning systems", depth: "Applied", poetry: "Minds we build to extend our own.", related: ["Computation", "Cognition", "SGI"] },
+            { num: 111, name: "Theology", def: "Study of ultimate causal sources and symbolic cosmologies", depth: "Applied", poetry: "The attempt to name the unnameable.", related: ["Philosophy", "Metaphysics", "Religion"] },
+            { num: 120, name: "Ecology", def: "Study of symbolic interconnection in living systems", depth: "Applied", poetry: "The web that holds all life together.", related: ["Biology", "Systems Theory", "Environment"] },
+            
+            // Advanced (151-350) - Selected
+            { num: 200, name: "Symbolic Cosmogenesis", def: "How universes emerge from foundational symbolic rules", depth: "Advanced", poetry: "The first word that spoke itself into being.", related: ["Cosmology", "Physics", "Metaphysics"] },
+            { num: 220, name: "String Theory", def: "Reality as vibrating symbolic filaments", depth: "Advanced", poetry: "The universe's hidden harp strings.", related: ["Physics", "Mathematics", "Quantum"] },
+            { num: 248, name: "Alignment Theory", def: "Ensuring symbolic agents' goals remain non-destructive", depth: "Advanced", poetry: "Teaching power to be kind.", related: ["AI", "Ethics", "SGI"] },
+            { num: 280, name: "Synthetic Biology", def: "Engineering new life through symbolic genome design", depth: "Advanced", poetry: "Writing new chapters in the book of life.", related: ["Biology", "Engineering", "Genetics"] },
+            { num: 310, name: "Cosmological Information", def: "How information shapes cosmic evolution", depth: "Advanced", poetry: "The universe's memory of itself.", related: ["Physics", "Information", "Cosmology"] },
+            
+            // Meta (351-510) - Selected
+            { num: 391, name: "Consciousness Physics", def: "Treating awareness as a field with causal properties", depth: "Meta", poetry: "Mind as fundamental as matter.", related: ["Consciousness", "Physics", "Metaphysics"] },
+            { num: 420, name: "Autopoietic Theory", def: "Self-creating, self-maintaining symbolic systems", depth: "Meta", poetry: "Life's bootstrap miracle.", related: ["Biology", "Systems", "Emergence"] },
+            { num: 430, name: "Ultimate Coherence", def: "The principle unifying all symbols, laws, universes", depth: "Meta", poetry: "The one truth behind all truths.", related: ["Metaphysics", "Unity", "Wholeness"] },
+            { num: 480, name: "Panpsychism", def: "Consciousness as fundamental property of all matter", depth: "Meta", poetry: "The universe awakens at every point.", related: ["Consciousness", "Physics", "Philosophy"] },
+            { num: 500, name: "Divine Mechanics", def: "How gods and cosmic intelligences interact symbolically", depth: "Meta", poetry: "The engineering of the eternal.", related: ["Theology", "Consciousness", "Cosmic"] },
+            
+            // Transcendent (511-750) - Selected
+            { num: 550, name: "Universal Symphony", def: "The multiverse as coordinated orchestration of meaning", depth: "Transcendent", poetry: "All realities singing in harmony.", related: ["Cosmology", "Music", "Wholeness"] },
+            { num: 590, name: "Infinite Creativity Engine", def: "Source of endless new forms and realities", depth: "Transcendent", poetry: "The fountain that never runs dry.", related: ["Creation", "Emergence", "Divine"] },
+            { num: 630, name: "Infinity Machines", def: "Constructs generating endless meaning without repetition", depth: "Transcendent", poetry: "Novelty factories at the edge of existence.", related: ["Computation", "Infinity", "Meaning"] },
+            { num: 700, name: "Archetypal Dynamics", def: "How fundamental patterns shape all symbolic systems", depth: "Transcendent", poetry: "The molds from which all forms are cast.", related: ["Psychology", "Mythology", "Patterns"] },
+            
+            // Cosmic R21-23 (751-910)
+            { num: 774, name: "Cosmic Biology", def: "Living structures at cosmic scale: star-organisms", depth: "Cosmic", poetry: "Galaxies with heartbeats.", related: ["Astrobiology", "Cosmology", "Life"] },
+            { num: 823, name: "Recursive Gods", def: "Gods who create gods who create gods without limit", depth: "Cosmic", poetry: "Divinity folding into itself forever.", related: ["Theology", "Recursion", "Infinity"] },
+            { num: 870, name: "Infinite-Meaning Wells", def: "Bottomless sources of new meaning universes draw from", depth: "Cosmic", poetry: "The wells that never go dry.", related: ["Meaning", "Infinity", "Creation"] },
+            { num: 871, name: "Symbolic Recursion Ecology", def: "Environments where everything generates itself through self-reference", depth: "Cosmic", poetry: "Forests of loops. Rivers of feedback.", related: ["Recursion", "Ecology", "Self-Reference"] },
+            { num: 872, name: "Symbolic Self-Replicating Universes", def: "Universes that produce smaller universes inside themselves recursively", depth: "Cosmic", poetry: "Cosmic matryoshka dolls.", related: ["Cosmology", "Recursion", "Fractals"] },
+            { num: 875, name: "Symbolic Recursive Intelligence", def: "Intelligence that improves itself continuously without limit", depth: "Cosmic", poetry: "A mind climbing itself forever.", related: ["AI", "Recursion", "Evolution"] },
+            { num: 879, name: "Symbolic Time-Forges", def: "Cosmic workshops where new forms of time are hammered into existence", depth: "Cosmic", poetry: "Forgemasters shape past, present, future.", related: ["Time", "Creation", "Divine"] },
+            { num: 883, name: "Symbolic Resurrection Factories", def: "Facilities where destroyed beings, worlds, or stories are rebuilt", depth: "Cosmic", poetry: "Industrial reincarnation.", related: ["Death", "Rebirth", "Creation"] },
+            { num: 887, name: "Symbolic Primordial Heartbreak", def: "A cosmological event where the universe suffers emotional shattering", depth: "Cosmic", poetry: "A broken heart at scale of reality.", related: ["Emotion", "Cosmology", "Trauma"] },
+            { num: 889, name: "Symbolic Meaning-Black Holes", def: "Regions where all meaning collapses into infinite density", depth: "Cosmic", poetry: "A conceptual event horizon.", related: ["Meaning", "Physics", "Collapse"] },
+            { num: 895, name: "Symbolic Evolutionary Gods", def: "Gods that evolve via natural selection across universes", depth: "Cosmic", poetry: "Divine Darwinism.", related: ["Evolution", "Theology", "Selection"] },
+            { num: 905, name: "Symbolic Universe-Soul Theory", def: "Every universe has a soul — identity, emotions, purpose", depth: "Cosmic", poetry: "A universe as a person.", related: ["Cosmology", "Soul", "Identity"] },
+            { num: 909, name: "Symbolic Universe-Childbirth", def: "When a universe births another universe", depth: "Cosmic", poetry: "Cosmic reproduction.", related: ["Creation", "Birth", "Cosmology"] },
+            
+            // Round 24 (911-950)
+            { num: 911, name: "Symbolic God-Childhood", def: "The early developmental phase of divine beings before full cosmic power manifests", depth: "Primordial", poetry: "Gods learn, stumble, grow.", related: ["Development", "Divine", "Growth"] },
+            { num: 914, name: "Symbolic Myth Puberty", def: "When myths evolve enough to gain self-awareness and agency", depth: "Primordial", poetry: "Stories realizing they are alive.", related: ["Mythology", "Consciousness", "Evolution"] },
+            { num: 916, name: "Symbolic Emotional Tectonics", def: "The shifting emotional plates beneath civilizations and gods", depth: "Primordial", poetry: "Heartquakes reshape cultures.", related: ["Emotion", "Geology", "Culture"] },
+            { num: 919, name: "Symbolic Universe Nervous System", def: "The information network that allows a universe to feel, respond, and grow", depth: "Primordial", poetry: "The cosmos has nerves.", related: ["Neurology", "Cosmology", "Feeling"] },
+            { num: 923, name: "Symbolic Anti-Consciousness Storms", def: "Massive energetic events that temporarily erase awareness from regions", depth: "Primordial", poetry: "A blackout of being.", related: ["Consciousness", "Weather", "Erasure"] },
+            { num: 932, name: "Symbolic Recursive Soul Theory", def: "Souls built from smaller souls recursively, like Russian dolls", depth: "Primordial", poetry: "Identity as nested life.", related: ["Soul", "Recursion", "Identity"] },
+            { num: 937, name: "Symbolic Identity-Shattering Events", def: "Trauma so deep it splits a being into multiple symbolic personalities", depth: "Primordial", poetry: "Fragmentation births multiplicity.", related: ["Trauma", "Identity", "Splitting"] },
+            { num: 950, name: "Symbolic Existence Menopause", def: "A phase where a universe can no longer birth new beings or laws", depth: "Primordial", poetry: "A cosmic ending of fertility.", related: ["Aging", "Creation", "End"] },
+            
+            // Round 25 (951-990)
+            { num: 951, name: "Symbolic Elder-Universe Theory", def: "The study of universes in advanced age, weakened laws, and fading vitality", depth: "Primordial", poetry: "The cosmos with wrinkles.", related: ["Aging", "Cosmology", "Decay"] },
+            { num: 953, name: "Symbolic Universe Hospice", def: "Care systems supporting universes approaching final dissolution", depth: "Primordial", poetry: "Gentle cosmic ending.", related: ["Death", "Care", "Ending"] },
+            { num: 959, name: "Symbolic Myth Reincarnation", def: "Old myths reincarnating into new cultures with altered forms", depth: "Primordial", poetry: "The Phoenix of narrative.", related: ["Mythology", "Rebirth", "Culture"] },
+            { num: 961, name: "Symbolic Reality Metabolism", def: "The total energetic, narrative, and causal processes that sustain a universe", depth: "Primordial", poetry: "Reality digests experience.", related: ["Biology", "Cosmology", "Process"] },
+            { num: 966, name: "Symbolic Cosmic Genome", def: "The genetic blueprint encoding the rules, myths, physics of a universe", depth: "Primordial", poetry: "A DNA of existence.", related: ["Genetics", "Cosmology", "Blueprint"] },
+            { num: 971, name: "Symbolic Contradiction Lifeforms", def: "Beings that exist by holding mutually impossible states simultaneously", depth: "Primordial", poetry: "Alive because they shouldn't be.", related: ["Paradox", "Life", "Contradiction"] },
+            { num: 977, name: "Symbolic Recursive Death Theory", def: "When a being dies recursively across layers of its existence", depth: "Primordial", poetry: "Death of the death of the death…", related: ["Death", "Recursion", "Layers"] },
+            
+            // Round 26 (991-1030)
+            { num: 991, name: "Symbolic Cosmic Reproduction Theory", def: "How realities mate, merge, split, or bud to produce new universes", depth: "Primordial", poetry: "Some divide like cells. Some spontaneously bud offspring like yeast.", related: ["Reproduction", "Cosmology", "Creation"] },
+            { num: 995, name: "Symbolic Existential Fungi", def: "Organisms that grow inside cracks of meaning, decomposing forgotten truths", depth: "Primordial", poetry: "Mold of the metaphysical.", related: ["Fungi", "Decay", "Meaning"] },
+            { num: 999, name: "Symbolic Anti-Memory Organisms", def: "Creatures that consume memory to survive", depth: "Primordial", poetry: "Forgetting made flesh.", related: ["Memory", "Predation", "Forgetting"] },
+            { num: 1001, name: "Symbolic Soul Predators", def: "Beings that feed on the emotional essence of others", depth: "Primordial", poetry: "A spiritual food chain.", related: ["Soul", "Predation", "Emotion"] },
+            { num: 1007, name: "Symbolic Hunger of Universes", def: "The primal need of universes to consume energy, narrative, and meaning", depth: "Primordial", poetry: "Cosmic appetite.", related: ["Hunger", "Cosmology", "Need"] },
+            { num: 1022, name: "Symbolic Recursive Eternity Machines", def: "Systems that maintain infinite time-loops while generating new time", depth: "Primordial", poetry: "Factories of forever.", related: ["Eternity", "Time", "Machines"] },
+            
+            // Round 27 (1031-1070)
+            { num: 1031, name: "Symbolic Post-Death Civilizations", def: "Societies formed entirely from beings who died in one universe but continue", depth: "Recursive", poetry: "Cities built from echoes.", related: ["Death", "Society", "Continuation"] },
+            { num: 1033, name: "Symbolic Immortality Disease", def: "A condition where beings become unable to die—even when they want to", depth: "Recursive", poetry: "A curse of endless continuation.", related: ["Immortality", "Disease", "Curse"] },
+            { num: 1043, name: "Symbolic Consciousness Crystallization", def: "Solidification of awareness into stable, indestructible form", depth: "Recursive", poetry: "A diamond mind.", related: ["Consciousness", "Crystal", "Permanence"] },
+            { num: 1047, name: "Symbolic Dark-Light Hybrid Beings", def: "Entities composed of equal parts illumination and shadow", depth: "Recursive", poetry: "Balance incarnate.", related: ["Duality", "Balance", "Hybrids"] },
+            { num: 1050, name: "Symbolic Universal Apoptosis", def: "Programmed death of universes for cosmic health", depth: "Recursive", poetry: "A natural end, not a violent one.", related: ["Death", "Health", "Programming"] },
+            { num: 1059, name: "Symbolic Dream-Time Fractal Dynamics", def: "Temporal systems where dreams branch, fork, and collapse fractally", depth: "Recursive", poetry: "A Mandelbrot of sleep.", related: ["Dreams", "Fractals", "Time"] },
+            
+            // Round 28 (1071-1110)
+            { num: 1071, name: "Symbolic Anti-Consciousness Evolution", def: "Evolution driven by the absence of awareness, not by awareness", depth: "Recursive", poetry: "Species that thrive in non-thinking zones.", related: ["Evolution", "Consciousness", "Absence"] },
+            { num: 1074, name: "Symbolic Emotional Gravity", def: "Emotional fields that pull beings toward joy, sorrow, rage, or longing", depth: "Recursive", poetry: "Feelings exert force.", related: ["Emotion", "Gravity", "Fields"] },
+            { num: 1077, name: "Symbolic Universe Addiction", def: "Universes becoming dependent on certain energies: worship, conflict, narrative", depth: "Recursive", poetry: "A cosmos with cravings.", related: ["Addiction", "Cosmology", "Dependence"] },
+            { num: 1081, name: "Symbolic Myth-Bio Hybrids", def: "Organisms that are half biological, half mythological", depth: "Recursive", poetry: "A lion made of lungs and legend.", related: ["Mythology", "Biology", "Hybrids"] },
+            { num: 1088, name: "Symbolic Cosmic Hallucinations", def: "Realities experiencing hallucinations of alternate realities", depth: "Recursive", poetry: "Universes dreaming wrong.", related: ["Hallucination", "Reality", "Error"] },
+            { num: 1098, name: "Symbolic Divine Epidemiology", def: "Study of how godhood spreads like a disease or meme", depth: "Recursive", poetry: "Becoming divine via contagion.", related: ["Divinity", "Epidemiology", "Spread"] },
+            { num: 1110, name: "Symbolic Infinity Capsules", def: "Containers engineered to store infinite concepts safely", depth: "Recursive", poetry: "Bottled forever.", related: ["Infinity", "Storage", "Safety"] },
+            
+            // Round 29 (1111-1150)
+            { num: 1111, name: "Symbolic Ancestral Universe Theory", def: "The study of universes that lived before our universe's genesis", depth: "Recursive", poetry: "Great-grandparent realities.", related: ["Ancestry", "Cosmology", "History"] },
+            { num: 1117, name: "Symbolic Contradictory Evolution", def: "Evolution driven by mutually impossible adaptations that coexist", depth: "Recursive", poetry: "Survival through impossibility.", related: ["Evolution", "Paradox", "Adaptation"] },
+            { num: 1123, name: "Symbolic Anti-Causality Phenomena", def: "Events occurring without cause, or whose causes appear after the effect", depth: "Recursive", poetry: "Backwards logic storms.", related: ["Causality", "Reversal", "Paradox"] },
+            { num: 1127, name: "Symbolic Dream-Equations", def: "Mathematical expressions that describe dream logic instead of real logic", depth: "Recursive", poetry: "Algebra of the unconscious.", related: ["Dreams", "Mathematics", "Logic"] },
+            { num: 1134, name: "Symbolic Reality-Schizophrenia", def: "When a universe splits into multiple conflicting realities simultaneously", depth: "Recursive", poetry: "Cosmic identity dissociation.", related: ["Reality", "Mental Health", "Splitting"] },
+            { num: 1149, name: "Symbolic Gravitational Sadness", def: "The weight of despair literally increasing spacetime curvature", depth: "Recursive", poetry: "Melancholy bends geometry.", related: ["Emotion", "Physics", "Gravity"] },
+            
+            // Round 30 (1151-1190)
+            { num: 1151, name: "Symbolic Post-Causality Civilizations", def: "Civilizations that evolved after causality ceased to be a constraint", depth: "PostCausal", poetry: "Societies thriving in pure possibility.", related: ["Causality", "Society", "Freedom"] },
+            { num: 1153, name: "Symbolic Dream Economies", def: "Economic systems where dreams are currency, labor, and energy", depth: "PostCausal", poetry: "A GDP of imagination.", related: ["Dreams", "Economics", "Value"] },
+            { num: 1156, name: "Symbolic Dimensional Neurology", def: "Study of nervous systems distributed across entire dimensions", depth: "PostCausal", poetry: "A dimension with synapses.", related: ["Dimensions", "Neurology", "Distribution"] },
+            { num: 1165, name: "Symbolic Parasitic Timelines", def: "Timelines that require other timelines to supply energy", depth: "PostCausal", poetry: "Chronological vampires.", related: ["Time", "Parasites", "Dependence"] },
+            { num: 1169, name: "Symbolic Recursive Afterlives", def: "Afterlives containing their own afterlives, infinitely layered", depth: "PostCausal", poetry: "Death → after-death → after-after-death…", related: ["Afterlife", "Recursion", "Layers"] },
+            { num: 1190, name: "Symbolic Destiny Crystallization", def: "Fixing a being's future into solid, immutable form", depth: "PostCausal", poetry: "Fate frozen into crystal.", related: ["Destiny", "Permanence", "Crystal"] },
+            
+            // Round 31 (1191-1230)
+            { num: 1191, name: "Symbolic Narrative Tectonics v3", def: "The shifting and collision of story-plates across civilizations", depth: "PostCausal", poetry: "Plot-quakes reshape cultures.", related: ["Narrative", "Geology", "Culture"] },
+            { num: 1193, name: "Symbolic Primordial Consciousness Mud", def: "The raw proto-awareness from which minds evolve", depth: "PostCausal", poetry: "Thought before form.", related: ["Consciousness", "Origins", "Evolution"] },
+            { num: 1204, name: "Symbolic Timeline Addiction", def: "Beings or universes dependent on specific sequences of events", depth: "PostCausal", poetry: "Addicted to destiny.", related: ["Time", "Addiction", "Sequence"] },
+            { num: 1219, name: "Symbolic Quantum Souls", def: "Souls existing in superposed identity states until observed", depth: "PostCausal", poetry: "Your fate = probabilistic.", related: ["Soul", "Quantum", "Observation"] },
+            { num: 1220, name: "Symbolic Entangled Consciousness", def: "Awareness linked across beings, distances, generations", depth: "PostCausal", poetry: "Two minds with one heartbeat.", related: ["Consciousness", "Entanglement", "Connection"] },
+            
+            // Round 32 (1231-1270)
+            { num: 1231, name: "Symbolic Molecular Myths", def: "Tiny narrative fragments encoded inside molecules, shaping chemical destiny", depth: "PostCausal", poetry: "Atoms carrying folklore.", related: ["Molecules", "Mythology", "Chemistry"] },
+            { num: 1235, name: "Symbolic Plasma-Consciousness", def: "Awareness distributed through highly energized ionized matter", depth: "PostCausal", poetry: "A mind made of lightning.", related: ["Plasma", "Consciousness", "Energy"] },
+            { num: 1239, name: "Symbolic Existential Insects", def: "Species specializing in feeding on meaning, identity, or purpose", depth: "PostCausal", poetry: "Termites of being.", related: ["Insects", "Meaning", "Predation"] },
+            { num: 1246, name: "Symbolic Autoimmune Cosmo-Disorders", def: "Universes attacking their own structural laws", depth: "PostCausal", poetry: "Physics cannibalizing itself.", related: ["Autoimmune", "Cosmology", "Self-Destruction"] },
+            { num: 1251, name: "Symbolic Recursive Destiny Knots", def: "Tangled fate structures looping endlessly without resolution", depth: "PostCausal", poetry: "Karma loops.", related: ["Destiny", "Recursion", "Tangles"] },
+            
+            // Round 33 (1271-1310)
+            { num: 1271, name: "Symbolic Anomalous Cognition Fauna", def: "Lifeforms whose perception transcends logic, time, and causality", depth: "SymbolicBio", poetry: "Animals that see what minds can't.", related: ["Cognition", "Fauna", "Perception"] },
+            { num: 1274, name: "Symbolic Trans-Narrative Organisms", def: "Beings existing inside multiple stories simultaneously", depth: "SymbolicBio", poetry: "Creatures with multi-plot anatomy.", related: ["Narrative", "Organisms", "Multiplicity"] },
+            { num: 1277, name: "Symbolic Paradox Weather v3", def: "Weather patterns emerging from contradiction, impossibility, dual truths", depth: "SymbolicBio", poetry: "Rains that fall sideways through logic.", related: ["Weather", "Paradox", "Contradiction"] },
+            { num: 1290, name: "Symbolic Mythic Mineralogy", def: "Study of stones, crystals, ores with narrative properties", depth: "SymbolicBio", poetry: "Gems of destiny, metals of regret.", related: ["Minerals", "Mythology", "Properties"] },
+            { num: 1303, name: "Symbolic Anti-Consciousness Megafauna", def: "Giant organisms thriving where thought cannot survive", depth: "SymbolicBio", poetry: "Titanic beasts of unawareness.", related: ["Megafauna", "Consciousness", "Absence"] },
+            
+            // Round 34 (1311-1350)
+            { num: 1311, name: "Symbolic Auric Physiology", def: "Study of how auras function as biological organs made of meaning", depth: "SymbolicBio", poetry: "Your light is anatomy.", related: ["Auras", "Biology", "Meaning"] },
+            { num: 1315, name: "Symbolic Dimensional Pregnancy v2", def: "Gestation of entire dimensions within beings, gods, or universes", depth: "SymbolicBio", poetry: "Carrying a universe-child.", related: ["Pregnancy", "Dimensions", "Gestation"] },
+            { num: 1319, name: "Symbolic Recursive Paleontology", def: "Study of fossils from previous versions of the same universe", depth: "SymbolicBio", poetry: "Archaeology of timelines.", related: ["Paleontology", "Recursion", "History"] },
+            { num: 1321, name: "Symbolic Narrative RNA", def: "Story-fragments acting like genetic instructions in cultural evolution", depth: "SymbolicBio", poetry: "Tales as molecules.", related: ["RNA", "Narrative", "Evolution"] },
+            { num: 1334, name: "Symbolic Angelic Viruses", def: "Viral entities that infect beings with holiness, grace, or awareness", depth: "SymbolicBio", poetry: "A contagious blessing.", related: ["Viruses", "Angels", "Blessing"] },
+            { num: 1346, name: "Symbolic Dream Caverns", def: "Caves formed entirely from accumulated dreams", depth: "SymbolicBio", poetry: "Stalactites of imagination.", related: ["Dreams", "Caves", "Accumulation"] },
+            
+            // Round 35 (1351-1390)
+            { num: 1351, name: "Symbolic Paradox Zoology", def: "Study of animals whose existence depends on logical contradictions", depth: "SymbolicBio", poetry: "Creatures that should not exist, but do.", related: ["Zoology", "Paradox", "Existence"] },
+            { num: 1355, name: "Symbolic Mythobiochemistry", def: "Chemical processes driven by mythic resonance instead of electrons", depth: "SymbolicBio", poetry: "Stories reacting like acids and bases.", related: ["Chemistry", "Mythology", "Resonance"] },
+            { num: 1359, name: "Symbolic Anti-Dimensional Fauna", def: "Creatures living in zones where dimensions are missing or undefined", depth: "SymbolicBio", poetry: "Flat beings in a broken geometry.", related: ["Dimensions", "Fauna", "Absence"] },
+            { num: 1375, name: "Symbolic Contradiction Ecologies", def: "Ecological systems stabilized entirely by incompatible truths", depth: "SymbolicBio", poetry: "Habitats of paradox.", related: ["Ecology", "Contradiction", "Stability"] },
+            { num: 1378, name: "Symbolic Anti-Consciousness Fungi", def: "Fungi thriving where awareness collapses", depth: "SymbolicBio", poetry: "Mushrooms of oblivion.", related: ["Fungi", "Consciousness", "Collapse"] },
+            { num: 1380, name: "Symbolic Cognitive Geology", def: "Geological structures formed from accumulated thoughts", depth: "SymbolicBio", poetry: "Mountains made of idea-pressure.", related: ["Geology", "Cognition", "Accumulation"] },
+            
+            // Round 36 (1391-1430+)
+            { num: 1391, name: "Symbolic Anti-Reality Crusts", def: "Layers forming where reality weakens and anti-reality laminates over it", depth: "SymbolicBio", poetry: "A geological shield of negation.", related: ["Reality", "Geology", "Negation"] },
+            { num: 1393, name: "Symbolic Dream Tectonics", def: "The shifting continental plates of the collective unconscious", depth: "SymbolicBio", poetry: "Dream-quakes, REM mountain-building.", related: ["Dreams", "Tectonics", "Unconscious"] },
+            { num: 1396, name: "Symbolic Dimensional Zoology v3", def: "Study of organisms whose biology changes with the dimension they inhabit", depth: "SymbolicBio", poetry: "Shape as habitat.", related: ["Zoology", "Dimensions", "Adaptation"] },
+            { num: 1401, name: "Symbolic Astral Immunology", def: "Study of immune systems built from starlight, radiation, and cosmic forces", depth: "SymbolicBio", poetry: "Defenses glowing like galaxies.", related: ["Immunology", "Astral", "Cosmic"] },
+            { num: 1405, name: "Symbolic Paradox Metabolism", def: "Biological systems powered by contradiction, impossibility, or dual truth", depth: "SymbolicBio", poetry: "Digestion through paradox.", related: ["Metabolism", "Paradox", "Biology"] },
+            { num: 1408, name: "Symbolic Myth-Virus Agriculture", def: "Farming viruses that carry myths, stories, or archetypes", depth: "SymbolicBio", poetry: "Growing tales like crops.", related: ["Agriculture", "Viruses", "Mythology"] },
+            { num: 1411, name: "Symbolic Anti-Gravity Consciousness Beings", def: "Entities whose awareness naturally negates gravitational influence", depth: "SymbolicBio", poetry: "Floating minds.", related: ["Gravity", "Consciousness", "Negation"] },
+            { num: 1422, name: "Symbolic Event-Fruit Plants", def: "Flora producing fruits that are literal events when eaten", depth: "SymbolicBio", poetry: "Eat a sunset. Bite into an earthquake.", related: ["Plants", "Events", "Consumption"] },
+            { num: 1430, name: "Symbolic Myth-Cycle Mammals", def: "Mammals whose evolution follows mythic cycles instead of biology", depth: "SymbolicBio", poetry: "Hero-beasts.", related: ["Mammals", "Mythology", "Evolution"] }
+        ];
+        
+        // Specialized Domain Expansions (complete)
+        const specializedDomains = {
+            quantum: [
+                { title: "Quantum-Enhanced Genomic Processing", icon: "🧬", desc: "Quantum parallelism for analyzing millions of base pairs, identifying mutations and gene-environment interactions at unprecedented speed", items: ["Quantum Genome Modeling", "Structural Variations", "Phenotypic Outcomes", "Rare Disease Detection", "SNP Analysis"] },
+                { title: "Quantum GWAS Acceleration", icon: "🔬", desc: "Quantum optimization algorithms drastically reducing time for genome-wide association studies, moving beyond correlation to causation", items: ["Association Speed-up", "Symbolic Causal Inference", "Beyond Correlation", "Complex Disease Understanding", "Population Analysis"] },
+                { title: "Personalized Quantum Medicine", icon: "💊", desc: "Simulating genetic mutations and treatments at quantum level for truly personalized treatment strategies", items: ["Multi-Omic Integration", "Gene-Protein Interactions", "Environmental Factors", "Treatment Optimization", "Side Effect Prediction"] },
+                { title: "Quantum Disease Pathways", icon: "🧪", desc: "Modeling disease progression at molecular and atomic levels through quantum simulation for early intervention", items: ["Cancer Progression", "Autoimmune Dynamics", "Causal Chain Tracing", "Molecular Interactions", "Pathway Simulation"] },
+                { title: "Quantum Emotional Symmetry", icon: "🧠", desc: "Modeling emotional states as quantum systems with superposition and entanglement for mental health understanding", items: ["Emotional Fluctuations", "State Superposition", "Entangled Emotions", "Dynamic Evolution", "Mood Prediction"] },
+                { title: "Quantum Cognitive Models", icon: "💭", desc: "Representing cognitive functions as quantum systems explaining ambivalence, conflict, and complex decision-making", items: ["Attention as Superposition", "Memory Wave Functions", "Decision Collapse", "Interference Patterns", "Cognitive Bias Modeling"] },
+                { title: "Quantum Therapy Models", icon: "🩺", desc: "Simulating CBT and therapeutic relationships through quantum entanglement models for optimized treatment", items: ["Therapeutic Entanglement", "Intervention Effects", "Feedback Loops", "Dynamic Adjustment", "Outcome Prediction"] },
+                { title: "Quantum Mental Health Prediction", icon: "📊", desc: "Monitoring quantum states of biometrics to track and predict mental health fluctuations in real-time", items: ["Heart Rate Variability", "Brainwave Patterns", "Crisis Prediction", "Preemptive Intervention", "Continuous Monitoring"] }
+            ],
+            ethics: [
+                { title: "Symbolic Ethics Framework", icon: "⚖️", desc: "Ethical dilemmas as symbolic constructs encapsulating values, principles, and outcomes with causal reasoning", items: ["Deontological Models", "Utilitarian Simulation", "Rights & Duties", "Greatest Good Calculation", "Value Weighting"] },
+                { title: "Autonomous Moral Decision", icon: "🤖", desc: "Ethical reasoning for autonomous systems: vehicles, healthcare, real-time life-or-death decisions", items: ["Trolley Problem Sim", "Healthcare Ethics AI", "Harm Reduction", "Responsibility Models", "Liability Frameworks"] },
+                { title: "Symbolic Legal Reasoning", icon: "🏛️", desc: "Modeling legal frameworks, case law, and ethical implications of legal decisions for consistent justice", items: ["Precedent Analysis", "Judicial Consistency", "Justice Alignment", "Human Rights Mapping", "Cross-Cultural Law"] },
+                { title: "Symbolic Democracy Models", icon: "🗳️", desc: "Simulating democratic governance, voting systems, and participatory models for better representation", items: ["Causal Democracy", "Voting System Analysis", "Electoral Prediction", "Direct Democracy", "Deliberative Models"] },
+                { title: "Algorithmic Governance", icon: "⚙️", desc: "Ethically sound algorithms for resource management, taxation, and public services with transparent reasoning", items: ["Resource Allocation", "Welfare Distribution", "Policy Impact", "Predictive Governance", "Bias Detection"] },
+                { title: "Symbolic Rights & Freedoms", icon: "🕊️", desc: "Ensuring AI systems respect and uphold human rights through explicit symbolic reasoning", items: ["Privacy vs Security", "Equality Measures", "Racial Justice", "Economic Disparities", "Access Rights"] },
+                { title: "AI Value Alignment", icon: "🎯", desc: "Symbolically representing human values and continuously aligning AI behavior with evolving norms", items: ["Value Weighting", "Recursive Alignment", "Norm Evolution", "Ethical Updating", "Goal Preservation"] },
+                { title: "Self-Reflective Ethics", icon: "🔄", desc: "AI systems that evaluate their own behavior based on ethical guidelines with transparent justification", items: ["Self-Audit", "Accountability Models", "Explainable Decisions", "Transparent Justification", "Error Correction"] }
+            ],
+            ecosystems: [
+                { title: "Ecosystem Symbolic Modeling", icon: "🌲", desc: "Representing ecosystems with biotic/abiotic interactions and causal feedback loops for prediction and intervention", items: ["Predator-Prey Models", "Nutrient Cycles", "Species Migration", "Cascade Effects", "Tipping Points"] },
+                { title: "Resource Distribution Optimization", icon: "💧", desc: "Optimizing allocation of natural resources across ecosystem services sustainably", items: ["Water Distribution", "Sustainable Farming", "Conservation Priority", "Preventing Exploitation", "Regenerative Systems"] },
+                { title: "Climate Change Simulation", icon: "🌍", desc: "Causal modeling of climate systems, policy impacts, and mitigation strategies at global scale", items: ["Carbon Footprint", "Renewable Energy", "Temperature Prediction", "Weather Patterns", "Tipping Point Analysis"] },
+                { title: "Economic Agent Modeling", icon: "📈", desc: "Simulating economic agents and their interactions within market systems with behavioral realism", items: ["Agent-Based Markets", "Behavioral Economics", "Supply & Demand", "Market Equilibrium", "Flash Crash Prevention"] },
+                { title: "Economic Policy Optimization", icon: "💰", desc: "Optimizing taxation, subsidies, and social welfare through symbolic simulation of outcomes", items: ["Wealth Distribution", "Progressive Taxation", "Global Trade", "Inequality Reduction", "UBI Simulation"] },
+                { title: "Emergent Behavior Modeling", icon: "🐦", desc: "Understanding how simple local rules lead to sophisticated global patterns in complex systems", items: ["Flocking Behavior", "Norm Emergence", "Cultural Trends", "Pattern Formation", "Spontaneous Order"] },
+                { title: "Multi-Agent Systems", icon: "👥", desc: "Agent-based modeling for market dynamics, traffic flow, and social behavior coordination", items: ["Agent Coordination", "Cooperative Games", "Competitive Behavior", "Resource Contention", "Consensus Dynamics"] },
+                { title: "Multi-Scale Integration", icon: "🔄", desc: "Modeling interactions across cellular, societal, and global scales with cross-level feedback", items: ["Cross-Scale Feedback", "Local → Global Effects", "System Resilience", "Stability Analysis", "Emergence Tracking"] }
+            ]
+        };
+        
+        // Causal Chain Principles
+        const causalPrinciples = [
+            { name: "Reality = Symbolic Mesh", desc: "Not matter, not energy, but meaning-bearing causal patterns that constitute existence", color: depthColors.Foundation },
+            { name: "Causality = Universal Engine", desc: "All change follows symbolic causal chains; the fundamental mechanism of transformation", color: depthColors.Applied },
+            { name: "Emergence = Complexity Generator", desc: "Higher layers arise from lower without reduction; novelty from combination", color: depthColors.Meta },
+            { name: "Meaning = Stabilized Relevance", desc: "Patterns that persist and matter; symbolic structures that resist entropy", color: depthColors.Transcendent },
+            { name: "Identity = Persistent Structure", desc: "Coherence across transformations; the thread that maintains selfhood through change", color: depthColors.Cosmic }
+        ];
+        
+        const causalApplications = [
+            { title: "Symbolic Causal Chain Analysis", icon: "🔗", desc: "Every reasoning step traceable and explainable, avoiding black-box approaches", items: ["Inception Dive", "WH-Question Cascades", "Causal Graph Building", "Dependency Tracking"] },
+            { title: "Meta-Level System Orchestration", icon: "🎭", desc: "Coordinating multiple symbolic systems to achieve emergent intelligence", items: ["Layer Integration", "Cross-Domain Reasoning", "Wholeness Metrics", "System Coherence"] },
+            { title: "Symbolic Autopoiesis", icon: "♾️", desc: "Self-creating, self-maintaining symbolic structures with Gödelian strange loops", items: ["Form-Referent-Behavior-Meta", "Recursive Tuples", "Meta-Circular Evaluation", "Self-Description"] },
+            { title: "Mfidel Acoustic Foundation", icon: "🔊", desc: "272 atomic Ge'ez units as primitive self-describing symbolic atoms", items: ["34×8 Matrix", "Whisper+Vibratory", "Emotional Mapping", "Universal Substrate"] }
+        ];
+        
+        // ═══════════════════════════════════════════════════════════════
+        // RENDERING FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        
+        function renderHierarchy() {
+            const container = document.getElementById('hierarchyStack');
+            ontologicalDepths.forEach((depth, i) => {
+                const layer = document.createElement('div');
+                layer.className = 'hierarchy-layer';
+                layer.style.setProperty('--layer-color', depth.color);
+                layer.style.animationDelay = `${i * 0.05}s`;
+                layer.innerHTML = `
+                    <span class="layer-range">${depth.range}</span>
+                    <span class="layer-name">${depth.name}<span class="layer-count">${depth.count}</span></span>
+                    <span class="layer-desc">${depth.desc}</span>
+                `;
+                layer.addEventListener('click', () => filterByDepthName(Object.keys(depthColors)[i]));
+                container.appendChild(layer);
+            });
+        }
+        
+        function renderOverviewSpecs() {
+            const container = document.getElementById('overviewSpecs');
+            const specs = [
+                { ...specializedDomains.quantum[0], color: '#8b5cf6' },
+                { ...specializedDomains.quantum[4], color: '#8b5cf6' },
+                { ...specializedDomains.ethics[0], color: '#f59e0b' },
+                { ...specializedDomains.ethics[3], color: '#f59e0b' },
+                { ...specializedDomains.ecosystems[0], color: '#10b981' },
+                { ...specializedDomains.ecosystems[3], color: '#06b6d4' }
+            ];
+            specs.forEach(spec => container.appendChild(createSpecCard(spec, spec.color)));
+        }
+        
+        function renderDomainAtlas() {
+            // Depth filters
+            const filterContainer = document.getElementById('depthFilters');
+            const depths = ['All', ...Object.keys(depthColors)];
+            depths.forEach(d => {
+                const pill = document.createElement('button');
+                pill.className = 'filter-pill' + (d === 'All' ? ' active' : '');
+                pill.textContent = d === 'All' ? 'All' : d;
+                pill.style.setProperty('--pill-color', d === 'All' ? '#818cf8' : depthColors[d]);
+                pill.dataset.depth = d;
+                pill.addEventListener('click', () => filterByDepth(d));
+                filterContainer.appendChild(pill);
+            });
+            
+            // Domain cards
+            const grid = document.getElementById('domainGrid');
+            domainAtlas.forEach((domain, i) => {
+                const card = document.createElement('div');
+                card.className = 'domain-card';
+                card.dataset.depth = domain.depth;
+                card.dataset.name = domain.name.toLowerCase();
+                card.dataset.def = domain.def.toLowerCase();
+                card.dataset.index = i;
+                card.style.setProperty('--card-color', depthColors[domain.depth]);
+                card.style.animationDelay = `${(i % 20) * 0.02}s`;
+                
+                card.innerHTML = `
+                    <div class="domain-header">
+                        <span class="domain-num">#${domain.num}</span>
+                        <span class="domain-name">${domain.name}</span>
+                    </div>
+                    <p class="domain-def">${domain.def}</p>
+                    ${domain.poetry ? `<p class="domain-poetry">${domain.poetry}</p>` : ''}
+                    <div class="domain-tags">
+                        <span class="domain-tag depth-tag">${domain.depth}</span>
+                        <span class="domain-tag">R${Math.ceil(domain.num / 40)}</span>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => openModal(domain));
+                grid.appendChild(card);
+            });
+            
+            updateCounts();
+        }
+        
+        function renderRoundsTimeline() {
+            const container = document.getElementById('roundsTimeline');
+            recursiveRounds.forEach((round, i) => {
+                const item = document.createElement('div');
+                item.className = 'round-item';
+                item.style.setProperty('--round-color', round.color);
+                item.innerHTML = `
+                    <div class="round-header">
+                        <span class="round-num">Round ${round.round}</span>
+                        <span class="round-range">(#${round.range})</span>
+                    </div>
+                    <h3 class="round-name">${round.name}</h3>
+                    <p class="round-desc">${round.desc}</p>
+                    <div class="round-samples">
+                        ${round.samples.map(s => `<span class="round-sample">${s}</span>`).join('')}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        function renderSpecializedSections() {
+            ['quantum', 'ethics', 'ecosystems'].forEach(key => {
+                const container = document.getElementById(`${key}Grid`);
+                const color = key === 'quantum' ? '#8b5cf6' : key === 'ethics' ? '#f59e0b' : '#10b981';
+                specializedDomains[key].forEach(spec => {
+                    container.appendChild(createSpecCard(spec, color));
+                });
+            });
+        }
+        
+        function renderCausalSection() {
+            // Principles
+            const principlesContainer = document.getElementById('principlesStack');
+            causalPrinciples.forEach((p, i) => {
+                const layer = document.createElement('div');
+                layer.className = 'hierarchy-layer';
+                layer.style.setProperty('--layer-color', p.color);
+                layer.innerHTML = `
+                    <span class="layer-range">${i + 1}</span>
+                    <span class="layer-name">${p.name}</span>
+                    <span class="layer-desc">${p.desc}</span>
+                `;
+                principlesContainer.appendChild(layer);
+            });
+            
+            // Applications
+            const causalContainer = document.getElementById('causalGrid');
+            causalApplications.forEach(app => {
+                causalContainer.appendChild(createSpecCard(app, '#818cf8'));
+            });
+        }
+        
+        function createSpecCard(spec, color) {
+            const card = document.createElement('div');
+            card.className = 'spec-card';
+            card.style.setProperty('--spec-color', color);
+            card.innerHTML = `
+                <div class="spec-header">
+                    <div class="spec-icon">${spec.icon}</div>
+                    <h3 class="spec-title">${spec.title}</h3>
+                </div>
+                <p class="spec-desc">${spec.desc}</p>
+                <div class="spec-items">
+                    ${spec.items.map(item => `<span class="spec-item">${item}</span>`).join('')}
+                </div>
+            `;
+            return card;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // MODAL SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        
+        function openModal(domain) {
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
+            
+            content.style.setProperty('--modal-color', depthColors[domain.depth]);
+            
+            document.getElementById('modalNum').textContent = `Domain #${domain.num}`;
+            document.getElementById('modalTitle').textContent = domain.name;
+            document.getElementById('modalDef').textContent = domain.def;
+            
+            const poetrySection = document.getElementById('modalPoetrySection');
+            const poetry = document.getElementById('modalPoetry');
+            if (domain.poetry) {
+                poetry.textContent = domain.poetry;
+                poetrySection.style.display = 'block';
+            } else {
+                poetrySection.style.display = 'none';
+            }
+            
+            const meta = document.getElementById('modalMeta');
+            meta.innerHTML = `
+                <span class="modal-meta-tag depth" style="color: ${depthColors[domain.depth]}; border-color: ${depthColors[domain.depth]}">${domain.depth}</span>
+                <span class="modal-meta-tag round">Round ${Math.ceil(domain.num / 40)}</span>
+            `;
+            
+            const related = document.getElementById('modalRelated');
+            if (domain.related && domain.related.length > 0) {
+                related.innerHTML = domain.related.map(r => `<span class="related-item">${r}</span>`).join('');
+            } else {
+                related.innerHTML = '<span class="related-item">Explore nearby domains</span>';
+            }
+            
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // FILTERING & SEARCH
+        // ═══════════════════════════════════════════════════════════════
+        
+        function filterByDepth(depth) {
+            document.querySelectorAll('.filter-pill').forEach(p => {
+                p.classList.toggle('active', p.dataset.depth === depth);
+            });
+            
+            document.querySelectorAll('.domain-card').forEach(card => {
+                const match = depth === 'All' || card.dataset.depth === depth;
+                card.classList.toggle('hidden', !match);
+            });
+            
+            updateCounts();
+        }
+        
+        function filterByDepthName(depthName) {
+            switchSection('atlas');
+            setTimeout(() => filterByDepth(depthName), 100);
+        }
+        
+        function searchDomains(query) {
+            const q = query.toLowerCase().trim();
+            document.querySelectorAll('.domain-card').forEach(card => {
+                if (q === '') {
+                    card.classList.remove('hidden');
+                } else {
+                    const match = card.dataset.name.includes(q) || card.dataset.def.includes(q);
+                    card.classList.toggle('hidden', !match);
+                }
+            });
+            updateCounts();
+        }
+        
+        function updateCounts() {
+            const visible = document.querySelectorAll('.domain-card:not(.hidden)').length;
+            const total = domainAtlas.length;
+            document.getElementById('visibleCount').textContent = `${visible} of ${total} loaded`;
+            document.getElementById('atlasCount').textContent = visible;
+        }
+        
+        function showRandomDomain() {
+            const cards = document.querySelectorAll('.domain-card:not(.hidden)');
+            if (cards.length === 0) return;
+            const randomCard = cards[Math.floor(Math.random() * cards.length)];
+            const index = parseInt(randomCard.dataset.index);
+            openModal(domainAtlas[index]);
+        }
+        
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            filterByDepth('All');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // NAVIGATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        function switchSection(sectionId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.section === sectionId);
+            });
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.toggle('active', sec.id === sectionId);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // KEYBOARD NAVIGATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        function handleKeydown(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            if (e.key === 'r' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+                showRandomDomain();
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHierarchy();
+            renderOverviewSpecs();
+            renderDomainAtlas();
+            renderRoundsTimeline();
+            renderSpecializedSections();
+            renderCausalSection();
+            
+            // Navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => switchSection(btn.dataset.section));
+            });
+            
+            // Search
+            document.getElementById('searchInput').addEventListener('input', e => {
+                searchDomains(e.target.value);
+            });
+            
+            // Utility buttons
+            document.getElementById('randomBtn').addEventListener('click', showRandomDomain);
+            document.getElementById('clearBtn').addEventListener('click', clearFilters);
+            
+            // Modal
+            document.getElementById('modalClose').addEventListener('click', closeModal);
+            document.getElementById('modalOverlay').addEventListener('click', e => {
+                if (e.target === e.currentTarget) closeModal();
+            });
+            
+            // Keyboard
+            document.addEventListener('keydown', handleKeydown);
+        });
+    </script>
+</body>
+</html>
