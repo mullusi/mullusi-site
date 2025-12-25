@@ -1,299 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MULLU — Symbolic Intelligence Portal</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mullu Sandbox Landing</title>
 
-    <!-- Typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Meta & SEO -->
-    <meta name="description" content="Mullu — The Symbolic Intelligence Framework. Explore symbolic causal reasoning, Mfidel atomic logic, and the intelligence architecture of the future.">
-    <meta name="theme-color" content="#000000">
-
-    <style>
-        /* ---------------------------------------------
-           ROOT VARIABLES
-        ---------------------------------------------- */
-        :root {
-            --bg: #000;
-            --text: #e2e8f0;
-            --text-dim: #94a3b8;
-            --accent: #00eaff;
-            --accent-soft: rgba(0,234,255,0.35);
-            --radius: 14px;
-            --transition: 0.3s ease;
-            --glow: 0 0 12px rgba(0, 234, 255, 0.6);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            overflow-x: hidden;
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* ---------------------------------------------
-           HERO BACKGROUND CANVAS LAYERS (OPTIMIZED)
-        ---------------------------------------------- */
-
-        #bg-canvas {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .bg-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background: radial-gradient(circle at 50% 30%, rgba(0,200,255,0.15), transparent 70%);
-            opacity: 0.6;
-        }
-
-        .aurora {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
-            background: linear-gradient(115deg, rgba(0,255,200,0.12), transparent 60%);
-            mix-blend-mode: screen;
-            animation: auroraFlow 16s ease-in-out infinite alternate;
-            will-change: opacity, transform;
-        }
-        @keyframes auroraFlow {
-            0% { opacity: 0.15; transform: translateY(0); }
-            100% { opacity: 0.5; transform: translateY(-6%); }
-        }
-
-        /* ---------------------------------------------
-           MAIN LAYOUT
-        ---------------------------------------------- */
-
-        header {
-            width: 100%;
-            padding: 40px 0;
-            text-align: center;
-            z-index: 10;
-            position: relative;
-        }
-
-        header h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            background: linear-gradient(90deg, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: var(--glow);
-        }
-
-        header p {
-            margin-top: 16px;
-            font-size: 1.2rem;
-            color: var(--text-dim);
-        }
-
-        /* ---------------------------------------------
-           CARD CONTAINER (Optimized Grid)
-        ---------------------------------------------- */
-
-        .container {
-            z-index: 5;
-            position: relative;
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-bottom: 120px;
-        }
-
-        .card {
-            background: rgba(20,20,30,0.55);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: var(--radius);
-            padding: 28px;
-            margin: 22px 0;
-            backdrop-filter: blur(12px);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            border-color: rgba(0,255,200,0.3);
-            box-shadow: 0 0 24px rgba(0,255,200,0.15);
-        }
-
-        .card h2 {
-            font-size: 1.9rem;
-            margin-bottom: 14px;
-            color: var(--accent);
-        }
-
-        .card p {
-            line-height: 1.62;
-            margin-bottom: 8px;
-        }
-
-        .mullu-btn {
-            margin-top: 22px;
-            display: inline-block;
-            padding: 12px 26px;
-            border-radius: var(--radius);
-            background: var(--accent-soft);
-            color: var(--text);
-            transition: var(--transition);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .mullu-btn:hover {
-            background: var(--accent);
-            color: #000;
-        }
-
-        /* ---------------------------------------------
-           FLOATING MFIDELS (Performance-tuned)
-        ---------------------------------------------- */
-
-        #floating-fidels {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 3;
-        }
-
-        .fidel {
-            position: absolute;
-            font-size: 26px;
-            opacity: 0.18;
-            color: #fff;
-            user-select: none;
-            will-change: transform;
-            animation: drift 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes drift {
-            0% { transform: translateY(0); opacity: 0.15; }
-            100% { transform: translateY(-18px); opacity: 0.28; }
-        }
-
-    </style>
+<style>
+  :root {
+    --accent:#00bfa6;
+    --accent2:#007a68;
+    --bg:#fdfdfd;
+    --text:#222;
+    --muted:#666;
+  }
+  body{margin:0;font-family:system-ui, sans-serif;background:var(--bg);color:var(--text);}
+  header{
+    background:var(--accent);color:white;text-align:center;padding:2rem 1rem;
+  }
+  nav a{color:white;margin:0 1rem;text-decoration:none;font-weight:600;}
+  section{padding:2rem 8vw;max-width:900px;margin:auto;}
+  h2{border-bottom:2px solid var(--accent);padding-bottom:.3rem;}
+  .news-item,.artifact{border:1px solid #ddd;border-radius:.5rem;padding:1rem;margin:1.5rem 0;}
+  .artifact img{max-width:100%;border-radius:.3rem;}
+  .date{color:var(--muted);font-size:.85rem;}
+  footer{text-align:center;padding:1rem;background:#eee;color:var(--muted);}
+  #admin-panel{background:#fafafa;margin-top:3rem;padding:1.5rem;border:1px solid #ddd;border-radius:.5rem;}
+  input,textarea{
+    width:100%;padding:.7rem;margin:.4rem 0;
+    border:1px solid #ccc;border-radius:.3rem;
+  }
+  button{
+    padding:.7rem 1rem;background:var(--accent);
+    border:none;color:white;border-radius:.3rem;cursor:pointer;
+  }
+  button:hover{background:var(--accent2);}
+</style>
 </head>
-
 <body>
 
-<!-- BACKGROUND LAYERS -->
-<canvas id="bg-canvas"></canvas>
-<div class="bg-overlay"></div>
-<div class="aurora"></div>
-<div id="floating-fidels"></div>
-
-<!-- HEADER -->
 <header>
-    <h1>MULLU</h1>
-    <p>Symbolic Intelligence • Causal Reasoning • Mfidel Atomic Logic</p>
+  <h1>Mullu Sandbox</h1>
+  <p>A personal symbolic exploration space</p>
+  <nav>
+    <a href="#news">News</a>
+    <a href="#artifacts">Artifacts</a>
+    <a href="#admin-panel">Admin</a>
+  </nav>
 </header>
 
-<!-- MAIN CONTENT -->
-<div class="container">
+<section id="news">
+  <h2>Articles & News</h2>
+  <div id="news-list"></div>
+</section>
 
-    <div class="card">
-        <h2>Symbolic Intelligence</h2>
-        <p>Mullu is a pure symbolic engine. Every symbol has a causal origin, a trajectory, and a transformation rule. Nothing is statistical; everything is traceable.</p>
-    </div>
+<section id="artifacts">
+  <h2>Artifacts Collection</h2>
+  <div id="artifact-list"></div>
+</section>
 
-    <div class="card">
-        <h2>Mfidel Atomic Structure</h2>
-        <p>Each fidel is atomic. No Unicode decomposition. No root-vowel hacks. Whisper + vibratory overlay = complete symbolic sound identity.</p>
-    </div>
+<section id="admin-panel">
+  <h2>Admin Panel (Local Only)</h2>
+  <p style="color:var(--muted);">Everything you add stays on *your device only*, thanks to LocalStorage.</p>
 
-    <div class="card">
-        <h2>Reasoning Architecture</h2>
-        <p>The full WH-Question Reasoning Engine (WHQR) drives symbolic world modeling, causal deduction, counterfactual reasoning, and temporal-modal inference.</p>
-    </div>
+  <h3>Add Article</h3>
+  <input id="news-title" placeholder="Title">
+  <textarea id="news-text" placeholder="Short description"></textarea>
+  <button onclick="addNews()">Add Article</button>
 
-    <div class="card">
-        <h2>Begin The Journey</h2>
-        <a href="#explore" class="mullu-btn">Explore Mullu</a>
-    </div>
+  <h3 style="margin-top:2rem;">Add Artifact</h3>
+  <input id="artifact-title" placeholder="Artifact Title">
+  <input id="artifact-img" placeholder="Image URL">
+  <textarea id="artifact-desc" placeholder="Description"></textarea>
+  <button onclick="addArtifact()">Add Artifact</button>
+</section>
 
-</div>
+<footer>
+  <p>© 2025 — Sandbox experimental build</p>
+</footer>
 
-<!-- SCRIPT (Optimized) -->
 <script>
-/* ---------------------------------------------
-   PARTICLE BACKGROUND (Optimized)
----------------------------------------------- */
+// Load data from localStorage or initialize empty arrays
+let newsData = JSON.parse(localStorage.getItem("newsData") || "[]");
+let artifactData = JSON.parse(localStorage.getItem("artifactData") || "[]");
 
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d', { alpha: false });
-let w, h;
-
-function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
+function renderNews() {
+  const container = document.getElementById("news-list");
+  container.innerHTML = "";
+  newsData.forEach(n => {
+    container.innerHTML += `
+      <div class="news-item">
+        <div class="date">${n.date}</div>
+        <h3>${n.title}</h3>
+        <p>${n.text}</p>
+      </div>
+    `;
+  });
 }
-resize();
-window.addEventListener('resize', resize);
 
-const particles = Array.from({ length: 85 }, () => ({
-    x: Math.random() * w,
-    y: Math.random() * h,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: (Math.random() - 0.5) * 0.3,
-}));
-
-function animateParticles() {
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = 'rgba(0, 255, 200, 0.6)';
-
-    for (let p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.7, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    requestAnimationFrame(animateParticles);
+function renderArtifacts() {
+  const container = document.getElementById("artifact-list");
+  container.innerHTML = "";
+  artifactData.forEach(a => {
+    container.innerHTML += `
+      <div class="artifact">
+        <img src="${a.img}">
+        <h3>${a.title}</h3>
+        <p>${a.desc}</p>
+      </div>
+    `;
+  });
 }
-animateParticles();
 
+function addNews() {
+  const title = document.getElementById("news-title").value;
+  const text = document.getElementById("news-text").value;
+  if(!title || !text) return;
 
-/* ---------------------------------------------
-   FLOATING MFIDELS
----------------------------------------------- */
+  newsData.unshift({
+    title,
+    text,
+    date: new Date().toLocaleDateString()
+  });
 
-const fidelLayer = document.getElementById("floating-fidels");
-const fidels = ["ሀ","ለ","መ","ረ","ሰ","ቀ","በ","ተ","ነ","ኘ","አ","ከ","ወ","ዐ","ዘ","ገ","ጠ","ጨ","ፀ"];
-
-for (let i = 0; i < 22; i++) {
-    const el = document.createElement("div");
-    el.className = "fidel";
-    el.textContent = fidels[Math.floor(Math.random() * fidels.length)];
-    el.style.left = Math.random() * 100 + "%";
-    el.style.top = Math.random() * 100 + "%";
-    el.style.animationDuration = (8 + Math.random() * 10) + "s";
-    fidelLayer.appendChild(el);
+  localStorage.setItem("newsData", JSON.stringify(newsData));
+  renderNews();
+  document.getElementById("news-title").value = "";
+  document.getElementById("news-text").value = "";
 }
+
+function addArtifact() {
+  const title = document.getElementById("artifact-title").value;
+  const img = document.getElementById("artifact-img").value;
+  const desc = document.getElementById("artifact-desc").value;
+  if(!title || !img || !desc) return;
+
+  artifactData.unshift({ title, img, desc });
+
+  localStorage.setItem("artifactData", JSON.stringify(artifactData));
+  renderArtifacts();
+  document.getElementById("artifact-title").value = "";
+  document.getElementById("artifact-img").value = "";
+  document.getElementById("artifact-desc").value = "";
+}
+
+// initial render
+renderNews();
+renderArtifacts();
 
 </script>
 
