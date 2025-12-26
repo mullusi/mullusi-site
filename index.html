@@ -3,892 +3,2890 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mullu Holistic Physics Engine</title>
+    <title>Mullu Symbolic Execution Engine v3.4 | ⸮ = Ω</title>
     <style>
-        :root {
-            --bg-void: #030308;
-            --bg-dark: #0a0a12;
-            --bg-card: #101018;
-            --bg-inner: #16161f;
-            --entropy: #e74c3c;
-            --quantum: #9b59b6;
-            --consciousness: #00d4aa;
-            --gravity: #3498db;
-            --light: #f1c40f;
-            --gold: #d4a853;
-            --inactive: #333340;
-            --text: #e8e8e8;
-            --text-dim: #6a6a7a;
-            --border: #252535;
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-void);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        /* Cosmic Background */
-        .cosmos {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at center, #0a0a18 0%, #030308 100%);
-            z-index: -2;
-        }
-        
-        .stars {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: -1;
-        }
-        
-        .star {
-            position: absolute;
-            width: 2px; height: 2px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: twinkle 3s ease-in-out infinite;
-        }
-        
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-        
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(180deg, rgba(10,10,18,0.9) 0%, transparent 100%);
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(90deg, var(--entropy), var(--quantum), var(--consciousness), var(--gravity), var(--light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-        
-        .axiom-display {
-            font-size: 2rem;
-            color: var(--gold);
-            font-family: 'Times New Roman', serif;
-            margin: 1rem 0;
-            text-shadow: 0 0 30px var(--gold);
-        }
-        
-        .stats-row {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 1rem;
-        }
-        
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(90deg, var(--consciousness), var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .stat-label { font-size: 0.8rem; color: var(--text-dim); }
-        
-        .container {
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        /* Mesh Grid */
-        .mesh-section {
-            margin-bottom: 3rem;
-        }
-        
-        .section-title {
-            color: var(--gold);
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .mesh-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 0.75rem;
-        }
-        
-        .fidel-cell {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .fidel-cell.active { border-color: var(--consciousness); }
-        .fidel-cell.active.entropy { border-color: var(--entropy); background: rgba(231,76,60,0.1); }
-        .fidel-cell.active.quantum { border-color: var(--quantum); background: rgba(155,89,182,0.1); }
-        .fidel-cell.active.consciousness { border-color: var(--consciousness); background: rgba(0,212,170,0.1); }
-        .fidel-cell.active.gravity { border-color: var(--gravity); background: rgba(52,152,219,0.1); }
-        .fidel-cell.active.light { border-color: var(--light); background: rgba(241,196,15,0.1); }
-        
-        .fidel-cell:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-        
-        .fidel-cell .row-num {
-            position: absolute;
-            top: 4px; left: 8px;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-        }
-        
-        .fidel-cell .fidel {
-            font-size: 2rem;
-            margin-bottom: 0.3rem;
-        }
-        
-        .fidel-cell.active.entropy .fidel { color: var(--entropy); }
-        .fidel-cell.active.quantum .fidel { color: var(--quantum); }
-        .fidel-cell.active.consciousness .fidel { color: var(--consciousness); }
-        .fidel-cell.active.gravity .fidel { color: var(--gravity); }
-        .fidel-cell.active.light .fidel { color: var(--light); }
-        .fidel-cell:not(.active) .fidel { color: var(--inactive); }
-        
-        .fidel-cell .domain {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-        }
-        
-        .fidel-cell .status {
-            position: absolute;
-            top: 4px; right: 8px;
-            font-size: 0.7rem;
-        }
-        
-        .fidel-cell.active .status { color: var(--consciousness); }
-        .fidel-cell:not(.active) .status { color: var(--text-dim); }
-        
-        /* Vowel Columns */
-        .vowel-row {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-        
-        .vowel-item {
-            text-align: center;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            background: var(--bg-inner);
-        }
-        
-        .vowel-item .vowel { font-size: 1.5rem; color: var(--gold); }
-        .vowel-item .state { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem; }
-        
-        /* Bridge Network */
-        .bridges-section {
-            margin: 3rem 0;
-        }
-        
-        .bridge-network {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-        }
-        
-        .bridge-card {
-            background: var(--bg-card);
-            border: 1px solid var(--gold);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            min-width: 280px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .bridge-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 20px rgba(212,168,83,0.3);
-        }
-        
-        .bridge-card .link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .bridge-card .fidel { font-size: 1.5rem; }
-        .bridge-card .arrow { color: var(--gold); }
-        .bridge-card .name { font-size: 0.85rem; color: var(--gold); text-align: center; }
-        .bridge-card .formula { font-size: 0.75rem; color: var(--text-dim); text-align: center; margin-top: 0.3rem; font-family: 'Times New Roman', serif; }
-        
-        /* Operator Console */
-        .console-section {
-            margin: 3rem 0;
-        }
-        
-        .console {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+            color: #e0e0e0;
+            height: 100vh;
             overflow: hidden;
         }
-        
-        .console-header {
-            background: var(--bg-inner);
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .container {
+            display: grid;
+            grid-template-columns: 55% 45%;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
         }
+        .top-bar {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid #333;
+        }
+        .top-bar h1 { font-size: 1.2em; color: #00d4aa; }
+        .top-bar .axiom { font-size: 1.4em; color: rgba(0, 212, 170, 0.6); }
+        .top-bar .status { display: flex; align-items: center; gap: 15px; font-size: 0.8em; color: #888; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #e74c3c; display: inline-block; }
+        .status-dot.running { background: #00d4aa; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         
-        .console-header h3 { color: var(--consciousness); }
+        .system-state-badge { 
+            padding: 3px 10px; 
+            border-radius: 4px; 
+            font-size: 0.75em; 
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .system-state-badge.quiescent { background: rgba(52, 152, 219, 0.3); color: #3498db; }
+        .system-state-badge.coherent { background: rgba(0, 212, 170, 0.3); color: #00d4aa; }
+        .system-state-badge.active { background: rgba(241, 196, 15, 0.3); color: #f1c40f; }
+        .system-state-badge.overdamped { background: rgba(155, 89, 182, 0.3); color: #9b59b6; }
+        .system-state-badge.fragmenting { background: rgba(231, 76, 60, 0.3); color: #e74c3c; }
+        .system-state-badge.saturated { background: rgba(230, 126, 34, 0.3); color: #e67e22; }
+        .system-state-badge.runaway { background: rgba(192, 57, 43, 0.5); color: #fff; }
         
-        .console-body {
+        .canvas-container { position: relative; overflow: hidden; }
+        #meshCanvas { display: block; cursor: crosshair; }
+        .center-axiom { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5em; color: rgba(0, 212, 170, 0.08); pointer-events: none; z-index: 1; }
+        
+        .sidebar { background: rgba(15, 15, 25, 0.95); border-left: 1px solid #333; display: flex; flex-direction: column; overflow: hidden; }
+        
+        .trust-panel { 
+            padding: 10px 12px; 
+            background: rgba(0, 0, 0, 0.4); 
+            border-bottom: 1px solid #333; 
             display: grid;
             grid-template-columns: 1fr 1fr;
-            min-height: 300px;
+            gap: 10px;
+            flex-shrink: 0;
         }
-        
-        .console-input {
-            padding: 1.5rem;
-            border-right: 1px solid var(--border);
-        }
-        
-        .console-output {
-            padding: 1.5rem;
-            background: var(--bg-void);
-            font-family: 'Consolas', monospace;
-            font-size: 0.85rem;
-            overflow-y: auto;
-            max-height: 400px;
-        }
-        
-        .operator-select {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--bg-inner);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        
-        .param-group {
-            margin-bottom: 1rem;
-        }
-        
-        .param-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            margin-bottom: 0.3rem;
-        }
-        
-        .param-group input {
-            width: 100%;
-            padding: 0.6rem;
-            background: var(--bg-inner);
-            border: 1px solid var(--border);
+        .trust-box, .warnings-box {
+            background: rgba(0,0,0,0.3);
             border-radius: 6px;
-            color: var(--text);
+            padding: 8px;
         }
-        
-        .exec-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(90deg, var(--consciousness), var(--quantum));
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
+        .trust-label { font-size: 0.6em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+        .gti-value {
+            font-size: 1.6em;
+            font-weight: bold;
+            font-family: monospace;
         }
-        
-        .exec-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,212,170,0.3);
-        }
-        
-        .output-entry {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .output-entry .trace { color: var(--gold); }
-        .output-entry .value { color: var(--consciousness); margin-top: 0.25rem; }
-        .output-entry .timestamp { color: var(--text-dim); font-size: 0.75rem; }
-        
-        /* Universe Simulation */
-        .universe-section {
-            margin: 3rem 0;
-        }
-        
-        .universe-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-        }
-        
-        .universe-canvas {
-            width: 100%;
-            height: 300px;
-            background: radial-gradient(circle at center, #0a0a18, #030308);
-            border-radius: 12px;
-            position: relative;
+        .gti-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-top: 6px;
             overflow: hidden;
         }
-        
-        .universe-object {
-            position: absolute;
-            border-radius: 50%;
-            transition: all 0.1s linear;
-        }
-        
-        .universe-controls {
+        .gti-fill { height: 100%; transition: width 0.3s, background 0.3s; border-radius: 2px; }
+        .gti-trend { font-size: 0.65em; color: #555; margin-top: 4px; }
+        .gti-trend.improving { color: #2ecc71; }
+        .gti-trend.degrading { color: #e74c3c; }
+        .warning-item {
+            font-size: 0.65em;
+            color: #e74c3c;
+            padding: 2px 0;
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px;
         }
+        .warning-item::before { content: '⚠'; }
+        .no-warnings { color: #00d4aa; font-size: 0.7em; }
         
-        .universe-controls button {
-            padding: 0.6rem 1.2rem;
-            background: var(--bg-inner);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .metrics { padding: 10px 12px; background: rgba(0, 0, 0, 0.3); border-bottom: 1px solid #333; flex-shrink: 0; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .metric-item { background: rgba(0, 0, 0, 0.3); padding: 6px 8px; border-radius: 5px; }
+        .metric-label { font-size: 0.6em; color: #555; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .metric-trend { font-size: 1em; font-weight: bold; }
+        .metric-trend.rising { color: #2ecc71; }
+        .metric-trend.falling { color: #e74c3c; }
+        .metric-trend.stable { color: #555; }
+        .metric-value { font-family: monospace; font-size: 0.95em; color: #00d4aa; }
+        .metric-bar { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 3px; overflow: hidden; }
+        .metric-fill { height: 100%; border-radius: 2px; transition: width 0.15s; }
         
-        .universe-controls button:hover {
-            background: var(--consciousness);
-            color: var(--bg-dark);
-        }
+        .controls { padding: 8px 12px; display: flex; gap: 6px; border-bottom: 1px solid #333; flex-shrink: 0; flex-wrap: wrap; align-items: center; }
+        .btn { padding: 7px 12px; background: rgba(0, 212, 170, 0.1); border: 1px solid rgba(0, 212, 170, 0.3); border-radius: 4px; color: #00d4aa; cursor: pointer; font-size: 0.75em; transition: all 0.2s; }
+        .btn:hover { background: rgba(0, 212, 170, 0.2); }
+        .btn.active { background: rgba(0, 212, 170, 0.3); }
+        .btn.danger { background: rgba(231, 76, 60, 0.1); border-color: rgba(231, 76, 60, 0.3); color: #e74c3c; }
+        .speed-control { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+        .speed-control input[type="range"] { width: 60px; height: 4px; cursor: pointer; }
+        .speed-label { font-size: 0.7em; color: #00d4aa; font-family: monospace; min-width: 25px; }
         
-        .universe-stats {
-            display: flex;
-            gap: 2rem;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-        }
+        .node-panel { flex: 1; padding: 8px 12px; overflow-y: auto; min-height: 0; }
+        .panel-title { font-size: 0.65em; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .node-card { background: rgba(0, 0, 0, 0.3); border-radius: 6px; padding: 10px; }
+        .node-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .node-fidel { font-size: 1.6em; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.4); border-radius: 6px; border: 2px solid; }
+        .node-info h4 { font-size: 1em; color: #fff; }
+        .node-info .domain { font-size: 0.7em; color: #555; }
+        .node-info .node-role { font-size: 0.6em; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-top: 2px; }
+        .node-role.structural { background: rgba(0, 212, 170, 0.2); color: #00d4aa; }
+        .node-role.dynamic { background: rgba(155, 89, 182, 0.2); color: #9b59b6; }
+        .node-role.canonical { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
+        .state-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 8px; }
+        .state-item { background: rgba(0, 0, 0, 0.2); padding: 5px; border-radius: 3px; text-align: center; }
+        .state-item .label { font-size: 0.55em; color: #555; }
+        .state-item .value { font-family: monospace; font-size: 0.85em; }
+        .state-item .value.resonance { color: #f1c40f; }
+        .state-item .value.coherence { color: #00d4aa; }
+        .state-item .value.memory { color: #9b59b6; }
+        .memory-details { font-size: 0.6em; color: #555; margin-top: 4px; }
+        .bridges-mini { margin-top: 6px; max-height: 50px; overflow-y: auto; }
+        .bridge-tag { display: inline-block; padding: 2px 5px; margin: 1px; border-radius: 2px; font-size: 0.6em; background: rgba(0, 0, 0, 0.3); }
+        .bridge-tag.entropy { border-left: 2px solid #e74c3c; }
+        .bridge-tag.symmetry { border-left: 2px solid #00d4aa; }
+        .bridge-tag.coupling { border-left: 2px solid #9b59b6; }
         
-        .universe-stats span { color: var(--text-dim); }
-        .universe-stats strong { color: var(--consciousness); }
+        .log { padding: 6px 10px; background: rgba(0, 0, 0, 0.5); border-top: 1px solid #333; height: 85px; overflow-y: auto; flex-shrink: 0; }
+        .diagnostics { padding: 6px 10px; background: rgba(0, 50, 40, 0.3); border-top: 1px solid #00d4aa33; height: 75px; overflow-y: auto; flex-shrink: 0; }
+        .invariant-tag { display: inline-block; padding: 3px 7px; margin: 2px; border-radius: 3px; font-size: 0.7em; background: rgba(0, 212, 170, 0.15); border: 1px solid #00d4aa44; color: #00d4aa; cursor: default; }
+        .invariant-tag:hover { background: rgba(0, 212, 170, 0.25); }
+        .invariant-tag .count { color: #f1c40f; font-weight: bold; }
+        .invariant-tag.structural { background: rgba(0, 212, 170, 0.25); border-color: #00d4aa; }
+        .invariant-tag.dynamic { background: rgba(155, 89, 182, 0.25); border-color: #9b59b6; color: #9b59b6; }
+        .invariant-tag.dynamic .count { color: #e056fd; }
+        .log-title { font-size: 0.6em; color: #444; text-transform: uppercase; margin-bottom: 3px; }
+        .log-entry { font-family: monospace; font-size: 0.65em; color: #555; padding: 1px 0; }
+        .log-entry.injection { color: #f1c40f; }
+        .log-entry.propagation { color: #00d4aa; }
+        .log-entry.decay { color: #e74c3c; }
+        .log-entry.warning { color: #e67e22; }
         
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
+        .bottom-bar { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding: 5px 20px; background: rgba(0, 0, 0, 0.5); border-top: 1px solid #333; font-size: 0.7em; color: #555; }
+        .conservation-indicators { display: flex; gap: 20px; }
+        .conservation-item { display: flex; align-items: center; gap: 5px; }
+        .conservation-dot { width: 7px; height: 7px; border-radius: 50%; }
+        .conservation-dot.good { background: #00d4aa; box-shadow: 0 0 4px #00d4aa; }
+        .conservation-dot.warning { background: #f1c40f; box-shadow: 0 0 4px #f1c40f; }
+        .conservation-dot.bad { background: #e74c3c; box-shadow: 0 0 4px #e74c3c; }
         
-        footer a { color: var(--consciousness); }
-        
-        @media (max-width: 900px) {
-            .console-body { grid-template-columns: 1fr; }
-            .stats-row { flex-wrap: wrap; gap: 1.5rem; }
-        }
+        .empty-state { color: #333; text-align: center; padding: 15px; font-size: 0.8em; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
     </style>
 </head>
 <body>
-    <div class="cosmos"></div>
-    <div class="stars" id="stars"></div>
-    
-    <div class="header">
-        <h1>Mullu Holistic Physics Engine</h1>
-        <div class="axiom-display">⸮ = Ω</div>
-        <p style="color: var(--text-dim);">The question is the self — Symbolic Intelligence meets Physical Law</p>
-        
-        <div class="stats-row">
-            <div class="stat">
-                <div class="stat-value">5</div>
-                <div class="stat-label">Active Capsules</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">34</div>
-                <div class="stat-label">Fidel Rows</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">6</div>
-                <div class="stat-label">Cross Bridges</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">28</div>
-                <div class="stat-label">Operators</div>
-            </div>
-        </div>
-    </div>
-    
     <div class="container">
-        <!-- 34-Row Mesh -->
-        <div class="mesh-section">
-            <div class="section-title">
-                <span>🔮</span>
-                <span>Mfidel-Physics Mesh — 34 Rows × 8 Columns</span>
+        <div class="top-bar">
+            <h1>ሙሉ Symbolic Engine</h1>
+            <span class="axiom">⸮ = Ω</span>
+            <div class="status">
+                <span class="system-state-badge coherent" id="systemStateBadge">COHERENT</span>
+                <span><span class="status-dot running" id="statusDot"></span> <span id="statusText">Running</span></span>
+                <span id="tickCount">Tick: 0</span>
             </div>
-            <div class="mesh-grid" id="mesh-grid"></div>
         </div>
-        
-        <!-- Vowel Columns -->
-        <div class="vowel-row" id="vowel-row"></div>
-        
-        <!-- Bridge Network -->
-        <div class="bridges-section">
-            <div class="section-title">
-                <span>🌉</span>
-                <span>Cross-Capsule Bridges</span>
-            </div>
-            <div class="bridge-network" id="bridge-network"></div>
+        <div class="canvas-container">
+            <canvas id="meshCanvas"></canvas>
+            <div class="center-axiom">⸮ = Ω</div>
         </div>
-        
-        <!-- Operator Console -->
-        <div class="console-section">
-            <div class="section-title">
-                <span>⚡</span>
-                <span>Operator Execution Console</span>
-            </div>
-            <div class="console">
-                <div class="console-header">
-                    <span style="font-size: 1.5rem;">ዐ</span>
-                    <h3>Execute Physics Operators</h3>
+        <div class="sidebar">
+            <div class="trust-panel">
+                <div class="trust-box">
+                    <div class="trust-label">Global Trust Index</div>
+                    <div class="gti-value" id="gtiValue">1.000</div>
+                    <div class="gti-bar"><div class="gti-fill" id="gtiFill" style="width:100%;background:#00d4aa;"></div></div>
+                    <div class="gti-trend" id="gtiTrend">stable</div>
                 </div>
-                <div class="console-body">
-                    <div class="console-input">
-                        <select class="operator-select" id="op-select" onchange="updateParams()">
-                            <optgroup label="Entropy (ሐ)">
-                                <option value="entropy.compute_change">compute_entropy_change(Q, T)</option>
-                                <option value="entropy.statistical">statistical_entropy(W)</option>
-                                <option value="entropy.arrow">arrow_of_time(S₀, S₁)</option>
-                            </optgroup>
-                            <optgroup label="Quantum (ቀ)">
-                                <option value="quantum.uncertainty">check_uncertainty(Δx, Δp)</option>
-                                <option value="quantum.measure">measure([p₀, p₁])</option>
-                            </optgroup>
-                            <optgroup label="Consciousness (ዐ)">
-                                <option value="consciousness.ask">ask(question)</option>
-                                <option value="consciousness.self_observe">self_observe(depth)</option>
-                            </optgroup>
-                            <optgroup label="Gravity (ገ)">
-                                <option value="gravity.newton">newtonian_force(m₁, m₂, r)</option>
-                                <option value="gravity.escape_velocity">escape_velocity(M, r)</option>
-                                <option value="gravity.schwarzschild">schwarzschild_radius(M)</option>
-                                <option value="gravity.time_dilation">time_dilation(M, r)</option>
-                            </optgroup>
-                            <optgroup label="Light (ለ)">
-                                <option value="light.photon_energy">photon_energy(ν)</option>
-                                <option value="light.wavelength">wavelength(ν)</option>
-                                <option value="light.blackbody_peak">blackbody_peak(T)</option>
-                            </optgroup>
-                        </select>
-                        
-                        <div id="param-inputs"></div>
-                        
-                        <button class="exec-btn" onclick="executeOperator()">⟶ Execute Operator</button>
+                <div class="warnings-box">
+                    <div class="trust-label">System Warnings</div>
+                    <div id="warningsDisplay"><div class="no-warnings">✓ No warnings</div></div>
+                </div>
+            </div>
+            <div class="metrics">
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <div class="metric-label">Σ Resonance <span class="metric-trend stable" id="resTrend">―</span></div>
+                        <div class="metric-value" id="totalResonance">0.000</div>
+                        <div class="metric-bar"><div class="metric-fill" id="resonanceBar" style="width: 0%; background: #f1c40f;"></div></div>
                     </div>
-                    <div class="console-output" id="console-output">
-                        <div class="output-entry">
-                            <div class="trace">Engine initialized</div>
-                            <div class="value">⸮ = Ω — Ready for symbolic physics operations</div>
-                        </div>
+                    <div class="metric-item">
+                        <div class="metric-label">σ Coherence <span class="metric-trend stable" id="cohTrend">―</span></div>
+                        <div class="metric-value" id="avgCoherence">1.000</div>
+                        <div class="metric-bar"><div class="metric-fill" id="coherenceBar" style="width: 100%; background: #00d4aa;"></div></div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Ω Memory <span class="metric-trend stable" id="memTrend">―</span></div>
+                        <div class="metric-value" id="totalMemory">0.00</div>
+                        <div class="metric-bar"><div class="metric-fill" id="memoryBar" style="width: 0%; background: #9b59b6;"></div></div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">ΔΣ/tick</div>
+                        <div class="metric-value" id="deltaSigma" style="color: #666;">+0.000</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Dissipation</div>
+                        <div class="metric-value" id="dissipation" style="color: #00d4aa;">0.0%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Flow</div>
+                        <div class="metric-value" id="totalFlow" style="color: #3498db;">0.00</div>
                     </div>
                 </div>
             </div>
+            <div class="controls">
+                <button class="btn active" id="btnRun">▶ Run</button>
+                <button class="btn" id="btnStep">Step</button>
+                <button class="btn" id="btnInjectAll">All</button>
+                <button class="btn danger" id="btnReset">Reset</button>
+                <div class="speed-control">
+                    <span class="speed-label" id="speedLabel">1×</span>
+                    <input type="range" id="speedSlider" min="1" max="10" value="1">
+                </div>
+            </div>
+            <div class="node-panel">
+                <div class="panel-title">Selected Node</div>
+                <div id="selectedNodePanel"><div class="empty-state">Click a node to select</div></div>
+            </div>
+            <div class="log">
+                <div class="log-title">Activity Log</div>
+                <div id="logContent"></div>
+            </div>
+            <div class="diagnostics">
+                <div class="log-title">Invariants (★ = canonical)</div>
+                <div id="invariantsList"></div>
+            </div>
         </div>
-        
-        <!-- Universe Simulation -->
-        <div class="universe-section">
-            <div class="section-title">
-                <span>🌌</span>
-                <span>Universe Simulation</span>
-            </div>
-            <div class="universe-container">
-                <div class="universe-canvas" id="universe-canvas"></div>
-                <div class="universe-controls">
-                    <button onclick="addStar()">Add Star ☀️</button>
-                    <button onclick="addPlanet()">Add Planet 🪐</button>
-                    <button onclick="toggleSimulation()">▶ Start</button>
-                    <button onclick="resetUniverse()">🔄 Reset</button>
-                    <button onclick="observeUniverse()">👁️ Observe (ዐ)</button>
+        <div class="bottom-bar">
+            <span>Mullu v3.4 | Layer 6.3 Fact Graph</span>
+            <div class="conservation-indicators">
+                <div class="conservation-item">
+                    <span class="conservation-dot good" id="contractDot"></span>
+                    <span id="contractStatus">Contracts: OK</span>
                 </div>
-                <div class="universe-stats">
-                    <span>Time: <strong id="uni-time">0.00</strong> s</span>
-                    <span>Entropy: <strong id="uni-entropy">0.00</strong></span>
-                    <span>Objects: <strong id="uni-objects">0</strong></span>
-                    <span>Observer: <strong id="uni-observer">—</strong></span>
+                <div class="conservation-item">
+                    <span class="conservation-dot good" id="energyDot"></span>
+                    <span id="energyStatus">Energy: Balanced</span>
                 </div>
             </div>
+            <span>Causal Field Dynamics</span>
         </div>
     </div>
-    
-    <footer>
-        <p>Mullu Symbolic Intelligence | <a href="https://mullusi.com">mullusi.com</a></p>
-        <p>Holistic Physics Engine v0.1 | ⸮ = Ω | The question is the self</p>
-    </footer>
-    
+
     <script>
-        // === CONSTANTS ===
-        const C = {
-            c: 299792458, h: 6.62607015e-34, hbar: 1.054571817e-34,
-            G: 6.67430e-11, k_B: 1.380649e-23, e: 1.602176634e-19,
-            solar_mass: 1.989e30, earth_mass: 5.972e24
+        'use strict';
+        
+        const canvas = document.getElementById('meshCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // ═══════════════════════════════════════════════════════════
+        // CONFIGURATION (centralized, tunable)
+        // ═══════════════════════════════════════════════════════════
+        const CONFIG = {
+            // Dynamics
+            DECAY_RATE: 0.94,
+            MEMORY_GAIN: 0.03,
+            MEMORY_DECAY: 0.999,
+            COHERENCE_RESTORATION: 0.002,
+            MAX_RESONANCE: 1.5,
+            
+            // Intervals
+            INVARIANT_CHECK_INTERVAL: 50,
+            CONTRACT_CHECK_INTERVAL: 100,
+            PATTERN_CHECK_INTERVAL: 50,
+            TREND_RECORD_INTERVAL: 10,
+            BRIDGE_PLASTICITY_INTERVAL: 100,
+            
+            // Thresholds
+            PROMOTION_THRESHOLD: 5,
+            COHERENCE_INVARIANT_MIN: 0.92,
+            MEMORY_INVARIANT_MIN: 3,
+            SIGNIFICANT_TRANSFER: 0.05,
+            SIGNIFICANT_ACTIVATION: 0.3,
+            RECURRENCE_SPACING: 10,
+            
+            // Limits
+            MAX_EVENTS: 500,
+            MAX_LOG_ENTRIES: 12,
+            MAX_TREND_HISTORY: 50,
+            MAX_GTI_HISTORY: 100,
+            MAX_BRIDGE_EFFECTS: 20
         };
         
-        // === MFIDEL MESH ===
-        const MESH = [
-            { row: 1, fidel: 'ሀ', domain: 'Spacetime.Origin', active: false },
-            { row: 2, fidel: 'ለ', domain: 'Light.Propagation', active: true, type: 'light' },
-            { row: 3, fidel: 'ሐ', domain: 'Heat.Energy', active: true, type: 'entropy' },
-            { row: 4, fidel: 'መ', domain: 'Mass.Matter', active: false },
-            { row: 5, fidel: 'ሠ', domain: 'Force.Strong', active: false },
-            { row: 6, fidel: 'ረ', domain: 'Radiation.Emission', active: false },
-            { row: 7, fidel: 'ሰ', domain: 'Symmetry.Conservation', active: false },
-            { row: 8, fidel: 'ሸ', domain: 'Spin.Intrinsic', active: false },
-            { row: 9, fidel: 'ቀ', domain: 'Quantum.Discrete', active: true, type: 'quantum' },
-            { row: 10, fidel: 'በ', domain: 'Boundary.Interface', active: false },
-            { row: 11, fidel: 'ቨ', domain: 'Vacuum.Field', active: false },
-            { row: 12, fidel: 'ተ', domain: 'Time.Flow', active: false },
-            { row: 13, fidel: 'ቸ', domain: 'Charge.Electric', active: false },
-            { row: 14, fidel: 'ኀ', domain: 'Horizon.Limit', active: false },
-            { row: 15, fidel: 'ነ', domain: 'Nucleus.Atomic', active: false },
-            { row: 16, fidel: 'ኘ', domain: 'Entanglement.Nonlocal', active: false },
-            { row: 17, fidel: 'ኧ', domain: 'Vowel.StateModifier', active: false },
-            { row: 18, fidel: 'ከ', domain: 'Kinetic.Motion', active: false },
-            { row: 19, fidel: 'ኸ', domain: 'Chaos.Nonlinear', active: false },
-            { row: 20, fidel: 'ወ', domain: 'Wave.Function', active: false },
-            { row: 21, fidel: 'ዐ', domain: 'Observer.Measurement', active: true, type: 'consciousness' },
-            { row: 22, fidel: 'ዘ', domain: 'Zero.Ground', active: false },
-            { row: 23, fidel: 'ዠ', domain: 'Resonance.Oscillation', active: false },
-            { row: 24, fidel: 'የ', domain: 'Yield.Reaction', active: false },
-            { row: 25, fidel: 'ደ', domain: 'Decay.Transformation', active: false },
-            { row: 26, fidel: 'ጀ', domain: 'Junction.Coupling', active: false },
-            { row: 27, fidel: 'ገ', domain: 'Gravity.Curvature', active: true, type: 'gravity' },
-            { row: 28, fidel: 'ጠ', domain: 'Tensor.Geometry', active: false },
-            { row: 29, fidel: 'ጨ', domain: 'Collision.Scattering', active: false },
-            { row: 30, fidel: 'ጰ', domain: 'Potential.Field', active: false },
-            { row: 31, fidel: 'ጸ', domain: 'Topology.Invariant', active: false },
-            { row: 32, fidel: 'ፀ', domain: 'Duality.Complementary', active: false },
-            { row: 33, fidel: 'ፈ', domain: 'Flux.Flow', active: false },
-            { row: 34, fidel: 'ፐ', domain: 'Probability.Statistical', active: false }
+        // ═══════════════════════════════════════════════════════════
+        // ENUMS & CONSTANTS
+        // ═══════════════════════════════════════════════════════════
+        const TICK_PHASE = { 
+            INJECT: 'inject', 
+            PROPAGATE: 'propagate', 
+            DECAY: 'decay', 
+            MEMORY: 'memory', 
+            STABILIZE: 'stabilize', 
+            OBSERVE: 'observe' 
+        };
+        
+        const BRIDGE_CONTRACTS = {
+            entropy: { expected_effect: 'coherence_down', conserved: null },
+            symmetry: { expected_effect: 'coherence_preserve', conserved: 'coherence_minimum' },
+            coupling: { expected_effect: 'neutral', conserved: 'resonance_transfer' }
+        };
+        
+        const EVENT_TYPES = { 
+            INJECTION: 'injection', 
+            CANONICAL_PROMOTION: 'canonical_promotion', 
+            SINK_FORMED: 'sink_formed', 
+            AMPLIFIER_DETECTED: 'amplifier_detected', 
+            COHERENCE_COLLAPSE: 'coherence_collapse',
+            CONTRACT_VIOLATION: 'contract_violation',
+            CONTRACT_ANOMALY: 'contract_anomaly',
+            TREND_WARNING: 'trend_warning'
+        };
+        
+        const INVARIANT_TYPES = {
+            STRUCTURAL: 'structural',
+            DYNAMIC: 'dynamic',
+            ACCIDENTAL: 'accidental',
+            BOUNDARY: 'boundary'
+        };
+        
+        const SYSTEM_STATES = {
+            QUIESCENT: 'quiescent',
+            COHERENT: 'coherent',
+            ACTIVE: 'active',
+            OVERDAMPED: 'overdamped',
+            FRAGMENTING: 'fragmenting',
+            SATURATED: 'saturated',
+            RUNAWAY: 'runaway'
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // DATA: 34 CAPSULES
+        // ═══════════════════════════════════════════════════════════
+        const CAPSULES = [
+            { row: 1, fidel: 'ሀ', name: 'Spacetime', domain: 'Spacetime.Origin', color: '#9b59b6' },
+            { row: 2, fidel: 'ለ', name: 'Light', domain: 'Light.Propagation', color: '#f1c40f' },
+            { row: 3, fidel: 'ሐ', name: 'Entropy', domain: 'Heat.Energy', color: '#e74c3c' },
+            { row: 4, fidel: 'መ', name: 'Mass', domain: 'Mass.Matter', color: '#95a5a6' },
+            { row: 5, fidel: 'ሠ', name: 'Strong', domain: 'Force.Strong', color: '#e67e22' },
+            { row: 6, fidel: 'ረ', name: 'Radiation', domain: 'Radiation.Emission', color: '#f39c12' },
+            { row: 7, fidel: 'ሰ', name: 'Symmetry', domain: 'Symmetry.Conservation', color: '#16a085' },
+            { row: 8, fidel: 'ሸ', name: 'Spin', domain: 'Spin.Intrinsic', color: '#e91e63' },
+            { row: 9, fidel: 'ቀ', name: 'Quantum', domain: 'Quantum.Discrete', color: '#9b59b6' },
+            { row: 10, fidel: 'በ', name: 'Boundary', domain: 'Boundary.Interface', color: '#34495e' },
+            { row: 11, fidel: 'ቨ', name: 'Vacuum', domain: 'Vacuum.Field', color: '#2c3e50' },
+            { row: 12, fidel: 'ተ', name: 'Time', domain: 'Time.Flow', color: '#e67e22' },
+            { row: 13, fidel: 'ቸ', name: 'Charge', domain: 'Charge.Electric', color: '#2ecc71' },
+            { row: 14, fidel: 'ኀ', name: 'Horizon', domain: 'Horizon.Limit', color: '#1a1a2e' },
+            { row: 15, fidel: 'ነ', name: 'Nucleus', domain: 'Nucleus.Atomic', color: '#ff6b6b' },
+            { row: 16, fidel: 'ኘ', name: 'Entanglement', domain: 'Entanglement.Nonlocal', color: '#e056fd' },
+            { row: 17, fidel: 'ኧ', name: 'Vowel', domain: 'Vowel.StateModifier', color: '#00bcd4' },
+            { row: 18, fidel: 'ከ', name: 'Kinetic', domain: 'Kinetic.Motion', color: '#3498db' },
+            { row: 19, fidel: 'ኸ', name: 'Chaos', domain: 'Chaos.Nonlinear', color: '#c0392b' },
+            { row: 20, fidel: 'ወ', name: 'Wave', domain: 'Wave.Function', color: '#1abc9c' },
+            { row: 21, fidel: 'ዐ', name: 'Consciousness', domain: 'Observer.Measurement', color: '#00d4aa' },
+            { row: 22, fidel: 'ዘ', name: 'Zero', domain: 'Zero.Ground', color: '#607d8b' },
+            { row: 23, fidel: 'ዠ', name: 'Resonance', domain: 'Resonance.Oscillation', color: '#9b59b6' },
+            { row: 24, fidel: 'የ', name: 'Yield', domain: 'Yield.Reaction', color: '#ff9800' },
+            { row: 25, fidel: 'ደ', name: 'Decay', domain: 'Decay.Transformation', color: '#c0392b' },
+            { row: 26, fidel: 'ጀ', name: 'Junction', domain: 'Junction.Coupling', color: '#673ab7' },
+            { row: 27, fidel: 'ገ', name: 'Gravity', domain: 'Gravity.Curvature', color: '#3498db' },
+            { row: 28, fidel: 'ጠ', name: 'Tensor', domain: 'Tensor.Geometry', color: '#795548' },
+            { row: 29, fidel: 'ጨ', name: 'Collision', domain: 'Collision.Scattering', color: '#e74c3c' },
+            { row: 30, fidel: 'ጰ', name: 'Potential', domain: 'Potential.Field', color: '#8e44ad' },
+            { row: 31, fidel: 'ጸ', name: 'Topology', domain: 'Topology.Invariant', color: '#009688' },
+            { row: 32, fidel: 'ፀ', name: 'Duality', domain: 'Duality.Complementary', color: '#ff5722' },
+            { row: 33, fidel: 'ፈ', name: 'Flux', domain: 'Flux.Flow', color: '#16a085' },
+            { row: 34, fidel: 'ፐ', name: 'Probability', domain: 'Probability.Statistical', color: '#27ae60' }
         ];
         
-        const VOWELS = [
-            { col: 1, vowel: 'ኧ', state: 'Ground' },
-            { col: 2, vowel: 'ኡ', state: 'Excited' },
-            { col: 3, vowel: 'ኢ', state: 'Intrinsic' },
-            { col: 4, vowel: 'ኣ', state: 'Active' },
-            { col: 5, vowel: 'ኤ', state: 'Extended' },
-            { col: 6, vowel: 'እ', state: 'Essential' },
-            { col: 7, vowel: 'ኦ', state: 'Observable' },
-            { col: 8, vowel: 'አ', state: 'Amplified' }
-        ];
-        
+        // ═══════════════════════════════════════════════════════════
+        // DATA: BRIDGES
+        // ═══════════════════════════════════════════════════════════
         const BRIDGES = [
-            { from: 'ሐ', to: 'ቀ', name: 'Von Neumann Entropy', formula: 'S = -kB Tr(ρ ln ρ)' },
-            { from: 'ሐ', to: 'ገ', name: 'Bekenstein-Hawking', formula: 'S = kc³A/4Għ' },
-            { from: 'ቀ', to: 'ዐ', name: 'Measurement Collapse', formula: 'ዐ(|Ψ⟩)→|φₖ⟩' },
-            { from: 'ገ', to: 'ለ', name: 'Gravitational Lensing', formula: 'θ = 4GM/rc²' },
-            { from: 'ለ', to: 'ቀ', name: 'Photon Quantization', formula: 'E = hν' },
-            { from: 'ሐ', to: 'ዐ', name: "Maxwell's Demon", formula: 'ΔS ≥ kB ln 2' }
+            // Entropy bridges
+            { from: 3, to: 9, name: 'Von Neumann', type: 'entropy', strength: 0.7, usage: 0 },
+            { from: 3, to: 27, name: 'Bekenstein', type: 'entropy', strength: 0.8, usage: 0 },
+            { from: 3, to: 21, name: 'Maxwell', type: 'entropy', strength: 0.6, usage: 0 },
+            { from: 3, to: 12, name: 'Arrow', type: 'entropy', strength: 0.9, usage: 0 },
+            { from: 19, to: 3, name: 'Mixing', type: 'entropy', strength: 0.7, usage: 0 },
+            { from: 25, to: 3, name: 'Decay-E', type: 'entropy', strength: 0.6, usage: 0 },
+            { from: 29, to: 3, name: 'Dissipate', type: 'entropy', strength: 0.5, usage: 0 },
+            { from: 33, to: 3, name: 'Heat', type: 'entropy', strength: 0.6, usage: 0 },
+            // Symmetry bridges
+            { from: 7, to: 12, name: 'Time-E', type: 'symmetry', strength: 0.8, usage: 0 },
+            { from: 7, to: 13, name: 'Gauge-Q', type: 'symmetry', strength: 0.7, usage: 0 },
+            { from: 7, to: 8, name: 'Rot-Spin', type: 'symmetry', strength: 0.7, usage: 0 },
+            { from: 7, to: 18, name: 'Trans-p', type: 'symmetry', strength: 0.8, usage: 0 },
+            { from: 10, to: 7, name: 'Break', type: 'symmetry', strength: 0.6, usage: 0 },
+            { from: 29, to: 7, name: 'Conserve', type: 'symmetry', strength: 0.7, usage: 0 },
+            { from: 33, to: 7, name: 'Continuity', type: 'symmetry', strength: 0.6, usage: 0 },
+            { from: 31, to: 7, name: 'Topo', type: 'symmetry', strength: 0.8, usage: 0 },
+            // Coupling bridges (selection)
+            { from: 9, to: 21, name: 'Collapse', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 9, to: 20, name: 'Psi', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 27, to: 2, name: 'Lens', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 27, to: 12, name: 'Dilate', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 2, to: 9, name: 'Photon', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 20, to: 21, name: 'Observe', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 16, to: 9, name: 'Bell', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 16, to: 21, name: 'EPR', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 16, to: 27, name: 'ER-EPR', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 12, to: 21, name: 'Percept', type: 'coupling', strength: 0.5, usage: 0 },
+            { from: 4, to: 2, name: 'E-mc2', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 4, to: 27, name: 'Curve', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 4, to: 20, name: 'deBroglie', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 13, to: 2, name: 'Mediate', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 13, to: 9, name: 'Quantize', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 8, to: 9, name: 'Spin-QM', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 8, to: 16, name: 'Singlet', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 8, to: 21, name: 'Measure', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 1, to: 27, name: 'Curve-ST', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 1, to: 12, name: 'TimeDim', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 1, to: 3, name: 'InitS', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 5, to: 4, name: 'QCDmass', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 5, to: 15, name: 'Bind', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 15, to: 4, name: 'Defect', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 15, to: 2, name: 'Gamma', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 14, to: 27, name: 'Horizon', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 14, to: 2, name: 'Trap', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 14, to: 16, name: 'ER', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 6, to: 2, name: 'EMrad', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 6, to: 9, name: 'PhotonQM', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 6, to: 14, name: 'Hawking', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 11, to: 9, name: 'Fluct', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 11, to: 14, name: 'Unruh', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 11, to: 4, name: 'Higgs', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 10, to: 1, name: 'CosmicPT', type: 'coupling', strength: 0.5, usage: 0 },
+            { from: 18, to: 4, name: 'Momentum', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 18, to: 12, name: 'Motion', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 18, to: 30, name: 'E-KE-PE', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 25, to: 15, name: 'Nuclear', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 25, to: 12, name: 'HalfLife', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 25, to: 9, name: 'Tunnel', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 30, to: 27, name: 'GravPE', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 30, to: 13, name: 'ElecPE', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 30, to: 9, name: 'Wells', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 34, to: 9, name: 'Born', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 34, to: 20, name: 'Psi-P', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 34, to: 21, name: 'MeasureP', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 19, to: 18, name: 'Nonlin', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 19, to: 12, name: 'Lyapunov', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 19, to: 34, name: 'Random', type: 'coupling', strength: 0.5, usage: 0 },
+            { from: 23, to: 20, name: 'Standing', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 23, to: 18, name: 'Periodic', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 23, to: 30, name: 'SHM', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 23, to: 9, name: 'QMosc', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 29, to: 18, name: 'pXfer', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 29, to: 5, name: 'QCD', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 33, to: 13, name: 'Current', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 33, to: 20, name: 'Energy', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 17, to: 9, name: 'Column', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 17, to: 20, name: 'Vibrate', type: 'coupling', strength: 0.5, usage: 0 },
+            { from: 17, to: 23, name: 'Formant', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 17, to: 21, name: 'Voice', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 22, to: 11, name: 'Vac0', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 22, to: 9, name: 'Ground', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 22, to: 30, name: 'PEref', type: 'coupling', strength: 0.5, usage: 0 },
+            { from: 24, to: 29, name: 'Product', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 24, to: 15, name: 'NucY', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 24, to: 25, name: 'DecayY', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 24, to: 34, name: 'ReactP', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 26, to: 13, name: 'aEM', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 26, to: 5, name: 'as', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 26, to: 27, name: 'aG', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 28, to: 1, name: 'Metric', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 28, to: 27, name: 'Riemann', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 28, to: 18, name: 'Tmunu', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 28, to: 2, name: 'Fmunu', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 31, to: 9, name: 'TopoQN', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 31, to: 10, name: 'TopoPT', type: 'coupling', strength: 0.7, usage: 0 },
+            { from: 31, to: 13, name: 'Monopole', type: 'coupling', strength: 0.6, usage: 0 },
+            { from: 32, to: 20, name: 'WaveD', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 32, to: 9, name: 'Particle', type: 'coupling', strength: 0.9, usage: 0 },
+            { from: 32, to: 21, name: 'ObserverD', type: 'coupling', strength: 0.8, usage: 0 },
+            { from: 32, to: 2, name: 'LightD', type: 'coupling', strength: 0.8, usage: 0 }
         ];
         
-        // === OPERATORS ===
-        const OPS = {
-            'entropy.compute_change': (Q, T) => ({ value: Q/T, unit: 'J/K', trace: `ሐ(${Q},${T})→${(Q/T).toFixed(6)}` }),
-            'entropy.statistical': (W) => ({ value: C.k_B * Math.log(W), trace: `ሐ_stat→${(C.k_B*Math.log(W)).toExponential(4)}` }),
-            'entropy.arrow': (S0, S1) => ({ valid: S1 >= S0, delta: S1-S0, trace: `ተ_arrow→${S1>=S0?'forward':'forbidden'}` }),
-            'quantum.uncertainty': (dx, dp) => ({ product: dx*dp, valid: dx*dp >= C.hbar/2, trace: `ቀ?→${dx*dp >= C.hbar/2}` }),
-            'quantum.measure': (p0, p1) => { const o = Math.random() < p0 ? 0 : 1; return { outcome: o, trace: `ዐ(ወ)→|${o}⟩` }; },
-            'consciousness.ask': (q) => ({ answer: '⸮ = Ω', meaning: 'The question is the self', trace: `⸮("${q}")→Ω` }),
-            'consciousness.self_observe': (d) => ({ depth: (d||0)+1, trace: `ዐ(ዐ)→ዐ^${(d||0)+1}` }),
-            'gravity.newton': (m1, m2, r) => ({ force: C.G*m1*m2/(r*r), trace: `ገ→${(C.G*m1*m2/(r*r)).toExponential(4)}N` }),
-            'gravity.escape_velocity': (M, r) => ({ velocity: Math.sqrt(2*C.G*M/r), trace: `ገ_esc→${Math.sqrt(2*C.G*M/r).toFixed(2)}m/s` }),
-            'gravity.schwarzschild': (M) => ({ radius: 2*C.G*M/(C.c*C.c), trace: `ገ_rs→${(2*C.G*M/(C.c*C.c)).toExponential(4)}m` }),
-            'gravity.time_dilation': (M, r) => ({ factor: Math.sqrt(1-2*C.G*M/(r*C.c*C.c)), trace: `ተ_dilate→${Math.sqrt(1-2*C.G*M/(r*C.c*C.c)).toFixed(8)}` }),
-            'light.photon_energy': (freq) => ({ energy: C.h*freq, eV: C.h*freq/C.e, trace: `ለ_E→${(C.h*freq).toExponential(4)}J` }),
-            'light.wavelength': (freq) => ({ wavelength: C.c/freq, nm: (C.c/freq)*1e9, trace: `ለ_λ→${((C.c/freq)*1e9).toFixed(2)}nm` }),
-            'light.blackbody_peak': (T) => ({ wavelength: 2.898e-3/T, nm: (2.898e-3/T)*1e9, trace: `ለ_peak→${((2.898e-3/T)*1e9).toFixed(2)}nm` })
+        // ═══════════════════════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════════════════════
+        let nodes = [];
+        const nodeMap = new Map(); // O(1) lookup
+        let selectedNode = null;
+        let hoveredNode = null;
+        let isRunning = true;
+        let tick = 0;
+        let speed = 1;
+        let currentPhase = TICK_PHASE.OBSERVE;
+        
+        // Metrics
+        let lastTotalResonance = 0;
+        let deltaSigma = 0;
+        let effectiveDissipation = 0;
+        let preDecayResonance = 0;
+        let totalFlow = 0;
+        let totalEnergyIn = 0;
+        let totalEnergyOut = 0;
+        
+        // Registries
+        const eventRegistry = [];
+        const logEntries = [];
+        let invariantCandidates = [];
+        let lastInvariantCheck = 0;
+        
+        // ═══════════════════════════════════════════════════════════
+        // CACHED METRICS (optimization: avoid redundant calculations)
+        // ═══════════════════════════════════════════════════════════
+        const metrics = {
+            totalResonance: 0,
+            avgCoherence: 1,
+            totalMemory: 0,
+            
+            update: function() {
+                let sumRes = 0, sumCoh = 0, sumMem = 0;
+                for (let i = 0; i < nodes.length; i++) {
+                    sumRes += nodes[i].state.resonance;
+                    sumCoh += nodes[i].state.coherence;
+                    sumMem += nodes[i].state.memory.cumulative;
+                }
+                this.totalResonance = sumRes;
+                this.avgCoherence = sumCoh / nodes.length;
+                this.totalMemory = sumMem;
+            }
         };
         
-        const PARAM_DEFS = {
-            'entropy.compute_change': [{name:'Q',label:'Q (Joules)',val:'1000'},{name:'T',label:'T (Kelvin)',val:'300'}],
-            'entropy.statistical': [{name:'W',label:'W (microstates)',val:'1e20'}],
-            'entropy.arrow': [{name:'S0',label:'S₀ (J/K)',val:'100'},{name:'S1',label:'S₁ (J/K)',val:'150'}],
-            'quantum.uncertainty': [{name:'dx',label:'Δx (m)',val:'1e-10'},{name:'dp',label:'Δp (kg·m/s)',val:'1e-24'}],
-            'quantum.measure': [{name:'p0',label:'P(|0⟩)',val:'0.5'},{name:'p1',label:'P(|1⟩)',val:'0.5'}],
-            'consciousness.ask': [{name:'q',label:'Question',val:'Who am I?'}],
-            'consciousness.self_observe': [{name:'d',label:'Current Depth',val:'0'}],
-            'gravity.newton': [{name:'m1',label:'m₁ (kg)',val:'5.972e24'},{name:'m2',label:'m₂ (kg)',val:'1000'},{name:'r',label:'r (m)',val:'6.371e6'}],
-            'gravity.escape_velocity': [{name:'M',label:'M (kg)',val:'5.972e24'},{name:'r',label:'r (m)',val:'6.371e6'}],
-            'gravity.schwarzschild': [{name:'M',label:'M (kg)',val:'1.989e30'}],
-            'gravity.time_dilation': [{name:'M',label:'M (kg)',val:'5.972e24'},{name:'r',label:'r (m)',val:'6.371e6'}],
-            'light.photon_energy': [{name:'freq',label:'ν (Hz)',val:'5e14'}],
-            'light.wavelength': [{name:'freq',label:'ν (Hz)',val:'5e14'}],
-            'light.blackbody_peak': [{name:'T',label:'T (Kelvin)',val:'5778'}]
+        // ═══════════════════════════════════════════════════════════
+        // EVENT SYSTEM
+        // ═══════════════════════════════════════════════════════════
+        function emitEvent(type, subject, magnitude, context) {
+            const event = { type, tick, phase: currentPhase, subject, magnitude: magnitude || 0, context: context || {}, timestamp: Date.now() };
+            eventRegistry.unshift(event);
+            if (eventRegistry.length > CONFIG.MAX_EVENTS) eventRegistry.pop();
+            return event;
+        }
+        
+        function addLog(message, type) {
+            logEntries.unshift({ message, type: type || 'info', tick });
+            if (logEntries.length > CONFIG.MAX_LOG_ENTRIES) logEntries.pop();
+            renderLog();
+        }
+        
+        function renderLog() {
+            const el = document.getElementById('logContent');
+            el.innerHTML = logEntries.map(e => '<div class="log-entry ' + e.type + '">[' + e.tick + '] ' + e.message + '</div>').join('');
+        }
+        
+        // ═══════════════════════════════════════════════════════════
+        // CONTRACT VERIFICATION ENGINE
+        // ═══════════════════════════════════════════════════════════
+        const contractVerification = {
+            lastCheck: 0,
+            results: [],
+            bridgeEffects: new Map(),
+            
+            recordEffect: function(bridgeName, bridgeType, coherenceDelta, transfer) {
+                if (!this.bridgeEffects.has(bridgeName)) {
+                    this.bridgeEffects.set(bridgeName, []);
+                }
+                const effects = this.bridgeEffects.get(bridgeName);
+                effects.push({ tick, delta: coherenceDelta, transfer });
+                if (effects.length > CONFIG.MAX_BRIDGE_EFFECTS) effects.shift();
+            },
+            
+            verify: function() {
+                const results = [];
+                
+                for (const b of BRIDGES) {
+                    const effects = this.bridgeEffects.get(b.name);
+                    if (!effects || effects.length < 3) continue;
+                    
+                    const contract = BRIDGE_CONTRACTS[b.type];
+                    if (!contract) continue;
+                    
+                    const significant = effects.filter(e => e.transfer > CONFIG.SIGNIFICANT_TRANSFER);
+                    if (significant.length < 2) {
+                        results.push({ bridge: b.name, type: b.type, status: 'insufficient_data', confidence: 'none' });
+                        continue;
+                    }
+                    
+                    const avgDelta = significant.reduce((s, e) => s + e.delta, 0) / significant.length;
+                    let status = 'satisfied', confidence = 'high';
+                    
+                    if (b.type === 'entropy') {
+                        if (avgDelta > 0.005) { status = 'violated'; confidence = avgDelta > 0.02 ? 'high' : 'medium'; }
+                        else if (avgDelta > -0.001) { status = 'weak'; confidence = 'low'; }
+                    } else if (b.type === 'symmetry') {
+                        if (avgDelta < -0.01) { status = 'violated'; confidence = avgDelta < -0.03 ? 'high' : 'medium'; }
+                        else if (avgDelta < 0) { status = 'weak'; confidence = 'low'; }
+                    }
+                    
+                    results.push({ bridge: b.name, type: b.type, expected: contract.expected_effect, avgEffect: avgDelta, status, confidence, samples: significant.length });
+                }
+                
+                this.results = results;
+                this.lastCheck = tick;
+                return results;
+            },
+            
+            getSummary: function() {
+                const s = this.results.filter(r => r.status === 'satisfied').length;
+                const v = this.results.filter(r => r.status === 'violated').length;
+                const w = this.results.filter(r => r.status === 'weak').length;
+                return { satisfied: s, violated: v, weak: w, total: this.results.length };
+            }
         };
         
-        // === INIT ===
-        function init() {
-            generateStars();
-            renderMesh();
-            renderVowels();
-            renderBridges();
-            updateParams();
-        }
+        // ═══════════════════════════════════════════════════════════
+        // PATTERN DETECTORS
+        // ═══════════════════════════════════════════════════════════
+        const patternDetectors = {
+            lastDetection: 0,
+            patterns: [],
+            
+            detect: function() {
+                const patterns = [];
+                
+                // Precompute connectivity
+                const inbound = {}, outbound = {}, outboundFlow = {};
+                for (const b of BRIDGES) {
+                    inbound[b.to] = (inbound[b.to] || 0) + 1;
+                    outbound[b.from] = (outbound[b.from] || 0) + 1;
+                    const src = nodeMap.get(b.from);
+                    if (src && src.state.resonance > 0.05) {
+                        outboundFlow[b.from] = (outboundFlow[b.from] || 0) + b.usage;
+                    }
+                }
+                
+                for (const n of nodes) {
+                    // Sink: high memory, low resonance
+                    if (n.state.memory.cumulative > 5 && n.state.resonance < 0.05) {
+                        patterns.push({ type: 'sink', node: n.fidel, name: n.name, memory: n.state.memory.cumulative, severity: n.state.memory.cumulative > 10 ? 'high' : 'medium' });
+                    }
+                    
+                    // Amplifier: high outbound flow ratio
+                    const flow = outboundFlow[n.row] || 0;
+                    if (flow > 1 && n.state.resonance > 0.1) {
+                        const ratio = flow / n.state.resonance;
+                        if (ratio > 5) patterns.push({ type: 'amplifier', node: n.fidel, name: n.name, ratio });
+                    }
+                    
+                    // Bottleneck: high inbound, low outbound
+                    if ((inbound[n.row] || 0) > 4 && (outbound[n.row] || 0) <= 1 && n.state.memory.cumulative > 3) {
+                        patterns.push({ type: 'bottleneck', node: n.fidel, name: n.name, inbound: inbound[n.row], outbound: outbound[n.row] || 0 });
+                    }
+                }
+                
+                this.patterns = patterns;
+                this.lastDetection = tick;
+                return patterns;
+            },
+            
+            getByType: function(type) { return this.patterns.filter(p => p.type === type); }
+        };
         
-        function generateStars() {
-            const container = document.getElementById('stars');
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                container.appendChild(star);
+        // ═══════════════════════════════════════════════════════════
+        // GLOBAL TRUST INDEX
+        // ═══════════════════════════════════════════════════════════
+        const trustIndex = {
+            history: [],
+            lastGTI: 1.0,
+            
+            compute: function() {
+                const cs = contractVerification.getSummary();
+                const patterns = patternDetectors.patterns;
+                
+                // Contract health (30%)
+                const contractHealth = cs.total > 0 ? Math.max(0, 1 - (cs.violated / cs.total * 2) - (cs.weak / cs.total * 0.5)) : 1.0;
+                
+                // Invariant stability (20%)
+                let invariantStability = 1.0;
+                if (invariantCandidates.length > 0) {
+                    const structural = invariantCandidates.filter(c => c.type === INVARIANT_TYPES.STRUCTURAL).length;
+                    const promoted = invariantCandidates.filter(c => c.promoted).length;
+                    const accidental = invariantCandidates.filter(c => c.type === INVARIANT_TYPES.ACCIDENTAL).length;
+                    invariantStability = Math.min(1, (structural + promoted * 0.5) / (invariantCandidates.length + accidental * 0.3));
+                }
+                
+                // Anomaly health (20%)
+                const recentAnomalies = eventRegistry.filter(e => (e.type === EVENT_TYPES.CONTRACT_ANOMALY || e.type === EVENT_TYPES.CONTRACT_VIOLATION) && e.tick > tick - 200).length;
+                const anomalyHealth = Math.max(0, 1 - recentAnomalies * 0.1);
+                
+                // Coherence consistency (15%)
+                const cohVar = nodes.reduce((s, n) => s + Math.pow(n.state.coherence - metrics.avgCoherence, 2), 0) / nodes.length;
+                const coherenceConsistency = Math.max(0, 1 - Math.sqrt(cohVar) * 2);
+                
+                // Pattern health (15%)
+                const highSeverity = patterns.filter(p => p.type === 'sink' && p.severity === 'high').length;
+                const patternHealth = Math.max(0, 1 - highSeverity * 0.2);
+                
+                const gti = contractHealth * 0.30 + invariantStability * 0.20 + anomalyHealth * 0.20 + coherenceConsistency * 0.15 + patternHealth * 0.15;
+                
+                this.history.push({ tick, gti });
+                if (this.history.length > CONFIG.MAX_GTI_HISTORY) this.history.shift();
+                this.lastGTI = gti;
+                
+                return { gti, components: { contractHealth, invariantStability, anomalyHealth, coherenceConsistency, patternHealth }, interpretation: gti > 0.8 ? 'high_trust' : gti > 0.5 ? 'moderate_trust' : gti > 0.3 ? 'low_trust' : 'no_trust' };
+            },
+            
+            getTrend: function() {
+                if (this.history.length < 10) return { direction: 'insufficient_data', slope: 0 };
+                const recent = this.history.slice(-10);
+                const older = this.history.slice(-20, -10);
+                if (older.length < 5) return { direction: 'stable', slope: 0 };
+                const recentAvg = recent.reduce((s, h) => s + h.gti, 0) / recent.length;
+                const olderAvg = older.reduce((s, h) => s + h.gti, 0) / older.length;
+                const slope = recentAvg - olderAvg;
+                return { direction: slope > 0.03 ? 'improving' : slope < -0.03 ? 'degrading' : 'stable', slope };
             }
-        }
+        };
         
-        function renderMesh() {
-            const grid = document.getElementById('mesh-grid');
-            grid.innerHTML = MESH.map(m => `
-                <div class="fidel-cell ${m.active ? 'active ' + m.type : ''}" onclick="showCapsuleInfo(${m.row})">
-                    <span class="row-num">${m.row}</span>
-                    <div class="fidel">${m.fidel}</div>
-                    <div class="domain">${m.domain}</div>
-                    <span class="status">${m.active ? '●' : '○'}</span>
-                </div>
-            `).join('');
-        }
-        
-        function renderVowels() {
-            const row = document.getElementById('vowel-row');
-            row.innerHTML = VOWELS.map(v => `
-                <div class="vowel-item">
-                    <div class="vowel">${v.vowel}</div>
-                    <div class="state">Col ${v.col}: ${v.state}</div>
-                </div>
-            `).join('');
-        }
-        
-        function renderBridges() {
-            const net = document.getElementById('bridge-network');
-            net.innerHTML = BRIDGES.map(b => `
-                <div class="bridge-card">
-                    <div class="link">
-                        <span class="fidel">${b.from}</span>
-                        <span class="arrow">⟷</span>
-                        <span class="fidel">${b.to}</span>
-                    </div>
-                    <div class="name">${b.name}</div>
-                    <div class="formula">${b.formula}</div>
-                </div>
-            `).join('');
-        }
-        
-        function showCapsuleInfo(row) {
-            const m = MESH.find(x => x.row === row);
-            if (m.active) {
-                addOutput(`Capsule ${m.fidel} (Row ${m.row})`, `Domain: ${m.domain} — ACTIVE`);
-            } else {
-                addOutput(`Fidel ${m.fidel} (Row ${m.row})`, `Domain: ${m.domain} — Pending implementation`);
+        // ═══════════════════════════════════════════════════════════
+        // TREND DETECTOR
+        // ═══════════════════════════════════════════════════════════
+        const trendDetector = {
+            history: { coherence: [], resonance: [], memory: [], dissipation: [], flow: [], violations: [] },
+            
+            record: function() {
+                this.history.coherence.push({ tick, value: metrics.avgCoherence });
+                this.history.resonance.push({ tick, value: metrics.totalResonance });
+                this.history.memory.push({ tick, value: metrics.totalMemory });
+                this.history.dissipation.push({ tick, value: effectiveDissipation });
+                this.history.flow.push({ tick, value: totalFlow });
+                this.history.violations.push({ tick, value: eventRegistry.filter(e => e.type === EVENT_TYPES.CONTRACT_VIOLATION && e.tick > tick - 50).length });
+                
+                for (const k in this.history) { if (this.history[k].length > CONFIG.MAX_TREND_HISTORY) this.history[k].shift(); }
+            },
+            
+            computeTrend: function(metric) {
+                const data = this.history[metric];
+                if (!data || data.length < 10) return { direction: 'insufficient_data', velocity: 0 };
+                
+                const recent = data.slice(-5);
+                const older = data.slice(-10, -5);
+                const recentAvg = recent.reduce((s, d) => s + d.value, 0) / recent.length;
+                const olderAvg = older.reduce((s, d) => s + d.value, 0) / older.length;
+                const velocity = recentAvg - olderAvg;
+                
+                const threshold = metric === 'coherence' ? 0.01 : metric === 'memory' ? 1 : 0.05;
+                const direction = velocity > threshold ? 'rising' : velocity < -threshold ? 'falling' : 'stable';
+                
+                return { direction, velocity, current: recentAvg };
+            },
+            
+            getAllTrends: function() {
+                const trends = {};
+                for (const m in this.history) trends[m] = this.computeTrend(m);
+                return trends;
+            },
+            
+            getSummary: function() {
+                const trends = this.getAllTrends();
+                const warnings = [];
+                if (trends.coherence.direction === 'falling') warnings.push('coherence_declining');
+                if (trends.memory.direction === 'rising' && trends.memory.velocity > 2) warnings.push('memory_accelerating');
+                if (trends.violations.direction === 'rising') warnings.push('violations_increasing');
+                if (trends.dissipation.direction === 'rising' && trends.dissipation.current > 0.2) warnings.push('high_dissipation');
+                if (trends.resonance.direction === 'rising' && trends.resonance.velocity > 1) warnings.push('possible_runaway');
+                return { status: warnings.length >= 3 ? 'critical' : warnings.length >= 1 ? 'warning' : 'stable', warnings, trends };
             }
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // SYSTEM STATE CLASSIFIER
+        // ═══════════════════════════════════════════════════════════
+        function classifySystemState() {
+            const gti = trustIndex.lastGTI;
+            const cs = contractVerification.getSummary();
+            
+            const modulate = base => {
+                if (base === 'high' && gti < 0.5) return 'medium';
+                if (base === 'high' && gti < 0.3) return 'low';
+                if (base === 'medium' && gti < 0.3) return 'low';
+                return base;
+            };
+            
+            if (metrics.totalResonance > 20 && deltaSigma > 0.5) return { state: SYSTEM_STATES.RUNAWAY, confidence: modulate('high'), reason: 'unbounded_growth', gti };
+            if (metrics.totalMemory > 200 && metrics.totalResonance > 5) return { state: SYSTEM_STATES.SATURATED, confidence: modulate('high'), reason: 'memory_full', gti };
+            if (metrics.avgCoherence < 0.5) return { state: SYSTEM_STATES.FRAGMENTING, confidence: modulate('high'), reason: 'coherence_breakdown', gti };
+            if (effectiveDissipation > 0.3 && deltaSigma < -0.1) return { state: SYSTEM_STATES.OVERDAMPED, confidence: modulate('medium'), reason: 'excessive_dissipation', gti };
+            if (metrics.totalResonance < 0.5 && metrics.avgCoherence > 0.9) return { state: SYSTEM_STATES.QUIESCENT, confidence: modulate('high'), reason: 'at_rest', gti };
+            if (metrics.avgCoherence > 0.8 && cs.violated === 0) return { state: SYSTEM_STATES.COHERENT, confidence: modulate('high'), reason: 'stable_operation', gti };
+            return { state: SYSTEM_STATES.ACTIVE, confidence: modulate('medium'), reason: 'normal', gti };
         }
         
-        function updateParams() {
-            const op = document.getElementById('op-select').value;
-            const params = PARAM_DEFS[op] || [];
-            document.getElementById('param-inputs').innerHTML = params.map(p => `
-                <div class="param-group">
-                    <label>${p.label}</label>
-                    <input type="text" id="param-${p.name}" value="${p.val}">
-                </div>
-            `).join('');
+        // ═══════════════════════════════════════════════════════════
+        // INVARIANT CLASSIFICATION
+        // ═══════════════════════════════════════════════════════════
+        function classifyInvariantType(node) {
+            let inb = 0, outb = 0;
+            for (const b of BRIDGES) {
+                if (b.to === node.row) inb++;
+                if (b.from === node.row) outb++;
+            }
+            const conn = inb + outb;
+            const rec = node.state.memory.recurrence;
+            
+            if (conn >= 6 && rec >= 3) return INVARIANT_TYPES.STRUCTURAL;
+            if (rec >= 5) return INVARIANT_TYPES.DYNAMIC;
+            if (conn <= 2) return INVARIANT_TYPES.BOUNDARY;
+            return INVARIANT_TYPES.ACCIDENTAL;
         }
         
-        function executeOperator() {
-            const op = document.getElementById('op-select').value;
-            const params = PARAM_DEFS[op] || [];
-            const args = params.map(p => {
-                const val = document.getElementById(`param-${p.name}`).value;
-                return isNaN(val) ? val : parseFloat(val);
+        // ═══════════════════════════════════════════════════════════
+        // INITIALIZATION
+        // ═══════════════════════════════════════════════════════════
+        function initNodes() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) * 0.72;
+            
+            nodes = CAPSULES.map((c, i) => {
+                const angle = (i / CAPSULES.length) * Math.PI * 2 - Math.PI / 2;
+                return {
+                    row: c.row, fidel: c.fidel, name: c.name, domain: c.domain, color: c.color,
+                    x: centerX + Math.cos(angle) * radius,
+                    y: centerY + Math.sin(angle) * radius,
+                    state: { resonance: 0, coherence: 1, memory: { cumulative: 0, peak: 0, recurrence: 0, lastSignificantTick: 0 } }
+                };
             });
             
-            try {
-                const result = OPS[op](...args);
-                addOutput(result.trace, JSON.stringify(result, null, 2));
-            } catch (e) {
-                addOutput('Error', e.message);
+            nodeMap.clear();
+            nodes.forEach(n => nodeMap.set(n.row, n));
+        }
+        
+        // ═══════════════════════════════════════════════════════════
+        // CORE DYNAMICS
+        // ═══════════════════════════════════════════════════════════
+        function propagate() {
+            currentPhase = TICK_PHASE.PROPAGATE;
+            
+            const deltaResonance = new Map();
+            const deltaCoherence = new Map();
+            totalFlow = 0;
+            
+            nodes.forEach(n => { deltaResonance.set(n.row, 0); deltaCoherence.set(n.row, 0); });
+            
+            for (const b of BRIDGES) {
+                const source = nodeMap.get(b.from);
+                const target = nodeMap.get(b.to);
+                if (!source || !target) continue;
+                
+                const gate = source.state.coherence;
+                const transfer = source.state.resonance * b.strength * gate;
+                if (transfer < 0.001) continue;
+                
+                totalFlow += transfer;
+                b.usage += transfer;
+                
+                let coherenceDelta = 0;
+                if (b.type === 'entropy') {
+                    deltaResonance.set(target.row, deltaResonance.get(target.row) + transfer * 0.6);
+                    coherenceDelta = -0.02 * transfer;
+                } else if (b.type === 'symmetry') {
+                    deltaResonance.set(target.row, deltaResonance.get(target.row) + transfer * 0.5);
+                    coherenceDelta = 0.01 * source.state.coherence * transfer;
+                } else {
+                    deltaResonance.set(target.row, deltaResonance.get(target.row) + transfer);
+                }
+                deltaCoherence.set(target.row, deltaCoherence.get(target.row) + coherenceDelta);
+                
+                if (transfer > 0.01) contractVerification.recordEffect(b.name, b.type, coherenceDelta, transfer);
             }
-        }
-        
-        function addOutput(trace, value) {
-            const output = document.getElementById('console-output');
-            const entry = document.createElement('div');
-            entry.className = 'output-entry';
-            entry.innerHTML = `
-                <div class="timestamp">${new Date().toLocaleTimeString()}</div>
-                <div class="trace">${trace}</div>
-                <div class="value">${value}</div>
-            `;
-            output.insertBefore(entry, output.firstChild);
-        }
-        
-        // === UNIVERSE SIMULATION ===
-        let universe = { objects: [], running: false, time: 0, entropy: 0, observed: false };
-        let animFrame = null;
-        
-        function addStar() {
-            const canvas = document.getElementById('universe-canvas');
-            const obj = document.createElement('div');
-            obj.className = 'universe-object';
-            obj.style.width = '30px';
-            obj.style.height = '30px';
-            obj.style.background = 'radial-gradient(circle, #fff, #f1c40f)';
-            obj.style.boxShadow = '0 0 20px #f1c40f';
-            obj.style.left = Math.random() * (canvas.offsetWidth - 30) + 'px';
-            obj.style.top = Math.random() * (canvas.offsetHeight - 30) + 'px';
-            canvas.appendChild(obj);
-            universe.objects.push({ el: obj, mass: 1e30, vx: 0, vy: 0, type: 'star' });
-            updateUniverseStats();
-        }
-        
-        function addPlanet() {
-            const canvas = document.getElementById('universe-canvas');
-            const obj = document.createElement('div');
-            obj.className = 'universe-object';
-            const size = 10 + Math.random() * 10;
-            obj.style.width = size + 'px';
-            obj.style.height = size + 'px';
-            obj.style.background = `hsl(${Math.random()*360}, 60%, 50%)`;
-            obj.style.left = Math.random() * (canvas.offsetWidth - size) + 'px';
-            obj.style.top = Math.random() * (canvas.offsetHeight - size) + 'px';
-            canvas.appendChild(obj);
-            universe.objects.push({ 
-                el: obj, mass: 1e24, 
-                vx: (Math.random() - 0.5) * 2, 
-                vy: (Math.random() - 0.5) * 2, 
-                type: 'planet' 
+            
+            // Apply deltas
+            nodes.forEach(n => {
+                n.state.resonance = Math.min(CONFIG.MAX_RESONANCE, n.state.resonance + deltaResonance.get(n.row));
+                n.state.coherence = Math.max(0.01, Math.min(1.0, n.state.coherence + deltaCoherence.get(n.row)));
             });
-            updateUniverseStats();
+            
+            // DECAY
+            currentPhase = TICK_PHASE.DECAY;
+            preDecayResonance = metrics.totalResonance;
+            
+            // MEMORY
+            currentPhase = TICK_PHASE.MEMORY;
+            nodes.forEach(n => {
+                const mem = n.state.memory;
+                const res = n.state.resonance;
+                
+                mem.cumulative = mem.cumulative * CONFIG.MEMORY_DECAY + res * CONFIG.MEMORY_GAIN;
+                if (res > mem.peak) mem.peak = res;
+                if (res > CONFIG.SIGNIFICANT_ACTIVATION && tick - mem.lastSignificantTick > CONFIG.RECURRENCE_SPACING) {
+                    mem.recurrence++;
+                    mem.lastSignificantTick = tick;
+                }
+                
+                const memoryBias = Math.min(mem.cumulative * 0.01, 0.1);
+                n.state.resonance *= (CONFIG.DECAY_RATE + memoryBias);
+            });
+            
+            // STABILIZE
+            currentPhase = TICK_PHASE.STABILIZE;
+            nodes.forEach(n => {
+                if (n.state.resonance < 0.1) {
+                    n.state.coherence = Math.min(1.0, n.state.coherence + CONFIG.COHERENCE_RESTORATION);
+                }
+            });
+            
+            // Bridge plasticity
+            if (tick % CONFIG.BRIDGE_PLASTICITY_INTERVAL === 0 && tick > 0) {
+                BRIDGES.forEach(b => {
+                    if (b.usage > 0) {
+                        b.strength = Math.min(1.0, b.strength + b.usage * 0.0001);
+                        b.usage *= 0.5;
+                    }
+                });
+            }
+            
+            // Calculate dissipation
+            metrics.update();
+            const postDecayResonance = metrics.totalResonance;
+            effectiveDissipation = totalFlow > 0.001 ? (preDecayResonance - postDecayResonance) / totalFlow : preDecayResonance > 0.001 ? (preDecayResonance - postDecayResonance) / preDecayResonance : 0;
+            totalEnergyOut += (preDecayResonance - postDecayResonance);
+            
+            currentPhase = TICK_PHASE.OBSERVE;
+            tick++;
         }
         
-        function toggleSimulation() {
-            universe.running = !universe.running;
-            event.target.textContent = universe.running ? '⏸ Pause' : '▶ Start';
-            if (universe.running) runSimulation();
+        function injectResonance(node) {
+            currentPhase = TICK_PHASE.INJECT;
+            node.state.resonance = 1.0;
+            node.state.coherence = 1.0;
+            totalEnergyIn += 1.0;
+            emitEvent(EVENT_TYPES.INJECTION, node.fidel, 1.0, { name: node.name });
+            addLog('Σ[1] → ' + node.fidel + ' ' + node.name, 'injection');
         }
         
-        function runSimulation() {
-            if (!universe.running) return;
+        // ═══════════════════════════════════════════════════════════
+        // RENDERING
+        // ═══════════════════════════════════════════════════════════
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            initNodes();
+        }
+        
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            const canvas = document.getElementById('universe-canvas');
-            const dt = 0.016;
+            // Draw bridges
+            for (const b of BRIDGES) {
+                const source = nodeMap.get(b.from);
+                const target = nodeMap.get(b.to);
+                if (!source || !target) continue;
+                
+                const intensity = source.state.resonance * b.strength;
+                if (intensity < 0.01) continue;
+                
+                ctx.beginPath();
+                ctx.moveTo(source.x, source.y);
+                ctx.lineTo(target.x, target.y);
+                
+                const alpha = 0.06 + intensity * 0.5;
+                ctx.strokeStyle = b.type === 'entropy' ? `rgba(231,76,60,${alpha})` : b.type === 'symmetry' ? `rgba(0,212,170,${alpha})` : `rgba(155,89,182,${0.04 + intensity * 0.4})`;
+                ctx.lineWidth = 0.5 + intensity * 2.5;
+                ctx.stroke();
+            }
             
-            // Simplified gravity
-            for (let i = 0; i < universe.objects.length; i++) {
-                for (let j = i + 1; j < universe.objects.length; j++) {
-                    const o1 = universe.objects[i];
-                    const o2 = universe.objects[j];
-                    const x1 = parseFloat(o1.el.style.left);
-                    const y1 = parseFloat(o1.el.style.top);
-                    const x2 = parseFloat(o2.el.style.left);
-                    const y2 = parseFloat(o2.el.style.top);
-                    
-                    const dx = x2 - x1;
-                    const dy = y2 - y1;
-                    const r = Math.sqrt(dx*dx + dy*dy) || 1;
-                    
-                    const F = 50 / (r * r + 100);
-                    o1.vx += F * dx / r * dt;
-                    o1.vy += F * dy / r * dt;
-                    o2.vx -= F * dx / r * dt;
-                    o2.vy -= F * dy / r * dt;
+            // Draw nodes
+            for (const node of nodes) {
+                const isHovered = node === hoveredNode;
+                const isSelected = node === selectedNode;
+                
+                const glowStrength = node.state.resonance * 30;
+                ctx.shadowBlur = glowStrength > 1 ? glowStrength : 0;
+                ctx.shadowColor = node.color;
+                
+                const radius = 14 + node.state.resonance * 6;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+                
+                const alpha = 0.3 + node.state.coherence * 0.7;
+                ctx.fillStyle = node.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+                ctx.fill();
+                
+                ctx.strokeStyle = isSelected ? '#fff' : isHovered ? '#00d4aa' : node.color;
+                ctx.lineWidth = isSelected ? 2 : isHovered ? 1.5 : 0.5;
+                ctx.stroke();
+                
+                ctx.shadowBlur = 0;
+                
+                // Memory ring
+                if (node.state.memory.cumulative > 0.1) {
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, radius + 3 + Math.min(node.state.memory.cumulative * 0.4, 3), 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(155,89,182,${Math.min(node.state.memory.cumulative * 0.06, 0.35)})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+                
+                // Fidel label
+                ctx.fillStyle = '#fff';
+                ctx.font = (11 + node.state.resonance * 3) + 'px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.globalAlpha = 0.5 + node.state.coherence * 0.5;
+                ctx.fillText(node.fidel, node.x, node.y);
+                ctx.globalAlpha = 1;
+            }
+            
+            updateUI();
+        }
+        
+        // ═══════════════════════════════════════════════════════════
+        // UI UPDATES
+        // ═══════════════════════════════════════════════════════════
+        function updateUI() {
+            deltaSigma = metrics.totalResonance - lastTotalResonance;
+            lastTotalResonance = metrics.totalResonance;
+            
+            // Record trends periodically
+            if (tick % CONFIG.TREND_RECORD_INTERVAL === 0 && tick > 0) {
+                trendDetector.record();
+            }
+            
+            // Periodic analysis
+            if (tick - lastInvariantCheck >= CONFIG.INVARIANT_CHECK_INTERVAL && tick > 100) {
+                lastInvariantCheck = tick;
+                
+                if (tick - contractVerification.lastCheck >= CONFIG.CONTRACT_CHECK_INTERVAL) contractVerification.verify();
+                if (tick - patternDetectors.lastDetection >= CONFIG.PATTERN_CHECK_INTERVAL) patternDetectors.detect();
+                
+                // Invariant detection
+                for (const n of nodes) {
+                    if (n.state.coherence > CONFIG.COHERENCE_INVARIANT_MIN && n.state.memory.cumulative > CONFIG.MEMORY_INVARIANT_MIN) {
+                        const existing = invariantCandidates.find(c => c.row === n.row);
+                        if (existing) {
+                            existing.count++;
+                            existing.lastTick = tick;
+                            existing.type = classifyInvariantType(n);
+                            if (existing.count === CONFIG.PROMOTION_THRESHOLD) {
+                                emitEvent(EVENT_TYPES.CANONICAL_PROMOTION, n.fidel, existing.count, { name: n.name, type: existing.type });
+                                addLog('★ ' + n.fidel + ' [' + existing.type + ']', 'propagation');
+                            }
+                            if (existing.count >= CONFIG.PROMOTION_THRESHOLD) {
+                                n.state.coherence = Math.max(n.state.coherence, 0.98);
+                                existing.promoted = true;
+                            }
+                        } else {
+                            invariantCandidates.push({ row: n.row, fidel: n.fidel, name: n.name, count: 1, lastTick: tick, promoted: false, type: classifyInvariantType(n) });
+                        }
+                    }
                 }
             }
             
-            // Update positions
-            for (const obj of universe.objects) {
-                let x = parseFloat(obj.el.style.left) + obj.vx;
-                let y = parseFloat(obj.el.style.top) + obj.vy;
-                
-                // Boundary
-                if (x < 0 || x > canvas.offsetWidth - 30) obj.vx *= -0.8;
-                if (y < 0 || y > canvas.offsetHeight - 30) obj.vy *= -0.8;
-                
-                x = Math.max(0, Math.min(canvas.offsetWidth - 30, x));
-                y = Math.max(0, Math.min(canvas.offsetHeight - 30, y));
-                
-                obj.el.style.left = x + 'px';
-                obj.el.style.top = y + 'px';
+            // Update metric displays
+            document.getElementById('totalResonance').textContent = metrics.totalResonance.toFixed(3);
+            document.getElementById('avgCoherence').textContent = metrics.avgCoherence.toFixed(3);
+            document.getElementById('totalMemory').textContent = metrics.totalMemory.toFixed(2);
+            document.getElementById('deltaSigma').textContent = (deltaSigma >= 0 ? '+' : '') + deltaSigma.toFixed(3);
+            document.getElementById('deltaSigma').style.color = deltaSigma >= 0 ? '#f1c40f' : '#e74c3c';
+            document.getElementById('dissipation').textContent = (effectiveDissipation * 100).toFixed(1) + '%';
+            document.getElementById('dissipation').style.color = effectiveDissipation < 0.05 ? '#00d4aa' : effectiveDissipation < 0.1 ? '#f1c40f' : '#e74c3c';
+            document.getElementById('totalFlow').textContent = totalFlow.toFixed(2);
+            
+            document.getElementById('resonanceBar').style.width = Math.min(metrics.totalResonance / 6, 100) + '%';
+            document.getElementById('coherenceBar').style.width = (metrics.avgCoherence * 100) + '%';
+            document.getElementById('memoryBar').style.width = Math.min(metrics.totalMemory / 30, 100) + '%';
+            
+            document.getElementById('tickCount').textContent = 'Tick: ' + tick;
+            
+            // Trends
+            const trends = trendDetector.getAllTrends();
+            updateTrendIndicator('resTrend', trends.resonance);
+            updateTrendIndicator('cohTrend', trends.coherence);
+            updateTrendIndicator('memTrend', trends.memory);
+            
+            // GTI
+            const trust = trustIndex.compute();
+            const gtiTrend = trustIndex.getTrend();
+            document.getElementById('gtiValue').textContent = trust.gti.toFixed(3);
+            document.getElementById('gtiValue').style.color = trust.gti > 0.8 ? '#00d4aa' : trust.gti > 0.5 ? '#f1c40f' : '#e74c3c';
+            document.getElementById('gtiFill').style.width = (trust.gti * 100) + '%';
+            document.getElementById('gtiFill').style.background = trust.gti > 0.8 ? '#00d4aa' : trust.gti > 0.5 ? '#f1c40f' : '#e74c3c';
+            const gtiTrendEl = document.getElementById('gtiTrend');
+            gtiTrendEl.textContent = gtiTrend.direction === 'improving' ? '↑ improving' : gtiTrend.direction === 'degrading' ? '↓ degrading' : '― stable';
+            gtiTrendEl.className = 'gti-trend ' + gtiTrend.direction;
+            
+            // Warnings
+            const trendSummary = trendDetector.getSummary();
+            const warningsEl = document.getElementById('warningsDisplay');
+            if (trendSummary.warnings.length > 0) {
+                warningsEl.innerHTML = trendSummary.warnings.slice(0, 3).map(w => '<div class="warning-item">' + w.replace(/_/g, ' ') + '</div>').join('');
+            } else {
+                warningsEl.innerHTML = '<div class="no-warnings">✓ No warnings</div>';
             }
             
-            universe.time += dt;
-            universe.entropy += Math.random() * 0.001;
-            updateUniverseStats();
+            // System state
+            const state = classifySystemState();
+            const stateEl = document.getElementById('systemStateBadge');
+            stateEl.textContent = state.state.toUpperCase();
+            stateEl.className = 'system-state-badge ' + state.state;
             
-            animFrame = requestAnimationFrame(runSimulation);
+            // Contract status
+            const cs = contractVerification.getSummary();
+            const contractDot = document.getElementById('contractDot');
+            const contractStatus = document.getElementById('contractStatus');
+            if (cs.violated > 0) { contractDot.className = 'conservation-dot bad'; contractStatus.textContent = 'Contracts: ' + cs.violated + ' violated'; }
+            else if (cs.weak > 0) { contractDot.className = 'conservation-dot warning'; contractStatus.textContent = 'Contracts: ' + cs.weak + ' weak'; }
+            else { contractDot.className = 'conservation-dot good'; contractStatus.textContent = 'Contracts: OK'; }
+            
+            // Energy balance
+            const energyDot = document.getElementById('energyDot');
+            const energyStatus = document.getElementById('energyStatus');
+            const energyBalance = totalEnergyIn > 0 ? Math.abs(totalEnergyIn - totalEnergyOut - metrics.totalResonance) / totalEnergyIn : 0;
+            if (energyBalance < 0.1) { energyDot.className = 'conservation-dot good'; energyStatus.textContent = 'Energy: Balanced'; }
+            else if (energyBalance < 0.3) { energyDot.className = 'conservation-dot warning'; energyStatus.textContent = 'Energy: Drift'; }
+            else { energyDot.className = 'conservation-dot bad'; energyStatus.textContent = 'Energy: Unstable'; }
+            
+            updateInvariantsDisplay();
+            updateSelectedPanel();
         }
         
-        function resetUniverse() {
-            universe.running = false;
-            universe.time = 0;
-            universe.entropy = 0;
-            universe.observed = false;
-            universe.objects = [];
-            document.getElementById('universe-canvas').innerHTML = '';
-            if (animFrame) cancelAnimationFrame(animFrame);
-            updateUniverseStats();
+        function updateTrendIndicator(id, trend) {
+            const el = document.getElementById(id);
+            if (!trend || trend.direction === 'insufficient_data') { el.textContent = '―'; el.className = 'metric-trend stable'; }
+            else if (trend.direction === 'rising') { el.textContent = '↑'; el.className = 'metric-trend rising'; }
+            else if (trend.direction === 'falling') { el.textContent = '↓'; el.className = 'metric-trend falling'; }
+            else { el.textContent = '―'; el.className = 'metric-trend stable'; }
         }
         
-        function observeUniverse() {
-            universe.observed = true;
-            addOutput('ዐ(Universe)', '⸮ = Ω — Observer collapsed the universe state');
-            updateUniverseStats();
+        function updateInvariantsDisplay() {
+            const container = document.getElementById('invariantsList');
+            if (invariantCandidates.length === 0) {
+                container.innerHTML = '<span style="color:#444;font-size:0.65em;">Observing... (tick > 100)</span>';
+                return;
+            }
+            
+            const sorted = invariantCandidates.slice().sort((a, b) => b.count - a.count);
+            container.innerHTML = sorted.slice(0, 10).map(c => {
+                const promoted = c.promoted ? '★' : '';
+                const typeClass = c.type === INVARIANT_TYPES.STRUCTURAL ? 'structural' : c.type === INVARIANT_TYPES.DYNAMIC ? 'dynamic' : '';
+                return '<span class="invariant-tag ' + typeClass + '" title="' + c.name + ' [' + (c.type || 'unknown') + ']">' + promoted + c.fidel + ' <span class="count">×' + c.count + '</span></span>';
+            }).join('');
         }
         
-        function updateUniverseStats() {
-            document.getElementById('uni-time').textContent = universe.time.toFixed(2);
-            document.getElementById('uni-entropy').textContent = universe.entropy.toFixed(4);
-            document.getElementById('uni-objects').textContent = universe.objects.length;
-            document.getElementById('uni-observer').textContent = universe.observed ? 'ዐ Active' : '—';
+        function updateSelectedPanel() {
+            const panel = document.getElementById('selectedNodePanel');
+            if (!selectedNode) {
+                panel.innerHTML = '<div class="empty-state">Click a node to select</div>';
+                return;
+            }
+            
+            const n = selectedNode;
+            const inv = invariantCandidates.find(c => c.row === n.row);
+            const roleType = inv && inv.promoted ? 'canonical' : classifyInvariantType(n);
+            const roleLabel = inv && inv.promoted ? '★ Canonical' : roleType;
+            const bridges = BRIDGES.filter(b => b.from === n.row || b.to === n.row);
+            
+            panel.innerHTML = `<div class="node-card">
+                <div class="node-header">
+                    <div class="node-fidel" style="border-color:${n.color};color:${n.color}">${n.fidel}</div>
+                    <div class="node-info">
+                        <h4>${n.name}</h4>
+                        <div class="domain">${n.domain}</div>
+                        <span class="node-role ${roleType}">${roleLabel}</span>
+                    </div>
+                </div>
+                <div class="state-grid">
+                    <div class="state-item"><div class="label">Σ</div><div class="value resonance">${n.state.resonance.toFixed(3)}</div></div>
+                    <div class="state-item"><div class="label">σ</div><div class="value coherence">${n.state.coherence.toFixed(3)}</div></div>
+                    <div class="state-item"><div class="label">Ω</div><div class="value memory">${n.state.memory.cumulative.toFixed(2)}</div></div>
+                </div>
+                <div class="memory-details">Peak: ${n.state.memory.peak.toFixed(3)} | Recurrence: ${n.state.memory.recurrence}</div>
+                <div class="bridges-mini">${bridges.slice(0, 12).map(b => {
+                    const other = b.from === n.row ? nodeMap.get(b.to) : nodeMap.get(b.from);
+                    const dir = b.from === n.row ? '→' : '←';
+                    return '<span class="bridge-tag ' + b.type + '">' + dir + (other ? other.fidel : '?') + '</span>';
+                }).join('')}${bridges.length > 12 ? '<span class="bridge-tag">+' + (bridges.length - 12) + '</span>' : ''}</div>
+            </div>`;
         }
         
-        // Init
-        init();
+        // ═══════════════════════════════════════════════════════════
+        // EVENT HANDLERS
+        // ═══════════════════════════════════════════════════════════
+        canvas.addEventListener('mousemove', e => {
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+            
+            hoveredNode = null;
+            for (const node of nodes) {
+                if (Math.hypot(node.x - mx, node.y - my) < 20) { hoveredNode = node; break; }
+            }
+            canvas.style.cursor = hoveredNode ? 'pointer' : 'crosshair';
+        });
+        
+        canvas.addEventListener('click', () => { if (hoveredNode) { selectedNode = hoveredNode; injectResonance(hoveredNode); } });
+        
+        document.getElementById('btnRun').addEventListener('click', function() {
+            isRunning = !isRunning;
+            this.textContent = isRunning ? '▶ Run' : '❚❚';
+            this.classList.toggle('active', isRunning);
+            document.getElementById('statusDot').classList.toggle('running', isRunning);
+            document.getElementById('statusText').textContent = isRunning ? 'Running' : 'Paused';
+        });
+        
+        document.getElementById('btnStep').addEventListener('click', () => { if (!isRunning) { propagate(); metrics.update(); addLog('Step', 'propagation'); } });
+        
+        document.getElementById('btnInjectAll').addEventListener('click', () => {
+            nodes.forEach(n => { n.state.resonance = 0.3; totalEnergyIn += 0.3; });
+            addLog('Σ[0.3] → ALL', 'injection');
+        });
+        
+        document.getElementById('btnReset').addEventListener('click', () => {
+            nodes.forEach(n => { n.state.resonance = 0; n.state.coherence = 1; n.state.memory = { cumulative: 0, peak: 0, recurrence: 0, lastSignificantTick: 0 }; });
+            BRIDGES.forEach(b => { b.usage = 0; });
+            tick = 0; totalEnergyIn = 0; totalEnergyOut = 0;
+            logEntries.length = 0; invariantCandidates = []; eventRegistry.length = 0;
+            contractVerification.bridgeEffects.clear(); contractVerification.results = [];
+            patternDetectors.patterns = []; trustIndex.history = [];
+            Object.keys(trendDetector.history).forEach(k => { trendDetector.history[k] = []; });
+            factStabilityTracker.reset(); // Layer 6.2
+            factGraph.reset(); // Layer 6.3
+            lastInvariantCheck = 0; lastTotalResonance = 0;
+            document.getElementById('logContent').innerHTML = '';
+            document.getElementById('invariantsList').innerHTML = '';
+            metrics.update();
+            addLog('Reset', 'decay');
+        });
+        
+        document.getElementById('speedSlider').addEventListener('input', function() {
+            speed = parseInt(this.value);
+            document.getElementById('speedLabel').textContent = speed + '×';
+        });
+        
+        // ═══════════════════════════════════════════════════════════
+        // MAIN LOOP
+        // ═══════════════════════════════════════════════════════════
+        function loop() {
+            if (isRunning) {
+                for (let i = 0; i < speed; i++) propagate();
+                // Layer 6.2: Sample facts periodically
+                factStabilityTracker.sample();
+                // Layer 6.3: Sample for graph building
+                factGraph.sample();
+            }
+            draw();
+            requestAnimationFrame(loop);
+        }
+        
+        // ═══════════════════════════════════════════════════════════
+        // LAYER 5.1 — OBSERVATION FRAME
+        // Standardizes analyzer output into stable observation units
+        // No interpretation. No meaning. Only representation discipline.
+        // ═══════════════════════════════════════════════════════════
+        
+        const OBSERVATION_SOURCES = {
+            METRICS: 'metrics',
+            CONTRACTS: 'contracts',
+            PATTERNS: 'patterns',
+            INVARIANTS: 'invariants',
+            TRUST: 'trust',
+            TRENDS: 'trends',
+            ENERGY: 'energy'
+        };
+        
+        const OBSERVATION_STATUS = {
+            RAW: 'raw',           // Just captured
+            VALIDATED: 'validated', // Passed stability filter (5.3)
+            EXPIRED: 'expired'     // Outside valid window
+        };
+        
+        const observationFrame = {
+            // Schema version for forward compatibility
+            SCHEMA_VERSION: '5.1.0',
+            
+            // Configuration
+            config: {
+                defaultWindowSize: 100,    // ticks
+                minConfidence: 0.1,        // observations below this are discarded
+                maxAge: 500               // ticks before expiration
+            },
+            
+            // Create a single observation unit
+            // This is the ONLY way cognitive layers should receive data
+            createObservation: function(source, scopeStart, scopeEnd, data, rawConfidence) {
+                // Validate source
+                if (!Object.values(OBSERVATION_SOURCES).includes(source)) {
+                    console.warn('Invalid observation source:', source);
+                    return null;
+                }
+                
+                // Derive confidence from GTI (observations are never more confident than system trust)
+                const gti = trustIndex.lastGTI;
+                const confidence = Math.min(rawConfidence || 1.0, gti);
+                
+                // Reject low-confidence observations
+                if (confidence < this.config.minConfidence) {
+                    return null;
+                }
+                
+                return {
+                    // Identity
+                    id: source + '_' + scopeStart + '_' + scopeEnd,
+                    schema_version: this.SCHEMA_VERSION,
+                    
+                    // Source
+                    source: source,
+                    
+                    // Scope (time window)
+                    scope: {
+                        start: scopeStart,
+                        end: scopeEnd,
+                        duration: scopeEnd - scopeStart,
+                        captured_at: tick
+                    },
+                    
+                    // Content (frozen snapshot)
+                    data: Object.freeze(JSON.parse(JSON.stringify(data))),
+                    
+                    // Confidence (derived from GTI)
+                    confidence: {
+                        value: confidence,
+                        source_gti: gti,
+                        raw: rawConfidence || 1.0
+                    },
+                    
+                    // Status
+                    status: OBSERVATION_STATUS.RAW,
+                    
+                    // Metadata
+                    meta: {
+                        created_tick: tick,
+                        expires_tick: tick + this.config.maxAge
+                    }
+                };
+            },
+            
+            // Capture current state as observation frame
+            // Returns a complete snapshot of all observable dimensions
+            capture: function(windowSize) {
+                const window = windowSize || this.config.defaultWindowSize;
+                const scopeStart = Math.max(0, tick - window);
+                const scopeEnd = tick;
+                
+                // Gather raw data from analyzer components
+                const metricsData = {
+                    resonance: metrics.totalResonance,
+                    coherence: metrics.avgCoherence,
+                    memory: metrics.totalMemory,
+                    dissipation: effectiveDissipation,
+                    flow: totalFlow,
+                    delta_sigma: deltaSigma
+                };
+                
+                const contractsData = contractVerification.getSummary();
+                
+                const patternsData = {
+                    sinks: patternDetectors.getByType('sink').length,
+                    amplifiers: patternDetectors.getByType('amplifier').length,
+                    bottlenecks: patternDetectors.getByType('bottleneck').length,
+                    details: patternDetectors.patterns.slice(0, 10) // limit detail
+                };
+                
+                const invariantsData = {
+                    total: invariantCandidates.length,
+                    promoted: invariantCandidates.filter(c => c.promoted).length,
+                    structural: invariantCandidates.filter(c => c.type === INVARIANT_TYPES.STRUCTURAL).length,
+                    dynamic: invariantCandidates.filter(c => c.type === INVARIANT_TYPES.DYNAMIC).length
+                };
+                
+                const trustData = {
+                    gti: trustIndex.lastGTI,
+                    trend: trustIndex.getTrend()
+                };
+                
+                const trendsData = trendDetector.getSummary();
+                
+                const energyData = {
+                    total_in: totalEnergyIn,
+                    total_out: totalEnergyOut,
+                    current: metrics.totalResonance,
+                    balance: totalEnergyIn > 0 ? (totalEnergyIn - totalEnergyOut - metrics.totalResonance) / totalEnergyIn : 0
+                };
+                
+                // Create observation frame (collection of observations)
+                const frame = {
+                    // Frame identity
+                    frame_id: 'frame_' + tick,
+                    schema_version: this.SCHEMA_VERSION,
+                    captured_at: tick,
+                    scope: { start: scopeStart, end: scopeEnd, duration: window },
+                    
+                    // Observations (each is independent)
+                    observations: {}
+                };
+                
+                // Create individual observations with appropriate confidence
+                // Metrics: high confidence if system is stable
+                const metricsConf = metrics.avgCoherence > 0.7 ? 0.9 : 0.6;
+                frame.observations.metrics = this.createObservation(
+                    OBSERVATION_SOURCES.METRICS, scopeStart, scopeEnd, metricsData, metricsConf
+                );
+                
+                // Contracts: confidence based on sample size
+                const contractConf = contractsData.total > 5 ? 0.85 : contractsData.total > 0 ? 0.5 : 0.2;
+                frame.observations.contracts = this.createObservation(
+                    OBSERVATION_SOURCES.CONTRACTS, scopeStart, scopeEnd, contractsData, contractConf
+                );
+                
+                // Patterns: confidence based on pattern count and severity
+                const patternConf = patternsData.sinks + patternsData.amplifiers > 0 ? 0.8 : 0.4;
+                frame.observations.patterns = this.createObservation(
+                    OBSERVATION_SOURCES.PATTERNS, scopeStart, scopeEnd, patternsData, patternConf
+                );
+                
+                // Invariants: higher confidence with more promoted
+                const invConf = invariantsData.promoted > 3 ? 0.9 : invariantsData.promoted > 0 ? 0.7 : 0.3;
+                frame.observations.invariants = this.createObservation(
+                    OBSERVATION_SOURCES.INVARIANTS, scopeStart, scopeEnd, invariantsData, invConf
+                );
+                
+                // Trust: self-referential, moderate confidence
+                frame.observations.trust = this.createObservation(
+                    OBSERVATION_SOURCES.TRUST, scopeStart, scopeEnd, trustData, 0.75
+                );
+                
+                // Trends: confidence based on data availability
+                const trendConf = trendsData.trends.coherence && trendsData.trends.coherence.direction !== 'insufficient_data' ? 0.8 : 0.3;
+                frame.observations.trends = this.createObservation(
+                    OBSERVATION_SOURCES.TRENDS, scopeStart, scopeEnd, trendsData, trendConf
+                );
+                
+                // Energy: high confidence (direct measurement)
+                frame.observations.energy = this.createObservation(
+                    OBSERVATION_SOURCES.ENERGY, scopeStart, scopeEnd, energyData, 0.95
+                );
+                
+                // Remove null observations (below confidence threshold)
+                Object.keys(frame.observations).forEach(key => {
+                    if (frame.observations[key] === null) delete frame.observations[key];
+                });
+                
+                // Frame-level confidence (minimum of all observations)
+                const obsConfidences = Object.values(frame.observations).map(o => o.confidence.value);
+                frame.frame_confidence = obsConfidences.length > 0 ? Math.min(...obsConfidences) : 0;
+                
+                // Freeze the frame (immutable)
+                return Object.freeze(frame);
+            },
+            
+            // Check if observation is still valid
+            isValid: function(observation) {
+                if (!observation) return false;
+                if (observation.status === OBSERVATION_STATUS.EXPIRED) return false;
+                if (tick > observation.meta.expires_tick) return false;
+                return true;
+            },
+            
+            // Get observation age in ticks
+            getAge: function(observation) {
+                if (!observation) return Infinity;
+                return tick - observation.meta.created_tick;
+            },
+            
+            // Schema documentation (for cognitive layers)
+            getSchema: function() {
+                return {
+                    version: this.SCHEMA_VERSION,
+                    sources: Object.values(OBSERVATION_SOURCES),
+                    statuses: Object.values(OBSERVATION_STATUS),
+                    observation_structure: {
+                        id: 'string',
+                        source: 'OBSERVATION_SOURCES',
+                        scope: { start: 'tick', end: 'tick', duration: 'ticks', captured_at: 'tick' },
+                        data: 'object (frozen)',
+                        confidence: { value: 'number [0-1]', source_gti: 'number', raw: 'number' },
+                        status: 'OBSERVATION_STATUS',
+                        meta: { created_tick: 'tick', expires_tick: 'tick' }
+                    },
+                    frame_structure: {
+                        frame_id: 'string',
+                        captured_at: 'tick',
+                        scope: { start: 'tick', end: 'tick', duration: 'ticks' },
+                        observations: 'object of observations',
+                        frame_confidence: 'number [0-1]'
+                    }
+                };
+            }
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // LAYER 5.2 — TEMPORAL COARSENING
+        // Same data at multiple time resolutions
+        // No interpretation. No meaning. Only resolution discipline.
+        // ═══════════════════════════════════════════════════════════
+        
+        const TEMPORAL_SCALES = {
+            SHORT: 20,      // "What just happened" (~2 seconds at 10fps)
+            MEDIUM: 100,    // "What's been happening" (~10 seconds)
+            LONG: 500       // "What usually happens" (~50 seconds)
+        };
+        
+        const temporalCoarsening = {
+            SCHEMA_VERSION: '5.2.0',
+            
+            // Capture observations at all temporal scales
+            captureMultiScale: function() {
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    captured_at: tick,
+                    scales: {
+                        short: observationFrame.capture(TEMPORAL_SCALES.SHORT),
+                        medium: observationFrame.capture(TEMPORAL_SCALES.MEDIUM),
+                        long: observationFrame.capture(TEMPORAL_SCALES.LONG)
+                    },
+                    scale_config: Object.freeze({...TEMPORAL_SCALES})
+                });
+            },
+            
+            // Get a specific scale
+            captureScale: function(scale) {
+                const windowSize = TEMPORAL_SCALES[scale.toUpperCase()];
+                if (!windowSize) {
+                    console.warn('Invalid scale:', scale);
+                    return null;
+                }
+                return observationFrame.capture(windowSize);
+            },
+            
+            // Compare same source across scales (returns deltas, not interpretations)
+            compareAcrossScales: function(multiScale, source) {
+                const short = multiScale.scales.short.observations[source];
+                const medium = multiScale.scales.medium.observations[source];
+                const long = multiScale.scales.long.observations[source];
+                
+                if (!short || !medium || !long) {
+                    return { available: false, source: source };
+                }
+                
+                // Calculate deltas for numeric fields only
+                const deltas = { available: true, source: source };
+                
+                // Compare each numeric field in data
+                const shortData = short.data;
+                const mediumData = medium.data;
+                const longData = long.data;
+                
+                Object.keys(shortData).forEach(key => {
+                    if (typeof shortData[key] === 'number') {
+                        deltas[key] = {
+                            short: shortData[key],
+                            medium: mediumData[key],
+                            long: longData[key],
+                            short_vs_medium: shortData[key] - mediumData[key],
+                            medium_vs_long: mediumData[key] - longData[key]
+                        };
+                    }
+                });
+                
+                return Object.freeze(deltas);
+            }
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // LAYER 5.3 — OBSERVATION STABILITY FILTER
+        // Gatekeeper before cognition. Prevents hallucination from noise.
+        // Only VALIDATED observations pass to Layer 6.
+        // ═══════════════════════════════════════════════════════════
+        
+        const stabilityFilter = {
+            SCHEMA_VERSION: '5.3.0',
+            
+            // Thresholds for stability
+            config: {
+                // Maximum allowed divergence between scales (as ratio)
+                maxDivergence: {
+                    resonance: 0.3,    // 30% difference allowed
+                    coherence: 0.15,   // 15% difference allowed
+                    memory: 0.4,       // 40% difference allowed
+                    dissipation: 0.5,  // 50% difference allowed
+                    flow: 0.5          // 50% difference allowed
+                },
+                // Minimum confidence for validation
+                minConfidenceForValidation: 0.3,
+                // Minimum scales that must agree
+                minAgreeingScales: 2
+            },
+            
+            // Check if a metric is stable across scales
+            isMetricStable: function(shortVal, mediumVal, longVal, maxDiv) {
+                if (shortVal === undefined || mediumVal === undefined) return false;
+                
+                // Handle zero case
+                const base = Math.max(Math.abs(mediumVal), 0.001);
+                const shortDiv = Math.abs(shortVal - mediumVal) / base;
+                
+                // Short vs Medium must be within threshold
+                if (shortDiv > maxDiv) return false;
+                
+                // If long exists, Medium vs Long should also be reasonable
+                if (longVal !== undefined) {
+                    const longDiv = Math.abs(mediumVal - longVal) / base;
+                    // Long-term divergence can be slightly higher
+                    if (longDiv > maxDiv * 1.5) return false;
+                }
+                
+                return true;
+            },
+            
+            // Validate a single observation source across scales
+            validateSource: function(multiScale, source) {
+                const short = multiScale.scales.short.observations[source];
+                const medium = multiScale.scales.medium.observations[source];
+                const long = multiScale.scales.long.observations[source];
+                
+                // Must have at least short and medium
+                if (!short || !medium) {
+                    return {
+                        source: source,
+                        validated: false,
+                        reason: 'insufficient_scales',
+                        status: OBSERVATION_STATUS.RAW
+                    };
+                }
+                
+                // Check confidence threshold
+                if (short.confidence.value < this.config.minConfidenceForValidation ||
+                    medium.confidence.value < this.config.minConfidenceForValidation) {
+                    return {
+                        source: source,
+                        validated: false,
+                        reason: 'low_confidence',
+                        status: OBSERVATION_STATUS.RAW
+                    };
+                }
+                
+                // For metrics source, check each metric
+                if (source === OBSERVATION_SOURCES.METRICS) {
+                    const stableMetrics = [];
+                    const unstableMetrics = [];
+                    
+                    ['resonance', 'coherence', 'memory', 'dissipation', 'flow'].forEach(metric => {
+                        const maxDiv = this.config.maxDivergence[metric] || 0.3;
+                        const isStable = this.isMetricStable(
+                            short.data[metric],
+                            medium.data[metric],
+                            long ? long.data[metric] : undefined,
+                            maxDiv
+                        );
+                        if (isStable) stableMetrics.push(metric);
+                        else unstableMetrics.push(metric);
+                    });
+                    
+                    // Require majority of metrics to be stable
+                    const validated = stableMetrics.length >= 3;
+                    
+                    return {
+                        source: source,
+                        validated: validated,
+                        reason: validated ? 'metrics_stable' : 'metrics_divergent',
+                        status: validated ? OBSERVATION_STATUS.VALIDATED : OBSERVATION_STATUS.RAW,
+                        stable_metrics: stableMetrics,
+                        unstable_metrics: unstableMetrics,
+                        stability_ratio: stableMetrics.length / (stableMetrics.length + unstableMetrics.length)
+                    };
+                }
+                
+                // For other sources, check if counts/values are consistent
+                // (simplified: just check confidence and existence)
+                const validated = short.confidence.value >= 0.5 && medium.confidence.value >= 0.5;
+                
+                return {
+                    source: source,
+                    validated: validated,
+                    reason: validated ? 'consistent' : 'inconsistent',
+                    status: validated ? OBSERVATION_STATUS.VALIDATED : OBSERVATION_STATUS.RAW
+                };
+            },
+            
+            // Validate all observations in a multi-scale capture
+            validateAll: function(multiScale) {
+                const results = {
+                    schema_version: this.SCHEMA_VERSION,
+                    captured_at: multiScale.captured_at,
+                    validation_tick: tick,
+                    sources: {},
+                    summary: {
+                        total: 0,
+                        validated: 0,
+                        rejected: 0
+                    }
+                };
+                
+                // Validate each source
+                Object.values(OBSERVATION_SOURCES).forEach(source => {
+                    const validation = this.validateSource(multiScale, source);
+                    results.sources[source] = validation;
+                    results.summary.total++;
+                    if (validation.validated) results.summary.validated++;
+                    else results.summary.rejected++;
+                });
+                
+                // Overall validation ratio
+                results.summary.validation_ratio = results.summary.validated / results.summary.total;
+                
+                // System is perceptually reliable if >50% of sources validate
+                results.perceptually_reliable = results.summary.validation_ratio > 0.5;
+                
+                return Object.freeze(results);
+            },
+            
+            // Get only validated observations (the clean interface for Layer 6)
+            getValidatedObservations: function(multiScale) {
+                const validation = this.validateAll(multiScale);
+                const validated = {};
+                
+                Object.keys(validation.sources).forEach(source => {
+                    if (validation.sources[source].validated) {
+                        // Return the medium-scale observation (best balance)
+                        const obs = multiScale.scales.medium.observations[source];
+                        if (obs) {
+                            // Create a new object with validated status
+                            validated[source] = {
+                                ...obs,
+                                status: OBSERVATION_STATUS.VALIDATED,
+                                validation: validation.sources[source]
+                            };
+                        }
+                    }
+                });
+                
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    captured_at: tick,
+                    validation_summary: validation.summary,
+                    perceptually_reliable: validation.perceptually_reliable,
+                    observations: validated
+                });
+            }
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // LAYER 6.1 — FACT EXTRACTOR
+        // Converts validated observations into discrete symbolic facts.
+        // Facts are NOT interpretations. Facts are assertions with provenance.
+        // ═══════════════════════════════════════════════════════════
+        
+        // Fact type enumeration (finite, explicit)
+        const FACT_TYPES = {
+            // From metrics
+            COHERENCE_LEVEL: 'COHERENCE_LEVEL',
+            RESONANCE_LEVEL: 'RESONANCE_LEVEL',
+            MEMORY_LOAD: 'MEMORY_LOAD',
+            
+            // From contracts
+            CONTRACT_HEALTH: 'CONTRACT_HEALTH',
+            
+            // From invariants
+            STRUCTURAL_STABILITY: 'STRUCTURAL_STABILITY',
+            
+            // From patterns
+            TOPOLOGY_SINKS: 'TOPOLOGY_SINKS',
+            TOPOLOGY_AMPLIFIERS: 'TOPOLOGY_AMPLIFIERS',
+            
+            // From trust
+            TRUST_LEVEL: 'TRUST_LEVEL',
+            
+            // From energy
+            ENERGY_BALANCE: 'ENERGY_BALANCE'
+        };
+        
+        // Fact value enumerations (bounded, not fuzzy)
+        const FACT_VALUES = {
+            // Levels (ordered)
+            HIGH: 'HIGH',
+            MEDIUM: 'MEDIUM',
+            LOW: 'LOW',
+            NONE: 'NONE',
+            
+            // Health states
+            HEALTHY: 'HEALTHY',
+            STRESSED: 'STRESSED',
+            FAILING: 'FAILING',
+            
+            // Balance states
+            STABLE: 'STABLE',
+            DRIFTING: 'DRIFTING',
+            UNSTABLE: 'UNSTABLE',
+            
+            // Presence
+            PRESENT: 'PRESENT',
+            ABSENT: 'ABSENT'
+        };
+        
+        const factExtractor = {
+            SCHEMA_VERSION: '6.1.0',
+            
+            // Thresholds (hard-coded, deterministic)
+            thresholds: {
+                coherence: { high: 0.85, medium: 0.6, low: 0.4 },
+                resonance: { high: 3.0, medium: 1.0, low: 0.1 },
+                memory: { high: 100, medium: 30, low: 5 },
+                trust: { high: 0.8, moderate: 0.5, low: 0.3 },
+                energyBalance: { stable: 0.1, drifting: 0.3 }
+            },
+            
+            // Create a single fact (internal)
+            createFact: function(factType, value, confidence, supportedBy) {
+                if (!Object.values(FACT_TYPES).includes(factType)) {
+                    console.warn('Invalid fact type:', factType);
+                    return null;
+                }
+                
+                return Object.freeze({
+                    fact_type: factType,
+                    value: value,
+                    confidence: confidence,
+                    supported_by: supportedBy,
+                    tick: tick,
+                    schema_version: this.SCHEMA_VERSION
+                });
+            },
+            
+            // Extract COHERENCE_LEVEL from metrics observation
+            extractCoherenceLevel: function(metricsObs) {
+                if (!metricsObs || metricsObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const coh = metricsObs.data.coherence;
+                let value;
+                
+                if (coh >= this.thresholds.coherence.high) value = FACT_VALUES.HIGH;
+                else if (coh >= this.thresholds.coherence.medium) value = FACT_VALUES.MEDIUM;
+                else if (coh >= this.thresholds.coherence.low) value = FACT_VALUES.LOW;
+                else value = FACT_VALUES.NONE;
+                
+                // Confidence is bounded by observation confidence
+                const conf = metricsObs.confidence.value * 0.95; // Slight reduction for derivation
+                
+                return this.createFact(FACT_TYPES.COHERENCE_LEVEL, value, conf, ['metrics']);
+            },
+            
+            // Extract RESONANCE_LEVEL from metrics observation
+            extractResonanceLevel: function(metricsObs) {
+                if (!metricsObs || metricsObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const res = metricsObs.data.resonance;
+                let value;
+                
+                if (res >= this.thresholds.resonance.high) value = FACT_VALUES.HIGH;
+                else if (res >= this.thresholds.resonance.medium) value = FACT_VALUES.MEDIUM;
+                else if (res >= this.thresholds.resonance.low) value = FACT_VALUES.LOW;
+                else value = FACT_VALUES.NONE;
+                
+                const conf = metricsObs.confidence.value * 0.95;
+                
+                return this.createFact(FACT_TYPES.RESONANCE_LEVEL, value, conf, ['metrics']);
+            },
+            
+            // Extract MEMORY_LOAD from metrics observation
+            extractMemoryLoad: function(metricsObs) {
+                if (!metricsObs || metricsObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const mem = metricsObs.data.memory;
+                let value;
+                
+                if (mem >= this.thresholds.memory.high) value = FACT_VALUES.HIGH;
+                else if (mem >= this.thresholds.memory.medium) value = FACT_VALUES.MEDIUM;
+                else if (mem >= this.thresholds.memory.low) value = FACT_VALUES.LOW;
+                else value = FACT_VALUES.NONE;
+                
+                const conf = metricsObs.confidence.value * 0.95;
+                
+                return this.createFact(FACT_TYPES.MEMORY_LOAD, value, conf, ['metrics']);
+            },
+            
+            // Extract CONTRACT_HEALTH from contracts observation
+            extractContractHealth: function(contractsObs) {
+                if (!contractsObs || contractsObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const data = contractsObs.data;
+                let value;
+                
+                if (data.violated > 0) value = FACT_VALUES.FAILING;
+                else if (data.weak > 0) value = FACT_VALUES.STRESSED;
+                else value = FACT_VALUES.HEALTHY;
+                
+                const conf = contractsObs.confidence.value * 0.9;
+                
+                return this.createFact(FACT_TYPES.CONTRACT_HEALTH, value, conf, ['contracts']);
+            },
+            
+            // Extract STRUCTURAL_STABILITY from invariants observation
+            extractStructuralStability: function(invariantsObs) {
+                if (!invariantsObs || invariantsObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const data = invariantsObs.data;
+                let value;
+                
+                // Structural stability requires promoted structural invariants
+                if (data.structural >= 2) value = FACT_VALUES.HIGH;
+                else if (data.promoted >= 1) value = FACT_VALUES.MEDIUM;
+                else if (data.total >= 3) value = FACT_VALUES.LOW;
+                else value = FACT_VALUES.NONE;
+                
+                const conf = invariantsObs.confidence.value * 0.9;
+                
+                return this.createFact(FACT_TYPES.STRUCTURAL_STABILITY, value, conf, ['invariants']);
+            },
+            
+            // Extract TOPOLOGY_SINKS from patterns observation
+            extractTopologySinks: function(patternsObs) {
+                if (!patternsObs || patternsObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const sinks = patternsObs.data.sinks;
+                const value = sinks > 0 ? FACT_VALUES.PRESENT : FACT_VALUES.ABSENT;
+                const conf = patternsObs.confidence.value * 0.9;
+                
+                return this.createFact(FACT_TYPES.TOPOLOGY_SINKS, value, conf, ['patterns']);
+            },
+            
+            // Extract TOPOLOGY_AMPLIFIERS from patterns observation
+            extractTopologyAmplifiers: function(patternsObs) {
+                if (!patternsObs || patternsObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const amps = patternsObs.data.amplifiers;
+                const value = amps > 0 ? FACT_VALUES.PRESENT : FACT_VALUES.ABSENT;
+                const conf = patternsObs.confidence.value * 0.9;
+                
+                return this.createFact(FACT_TYPES.TOPOLOGY_AMPLIFIERS, value, conf, ['patterns']);
+            },
+            
+            // Extract TRUST_LEVEL from trust observation
+            extractTrustLevel: function(trustObs) {
+                if (!trustObs || trustObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const gti = trustObs.data.gti;
+                let value;
+                
+                if (gti >= this.thresholds.trust.high) value = FACT_VALUES.HIGH;
+                else if (gti >= this.thresholds.trust.moderate) value = FACT_VALUES.MEDIUM;
+                else if (gti >= this.thresholds.trust.low) value = FACT_VALUES.LOW;
+                else value = FACT_VALUES.NONE;
+                
+                // Trust facts have slightly lower confidence (self-referential)
+                const conf = trustObs.confidence.value * 0.85;
+                
+                return this.createFact(FACT_TYPES.TRUST_LEVEL, value, conf, ['trust']);
+            },
+            
+            // Extract ENERGY_BALANCE from energy observation
+            extractEnergyBalance: function(energyObs) {
+                if (!energyObs || energyObs.status !== OBSERVATION_STATUS.VALIDATED) return null;
+                
+                const balance = Math.abs(energyObs.data.balance);
+                let value;
+                
+                if (balance <= this.thresholds.energyBalance.stable) value = FACT_VALUES.STABLE;
+                else if (balance <= this.thresholds.energyBalance.drifting) value = FACT_VALUES.DRIFTING;
+                else value = FACT_VALUES.UNSTABLE;
+                
+                const conf = energyObs.confidence.value * 0.95;
+                
+                return this.createFact(FACT_TYPES.ENERGY_BALANCE, value, conf, ['energy']);
+            },
+            
+            // Extract ALL facts from validated observations
+            extractAll: function(validatedObs) {
+                if (!validatedObs || !validatedObs.observations) {
+                    return Object.freeze({
+                        schema_version: this.SCHEMA_VERSION,
+                        tick: tick,
+                        facts: [],
+                        extraction_failed: true,
+                        reason: 'no_validated_observations'
+                    });
+                }
+                
+                const obs = validatedObs.observations;
+                const facts = [];
+                
+                // Extract each fact type (order is arbitrary, facts are independent)
+                const coherence = this.extractCoherenceLevel(obs.metrics);
+                if (coherence) facts.push(coherence);
+                
+                const resonance = this.extractResonanceLevel(obs.metrics);
+                if (resonance) facts.push(resonance);
+                
+                const memory = this.extractMemoryLoad(obs.metrics);
+                if (memory) facts.push(memory);
+                
+                const contracts = this.extractContractHealth(obs.contracts);
+                if (contracts) facts.push(contracts);
+                
+                const stability = this.extractStructuralStability(obs.invariants);
+                if (stability) facts.push(stability);
+                
+                const sinks = this.extractTopologySinks(obs.patterns);
+                if (sinks) facts.push(sinks);
+                
+                const amplifiers = this.extractTopologyAmplifiers(obs.patterns);
+                if (amplifiers) facts.push(amplifiers);
+                
+                const trust = this.extractTrustLevel(obs.trust);
+                if (trust) facts.push(trust);
+                
+                const energy = this.extractEnergyBalance(obs.energy);
+                if (energy) facts.push(energy);
+                
+                // Build fact base
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    source_validation: validatedObs.validation_summary,
+                    perceptually_reliable: validatedObs.perceptually_reliable,
+                    facts: facts,
+                    fact_count: facts.length,
+                    // Index by type for quick lookup
+                    by_type: facts.reduce((acc, f) => { acc[f.fact_type] = f; return acc; }, {})
+                });
+            },
+            
+            // Convenience: get facts directly (full pipeline)
+            getFacts: function() {
+                const multiScale = temporalCoarsening.captureMultiScale();
+                const validated = stabilityFilter.getValidatedObservations(multiScale);
+                return this.extractAll(validated);
+            },
+            
+            // Get a specific fact by type
+            getFact: function(factType) {
+                const factBase = this.getFacts();
+                return factBase.by_type[factType] || null;
+            },
+            
+            // Schema documentation
+            getSchema: function() {
+                return {
+                    version: this.SCHEMA_VERSION,
+                    fact_types: Object.values(FACT_TYPES),
+                    fact_values: Object.values(FACT_VALUES),
+                    thresholds: this.thresholds,
+                    fact_structure: {
+                        fact_type: 'FACT_TYPES',
+                        value: 'FACT_VALUES',
+                        confidence: 'number [0-1]',
+                        supported_by: 'array of observation sources',
+                        tick: 'number',
+                        schema_version: 'string'
+                    },
+                    fact_base_structure: {
+                        tick: 'number',
+                        source_validation: 'validation summary',
+                        perceptually_reliable: 'boolean',
+                        facts: 'array of facts',
+                        fact_count: 'number',
+                        by_type: 'object indexed by fact_type'
+                    }
+                };
+            }
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // LAYER 6.2 — FACT STABILITY TRACKER
+        // Tracks facts over time. Measures persistence and volatility.
+        // Facts that persist become STATE. Facts that flicker are NOISE.
+        // Still no interpretation. Only temporal fact analysis.
+        // ═══════════════════════════════════════════════════════════
+        
+        const VOLATILITY_LEVEL = {
+            STABLE: 'STABLE',       // Very few transitions
+            LOW: 'LOW',             // Occasional transitions
+            MEDIUM: 'MEDIUM',       // Regular transitions
+            HIGH: 'HIGH',           // Frequent transitions
+            CHAOTIC: 'CHAOTIC'      // Constant change
+        };
+        
+        const factStabilityTracker = {
+            SCHEMA_VERSION: '6.2.0',
+            
+            // Configuration
+            config: {
+                historyLength: 100,           // How many fact snapshots to keep
+                sampleInterval: 10,           // Sample facts every N ticks
+                stableThreshold: 50,          // Ticks without change = stable
+                volatilityWindow: 50,         // Window for volatility calculation
+                minSamplesForVolatility: 5    // Minimum samples to calculate volatility
+            },
+            
+            // Fact history: { fact_type: [{ tick, value, confidence }, ...] }
+            history: {},
+            
+            // Last sample tick
+            lastSampleTick: 0,
+            
+            // Initialize history for all fact types
+            init: function() {
+                Object.values(FACT_TYPES).forEach(ft => {
+                    if (!this.history[ft]) this.history[ft] = [];
+                });
+            },
+            
+            // Record current facts (called periodically)
+            sample: function() {
+                // Only sample at intervals
+                if (tick - this.lastSampleTick < this.config.sampleInterval) return;
+                this.lastSampleTick = tick;
+                
+                const factBase = factExtractor.getFacts();
+                if (factBase.extraction_failed) return;
+                
+                // Record each fact
+                factBase.facts.forEach(fact => {
+                    if (!this.history[fact.fact_type]) {
+                        this.history[fact.fact_type] = [];
+                    }
+                    
+                    this.history[fact.fact_type].push({
+                        tick: fact.tick,
+                        value: fact.value,
+                        confidence: fact.confidence
+                    });
+                    
+                    // Trim history
+                    if (this.history[fact.fact_type].length > this.config.historyLength) {
+                        this.history[fact.fact_type].shift();
+                    }
+                });
+            },
+            
+            // Get stability info for a single fact type
+            getFactStability: function(factType) {
+                const hist = this.history[factType];
+                
+                if (!hist || hist.length < 2) {
+                    return {
+                        fact_type: factType,
+                        available: false,
+                        reason: 'insufficient_history'
+                    };
+                }
+                
+                const latest = hist[hist.length - 1];
+                const currentValue = latest.value;
+                const currentConfidence = latest.confidence;
+                
+                // Find how long current value has persisted
+                let stableSince = latest.tick;
+                for (let i = hist.length - 2; i >= 0; i--) {
+                    if (hist[i].value === currentValue) {
+                        stableSince = hist[i].tick;
+                    } else {
+                        break;
+                    }
+                }
+                const stableFor = latest.tick - stableSince;
+                
+                // Count transitions in volatility window
+                const windowStart = tick - this.config.volatilityWindow;
+                const windowHist = hist.filter(h => h.tick >= windowStart);
+                
+                let transitions = 0;
+                for (let i = 1; i < windowHist.length; i++) {
+                    if (windowHist[i].value !== windowHist[i - 1].value) {
+                        transitions++;
+                    }
+                }
+                
+                // Calculate volatility
+                let volatility;
+                if (windowHist.length < this.config.minSamplesForVolatility) {
+                    volatility = VOLATILITY_LEVEL.LOW; // Default assumption
+                } else {
+                    const transitionRate = transitions / windowHist.length;
+                    if (transitionRate === 0) volatility = VOLATILITY_LEVEL.STABLE;
+                    else if (transitionRate < 0.1) volatility = VOLATILITY_LEVEL.LOW;
+                    else if (transitionRate < 0.25) volatility = VOLATILITY_LEVEL.MEDIUM;
+                    else if (transitionRate < 0.5) volatility = VOLATILITY_LEVEL.HIGH;
+                    else volatility = VOLATILITY_LEVEL.CHAOTIC;
+                }
+                
+                // Track value distribution in history
+                const valueCounts = {};
+                hist.forEach(h => {
+                    valueCounts[h.value] = (valueCounts[h.value] || 0) + 1;
+                });
+                
+                // Find dominant value
+                let dominantValue = currentValue;
+                let maxCount = 0;
+                Object.keys(valueCounts).forEach(v => {
+                    if (valueCounts[v] > maxCount) {
+                        maxCount = valueCounts[v];
+                        dominantValue = v;
+                    }
+                });
+                const dominantRatio = maxCount / hist.length;
+                
+                // Calculate average confidence
+                const avgConfidence = hist.reduce((s, h) => s + h.confidence, 0) / hist.length;
+                
+                // Detect recent transition
+                let lastTransition = null;
+                for (let i = hist.length - 1; i >= 1; i--) {
+                    if (hist[i].value !== hist[i - 1].value) {
+                        lastTransition = {
+                            from: hist[i - 1].value,
+                            to: hist[i].value,
+                            at_tick: hist[i].tick,
+                            ticks_ago: tick - hist[i].tick
+                        };
+                        break;
+                    }
+                }
+                
+                return Object.freeze({
+                    fact_type: factType,
+                    available: true,
+                    
+                    // Current state
+                    current: {
+                        value: currentValue,
+                        confidence: currentConfidence,
+                        tick: latest.tick
+                    },
+                    
+                    // Stability metrics
+                    stability: {
+                        stable_for: stableFor,
+                        is_stable: stableFor >= this.config.stableThreshold,
+                        volatility: volatility,
+                        transitions_in_window: transitions
+                    },
+                    
+                    // Historical pattern
+                    pattern: {
+                        dominant_value: dominantValue,
+                        dominant_ratio: dominantRatio,
+                        avg_confidence: avgConfidence,
+                        sample_count: hist.length
+                    },
+                    
+                    // Last transition (if any)
+                    last_transition: lastTransition
+                });
+            },
+            
+            // Get stability for all fact types
+            getAllStability: function() {
+                const results = {
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    fact_states: {},
+                    summary: {
+                        total: 0,
+                        stable: 0,
+                        volatile: 0,
+                        insufficient_data: 0
+                    }
+                };
+                
+                Object.values(FACT_TYPES).forEach(ft => {
+                    const stability = this.getFactStability(ft);
+                    results.fact_states[ft] = stability;
+                    results.summary.total++;
+                    
+                    if (!stability.available) {
+                        results.summary.insufficient_data++;
+                    } else if (stability.stability.is_stable) {
+                        results.summary.stable++;
+                    } else {
+                        results.summary.volatile++;
+                    }
+                });
+                
+                // System-level stability ratio
+                const validFacts = results.summary.total - results.summary.insufficient_data;
+                results.summary.stability_ratio = validFacts > 0 ? results.summary.stable / validFacts : 0;
+                
+                return Object.freeze(results);
+            },
+            
+            // Get only stable facts (facts that have persisted)
+            getStableFacts: function() {
+                const allStability = this.getAllStability();
+                const stableFacts = {};
+                
+                Object.keys(allStability.fact_states).forEach(ft => {
+                    const state = allStability.fact_states[ft];
+                    if (state.available && state.stability.is_stable) {
+                        stableFacts[ft] = {
+                            value: state.current.value,
+                            confidence: state.current.confidence,
+                            stable_for: state.stability.stable_for,
+                            volatility: state.stability.volatility
+                        };
+                    }
+                });
+                
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    stable_facts: stableFacts,
+                    stable_count: Object.keys(stableFacts).length
+                });
+            },
+            
+            // Detect recent transitions (facts that just changed)
+            getRecentTransitions: function(withinTicks) {
+                const window = withinTicks || 50;
+                const transitions = [];
+                
+                Object.values(FACT_TYPES).forEach(ft => {
+                    const stability = this.getFactStability(ft);
+                    if (stability.available && stability.last_transition) {
+                        if (stability.last_transition.ticks_ago <= window) {
+                            transitions.push({
+                                fact_type: ft,
+                                ...stability.last_transition
+                            });
+                        }
+                    }
+                });
+                
+                // Sort by recency
+                transitions.sort((a, b) => a.ticks_ago - b.ticks_ago);
+                
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    window: window,
+                    transitions: transitions,
+                    transition_count: transitions.length
+                });
+            },
+            
+            // Reset history (e.g., on system reset)
+            reset: function() {
+                this.history = {};
+                this.lastSampleTick = 0;
+                this.init();
+            },
+            
+            // Schema documentation
+            getSchema: function() {
+                return {
+                    version: this.SCHEMA_VERSION,
+                    volatility_levels: Object.values(VOLATILITY_LEVEL),
+                    config: this.config,
+                    fact_stability_structure: {
+                        fact_type: 'FACT_TYPES',
+                        available: 'boolean',
+                        current: { value: 'FACT_VALUES', confidence: 'number', tick: 'number' },
+                        stability: {
+                            stable_for: 'ticks',
+                            is_stable: 'boolean',
+                            volatility: 'VOLATILITY_LEVEL',
+                            transitions_in_window: 'number'
+                        },
+                        pattern: {
+                            dominant_value: 'FACT_VALUES',
+                            dominant_ratio: 'number [0-1]',
+                            avg_confidence: 'number [0-1]',
+                            sample_count: 'number'
+                        },
+                        last_transition: { from: 'FACT_VALUES', to: 'FACT_VALUES', at_tick: 'number', ticks_ago: 'number' }
+                    }
+                };
+            }
+        };
+        
+        // Initialize fact stability tracker
+        factStabilityTracker.init();
+        
+        // ═══════════════════════════════════════════════════════════
+        // LAYER 6.3 — FACT GRAPH CONSTRUCTION
+        // Discovers RELATIONS between facts. Not meanings.
+        // Nodes = stable facts. Edges = observed co-occurrence/transition.
+        // This is STRUCTURAL KNOWLEDGE, not understanding.
+        // ═══════════════════════════════════════════════════════════
+        
+        // Edge types (structural, not semantic)
+        const EDGE_TYPES = {
+            CO_OCCURRENCE: 'co_occurrence',     // Facts appear together
+            TRANSITION: 'transition',           // One fact leads to another
+            ANTI_CORRELATION: 'anti_correlation' // Facts rarely appear together
+        };
+        
+        const factGraph = {
+            SCHEMA_VERSION: '6.3.0',
+            
+            // Configuration
+            config: {
+                sampleInterval: 20,              // Sample every N ticks
+                historyLength: 200,              // How many snapshots to keep
+                minSamplesForEdge: 10,           // Minimum samples to create edge
+                coOccurrenceThreshold: 0.6,      // Min ratio for co-occurrence edge
+                antiCorrelationThreshold: 0.2,   // Max ratio for anti-correlation edge
+                transitionWindow: 30             // Ticks to look for transitions
+            },
+            
+            // Snapshot history: [{ tick, facts: { factType: value, ... } }, ...]
+            snapshots: [],
+            
+            // Computed edges: [{ from, to, type, weight, samples, last_updated }, ...]
+            edges: [],
+            
+            // Last sample tick
+            lastSampleTick: 0,
+            lastGraphBuildTick: 0,
+            
+            // Take a snapshot of current stable fact values
+            sample: function() {
+                if (tick - this.lastSampleTick < this.config.sampleInterval) return;
+                this.lastSampleTick = tick;
+                
+                const stableFacts = factStabilityTracker.getStableFacts();
+                const snapshot = { tick: tick, facts: {} };
+                
+                // Only record stable facts
+                Object.keys(stableFacts.stable_facts).forEach(ft => {
+                    snapshot.facts[ft] = stableFacts.stable_facts[ft].value;
+                });
+                
+                this.snapshots.push(snapshot);
+                
+                // Trim history
+                if (this.snapshots.length > this.config.historyLength) {
+                    this.snapshots.shift();
+                }
+                
+                // Rebuild graph periodically (every 100 ticks)
+                if (tick - this.lastGraphBuildTick >= 100) {
+                    this.buildGraph();
+                    this.lastGraphBuildTick = tick;
+                }
+            },
+            
+            // Build the fact graph from snapshot history
+            buildGraph: function() {
+                if (this.snapshots.length < this.config.minSamplesForEdge) {
+                    return; // Not enough data
+                }
+                
+                this.edges = [];
+                const factTypes = Object.values(FACT_TYPES);
+                
+                // Analyze each pair of fact types
+                for (let i = 0; i < factTypes.length; i++) {
+                    for (let j = i + 1; j < factTypes.length; j++) {
+                        const ftA = factTypes[i];
+                        const ftB = factTypes[j];
+                        
+                        const edge = this.analyzeRelation(ftA, ftB);
+                        if (edge) {
+                            this.edges.push(edge);
+                        }
+                    }
+                }
+                
+                // Analyze transitions (value changes leading to other value changes)
+                this.analyzeTransitions();
+            },
+            
+            // Analyze relation between two fact types
+            analyzeRelation: function(ftA, ftB) {
+                let bothPresent = 0;
+                let aOnlyPresent = 0;
+                let bOnlyPresent = 0;
+                let neitherPresent = 0;
+                
+                this.snapshots.forEach(snap => {
+                    const hasA = snap.facts[ftA] !== undefined;
+                    const hasB = snap.facts[ftB] !== undefined;
+                    
+                    if (hasA && hasB) bothPresent++;
+                    else if (hasA) aOnlyPresent++;
+                    else if (hasB) bOnlyPresent++;
+                    else neitherPresent++;
+                });
+                
+                const total = this.snapshots.length;
+                const aPresent = bothPresent + aOnlyPresent;
+                const bPresent = bothPresent + bOnlyPresent;
+                
+                // Need both facts to appear enough
+                if (aPresent < this.config.minSamplesForEdge || bPresent < this.config.minSamplesForEdge) {
+                    return null;
+                }
+                
+                // Co-occurrence: when A is present, how often is B also present?
+                const coOccurrenceRatio = aPresent > 0 ? bothPresent / aPresent : 0;
+                
+                // Check for co-occurrence
+                if (coOccurrenceRatio >= this.config.coOccurrenceThreshold) {
+                    return {
+                        from: ftA,
+                        to: ftB,
+                        type: EDGE_TYPES.CO_OCCURRENCE,
+                        weight: coOccurrenceRatio,
+                        samples: total,
+                        bidirectional: true,
+                        last_updated: tick
+                    };
+                }
+                
+                // Check for anti-correlation
+                if (coOccurrenceRatio <= this.config.antiCorrelationThreshold && aPresent > 0 && bPresent > 0) {
+                    return {
+                        from: ftA,
+                        to: ftB,
+                        type: EDGE_TYPES.ANTI_CORRELATION,
+                        weight: 1 - coOccurrenceRatio,
+                        samples: total,
+                        bidirectional: true,
+                        last_updated: tick
+                    };
+                }
+                
+                return null;
+            },
+            
+            // Analyze transitions: when fact A changes, does fact B often change shortly after?
+            analyzeTransitions: function() {
+                if (this.snapshots.length < 3) return;
+                
+                const factTypes = Object.values(FACT_TYPES);
+                const transitionCounts = {}; // { "ftA→ftB": { count, total } }
+                
+                // Look for value changes
+                for (let i = 1; i < this.snapshots.length; i++) {
+                    const prev = this.snapshots[i - 1];
+                    const curr = this.snapshots[i];
+                    
+                    // Find facts that changed
+                    const changedFacts = [];
+                    factTypes.forEach(ft => {
+                        if (prev.facts[ft] !== curr.facts[ft]) {
+                            changedFacts.push(ft);
+                        }
+                    });
+                    
+                    // Look ahead for subsequent changes
+                    if (changedFacts.length > 0) {
+                        for (let j = i + 1; j < this.snapshots.length && j <= i + 3; j++) {
+                            const future = this.snapshots[j];
+                            const futureChanges = [];
+                            
+                            factTypes.forEach(ft => {
+                                if (this.snapshots[j - 1].facts[ft] !== future.facts[ft]) {
+                                    futureChanges.push(ft);
+                                }
+                            });
+                            
+                            // Record transitions
+                            changedFacts.forEach(srcFact => {
+                                futureChanges.forEach(dstFact => {
+                                    if (srcFact !== dstFact) {
+                                        const key = srcFact + '→' + dstFact;
+                                        if (!transitionCounts[key]) {
+                                            transitionCounts[key] = { count: 0, total: 0 };
+                                        }
+                                        transitionCounts[key].count++;
+                                    }
+                                });
+                                
+                                // Track total opportunities
+                                const key = srcFact + '→*';
+                                if (!transitionCounts[key]) {
+                                    transitionCounts[key] = { count: 0, total: 0 };
+                                }
+                                transitionCounts[key].total++;
+                            });
+                        }
+                    }
+                }
+                
+                // Convert significant transitions to edges
+                Object.keys(transitionCounts).forEach(key => {
+                    if (key.endsWith('→*')) return; // Skip totals
+                    
+                    const parts = key.split('→');
+                    const srcFact = parts[0];
+                    const dstFact = parts[1];
+                    const totalKey = srcFact + '→*';
+                    
+                    const count = transitionCounts[key].count;
+                    const total = transitionCounts[totalKey] ? transitionCounts[totalKey].total : 0;
+                    
+                    if (total >= this.config.minSamplesForEdge / 2 && count >= 3) {
+                        const weight = count / Math.max(total, count);
+                        
+                        if (weight >= 0.3) { // Significant transition
+                            // Check if edge already exists
+                            const existing = this.edges.find(e => 
+                                e.from === srcFact && e.to === dstFact && e.type === EDGE_TYPES.TRANSITION
+                            );
+                            
+                            if (!existing) {
+                                this.edges.push({
+                                    from: srcFact,
+                                    to: dstFact,
+                                    type: EDGE_TYPES.TRANSITION,
+                                    weight: weight,
+                                    samples: count,
+                                    bidirectional: false,
+                                    last_updated: tick
+                                });
+                            }
+                        }
+                    }
+                });
+            },
+            
+            // Get all edges
+            getEdges: function() {
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    edge_count: this.edges.length,
+                    edges: this.edges.map(e => Object.freeze({...e})),
+                    snapshot_count: this.snapshots.length
+                });
+            },
+            
+            // Get edges for a specific fact type
+            getEdgesFor: function(factType) {
+                const related = this.edges.filter(e => e.from === factType || e.to === factType);
+                
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    fact_type: factType,
+                    edges: related.map(e => Object.freeze({...e}))
+                });
+            },
+            
+            // Get edges by type
+            getEdgesByType: function(edgeType) {
+                const filtered = this.edges.filter(e => e.type === edgeType);
+                
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    edge_type: edgeType,
+                    edges: filtered.map(e => Object.freeze({...e}))
+                });
+            },
+            
+            // Get the full graph structure (nodes + edges)
+            getGraph: function() {
+                const stableFacts = factStabilityTracker.getStableFacts();
+                
+                // Build nodes from stable facts
+                const nodes = {};
+                Object.keys(stableFacts.stable_facts).forEach(ft => {
+                    const sf = stableFacts.stable_facts[ft];
+                    nodes[ft] = {
+                        fact_type: ft,
+                        value: sf.value,
+                        stable_for: sf.stable_for,
+                        volatility: sf.volatility,
+                        edge_count: this.edges.filter(e => e.from === ft || e.to === ft).length
+                    };
+                });
+                
+                // Calculate graph metrics
+                const nodeCount = Object.keys(nodes).length;
+                const edgeCount = this.edges.length;
+                const density = nodeCount > 1 ? (2 * edgeCount) / (nodeCount * (nodeCount - 1)) : 0;
+                
+                // Find most connected node
+                let mostConnected = null;
+                let maxEdges = 0;
+                Object.keys(nodes).forEach(ft => {
+                    if (nodes[ft].edge_count > maxEdges) {
+                        maxEdges = nodes[ft].edge_count;
+                        mostConnected = ft;
+                    }
+                });
+                
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    
+                    // Nodes
+                    nodes: nodes,
+                    node_count: nodeCount,
+                    
+                    // Edges
+                    edges: this.edges.map(e => Object.freeze({...e})),
+                    edge_count: edgeCount,
+                    
+                    // Metrics
+                    metrics: {
+                        density: density,
+                        most_connected: mostConnected,
+                        max_edges: maxEdges,
+                        avg_edges_per_node: nodeCount > 0 ? edgeCount / nodeCount : 0
+                    },
+                    
+                    // By edge type
+                    by_type: {
+                        co_occurrence: this.edges.filter(e => e.type === EDGE_TYPES.CO_OCCURRENCE).length,
+                        transition: this.edges.filter(e => e.type === EDGE_TYPES.TRANSITION).length,
+                        anti_correlation: this.edges.filter(e => e.type === EDGE_TYPES.ANTI_CORRELATION).length
+                    }
+                });
+            },
+            
+            // Get strongest edges (highest weight)
+            getStrongestEdges: function(n) {
+                const count = n || 5;
+                const sorted = [...this.edges].sort((a, b) => b.weight - a.weight);
+                
+                return Object.freeze({
+                    schema_version: this.SCHEMA_VERSION,
+                    tick: tick,
+                    edges: sorted.slice(0, count).map(e => Object.freeze({...e}))
+                });
+            },
+            
+            // Reset graph
+            reset: function() {
+                this.snapshots = [];
+                this.edges = [];
+                this.lastSampleTick = 0;
+                this.lastGraphBuildTick = 0;
+            },
+            
+            // Schema documentation
+            getSchema: function() {
+                return {
+                    version: this.SCHEMA_VERSION,
+                    edge_types: Object.values(EDGE_TYPES),
+                    config: this.config,
+                    edge_structure: {
+                        from: 'FACT_TYPES',
+                        to: 'FACT_TYPES',
+                        type: 'EDGE_TYPES',
+                        weight: 'number [0-1]',
+                        samples: 'number',
+                        bidirectional: 'boolean',
+                        last_updated: 'tick'
+                    },
+                    graph_structure: {
+                        nodes: 'object of fact states',
+                        edges: 'array of edges',
+                        metrics: { density: 'number', most_connected: 'FACT_TYPES', avg_edges_per_node: 'number' },
+                        by_type: 'edge counts per type'
+                    }
+                };
+            }
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // CONSOLE API
+        // ═══════════════════════════════════════════════════════════
+        window.mullu = {
+            // Data
+            events: eventRegistry,
+            nodes: () => nodes,
+            bridges: () => BRIDGES,
+            invariants: () => invariantCandidates,
+            config: CONFIG,
+            
+            // Queries
+            getCanonical: () => invariantCandidates.filter(c => c.promoted),
+            getSinks: () => patternDetectors.getByType('sink'),
+            getAmplifiers: () => patternDetectors.getByType('amplifier'),
+            getBottlenecks: () => patternDetectors.getByType('bottleneck'),
+            getViolations: () => eventRegistry.filter(e => e.type === EVENT_TYPES.CONTRACT_VIOLATION),
+            getStrongestBridges: (n = 10) => BRIDGES.slice().sort((a, b) => b.strength - a.strength).slice(0, n),
+            
+            // Analysis
+            verifyContracts: () => contractVerification.verify(),
+            contractSummary: () => contractVerification.getSummary(),
+            detectPatterns: () => patternDetectors.detect(),
+            patterns: () => patternDetectors.patterns,
+            
+            // Trust & Trends
+            getTrust: () => trustIndex.compute(),
+            trustTrend: () => trustIndex.getTrend(),
+            getTrends: () => trendDetector.getAllTrends(),
+            trendSummary: () => trendDetector.getSummary(),
+            
+            // Layer 5.1 — Observation Frame
+            observe: (windowSize) => observationFrame.capture(windowSize),
+            observationSchema: () => observationFrame.getSchema(),
+            createObservation: (source, start, end, data, conf) => observationFrame.createObservation(source, start, end, data, conf),
+            OBSERVATION_SOURCES: OBSERVATION_SOURCES,
+            OBSERVATION_STATUS: OBSERVATION_STATUS,
+            
+            // Layer 5.2 — Temporal Coarsening
+            observeMultiScale: () => temporalCoarsening.captureMultiScale(),
+            observeScale: (scale) => temporalCoarsening.captureScale(scale),
+            compareScales: (multiScale, source) => temporalCoarsening.compareAcrossScales(multiScale, source),
+            TEMPORAL_SCALES: TEMPORAL_SCALES,
+            
+            // Layer 5.3 — Stability Filter
+            validateObservations: (multiScale) => stabilityFilter.validateAll(multiScale),
+            getValidated: () => stabilityFilter.getValidatedObservations(temporalCoarsening.captureMultiScale()),
+            stabilityConfig: () => stabilityFilter.config,
+            
+            // Layer 6.1 — Fact Extractor
+            getFacts: () => factExtractor.getFacts(),
+            getFact: (type) => factExtractor.getFact(type),
+            factSchema: () => factExtractor.getSchema(),
+            FACT_TYPES: FACT_TYPES,
+            FACT_VALUES: FACT_VALUES,
+            
+            // Layer 6.2 — Fact Stability Tracker
+            getFactStability: (type) => factStabilityTracker.getFactStability(type),
+            getAllFactStability: () => factStabilityTracker.getAllStability(),
+            getStableFacts: () => factStabilityTracker.getStableFacts(),
+            getRecentTransitions: (window) => factStabilityTracker.getRecentTransitions(window),
+            factStabilitySchema: () => factStabilityTracker.getSchema(),
+            VOLATILITY_LEVEL: VOLATILITY_LEVEL,
+            
+            // Layer 6.3 — Fact Graph
+            getFactGraph: () => factGraph.getGraph(),
+            getEdges: () => factGraph.getEdges(),
+            getEdgesFor: (type) => factGraph.getEdgesFor(type),
+            getEdgesByType: (type) => factGraph.getEdgesByType(type),
+            getStrongestEdges: (n) => factGraph.getStrongestEdges(n),
+            factGraphSchema: () => factGraph.getSchema(),
+            EDGE_TYPES: EDGE_TYPES,
+            
+            // State
+            getSystemState: classifySystemState,
+            getMetrics: () => ({ totalResonance: metrics.totalResonance, avgCoherence: metrics.avgCoherence, totalMemory: metrics.totalMemory, dissipation: effectiveDissipation, flow: totalFlow, deltaSigma }),
+            
+            // Full report
+            analyze: () => {
+                contractVerification.verify();
+                patternDetectors.detect();
+                const state = classifySystemState();
+                const trust = trustIndex.compute();
+                const trends = trendDetector.getSummary();
+                const cs = contractVerification.getSummary();
+                
+                return {
+                    tick, system_state: state.state, state_confidence: state.confidence,
+                    gti: +trust.gti.toFixed(3), trust_interpretation: trust.interpretation,
+                    trend_status: trends.status, warnings: trends.warnings,
+                    invariants: { structural: invariantCandidates.filter(c => c.promoted && c.type === INVARIANT_TYPES.STRUCTURAL).map(c => c.fidel), dynamic: invariantCandidates.filter(c => c.promoted && c.type === INVARIANT_TYPES.DYNAMIC).map(c => c.fidel), total: invariantCandidates.length },
+                    contracts: cs,
+                    patterns: { sinks: patternDetectors.getByType('sink').length, amplifiers: patternDetectors.getByType('amplifier').length, bottlenecks: patternDetectors.getByType('bottleneck').length },
+                    metrics: { resonance: +metrics.totalResonance.toFixed(3), coherence: +metrics.avgCoherence.toFixed(3), memory: +metrics.totalMemory.toFixed(2), dissipation: +(effectiveDissipation * 100).toFixed(1), flow: +totalFlow.toFixed(2) },
+                    energy: { in: +totalEnergyIn.toFixed(2), out: +totalEnergyOut.toFixed(2), current: +metrics.totalResonance.toFixed(3) }
+                };
+            },
+            
+            // Export
+            exportState: () => ({ tick, nodes: nodes.map(n => ({ fidel: n.fidel, name: n.name, state: n.state })), invariants: invariantCandidates, contracts: contractVerification.results, patterns: patternDetectors.patterns, trust: trustIndex.compute(), trends: trendDetector.getSummary(), events: eventRegistry.slice(0, 100) })
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════════════════════════
+        window.addEventListener('resize', resize);
+        resize();
+        metrics.update();
+        addLog('v3.4 L6.3', 'propagation');
+        console.log('%cMullu v3.4%c | Layer 6.3 Fact Graph', 'color:#00d4aa;font-weight:bold', 'color:#888');
+        console.log('API: mullu.getFactGraph() | mullu.getEdges() | mullu.getStrongestEdges()');
+        loop();
     </script>
 </body>
 </html>
