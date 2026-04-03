@@ -264,7 +264,7 @@ let S = {
   robotGesture:[null,null],gestureTimers:[0,0],
   lightsOn:[true,true,true,true],deskMonModes:[0,1,2],
   headline:"",speakerActive:0,autoAdvance:true,autoCut:true,
-  segTimer:0,autoRotate:false,showPip:false,lightPreset:0,
+  segTimer:0,autoRotate:true,showPip:false,lightPreset:0,
   showFps:false,preset:0,showUI:true,
   broadcastTimer:0, cinematic:true, greenScreen:0, tvFull:false,
 };
@@ -1265,14 +1265,84 @@ function animate(){
     else{mat.emissiveIntensity=.03;mat.color.setHex(0x2244cc);}
   }
 
-  // Cinematic auto-orbit (smooth sweep through presets)
+  // ═══ CINEMATIC CAMERA DIRECTOR ═══
+  // Rich multi-move sequences: tilt, drone, dolly, zoom, crane, pan, rig sweep
+  // Each move blends multiple techniques simultaneously
   if(S.cinematic&&!dragging){
     cinematicTimer+=dt;
-    if(cinematicTimer>6){
+    // 12 cinematic moves, 8 seconds each
+    const CINEMA_MOVES=[
+      // 0: ESTABLISHING — slow drone rise + wide pull-back
+      {dur:8,fn:(p)=>{
+        orbit.r=14+p*6;orbit.p=0.2+p*0.4;orbit.t=p*0.3;
+        orbit.cx=0;orbit.cy=1.5+p*2;orbit.cz=0;
+      }},
+      // 1: ANCHOR CLOSE-UP — dolly in on anchors + slight tilt down
+      {dur:7,fn:(p)=>{
+        orbit.r=7-p*3;orbit.p=0.18-p*0.06;orbit.t=Math.sin(p*1.5)*0.08;
+        orbit.cx=0;orbit.cy=2+p*0.3;orbit.cz=0;
+      }},
+      // 2: CRANE SWEEP LEFT — high crane arc over left side
+      {dur:9,fn:(p)=>{
+        orbit.r=10+Math.sin(p*Math.PI)*4;orbit.p=0.5+Math.sin(p*Math.PI)*0.4;
+        orbit.t=-0.3+p*1.2;orbit.cx=-2+p*4;orbit.cy=3;orbit.cz=0;
+      }},
+      // 3: ROBOT 1 FOCUS — tight zoom on CYAN-1 + head tracking
+      {dur:6,fn:(p)=>{
+        orbit.r=3.5+Math.sin(p*Math.PI)*0.5;orbit.p=0.15+Math.sin(p*2)*0.04;
+        orbit.t=0.25+Math.sin(p*3)*0.06;orbit.cx=-1.6;orbit.cy=2;orbit.cz=1.3;
+      }},
+      // 4: LOW DOLLY — ground-level push through studio
+      {dur:8,fn:(p)=>{
+        orbit.r=12-p*4;orbit.p=0.04+Math.sin(p*Math.PI)*0.03;
+        orbit.t=0.1+p*0.4;orbit.cx=p*3-1.5;orbit.cy=0.8;orbit.cz=p*2;
+      }},
+      // 5: BACKDROP ZOOM — slow push into the TV screen
+      {dur:7,fn:(p)=>{
+        orbit.r=16-p*10;orbit.p=0.25+Math.sin(p*Math.PI)*0.08;
+        orbit.t=Math.sin(p*2)*0.05;orbit.cx=0;orbit.cy=4+p*2;orbit.cz=-2-p*3;
+      }},
+      // 6: TOP DOWN DRONE — bird's eye rotating descent
+      {dur:8,fn:(p)=>{
+        orbit.r=14-p*4;orbit.p=1.2-p*0.6;orbit.t=p*2;
+        orbit.cx=0;orbit.cy=0;orbit.cz=0;
+      }},
+      // 7: ROBOT 2 ORBIT — tight circle around AMBER-2
+      {dur:6,fn:(p)=>{
+        orbit.r=3.2+Math.sin(p*Math.PI)*0.8;orbit.p=0.12+Math.sin(p*Math.PI)*0.1;
+        orbit.t=-0.25+p*1.5;orbit.cx=1.6;orbit.cy=2;orbit.cz=1.3;
+      }},
+      // 8: DUTCH TILT — dramatic angle with slow zoom
+      {dur:7,fn:(p)=>{
+        orbit.r=8+Math.sin(p*Math.PI)*3;orbit.p=0.08+p*0.35;
+        orbit.t=-0.5+p*0.8;orbit.cx=-1;orbit.cy=1.5+p*2;orbit.cz=1;
+      }},
+      // 9: Φ HOLOGRAM — approach the governance display
+      {dur:7,fn:(p)=>{
+        orbit.r=5+Math.sin(p*Math.PI)*2;orbit.p=0.2+Math.sin(p*2)*0.08;
+        orbit.t=1.45+Math.sin(p*1.5)*0.15;orbit.cx=-15;orbit.cy=5.5;orbit.cz=4;
+      }},
+      // 10: EQUIPMENT PASS — dolly past racks and gear
+      {dur:8,fn:(p)=>{
+        orbit.r=6+p*4;orbit.p=0.2+Math.sin(p*Math.PI)*0.15;
+        orbit.t=0.8-p*1.6;orbit.cx=6-p*12;orbit.cy=2;orbit.cz=4+p*3;
+      }},
+      // 11: GRAND PULLBACK — final wide establishing + tilt up to ceiling
+      {dur:9,fn:(p)=>{
+        orbit.r=8+p*14;orbit.p=0.15+p*0.5;orbit.t=-0.2+p*0.4;
+        orbit.cx=0;orbit.cy=2+p*1;orbit.cz=0;
+      }},
+    ];
+    const totalMoves=CINEMA_MOVES.length;
+    const moveIdx=cinematicPresetIdx%totalMoves;
+    const move=CINEMA_MOVES[moveIdx];
+    const progress=Math.min(1,cinematicTimer/move.dur);
+    // Smooth easing
+    const eased=progress<0.5?2*progress*progress:1-Math.pow(-2*progress+2,2)/2;
+    move.fn(eased);
+    if(cinematicTimer>=move.dur){
       cinematicTimer=0;
-      cinematicPresetIdx=(cinematicPresetIdx+1)%PRESETS.length;
-      const p=PRESETS[cinematicPresetIdx];
-      orbit={t:p.t,p:p.p,r:p.r,cx:p.cx,cy:p.cy,cz:p.cz};
+      cinematicPresetIdx=(cinematicPresetIdx+1)%totalMoves;
     }
   }
 
