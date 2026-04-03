@@ -228,6 +228,7 @@ const RUNDOWN = [
   {id:"D",label:"LLM \u2194 SYMBOLIC",backdrop:"data",speaker:1,ticker:"HOW SYMBOLIC AI AND LLMS FEED EACH OTHER: LLMS GENERATE — SYMBOLIC SYSTEMS VERIFY, GOVERN, AND GROUND MEANING IN TRUTH"},
   {id:"E",label:"\u03A6\u00B2 GOVERNANCE",backdrop:"weather",speaker:0,ticker:"\u03A6\u00B2-M: MULTI-AGENT GOVERNANCE FRAMEWORK — FROM SINGLE MINDS TO CIVILIZATIONAL STABILITY THROUGH CAUSAL ACCOUNTABILITY"},
   {id:"F",label:"THE AMBITION",backdrop:"globe",speaker:1,ticker:"THE GOAL: SYMBOLIC INTELLIGENCE THAT COEXISTS WITH HUMANITY — NOT REPLACING THOUGHT BUT MAKING IT ACCOUNTABLE AND TRACEABLE"},
+  {id:"G",label:"COMING SOON",backdrop:"headline",speaker:0,ticker:"COMING SOON: MULLUSI NEWS LIVE BROADCAST — TAMIRAT LULIE WUBIE — SYMBOLIC INTELLIGENCE NETWORK — MULLUSI.COM — STAY TUNED"},
 ];
 
 // Story crawler — Tamirat's journey told as scrolling headlines
@@ -746,6 +747,26 @@ function drawMain(t){
     ctx.fillText("\u1219\u1209 \u12DC\u1293",gx,gy+gr-8);ctx.textAlign="start";
     // ሙሉ ዜና label corner
     ctx.fillStyle="rgba(80,140,220,0.25)";ctx.font="11px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",gx+gr+14,gy-gr+15);
+    // ── COMING PRODUCTS panel (segment A) ──
+    if(RUNDOWN[S.rundownIdx]?.id==="A"){
+      const px=gx+gr+20,py=65;
+      ctx.fillStyle="rgba(4,10,25,0.7)";
+      ctx.fillRect(px-6,py-16,210,170);
+      ctx.strokeStyle="rgba(60,120,200,0.1)";ctx.lineWidth=1;
+      ctx.strokeRect(px-6,py-16,210,170);
+      ctx.fillStyle="rgba(100,170,255,0.55)";ctx.font="bold 9px monospace";ctx.fillText("COMING PRODUCTS",px,py);
+      ctx.strokeStyle="rgba(60,120,200,0.12)";ctx.beginPath();ctx.moveTo(px,py+5);ctx.lineTo(px+198,py+5);ctx.stroke();
+      const items=["Agentic Framework","New Video Format","Physics Discovery Engine","AI & LLM Grounding Mechanism","General Symbolic Intelligence","Domain-Specific Solutions","and more ..."];
+      items.forEach((item,i)=>{
+        const reveal=Math.min(1,Math.max(0,(t*0.8-i*0.5)));
+        if(reveal<=0)return;
+        const iy=py+20+i*20;
+        ctx.fillStyle=`rgba(80,170,255,${(reveal*0.45).toFixed(2)})`;ctx.font="8px monospace";ctx.fillText("\u25B8",px,iy);
+        ctx.fillStyle=i<6?`rgba(170,200,240,${(reveal*0.6).toFixed(2)})`:`rgba(120,160,220,${(reveal*0.4).toFixed(2)})`;
+        ctx.font=i<6?"9px monospace":"italic 9px monospace";
+        ctx.fillText(item,px+12,iy);
+      });
+    }
   }else if(mode==="data"){
     ctx.strokeStyle="rgba(0,60,140,0.06)";ctx.lineWidth=1;
     for(let x=0;x<cw;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ch);ctx.stroke();}
@@ -806,18 +827,35 @@ function drawMain(t){
     ctx.strokeStyle="rgba(80,140,220,0.15)";ctx.lineWidth=2;
     ctx.beginPath();ctx.arc(cw/2,ch/2-20,70,t*.3,t*.3+3.5);ctx.stroke();
     ctx.beginPath();ctx.arc(cw/2,ch/2-20,80,-t*.2,-t*.2+2.5);ctx.stroke();
-    // Headline text
-    ctx.fillStyle="rgba(120,180,255,0.8)";ctx.font="bold 28px monospace";ctx.textAlign="center";
-    ctx.fillText(S.headline||"MULLUSI NEWS",cw/2,ch/2-20);
-    // Amharic title
-    ctx.fillStyle="rgba(100,160,240,0.5)";ctx.font="bold 20px serif";
-    ctx.fillText("\u1219\u1209 \u12DC\u1293",cw/2,ch/2+5);
-    // Subtitle
-    ctx.fillStyle="rgba(80,120,180,0.4)";ctx.font="12px monospace";
-    ctx.fillText("SYMBOLIC INTELLIGENCE NETWORK",cw/2,ch/2+25);
-    // Dev credit
-    ctx.fillStyle="rgba(60,90,140,0.25)";ctx.font="8px monospace";
-    ctx.fillText("TAMIRAT LULIE WUBIE · MULLUSI.COM",cw/2,ch/2+35);
+    // Headline text — show COMING SOON on segment G
+    const isComingSoon=RUNDOWN[S.rundownIdx]?.id==="G";
+    if(isComingSoon){
+      // COMING SOON screen
+      ctx.fillStyle="rgba(100,160,240,0.5)";ctx.font="bold 24px serif";ctx.textAlign="center";
+      ctx.fillText("\u1219\u1209 \u12DC\u1293",cw/2,ch/2-55);
+      ctx.fillStyle="rgba(120,180,255,0.7)";ctx.font="bold 30px monospace";
+      ctx.fillText("MULLUSI NEWS",cw/2,ch/2-25);
+      const csPulse2=0.5+0.3*Math.sin(t*2);
+      ctx.fillStyle=`rgba(200,220,255,${csPulse2.toFixed(2)})`;ctx.font="bold 22px monospace";
+      ctx.fillText("COMING SOON"+".".repeat(1+Math.floor(t*2)%4),cw/2,ch/2+5);
+      ctx.fillStyle="rgba(160,190,240,0.5)";ctx.font="16px monospace";
+      ctx.fillText("TAMIRAT LULIE WUBIE",cw/2,ch/2+35);
+      ctx.fillStyle="rgba(100,140,200,0.35)";ctx.font="11px monospace";
+      ctx.fillText("SYMBOLIC INTELLIGENCE NETWORK",cw/2,ch/2+55);
+      ctx.fillText("mullusi.com",cw/2,ch/2+70);
+      // Φ watermark
+      ctx.fillStyle="rgba(60,100,180,0.05)";ctx.font="bold 120px monospace";
+      ctx.fillText("\u03A6",cw/2,ch/2+35);
+    }else{
+      ctx.fillStyle="rgba(120,180,255,0.8)";ctx.font="bold 28px monospace";ctx.textAlign="center";
+      ctx.fillText(S.headline||"MULLUSI NEWS",cw/2,ch/2-20);
+      ctx.fillStyle="rgba(100,160,240,0.5)";ctx.font="bold 20px serif";
+      ctx.fillText("\u1219\u1209 \u12DC\u1293",cw/2,ch/2+5);
+      ctx.fillStyle="rgba(80,120,180,0.4)";ctx.font="12px monospace";
+      ctx.fillText("SYMBOLIC INTELLIGENCE NETWORK",cw/2,ch/2+25);
+      ctx.fillStyle="rgba(60,90,140,0.25)";ctx.font="8px monospace";
+      ctx.fillText("TAMIRAT LULIE WUBIE \u00B7 MULLUSI.COM",cw/2,ch/2+35);
+    }
     ctx.textAlign="start";
   }
 
@@ -857,33 +895,29 @@ function drawMain(t){
   ctx.fillStyle="rgba(0,100,200,0.03)";ctx.fillRect(0,(t*35)%ch,cw,2);
   sTex.needsUpdate=true;
 
-  // TV Fullscreen mode — draw enlarged backdrop + fidels + effects
+  // TV Fullscreen mode — shows live broadcast (backdrop canvas scaled up)
   if(S.tvFull){
     const tvC=ge('tv-canvas');const tvCtx=tvC.getContext('2d');
     const tw=tvC.width,th=tvC.height;
-    // Scale backdrop to TV canvas
+    // Scale live backdrop to TV canvas
     tvCtx.drawImage(sCvs,0,0,tw,th);
-    // Draw fidels on TV canvas (matching their screen positions)
+    // Draw fidels on TV canvas
     if(window.fidelMeshes&&window.fidelMeshes.length){
       window.fidelMeshes.forEach((fm,i)=>{
-        const d=window.fidelData[i];
-        // Map screen coords to TV canvas: x[-6.5,6.5]→[0,tw], y[1.75,9.25]→[th,0]
         const fx=((fm.position.x+6.75)/13.5)*tw;
         const fy=(1-(fm.position.y-1.75)/7.5)*th;
         const hue=i<4?200:(180+i*8)%360;
         const alpha=i<4?(0.75+0.2*Math.sin(t*1.5+i)):(0.35+0.2*Math.sin(t*0.8+i*0.5));
-        const sz=i<4?32:20;
         tvCtx.fillStyle=`hsla(${hue},70%,65%,${alpha.toFixed(2)})`;
-        tvCtx.font=(i<4?"bold ":"")+(sz)+"px serif";
+        tvCtx.font=(i<4?"bold ":"")+(i<4?32:20)+"px serif";
         tvCtx.textAlign="center";tvCtx.textBaseline="middle";
         tvCtx.fillText(FIDEL_CHARS[i],fx,fy);
         tvCtx.textAlign="start";tvCtx.textBaseline="alphabetic";
       });
     }
-    // Scan line effect
+    // Scan lines
     tvCtx.fillStyle="rgba(0,0,0,0.03)";
     for(let y=0;y<th;y+=3)tvCtx.fillRect(0,y,tw,1);
-    // Moving scan bar
     tvCtx.fillStyle="rgba(0,100,200,0.04)";tvCtx.fillRect(0,(t*60)%th,tw,3);
     // Network watermark
     tvCtx.fillStyle="rgba(60,100,160,0.08)";tvCtx.font="12px serif";tvCtx.fillText("\u1219\u1209 \u12DC\u1293",tw-100,30);
