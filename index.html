@@ -44,6 +44,8 @@ canvas{display:block;width:100%;height:100%}
 #progress .bar{height:100%;border-radius:2px;transition:width .25s}
 #fps{position:fixed;bottom:auto;top:8px;right:8px;color:#334;font:7px var(--mono);z-index:5;pointer-events:none;display:none}
 #show-ui{position:fixed;bottom:6px;right:6px;z-index:11;display:none}
+@keyframes ui-blink{0%,100%{opacity:.3}50%{opacity:1}}
+#show-ui.blink{animation:ui-blink 2s ease-in-out infinite}
 #tv-full{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:50;display:none;cursor:pointer;opacity:0;transition:opacity .4s}
 #tv-full.show{opacity:1}
 #tv-full canvas{width:100%;height:100%;object-fit:contain}
@@ -261,10 +263,10 @@ let S = {
   liveCam:0,broadcastOn:true,rundownIdx:0,backdropMode:"globe",
   robotGesture:[null,null],gestureTimers:[0,0],
   lightsOn:[true,true,true,true],deskMonModes:[0,1,2],
-  headline:"",speakerActive:0,autoAdvance:false,autoCut:true,
+  headline:"",speakerActive:0,autoAdvance:true,autoCut:true,
   segTimer:0,autoRotate:false,showPip:false,lightPreset:0,
   showFps:false,preset:0,showUI:true,
-  broadcastTimer:0, cinematic:false, greenScreen:0, tvFull:false,
+  broadcastTimer:0, cinematic:true, greenScreen:0, tvFull:false,
 };
 let undoStack = [];
 const pushUndo = () => { undoStack.push(JSON.parse(JSON.stringify(S))); if(undoStack.length>20)undoStack.shift(); };
@@ -1384,10 +1386,9 @@ function holoFire(chain,deltas){
 }
 function toggleUI(){
   S.showUI=!S.showUI;
-  const ui=ge('ui');
-  if(S.showUI){ui.style.display='block';ui.classList.remove('hidden');}
-  else{ui.classList.add('hidden');}
-  ge('show-ui').style.display=S.showUI?'none':'block';
+  const ui=ge('ui'),btn=ge('show-ui');
+  if(S.showUI){ui.style.display='block';ui.classList.remove('hidden');btn.style.display='none';btn.classList.remove('blink');}
+  else{ui.classList.add('hidden');btn.style.display='block';btn.classList.add('blink');}
 }
 function toggleHelp(){ge('help').style.display=ge('help').style.display==='flex'?'none':'flex';}
 function togglePip(){S.showPip=!S.showPip;ge('pip').style.display=S.showPip?'block':'none';log("PiP: "+(S.showPip?"ON":"OFF"));}
@@ -1665,6 +1666,14 @@ function launchStudio(){
   ge('title').style.display='block';
   ge('status').style.display='flex';
   ge('ui').style.display='block';
+  // Auto-hide UI after 5 seconds
+  setTimeout(()=>{
+    if(S.showUI&&!S.tvFull){
+      S.showUI=false;
+      ge('ui').classList.add('hidden');
+      const btn=ge('show-ui');btn.style.display='block';btn.classList.add('blink');
+    }
+  },5000);
   // Enter fullscreen
   const el=document.documentElement;
   try{
