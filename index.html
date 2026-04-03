@@ -178,11 +178,12 @@ canvas{display:block;width:100%;height:100%}
     <div>Double-tap to reset to WIDE</div>
     <div class="sec">SEGMENT JUMP:</div>
     <div>Click segment buttons (A-F) to jump directly</div>
-    <div class="sec">DESK MONITORS (4 modes — click to cycle):</div>
+    <div class="sec">DESK MONITORS (5 modes — click to cycle):</div>
     <div>CAM → Viewfinder with settings</div>
     <div>PROMPT → Teleprompter script</div>
     <div>RUNDOWN → Full segment list</div>
     <div>STATS → Broadcast dashboard</div>
+    <div>SYMBIOSIS → LLM \u2194 Symbolic AI flow</div>
     <div class="sec">LIGHTING PRESETS (L key):</div>
     <div>STUDIO · WARM · COOL · DRAMA</div>
     <div class="sec">BACKDROP MODES (BG button):</div>
@@ -221,12 +222,30 @@ const PRESETS = [
   {n:"\u03A6",t:1.45,p:.2,r:5,cx:-15,cy:5.5,cz:4},
 ];
 const RUNDOWN = [
-  {id:"A",label:"OPEN / HEADLINES",backdrop:"globe",speaker:0,ticker:"MULLUSI NEWS — TOP STORIES TONIGHT"},
-  {id:"B",label:"MULLUSI LAUNCH",backdrop:"data",speaker:1,ticker:"MULLUSI SYMBOLIC INTELLIGENCE PLATFORM REACHES PRODUCTION"},
-  {id:"C",label:"DMRS AUDIT",backdrop:"globe",speaker:0,ticker:"DMRS KERNEL PASSES ALL GOVERNANCE AUDITS — ZERO WARNINGS"},
-  {id:"D",label:"MFIDEL ENGINE",backdrop:"weather",speaker:1,ticker:"MFIDEL GE'EZ SUBSTRATE ENGINE NOW FULLY OPERATIONAL"},
-  {id:"E",label:"\u03A6\u00B2 GOVERNANCE",backdrop:"data",speaker:0,ticker:"\u03A6\u00B2-M MULTI-AGENT GOVERNANCE FRAMEWORK DEPLOYED"},
-  {id:"F",label:"CLOSE",backdrop:"globe",speaker:1,ticker:"THANK YOU FOR WATCHING MULLUSI NEWS — GOODNIGHT"},
+  {id:"A",label:"OPEN / HEADLINES",backdrop:"globe",speaker:0,ticker:"MULLUSI NEWS — TONIGHT: THE FUTURE OF INTELLIGENCE IS SYMBOLIC"},
+  {id:"B",label:"FOUNDER'S VISION",backdrop:"data",speaker:1,ticker:"TAMIRAT LULIE WUBIE: FROM ETHIOPIAN HERITAGE TO SYMBOLIC INTELLIGENCE PIONEER — BUILDING THE FUTURE OF AI WITHOUT STATISTICS"},
+  {id:"C",label:"MULLUSI PLATFORM",backdrop:"globe",speaker:0,ticker:"MULLUSI: A DETERMINISTIC CAUSAL CHAIN REASONING ENGINE — NOT AN LLM — GROUNDED IN THE GE'EZ MFIDEL ATOMIC SYMBOL SUBSTRATE"},
+  {id:"D",label:"LLM \u2194 SYMBOLIC",backdrop:"data",speaker:1,ticker:"HOW SYMBOLIC AI AND LLMS FEED EACH OTHER: LLMS GENERATE — SYMBOLIC SYSTEMS VERIFY, GOVERN, AND GROUND MEANING IN TRUTH"},
+  {id:"E",label:"\u03A6\u00B2 GOVERNANCE",backdrop:"weather",speaker:0,ticker:"\u03A6\u00B2-M: MULTI-AGENT GOVERNANCE FRAMEWORK — FROM SINGLE MINDS TO CIVILIZATIONAL STABILITY THROUGH CAUSAL ACCOUNTABILITY"},
+  {id:"F",label:"THE AMBITION",backdrop:"globe",speaker:1,ticker:"THE GOAL: SYMBOLIC INTELLIGENCE THAT COEXISTS WITH HUMANITY — NOT REPLACING THOUGHT BUT MAKING IT ACCOUNTABLE AND TRACEABLE"},
+];
+
+// Story crawler — Tamirat's journey told as scrolling headlines
+const STORY_LINES=[
+  "TAMIRAT LULIE WUBIE — SYMBOLIC AI ARCHITECT — FOUNDER OF MULLUSI",
+  "BORN FROM ETHIOPIAN HERITAGE: THE GE'EZ WRITING SYSTEM AS COMPUTATIONAL SUBSTRATE",
+  "EACH FIDEL IS ATOMIC — NO DECOMPOSITION — MEANING THROUGH RELATION, NOT STATISTICS",
+  "THE CONVICTION: THE UNIVERSE IS A SINGULAR SYMBOL WITH INTERNAL DIVERSITY",
+  "MULLUSI: SYMBOLIC CAUSAL CHAIN GENERAL INTELLIGENCE — DETERMINISTIC, NOT PROBABILISTIC",
+  "DMRS KERNEL: 54 TESTS, ZERO WARNINGS — PROOF-CARRYING MEMORY GOVERNANCE",
+  "MFIDEL 34×8 GRID: 272 ATOMIC SYMBOLS — THE COMPUTATIONAL GROUND TRUTH",
+  "\u03A6 OPERATOR: GOVERNED SYMBOLIC TRANSFORMATION — EVERY ACTION LOGGED, EVERY JUDGMENT EARNED",
+  "\u03A8 JUDGMENT KERNEL: TRACEABLE, AUDITABLE, REVERSIBLE, GOVERNANCE-BOUND",
+  "FROM MECHANISM TO MIND: SURVIVAL → LEARNING → ABSTRACTION → CAUSATION → CHOICE → ETHICS",
+  "SYMBOLIC AI VERIFIES WHAT LLMS GENERATE — LLMS EXPAND WHAT SYMBOLIC AI CAN REACH",
+  "VISION: INTELLIGENCE THAT IS ACCOUNTABLE BY DESIGN — NOT CORRECTED AFTER THE FACT",
+  "BUILDING THE SYMBOLIC LAYER: VIRECAI, TATOKEN, SCCML, DMRS, MAF, SCCE, USL",
+  "MULLUSI.COM — THE SYMBOLIC INTELLIGENCE ECOSYSTEM — CAUSAL CONTRACTS FOR THE FUTURE",
 ];
 const LIGHT_PRESETS = [
   {name:"STUDIO",colors:[[0xffffff,.8],[0xffffff,.8],[0xffffff,.8],[0xffffff,.6]]},
@@ -815,7 +834,18 @@ function drawMain(t){
   if(S.broadcastOn){ctx.fillStyle="rgba(180,80,80,0.4)";ctx.font="10px monospace";ctx.fillText("AIR: "+fmtTime(S.broadcastTimer),18,76);}
   const now=new Date();ctx.fillStyle="rgba(150,180,220,0.45)";ctx.font="bold 14px monospace";ctx.fillText(now.toLocaleTimeString(),cw-100,55);
   // Dev watermark
-  ctx.fillStyle="rgba(40,60,100,0.12)";ctx.font="7px monospace";ctx.fillText("DEV: TAMIRAT LULIE WUBIE · MULLUSI",cw-220,ch-42);
+  ctx.fillStyle="rgba(40,60,100,0.12)";ctx.font="7px monospace";ctx.fillText("DEV: TAMIRAT LULIE WUBIE \u00B7 MULLUSI",cw-220,ch-58);
+  // ── DUAL TICKER CRAWLER ──
+  // Upper story line (Tamirat's journey — slower scroll, cycles through STORY_LINES)
+  ctx.fillStyle="rgba(8,16,40,0.85)";ctx.fillRect(0,ch-54,cw,16);
+  ctx.fillStyle="rgba(30,60,120,0.6)";ctx.fillRect(0,ch-54,80,16);
+  ctx.fillStyle="rgba(180,200,240,0.6)";ctx.font="bold 8px monospace";ctx.fillText("PROFILE",8,ch-43);
+  ctx.font="9px monospace";ctx.fillStyle="rgba(160,190,240,0.7)";
+  const storyIdx=Math.floor(t/12)%STORY_LINES.length;
+  const stLine=STORY_LINES[storyIdx]+"    \u25C6    "+STORY_LINES[(storyIdx+1)%STORY_LINES.length]+"    \u25C6    ";
+  const stSw=ctx.measureText(stLine).width,stSx=(t*35)%(stSw/2+50);
+  ctx.fillText(stLine,90-stSx,ch-43);
+  // Lower breaking news line (segment ticker)
   ctx.fillStyle="#b81818";ctx.fillRect(0,ch-38,cw,38);ctx.fillStyle="#8a0e0e";ctx.fillRect(0,ch-38,110,38);
   ctx.fillStyle="#fff";ctx.font="bold 10px monospace";ctx.fillText("BREAKING",15,ch-15);
   ctx.font="11px monospace";const tk=S.headline||seg?.ticker||"MULLUSI NEWS";const tkF=tk+"  \u25CF  "+tk+"  \u25CF  ";
@@ -929,7 +959,7 @@ function drawDMon(cvs,t,idx){
     ctx.fillStyle="rgba(150,170,200,0.25)";ctx.font="6px monospace";ctx.fillText("AIR: "+fmtTime(S.broadcastTimer),6,ch-8);
     // Progress
     if(S.autoAdvance&&S.broadcastOn){const pct=S.segTimer/10;ctx.fillStyle="rgba(0,80,200,0.2)";ctx.fillRect(6,110,cw-12,4);ctx.fillStyle=pct>.8?"rgba(220,60,30,0.5)":"rgba(0,150,255,0.4)";ctx.fillRect(6,110,(cw-12)*pct,4);}
-  }else{
+  }else if(mode===3){
     // Mode 3: Broadcast stats
     ctx.fillStyle="rgba(140,100,200,0.3)";ctx.font="7px monospace";ctx.fillText("BROADCAST",6,12);
     ctx.fillStyle="rgba(100,130,200,0.25)";ctx.font="9px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",65,12);
@@ -942,6 +972,58 @@ function drawDMon(cvs,t,idx){
     ctx.fillStyle="rgba(100,140,200,0.3)";ctx.font="6px monospace";
     ctx.fillText("AUTO:"+(S.autoAdvance?"ON":"OFF")+" CUT:"+(S.autoCut?"ON":"OFF"),6,100);
     ctx.fillText("CINEMA:"+(S.cinematic?"ON":"OFF"),6,112);
+  }else{
+    // Mode 4: SYMBIOSIS — LLM ↔ Symbolic AI scientific reasoning diagram
+    ctx.fillStyle="rgba(20,30,60,0.95)";ctx.fillRect(0,0,cw,ch);
+    ctx.fillStyle="rgba(100,160,240,0.4)";ctx.font="bold 6px monospace";ctx.fillText("LLM \u2194 SYMBOLIC AI SYMBIOSIS",6,10);
+    // LLM node (left)
+    const lx2=42,ly=52,nr=16;
+    ctx.strokeStyle="rgba(100,180,255,0.4)";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(lx2,ly,nr,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle="rgba(40,80,160,0.3)";ctx.beginPath();ctx.arc(lx2,ly,nr,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="rgba(140,190,255,0.7)";ctx.font="bold 7px monospace";ctx.textAlign="center";ctx.fillText("LLM",lx2,ly+2);
+    ctx.font="5px monospace";ctx.fillStyle="rgba(120,160,220,0.4)";ctx.fillText("GENERATE",lx2,ly+10);
+    // Symbolic node (right)
+    const sx2=150,sy=52;
+    ctx.strokeStyle="rgba(255,160,60,0.4)";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(sx2,sy,nr,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle="rgba(140,80,20,0.3)";ctx.beginPath();ctx.arc(sx2,sy,nr,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="rgba(255,200,100,0.7)";ctx.font="bold 6px monospace";ctx.fillText("SYMBOLIC",sx2,sy+2);
+    ctx.font="5px monospace";ctx.fillStyle="rgba(220,160,80,0.4)";ctx.fillText("VERIFY",sx2,sy+10);
+    ctx.textAlign="start";
+    // Animated flow arrows: LLM → Symbolic (top arc)
+    const flowT=t*2;
+    for(let f=0;f<3;f++){
+      const fp=(flowT+f*2.1)%6.3/6.3;
+      const fx=lx2+nr+(sx2-lx2-nr*2)*fp;
+      const fy=ly-12-Math.sin(fp*Math.PI)*10;
+      ctx.fillStyle=`rgba(100,220,255,${(.3+.3*Math.sin(flowT+f)).toFixed(2)})`;
+      ctx.beginPath();ctx.arc(fx,fy,2,0,Math.PI*2);ctx.fill();
+    }
+    // Animated flow arrows: Symbolic → LLM (bottom arc)
+    for(let f=0;f<3;f++){
+      const fp=(flowT+f*2.1+3.15)%6.3/6.3;
+      const fx=sx2-nr-(sx2-lx2-nr*2)*fp;
+      const fy=sy+12+Math.sin(fp*Math.PI)*10;
+      ctx.fillStyle=`rgba(255,180,60,${(.3+.3*Math.sin(flowT+f+1)).toFixed(2)})`;
+      ctx.beginPath();ctx.arc(fx,fy,2,0,Math.PI*2);ctx.fill();
+    }
+    // Labels on flows
+    ctx.fillStyle="rgba(100,200,255,0.35)";ctx.font="4px monospace";ctx.textAlign="center";
+    ctx.fillText("PATTERNS \u2192 HYPOTHESES",96,35);
+    ctx.fillStyle="rgba(255,180,80,0.35)";
+    ctx.fillText("PROOF \u2192 CONSTRAINTS",96,75);
+    ctx.textAlign="start";
+    // Φ governance bridge in center
+    ctx.fillStyle="rgba(160,120,255,0.3)";ctx.font="bold 10px monospace";ctx.textAlign="center";
+    ctx.fillText("\u03A6",96,55);ctx.textAlign="start";
+    // Bottom: causal flow text
+    ctx.fillStyle="rgba(140,170,220,0.3)";ctx.font="5px monospace";
+    ctx.fillText("LLM: EXPAND SEARCH SPACE",6,92);
+    ctx.fillText("SYMBOLIC: CONSTRAIN TO TRUTH",6,100);
+    ctx.fillText("TOGETHER: CREATIVE + CORRECT",6,108);
+    ctx.fillText("\u03A6 GOVERNS THE BOUNDARY",6,116);
+    // Pulsing connection line
+    ctx.strokeStyle=`rgba(160,140,255,${(.15+.1*Math.sin(t*3)).toFixed(2)})`;ctx.lineWidth=1;
+    ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(lx2+nr,ly);ctx.lineTo(sx2-nr,sy);ctx.stroke();ctx.setLineDash([]);
   }
   dMonT[idx].needsUpdate=true;
 }
@@ -1222,7 +1304,7 @@ function toggleBroadcast(){pushUndo();S.broadcastOn=!S.broadcastOn;if(!S.broadca
 function switchCam(id){pushUndo();S.liveCam=id;log("CAM "+(id+1)+(id===3?" (JIB)":"")+" → LIVE");holoFire("CAMERA_SWITCH",["cam→"+(id+1)]);}
 function toggleLight(id){pushUndo();S.lightsOn[id]=!S.lightsOn[id];log("LIGHT "+(id+1)+": "+(S.lightsOn[id]?"ON":"OFF"));holoFire("LIGHT_TOGGLE",["rig"+(id+1)+"→"+(S.lightsOn[id]?"on":"off")]);}
 function cycleBackdrop(){pushUndo();const modes=["globe","data","weather","headline"];const i=modes.indexOf(S.backdropMode);S.backdropMode=modes[(i+1)%modes.length];backdropFade=.5;log("BG: "+S.backdropMode);holoFire("BACKDROP_CYCLE",["mode→"+S.backdropMode]);}
-function cycleDeskMon(id){pushUndo();S.deskMonModes[id]=(S.deskMonModes[id]+1)%4;const names=["CAM","PROMPT","RUNDOWN","STATS"];log("MON "+(id+1)+": "+names[S.deskMonModes[id]]);holoFire("MONITOR_CYCLE",["mon"+(id+1)+"→"+names[S.deskMonModes[id]]]);}
+function cycleDeskMon(id){pushUndo();S.deskMonModes[id]=(S.deskMonModes[id]+1)%5;const names=["CAM","PROMPT","RUNDOWN","STATS","SYMBIOSIS"];log("MON "+(id+1)+": "+names[S.deskMonModes[id]]);holoFire("MONITOR_CYCLE",["mon"+(id+1)+"→"+names[S.deskMonModes[id]]]);}
 function robotGesture(id){pushUndo();const g=GESTURES[Math.floor(Math.random()*GESTURES.length)];S.robotGesture[id]=g;S.gestureTimers[id]=2.5;log("ROBOT "+(id+1)+": "+g);holoFire("ROBOT_GESTURE",["bot"+(id+1)+"→"+g]);}
 function cycleLightPreset(){pushUndo();S.lightPreset=(S.lightPreset+1)%LIGHT_PRESETS.length;log("LIGHTS: "+LIGHT_PRESETS[S.lightPreset].name);holoFire("LIGHT_PRESET_CYCLE",["preset→"+LIGHT_PRESETS[S.lightPreset].name]);}
 function cycleGreenScreen(){
