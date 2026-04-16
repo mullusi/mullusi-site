@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MULLUSI — Symbolic Intelligence</title>
+<meta name="description" content="Mullusi is a symbolic intelligence platform built on deterministic causal chain architecture — governed, traceable, grounded in the Mfidel atomic substrate.">
+<meta property="og:title" content="MULLUSI — Symbolic Intelligence">
+<meta property="og:description" content="Deterministic. Governed. Causal. Symbolic Intelligence from Ethiopia.">
+<meta property="og:url" content="https://mullusi.com">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@400;700&family=Noto+Sans+Ethiopic:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -18,7 +23,6 @@
     --amber: #e8b84b;
     --jade: #2fd4a0;
     --jade-dim: #1a7a5c;
-    --crimson: #d44a4a;
     --text: #e8e4d8;
     --text-dim: #8a8680;
     --text-muted: #4a4840;
@@ -27,105 +31,105 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
-
   body {
-    background: var(--void);
-    color: var(--text);
+    background: var(--void); color: var(--text);
     font-family: 'Space Mono', monospace;
-    overflow-x: hidden;
-    cursor: none;
+    overflow-x: hidden; cursor: none;
   }
 
-  /* Custom cursor */
+  /* ── Cursor ── */
   .cursor {
-    width: 12px; height: 12px;
-    background: var(--gold);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.08s ease, width 0.2s, height 0.2s, background 0.2s;
-    mix-blend-mode: difference;
+    width: 12px; height: 12px; background: var(--gold); border-radius: 50%;
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%); mix-blend-mode: difference;
+    transition: transform 0.15s ease;
   }
   .cursor-ring {
-    width: 40px; height: 40px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: transform 0.18s ease, opacity 0.2s;
-    opacity: 0.4;
+    width: 40px; height: 40px; border: 1px solid var(--gold); border-radius: 50%;
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%); opacity: 0.4;
+    transition: transform 0.2s ease, opacity 0.2s;
   }
 
-  /* ═══ NOISE OVERLAY ═══ */
+  /* ── Noise & scanlines ── */
   body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.35;
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9990; opacity: 0.35;
+  }
+  body::after {
+    content: ''; position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+    pointer-events: none; z-index: 9989;
   }
 
-  /* ═══ NAV ═══ */
+  /* ── NAV ── */
   nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 500;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9000;
     display: flex; align-items: center; justify-content: space-between;
     padding: 1.5rem 4rem;
-    background: linear-gradient(to bottom, rgba(5,5,8,0.95) 0%, transparent 100%);
+    background: linear-gradient(to bottom, rgba(5,5,8,0.97), rgba(5,5,8,0.85));
     border-bottom: 1px solid rgba(200,164,74,0.08);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
   }
   .nav-logo {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1.2rem;
-    letter-spacing: 0.3em;
-    color: var(--gold);
-    text-decoration: none;
+    font-family: 'Cinzel Decorative', serif; font-size: 1.2rem;
+    letter-spacing: 0.3em; color: var(--gold); text-decoration: none; flex-shrink: 0;
   }
-  .nav-logo span { color: var(--text-dim); font-size: 0.65rem; display: block; letter-spacing: 0.5em; margin-top: 2px; }
+  .nav-logo span {
+    color: var(--text-dim); font-size: 0.6rem; font-family: 'Space Mono', monospace;
+    display: block; letter-spacing: 0.5em; margin-top: 2px;
+  }
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a {
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-    position: relative;
+    color: var(--text-dim); text-decoration: none;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    transition: color 0.2s; position: relative;
   }
   .nav-links a::after {
-    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
-    background: var(--gold); transition: width 0.3s;
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px; background: var(--gold); transition: width 0.3s;
   }
   .nav-links a:hover { color: var(--gold); }
   .nav-links a:hover::after { width: 100%; }
   .nav-cta {
     font-family: 'Space Mono', monospace;
     font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--void); background: var(--gold);
-    border: none; padding: 0.6rem 1.4rem;
-    cursor: none; transition: background 0.2s;
-    text-decoration: none;
+    color: var(--void); background: var(--gold); border: none;
+    padding: 0.6rem 1.4rem; cursor: none; transition: background 0.2s;
+    text-decoration: none; flex-shrink: 0;
   }
   .nav-cta:hover { background: var(--amber); }
+  .nav-toggle {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: none; padding: 4px;
+  }
+  .nav-toggle span { display: block; width: 22px; height: 1px; background: var(--gold); }
 
-  /* ═══ HERO ═══ */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    position: relative;
-    overflow: hidden;
+  /* Mobile overlay */
+  .nav-mobile {
+    display: none; position: fixed; inset: 0;
+    background: rgba(5,5,8,0.98); z-index: 8900;
+    flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+  }
+  .nav-mobile.open { display: flex; }
+  .nav-mobile a {
+    font-family: 'Cinzel Decorative', serif; font-size: 1.3rem;
+    letter-spacing: 0.2em; color: var(--text-dim); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-mobile a:hover { color: var(--gold); }
+  .nav-mobile-close {
+    position: absolute; top: 2rem; right: 2rem;
+    background: none; border: none; color: var(--text-dim); font-size: 1.5rem; cursor: none;
   }
 
-  /* Animated grid background */
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    position: relative; overflow: hidden;
+  }
   .hero-grid {
     position: absolute; inset: 0;
     background-image:
@@ -134,141 +138,89 @@
     background-size: 60px 60px;
     animation: grid-drift 30s linear infinite;
   }
-  @keyframes grid-drift {
-    from { background-position: 0 0; }
-    to { background-position: 60px 60px; }
-  }
+  @keyframes grid-drift { from{background-position:0 0;} to{background-position:60px 60px;} }
 
-  /* Glow orbs */
-  .orb {
-    position: absolute; border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-  }
-  .orb-1 { width: 600px; height: 600px; background: rgba(122,92,240,0.12); top: -150px; right: 0; }
-  .orb-2 { width: 400px; height: 400px; background: rgba(200,164,74,0.08); bottom: 100px; left: -100px; }
-  .orb-3 { width: 300px; height: 300px; background: rgba(47,212,160,0.06); top: 200px; right: 200px; animation: orb-pulse 8s ease-in-out infinite; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+  .orb-1 { width:600px;height:600px;background:rgba(122,92,240,0.12);top:-150px;right:0; }
+  .orb-2 { width:400px;height:400px;background:rgba(200,164,74,0.08);bottom:100px;left:-100px; }
+  .orb-3 { width:300px;height:300px;background:rgba(47,212,160,0.06);top:200px;right:200px;animation:orb-pulse 8s ease-in-out infinite; }
   @keyframes orb-pulse { 0%,100%{opacity:0.6;transform:scale(1);} 50%{opacity:1;transform:scale(1.2);} }
 
   .hero-left {
     display: flex; flex-direction: column; justify-content: center;
-    padding: 8rem 4rem 4rem 5rem;
-    position: relative; z-index: 2;
+    padding: 8rem 4rem 4rem 5rem; position: relative; z-index: 2;
   }
-
   .hero-tag {
     font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
     color: var(--jade); border: 1px solid var(--jade-dim);
-    padding: 0.3rem 0.8rem; display: inline-block;
-    margin-bottom: 2rem;
+    padding: 0.3rem 0.8rem; display: inline-block; margin-bottom: 2rem;
     position: relative; overflow: hidden;
     animation: tag-appear 0.6s ease forwards;
   }
   .hero-tag::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: var(--jade);
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--jade);
   }
   @keyframes tag-appear { from{opacity:0;transform:translateX(-20px);} to{opacity:1;transform:translateX(0);} }
 
   .hero-title {
     font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(3rem, 6vw, 5.5rem);
-    line-height: 1.05;
-    letter-spacing: 0.05em;
-    color: var(--text);
+    font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.05; letter-spacing: 0.05em; color: var(--text);
     animation: title-rise 0.8s ease 0.2s both;
   }
   .hero-title .accent { color: var(--gold); display: block; }
   @keyframes title-rise { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
 
   .hero-sub {
-    font-family: 'Noto Sans Ethiopic', 'Space Mono', monospace;
-    font-size: 2.8rem; color: var(--text-muted);
-    letter-spacing: 0.15em; margin-top: 0.5rem;
-    animation: title-rise 0.8s ease 0.35s both;
-    line-height: 1.4;
+    font-family: 'Noto Sans Ethiopic', serif;
+    font-size: 2.8rem; color: var(--text-muted); letter-spacing: 0.15em; margin-top: 0.5rem;
+    animation: title-rise 0.8s ease 0.35s both; line-height: 1.4;
   }
-
   .hero-desc {
-    font-size: 0.8rem; line-height: 1.9;
-    color: var(--text-dim); max-width: 440px;
-    margin-top: 2rem;
-    animation: title-rise 0.8s ease 0.5s both;
-    border-left: 2px solid var(--gold-dim);
-    padding-left: 1.2rem;
+    font-size: 0.8rem; line-height: 1.9; color: var(--text-dim); max-width: 440px;
+    margin-top: 2rem; animation: title-rise 0.8s ease 0.5s both;
+    border-left: 2px solid var(--gold-dim); padding-left: 1.2rem;
   }
-
   .hero-actions {
-    display: flex; gap: 1rem; margin-top: 2.5rem;
+    display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
     animation: title-rise 0.8s ease 0.65s both;
   }
   .btn-primary {
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
     color: var(--void); background: var(--gold);
-    padding: 0.8rem 2rem; text-decoration: none;
-    border: none; cursor: none;
-    transition: background 0.2s, transform 0.1s;
-    position: relative; overflow: hidden;
-  }
-  .btn-primary::after {
-    content: '→'; position: absolute; right: -20px;
-    transition: right 0.2s; opacity: 0;
+    padding: 0.8rem 2rem; text-decoration: none; border: none; cursor: none;
+    transition: background 0.2s;
   }
   .btn-primary:hover { background: var(--amber); }
   .btn-ghost {
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
     color: var(--text-dim); background: transparent;
-    padding: 0.8rem 2rem; text-decoration: none;
-    border: 1px solid var(--rim); cursor: none;
+    padding: 0.8rem 2rem; text-decoration: none; border: 1px solid var(--rim); cursor: none;
     transition: border-color 0.2s, color 0.2s;
   }
   .btn-ghost:hover { border-color: var(--gold-dim); color: var(--text); }
 
   .hero-metrics {
-    display: flex; gap: 2.5rem; margin-top: 3.5rem;
+    display: flex; gap: 2.5rem; margin-top: 3.5rem; flex-wrap: wrap;
     animation: title-rise 0.8s ease 0.8s both;
   }
   .metric { display: flex; flex-direction: column; }
-  .metric-val {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1.6rem; color: var(--gold); line-height: 1;
-  }
+  .metric-val { font-family: 'Cinzel Decorative', serif; font-size: 1.6rem; color: var(--gold); line-height: 1; }
   .metric-label { font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.3rem; }
 
-  /* Hero Right — Symbolic Visualization */
-  .hero-right {
-    position: relative; z-index: 2;
-    display: flex; align-items: center; justify-content: center;
-  }
+  .hero-right { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; }
+  .phi-canvas { width: 520px; height: 520px; position: relative; animation: phi-appear 1.2s ease 0.4s both; }
+  @keyframes phi-appear { from{opacity:0;transform:scale(0.85) rotate(-10deg);} to{opacity:1;transform:scale(1) rotate(0);} }
+  .phi-canvas svg { width: 100%; height: 100%; overflow: visible; }
 
-  .phi-canvas {
-    width: 520px; height: 520px;
-    position: relative;
-    animation: phi-appear 1.2s ease 0.4s both;
-  }
-  @keyframes phi-appear { from{opacity:0;transform:scale(0.85) rotate(-10deg);} to{opacity:1;transform:scale(1) rotate(0deg);} }
-
-  .phi-canvas svg {
-    width: 100%; height: 100%;
-    overflow: visible;
-  }
-
-  /* ═══ PHILOSOPHY STRIP ═══ */
+  /* ── STRIP ── */
   .strip {
     background: var(--surface);
-    border-top: 1px solid rgba(200,164,74,0.15);
-    border-bottom: 1px solid rgba(200,164,74,0.15);
-    padding: 1.2rem 0;
-    overflow: hidden;
-    position: relative; z-index: 2;
+    border-top: 1px solid rgba(200,164,74,0.15); border-bottom: 1px solid rgba(200,164,74,0.15);
+    padding: 1.2rem 0; overflow: hidden; position: relative; z-index: 2;
   }
-  .strip-inner {
-    display: flex; gap: 4rem;
-    animation: marquee 40s linear infinite;
-    white-space: nowrap;
-  }
+  .strip-inner { display: flex; gap: 4rem; animation: marquee 40s linear infinite; white-space: nowrap; }
   .strip-item {
     font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
     color: var(--text-dim); display: flex; align-items: center; gap: 1rem;
@@ -276,327 +228,193 @@
   .strip-item::before { content: '◈'; color: var(--gold); font-size: 0.5rem; }
   @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
-  /* ═══ PILLARS SECTION ═══ */
-  .section {
-    padding: 8rem 5rem;
-    position: relative;
-  }
+  /* ── SECTIONS ── */
+  .section { padding: 8rem 5rem; position: relative; }
   .section-label {
     font-size: 0.55rem; letter-spacing: 0.5em; text-transform: uppercase;
     color: var(--jade); margin-bottom: 1rem;
     display: flex; align-items: center; gap: 1rem;
   }
-  .section-label::before { content: ''; display: block; width: 40px; height: 1px; background: var(--jade); }
-  .section-title {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    color: var(--text); line-height: 1.1;
-    max-width: 600px;
-  }
+  .section-label::before { content:'';display:block;width:40px;height:1px;background:var(--jade); }
+  .section-title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 4vw, 3.5rem); color: var(--text); line-height: 1.1; max-width: 600px; }
   .section-title .gold { color: var(--gold); }
 
+  /* ── PILLARS ── */
   .pillars-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    margin-top: 4rem;
-    border: 2px solid var(--rim);
+    display: grid; grid-template-columns: repeat(3,1fr);
+    margin-top: 4rem; border: 2px solid var(--rim);
   }
   .pillar {
-    background: var(--deep);
-    padding: 3rem 2.5rem;
+    background: var(--deep); padding: 3rem 2.5rem;
     border-right: 2px solid var(--rim);
-    position: relative;
-    overflow: hidden;
-    transition: background 0.3s;
+    position: relative; overflow: hidden; transition: background 0.3s;
   }
   .pillar:last-child { border-right: none; }
   .pillar::before {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 2px;
-    background: var(--gold);
-    transform: scaleX(0); transform-origin: left;
-    transition: transform 0.4s ease;
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
   }
   .pillar:hover { background: var(--surface); }
   .pillar:hover::before { transform: scaleX(1); }
-
-  .pillar-num {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 3rem; color: var(--text-muted);
-    line-height: 1; margin-bottom: 1.5rem;
-    transition: color 0.3s;
-  }
+  .pillar-num { font-family: 'Cinzel Decorative', serif; font-size: 3rem; color: var(--text-muted); line-height: 1; margin-bottom: 1.5rem; transition: color 0.3s; }
   .pillar:hover .pillar-num { color: var(--gold); }
-  .pillar-glyph {
-    font-family: 'Noto Sans Ethiopic', serif;
-    font-size: 2rem; color: var(--gold-dim);
-    margin-bottom: 1rem; display: block;
-  }
-  .pillar-title {
-    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--text); margin-bottom: 1rem;
-    font-weight: 700;
-  }
-  .pillar-body { font-size: 0.72rem; line-height: 1.8; color: var(--text-dim); }
-  .pillar-tag {
-    display: inline-block; margin-top: 1.5rem;
-    font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--jade); border: 1px solid var(--jade-dim); padding: 0.2rem 0.6rem;
-  }
+  .pillar-glyph { font-family: 'Noto Sans Ethiopic', serif; font-size: 2rem; color: var(--gold-dim); margin-bottom: 1rem; display: block; }
+  .pillar-title { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text); margin-bottom: 1rem; font-weight: 700; }
+  .pillar-body { font-size: 0.72rem; line-height: 1.85; color: var(--text-dim); }
+  .pillar-tag { display: inline-block; margin-top: 1.5rem; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--jade); border: 1px solid var(--jade-dim); padding: 0.2rem 0.6rem; }
 
-  /* ═══ PHI TRAVERSAL ═══ */
-  .phi-section {
-    background: var(--surface);
-    padding: 8rem 5rem;
-    position: relative; overflow: hidden;
-  }
+  /* ── PHI SECTION ── */
+  .phi-section { background: var(--surface); padding: 8rem 5rem; position: relative; overflow: hidden; }
   .phi-section::before {
     content: 'Φ'; position: absolute;
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 40vw; color: rgba(122,92,240,0.03);
-    right: -10vw; top: 50%; transform: translateY(-50%);
-    line-height: 1; pointer-events: none;
-    letter-spacing: -0.1em;
+    font-family: 'Cinzel Decorative', serif; font-size: 40vw;
+    color: rgba(122,92,240,0.03); right: -10vw; top: 50%;
+    transform: translateY(-50%); line-height: 1; pointer-events: none;
   }
-
-  .phi-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 6rem; align-items: start;
-    position: relative; z-index: 1;
-  }
-
-  .phi-phases {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1.5rem; margin-top: 3rem;
-  }
+  .phi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; position: relative; z-index: 1; }
+  .phi-phases { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
   .phase-card {
-    background: var(--panel);
-    border: 1px solid var(--rim);
-    padding: 1.2rem 1.5rem;
-    position: relative;
+    background: var(--panel); border: 1px solid var(--rim); padding: 1.2rem 1.5rem;
     transition: border-color 0.2s, transform 0.2s;
   }
   .phase-card:hover { border-color: var(--phi); transform: translateY(-2px); }
   .phase-num { font-size: 0.55rem; color: var(--phi); letter-spacing: 0.2em; margin-bottom: 0.4rem; }
   .phase-name { font-size: 0.7rem; color: var(--text); letter-spacing: 0.1em; font-weight: 700; }
-  .phase-desc { font-size: 0.6rem; color: var(--text-muted); margin-top: 0.3rem; line-height: 1.6; }
 
-  .phi-law {
-    background: var(--panel);
-    border: 1px solid var(--rim);
-    border-left: 3px solid var(--phi);
-    padding: 2rem 2.5rem;
-    margin-top: 3rem;
-    font-size: 0.7rem; line-height: 2;
-    color: var(--text-dim);
-    font-style: italic;
+  .phi-principle {
+    background: var(--panel); border: 1px solid var(--rim);
+    border-left: 3px solid var(--phi); padding: 2rem 2.5rem; margin-top: 3rem;
   }
-  .phi-law strong { color: var(--gold); font-style: normal; }
+  .phi-principle p { font-size: 0.72rem; line-height: 1.95; color: var(--text-dim); }
+  .phi-principle strong { color: var(--gold); }
 
-  /* ═══ MFIDEL SECTION ═══ */
-  .mfidel-section {
-    padding: 8rem 5rem;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 6rem; align-items: center;
-  }
-
-  .fidel-grid-display {
-    display: grid; grid-template-columns: repeat(8, 1fr);
-    gap: 3px;
-  }
+  /* ── MFIDEL ── */
+  .mfidel-section { padding: 8rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+  .fidel-grid-display { display: grid; grid-template-columns: repeat(8,1fr); gap: 3px; }
   .fidel-cell {
-    aspect-ratio: 1;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--surface);
-    border: 1px solid var(--rim);
-    font-family: 'Noto Sans Ethiopic', serif;
-    font-size: 1rem; color: var(--text-muted);
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-    cursor: none;
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    background: var(--surface); border: 1px solid var(--rim);
+    font-family: 'Noto Sans Ethiopic', serif; font-size: 1rem; color: var(--text-muted);
+    transition: background 0.15s, color 0.15s, border-color 0.15s; cursor: none;
   }
-  .fidel-cell:hover {
-    background: var(--panel); color: var(--gold); border-color: var(--gold-dim);
-  }
+  .fidel-cell:hover { background: var(--panel); color: var(--gold); border-color: var(--gold-dim); }
   .fidel-cell.vowel { color: var(--jade-dim); }
   .fidel-cell.vowel:hover { color: var(--jade); border-color: var(--jade-dim); }
 
-  /* ═══ PROJECTS / ECOSYSTEM ═══ */
-  .ecosystem-section {
-    background: var(--deep);
-    padding: 8rem 5rem;
-    border-top: 1px solid var(--rim);
-  }
-
-  .ecosystem-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-top: 4rem;
-  }
+  /* ── ECOSYSTEM ── */
+  .ecosystem-section { background: var(--deep); padding: 8rem 5rem; border-top: 1px solid var(--rim); }
+  .ecosystem-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-top: 4rem; }
   .eco-card {
-    background: var(--surface);
-    border: 1px solid var(--rim);
-    padding: 2rem 1.8rem;
-    transition: border-color 0.3s, transform 0.2s;
-    position: relative; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--rim); padding: 2rem 1.8rem;
+    transition: border-color 0.3s, transform 0.2s; position: relative; overflow: hidden;
   }
   .eco-card::after {
-    content: ''; position: absolute;
-    bottom: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg,transparent,var(--gold),transparent);
     transform: scaleX(0); transition: transform 0.4s;
   }
   .eco-card:hover { border-color: rgba(200,164,74,0.3); transform: translateY(-4px); }
   .eco-card:hover::after { transform: scaleX(1); }
   .eco-icon { font-size: 1.8rem; margin-bottom: 1rem; font-family: 'Noto Sans Ethiopic', serif; color: var(--gold-dim); }
   .eco-name { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); margin-bottom: 0.5rem; }
-  .eco-desc { font-size: 0.65rem; color: var(--text-dim); line-height: 1.7; }
-  .eco-badge {
-    display: inline-block; margin-top: 1rem;
-    font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase;
-    padding: 0.2rem 0.6rem;
-    border: 1px solid;
-  }
+  .eco-desc { font-size: 0.65rem; color: var(--text-dim); line-height: 1.75; }
+  .eco-badge { display: inline-block; margin-top: 1rem; font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.2rem 0.6rem; border: 1px solid; }
   .eco-badge.active { color: var(--jade); border-color: var(--jade-dim); }
   .eco-badge.dev { color: var(--amber); border-color: var(--gold-dim); }
   .eco-badge.arch { color: var(--phi); border-color: var(--phi-dim); }
 
-  /* ═══ MANIFESTO ═══ */
-  .manifesto {
-    padding: 10rem 5rem;
-    text-align: center;
-    position: relative; overflow: hidden;
-    background: var(--void);
-  }
-  .manifesto::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center, rgba(200,164,74,0.06) 0%, transparent 70%);
-  }
-  .manifesto-lines {
-    max-width: 800px; margin: 0 auto;
-    position: relative; z-index: 1;
-  }
+  /* ── MANIFESTO ── */
+  .manifesto { padding: 10rem 5rem; text-align: center; position: relative; overflow: hidden; background: var(--void); }
+  .manifesto::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center,rgba(200,164,74,0.06) 0%,transparent 70%); }
+  .manifesto-lines { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
   .manifesto-line {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(1.2rem, 2.5vw, 2rem);
-    color: var(--text-muted);
-    margin: 1.5rem 0; line-height: 1.3;
-    opacity: 0; transform: translateY(20px);
-    transition: opacity 0.6s, transform 0.6s;
+    font-family: 'Cinzel Decorative', serif; font-size: clamp(1.2rem,2.5vw,2rem);
+    color: var(--text-muted); margin: 1.5rem 0; line-height: 1.3;
+    opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s;
   }
   .manifesto-line.visible { opacity: 1; transform: translateY(0); }
   .manifesto-line .hi { color: var(--text); }
   .manifesto-line .gold { color: var(--gold); }
   .manifesto-line .jade { color: var(--jade); }
-  .manifesto-sep {
-    width: 1px; height: 40px; background: var(--rim);
-    margin: 0.5rem auto; opacity: 0.5;
-  }
+  .manifesto-sep { width: 1px; height: 40px; background: var(--rim); margin: 0.5rem auto; opacity: 0.5; }
 
-  /* ═══ CTA SECTION ═══ */
+  /* ── CTA ── */
   .cta-section {
-    padding: 8rem 5rem;
-    background: var(--surface);
-    border-top: 1px solid var(--rim);
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 6rem; align-items: center;
+    padding: 8rem 5rem; background: var(--surface); border-top: 1px solid var(--rim);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
   }
-  .cta-title {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    line-height: 1.15;
-  }
+  .cta-title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem,3.5vw,3rem); line-height: 1.15; }
   .cta-title .gold { color: var(--gold); }
   .cta-right { display: flex; flex-direction: column; gap: 1.5rem; }
-  .cta-form-group { display: flex; gap: 0; }
+  .cta-form-group { display: flex; }
   .cta-input {
-    flex: 1; background: var(--panel); border: 1px solid var(--rim);
-    border-right: none; color: var(--text);
-    font-family: 'Space Mono', monospace; font-size: 0.7rem;
-    padding: 0.9rem 1.2rem; outline: none;
-    transition: border-color 0.2s;
+    flex: 1; background: var(--panel); border: 1px solid var(--rim); border-right: none;
+    color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    padding: 0.9rem 1.2rem; outline: none; transition: border-color 0.2s;
   }
   .cta-input:focus { border-color: var(--gold-dim); }
   .cta-input::placeholder { color: var(--text-muted); }
   .cta-submit {
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-    background: var(--gold); color: var(--void);
-    border: none; padding: 0.9rem 1.5rem; cursor: none;
-    white-space: nowrap; transition: background 0.2s;
+    background: var(--gold); color: var(--void); border: none;
+    padding: 0.9rem 1.5rem; cursor: none; white-space: nowrap; transition: background 0.2s;
   }
   .cta-submit:hover { background: var(--amber); }
   .cta-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-  .cta-link {
-    font-size: 0.65rem; color: var(--text-dim); text-decoration: none;
-    letter-spacing: 0.1em;
-    display: flex; align-items: center; gap: 0.5rem;
-    transition: color 0.2s;
-  }
+  .cta-link { font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.1em; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
   .cta-link::before { content: '→'; color: var(--gold-dim); }
   .cta-link:hover { color: var(--gold); }
 
-  /* ═══ FOOTER ═══ */
-  footer {
-    background: var(--void);
-    border-top: 1px solid var(--rim);
-    padding: 3rem 5rem;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .footer-logo {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1rem; color: var(--gold);
-  }
+  /* ── FOOTER ── */
+  footer { background: var(--void); border-top: 1px solid var(--rim); padding: 3rem 5rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-logo { font-family: 'Cinzel Decorative', serif; font-size: 1rem; color: var(--gold); }
   .footer-logo span { color: var(--text-muted); font-family: 'Space Mono', monospace; font-size: 0.6rem; display: block; margin-top: 0.3rem; letter-spacing: 0.2em; }
   .footer-links { display: flex; gap: 2rem; }
   .footer-links a { font-size: 0.6rem; color: var(--text-muted); text-decoration: none; letter-spacing: 0.2em; text-transform: uppercase; transition: color 0.2s; }
   .footer-links a:hover { color: var(--text); }
-  .footer-law {
-    font-size: 0.55rem; color: var(--text-muted);
-    letter-spacing: 0.1em; text-align: right;
-    max-width: 260px; line-height: 1.6;
-  }
+  .footer-law { font-size: 0.55rem; color: var(--text-muted); letter-spacing: 0.1em; text-align: right; max-width: 260px; line-height: 1.8; }
 
-  /* ═══ SCAN LINES ═══ */
-  body::after {
-    content: '';
-    position: fixed; inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 999;
-  }
-
-  /* Responsive */
+  /* ── RESPONSIVE ── */
   @media (max-width: 1100px) {
     .hero { grid-template-columns: 1fr; }
     .hero-right { display: none; }
     .pillars-grid { grid-template-columns: 1fr; }
     .pillar { border-right: none; border-bottom: 2px solid var(--rim); }
+    .pillar:last-child { border-bottom: none; }
     .phi-grid, .mfidel-section, .cta-section { grid-template-columns: 1fr; gap: 3rem; }
     .ecosystem-grid { grid-template-columns: 1fr 1fr; }
-    nav { padding: 1.5rem 2rem; }
-    .nav-links { display: none; }
-    .section, .phi-section, .mfidel-section, .ecosystem-section, .cta-section { padding: 5rem 2rem; }
-    .hero-left { padding: 7rem 2rem 3rem; }
-    footer { flex-direction: column; gap: 2rem; text-align: center; padding: 2rem; }
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links, .nav-cta { display: none; }
+    .nav-toggle { display: flex; }
+    .section, .phi-section, .mfidel-section, .ecosystem-section, .cta-section, .manifesto { padding: 5rem 1.5rem; }
+    .hero-left { padding: 7rem 1.5rem 3rem; }
+    footer { flex-direction: column; gap: 2rem; text-align: center; padding: 2rem 1.5rem; }
+    .footer-law { text-align: center; }
+  }
+  @media (max-width: 640px) {
+    .ecosystem-grid, .phi-phases { grid-template-columns: 1fr; }
+    .hero-metrics { gap: 1.5rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- Custom cursor -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRingEl"></div>
 
-<!-- ═══ NAV ═══ -->
+<!-- Mobile nav overlay -->
+<div class="nav-mobile" id="navMobile">
+  <button class="nav-mobile-close" id="navClose">✕</button>
+  <a href="#pillars" onclick="closeMobileNav()">Architecture</a>
+  <a href="#phi" onclick="closeMobileNav()">Φ Traversal</a>
+  <a href="#mfidel" onclick="closeMobileNav()">Mfidel</a>
+  <a href="#ecosystem" onclick="closeMobileNav()">Ecosystem</a>
+  <a href="https://docs.mullusi.com" onclick="closeMobileNav()">Docs</a>
+  <a href="https://dashboard.mullusi.com" style="margin-top:1rem;background:var(--gold);color:var(--void);padding:0.8rem 2rem;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;" onclick="closeMobileNav()">Launch Platform</a>
+</div>
+
+<!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">MULLUSI<span>Symbolic Intelligence</span></a>
   <ul class="nav-links">
@@ -607,9 +425,12 @@
     <li><a href="https://docs.mullusi.com">Docs</a></li>
   </ul>
   <a href="https://dashboard.mullusi.com" class="nav-cta">Launch Platform</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- ═══ HERO ═══ -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="orb orb-1"></div>
@@ -617,44 +438,23 @@
   <div class="orb orb-3"></div>
 
   <div class="hero-left">
-    <div class="hero-tag">Symbolic Causal Chain Intelligence · SCCI v2</div>
-
-    <h1 class="hero-title">
-      MULLUSI
-      <span class="accent">Intelligence</span>
-    </h1>
+    <div class="hero-tag">Symbolic Causal Chain · Deterministic Intelligence</div>
+    <h1 class="hero-title">MULLUSI<span class="accent">Intelligence</span></h1>
     <div class="hero-sub">ሙሉሲ</div>
-
     <p class="hero-desc">
-      A deterministic symbolic intelligence platform built on causal chain architecture.
-      Not probabilistic. Not statistical. Every inference is governed,
-      traceable, and anchored in the Mfidel 34×8 atomic substrate.
-      <br><br>
-      Meaning is relational. Traversal is governed. Judgment is earned.
+      A symbolic intelligence platform built on deterministic causal chain architecture.
+      Every inference is governed, traceable, and grounded in the Mfidel atomic substrate.
+      Meaning is derived through governed symbolic traversal — not approximated.
     </p>
-
     <div class="hero-actions">
       <a href="https://docs.mullusi.com" class="btn-primary">Explore Architecture</a>
       <a href="https://github.com/tamirat-wubie" class="btn-ghost">View Source</a>
     </div>
-
     <div class="hero-metrics">
-      <div class="metric">
-        <div class="metric-val">13</div>
-        <div class="metric-label">Φ Phases</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">272</div>
-        <div class="metric-label">Atomic Fidels</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">34×8</div>
-        <div class="metric-label">Mfidel Grid</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">𝕊</div>
-        <div class="metric-label">USCL v3.2</div>
-      </div>
+      <div class="metric"><div class="metric-val">13</div><div class="metric-label">Φ Phases</div></div>
+      <div class="metric"><div class="metric-val">272</div><div class="metric-label">Atomic Fidels</div></div>
+      <div class="metric"><div class="metric-val">34×8</div><div class="metric-label">Mfidel Grid</div></div>
+      <div class="metric"><div class="metric-val">∞</div><div class="metric-label">Causal Depth</div></div>
     </div>
   </div>
 
@@ -663,265 +463,223 @@
       <svg viewBox="-260 -260 520 520">
         <defs>
           <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#c8a44a" stop-opacity="0.3"/>
+            <stop offset="0%" stop-color="#c8a44a" stop-opacity="0.22"/>
             <stop offset="100%" stop-color="#c8a44a" stop-opacity="0"/>
           </radialGradient>
-          <filter id="blur4">
-            <feGaussianBlur stdDeviation="4"/>
-          </filter>
-          <filter id="blur2">
-            <feGaussianBlur stdDeviation="2"/>
-          </filter>
+          <filter id="gb4"><feGaussianBlur stdDeviation="4"/></filter>
         </defs>
-
-        <!-- Outer rim -->
-        <circle cx="0" cy="0" r="240" fill="none" stroke="rgba(200,164,74,0.08)" stroke-width="1"/>
-        <circle cx="0" cy="0" r="220" fill="none" stroke="rgba(200,164,74,0.12)" stroke-width="0.5" stroke-dasharray="4 8"/>
-        <circle cx="0" cy="0" r="180" fill="none" stroke="rgba(122,92,240,0.15)" stroke-width="1"/>
-        <circle cx="0" cy="0" r="140" fill="none" stroke="rgba(200,164,74,0.18)" stroke-width="0.5"/>
-        <circle cx="0" cy="0" r="90" fill="none" stroke="rgba(47,212,160,0.2)" stroke-width="1"/>
-
-        <!-- Glow core -->
+        <circle cx="0" cy="0" r="240" fill="none" stroke="rgba(200,164,74,0.06)" stroke-width="1"/>
+        <circle cx="0" cy="0" r="220" fill="none" stroke="rgba(200,164,74,0.1)" stroke-width="0.5" stroke-dasharray="4 8"/>
+        <circle cx="0" cy="0" r="180" fill="none" stroke="rgba(122,92,240,0.14)" stroke-width="1"/>
+        <circle cx="0" cy="0" r="140" fill="none" stroke="rgba(200,164,74,0.14)" stroke-width="0.5"/>
+        <circle cx="0" cy="0" r="90"  fill="none" stroke="rgba(47,212,160,0.16)"  stroke-width="1"/>
         <circle cx="0" cy="0" r="120" fill="url(#coreGlow)"/>
-        <circle cx="0" cy="0" r="60" fill="none" stroke="rgba(200,164,74,0.15)" stroke-width="1" filter="url(#blur4)"/>
-
-        <!-- 13-phase nodes on outer ring, animated -->
-        <g id="phaseNodes">
-          <!-- Phase nodes generated by JS -->
-        </g>
-
-        <!-- Inner mesh lines -->
         <g id="meshLines" opacity="0.3"></g>
-
-        <!-- Center Phi glyph -->
-        <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
-              font-family="serif" font-size="72" fill="rgba(200,164,74,0.9)"
-              filter="url(#blur2)">Φ</text>
-        <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
-              font-family="serif" font-size="72" fill="rgba(200,164,74,0.8)">Φ</text>
-
-        <!-- Mfidel labels at cardinal positions -->
-        <text x="0" y="-198" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(200,164,74,0.6)">ሙሉ</text>
-        <text x="198" y="0" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(47,212,160,0.5)" dominant-baseline="central">ሲ</text>
-        <text x="0" y="210" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(200,164,74,0.4)">ፍ</text>
-        <text x="-198" y="0" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(122,92,240,0.5)" dominant-baseline="central">ዕ</text>
-
-        <!-- Rotating outer ring -->
-        <g id="spinRing">
-          <circle cx="0" cy="0" r="235" fill="none" stroke="rgba(200,164,74,0.06)" stroke-width="6" stroke-dasharray="2 30"/>
-        </g>
-
-        <!-- Tick marks for 34 fidel rows -->
+        <g id="phaseNodes"></g>
         <g id="ticks" opacity="0.25"></g>
-
-        <!-- Animated scan arc -->
-        <path id="scanArc" fill="none" stroke="rgba(200,164,74,0.5)" stroke-width="1.5"/>
-
-        <!-- Outer label ring -->
-        <g font-family="'Space Mono',monospace" font-size="7" fill="rgba(200,164,74,0.35)" letter-spacing="0.1em">
-          <text x="0" y="-250" text-anchor="middle">SYMBOLIC · CAUSAL · CHAIN</text>
-        </g>
+        <text x="0" y="-198" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(200,164,74,0.5)">ሙሉ</text>
+        <text x="198" y="0" text-anchor="middle" dominant-baseline="central" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(47,212,160,0.4)">ሲ</text>
+        <text x="0" y="210" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(200,164,74,0.3)">ፍ</text>
+        <text x="-198" y="0" text-anchor="middle" dominant-baseline="central" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(122,92,240,0.4)">ዕ</text>
+        <g id="spinRing"><circle cx="0" cy="0" r="235" fill="none" stroke="rgba(200,164,74,0.05)" stroke-width="6" stroke-dasharray="2 30"/></g>
+        <path id="scanArc" fill="none"/>
+        <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="72" fill="rgba(200,164,74,0.15)" filter="url(#gb4)">Φ</text>
+        <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="72" fill="rgba(200,164,74,0.85)">Φ</text>
+        <text x="0" y="-250" text-anchor="middle" font-family="'Space Mono',monospace" font-size="7" fill="rgba(200,164,74,0.28)" letter-spacing="0.1em">SYMBOLIC · CAUSAL · CHAIN</text>
       </svg>
     </div>
   </div>
 </section>
 
-<!-- ═══ PHILOSOPHY STRIP ═══ -->
+<!-- STRIP -->
 <div class="strip">
-  <div class="strip-inner" id="stripInner">
+  <div class="strip-inner">
     <span class="strip-item">Symbols are Atomic</span>
     <span class="strip-item">Meaning is Relational</span>
     <span class="strip-item">Traversal is Governed</span>
     <span class="strip-item">Judgment is Earned</span>
     <span class="strip-item">Causal Chain Intelligence</span>
-    <span class="strip-item">USCL v3.2</span>
-    <span class="strip-item">Φ 13-Phase Governance</span>
     <span class="strip-item">Deterministic · Total · Auditable</span>
     <span class="strip-item">Mfidel 34×8 Substrate</span>
     <span class="strip-item">No Silent Failures</span>
+    <span class="strip-item">13-Phase Governance</span>
     <span class="strip-item">Symbols are Atomic</span>
     <span class="strip-item">Meaning is Relational</span>
     <span class="strip-item">Traversal is Governed</span>
     <span class="strip-item">Judgment is Earned</span>
     <span class="strip-item">Causal Chain Intelligence</span>
-    <span class="strip-item">USCL v3.2</span>
-    <span class="strip-item">Φ 13-Phase Governance</span>
     <span class="strip-item">Deterministic · Total · Auditable</span>
     <span class="strip-item">Mfidel 34×8 Substrate</span>
     <span class="strip-item">No Silent Failures</span>
+    <span class="strip-item">13-Phase Governance</span>
   </div>
 </div>
 
-<!-- ═══ PILLARS ═══ -->
+<!-- PILLARS -->
 <section class="section" id="pillars">
   <div class="section-label">Core Architecture</div>
   <h2 class="section-title">The Symbolic <span class="gold">Foundation</span></h2>
-
   <div class="pillars-grid">
     <div class="pillar">
       <div class="pillar-num">01</div>
-      <span class="pillar-glyph">𝕊</span>
-      <div class="pillar-title">USCL — Universal Symbolic Conservation Law</div>
+      <span class="pillar-glyph">ሙ</span>
+      <div class="pillar-title">Universal Symbolic Conservation</div>
       <p class="pillar-body">
-        𝕊 := ⟨ Ι, Λ, Σ, Γ, H ⟩. Every object in the system carries identity, constraint, state, context, and lineage. State writes are gated through Φ_gov exclusively. No silent failures. All Δ_reject are logged.
+        Every object in the system carries identity, constraint, state, context, and lineage.
+        State writes are gated through a single governance operator. No silent failures.
+        Every rejected action is logged. Every change is traceable to its authority.
       </p>
-      <span class="pillar-tag">v3.2 Active</span>
+      <span class="pillar-tag">Conservation Law Active</span>
     </div>
     <div class="pillar">
       <div class="pillar-num">02</div>
-      <span class="pillar-glyph">Φ</span>
-      <div class="pillar-title">Φ Governance — 13-Phase Traversal Engine</div>
+      <span class="pillar-glyph">ሉ</span>
+      <div class="pillar-title">Φ Governance Engine</div>
       <p class="pillar-body">
-        Every inference traverses: Distinction → Constraint → Ontology → Topology → Form → Organization → Module → Execution → Body → Architecture → Performance → Feedback → Evolution. Governed, ordered, irreversible where needed.
+        Every symbolic inference traverses a mandatory ordered sequence of thirteen phases.
+        Phase order is enforced. Deviation requires explicit governance authority.
+        No phase may be skipped. No traversal may be short-circuited.
       </p>
-      <span class="pillar-tag">GPS v2.2</span>
+      <span class="pillar-tag">Φ Engine Active</span>
     </div>
     <div class="pillar">
       <div class="pillar-num">03</div>
-      <span class="pillar-glyph">Ψ</span>
-      <div class="pillar-title">Ψ Judgment Kernel — Traceable Decisions</div>
+      <span class="pillar-glyph">ሲ</span>
+      <div class="pillar-title">Judgment Kernel</div>
       <p class="pillar-body">
-        Judgment maps problem state, execution trace, goal result, law compliance, proof record, causal graph, and surprise log into a verified decision. Reversible, auditable, governance-bound. Never heuristic guessing.
+        Every judgment is derived from a structured convergence of problem state, execution
+        trace, goal compliance, proof record, and causal graph. Judgment is not generated —
+        it is earned through verified traversal and governance passage.
       </p>
       <span class="pillar-tag">Auditable</span>
     </div>
   </div>
 </section>
 
-<!-- ═══ PHI TRAVERSAL ═══ -->
+<!-- PHI TRAVERSAL -->
 <section class="phi-section" id="phi">
   <div class="phi-grid">
     <div>
       <div class="section-label">Φ Traversal Spine</div>
       <h2 class="section-title">13-Phase <span class="gold">Governance</span> Engine</h2>
       <p style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;margin-top:1.5rem;max-width:460px;">
-        Every symbolic operation passes through a mandatory ordered traversal. Phase progression is enforced. Deviation requires explicit governance authority. The traversal cannot be short-circuited.
+        Every symbolic operation passes through a mandatory ordered traversal.
+        Each phase must settle before the next begins.
+        The traversal cannot be short-circuited — deviation requires governance authority.
       </p>
-
-      <div class="phi-law">
-        <strong>Φ_gov</strong> determines what may be known.<br>
-        <strong>Ψ</strong> commits only when authority is earned.<br>
-        All actions are logged in <strong>H</strong> (append-only lineage).<br>
-        Episode model <strong>M_e</strong> is frozen before execution<br>
-        and cannot be mutated mid-episode.
+      <div class="phi-principle">
+        <p>
+          <strong>Governance</strong> determines what may be known.<br>
+          <strong>Judgment</strong> commits only when authority is earned.<br>
+          All actions are logged in an <strong>append-only lineage</strong>.<br>
+          The execution model is frozen before a session begins<br>
+          and cannot be mutated mid-traversal.
+        </p>
       </div>
     </div>
-
     <div>
       <div class="phi-phases">
-        <div class="phase-card"><div class="phase-num">PHASE 01</div><div class="phase-name">Distinction</div><div class="phase-desc">Boundaries, separation, κ confidence</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 02</div><div class="phase-name">Constraint</div><div class="phase-desc">Hard / soft / contextual limits</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 03</div><div class="phase-name">Ontology</div><div class="phase-desc">Types, identity, mereology</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 04</div><div class="phase-name">Topology</div><div class="phase-desc">Adjacency, connectivity, cycles</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 05</div><div class="phase-name">Form</div><div class="phase-desc">Metrics, units, tolerances</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 06</div><div class="phase-name">Organization</div><div class="phase-desc">Invariants, dependencies, generators</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 07</div><div class="phase-name">Module</div><div class="phase-desc">Boundary, contract, responsibility</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 08</div><div class="phase-name">Execution</div><div class="phase-desc">State graph, transitions, termination</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 09</div><div class="phase-name">Body</div><div class="phase-desc">Boundary, homeostasis, repair</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 10</div><div class="phase-name">Architecture</div><div class="phase-desc">Layers, timescales, hazards</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 11</div><div class="phase-name">Performance</div><div class="phase-desc">Intent vs observed, gap analysis</div></div>
-        <div class="phase-card"><div class="phase-num">PHASE 12</div><div class="phase-name">Feedback</div><div class="phase-desc">Controllers, stability, protected vars</div></div>
-        <div class="phase-card" style="grid-column:1/-1"><div class="phase-num">PHASE 13</div><div class="phase-name">Evolution</div><div class="phase-desc">Variation, selection, retention, witness — the final phase that closes the governance loop</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 01</div><div class="phase-name">Distinction</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 02</div><div class="phase-name">Constraint</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 03</div><div class="phase-name">Ontology</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 04</div><div class="phase-name">Topology</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 05</div><div class="phase-name">Form</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 06</div><div class="phase-name">Organization</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 07</div><div class="phase-name">Module</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 08</div><div class="phase-name">Execution</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 09</div><div class="phase-name">Body</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 10</div><div class="phase-name">Architecture</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 11</div><div class="phase-name">Performance</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 12</div><div class="phase-name">Feedback</div></div>
+        <div class="phase-card" style="grid-column:1/-1"><div class="phase-num">PHASE 13</div><div class="phase-name">Evolution — Closure of the Governance Loop</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ MFIDEL SECTION ═══ -->
+<!-- MFIDEL -->
 <section class="mfidel-section" id="mfidel">
   <div>
     <div class="section-label">Atomic Substrate</div>
     <h2 class="section-title">Mfidel <span class="gold">34×8</span> Grid</h2>
     <p style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;margin-top:1.5rem;">
-      The symbolic substrate of the entire Mullusi system. 272 atomic fidels from the enhanced Ge'ez writing tradition. Each fidel is indivisible — one shape, one whisper sound, no decomposition permitted.
+      The symbolic grounding of the entire Mullusi system. An enhanced Ge'ez writing
+      tradition reimagined as an atomic symbolic substrate. Each fidel is indivisible —
+      one shape, one intrinsic sound. No decomposition. No root concepts.
     </p>
     <p style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;margin-top:1rem;">
-      Audio formula: <code style="color:var(--jade);font-size:0.7rem;">f[r][c].s(w,v) = f[r][c].s(w) + f[17][c].s(w,v)</code>
+      Each fidel carries a whisper sound by default. Vowels act as vibratory overlays —
+      amplifying rather than replacing. The atomicity of shape equals the atomicity of meaning.
     </p>
-    <p style="font-size:0.7rem;color:var(--text-muted);margin-top:0.8rem;line-height:1.8;">
-      Vowels are vibratory overlays — not roots. Column 8 derives from column 2 + vowel ኣ overlay. Each atomic shape carries an atomic whisper sound by default.
-    </p>
-    <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
-      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;">
-        <span style="color:var(--gold)">◈</span> 34 consonant rows
-      </div>
-      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;">
-        <span style="color:var(--jade)">◈</span> 8 vowel columns
-      </div>
-      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;">
-        <span style="color:var(--phi)">◈</span> 272 atomic fidels
-      </div>
+    <div style="margin-top:2rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;display:flex;align-items:center;gap:0.5rem;"><span style="color:var(--gold)">◈</span> 34 consonant rows</div>
+      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;display:flex;align-items:center;gap:0.5rem;"><span style="color:var(--jade)">◈</span> 8 vowel overlay columns</div>
+      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;display:flex;align-items:center;gap:0.5rem;"><span style="color:var(--phi)">◈</span> 272 atomic fidels total</div>
     </div>
   </div>
-
   <div>
-    <div class="fidel-grid-display" id="fidelGrid">
-      <!-- Generated by JS -->
-    </div>
-    <div style="font-size:0.55rem;color:var(--text-muted);margin-top:1rem;text-align:center;letter-spacing:0.2em;">
-      SHOWING FIRST 5 ROWS · HOVER TO ACTIVATE · 34×8 = 272 ATOMIC FIDELS
-    </div>
+    <div class="fidel-grid-display" id="fidelGrid"></div>
+    <div style="font-size:0.55rem;color:var(--text-muted);margin-top:1rem;text-align:center;letter-spacing:0.2em;">FIRST 5 ROWS + VOWEL ROW · HOVER TO ACTIVATE · 34×8 GRID</div>
   </div>
 </section>
 
-<!-- ═══ ECOSYSTEM ═══ -->
+<!-- ECOSYSTEM -->
 <section class="ecosystem-section" id="ecosystem">
   <div class="section-label">Platform Ecosystem</div>
   <h2 class="section-title">Symbolic <span class="gold">Modules</span></h2>
-
   <div class="ecosystem-grid">
     <div class="eco-card">
       <div class="eco-icon">ሙ</div>
-      <div class="eco-name">SCCGUB Blockchain</div>
-      <p class="eco-desc">Rust deterministic blockchain with CPoG consensus, 13-phase Φ traversal, and Mfidel atomic seals. Ed25519 verified.</p>
-      <span class="eco-badge active">Active · Audit CI ✓</span>
+      <div class="eco-name">Symbolic Blockchain</div>
+      <p class="eco-desc">Deterministic Rust blockchain with governed consensus, 13-phase Φ validation, and Mfidel atomic seals at every block boundary.</p>
+      <span class="eco-badge active">Active · CI Green</span>
     </div>
     <div class="eco-card">
       <div class="eco-icon">ሉ</div>
       <div class="eco-name">VIRECAI</div>
-      <p class="eco-desc">Symbolic video / reality recording format. 6-plane architecture, 155 classes, causal belief analysis, MLVF/MLVFF binary format.</p>
-      <span class="eco-badge dev">v9.x Active</span>
+      <p class="eco-desc">Symbolic video and reality recording format. Multi-plane architecture with causal belief analysis and a proprietary binary container format.</p>
+      <span class="eco-badge dev">Active</span>
     </div>
     <div class="eco-card">
       <div class="eco-icon">ሲ</div>
       <div class="eco-name">Φ-FOLD</div>
-      <p class="eco-desc">Protein structure prediction engine via symbolic Monte Carlo. 10-component energy function, Generalized Born electrostatics. 2.42 Å RMSD.</p>
-      <span class="eco-badge dev">v6.x</span>
+      <p class="eco-desc">Protein structure prediction governed by symbolic causal principles. Multi-component energy modeling with electrostatic resolution.</p>
+      <span class="eco-badge dev">Active</span>
     </div>
     <div class="eco-card">
       <div class="eco-icon">ፍ</div>
-      <div class="eco-name">scc-harness</div>
-      <p class="eco-desc">Python governed execution framework with DataProvenance, CausalArtifact, and five-part verifier Π_G ∧ Π_Λ ∧ Π_N ∧ Π_S ∧ Π_C.</p>
-      <span class="eco-badge active">v2.0.0</span>
+      <div class="eco-name">Governed Execution</div>
+      <p class="eco-desc">Framework for governed symbolic execution with data provenance tracking, causal artifact chaining, and multi-layer verification.</p>
+      <span class="eco-badge active">Active</span>
     </div>
     <div class="eco-card">
       <div class="eco-icon">ዕ</div>
-      <div class="eco-name">MQSSE</div>
-      <p class="eco-desc">Quantum symbolic simulation engine. 102 tests, MeasurementSystem, Φ governance, Mfidel bridge, 21 quantum gates.</p>
-      <span class="eco-badge arch">v0.4</span>
+      <div class="eco-name">Quantum Symbolic Engine</div>
+      <p class="eco-desc">Quantum simulation governed by symbolic rules. Mfidel-bridged measurement system with full Φ governance and gate-level control.</p>
+      <span class="eco-badge arch">Active</span>
     </div>
     <div class="eco-card">
       <div class="eco-icon">ዘ</div>
-      <div class="eco-name">Symbolic Physics Engine</div>
-      <p class="eco-desc">826 passing tests across 8 benchmark cases. Causal physics reasoning with symbolic constraint propagation.</p>
-      <span class="eco-badge active">v0.2.0</span>
+      <div class="eco-name">Symbolic Physics</div>
+      <p class="eco-desc">Physics reasoning engine built on symbolic constraint propagation. Multiple benchmark cases validated against known physical systems.</p>
+      <span class="eco-badge active">Active</span>
     </div>
     <div class="eco-card">
       <div class="eco-icon">ለ</div>
       <div class="eco-name">Mullu Mathematics</div>
-      <p class="eco-desc">18 Python modules (~9,000 LOC). Mfidel substrate, Φ operator, Ψ judgment kernel, Gödel-aware governance architecture.</p>
-      <span class="eco-badge arch">Engine Active</span>
+      <p class="eco-desc">Symbolic mathematics engine with Mfidel substrate grounding, Gödel-aware governance, judgment kernel integration, and causal proof construction.</p>
+      <span class="eco-badge arch">Active</span>
     </div>
     <div class="eco-card">
       <div class="eco-icon">ነ</div>
-      <div class="eco-name">MFIDEL Transcription</div>
-      <p class="eco-desc">English-to-Mfidel phonetic transcription via 34×8 mathematical engine. Latin sound impression components mapped to atomic fidels.</p>
-      <span class="eco-badge active">Σ 52.0</span>
+      <div class="eco-name">Mfidel Transcription</div>
+      <p class="eco-desc">Phonetic bridge between Latin script and the Mfidel atomic grid. Sound-impression mapping preserving atomic fidel integrity throughout conversion.</p>
+      <span class="eco-badge active">Active</span>
     </div>
   </div>
 </section>
 
-<!-- ═══ MANIFESTO ═══ -->
+<!-- MANIFESTO -->
 <section class="manifesto">
   <div class="manifesto-lines">
     <div class="manifesto-line"><span class="hi">Everything</span> is a Symbol.</div>
@@ -934,26 +692,27 @@
     <div class="manifesto-sep"></div>
     <div class="manifesto-line"><span class="gold">Deterministic.</span> Governed. Auditable.</div>
     <div class="manifesto-sep"></div>
-    <div class="manifesto-line" style="font-size:clamp(0.8rem,1.5vw,1.2rem);color:var(--text-muted);">
+    <div class="manifesto-line" style="font-size:clamp(0.8rem,1.4vw,1.1rem);color:var(--text-muted);">
       Symbolic Causal Chain General Intelligence<br>
-      <span style="color:var(--text-muted);font-size:0.8em;">Mullusi · Ethiopia · mullusi.com</span>
+      <span style="font-size:0.85em;opacity:0.5;">Mullusi · Ethiopia · mullusi.com</span>
     </div>
   </div>
 </section>
 
-<!-- ═══ CTA ═══ -->
+<!-- CTA -->
 <section class="cta-section" id="contact">
   <div>
     <div class="section-label">Get Involved</div>
     <h2 class="cta-title">Build on the <span class="gold">Symbolic</span> Foundation</h2>
     <p style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;margin-top:1.5rem;max-width:400px;">
-      Mullusi is an open symbolic intelligence platform. Explore the architecture, contribute to the ecosystem, or integrate the governance kernel into your systems.
+      Mullusi is a symbolic intelligence platform. Explore the architecture, engage with the
+      ecosystem, or reach out to integrate the governance framework into your systems.
     </p>
   </div>
   <div class="cta-right">
     <div class="cta-form-group">
-      <input class="cta-input" type="email" placeholder="your@email.com" />
-      <button class="cta-submit">Subscribe</button>
+      <input class="cta-input" id="emailInput" type="email" placeholder="your@email.com"/>
+      <button class="cta-submit" id="subBtn">Subscribe</button>
     </div>
     <div class="cta-links">
       <a href="https://docs.mullusi.com" class="cta-link">Documentation</a>
@@ -961,19 +720,16 @@
       <a href="mailto:hello@mullusi.com" class="cta-link">hello@mullusi.com</a>
       <a href="https://dashboard.mullusi.com" class="cta-link">Dashboard</a>
     </div>
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
-      <span style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.15em;">research@mullusi.com</span>
-      <span style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.15em;">support@mullusi.com</span>
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:0.5rem;">
+      <a href="mailto:research@mullusi.com" style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.15em;text-decoration:none;">research@mullusi.com</a>
+      <a href="mailto:support@mullusi.com" style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.15em;text-decoration:none;">support@mullusi.com</a>
     </div>
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
+<!-- FOOTER -->
 <footer>
-  <div class="footer-logo">
-    MULLUSI
-    <span>Symbolic Intelligence Platform · Ethiopia</span>
-  </div>
+  <div class="footer-logo">MULLUSI<span>Symbolic Intelligence · Ethiopia</span></div>
   <div class="footer-links">
     <a href="https://mullusi.com">mullusi.com</a>
     <a href="https://docs.mullusi.com">Docs</a>
@@ -985,180 +741,174 @@
     Symbols are atomic.<br>
     Meaning is relational.<br>
     Traversal is governed.<br>
-    <span style="color:var(--text-muted);opacity:0.5;">USCL v3.2 · Φ²-GPS v2.2</span>
+    <span style="opacity:0.4;">Mullusi Symbolic Intelligence</span>
   </div>
 </footer>
 
 <script>
-// ── Custom cursor ──
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
+'use strict';
+
+// ── Cursor ──
+const dot    = document.getElementById('cursorDot');
+const ringEl = document.getElementById('cursorRingEl');
+let mx = 0, my = 0, rlx = 0, rly = 0;
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-function animCursor() {
-  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(animCursor);
-}
-animCursor();
-
-// ── SVG Phase Nodes ──
-const phaseNames = ['Distinction','Constraint','Ontology','Topology','Form','Organization','Module','Execution','Body','Architecture','Performance','Feedback','Evolution'];
-const r = 180;
-const nodesG = document.getElementById('phaseNodes');
-const meshG = document.getElementById('meshLines');
-const points = [];
-
-phaseNames.forEach((name, i) => {
-  const angle = (i / 13) * Math.PI * 2 - Math.PI / 2;
-  const x = Math.cos(angle) * r;
-  const y = Math.sin(angle) * r;
-  points.push([x, y]);
-
-  // Pulse ring
-  const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  ring.setAttribute('cx', x); ring.setAttribute('cy', y); ring.setAttribute('r', '12');
-  ring.setAttribute('fill', 'none'); ring.setAttribute('stroke', 'rgba(200,164,74,0.15)');
-  ring.setAttribute('stroke-width', '1');
-  nodesG.appendChild(ring);
-
-  // Node dot
-  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', '4');
-  c.setAttribute('fill', i === 0 ? '#c8a44a' : i === 12 ? '#2fd4a0' : '#8a6e2f');
-  nodesG.appendChild(c);
-
-  // Label
-  const lx = Math.cos(angle) * (r + 30);
-  const ly = Math.sin(angle) * (r + 30);
-  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-  t.setAttribute('x', lx); t.setAttribute('y', ly);
-  t.setAttribute('text-anchor', 'middle'); t.setAttribute('dominant-baseline', 'central');
-  t.setAttribute('font-family', "'Space Mono',monospace"); t.setAttribute('font-size', '8');
-  t.setAttribute('fill', 'rgba(200,164,74,0.5)'); t.setAttribute('letter-spacing', '0.05em');
-  t.textContent = (i + 1).toString().padStart(2,'0');
-  nodesG.appendChild(t);
-
-  // Mesh lines to center
-  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-  line.setAttribute('x1', x); line.setAttribute('y1', y);
-  line.setAttribute('x2', 0); line.setAttribute('y2', 0);
-  line.setAttribute('stroke', i % 3 === 0 ? 'rgba(122,92,240,0.2)' : 'rgba(200,164,74,0.08)');
-  line.setAttribute('stroke-width', '0.5');
-  meshG.appendChild(line);
+(function tick() {
+  dot.style.left    = mx + 'px'; dot.style.top    = my + 'px';
+  rlx += (mx - rlx) * 0.12;     rly += (my - rly) * 0.12;
+  ringEl.style.left = rlx + 'px'; ringEl.style.top = rly + 'px';
+  requestAnimationFrame(tick);
+})();
+document.querySelectorAll('a, button, .pillar, .phase-card, .eco-card, .fidel-cell').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    dot.style.transform = 'translate(-50%,-50%) scale(2)';
+    ringEl.style.opacity = '0.7'; ringEl.style.transform = 'translate(-50%,-50%) scale(1.3)';
+  });
+  el.addEventListener('mouseleave', () => {
+    dot.style.transform = 'translate(-50%,-50%) scale(1)';
+    ringEl.style.opacity = '0.4'; ringEl.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
 });
 
-// Connect adjacent nodes
-for (let i = 0; i < points.length; i++) {
-  const next = (i + 1) % points.length;
-  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-  line.setAttribute('x1', points[i][0]); line.setAttribute('y1', points[i][1]);
-  line.setAttribute('x2', points[next][0]); line.setAttribute('y2', points[next][1]);
-  line.setAttribute('stroke', 'rgba(200,164,74,0.18)');
-  line.setAttribute('stroke-width', '0.5');
-  meshG.appendChild(line);
+// ── Mobile nav ──
+const navToggle = document.getElementById('navToggle');
+const navMobile = document.getElementById('navMobile');
+const navClose  = document.getElementById('navClose');
+navToggle.addEventListener('click', () => navMobile.classList.add('open'));
+navClose.addEventListener('click',  () => navMobile.classList.remove('open'));
+function closeMobileNav() { navMobile.classList.remove('open'); }
+
+// ── SVG helpers ──
+const NS   = 'http://www.w3.org/2000/svg';
+const svg  = (tag, attrs) => {
+  const el = document.createElementNS(NS, tag);
+  Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
+  return el;
+};
+const nodesG = document.getElementById('phaseNodes');
+const meshG  = document.getElementById('meshLines');
+const ticksG = document.getElementById('ticks');
+const scanArc= document.getElementById('scanArc');
+const spinRng= document.getElementById('spinRing');
+
+// Phase names — public concept names only, no internal descriptions
+const phases = ['Distinction','Constraint','Ontology','Topology','Form',
+                'Organization','Module','Execution','Body','Architecture',
+                'Performance','Feedback','Evolution'];
+const pts = phases.map((_, i) => {
+  const a = (i / 13) * Math.PI * 2 - Math.PI / 2;
+  return [Math.cos(a) * 180, Math.sin(a) * 180, a];
+});
+
+pts.forEach(([px, py, a], i) => {
+  nodesG.appendChild(svg('circle', { cx:px, cy:py, r:'12', fill:'none', stroke:'rgba(200,164,74,0.1)', 'stroke-width':'1' }));
+  nodesG.appendChild(svg('circle', { cx:px, cy:py, r:'4',  fill: i===0 ? '#c8a44a' : i===12 ? '#2fd4a0' : '#8a6e2f' }));
+  const lx = Math.cos(a) * 210, ly = Math.sin(a) * 210;
+  const t = svg('text', { x:lx, y:ly, 'text-anchor':'middle', 'dominant-baseline':'central', 'font-family':"'Space Mono',monospace", 'font-size':'8', fill:'rgba(200,164,74,0.4)' });
+  t.textContent = String(i+1).padStart(2,'0');
+  nodesG.appendChild(t);
+  meshG.appendChild(svg('line', { x1:px, y1:py, x2:'0', y2:'0', stroke: i%3===0 ? 'rgba(122,92,240,0.16)' : 'rgba(200,164,74,0.07)', 'stroke-width':'0.5' }));
+});
+pts.forEach(([px,py], i) => {
+  const [nx,ny] = pts[(i+1) % pts.length];
+  meshG.appendChild(svg('line', { x1:px, y1:py, x2:nx, y2:ny, stroke:'rgba(200,164,74,0.14)', 'stroke-width':'0.5' }));
+});
+
+// Tick marks for 34 fidel rows
+for (let i=0; i<34; i++) {
+  const a = (i/34)*Math.PI*2 - Math.PI/2;
+  const inner=225, outer=i%8===0?241:232;
+  ticksG.appendChild(svg('line',{
+    x1:Math.cos(a)*inner, y1:Math.sin(a)*inner,
+    x2:Math.cos(a)*outer, y2:Math.sin(a)*outer,
+    stroke: i%8===0?'rgba(200,164,74,0.5)':'rgba(200,164,74,0.16)',
+    'stroke-width': i%8===0?'1.5':'0.5'
+  }));
 }
 
-// Animated scan arc
-const scanArc = document.getElementById('scanArc');
-let scanAngle = 0;
-function animScan() {
-  const a = (scanAngle % 360) * Math.PI / 180 - Math.PI/2;
-  const x = Math.cos(a) * 180;
-  const y = Math.sin(a) * 180;
-  const x0 = Math.cos(a - 0.6) * 180;
-  const y0 = Math.sin(a - 0.6) * 180;
-  scanArc.setAttribute('d', `M 0 0 L ${x0} ${y0} A 180 180 0 0 1 ${x} ${y} Z`);
-  scanArc.setAttribute('fill', 'rgba(200,164,74,0.03)');
-  scanArc.setAttribute('stroke', 'rgba(200,164,74,0.4)');
-  scanAngle += 0.5;
+// Scan arc animation
+let sa=0;
+(function animScan(){
+  const a = sa*Math.PI/180 - Math.PI/2;
+  const a0 = a-0.55;
+  const x1=Math.cos(a)*180, y1=Math.sin(a)*180;
+  const x0=Math.cos(a0)*180, y0=Math.sin(a0)*180;
+  scanArc.setAttribute('d', `M 0 0 L ${x0} ${y0} A 180 180 0 0 1 ${x1} ${y1} Z`);
+  scanArc.setAttribute('fill','rgba(200,164,74,0.022)');
+  scanArc.setAttribute('stroke','rgba(200,164,74,0.32)');
+  sa = (sa+0.5)%360;
   requestAnimationFrame(animScan);
-}
-animScan();
+})();
 
 // Spin ring
-const spinRing = document.getElementById('spinRing');
-let spinA = 0;
-function animSpin() {
-  spinRing.setAttribute('transform', `rotate(${spinA})`);
-  spinA += 0.15;
+let spinDeg=0;
+(function animSpin(){
+  spinRng.setAttribute('transform',`rotate(${spinDeg})`);
+  spinDeg+=0.15;
   requestAnimationFrame(animSpin);
-}
-animSpin();
+})();
 
-// Tick marks for fidel rows
-const tG = document.getElementById('ticks');
-for (let i = 0; i < 34; i++) {
-  const a = (i / 34) * Math.PI * 2 - Math.PI/2;
-  const inner = 225, outer = i % 8 === 0 ? 240 : 232;
-  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-  line.setAttribute('x1', Math.cos(a)*inner); line.setAttribute('y1', Math.sin(a)*inner);
-  line.setAttribute('x2', Math.cos(a)*outer); line.setAttribute('y2', Math.sin(a)*outer);
-  line.setAttribute('stroke', i % 8 === 0 ? 'rgba(200,164,74,0.6)' : 'rgba(200,164,74,0.2)');
-  line.setAttribute('stroke-width', i % 8 === 0 ? '1.5' : '0.5');
-  tG.appendChild(line);
-}
-
-// ── Fidel Grid (first 5 rows of 34) ──
-const fidels = [
+// ── Fidel grid — no grid coordinate tooltips ──
+const fidelRows = [
   ['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ','ሇ'],
   ['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ','ሏ'],
   ['ሐ','ሑ','ሒ','ሓ','ሔ','ሕ','ሖ','ሗ'],
   ['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ','ሟ'],
   ['ሠ','ሡ','ሢ','ሣ','ሤ','ሥ','ሦ','ሧ'],
 ];
-// Row 17 (vowels) — mark differently
-const vowels = ['ኧ','ኡ','ኢ','ኣ','ኤ','እ','ኦ','አ'];
-const grid = document.getElementById('fidelGrid');
-fidels.forEach((row, ri) => {
-  row.forEach((f, ci) => {
-    const cell = document.createElement('div');
-    cell.className = 'fidel-cell';
-    cell.textContent = f;
-    // Tooltip
-    cell.title = `f[${ri+1}][${ci+1}] — Row ${ri+1}, Col ${ci+1}`;
-    grid.appendChild(cell);
-  });
-});
-// Show vowel row
-vowels.forEach((f, ci) => {
-  const cell = document.createElement('div');
-  cell.className = 'fidel-cell vowel';
-  cell.textContent = f;
-  cell.title = `Vowel f[17][${ci+1}]`;
-  grid.appendChild(cell);
+const vowelRow = ['ኧ','ኡ','ኢ','ኣ','ኤ','እ','ኦ','አ'];
+const fidelGrid = document.getElementById('fidelGrid');
+fidelRows.forEach(row => row.forEach(f => {
+  const c = document.createElement('div'); c.className='fidel-cell'; c.textContent=f; fidelGrid.appendChild(c);
+}));
+vowelRow.forEach(f => {
+  const c = document.createElement('div'); c.className='fidel-cell vowel'; c.textContent=f; fidelGrid.appendChild(c);
 });
 
-// ── Manifesto scroll reveal ──
-const mLines = document.querySelectorAll('.manifesto-line');
-const observer = new IntersectionObserver(entries => {
+// ── Manifesto reveal ──
+const mLines = Array.from(document.querySelectorAll('.manifesto-line'));
+const mObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if (e.isIntersecting) {
-      const idx = Array.from(mLines).indexOf(e.target);
-      setTimeout(() => e.target.classList.add('visible'), idx * 150);
-    }
+    if (!e.isIntersecting) return;
+    const idx = mLines.indexOf(e.target);
+    setTimeout(() => e.target.classList.add('visible'), idx * 160);
+    mObs.unobserve(e.target);
   });
-}, { threshold: 0.3 });
-mLines.forEach(l => observer.observe(l));
+}, { threshold: 0.25 });
+mLines.forEach(l => mObs.observe(l));
 
-// ── Pillar scroll reveal ──
-const pillars = document.querySelectorAll('.pillar, .phase-card, .eco-card');
-const obs2 = new IntersectionObserver(entries => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '0';
-      e.target.style.transform = 'translateY(20px)';
-      e.target.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-      setTimeout(() => {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }, 80);
-      obs2.unobserve(e.target);
-    }
+// ── Card reveal — init opacity before observing to prevent flash ──
+const cards = Array.from(document.querySelectorAll('.pillar, .phase-card, .eco-card'));
+cards.forEach(c => { c.style.opacity='0'; c.style.transform='translateY(18px)'; });
+const cardObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+    e.target.style.opacity = '1';
+    e.target.style.transform = 'translateY(0)';
+    cardObs.unobserve(e.target);
   });
-}, { threshold: 0.1 });
-pillars.forEach(p => { p.style.opacity = '0'; obs2.observe(p); });
+}, { threshold: 0.07 });
+cards.forEach(c => cardObs.observe(c));
+
+// ── Subscribe feedback ──
+const subBtn    = document.getElementById('subBtn');
+const emailInput= document.getElementById('emailInput');
+subBtn.addEventListener('click', () => {
+  const val = emailInput.value.trim();
+  if (val && val.includes('@') && val.includes('.')) {
+    subBtn.textContent = 'Submitted ✓';
+    subBtn.style.cssText += 'background:var(--jade-dim);color:var(--text);';
+    setTimeout(() => {
+      subBtn.textContent='Subscribe';
+      subBtn.style.background=''; subBtn.style.color='';
+      emailInput.value='';
+    }, 3000);
+  } else {
+    emailInput.style.borderColor='#d44a4a';
+    setTimeout(() => { emailInput.style.borderColor=''; }, 1500);
+  }
+});
 </script>
 </body>
 </html>
