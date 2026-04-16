@@ -2,2157 +2,1163 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Mullusi News Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MULLUSI — Symbolic Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@400;700&family=Noto+Sans+Ethiopic:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0a0a12;--panel:rgba(8,8,14,0.94);--border:rgba(80,80,110,0.12);
-  --btn:rgba(30,30,50,0.75);--btn-active:rgba(180,35,35,0.85);
-  --btn-border:rgba(60,60,85,0.3);--btn-active-border:rgba(220,70,70,0.5);
-  --text:#889;--text-dim:#556;--text-bright:#aab;
-  --red:rgba(190,20,20,0.92);--mono:'JetBrains Mono','Fira Code','SF Mono',monospace;
-}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:var(--mono);touch-action:none;-webkit-tap-highlight-color:transparent}
-canvas{display:block;width:100%;height:100%}
-#ui{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--border);padding:5px;padding-bottom:max(5px,env(safe-area-inset-bottom,0px));z-index:10;transition:transform .3s}
-#ui.hidden{transform:translateY(100%)}
-.row{display:flex;gap:3px;overflow-x:auto;white-space:nowrap;align-items:center;margin-bottom:4px;scrollbar-width:none}
-.row::-webkit-scrollbar{display:none}
-.btn{background:var(--btn);border:1px solid var(--btn-border);color:var(--text);padding:5px 8px;border-radius:3px;font:700 8px var(--mono);letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
-.btn:active{transform:scale(0.95)}
-.btn.on{background:var(--btn-active);border-color:var(--btn-active-border);color:#fff}
-.sep{width:1px;height:14px;background:rgba(80,80,110,0.2);flex-shrink:0}
-#ticker-input{flex:1;background:rgba(20,20,35,0.8);border:1px solid var(--btn-border);color:var(--text-bright);padding:3px 6px;border-radius:3px;font:8px var(--mono);outline:none;min-width:0}
-#badge{position:fixed;top:8px;left:8px;display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:3px;cursor:pointer;z-index:11}
-#badge.live{background:var(--red);animation:pulse 1.5s ease-in-out infinite}
-#badge.off{background:rgba(60,60,60,0.85)}
-#badge .dot{width:6px;height:6px;border-radius:50%}
-#badge .dot.on{background:#fff}
-#badge .dot.off{background:#888}
-#badge span{color:#fff;font:700 9px var(--mono);letter-spacing:2px}
-#title{position:fixed;top:8px;left:50%;transform:translateX(-50%);color:#8899aa;font:8px var(--mono);letter-spacing:3px;background:rgba(10,10,18,0.8);padding:4px 12px;border-radius:3px;border:1px solid rgba(80,90,110,0.2);text-transform:uppercase;white-space:nowrap;text-align:center;z-index:11}
-#title .seg{color:#667;font-size:7px}
-#title .timer{font-size:7px}
-#status{position:fixed;top:30px;left:50%;transform:translateX(-50%);display:flex;gap:6px;font:7px var(--mono);color:var(--text-dim);z-index:11}
-#log{position:fixed;top:8px;right:8px;color:var(--text-dim);font:7px var(--mono);line-height:1.6;text-align:right;pointer-events:none;z-index:11}
-#tooltip{position:fixed;top:36px;left:50%;transform:translateX(-50%);color:var(--text-bright);font:8px var(--mono);background:rgba(10,10,18,0.85);padding:3px 10px;border-radius:3px;z-index:11;display:none}
-#pip{position:fixed;top:110px;right:8px;width:160px;height:100px;border:1px solid rgba(80,80,110,0.2);border-radius:4px;overflow:hidden;z-index:11;display:none}
-#pip canvas{width:100%;height:100%}
-#pip .label{position:absolute;bottom:2px;left:4px;color:#889;font:bold 7px var(--mono);letter-spacing:1px}
-#progress{height:3px;background:rgba(30,30,50,0.6);border-radius:2px;margin-bottom:4px;overflow:hidden;display:none}
-#progress .bar{height:100%;border-radius:2px;transition:width .25s}
-#fps{position:fixed;bottom:auto;top:8px;right:8px;color:#334;font:7px var(--mono);z-index:5;pointer-events:none;display:none}
-#show-ui{position:fixed;bottom:6px;right:6px;z-index:11;display:none}
-@keyframes ui-blink{0%,100%{opacity:.3}50%{opacity:1}}
-#show-ui.blink{animation:ui-blink 2s ease-in-out infinite}
-@media(max-width:600px),(pointer:coarse){
-  .btn{min-width:28px;min-height:28px;font-size:8px;padding:4px 6px}
-  #ui{padding:6px 8px}
-  #ui .row{gap:3px}
-  #badge{font-size:9px;padding:4px 10px}
-  #title{font-size:8px}
-  #log{font-size:7px;max-height:55px}
-  #status span{font-size:7px}
-  #tv-full .tv-bar{padding:8px 12px;gap:6px}
-  #tv-full .tv-bar .btn{min-width:36px;min-height:32px;font-size:9px}
-  #help .card{max-width:92vw;max-height:85vh;padding:12px}
-  #ticker-input{font-size:9px;height:22px}
-}
-#tv-full{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:50;display:none;cursor:pointer;opacity:0;transition:opacity .4s}
-#tv-full.show{opacity:1}
-#tv-full canvas{width:100%;height:100%;object-fit:contain}
-#tv-full .exit{position:fixed;top:12px;right:12px;color:rgba(150,170,200,0.3);font:7px var(--mono);letter-spacing:2px;pointer-events:none}
-#tv-full .tv-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.7);padding:6px 12px;display:flex;align-items:center;gap:8px;font:8px var(--mono);color:#667;pointer-events:auto;opacity:0;transition:opacity .3s}
-#tv-full:hover .tv-bar,#tv-full .tv-bar:hover{opacity:1}
-#tv-full .tv-bar .seg-id{color:#fa0;font-weight:bold}
-#tv-full .tv-bar .air-badge{color:#f44;font-weight:bold}
-#help{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(5,5,10,0.88);display:none;align-items:center;justify-content:center;z-index:20}
-#help .card{background:rgba(15,15,25,0.95);border:1px solid rgba(80,80,120,0.2);border-radius:8px;padding:18px;max-width:320px;max-height:80vh;overflow-y:auto;color:#889}
-#help .card h3{color:#aab;font-size:11px;letter-spacing:2px;margin-bottom:10px}
-#help .card .sec{color:#6af;font-size:8px;margin:8px 0 3px}
-#help .card div{font-size:8px;line-height:2}
-#help .card kbd{color:#aab}
-#help .card .click{color:#f80}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-#launch{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(5,5,12,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;animation:fadeIn .3s}
-#launch .title{color:#6af;font:bold 16px var(--mono);letter-spacing:4px;margin-bottom:6px}
-#launch .sub{color:#556;font:9px var(--mono);letter-spacing:2px;margin-bottom:24px}
-#launch button{background:var(--btn-active);border:1px solid var(--btn-active-border);color:#fff;padding:14px 32px;border-radius:6px;font:bold 12px var(--mono);letter-spacing:3px;cursor:pointer}
-#launch .hint{color:#445;font:7px var(--mono);margin-top:16px;text-align:center;line-height:1.8}
+  :root {
+    --void: #050508;
+    --deep: #0a0a10;
+    --surface: #0f0f18;
+    --panel: #13131e;
+    --rim: #1e1e2e;
+    --gold: #c8a44a;
+    --gold-dim: #8a6e2f;
+    --amber: #e8b84b;
+    --jade: #2fd4a0;
+    --jade-dim: #1a7a5c;
+    --crimson: #d44a4a;
+    --text: #e8e4d8;
+    --text-dim: #8a8680;
+    --text-muted: #4a4840;
+    --phi: #7a5cf0;
+    --phi-dim: #3d2e80;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, opacity 0.2s;
+    opacity: 0.4;
+  }
+
+  /* ═══ NOISE OVERLAY ═══ */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.35;
+  }
+
+  /* ═══ NAV ═══ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.5rem 4rem;
+    background: linear-gradient(to bottom, rgba(5,5,8,0.95) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(200,164,74,0.08);
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--text-dim); font-size: 0.65rem; display: block; letter-spacing: 0.5em; margin-top: 2px; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
+    background: var(--gold); transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--void); background: var(--gold);
+    border: none; padding: 0.6rem 1.4rem;
+    cursor: none; transition: background 0.2s;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--amber); }
+
+  /* ═══ HERO ═══ */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated grid background */
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(200,164,74,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,164,74,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: grid-drift 30s linear infinite;
+  }
+  @keyframes grid-drift {
+    from { background-position: 0 0; }
+    to { background-position: 60px 60px; }
+  }
+
+  /* Glow orbs */
+  .orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .orb-1 { width: 600px; height: 600px; background: rgba(122,92,240,0.12); top: -150px; right: 0; }
+  .orb-2 { width: 400px; height: 400px; background: rgba(200,164,74,0.08); bottom: 100px; left: -100px; }
+  .orb-3 { width: 300px; height: 300px; background: rgba(47,212,160,0.06); top: 200px; right: 200px; animation: orb-pulse 8s ease-in-out infinite; }
+  @keyframes orb-pulse { 0%,100%{opacity:0.6;transform:scale(1);} 50%{opacity:1;transform:scale(1.2);} }
+
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 4rem 4rem 5rem;
+    position: relative; z-index: 2;
+  }
+
+  .hero-tag {
+    font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--jade); border: 1px solid var(--jade-dim);
+    padding: 0.3rem 0.8rem; display: inline-block;
+    margin-bottom: 2rem;
+    position: relative; overflow: hidden;
+    animation: tag-appear 0.6s ease forwards;
+  }
+  .hero-tag::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--jade);
+  }
+  @keyframes tag-appear { from{opacity:0;transform:translateX(-20px);} to{opacity:1;transform:translateX(0);} }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    animation: title-rise 0.8s ease 0.2s both;
+  }
+  .hero-title .accent { color: var(--gold); display: block; }
+  @keyframes title-rise { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+
+  .hero-sub {
+    font-family: 'Noto Sans Ethiopic', 'Space Mono', monospace;
+    font-size: 2.8rem; color: var(--text-muted);
+    letter-spacing: 0.15em; margin-top: 0.5rem;
+    animation: title-rise 0.8s ease 0.35s both;
+    line-height: 1.4;
+  }
+
+  .hero-desc {
+    font-size: 0.8rem; line-height: 1.9;
+    color: var(--text-dim); max-width: 440px;
+    margin-top: 2rem;
+    animation: title-rise 0.8s ease 0.5s both;
+    border-left: 2px solid var(--gold-dim);
+    padding-left: 1.2rem;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; margin-top: 2.5rem;
+    animation: title-rise 0.8s ease 0.65s both;
+  }
+  .btn-primary {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--void); background: var(--gold);
+    padding: 0.8rem 2rem; text-decoration: none;
+    border: none; cursor: none;
+    transition: background 0.2s, transform 0.1s;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '→'; position: absolute; right: -20px;
+    transition: right 0.2s; opacity: 0;
+  }
+  .btn-primary:hover { background: var(--amber); }
+  .btn-ghost {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-dim); background: transparent;
+    padding: 0.8rem 2rem; text-decoration: none;
+    border: 1px solid var(--rim); cursor: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--gold-dim); color: var(--text); }
+
+  .hero-metrics {
+    display: flex; gap: 2.5rem; margin-top: 3.5rem;
+    animation: title-rise 0.8s ease 0.8s both;
+  }
+  .metric { display: flex; flex-direction: column; }
+  .metric-val {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.6rem; color: var(--gold); line-height: 1;
+  }
+  .metric-label { font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.3rem; }
+
+  /* Hero Right — Symbolic Visualization */
+  .hero-right {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .phi-canvas {
+    width: 520px; height: 520px;
+    position: relative;
+    animation: phi-appear 1.2s ease 0.4s both;
+  }
+  @keyframes phi-appear { from{opacity:0;transform:scale(0.85) rotate(-10deg);} to{opacity:1;transform:scale(1) rotate(0deg);} }
+
+  .phi-canvas svg {
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+
+  /* ═══ PHILOSOPHY STRIP ═══ */
+  .strip {
+    background: var(--surface);
+    border-top: 1px solid rgba(200,164,74,0.15);
+    border-bottom: 1px solid rgba(200,164,74,0.15);
+    padding: 1.2rem 0;
+    overflow: hidden;
+    position: relative; z-index: 2;
+  }
+  .strip-inner {
+    display: flex; gap: 4rem;
+    animation: marquee 40s linear infinite;
+    white-space: nowrap;
+  }
+  .strip-item {
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--text-dim); display: flex; align-items: center; gap: 1rem;
+  }
+  .strip-item::before { content: '◈'; color: var(--gold); font-size: 0.5rem; }
+  @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* ═══ PILLARS SECTION ═══ */
+  .section {
+    padding: 8rem 5rem;
+    position: relative;
+  }
+  .section-label {
+    font-size: 0.55rem; letter-spacing: 0.5em; text-transform: uppercase;
+    color: var(--jade); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::before { content: ''; display: block; width: 40px; height: 1px; background: var(--jade); }
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: var(--text); line-height: 1.1;
+    max-width: 600px;
+  }
+  .section-title .gold { color: var(--gold); }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 4rem;
+    border: 2px solid var(--rim);
+  }
+  .pillar {
+    background: var(--deep);
+    padding: 3rem 2.5rem;
+    border-right: 2px solid var(--rim);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .pillar:last-child { border-right: none; }
+  .pillar::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .pillar:hover { background: var(--surface); }
+  .pillar:hover::before { transform: scaleX(1); }
+
+  .pillar-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 3rem; color: var(--text-muted);
+    line-height: 1; margin-bottom: 1.5rem;
+    transition: color 0.3s;
+  }
+  .pillar:hover .pillar-num { color: var(--gold); }
+  .pillar-glyph {
+    font-family: 'Noto Sans Ethiopic', serif;
+    font-size: 2rem; color: var(--gold-dim);
+    margin-bottom: 1rem; display: block;
+  }
+  .pillar-title {
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text); margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  .pillar-body { font-size: 0.72rem; line-height: 1.8; color: var(--text-dim); }
+  .pillar-tag {
+    display: inline-block; margin-top: 1.5rem;
+    font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--jade); border: 1px solid var(--jade-dim); padding: 0.2rem 0.6rem;
+  }
+
+  /* ═══ PHI TRAVERSAL ═══ */
+  .phi-section {
+    background: var(--surface);
+    padding: 8rem 5rem;
+    position: relative; overflow: hidden;
+  }
+  .phi-section::before {
+    content: 'Φ'; position: absolute;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 40vw; color: rgba(122,92,240,0.03);
+    right: -10vw; top: 50%; transform: translateY(-50%);
+    line-height: 1; pointer-events: none;
+    letter-spacing: -0.1em;
+  }
+
+  .phi-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: start;
+    position: relative; z-index: 1;
+  }
+
+  .phi-phases {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .phase-card {
+    background: var(--panel);
+    border: 1px solid var(--rim);
+    padding: 1.2rem 1.5rem;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .phase-card:hover { border-color: var(--phi); transform: translateY(-2px); }
+  .phase-num { font-size: 0.55rem; color: var(--phi); letter-spacing: 0.2em; margin-bottom: 0.4rem; }
+  .phase-name { font-size: 0.7rem; color: var(--text); letter-spacing: 0.1em; font-weight: 700; }
+  .phase-desc { font-size: 0.6rem; color: var(--text-muted); margin-top: 0.3rem; line-height: 1.6; }
+
+  .phi-law {
+    background: var(--panel);
+    border: 1px solid var(--rim);
+    border-left: 3px solid var(--phi);
+    padding: 2rem 2.5rem;
+    margin-top: 3rem;
+    font-size: 0.7rem; line-height: 2;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  .phi-law strong { color: var(--gold); font-style: normal; }
+
+  /* ═══ MFIDEL SECTION ═══ */
+  .mfidel-section {
+    padding: 8rem 5rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+  }
+
+  .fidel-grid-display {
+    display: grid; grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+  }
+  .fidel-cell {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--rim);
+    font-family: 'Noto Sans Ethiopic', serif;
+    font-size: 1rem; color: var(--text-muted);
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    cursor: none;
+  }
+  .fidel-cell:hover {
+    background: var(--panel); color: var(--gold); border-color: var(--gold-dim);
+  }
+  .fidel-cell.vowel { color: var(--jade-dim); }
+  .fidel-cell.vowel:hover { color: var(--jade); border-color: var(--jade-dim); }
+
+  /* ═══ PROJECTS / ECOSYSTEM ═══ */
+  .ecosystem-section {
+    background: var(--deep);
+    padding: 8rem 5rem;
+    border-top: 1px solid var(--rim);
+  }
+
+  .ecosystem-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+  .eco-card {
+    background: var(--surface);
+    border: 1px solid var(--rim);
+    padding: 2rem 1.8rem;
+    transition: border-color 0.3s, transform 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .eco-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0); transition: transform 0.4s;
+  }
+  .eco-card:hover { border-color: rgba(200,164,74,0.3); transform: translateY(-4px); }
+  .eco-card:hover::after { transform: scaleX(1); }
+  .eco-icon { font-size: 1.8rem; margin-bottom: 1rem; font-family: 'Noto Sans Ethiopic', serif; color: var(--gold-dim); }
+  .eco-name { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); margin-bottom: 0.5rem; }
+  .eco-desc { font-size: 0.65rem; color: var(--text-dim); line-height: 1.7; }
+  .eco-badge {
+    display: inline-block; margin-top: 1rem;
+    font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid;
+  }
+  .eco-badge.active { color: var(--jade); border-color: var(--jade-dim); }
+  .eco-badge.dev { color: var(--amber); border-color: var(--gold-dim); }
+  .eco-badge.arch { color: var(--phi); border-color: var(--phi-dim); }
+
+  /* ═══ MANIFESTO ═══ */
+  .manifesto {
+    padding: 10rem 5rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+    background: var(--void);
+  }
+  .manifesto::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(200,164,74,0.06) 0%, transparent 70%);
+  }
+  .manifesto-lines {
+    max-width: 800px; margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  .manifesto-line {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    color: var(--text-muted);
+    margin: 1.5rem 0; line-height: 1.3;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .manifesto-line.visible { opacity: 1; transform: translateY(0); }
+  .manifesto-line .hi { color: var(--text); }
+  .manifesto-line .gold { color: var(--gold); }
+  .manifesto-line .jade { color: var(--jade); }
+  .manifesto-sep {
+    width: 1px; height: 40px; background: var(--rim);
+    margin: 0.5rem auto; opacity: 0.5;
+  }
+
+  /* ═══ CTA SECTION ═══ */
+  .cta-section {
+    padding: 8rem 5rem;
+    background: var(--surface);
+    border-top: 1px solid var(--rim);
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+  }
+  .cta-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1.15;
+  }
+  .cta-title .gold { color: var(--gold); }
+  .cta-right { display: flex; flex-direction: column; gap: 1.5rem; }
+  .cta-form-group { display: flex; gap: 0; }
+  .cta-input {
+    flex: 1; background: var(--panel); border: 1px solid var(--rim);
+    border-right: none; color: var(--text);
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    padding: 0.9rem 1.2rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .cta-input:focus { border-color: var(--gold-dim); }
+  .cta-input::placeholder { color: var(--text-muted); }
+  .cta-submit {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    background: var(--gold); color: var(--void);
+    border: none; padding: 0.9rem 1.5rem; cursor: none;
+    white-space: nowrap; transition: background 0.2s;
+  }
+  .cta-submit:hover { background: var(--amber); }
+  .cta-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .cta-link {
+    font-size: 0.65rem; color: var(--text-dim); text-decoration: none;
+    letter-spacing: 0.1em;
+    display: flex; align-items: center; gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .cta-link::before { content: '→'; color: var(--gold-dim); }
+  .cta-link:hover { color: var(--gold); }
+
+  /* ═══ FOOTER ═══ */
+  footer {
+    background: var(--void);
+    border-top: 1px solid var(--rim);
+    padding: 3rem 5rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem; color: var(--gold);
+  }
+  .footer-logo span { color: var(--text-muted); font-family: 'Space Mono', monospace; font-size: 0.6rem; display: block; margin-top: 0.3rem; letter-spacing: 0.2em; }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a { font-size: 0.6rem; color: var(--text-muted); text-decoration: none; letter-spacing: 0.2em; text-transform: uppercase; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--text); }
+  .footer-law {
+    font-size: 0.55rem; color: var(--text-muted);
+    letter-spacing: 0.1em; text-align: right;
+    max-width: 260px; line-height: 1.6;
+  }
+
+  /* ═══ SCAN LINES ═══ */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .pillars-grid { grid-template-columns: 1fr; }
+    .pillar { border-right: none; border-bottom: 2px solid var(--rim); }
+    .phi-grid, .mfidel-section, .cta-section { grid-template-columns: 1fr; gap: 3rem; }
+    .ecosystem-grid { grid-template-columns: 1fr 1fr; }
+    nav { padding: 1.5rem 2rem; }
+    .nav-links { display: none; }
+    .section, .phi-section, .mfidel-section, .ecosystem-section, .cta-section { padding: 5rem 2rem; }
+    .hero-left { padding: 7rem 2rem 3rem; }
+    footer { flex-direction: column; gap: 2rem; text-align: center; padding: 2rem; }
+  }
 </style>
 </head>
 <body>
 
-<div id="launch">
-  <div style="color:#4a7acc;font:bold 22px serif;letter-spacing:6px;margin-bottom:4px">\u1219\u1209 \u12DC\u1293</div>
-  <div class="title">MULLUSI NEWS STUDIO</div>
-  <div class="sub">INTERACTIVE 3D BROADCAST SYSTEM</div>
-  <div id="loading-msg" style="color:#445;font:8px var(--mono);margin-bottom:12px;letter-spacing:1px">LOADING 3D SCENE...</div>
-  <button id="enter-btn" onclick="launchStudio()" style="display:none" aria-label="Enter the 3D studio">ENTER STUDIO</button>
-  <div class="hint">FULLSCREEN RECOMMENDED<br>DRAG TO ORBIT · PINCH TO ZOOM<br>TAP OBJECTS TO INTERACT</div>
-  <div style="margin-top:28px;color:#334;font:7px var(--mono);text-align:center;line-height:2;letter-spacing:1px">
-    DEVELOPED BY TAMIRAT LULIE WUBIE<br>
-    <span style="color:#223">MULLUSI SYMBOLIC INTELLIGENCE · mullusi.com</span><br>
-    <span style="color:#1a1a28">v2.0 · SCCML GOVERNED PRODUCTION SYSTEM</span>
-  </div>
-</div>
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-<div id="badge" class="live" onclick="toggleBroadcast()" style="display:none" role="button" aria-label="Toggle broadcast">
-  <div class="dot on"></div>
-  <span>ON AIR</span>
-</div>
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="#" class="nav-logo">MULLUSI<span>Symbolic Intelligence</span></a>
+  <ul class="nav-links">
+    <li><a href="#pillars">Architecture</a></li>
+    <li><a href="#phi">Φ Traversal</a></li>
+    <li><a href="#mfidel">Mfidel</a></li>
+    <li><a href="#ecosystem">Ecosystem</a></li>
+    <li><a href="https://docs.mullusi.com">Docs</a></li>
+  </ul>
+  <a href="https://dashboard.mullusi.com" class="nav-cta">Launch Platform</a>
+</nav>
 
-<div id="title" style="display:none">
-  MULLUSI STUDIO<br>
-  <span class="seg" id="seg-label">SEG A: OPEN / HEADLINES</span>
-  <span class="timer" id="seg-timer"></span>
-</div>
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-<div id="status" style="display:none">
-  <span id="st-cam">C1</span>
-  <span id="st-auto">AUTO-</span>
-  <span id="st-cut">CUT+</span>
-  <span id="st-bg">BG:GLO</span>
-  <span id="st-spk">SPK:1</span>
-  <span id="st-bt" style="color:#a66">00:00</span>
-  <span id="st-cin"></span>
-  <span id="st-fps" style="display:none">0fps</span>
-</div>
+  <div class="hero-left">
+    <div class="hero-tag">Symbolic Causal Chain Intelligence · SCCI v2</div>
 
-<div id="tooltip"></div>
-<div id="log"></div>
+    <h1 class="hero-title">
+      MULLUSI
+      <span class="accent">Intelligence</span>
+    </h1>
+    <div class="hero-sub">ሙሉሲ</div>
 
-<div id="pip">
-  <canvas id="pip-canvas" width="320" height="200"></canvas>
-  <div class="label">PiP</div>
-</div>
+    <p class="hero-desc">
+      A deterministic symbolic intelligence platform built on causal chain architecture.
+      Not probabilistic. Not statistical. Every inference is governed,
+      traceable, and anchored in the Mfidel 34×8 atomic substrate.
+      <br><br>
+      Meaning is relational. Traversal is governed. Judgment is earned.
+    </p>
 
-<div id="ui" style="display:none">
-  <div class="row" id="row-presets"></div>
-  <div class="row" id="row-prod"></div>
-  <div id="progress"><div class="bar"></div></div>
-  <div class="row" id="row-extra"></div>
-  <div class="row">
-    <span style="color:var(--text-dim);font-size:7px;flex-shrink:0">TICKER:</span>
-    <input type="text" id="ticker-input" placeholder="Custom headline...">
-    <button class="btn" id="ticker-clr" style="padding:3px 5px;font-size:7px;display:none" onclick="S.headline='';ge('ticker-input').value='';ge('ticker-clr').style.display='none';log('TICKER: clear')">CLR</button>
-  </div>
-</div>
-
-<button class="btn" id="show-ui" onclick="toggleUI()" aria-label="Show studio controls">UI</button>
-
-<div id="tv-full" onclick="tvClickHandler(event)">
-  <canvas id="tv-canvas" width="1280" height="720"></canvas>
-  <div class="exit">ESC TO EXIT</div>
-  <div class="tv-bar">
-    <span class="air-badge" id="tv-air">LIVE</span>
-    <span class="seg-id" id="tv-seg">A</span>
-    <span id="tv-label">OPEN / HEADLINES</span>
-    <span id="tv-timer" style="margin-left:auto;color:#556"></span>
-    <button class="btn" onclick="event.stopPropagation();advanceSegment()" style="padding:3px 8px;font-size:7px">NEXT</button>
-    <button class="btn" onclick="event.stopPropagation();toggleBroadcast()" style="padding:3px 8px;font-size:7px" id="tv-air-btn">AIR</button>
-    <button class="btn" onclick="event.stopPropagation();toggleTVFull()" style="padding:3px 8px;font-size:7px">EXIT</button>
-  </div>
-</div>
-
-<div id="help" onclick="toggleHelp()">
-  <div class="card" onclick="event.stopPropagation()">
-    <h3>STUDIO CONTROLS</h3>
-    <div class="sec">KEYBOARD:</div>
-    <div><kbd>1-8</kbd> Camera presets (8=\u03A6 view)</div>
-    <div><kbd>SPACE</kbd> Next segment</div>
-    <div><kbd>A</kbd> Auto-advance</div>
-    <div><kbd>C</kbd> Auto camera-cut</div>
-    <div><kbd>B</kbd> Broadcast ON/OFF</div>
-    <div><kbd>R</kbd> Auto-rotate</div>
-    <div><kbd>H</kbd> Hide/show UI</div>
-    <div><kbd>F</kbd> Fullscreen</div>
-    <div><kbd>P</kbd> Picture-in-picture</div>
-    <div><kbd>T</kbd> TV fullscreen (watch broadcast)</div>
-    <div><kbd>ESC</kbd> Exit TV fullscreen</div>
-    <div><kbd>L</kbd> Lighting preset cycle</div>
-    <div><kbd>U</kbd> Undo last action</div>
-    <div><kbd>0</kbd> Jib camera</div>
-    <div><kbd>G</kbd> Cycle green screen color</div>
-    <div><kbd>M</kbd> Cinematic auto-orbit</div>
-    <div><kbd>+/-</kbd> Zoom in/out</div>
-    <div><kbd>?</kbd> This help</div>
-    <div class="sec">CLICK 3D OBJECTS:</div>
-    <div><span class="click">Camera body</span> → Switch live feed</div>
-    <div><span class="click">Robot</span> → Trigger gesture</div>
-    <div><span class="click">Backdrop</span> → Cycle graphics</div>
-    <div><span class="click">Desk monitor</span> → Cycle content</div>
-    <div><span class="click">Light rig</span> → Toggle on/off</div>
-    <div><span class="click">ON AIR sign</span> → Toggle broadcast</div>
-    <div><span class="click">Teleprompter</span> → Next segment</div>
-    <div><span class="click">Green screen</span> → Cycle color</div>
-    <div class="sec">NAVIGATION:</div>
-    <div>Drag to orbit · Scroll/pinch to zoom</div>
-    <div>Double-tap to reset to WIDE</div>
-    <div class="sec">SEGMENT JUMP:</div>
-    <div>Click segment buttons (A-F) to jump directly</div>
-    <div class="sec">DESK MONITORS (5 modes — click to cycle):</div>
-    <div>CAM → Viewfinder with settings</div>
-    <div>PROMPT → Teleprompter script</div>
-    <div>RUNDOWN → Full segment list</div>
-    <div>STATS → Broadcast dashboard</div>
-    <div>SYMBIOSIS → LLM \u2194 Symbolic AI flow</div>
-    <div class="sec">LIGHTING PRESETS (L key):</div>
-    <div>STUDIO · WARM · COOL · DRAMA</div>
-    <div class="sec">BACKDROP MODES (BG button):</div>
-    <div>Globe · Data · Weather · Headline</div>
-    <div class="sec" style="margin-top:12px;color:#4a6a8a;border-top:1px solid rgba(80,80,120,0.15);padding-top:8px">ABOUT</div>
-    <div style="line-height:2.4">
-      <div style="color:#6af;font-size:9px;letter-spacing:1px">MULLUSI NEWS STUDIO v2.0</div>
-      <div>Developed by <span style="color:#aab">Tamirat Lulie Wubie</span></div>
-      <div>Mullusi Symbolic Intelligence</div>
-      <div style="color:#445">mullusi.com · SCCML Governed</div>
-      <div style="color:#334;font-size:7px;margin-top:4px">Three.js r128 · Vanilla JS · No dependencies</div>
-      <div style="color:#334;font-size:7px">9 click targets · 4 backdrop modes · 4 lighting presets</div>
-      <div style="color:#334;font-size:7px">6-segment rundown · 2 robot anchors · 4 cameras</div>
-      <div style="color:#334;font-size:7px">13 SCCML causal chains · \u03A6 governance hologram</div>
+    <div class="hero-actions">
+      <a href="https://docs.mullusi.com" class="btn-primary">Explore Architecture</a>
+      <a href="https://github.com/tamirat-wubie" class="btn-ghost">View Source</a>
     </div>
-    <button class="btn" style="margin-top:12px;width:100%;padding:6px" onclick="toggleHelp()">CLOSE</button>
+
+    <div class="hero-metrics">
+      <div class="metric">
+        <div class="metric-val">13</div>
+        <div class="metric-label">Φ Phases</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">272</div>
+        <div class="metric-label">Atomic Fidels</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">34×8</div>
+        <div class="metric-label">Mfidel Grid</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">𝕊</div>
+        <div class="metric-label">USCL v3.2</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="phi-canvas">
+      <svg viewBox="-260 -260 520 520">
+        <defs>
+          <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#c8a44a" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#c8a44a" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="blur4">
+            <feGaussianBlur stdDeviation="4"/>
+          </filter>
+          <filter id="blur2">
+            <feGaussianBlur stdDeviation="2"/>
+          </filter>
+        </defs>
+
+        <!-- Outer rim -->
+        <circle cx="0" cy="0" r="240" fill="none" stroke="rgba(200,164,74,0.08)" stroke-width="1"/>
+        <circle cx="0" cy="0" r="220" fill="none" stroke="rgba(200,164,74,0.12)" stroke-width="0.5" stroke-dasharray="4 8"/>
+        <circle cx="0" cy="0" r="180" fill="none" stroke="rgba(122,92,240,0.15)" stroke-width="1"/>
+        <circle cx="0" cy="0" r="140" fill="none" stroke="rgba(200,164,74,0.18)" stroke-width="0.5"/>
+        <circle cx="0" cy="0" r="90" fill="none" stroke="rgba(47,212,160,0.2)" stroke-width="1"/>
+
+        <!-- Glow core -->
+        <circle cx="0" cy="0" r="120" fill="url(#coreGlow)"/>
+        <circle cx="0" cy="0" r="60" fill="none" stroke="rgba(200,164,74,0.15)" stroke-width="1" filter="url(#blur4)"/>
+
+        <!-- 13-phase nodes on outer ring, animated -->
+        <g id="phaseNodes">
+          <!-- Phase nodes generated by JS -->
+        </g>
+
+        <!-- Inner mesh lines -->
+        <g id="meshLines" opacity="0.3"></g>
+
+        <!-- Center Phi glyph -->
+        <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
+              font-family="serif" font-size="72" fill="rgba(200,164,74,0.9)"
+              filter="url(#blur2)">Φ</text>
+        <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
+              font-family="serif" font-size="72" fill="rgba(200,164,74,0.8)">Φ</text>
+
+        <!-- Mfidel labels at cardinal positions -->
+        <text x="0" y="-198" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(200,164,74,0.6)">ሙሉ</text>
+        <text x="198" y="0" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(47,212,160,0.5)" dominant-baseline="central">ሲ</text>
+        <text x="0" y="210" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(200,164,74,0.4)">ፍ</text>
+        <text x="-198" y="0" text-anchor="middle" font-family="'Noto Sans Ethiopic',serif" font-size="14" fill="rgba(122,92,240,0.5)" dominant-baseline="central">ዕ</text>
+
+        <!-- Rotating outer ring -->
+        <g id="spinRing">
+          <circle cx="0" cy="0" r="235" fill="none" stroke="rgba(200,164,74,0.06)" stroke-width="6" stroke-dasharray="2 30"/>
+        </g>
+
+        <!-- Tick marks for 34 fidel rows -->
+        <g id="ticks" opacity="0.25"></g>
+
+        <!-- Animated scan arc -->
+        <path id="scanArc" fill="none" stroke="rgba(200,164,74,0.5)" stroke-width="1.5"/>
+
+        <!-- Outer label ring -->
+        <g font-family="'Space Mono',monospace" font-size="7" fill="rgba(200,164,74,0.35)" letter-spacing="0.1em">
+          <text x="0" y="-250" text-anchor="middle">SYMBOLIC · CAUSAL · CHAIN</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHILOSOPHY STRIP ═══ -->
+<div class="strip">
+  <div class="strip-inner" id="stripInner">
+    <span class="strip-item">Symbols are Atomic</span>
+    <span class="strip-item">Meaning is Relational</span>
+    <span class="strip-item">Traversal is Governed</span>
+    <span class="strip-item">Judgment is Earned</span>
+    <span class="strip-item">Causal Chain Intelligence</span>
+    <span class="strip-item">USCL v3.2</span>
+    <span class="strip-item">Φ 13-Phase Governance</span>
+    <span class="strip-item">Deterministic · Total · Auditable</span>
+    <span class="strip-item">Mfidel 34×8 Substrate</span>
+    <span class="strip-item">No Silent Failures</span>
+    <span class="strip-item">Symbols are Atomic</span>
+    <span class="strip-item">Meaning is Relational</span>
+    <span class="strip-item">Traversal is Governed</span>
+    <span class="strip-item">Judgment is Earned</span>
+    <span class="strip-item">Causal Chain Intelligence</span>
+    <span class="strip-item">USCL v3.2</span>
+    <span class="strip-item">Φ 13-Phase Governance</span>
+    <span class="strip-item">Deterministic · Total · Auditable</span>
+    <span class="strip-item">Mfidel 34×8 Substrate</span>
+    <span class="strip-item">No Silent Failures</span>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- ═══ PILLARS ═══ -->
+<section class="section" id="pillars">
+  <div class="section-label">Core Architecture</div>
+  <h2 class="section-title">The Symbolic <span class="gold">Foundation</span></h2>
+
+  <div class="pillars-grid">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <span class="pillar-glyph">𝕊</span>
+      <div class="pillar-title">USCL — Universal Symbolic Conservation Law</div>
+      <p class="pillar-body">
+        𝕊 := ⟨ Ι, Λ, Σ, Γ, H ⟩. Every object in the system carries identity, constraint, state, context, and lineage. State writes are gated through Φ_gov exclusively. No silent failures. All Δ_reject are logged.
+      </p>
+      <span class="pillar-tag">v3.2 Active</span>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <span class="pillar-glyph">Φ</span>
+      <div class="pillar-title">Φ Governance — 13-Phase Traversal Engine</div>
+      <p class="pillar-body">
+        Every inference traverses: Distinction → Constraint → Ontology → Topology → Form → Organization → Module → Execution → Body → Architecture → Performance → Feedback → Evolution. Governed, ordered, irreversible where needed.
+      </p>
+      <span class="pillar-tag">GPS v2.2</span>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <span class="pillar-glyph">Ψ</span>
+      <div class="pillar-title">Ψ Judgment Kernel — Traceable Decisions</div>
+      <p class="pillar-body">
+        Judgment maps problem state, execution trace, goal result, law compliance, proof record, causal graph, and surprise log into a verified decision. Reversible, auditable, governance-bound. Never heuristic guessing.
+      </p>
+      <span class="pillar-tag">Auditable</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHI TRAVERSAL ═══ -->
+<section class="phi-section" id="phi">
+  <div class="phi-grid">
+    <div>
+      <div class="section-label">Φ Traversal Spine</div>
+      <h2 class="section-title">13-Phase <span class="gold">Governance</span> Engine</h2>
+      <p style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;margin-top:1.5rem;max-width:460px;">
+        Every symbolic operation passes through a mandatory ordered traversal. Phase progression is enforced. Deviation requires explicit governance authority. The traversal cannot be short-circuited.
+      </p>
+
+      <div class="phi-law">
+        <strong>Φ_gov</strong> determines what may be known.<br>
+        <strong>Ψ</strong> commits only when authority is earned.<br>
+        All actions are logged in <strong>H</strong> (append-only lineage).<br>
+        Episode model <strong>M_e</strong> is frozen before execution<br>
+        and cannot be mutated mid-episode.
+      </div>
+    </div>
+
+    <div>
+      <div class="phi-phases">
+        <div class="phase-card"><div class="phase-num">PHASE 01</div><div class="phase-name">Distinction</div><div class="phase-desc">Boundaries, separation, κ confidence</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 02</div><div class="phase-name">Constraint</div><div class="phase-desc">Hard / soft / contextual limits</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 03</div><div class="phase-name">Ontology</div><div class="phase-desc">Types, identity, mereology</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 04</div><div class="phase-name">Topology</div><div class="phase-desc">Adjacency, connectivity, cycles</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 05</div><div class="phase-name">Form</div><div class="phase-desc">Metrics, units, tolerances</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 06</div><div class="phase-name">Organization</div><div class="phase-desc">Invariants, dependencies, generators</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 07</div><div class="phase-name">Module</div><div class="phase-desc">Boundary, contract, responsibility</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 08</div><div class="phase-name">Execution</div><div class="phase-desc">State graph, transitions, termination</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 09</div><div class="phase-name">Body</div><div class="phase-desc">Boundary, homeostasis, repair</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 10</div><div class="phase-name">Architecture</div><div class="phase-desc">Layers, timescales, hazards</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 11</div><div class="phase-name">Performance</div><div class="phase-desc">Intent vs observed, gap analysis</div></div>
+        <div class="phase-card"><div class="phase-num">PHASE 12</div><div class="phase-name">Feedback</div><div class="phase-desc">Controllers, stability, protected vars</div></div>
+        <div class="phase-card" style="grid-column:1/-1"><div class="phase-num">PHASE 13</div><div class="phase-name">Evolution</div><div class="phase-desc">Variation, selection, retention, witness — the final phase that closes the governance loop</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MFIDEL SECTION ═══ -->
+<section class="mfidel-section" id="mfidel">
+  <div>
+    <div class="section-label">Atomic Substrate</div>
+    <h2 class="section-title">Mfidel <span class="gold">34×8</span> Grid</h2>
+    <p style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;margin-top:1.5rem;">
+      The symbolic substrate of the entire Mullusi system. 272 atomic fidels from the enhanced Ge'ez writing tradition. Each fidel is indivisible — one shape, one whisper sound, no decomposition permitted.
+    </p>
+    <p style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;margin-top:1rem;">
+      Audio formula: <code style="color:var(--jade);font-size:0.7rem;">f[r][c].s(w,v) = f[r][c].s(w) + f[17][c].s(w,v)</code>
+    </p>
+    <p style="font-size:0.7rem;color:var(--text-muted);margin-top:0.8rem;line-height:1.8;">
+      Vowels are vibratory overlays — not roots. Column 8 derives from column 2 + vowel ኣ overlay. Each atomic shape carries an atomic whisper sound by default.
+    </p>
+    <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;">
+        <span style="color:var(--gold)">◈</span> 34 consonant rows
+      </div>
+      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;">
+        <span style="color:var(--jade)">◈</span> 8 vowel columns
+      </div>
+      <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;">
+        <span style="color:var(--phi)">◈</span> 272 atomic fidels
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="fidel-grid-display" id="fidelGrid">
+      <!-- Generated by JS -->
+    </div>
+    <div style="font-size:0.55rem;color:var(--text-muted);margin-top:1rem;text-align:center;letter-spacing:0.2em;">
+      SHOWING FIRST 5 ROWS · HOVER TO ACTIVATE · 34×8 = 272 ATOMIC FIDELS
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ECOSYSTEM ═══ -->
+<section class="ecosystem-section" id="ecosystem">
+  <div class="section-label">Platform Ecosystem</div>
+  <h2 class="section-title">Symbolic <span class="gold">Modules</span></h2>
+
+  <div class="ecosystem-grid">
+    <div class="eco-card">
+      <div class="eco-icon">ሙ</div>
+      <div class="eco-name">SCCGUB Blockchain</div>
+      <p class="eco-desc">Rust deterministic blockchain with CPoG consensus, 13-phase Φ traversal, and Mfidel atomic seals. Ed25519 verified.</p>
+      <span class="eco-badge active">Active · Audit CI ✓</span>
+    </div>
+    <div class="eco-card">
+      <div class="eco-icon">ሉ</div>
+      <div class="eco-name">VIRECAI</div>
+      <p class="eco-desc">Symbolic video / reality recording format. 6-plane architecture, 155 classes, causal belief analysis, MLVF/MLVFF binary format.</p>
+      <span class="eco-badge dev">v9.x Active</span>
+    </div>
+    <div class="eco-card">
+      <div class="eco-icon">ሲ</div>
+      <div class="eco-name">Φ-FOLD</div>
+      <p class="eco-desc">Protein structure prediction engine via symbolic Monte Carlo. 10-component energy function, Generalized Born electrostatics. 2.42 Å RMSD.</p>
+      <span class="eco-badge dev">v6.x</span>
+    </div>
+    <div class="eco-card">
+      <div class="eco-icon">ፍ</div>
+      <div class="eco-name">scc-harness</div>
+      <p class="eco-desc">Python governed execution framework with DataProvenance, CausalArtifact, and five-part verifier Π_G ∧ Π_Λ ∧ Π_N ∧ Π_S ∧ Π_C.</p>
+      <span class="eco-badge active">v2.0.0</span>
+    </div>
+    <div class="eco-card">
+      <div class="eco-icon">ዕ</div>
+      <div class="eco-name">MQSSE</div>
+      <p class="eco-desc">Quantum symbolic simulation engine. 102 tests, MeasurementSystem, Φ governance, Mfidel bridge, 21 quantum gates.</p>
+      <span class="eco-badge arch">v0.4</span>
+    </div>
+    <div class="eco-card">
+      <div class="eco-icon">ዘ</div>
+      <div class="eco-name">Symbolic Physics Engine</div>
+      <p class="eco-desc">826 passing tests across 8 benchmark cases. Causal physics reasoning with symbolic constraint propagation.</p>
+      <span class="eco-badge active">v0.2.0</span>
+    </div>
+    <div class="eco-card">
+      <div class="eco-icon">ለ</div>
+      <div class="eco-name">Mullu Mathematics</div>
+      <p class="eco-desc">18 Python modules (~9,000 LOC). Mfidel substrate, Φ operator, Ψ judgment kernel, Gödel-aware governance architecture.</p>
+      <span class="eco-badge arch">Engine Active</span>
+    </div>
+    <div class="eco-card">
+      <div class="eco-icon">ነ</div>
+      <div class="eco-name">MFIDEL Transcription</div>
+      <p class="eco-desc">English-to-Mfidel phonetic transcription via 34×8 mathematical engine. Latin sound impression components mapped to atomic fidels.</p>
+      <span class="eco-badge active">Σ 52.0</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MANIFESTO ═══ -->
+<section class="manifesto">
+  <div class="manifesto-lines">
+    <div class="manifesto-line"><span class="hi">Everything</span> is a Symbol.</div>
+    <div class="manifesto-sep"></div>
+    <div class="manifesto-line">A symbol is <span class="gold">metadata</span>.</div>
+    <div class="manifesto-sep"></div>
+    <div class="manifesto-line">Symbols form a <span class="jade">mesh</span>, not a tree.</div>
+    <div class="manifesto-sep"></div>
+    <div class="manifesto-line">Meaning emerges from <span class="hi">relations</span>.</div>
+    <div class="manifesto-sep"></div>
+    <div class="manifesto-line"><span class="gold">Deterministic.</span> Governed. Auditable.</div>
+    <div class="manifesto-sep"></div>
+    <div class="manifesto-line" style="font-size:clamp(0.8rem,1.5vw,1.2rem);color:var(--text-muted);">
+      Symbolic Causal Chain General Intelligence<br>
+      <span style="color:var(--text-muted);font-size:0.8em;">Mullusi · Ethiopia · mullusi.com</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-section" id="contact">
+  <div>
+    <div class="section-label">Get Involved</div>
+    <h2 class="cta-title">Build on the <span class="gold">Symbolic</span> Foundation</h2>
+    <p style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;margin-top:1.5rem;max-width:400px;">
+      Mullusi is an open symbolic intelligence platform. Explore the architecture, contribute to the ecosystem, or integrate the governance kernel into your systems.
+    </p>
+  </div>
+  <div class="cta-right">
+    <div class="cta-form-group">
+      <input class="cta-input" type="email" placeholder="your@email.com" />
+      <button class="cta-submit">Subscribe</button>
+    </div>
+    <div class="cta-links">
+      <a href="https://docs.mullusi.com" class="cta-link">Documentation</a>
+      <a href="https://github.com/tamirat-wubie" class="cta-link">GitHub</a>
+      <a href="mailto:hello@mullusi.com" class="cta-link">hello@mullusi.com</a>
+      <a href="https://dashboard.mullusi.com" class="cta-link">Dashboard</a>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
+      <span style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.15em;">research@mullusi.com</span>
+      <span style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.15em;">support@mullusi.com</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-logo">
+    MULLUSI
+    <span>Symbolic Intelligence Platform · Ethiopia</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://mullusi.com">mullusi.com</a>
+    <a href="https://docs.mullusi.com">Docs</a>
+    <a href="https://dashboard.mullusi.com">Dashboard</a>
+    <a href="https://api.mullusi.com">API</a>
+    <a href="https://github.com/tamirat-wubie">GitHub</a>
+  </div>
+  <div class="footer-law">
+    Symbols are atomic.<br>
+    Meaning is relational.<br>
+    Traversal is governed.<br>
+    <span style="color:var(--text-muted);opacity:0.5;">USCL v3.2 · Φ²-GPS v2.2</span>
+  </div>
+</footer>
+
 <script>
-// ═══════════════════════════════════════
-// MULLUSI NEWS STUDIO — STANDALONE HTML
-// Full interactive production system
-// ═══════════════════════════════════════
-
-const ge = id => document.getElementById(id);
-const PRESETS = [
-  {n:"WIDE",t:0,p:.3,r:18,cx:0,cy:2.5,cz:0},
-  {n:"ANCHOR",t:0,p:.18,r:7,cx:0,cy:2,cz:0},
-  {n:"CAM2",t:.6,p:.25,r:12,cx:-1,cy:2.5,cz:0},
-  {n:"TOP",t:.1,p:1.2,r:14,cx:0,cy:0,cz:0},
-  {n:"LOW",t:.2,p:.06,r:12,cx:0,cy:1.5,cz:0},
-  {n:"ABEBE",t:.25,p:.15,r:3.5,cx:-1.6,cy:2,cz:1.3},
-  {n:"SELAM",t:-.25,p:.15,r:3.5,cx:1.6,cy:2,cz:1.3},
-  {n:"\u03A6",t:1.45,p:.2,r:5,cx:-15,cy:5.5,cz:4},
-];
-const RUNDOWN = [
-  {id:"A",label:"OPEN / HEADLINES",backdrop:"globe",speaker:0,ticker:"MULLUSI NEWS — TONIGHT: THE FUTURE OF INTELLIGENCE IS SYMBOLIC"},
-  {id:"B",label:"FOUNDER'S VISION",backdrop:"data",speaker:1,ticker:"TAMIRAT LULIE WUBIE: FROM ETHIOPIAN HERITAGE TO SYMBOLIC INTELLIGENCE PIONEER — BUILDING THE FUTURE OF AI WITHOUT STATISTICS"},
-  {id:"C",label:"MULLUSI PLATFORM",backdrop:"globe",speaker:0,ticker:"MULLUSI: A DETERMINISTIC CAUSAL CHAIN REASONING ENGINE — NOT AN LLM — GROUNDED IN THE GE'EZ MFIDEL ATOMIC SYMBOL SUBSTRATE"},
-  {id:"D",label:"LLM \u2194 SYMBOLIC",backdrop:"data",speaker:1,ticker:"HOW SYMBOLIC AI AND LLMS FEED EACH OTHER: LLMS GENERATE — SYMBOLIC SYSTEMS VERIFY, GOVERN, AND GROUND MEANING IN TRUTH"},
-  {id:"E",label:"\u03A6\u00B2 GOVERNANCE",backdrop:"weather",speaker:0,ticker:"\u03A6\u00B2-M: MULTI-AGENT GOVERNANCE FRAMEWORK — FROM SINGLE MINDS TO CIVILIZATIONAL STABILITY THROUGH CAUSAL ACCOUNTABILITY"},
-  {id:"F",label:"THE AMBITION",backdrop:"globe",speaker:1,ticker:"THE GOAL: SYMBOLIC INTELLIGENCE THAT COEXISTS WITH HUMANITY — NOT REPLACING THOUGHT BUT MAKING IT ACCOUNTABLE AND TRACEABLE"},
-  {id:"G",label:"COMING SOON",backdrop:"headline",speaker:0,ticker:"COMING SOON: MULLUSI NEWS LIVE BROADCAST — TAMIRAT LULIE WUBIE — SYMBOLIC INTELLIGENCE NETWORK — MULLUSI.COM — STAY TUNED"},
-];
-
-// Story crawler — Tamirat's journey told as scrolling headlines
-const STORY_LINES=[
-  "TAMIRAT LULIE WUBIE — SYMBOLIC AI ARCHITECT — FOUNDER OF MULLUSI",
-  "BORN FROM ETHIOPIAN HERITAGE: THE GE'EZ WRITING SYSTEM AS COMPUTATIONAL SUBSTRATE",
-  "EACH FIDEL IS ATOMIC — NO DECOMPOSITION — MEANING THROUGH RELATION, NOT STATISTICS",
-  "THE CONVICTION: THE UNIVERSE IS A SINGULAR SYMBOL WITH INTERNAL DIVERSITY",
-  "MULLUSI: SYMBOLIC CAUSAL CHAIN GENERAL INTELLIGENCE — DETERMINISTIC, NOT PROBABILISTIC",
-  "DMRS KERNEL: 54 TESTS, ZERO WARNINGS — PROOF-CARRYING MEMORY GOVERNANCE",
-  "MFIDEL 34×8 GRID: 272 ATOMIC SYMBOLS — THE COMPUTATIONAL GROUND TRUTH",
-  "\u03A6 OPERATOR: GOVERNED SYMBOLIC TRANSFORMATION — EVERY ACTION LOGGED, EVERY JUDGMENT EARNED",
-  "\u03A8 JUDGMENT KERNEL: TRACEABLE, AUDITABLE, REVERSIBLE, GOVERNANCE-BOUND",
-  "FROM MECHANISM TO MIND: SURVIVAL → LEARNING → ABSTRACTION → CAUSATION → CHOICE → ETHICS",
-  "SYMBOLIC AI VERIFIES WHAT LLMS GENERATE — LLMS EXPAND WHAT SYMBOLIC AI CAN REACH",
-  "VISION: INTELLIGENCE THAT IS ACCOUNTABLE BY DESIGN — NOT CORRECTED AFTER THE FACT",
-  "BUILDING THE SYMBOLIC LAYER: VIRECAI, TATOKEN, SCCML, DMRS, MAF, SCCE, USL",
-  "MULLUSI.COM — THE SYMBOLIC INTELLIGENCE ECOSYSTEM — CAUSAL CONTRACTS FOR THE FUTURE",
-];
-const LIGHT_PRESETS = [
-  {name:"STUDIO",colors:[[0xffffff,.8],[0xffffff,.8],[0xffffff,.8],[0xffffff,.6]]},
-  {name:"WARM",colors:[[0xffddaa,1],[0xffccaa,.9],[0xffddaa,.7],[0xffbb88,.5]]},
-  {name:"COOL",colors:[[0x88bbff,.9],[0x99ccff,.8],[0x88aaff,.7],[0x6699dd,.5]]},
-  {name:"DRAMA",colors:[[0xff4444,.6],[0x4444ff,.5],[0xff4444,.6],[0x000000,0]]},
-];
-const GESTURES = ["nod","turn","look_cam","wave","think"];
-
-// ═══ PRODUCTION STATE ═══
-let S = {
-  liveCam:0,broadcastOn:true,rundownIdx:0,backdropMode:"globe",
-  robotGesture:[null,null],gestureTimers:[0,0],
-  lightsOn:[true,true,true,true],deskMonModes:[0,1,2],
-  headline:"",speakerActive:0,autoAdvance:true,autoCut:true,
-  segTimer:0,autoRotate:true,showPip:false,lightPreset:0,
-  showFps:false,preset:0,showUI:true,
-  broadcastTimer:0, cinematic:true, greenScreen:0, tvFull:false,
-};
-let undoStack = [];
-const pushUndo = () => { undoStack.push(JSON.parse(JSON.stringify(S))); if(undoStack.length>20)undoStack.shift(); };
-const undo = () => { if(!undoStack.length)return; S=undoStack.pop(); velocityT=0;velocityP=0;backdropFade=0;segFlash=0; sndClick(); syncUI(); log("UNDO"); };
-
-let logEntries = [];
-function log(msg){logEntries.unshift(msg);if(logEntries.length>8)logEntries.pop();ge('log').innerHTML=logEntries.map((l,i)=>`<div style="opacity:${1-i*.12}">${l}</div>`).join('');}
-
-// ═══ THREE.JS SETUP ═══
-let renderer,scene,camera,clock;
-let clickables=[], tallyMats=[], rigLights=[], rigGlowMats=[], rackLEDs=[];
-let robotHeads=[], robotAccents=[], robotLabels=[];
-let onAirMat, jib, boom, particles, pCount=150;
-let backdropFade=0, segFlash=0;
-let sCvs,sCtx,sTex, sc1,sc2,st1,st2, dMonC=[],dMonT=[];
-var ctrlCvs1,ctrlCvs2,ctrlCvs3,ctrlTex1,ctrlTex2,ctrlTex3;
-let pipRenderer, pipCamera;
-let wDots=[];
-let greenScreenMesh, clockMinHand, clockHourHand, clockSecHand, deskGlowRing;
-let cinematicTimer=0, cinematicPresetIdx=0;
-var autoHideTimer=null;
-// Φ Hologram state
-var holoCvs, holoTex;
-window.fidelMeshes=[];window.fidelData=[];
-const FIDEL_CHARS=[
-  "\u1219","\u1209","\u12DC","\u1293",
-  "\u1200","\u1208","\u1218","\u1228","\u1230","\u1240","\u1260","\u1270",
-  "\u1290","\u12A8","\u12C8","\u12D8","\u12E8","\u1308","\u1320","\u1330",
-  "\u1338","\u1348","\u1350","\u134A","\u12A0","\u12A5","\u12A3","\u12A7",
-];
-let holoEvents=[]; // queue of {chain, deltas, time, color}
-const CHAIN_NODES={
-  CAMERA_SWITCH:{x:80,y:60,label:"CAM",color:"#00aaff"},
-  BROADCAST_TOGGLE:{x:200,y:40,label:"AIR",color:"#ff3333"},
-  RUNDOWN_ADVANCE:{x:320,y:50,label:"SEG",color:"#ffaa00"},
-  ROBOT_GESTURE:{x:440,y:60,label:"BOT",color:"#00ffaa"},
-  BACKDROP_CYCLE:{x:200,y:140,label:"BG",color:"#8866ff"},
-  LIGHT_TOGGLE:{x:80,y:140,label:"LIT",color:"#ffdd44"},
-  LIGHT_PRESET_CYCLE:{x:80,y:210,label:"LPR",color:"#ffcc22"},
-  MONITOR_CYCLE:{x:320,y:140,label:"MON",color:"#44bbff"},
-  HEADLINE_SET:{x:440,y:140,label:"TKR",color:"#ff88cc"},
-  AUTO_ADVANCE_TOGGLE:{x:320,y:210,label:"AUT",color:"#44ff88"},
-  AUTO_CUT_TOGGLE:{x:200,y:210,label:"CUT",color:"#ff8844"},
-  CINEMATIC_TOGGLE:{x:440,y:210,label:"CIN",color:"#cc66ff"},
-  GREEN_SCREEN_CYCLE:{x:80,y:280,label:"GS",color:"#00cc44"},
-};
-
-// Orbit state
-let orbit={t:0,p:.3,r:18,cx:0,cy:2.5,cz:0};
-let dragging=false,lastMouse={x:0,y:0},dragDist=0,lastTap=0;
-let velocityT=0,velocityP=0; // orbit momentum
-
-// Orbit uses spherical coords: theta=horizontal, phi=vertical
-// phi: -PI/2 (straight down) to +PI/2 (straight up), full vertical range
-// theta: unclamped, wraps naturally for full 360 horizontal
-const raycaster=new THREE.Raycaster();
-
-function init(){
-  const W=window.innerWidth,H=window.innerHeight;
-  renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
-  renderer.setSize(W,H);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.4;
-  document.body.prepend(renderer.domElement);
-
-  scene=new THREE.Scene();scene.background=new THREE.Color(0x0a0a12);
-  scene.fog=new THREE.FogExp2(0x0a0a12,.007);
-  camera=new THREE.PerspectiveCamera(50,W/H,.1,200);
-  clock=new THREE.Clock();
-
-  // PiP
-  pipRenderer=new THREE.WebGLRenderer({canvas:ge('pip-canvas'),antialias:false});
-  pipRenderer.setSize(320,200);pipRenderer.toneMapping=THREE.ACESFilmicToneMapping;pipRenderer.toneMappingExposure=1.4;
-  pipCamera=new THREE.PerspectiveCamera(50,320/200,.1,200);
-
-  const mk=(g,m,x,y,z,rx,ry,rz)=>{const o=new THREE.Mesh(g,m);o.position.set(x,y,z);o.rotation.set(rx||0,ry||0,rz||0);return o;};
-  const add=(g,m,x,y,z,r,r2,r3)=>{const o=mk(g,m,x,y,z,r,r2,r3);scene.add(o);return o;};
-  const into=(grp,g,m,x,y,z,r,r2,r3)=>{const o=mk(g,m,x,y,z,r,r2,r3);grp.add(o);return o;};
-  const lt=(c,i,d,x,y,z)=>{const l=new THREE.PointLight(c,i,d);l.position.set(x,y,z);scene.add(l);return l;};
-  const mkC=(w,h)=>{const c=document.createElement("canvas");c.width=w;c.height=h;return c;};
-  const mt=(c,r,m)=>new THREE.MeshStandardMaterial({color:c,roughness:r??.5,metalness:m??.3});
-  const em=(c,i)=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:i??.3,roughness:.4});
-  const gl=(c,i)=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:i??2,roughness:1});
-  const bm=c=>new THREE.MeshBasicMaterial({color:c});
-  const reg=(mesh,type,id)=>clickables.push({mesh,type,id});
-
-  // Lights
-  scene.add(new THREE.AmbientLight(0x334455,.8));
-  const keyL=new THREE.DirectionalLight(0xffeedd,1.6);keyL.position.set(4,10,6);scene.add(keyL);
-  const fillL=new THREE.DirectionalLight(0x8899cc,.7);fillL.position.set(-5,7,-3);scene.add(fillL);
-  lt(0xff4444,.5,25,0,8,-9);lt(0xffffff,1,18,0,7,2);lt(0x6688ff,.4,20,-10,6,0);lt(0xff6644,.4,20,10,6,0);
-  lt(0xeeddcc,.4,8,-2,4,2);lt(0xeeddcc,.4,8,2,4,2);
-
-  const rigPos=[[0,10.5,1],[-4,10.5,-2],[4,10.5,-2],[0,10.5,-5]];
-  rigPos.forEach(([x,y,z])=>{rigLights.push(lt(0xffffff,.8,12,x,y-2,z));});
-
-  // Materials
-  const floorM=mt(0x18181f,.25,.4),wallM=mt(0x14141e,.85,.1),ceilM=mt(0x101018,.9,0);
-  const deskM=mt(0x282035,.3,.5),deskTopM=mt(0x1e1e2a,.2,.7);
-  const metalM=mt(0x555565,.2,.9),darkM=mt(0x222230,.3,.8);
-  const chairM=mt(0x1a1a26,.7,.1),screenBM=mt(0x111118,.3,.6);
-  const lensM=mt(0x0a0a18,.05,.95),cableM=mt(0x0a0a12,.9,0);
-  const redM=em(0xcc2020,.4);
-  const micM=mt(0x333340,.3,.8);
-  const roboBody=mt(0x2a2a38,.25,.8),roboWhite=mt(0xccccdd,.2,.9);
-  const roboJoint=mt(0x444450,.3,.9);
-  const roboA=[em(0x00aaff,.6),em(0xff6600,.6)];
-  const roboV=[em(0x00ddff,1.2),em(0xff8800,1.2)];
-
-  // ═══ ROOM ═══
-  add(new THREE.PlaneGeometry(36,24),floorM,0,0,0,-Math.PI/2);
-  add(new THREE.PlaneGeometry(10,6),mt(0x1a0808,.95,0),0,.008,0,-Math.PI/2);
-  for(let x=-14;x<=14;x+=4)add(new THREE.PlaneGeometry(.012,20),em(0x222244,.04),x,.004,0,-Math.PI/2);
-  for(let z=-9;z<=10;z+=4)add(new THREE.PlaneGeometry(28,.012),em(0x222244,.04),0,.004,z,-Math.PI/2);
-  add(new THREE.BoxGeometry(36,12,.3),wallM,0,6,-10);
-  add(new THREE.BoxGeometry(.3,12,24),wallM,-18,6,0);
-  add(new THREE.BoxGeometry(.3,12,24),wallM,18,6,0);
-  add(new THREE.PlaneGeometry(36,24),ceilM,0,12,0,Math.PI/2);
-  [-3.5,-1.5,.5,2.5,4.5].forEach(y=>add(new THREE.PlaneGeometry(34,.02),em(0x1144aa,.12),0,y+1,-9.83));
-  // Acoustic panels
-  for(let px=-14;px<=14;px+=3.5)for(let py=1.5;py<=9;py+=2.8)add(new THREE.BoxGeometry(2.8,2.2,.06),mt(0x121218,.92,.05),px,py,-9.82);
-  // Baseboards + LED
-  add(new THREE.BoxGeometry(34,.15,.04),mt(0x0a0a10,.5,.3),0,.075,-9.82);
-  add(new THREE.PlaneGeometry(33,.015),em(0x0a2255,.06),0,.015,-9.8);
-  // Control room window
-  add(new THREE.PlaneGeometry(4.5,3),new THREE.MeshStandardMaterial({color:0x223344,roughness:.05,metalness:.9,transparent:true,opacity:.35}),-17.78,5,-3,0,Math.PI/2);
-  lt(0x4466aa,.5,6,-19,5,-3);
-  // Green screen (clickable to cycle color)
-  const gsColors=[0x00cc44,0x3366ff,0xdddddd];
-  const gsMat=em(gsColors[0],.6);
-  greenScreenMesh=add(new THREE.PlaneGeometry(6,5),gsMat,17.82,4,5,0,-Math.PI/2);
-  reg(greenScreenMesh,"greenscreen",0);
-  // Green screen frame
-  add(new THREE.BoxGeometry(.06,5.2,.06),darkM,17.84,4,2.5);
-  add(new THREE.BoxGeometry(.06,5.2,.06),darkM,17.84,4,7.5);
-  add(new THREE.BoxGeometry(.06,.06,5.12),darkM,17.84,6.5,5);
-  add(new THREE.BoxGeometry(.06,.06,5.12),darkM,17.84,1.5,5);
-  // Door + EXIT
-  add(new THREE.BoxGeometry(.05,2.6,1.1),mt(0x1a1a22,.6,.3),17.86,1.3,9.5);
-  add(new THREE.BoxGeometry(.06,.2,.5),em(0x00cc44,.4),17.85,3,9.5);
-
-  // ═══ BACKDROP ═══
-  add(new THREE.BoxGeometry(14,8,.15),screenBM,0,5.5,-9.85);
-  // Frame trim
-  add(new THREE.BoxGeometry(14.2,.06,.02),em(0x1144aa,.08),0,9.55,-9.78);
-  add(new THREE.BoxGeometry(14.2,.06,.02),em(0x1144aa,.08),0,1.45,-9.78);
-  add(new THREE.BoxGeometry(.06,8.16,.02),em(0x1144aa,.08),-7.08,5.5,-9.78);
-  add(new THREE.BoxGeometry(.06,8.16,.02),em(0x1144aa,.08),7.08,5.5,-9.78);
-  // Brand plate below backdrop
-  const bpCvs=mkC(320,28);const bpCtx=bpCvs.getContext("2d");
-  bpCtx.fillStyle="#08081a";bpCtx.fillRect(0,0,320,28);
-  bpCtx.fillStyle="#3a5588";bpCtx.font="12px serif";bpCtx.fillText("\u1219\u1209 \u12DC\u1293",12,18);
-  bpCtx.fillStyle="#1a3055";bpCtx.font="8px monospace";bpCtx.textAlign="center";
-  bpCtx.fillText("MULLUSI NEWS \u00B7 TAMIRAT LULIE WUBIE",200,18);
-  add(new THREE.PlaneGeometry(5,.22),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(bpCvs)}),0,1.35,-9.76);
-
-  sCvs=mkC(640,360);sCtx=sCvs.getContext("2d");sTex=new THREE.CanvasTexture(sCvs);sTex.minFilter=THREE.LinearFilter;
-  const bdMesh=add(new THREE.PlaneGeometry(13.5,7.5),new THREE.MeshBasicMaterial({map:sTex}),0,5.5,-9.72);
-  reg(bdMesh,"backdrop",0);
-
-  sc1=mkC(320,240);sc2=mkC(320,240);st1=new THREE.CanvasTexture(sc1);st2=new THREE.CanvasTexture(sc2);
-  [-1,1].forEach(s=>{add(new THREE.BoxGeometry(4.5,3.5,.12),screenBM,s*9,6,-9.75,0,s*-.15);add(new THREE.PlaneGeometry(4,3),new THREE.MeshBasicMaterial({map:s<0?st1:st2}),s*9,6,-9.63,0,s*-.15);});
-
-  // ═══ DESK ═══
-  add(new THREE.CylinderGeometry(3.5,3.5,1.05,48,1,true,Math.PI+.5,Math.PI-1),deskM,0,.525,-.5);
-  add(new THREE.BoxGeometry(6,1.05,.08),mt(0x1e1828,.5,.3),0,.525,.7);
-  [-3,3].forEach(x=>add(new THREE.BoxGeometry(.08,1.05,2.2),deskM,x,.525,-.4));
-  add(new THREE.BoxGeometry(6,.06,2.4),deskTopM,0,1.08,-.3);
-  add(new THREE.CylinderGeometry(3.53,3.53,.05,48,1,true,Math.PI+.5,Math.PI-1),redM,0,.95,-.5);
-  add(new THREE.CylinderGeometry(3.52,3.52,.02,48,1,true,Math.PI+.5,Math.PI-1),em(0x1144dd,.25),0,1.06,-.5);
-  // Logo — on the desk front face, clearly visible
-  const logoCvs=mkC(512,128);const lx=logoCvs.getContext("2d");
-  lx.fillStyle="#0c0c1e";lx.fillRect(0,0,512,128);
-  // Border accent
-  lx.strokeStyle="rgba(40,80,200,0.3)";lx.lineWidth=2;lx.strokeRect(4,4,504,120);
-  lx.strokeStyle="rgba(30,60,160,0.15)";lx.lineWidth=1;lx.strokeRect(10,10,492,108);
-  // ሙሉ ዜና
-  lx.fillStyle="#5588dd";lx.font="bold 28px serif";lx.textAlign="center";lx.fillText("\u1219\u1209 \u12DC\u1293",256,38);
-  // MULLUSI
-  lx.fillStyle="#4488ee";lx.font="bold 36px monospace";lx.fillText("MULLUSI",256,74);
-  // Subtitle
-  lx.fillStyle="#2a5599";lx.font="12px monospace";lx.fillText("SYMBOLIC INTELLIGENCE",256,96);
-  // Φ accents on sides
-  lx.fillStyle="rgba(40,80,180,0.2)";lx.font="bold 40px monospace";
-  lx.fillText("\u03A6",50,72);lx.fillText("\u03A6",462,72);
-  lx.textAlign="start";
-  // Place on desk front — visible to cameras
-  add(new THREE.PlaneGeometry(4.5,.9),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(logoCvs)}),0,.5,.71);
-  lt(0x3366ff,.4,4,0,.5,1.5);
-
-  // Desk monitors
-  dMonC=[mkC(192,128),mkC(192,128),mkC(192,128)];
-  dMonT=dMonC.map(c=>{const t=new THREE.CanvasTexture(c);t.minFilter=THREE.LinearFilter;return t;});
-  [-1.5,0,1.5].forEach((x,idx)=>{
-    const fr=add(new THREE.BoxGeometry(1.4,1,.06),screenBM,x,1.7,-.2,.15,x*.05);
-    add(new THREE.PlaneGeometry(1.25,.85),new THREE.MeshBasicMaterial({map:dMonT[idx]}),x,1.7,-.14,.15,x*.05);
-    add(new THREE.CylinderGeometry(.03,.05,.5,8),metalM,x,1.35,-.15);
-    reg(fr,"deskmon",idx);
-  });
-  // Mics
-  [-1,1].forEach(x=>{add(new THREE.CylinderGeometry(.08,.1,.03,10),darkM,x,1.1,.15);add(new THREE.CylinderGeometry(.012,.012,.8,8),metalM,x,1.4,.35,-.35);add(new THREE.CylinderGeometry(.035,.028,.14,10),micM,x,1.72,.6);add(new THREE.SphereGeometry(.04,10,10),mt(0x222228,.95,0),x,1.81,.6);});
-  // Water glasses + papers
-  [-1.8,1.8].forEach(x=>{add(new THREE.CylinderGeometry(.045,.04,.16,10,1,true),new THREE.MeshStandardMaterial({color:0x88aacc,roughness:.02,metalness:.1,transparent:true,opacity:.3}),x,1.17,.25);add(new THREE.CylinderGeometry(.07,.07,.008,10),mt(0x1a1a1a,.8,0),x,1.087,.25);});
-  [-2.2,2.2].forEach(x=>{for(let p=0;p<3;p++)add(new THREE.BoxGeometry(.4,.004,.28),mt(0xccccbb,.95,0),x,1.087+p*.005,.3,0,x>0?.08:-.06);});
-
-  // Chairs
-  [-1.6,1.6].forEach(x=>{const g=new THREE.Group();g.position.set(x,0,1.3);g.rotation.set(0,Math.PI,0);into(g,new THREE.CylinderGeometry(.35,.35,.1,14),chairM,0,.55,0);into(g,new THREE.BoxGeometry(.65,.85,.07),chairM,0,1.05,.3);into(g,new THREE.CylinderGeometry(.03,.03,.45,8),metalM,0,.28,0);into(g,new THREE.CylinderGeometry(.25,.28,.04,14),darkM,0,.04,0);for(let w=0;w<5;w++){const a=(w/5)*Math.PI*2;into(g,new THREE.SphereGeometry(.035,6,6),darkM,Math.cos(a)*.24,.03,Math.sin(a)*.24);}scene.add(g);});
-
-  // ═══ ROBOTS ═══
-  [0,1].forEach(id=>{
-    const x=id===0?-1.6:1.6;
-    const g=new THREE.Group();g.position.set(x,0,1.3);g.rotation.set(0,Math.PI,0);
-    const acc=roboA[id],vis=roboV[id];
-    into(g,new THREE.CylinderGeometry(.18,.2,.15,10),roboBody,0,.65,0);
-    into(g,new THREE.BoxGeometry(.42,.6,.26),roboBody,0,1.1,0);
-    into(g,new THREE.PlaneGeometry(.34,.03),acc,0,1.32,-.135);
-    into(g,new THREE.PlaneGeometry(.34,.03),acc,0,.88,-.135);
-    const chestMat=em(id===0?0x00aaff:0xff6600,.6);
-    into(g,new THREE.CircleGeometry(.025,8),chestMat,0,1.1,-.136);
-    into(g,new THREE.BoxGeometry(.56,.1,.24),roboBody,0,1.42,0);
-    [-.28,.28].forEach(sx=>{into(g,new THREE.SphereGeometry(.08,10,10),roboWhite,sx,1.42,0);into(g,new THREE.TorusGeometry(.08,.012,8,14),acc,sx,1.42,0);});
-    into(g,new THREE.CylinderGeometry(.05,.06,.15,10),roboJoint,0,1.56,0);
-    const head=new THREE.Group();head.position.set(0,1.75,0);
-    into(head,new THREE.BoxGeometry(.24,.22,.22),roboWhite,0,0,0);
-    into(head,new THREE.SphereGeometry(.13,12,8,0,Math.PI*2,0,Math.PI*.5),roboWhite,0,.08,0);
-    into(head,new THREE.BoxGeometry(.26,.055,.015),vis,0,.02,-.115);
-    into(head,new THREE.CircleGeometry(.016,8),gl(0xffffff,3),-.055,.02,-.123);
-    into(head,new THREE.CircleGeometry(.016,8),gl(0xffffff,3),.055,.02,-.123);
-    const antX=id===0?-.06:.06;
-    into(head,new THREE.CylinderGeometry(.006,.006,.14,6),metalM,antX,.22,0);
-    const antMat=em(id===0?0x00aaff:0xff6600,.6);
-    into(head,new THREE.SphereGeometry(.016,8,8),antMat,antX,.3,0);
-    g.add(head);robotHeads.push(head);robotAccents.push({chest:chestMat,ant:antMat});
-    [-.3,.3].forEach(ax=>{into(g,new THREE.CylinderGeometry(.04,.035,.35,8),roboBody,ax,1.22,-.08,.3,0,ax>0?.15:-.15);into(g,new THREE.SphereGeometry(.04,8,8),roboJoint,ax*.85,1.05,-.2);});
-    [-.24,.24].forEach(ax=>into(g,new THREE.CylinderGeometry(.032,.028,.4,8),roboBody,ax,1.06,-.55,-.15));
-    [-.2,.2].forEach(ax=>into(g,new THREE.BoxGeometry(.06,.022,.07),roboWhite,ax,1.08,-.78));
-    [-.12,.12].forEach(lx2=>{into(g,new THREE.CylinderGeometry(.055,.045,.4,8),roboBody,lx2,.52,-.25,-1.35);into(g,new THREE.CylinderGeometry(.04,.035,.42,8),roboBody,lx2,.15,-.48);into(g,new THREE.BoxGeometry(.07,.03,.14),darkM,lx2,-.05,-.52);});
-    const hitbox=into(g,new THREE.BoxGeometry(.6,1.4,.4),new THREE.MeshBasicMaterial({visible:false}),0,1.2,0);
-    reg(hitbox,"robot",id);
-    // Label
-    const lCvs=mkC(96,24);const lCtx2=lCvs.getContext("2d");
-    lCtx2.fillStyle="rgba(10,10,20,0.7)";lCtx2.fillRect(0,0,96,24);
-    lCtx2.fillStyle=id===0?"#00ccff":"#ff8800";lCtx2.font="bold 12px monospace";lCtx2.textAlign="center";
-    lCtx2.fillText(id===0?"ABEBE":"SELAM",48,16);
-    const label=add(new THREE.PlaneGeometry(.5,.12),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(lCvs),transparent:true}),x,2.2,1.3);
-    robotLabels.push(label);
-    scene.add(g);
-  });
-
-  // ═══ CAMERAS ═══
-  [[0,9,0],[- 5.5,8,.25],[5.5,8,-.25]].forEach(([cx,cz,ry],idx)=>{
-    const g=new THREE.Group();g.position.set(cx,0,cz);g.rotation.set(0,ry,0);
-    for(let l=0;l<3;l++){const a=(l/3)*Math.PI*2-Math.PI/6;const leg=into(g,new THREE.CylinderGeometry(.025,.035,3.5,6),darkM,Math.cos(a)*.35,1.75,Math.sin(a)*.35);leg.rotation.set(Math.sin(a)*.1,0,-Math.cos(a)*.1);}
-    into(g,new THREE.CylinderGeometry(.12,.12,.25,12),metalM,0,3.5,0);
-    const body=into(g,new THREE.BoxGeometry(.55,.38,.75),darkM,0,3.65,0);
-    into(g,new THREE.CylinderGeometry(.08,.13,.45,12),lensM,0,3.65,-.58,Math.PI/2);
-    into(g,new THREE.CircleGeometry(.08,16),bm(0x112244),0,3.65,-.81);
-    const tm=em(0xcc2020,idx===0?.8:.05);into(g,new THREE.SphereGeometry(.03,8,8),tm,0,3.88,-.3);
-    tallyMats.push(tm);reg(body,"camera",idx);scene.add(g);
-  });
-  // Jib
-  jib=new THREE.Group();jib.position.set(7,0,2);
-  into(jib,new THREE.CylinderGeometry(.4,.45,.3,12),darkM,0,.15,0);into(jib,new THREE.CylinderGeometry(.08,.08,2.5,8),metalM,0,1.5,0);
-  into(jib,new THREE.CylinderGeometry(.03,.03,4,8),metalM,0,3.8,-1.2,.3);
-  const jibBody=into(jib,new THREE.BoxGeometry(.28,.2,.35),darkM,0,4.8,-3.2);
-  into(jib,new THREE.CylinderGeometry(.05,.08,.25,10),lensM,0,4.8,-3.55,Math.PI/2);
-  const jibTm=em(0xcc2020,.05);into(jib,new THREE.SphereGeometry(.025,6,6),jibTm,0,4.92,-3.3);
-  tallyMats.push(jibTm);reg(jibBody,"camera",3);scene.add(jib);
-
-  // ═══ LIGHT RIGS ═══
-  const coneMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.03,side:THREE.DoubleSide});
-  rigPos.forEach(([rx,_,rz],idx)=>{
-    const g=new THREE.Group();g.position.set(rx,10.5,rz);
-    into(g,new THREE.CylinderGeometry(.03,.03,3.5,8),metalM,0,0,0,0,0,Math.PI/2);
-    const gm=gl(0xffffff,2.5);rigGlowMats.push(gm);
-    [-1,0,1].forEach(i=>{
-      const h=into(g,new THREE.BoxGeometry(.65,.1,.45),darkM,i*1.2,-.12,0);
-      into(g,new THREE.PlaneGeometry(.55,.35),gm,i*1.2,-.18,0,-Math.PI/2);
-      into(g,new THREE.BoxGeometry(.015,.3,.45),darkM,i*1.2-.33,-.16,0);
-      into(g,new THREE.BoxGeometry(.015,.3,.45),darkM,i*1.2+.33,-.16,0);
-      if(idx<2)into(g,new THREE.CylinderGeometry(.25,2,8.5,12,1,true),coneMat,i*1.2,-4.4,0);
-      if(i===0)reg(h,"light",idx);
-    });scene.add(g);
-  });
-  for(let x=-12;x<=12;x+=4)add(new THREE.BoxGeometry(.05,.05,22),darkM,x,11.8,0);
-  for(let z=-9;z<=10;z+=5)add(new THREE.BoxGeometry(24,.05,.05),darkM,0,11.8,z);
-
-  // ON AIR sign
-  onAirMat=em(0xcc2020,.8);
-  add(new THREE.BoxGeometry(1.2,.5,.08),mt(0x111118,.4,.5),14,3.5,10);
-  const onAirSign=add(new THREE.PlaneGeometry(1,.35),onAirMat,14,3.5,10.05);
-  reg(onAirSign,"onair",0);
-
-  // Teleprompter
-  const prompter=add(new THREE.BoxGeometry(.9,.6,.015),new THREE.MeshStandardMaterial({color:0x334466,roughness:.05,metalness:.9,transparent:true,opacity:.45}),0,2.2,7.5,-.5);
-  add(new THREE.BoxGeometry(.3,.2,.35),darkM,0,1.8,7.5);
-  reg(prompter,"prompter",0);
-
-  // Boom
-  boom=new THREE.Group();boom.position.set(-4,0,7);
-  into(boom,new THREE.CylinderGeometry(.3,.35,.15,12),darkM,0,.08,0);into(boom,new THREE.CylinderGeometry(.05,.05,3.2,8),metalM,0,1.7,0);
-  into(boom,new THREE.CylinderGeometry(.025,.025,2.8,8),metalM,0,3.7,-1.1,.25);into(boom,new THREE.CylinderGeometry(.03,.025,.3,8),micM,0,4.1,-2.4);
-  scene.add(boom);
-
-  // Equipment rack
-  add(new THREE.BoxGeometry(.5,2.8,.4),darkM,10,1.4,5);
-  for(let r=0;r<5;r++){add(new THREE.BoxGeometry(.42,.02,.35),metalM,10,.4+r*.5,5);const lm=em(r%2===0?0x00ff44:0xffaa00,.5);add(new THREE.SphereGeometry(.012,6,6),lm,10.22,.48+r*.5,4.82);rackLEDs.push(lm);}
-  // PDU (power strip on rack side)
-  add(new THREE.BoxGeometry(.08,2,.06),mt(0x111118,.5,.3),10.28,1.2,5.15);
-  for(let p=0;p<6;p++)add(new THREE.SphereGeometry(.008,4,4),em(0x00ff44,.3),10.28,.4+p*.32,5.18);
-  // Patch panel behind rack
-  add(new THREE.BoxGeometry(.42,.15,.06),mt(0x0a0a10,.4,.6),10,2.9,5);
-  for(let p=0;p<8;p++)add(new THREE.CircleGeometry(.012,6),em(0x3366ff,.2),9.84+p*.048,2.92,5.04);
-
-  // ── MONITOR CART (behind camera area) ──
-  const cart=new THREE.Group();cart.position.set(-8,0,7);
-  into(cart,new THREE.BoxGeometry(.8,.04,.5),metalM,0,.7,0);
-  into(cart,new THREE.BoxGeometry(.8,.04,.5),metalM,0,1.4,0);
-  [-.35,.35].forEach(x=>[-.2,.2].forEach(z=>{
-    into(cart,new THREE.CylinderGeometry(.02,.02,.7,8),metalM,x,.35,z);
-    into(cart,new THREE.CylinderGeometry(.02,.02,.7,8),metalM,x,1.05,z);
-    into(cart,new THREE.SphereGeometry(.03,6,6),darkM,x,.02,z); // wheels
-  }));
-  // Small monitor on cart
-  into(cart,new THREE.BoxGeometry(.55,.35,.04),screenBM,0,1.6,-.02);
-  into(cart,new THREE.CylinderGeometry(.02,.03,.15,8),metalM,0,1.43,0);
-  scene.add(cart);
-
-  // ── SECOND RACK (far right) ──
-  add(new THREE.BoxGeometry(.4,2.2,.35),darkM,12,1.1,3);
-  for(let r=0;r<4;r++){
-    add(new THREE.BoxGeometry(.34,.02,.3),metalM,12,.3+r*.45,3);
-    const lm2=em(r%2===0?0x0088ff:0xff4400,.4);
-    add(new THREE.SphereGeometry(.01,4,4),lm2,12.18,.38+r*.45,2.85);
-    rackLEDs.push(lm2);
-  }
-
-  // Control room screens — 3 different monitors
-  ctrlCvs1=mkC(160,100);ctrlCvs2=mkC(160,100);ctrlCvs3=mkC(160,100);
-  ctrlTex1=new THREE.CanvasTexture(ctrlCvs1);ctrlTex1.minFilter=THREE.LinearFilter;
-  ctrlTex2=new THREE.CanvasTexture(ctrlCvs2);ctrlTex2.minFilter=THREE.LinearFilter;
-  ctrlTex3=new THREE.CanvasTexture(ctrlCvs3);ctrlTex3.minFilter=THREE.LinearFilter;
-  [ctrlTex1,ctrlTex2,ctrlTex3].forEach((tex,i)=>{
-    add(new THREE.PlaneGeometry(.9,.6),new THREE.MeshBasicMaterial({map:tex}),-18.3,5.3,-4.3+i*1.1,0,Math.PI/2);
-  });
-
-  // Studio clock with animated hands
-  add(new THREE.CylinderGeometry(.35,.35,.05,24),mt(0x111118,.3,.6),0,10.2,-9.8,Math.PI/2);
-  add(new THREE.CircleGeometry(.3,24),bm(0x0a0a14),0,10.2,-9.75);
-  for(let h=0;h<12;h++){const a=(h/12)*Math.PI*2-Math.PI/2;add(new THREE.BoxGeometry(.025,.006,.004),em(0x4466aa,.3),Math.cos(a)*.24,10.2+Math.sin(a)*.24,-9.74);}
-  // Hour hand
-  clockHourHand=add(new THREE.BoxGeometry(.015,.12,.003),em(0x8899bb,.4),0,10.2,-9.73);
-  clockHourHand.geometry.translate(0,.06,0);
-  // Minute hand
-  clockMinHand=add(new THREE.BoxGeometry(.01,.16,.003),em(0xaabbcc,.5),0,10.2,-9.72);
-  clockMinHand.geometry.translate(0,.08,0);
-  // Second hand
-  clockSecHand=add(new THREE.BoxGeometry(.005,.18,.003),em(0xcc3030,.6),0,10.2,-9.71);
-  clockSecHand.geometry.translate(0,.09,0);
-  // Center dot
-  add(new THREE.CircleGeometry(.012,8),em(0xffffff,.5),0,10.2,-9.7);
-
-  // ── DESK GLOW RING (pulses with broadcast) ──
-  const glowRingMat=em(0x2244cc,.15);
-  deskGlowRing=add(new THREE.TorusGeometry(3.55,.015,8,48,Math.PI-1),glowRingMat,0,.01,-.5,-Math.PI/2,Math.PI+.5);
-
-  // ── DEV CREDIT on desk logo panel ──
-  const devCvs=mkC(256,32);const devCtx=devCvs.getContext("2d");
-  devCtx.fillStyle="#08081a";devCtx.fillRect(0,0,256,32);
-  devCtx.fillStyle="#223355";devCtx.font="7px monospace";devCtx.textAlign="center";
-  devCtx.fillText("DEV: TAMIRAT LULIE WUBIE",128,12);
-  devCtx.fillStyle="#1a2a44";devCtx.fillText("mullusi.com",128,24);
-  add(new THREE.PlaneGeometry(2,.25),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(devCvs)}),0,.25,.72);
-
-  // Cables
-  for(let c=0;c<5;c++){const pts=[],sx=-4+c*2;for(let t=0;t<=16;t++){const tt=t/16;pts.push(new THREE.Vector3(sx+Math.sin(tt*3+c)*1,.02,-8+tt*18));}scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),20,.018,6,false),cableM));}
-
-  // ══════════════════════════════════════════════════════
-  // PROFESSIONAL STUDIO DECORATIONS
-  // ══════════════════════════════════════════════════════
-
-  // ── FLOOR: BRANDED CARPET WITH LOGO ──
-  // Professional broadcast carpet — dark with woven brand elements
-  const carpetCvs=mkC(512,512);const cpx=carpetCvs.getContext("2d");
-  // Carpet base — dark charcoal with subtle texture
-  cpx.fillStyle="#0e0e14";cpx.fillRect(0,0,512,512);
-  // Subtle woven texture pattern
-  for(let ty=0;ty<512;ty+=4){
-    cpx.fillStyle=ty%8===0?"rgba(18,18,26,1)":"rgba(14,14,20,1)";
-    cpx.fillRect(0,ty,512,2);
-  }
-  for(let tx=0;tx<512;tx+=6){
-    cpx.fillStyle="rgba(16,16,24,0.3)";cpx.fillRect(tx,0,1,512);
-  }
-  // Carpet border — double line
-  cpx.strokeStyle="rgba(30,55,120,0.2)";cpx.lineWidth=4;cpx.strokeRect(16,16,480,480);
-  cpx.strokeStyle="rgba(25,45,100,0.12)";cpx.lineWidth=2;cpx.strokeRect(28,28,456,456);
-  // Corner accents
-  [[32,32],[476,32],[32,476],[476,476]].forEach(([cx2,cy2])=>{
-    cpx.strokeStyle="rgba(40,80,180,0.12)";cpx.lineWidth=2;
-    cpx.beginPath();cpx.arc(cx2,cy2,12,0,Math.PI*2);cpx.stroke();
-    cpx.fillStyle="rgba(40,80,180,0.06)";cpx.beginPath();cpx.arc(cx2,cy2,4,0,Math.PI*2);cpx.fill();
-  });
-  // Central Φ symbol — large, visible
-  cpx.fillStyle="rgba(30,70,160,0.25)";cpx.font="bold 160px monospace";cpx.textAlign="center";cpx.textBaseline="middle";
-  cpx.fillText("\u03A6",256,256);
-  // Outer ring
-  cpx.strokeStyle="rgba(40,80,180,0.3)";cpx.lineWidth=4;cpx.beginPath();cpx.arc(256,256,140,0,Math.PI*2);cpx.stroke();
-  cpx.strokeStyle="rgba(35,70,160,0.18)";cpx.lineWidth=2;cpx.beginPath();cpx.arc(256,256,130,0,Math.PI*2);cpx.stroke();
-  // Inner ring
-  cpx.strokeStyle="rgba(40,80,180,0.2)";cpx.lineWidth=1.5;cpx.beginPath();cpx.arc(256,256,80,0,Math.PI*2);cpx.stroke();
-  // ሙሉ ዜና at top — clearly visible
-  cpx.fillStyle="rgba(60,120,220,0.3)";cpx.font="bold 32px serif";
-  cpx.fillText("\u1219\u1209 \u12DC\u1293",256,88);
-  // MULLUSI NEWS at bottom — clearly visible
-  cpx.fillStyle="rgba(50,100,200,0.25)";cpx.font="bold 22px monospace";
-  cpx.fillText("MULLUSI",256,400);
-  // TAMIRAT LULIE WUBIE
-  cpx.fillStyle="rgba(40,80,170,0.15)";cpx.font="12px monospace";
-  cpx.fillText("TAMIRAT LULIE WUBIE",256,430);
-  // Compass dots on ring
-  [0,Math.PI/4,Math.PI/2,Math.PI*3/4,Math.PI,Math.PI*5/4,Math.PI*3/2,Math.PI*7/4].forEach(a=>{
-    cpx.fillStyle="rgba(40,100,200,0.1)";cpx.beginPath();
-    cpx.arc(256+Math.cos(a)*135,256+Math.sin(a)*135,4,0,Math.PI*2);cpx.fill();
-  });
-  // Decorative fidels in corners (subtle)
-  cpx.fillStyle="rgba(30,60,140,0.05)";cpx.font="16px serif";
-  cpx.fillText("\u1200",70,70);cpx.fillText("\u1230",442,70);
-  cpx.fillText("\u1260",70,442);cpx.fillText("\u1308",442,442);
-  cpx.textAlign="start";cpx.textBaseline="alphabetic";
-  // Build carpet mesh — slightly raised, with rougher material for carpet feel
-  const carpetTex=new THREE.CanvasTexture(carpetCvs);
-  carpetTex.wrapS=THREE.ClampToEdgeWrapping;carpetTex.wrapT=THREE.ClampToEdgeWrapping;
-  const carpetMat=new THREE.MeshStandardMaterial({map:carpetTex,roughness:.95,metalness:0,bumpScale:.002});
-  add(new THREE.PlaneGeometry(10,10),carpetMat,0,.006,-1,-Math.PI/2);
-
-  // ── FLOOR: RUNWAY LIGHTS (camera path to desk) ──
-  const runwayGlow=em(0x1133aa,.08);
-  for(let rz=1;rz<=9;rz+=1){
-    add(new THREE.CircleGeometry(.04,8),runwayGlow,-2,.005,rz,-Math.PI/2);
-    add(new THREE.CircleGeometry(.04,8),runwayGlow,2,.005,rz,-Math.PI/2);
-  }
-  // Cross markers at camera positions
-  [8,9,10].forEach(cz=>{
-    add(new THREE.PlaneGeometry(.5,.015),em(0x112244,.06),0,.005,cz,-Math.PI/2);
-    add(new THREE.PlaneGeometry(.015,.5),em(0x112244,.06),0,.005,cz,-Math.PI/2);
-  });
-
-  // ── PILLARS: ILLUMINATED ACCENT COLUMNS ──
-  const pillarM=mt(0x14141e,.3,.6);const pillarGlow=em(0x1144aa,.15);
-  [-5,5].forEach(px=>{
-    add(new THREE.CylinderGeometry(.15,.18,11,12),pillarM,px,5.5,-8);
-    // Embedded glow strip
-    add(new THREE.CylinderGeometry(.06,.06,10,8),pillarGlow,px,5.5,-8);
-    // Base
-    add(new THREE.CylinderGeometry(.25,.28,.15,12),mt(0x0a0a12,.4,.5),px,.075,-8);
-    // Cap
-    add(new THREE.CylinderGeometry(.2,.16,.12,12),mt(0x0a0a12,.4,.5),px,11,-8);
-    // Small light at top
-    lt(0x2244aa,.15,3,px,10.5,-8);
-  });
-
-  // ── CEILING: LED STRIP GRID ──
-  const ceilLedM=em(0x0a1844,.04);
-  for(let cx=-12;cx<=12;cx+=6)add(new THREE.BoxGeometry(.02,.01,20),ceilLedM,cx,11.98,0);
-  for(let cz=-8;cz<=10;cz+=6)add(new THREE.BoxGeometry(24,.01,.02),ceilLedM,0,11.98,cz);
-
-  // ── RIGHT WALL: NEON "ሙሉ ዜና" + "MULLUSI" SIGN ──
-  const neonCvs=mkC(512,128);const nx=neonCvs.getContext("2d");
-  nx.fillStyle="#080810";nx.fillRect(0,0,512,128);
-  // Glow bloom background
-  const nGlow=nx.createRadialGradient(256,64,10,256,64,200);
-  nGlow.addColorStop(0,"rgba(20,60,180,0.25)");nGlow.addColorStop(1,"rgba(0,0,0,0)");
-  nx.fillStyle=nGlow;nx.fillRect(0,0,512,128);
-  // ሙሉ ዜና
-  nx.fillStyle="rgba(80,160,255,0.9)";nx.font="bold 40px serif";nx.textAlign="center";nx.textBaseline="middle";
-  nx.shadowColor="rgba(40,120,255,0.8)";nx.shadowBlur=20;
-  nx.fillText("\u1219\u1209 \u12DC\u1293",256,42);
-  // MULLUSI
-  nx.fillStyle="rgba(100,180,255,0.85)";nx.font="bold 28px monospace";
-  nx.shadowColor="rgba(40,120,255,0.6)";nx.shadowBlur=15;
-  nx.fillText("MULLUSI",256,88);
-  nx.shadowBlur=0;
-  // Underline accent
-  nx.strokeStyle="rgba(60,140,255,0.4)";nx.lineWidth=2;
-  nx.beginPath();nx.moveTo(140,105);nx.lineTo(372,105);nx.stroke();
-  const neonTex=new THREE.CanvasTexture(neonCvs);
-  add(new THREE.PlaneGeometry(4.5,1.1),new THREE.MeshBasicMaterial({map:neonTex}),17.78,8,0,0,-Math.PI/2);
-  lt(0x2266ff,.5,5,16.5,8,0);
-
-  // ── RIGHT WALL: GE'EZ FIDEL ART PANELS ──
-  const fidelPanel=(chars,x,y,z)=>{
-    const pc=mkC(128,128);const pctx=pc.getContext("2d");
-    pctx.fillStyle="rgba(12,12,20,0.8)";pctx.fillRect(0,0,128,128);
-    pctx.strokeStyle="rgba(40,80,160,0.12)";pctx.lineWidth=1;pctx.strokeRect(4,4,120,120);
-    chars.forEach((ch,i)=>{
-      const row=Math.floor(i/4),col=i%4;
-      pctx.fillStyle=`rgba(${60+col*20},${100+row*15},${180+col*10},0.25)`;
-      pctx.font="18px serif";pctx.textAlign="center";
-      pctx.fillText(ch,20+col*28,28+row*28);
-    });
-    pctx.textAlign="start";
-    add(new THREE.PlaneGeometry(1.2,1.2),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(pc),transparent:true}),x,y,z,0,-Math.PI/2);
-  };
-  fidelPanel(["\u1200","\u1208","\u1218","\u1228","\u1230","\u1240","\u1260","\u1270","\u1290","\u12A8","\u12C8","\u12D8","\u12E8","\u1308","\u1320","\u1330"],17.8,7,7);
-  fidelPanel(["\u1338","\u1348","\u1350","\u134A","\u12A0","\u12A5","\u12A3","\u12A7","\u1219","\u1209","\u12DC","\u1293","\u1200","\u1218","\u1260","\u1308"],17.8,7,9);
-
-  // ── AWARD SHELVES (left wall) ──
-  const shelfM=mt(0x181822,.3,.5);
-  [3.5,5.5,7.5].forEach((sy,i)=>{
-    add(new THREE.BoxGeometry(.04,.04,1.2),shelfM,-17.8,sy,-7+i*1.5);
-    // Small trophy/award objects
-    const trophyM=em([0xffaa00,0xcc6600,0x00aaff][i],.3);
-    add(new THREE.CylinderGeometry(.04,.06,.18,8),trophyM,-17.8,sy+.12,-7+i*1.5);
-    add(new THREE.SphereGeometry(.05,8,8),trophyM,-17.8,sy+.26,-7+i*1.5);
-    // Small plaque
-    add(new THREE.BoxGeometry(.02,.08,.2),mt(0x1a1a28,.3,.6),-17.8,sy+.06,-6.7+i*1.5);
-  });
-
-  // ── POTTED PLANTS (geometric stylized) ──
-  const potM=mt(0x2a2220,.6,.2);const leafM=em(0x1a4422,.15);
-  [[-4.5,.0,3.5],[4.5,.0,3.5],[-7,.0,-6],[7,.0,-6]].forEach(([px,py,pz])=>{
-    // Pot
-    add(new THREE.CylinderGeometry(.12,.1,.3,8),potM,px,py+.15,pz);
-    // Soil
-    add(new THREE.CircleGeometry(.11,8),mt(0x1a1208,.8,.1),px,py+.3,pz,-Math.PI/2+.01);
-    // Leaves (geometric triangular shapes)
-    for(let lf=0;lf<5;lf++){
-      const la=(lf/5)*Math.PI*2,lr=.08+Math.random()*.06;
-      const leafGeo=new THREE.ConeGeometry(.04,.25+Math.random()*.15,4);
-      const leaf=add(leafGeo,leafM,px+Math.cos(la)*lr,py+.45+Math.random()*.15,pz+Math.sin(la)*lr);
-      leaf.rotation.set(Math.sin(la)*.3,la,.1);
-    }
-  });
-
-  // ── FLOOR EDGE ACCENT STRIPS ──
-  add(new THREE.PlaneGeometry(34,.03),em(0x0a2255,.04),0,.006,-9,-Math.PI/2);
-  add(new THREE.PlaneGeometry(34,.03),em(0x0a2255,.04),0,.006,11,-Math.PI/2);
-  add(new THREE.PlaneGeometry(.03,20),em(0x0a2255,.04),-17,.006,1,-Math.PI/2);
-  add(new THREE.PlaneGeometry(.03,20),em(0x0a2255,.04),17,.006,1,-Math.PI/2);
-
-  // ══════════════════════════════════════════════════════
-  // BROADCAST-GRADE STUDIO ELEMENTS
-  // Inspired by CNN, BBC, Al Jazeera studio design
-  // ══════════════════════════════════════════════════════
-
-  // ── BACKLIT BRAND PANELS (behind desk, flanking backdrop) ──
-  // Translucent panels with brand blue inner glow — like BBC/Al Jazeera
-  const backlitM=new THREE.MeshStandardMaterial({color:0x0a1430,emissive:0x0a2266,emissiveIntensity:.12,roughness:.1,metalness:.8,transparent:true,opacity:.6});
-  [-7.5,7.5].forEach(bx=>{
-    add(new THREE.BoxGeometry(.08,7,.06),backlitM,bx,5,-9.6);
-    add(new THREE.BoxGeometry(.06,6.5,.04),em(0x1133aa,.06),bx,5.2,-9.58);
-    // Accent edge light
-    add(new THREE.BoxGeometry(.015,7,.015),em(0x2266cc,.2),bx-.05,5,-9.55);
-    lt(0x1144aa,.12,3,bx,5,-9);
-  });
-
-  // ── LED RIBBON — continuous light strip from floor through desk to wall ──
-  // Al Jazeera-style: "an LED ribbon flows through the floor, folds up to form the desk"
-  const ribbonM=em(0x1144cc,.1);
-  // Floor segment (z=4 to z=0)
-  add(new THREE.PlaneGeometry(.04,4),ribbonM,0,.007,2,-Math.PI/2);
-  // Desk front vertical (z=0, y=0 to y=1.08)
-  add(new THREE.PlaneGeometry(.04,1.08),ribbonM,0,.54,.71);
-  // Desk top horizontal
-  add(new THREE.PlaneGeometry(.04,2),ribbonM,0,1.085,-.3,-Math.PI/2);
-  // Up to backdrop
-  add(new THREE.PlaneGeometry(.04,8),ribbonM,0,5.5,-9.65);
-
-  // ── MONOLITH VIDEO TOWERS — freestanding tall LED columns ──
-  // Like BBC's "Tower A/B" — tall thin LED panels at set edges
-  const monolithScreen=em(0x0a1838,.06);
-  [-10,10].forEach((mx,mi)=>{
-    // Tower structure
-    add(new THREE.BoxGeometry(.5,6,.12),mt(0x0e0e16,.2,.7),mx,3.5,-6);
-    // Screen face
-    const tCvs=mkC(64,256);const tCtx=tCvs.getContext("2d");
-    tCtx.fillStyle="#040810";tCtx.fillRect(0,0,64,256);
-    // Brand gradient
-    const tGr=tCtx.createLinearGradient(0,0,0,256);
-    tGr.addColorStop(0,"rgba(10,30,80,0.8)");tGr.addColorStop(0.5,"rgba(20,60,140,0.4)");tGr.addColorStop(1,"rgba(10,30,80,0.8)");
-    tCtx.fillStyle=tGr;tCtx.fillRect(0,0,64,256);
-    // Mullusi branding — visible
-    tCtx.fillStyle="rgba(100,180,255,0.7)";tCtx.font="bold 16px serif";tCtx.textAlign="center";
-    tCtx.fillText("\u1219\u1209",32,38);tCtx.fillText("\u12DC\u1293",32,58);
-    tCtx.fillStyle="rgba(80,160,240,0.5)";tCtx.font="bold 10px monospace";
-    tCtx.fillText("MULLUSI",32,95);tCtx.fillText("NEWS",32,110);
-    // Φ symbol
-    tCtx.fillStyle="rgba(60,120,220,0.3)";tCtx.font="bold 36px monospace";tCtx.fillText("\u03A6",32,175);
-    tCtx.textAlign="start";
-    add(new THREE.PlaneGeometry(.4,5.5),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(tCvs)}),mx,3.5,-5.93);
-    // Top accent light
-    add(new THREE.BoxGeometry(.52,.03,.14),em(0x1144aa,.15),mx,6.52,-6);
-    lt(0x1144aa,.1,3,mx,6,-5);
-  });
-
-  // ── CIRCULAR LED CHANDELIER — overhead accent ring ──
-  // Al Jazeera: "a circular LED chandelier ringed with lighting"
-  const chandelierM=em(0x1133aa,.08);
-  add(new THREE.TorusGeometry(4,.03,8,48),chandelierM,0,11.5,0,Math.PI/2);
-  add(new THREE.TorusGeometry(3.6,.02,8,48),em(0x0a2244,.04),0,11.45,0,Math.PI/2);
-  // Hanging accent lights from chandelier
-  for(let ci=0;ci<8;ci++){
-    const ca=(ci/8)*Math.PI*2;
-    add(new THREE.CylinderGeometry(.008,.008,.3,6),mt(0x222230,.3,.5),Math.cos(ca)*3.8,11.35,Math.sin(ca)*3.8);
-    add(new THREE.SphereGeometry(.02,6,6),em(0x2255aa,.2),Math.cos(ca)*3.8,11.18,Math.sin(ca)*3.8);
-  }
-
-  // ── BRANDED DESK RISER/PLATFORM — elevated desk area with lit edges ──
-  // Like professional studios — desk sits on a raised platform with accent lighting
-  add(new THREE.CylinderGeometry(4.2,4.4,.08,48,1,true,Math.PI+.3,Math.PI-.6),em(0x1133aa,.06),0,.04,-.5);
-
-  // ── BACKLIT GLASS DIVIDER (behind camera area) ──
-  // Semi-opaque panel separating studio from production area
-  const glassM=new THREE.MeshStandardMaterial({color:0x112244,roughness:.05,metalness:.9,transparent:true,opacity:.2});
-  add(new THREE.PlaneGeometry(8,4),glassM,0,2,11);
-  add(new THREE.BoxGeometry(8,.03,.03),em(0x1144aa,.08),0,4,11);
-  add(new THREE.BoxGeometry(8,.03,.03),em(0x1144aa,.08),0,.03,11);
-  lt(0x1144aa,.08,4,0,2,11.5);
-
-  // ── BRAND COLOR FLOOR INLAY — circular red/blue accent ring around desk ──
-  add(new THREE.RingGeometry(3.8,3.9,48),em(0x881122,.04),0,.005,-.3,-Math.PI/2);
-  add(new THREE.RingGeometry(4.3,4.35,48),em(0x112266,.03),0,.005,-.3,-Math.PI/2);
-
-  // ── WALL ACCENT LIGHTING (back wall — flanking acoustic panels) ──
-  [-14,-10.5,10.5,14].forEach(wx=>{
-    add(new THREE.BoxGeometry(.02,8,.02),em(0x1133aa,.08),wx,5,-9.8);
-    lt(0x1133aa,.06,2,wx,5,-9.5);
-  });
-
-  // ── LARGE BACK WALL MULLUSI LOGO (above backdrop) ──
-  const wallLogoCvs=mkC(512,96);const wlx=wallLogoCvs.getContext("2d");
-  wlx.fillStyle="#0a0a14";wlx.fillRect(0,0,512,96);
-  wlx.fillStyle="rgba(60,130,240,0.6)";wlx.font="bold 32px serif";wlx.textAlign="center";
-  wlx.fillText("\u1219\u1209 \u12DC\u1293",256,35);
-  wlx.fillStyle="rgba(80,160,255,0.5)";wlx.font="bold 24px monospace";
-  wlx.fillText("MULLUSI NEWS",256,68);
-  wlx.fillStyle="rgba(40,100,200,0.2)";wlx.font="bold 50px monospace";
-  wlx.fillText("\u03A6",60,58);wlx.fillText("\u03A6",452,58);
-  add(new THREE.PlaneGeometry(8,1.2),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(wallLogoCvs)}),0,10.2,-9.76);
-  lt(0x2255cc,.3,3,0,10.5,-9);
-
-  // Safety rails
-  const railM=mt(0xaaaa44,.4,.3);
-  [[-6,10.5],[-6,6.5],[6,10.5],[6,6.5]].forEach(([rx,rz])=>{add(new THREE.CylinderGeometry(.025,.025,.9,8),railM,rx,.45,rz);add(new THREE.SphereGeometry(.035,8,8),railM,rx,.92,rz);});
-  add(new THREE.BoxGeometry(12,.02,.02),railM,0,.9,10.5);add(new THREE.BoxGeometry(12,.02,.02),railM,0,.9,6.5);
-
-  // ══════════════════════════════════════════════════════
-  // Φ GOVERNANCE HOLOGRAPHIC DISPLAY
-  // Floating transparent panel showing live causal chain
-  // visualization — the symbolic layer made visible
-  // ══════════════════════════════════════════════════════
-  holoCvs=mkC(512,320);
-  holoTex=new THREE.CanvasTexture(holoCvs);holoTex.minFilter=THREE.LinearFilter;
-  // Frame
-  add(new THREE.BoxGeometry(.08,4.5,6.2),mt(0x0a0a18,.3,.8),-17.7,5.5,4);
-  // Glass panel
-  add(new THREE.PlaneGeometry(6,4.2),new THREE.MeshBasicMaterial({map:holoTex,transparent:true,opacity:.85}),-17.6,5.5,4,0,Math.PI/2);
-  // Frame accent lights
-  add(new THREE.BoxGeometry(.02,.04,6.2),em(0x00aaff,.15),-17.65,7.62,4);
-  add(new THREE.BoxGeometry(.02,.04,6.2),em(0x00aaff,.15),-17.65,3.38,4);
-  add(new THREE.BoxGeometry(.02,4.28,.04),em(0x00aaff,.15),-17.65,5.5,1);
-  add(new THREE.BoxGeometry(.02,4.28,.04),em(0x00aaff,.15),-17.65,5.5,7);
-  lt(0x0066cc,.3,4,-17,5.5,4);
-
-  // Particles
-  const pG=new THREE.BufferGeometry(),pP=new Float32Array(pCount*3);
-  for(let i=0;i<pCount;i++){pP[i*3]=(Math.random()-.5)*24;pP[i*3+1]=Math.random()*10+.3;pP[i*3+2]=(Math.random()-.5)*18;}
-  pG.setAttribute("position",new THREE.BufferAttribute(pP,3));
-  particles=new THREE.Points(pG,new THREE.PointsMaterial({color:0x667788,size:.045,transparent:true,opacity:.3}));scene.add(particles);
-
-  // ══════════════════════════════════════════════════════
-  // ANIMATED GE'EZ FIDEL PARTICLES — INSIDE THE TV
-  // ══════════════════════════════════════════════════════
-  FIDEL_CHARS.forEach((ch,i)=>{
-    const fc=mkC(48,48);const fctx=fc.getContext("2d");
-    fctx.clearRect(0,0,48,48);
-    const hue=i<4?200:(180+i*8)%360;
-    // Glow halo
-    const grad=fctx.createRadialGradient(24,24,4,24,24,22);
-    grad.addColorStop(0,`hsla(${hue},70%,60%,0.4)`);
-    grad.addColorStop(1,`hsla(${hue},70%,40%,0)`);
-    fctx.fillStyle=grad;fctx.fillRect(0,0,48,48);
-    // Fidel character
-    fctx.fillStyle=i<4?`hsla(${hue},80%,75%,0.9)`:`hsla(${hue},60%,65%,0.55)`;
-    fctx.font=(i<4?"bold ":"")+(i<4?28:22)+"px serif";
-    fctx.textAlign="center";fctx.textBaseline="middle";
-    fctx.fillText(ch,24,26);
-    const ftex=new THREE.CanvasTexture(fc);
-    const fmat=new THREE.MeshBasicMaterial({map:ftex,transparent:true,side:THREE.DoubleSide,depthWrite:false});
-    const size=i<4?0.8:0.5;
-    const fmesh=new THREE.Mesh(new THREE.PlaneGeometry(size,size),fmat);
-    // Start position — scattered across TV screen surface
-    const sx=(Math.random()-.5)*11; // x: -5.5 to 5.5
-    const sy=2.5+Math.random()*6;   // y: 2.5 to 8.5
-    fmesh.position.set(sx,sy,-9.68);
-    scene.add(fmesh);
-    window.fidelMeshes.push(fmesh);
-    window.fidelData.push({
-      // Drift motion within screen bounds
-      driftSpeedX:0.15+Math.random()*0.4,
-      driftSpeedY:0.1+Math.random()*0.3,
-      phaseX:Math.random()*Math.PI*2,
-      phaseY:Math.random()*Math.PI*2,
-      rangeX:1.5+Math.random()*3.5, // horizontal drift range
-      rangeY:0.8+Math.random()*2,   // vertical drift range
-      baseX:sx,
-      baseY:sy,
-      bobSpeed:0.5+Math.random()*1,
-      bobAmp:0.05+Math.random()*0.1,
-    });
-  });
-
-  // World dots for globe
-  for(let i=0;i<120;i++){const lng=(Math.random()-.5)*2.8,lat=(Math.random()-.5)*2.2;if((lng>-.8&&lng<-.2&&lat>-.3&&lat<.6)||(lng>0&&lng<.6&&lat>-.2&&lat<.7)||(lng>.5&&lng<1.2&&lat>-.1&&lat<.5)||(lng>.8&&lng<1.3&&lat>-.8&&lat<-.3))wDots.push({x:lng,y:lat});}
-
-  buildUI();
-  // Signal loading complete
-  const loadMsg=ge('loading-msg');if(loadMsg)loadMsg.textContent='READY';
-  const enterBtn=ge('enter-btn');if(enterBtn)enterBtn.style.display='block';
-  animate();
+// ── Custom cursor ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
 }
+animCursor();
 
-// ═══ SCREEN DRAWING ═══
-function drawMain(t){
-  const ctx=sCtx,cw=640,ch=360;
-  const gd=ctx.createLinearGradient(0,0,0,ch);gd.addColorStop(0,"#001428");gd.addColorStop(1,"#000a14");
-  ctx.fillStyle=gd;ctx.fillRect(0,0,cw,ch);
+// ── SVG Phase Nodes ──
+const phaseNames = ['Distinction','Constraint','Ontology','Topology','Form','Organization','Module','Execution','Body','Architecture','Performance','Feedback','Evolution'];
+const r = 180;
+const nodesG = document.getElementById('phaseNodes');
+const meshG = document.getElementById('meshLines');
+const points = [];
 
-  const mode=S.backdropMode;
-  if(mode==="globe"){
-    ctx.strokeStyle="rgba(0,60,140,0.06)";ctx.lineWidth=1;
-    for(let x=0;x<cw;x+=30){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ch);ctx.stroke();}
-    for(let y=0;y<ch;y+=30){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cw,y);ctx.stroke();}
-    const gx=cw/2,gy=ch/2-10,gr=85;
-    // Globe glow halo
-    const haloG=ctx.createRadialGradient(gx,gy,gr-10,gx,gy,gr+30);
-    haloG.addColorStop(0,"rgba(0,60,180,0)");haloG.addColorStop(0.7,"rgba(0,40,120,0.06)");haloG.addColorStop(1,"rgba(0,20,60,0)");
-    ctx.fillStyle=haloG;ctx.fillRect(gx-gr-30,gy-gr-30,(gr+30)*2,(gr+30)*2);
-    // Rotating latitude lines
-    ctx.strokeStyle="rgba(0,80,180,0.08)";ctx.lineWidth=1;
-    for(let lat=0;lat<5;lat++){const ly=gy-gr+lat*(gr*2/4);ctx.beginPath();ctx.ellipse(gx,ly,gr*Math.cos(Math.asin((ly-gy)/gr)||0),4,0,0,Math.PI*2);ctx.stroke();}
-    // Rotating longitude lines
-    for(let lon=0;lon<6;lon++){const la=t*.15+lon*Math.PI/3;ctx.beginPath();ctx.ellipse(gx,gy,Math.abs(Math.cos(la))*gr,gr,0,0,Math.PI*2);ctx.stroke();}
-    // Globe outline
-    ctx.strokeStyle="rgba(0,100,200,0.18)";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(gx,gy,gr,0,Math.PI*2);ctx.stroke();
-    // Pulsing equator
-    const eqPulse=0.08+0.06*Math.sin(t*2);
-    ctx.strokeStyle=`rgba(0,160,255,${eqPulse.toFixed(3)})`;ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(gx,gy,gr,8+Math.sin(t*.5)*2,0,0,Math.PI*2);ctx.stroke();
-    // Land dots
-    ctx.fillStyle="rgba(0,180,255,0.3)";
-    wDots.forEach(d=>{const dx=gx+d.x*55,dy=gy-d.y*55;if(Math.hypot(dx-gx,dy-gy)<gr-4){ctx.beginPath();ctx.arc(dx,dy,1.3,0,Math.PI*2);ctx.fill();}});
-    // Orbital ring 1
-    ctx.strokeStyle="rgba(0,180,255,0.22)";ctx.lineWidth=2;ctx.beginPath();ctx.arc(gx,gy,gr+6,t*.4,t*.4+1.2);ctx.stroke();
-    // Orbital ring 2 (counter-rotating)
-    ctx.strokeStyle="rgba(0,140,255,0.12)";ctx.lineWidth=1;ctx.beginPath();ctx.arc(gx,gy,gr+12,-t*.25,-t*.25+1.8);ctx.stroke();
-    // Data pulse points
-    for(let i=0;i<4;i++){const a=t*.2+i*1.5,px=gx+Math.cos(a)*(gr-18),py=gy+Math.sin(a)*(gr-18),p=.5+.5*Math.sin(t*3+i);ctx.fillStyle=`rgba(0,220,255,${(.3+p*.35).toFixed(2)})`;ctx.beginPath();ctx.arc(px,py,1.5+p*1.5,0,Math.PI*2);ctx.fill();}
-    // Connection arcs between data points
-    ctx.strokeStyle="rgba(0,200,255,0.08)";ctx.lineWidth=1;
-    for(let i=0;i<3;i++){const a1=t*.2+i*1.5,a2=t*.2+(i+1)*1.5;const p1x=gx+Math.cos(a1)*(gr-18),p1y=gy+Math.sin(a1)*(gr-18);const p2x=gx+Math.cos(a2)*(gr-18),p2y=gy+Math.sin(a2)*(gr-18);ctx.beginPath();ctx.moveTo(p1x,p1y);ctx.quadraticCurveTo(gx,gy-20,p2x,p2y);ctx.stroke();}
-    // Addis Ababa marker
-    const addX=gx+25,addY=gy+8;
-    ctx.fillStyle="rgba(255,200,80,0.7)";ctx.beginPath();ctx.arc(addX,addY,3,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle="rgba(255,200,80,0.4)";ctx.font="7px monospace";ctx.fillText("ADDIS ABABA",addX+6,addY+3);
-    // ሙሉ ዜና on globe surface
-    ctx.fillStyle="rgba(100,180,255,0.18)";ctx.font="bold 22px serif";ctx.textAlign="center";
-    ctx.fillText("\u1219\u1209 \u12DC\u1293",gx,gy+gr-8);ctx.textAlign="start";
-    // ሙሉ ዜና label corner
-    ctx.fillStyle="rgba(80,140,220,0.25)";ctx.font="11px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",gx+gr+14,gy-gr+15);
-    // ── COMING PRODUCTS panel (segment A) ──
-    if(RUNDOWN[S.rundownIdx]?.id==="A"){
-      const px=gx+gr+20,py=65;
-      ctx.fillStyle="rgba(4,10,25,0.7)";
-      ctx.fillRect(px-6,py-16,210,170);
-      ctx.strokeStyle="rgba(60,120,200,0.1)";ctx.lineWidth=1;
-      ctx.strokeRect(px-6,py-16,210,170);
-      ctx.fillStyle="rgba(100,170,255,0.55)";ctx.font="bold 9px monospace";ctx.fillText("COMING PRODUCTS",px,py);
-      ctx.strokeStyle="rgba(60,120,200,0.12)";ctx.beginPath();ctx.moveTo(px,py+5);ctx.lineTo(px+198,py+5);ctx.stroke();
-      const items=["Agentic Framework","New Video Format","Physics Discovery Engine","AI & LLM Grounding Mechanism","General Symbolic Intelligence","Domain-Specific Solutions","and more ..."];
-      items.forEach((item,i)=>{
-        const reveal=Math.min(1,Math.max(0,(t*0.8-i*0.5)));
-        if(reveal<=0)return;
-        const iy=py+20+i*20;
-        ctx.fillStyle=`rgba(80,170,255,${(reveal*0.45).toFixed(2)})`;ctx.font="8px monospace";ctx.fillText("\u25B8",px,iy);
-        ctx.fillStyle=i<6?`rgba(170,200,240,${(reveal*0.6).toFixed(2)})`:`rgba(120,160,220,${(reveal*0.4).toFixed(2)})`;
-        ctx.font=i<6?"9px monospace":"italic 9px monospace";
-        ctx.fillText(item,px+12,iy);
-      });
-    }
-  }else if(mode==="data"){
-    ctx.strokeStyle="rgba(0,60,140,0.06)";ctx.lineWidth=1;
-    for(let x=0;x<cw;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ch);ctx.stroke();}
-    for(let y=0;y<ch;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cw,y);ctx.stroke();}
-    for(let i=0;i<12;i++){const bh=30+Math.abs(Math.sin(t*.5+i*.6))*100;ctx.fillStyle=i<6?`rgba(30,120,220,${(.3+Math.sin(t+i)*.1).toFixed(2)})`:`rgba(220,120,30,${(.3+Math.sin(t+i)*.1).toFixed(2)})`;ctx.fillRect(60+i*44,260-bh,35,bh);}
-    ctx.strokeStyle="rgba(0,200,120,0.4)";ctx.lineWidth=2;ctx.beginPath();
-    for(let x=0;x<cw;x+=3){const y=100+Math.sin(x*.02+t)*30+Math.sin(x*.05-t*1.2)*15;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
-    ctx.fillStyle="rgba(0,200,120,0.5)";ctx.font="bold 16px monospace";ctx.fillText("MULLUSI ANALYTICS",40,40);
-    ctx.fillStyle="rgba(80,140,200,0.3)";ctx.font="12px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",210,40);
-    ctx.fillStyle="rgba(100,255,150,0.6)";ctx.font="bold 24px monospace";ctx.fillText((12400+Math.sin(t*2)*800).toFixed(0)+" ops/s",40,75);
-    // Second metric
-    ctx.fillStyle="rgba(100,180,255,0.4)";ctx.font="14px monospace";ctx.fillText("CHAINS: "+(1340+Math.floor(Math.sin(t*1.5)*120)),40,100);
-    // Donut chart
-    const dcx=540,dcy=100,dr=35;
-    [.35,.25,.22,.18].forEach((v,i)=>{
-      const start=[0,.35,.6,.82][i]*Math.PI*2+t*.3;
-      const colors=["rgba(30,150,255,0.5)","rgba(255,150,30,0.5)","rgba(30,220,120,0.4)","rgba(200,80,255,0.4)"];
-      ctx.beginPath();ctx.arc(dcx,dcy,dr,start,start+v*Math.PI*2);ctx.lineWidth=10;ctx.strokeStyle=colors[i];ctx.stroke();
-    });
-    ctx.fillStyle="rgba(200,220,240,0.4)";ctx.font="8px monospace";ctx.textAlign="center";ctx.fillText("\u03A6",dcx,dcy+3);ctx.textAlign="start";
-  }else if(mode==="weather"){
-    // NEW: Weather map mode
-    ctx.fillStyle="rgba(0,15,30,0.95)";ctx.fillRect(0,0,cw,ch);
-    ctx.fillStyle="rgba(60,140,200,0.5)";ctx.font="bold 14px monospace";ctx.fillText("WEATHER OUTLOOK",30,35);
-    ctx.fillStyle="rgba(80,140,200,0.3)";ctx.font="12px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",190,35);
-    // Temperature map grid
-    for(let gx=0;gx<8;gx++)for(let gy=0;gy<5;gy++){
-      const temp=15+Math.sin(t*.3+gx*.5+gy*.7)*12;
-      const r=Math.min(255,Math.max(0,(temp-10)*8));const b=Math.min(255,Math.max(0,(30-temp)*8));
-      ctx.fillStyle=`rgba(${r},${80},${b},0.3)`;ctx.fillRect(40+gx*72,55+gy*48,65,42);
-      ctx.fillStyle="rgba(200,220,240,0.5)";ctx.font="10px monospace";ctx.fillText(temp.toFixed(0)+"\u00B0",55+gx*72,82+gy*48);
-    }
-    // Animated pressure lines (clamped to canvas)
-    for(let i=0;i<5;i++){ctx.strokeStyle=`rgba(100,180,255,${(.15+Math.sin(t+i)*.05).toFixed(2)})`;ctx.lineWidth=1;ctx.beginPath();
-      for(let x=0;x<cw;x+=4){const y=Math.max(50,Math.min(ch-45,100+i*50+Math.sin(x*.01+t*.5+i)*20));x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
-    // Wind arrows
-    ctx.strokeStyle="rgba(200,220,255,0.25)";ctx.lineWidth=1.5;
-    for(let w=0;w<6;w++){
-      const wx=80+w*95+Math.sin(t*.4+w)*10,wy=80+w*35+Math.cos(t*.3+w*2)*15;
-      const wa=Math.sin(t*.2+w)*0.5;
-      ctx.beginPath();ctx.moveTo(wx,wy);ctx.lineTo(wx+Math.cos(wa)*18,wy+Math.sin(wa)*18);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(wx+Math.cos(wa)*18,wy+Math.sin(wa)*18);
-      ctx.lineTo(wx+Math.cos(wa+.4)*12,wy+Math.sin(wa+.4)*12);ctx.stroke();
-    }
-    // City marker dots
-    [[120,110,"ADD"],[320,90,"MUL"],[480,140,"GOV"],[200,200,"SIM"],[550,100,"PHI"]].forEach(([cx2,cy2,name])=>{
-      ctx.fillStyle="rgba(255,200,80,0.5)";ctx.beginPath();ctx.arc(cx2,cy2,3,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle="rgba(255,200,80,0.35)";ctx.font="7px monospace";ctx.fillText(name,cx2+5,cy2+3);
-    });
-  }else{
-    // Headline card mode — enhanced with branding
-    ctx.fillStyle="rgba(0,20,50,0.95)";ctx.fillRect(0,0,cw,ch);
-    // Subtle grid
-    ctx.strokeStyle="rgba(0,40,100,0.06)";ctx.lineWidth=1;
-    for(let x=0;x<cw;x+=25){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ch);ctx.stroke();}
-    for(let y=0;y<ch;y+=25){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cw,y);ctx.stroke();}
-    // Animated ring
-    ctx.strokeStyle="rgba(80,140,220,0.15)";ctx.lineWidth=2;
-    ctx.beginPath();ctx.arc(cw/2,ch/2-20,70,t*.3,t*.3+3.5);ctx.stroke();
-    ctx.beginPath();ctx.arc(cw/2,ch/2-20,80,-t*.2,-t*.2+2.5);ctx.stroke();
-    // Headline text — show COMING SOON on segment G
-    const isComingSoon=RUNDOWN[S.rundownIdx]?.id==="G";
-    if(isComingSoon){
-      // COMING SOON screen
-      ctx.fillStyle="rgba(100,160,240,0.5)";ctx.font="bold 24px serif";ctx.textAlign="center";
-      ctx.fillText("\u1219\u1209 \u12DC\u1293",cw/2,ch/2-55);
-      ctx.fillStyle="rgba(120,180,255,0.7)";ctx.font="bold 30px monospace";
-      ctx.fillText("MULLUSI NEWS",cw/2,ch/2-25);
-      const csPulse2=0.5+0.3*Math.sin(t*2);
-      ctx.fillStyle=`rgba(200,220,255,${csPulse2.toFixed(2)})`;ctx.font="bold 22px monospace";
-      ctx.fillText("COMING SOON"+".".repeat(1+Math.floor(t*2)%4),cw/2,ch/2+5);
-      ctx.fillStyle="rgba(160,190,240,0.5)";ctx.font="16px monospace";
-      ctx.fillText("TAMIRAT LULIE WUBIE",cw/2,ch/2+35);
-      ctx.fillStyle="rgba(100,140,200,0.35)";ctx.font="11px monospace";
-      ctx.fillText("SYMBOLIC INTELLIGENCE NETWORK",cw/2,ch/2+55);
-      ctx.fillText("mullusi.com",cw/2,ch/2+70);
-      // Φ watermark
-      ctx.fillStyle="rgba(60,100,180,0.05)";ctx.font="bold 120px monospace";
-      ctx.fillText("\u03A6",cw/2,ch/2+35);
-    }else{
-      ctx.fillStyle="rgba(120,180,255,0.8)";ctx.font="bold 28px monospace";ctx.textAlign="center";
-      ctx.fillText(S.headline||"MULLUSI NEWS",cw/2,ch/2-20);
-      ctx.fillStyle="rgba(100,160,240,0.5)";ctx.font="bold 20px serif";
-      ctx.fillText("\u1219\u1209 \u12DC\u1293",cw/2,ch/2+5);
-      ctx.fillStyle="rgba(80,120,180,0.4)";ctx.font="12px monospace";
-      ctx.fillText("SYMBOLIC INTELLIGENCE NETWORK",cw/2,ch/2+25);
-      ctx.fillStyle="rgba(60,90,140,0.25)";ctx.font="8px monospace";
-      ctx.fillText("TAMIRAT LULIE WUBIE \u00B7 MULLUSI.COM",cw/2,ch/2+35);
-    }
-    ctx.textAlign="start";
-  }
+phaseNames.forEach((name, i) => {
+  const angle = (i / 13) * Math.PI * 2 - Math.PI / 2;
+  const x = Math.cos(angle) * r;
+  const y = Math.sin(angle) * r;
+  points.push([x, y]);
 
-  // Overlays
-  // Φ watermark top-left
-  ctx.fillStyle="rgba(60,100,160,0.07)";ctx.font="bold 28px monospace";ctx.fillText("\u03A6",12,48);
-  // LIVE badge with glow
-  if(S.broadcastOn){
-    const lp=.5+.5*Math.sin(t*3);
-    const lvG=ctx.createRadialGradient(cw-41,23,4,cw-41,23,30);
-    lvG.addColorStop(0,`rgba(220,30,30,${(lp*.15).toFixed(2)})`);lvG.addColorStop(1,"rgba(220,30,30,0)");
-    ctx.fillStyle=lvG;ctx.fillRect(cw-72,0,72,48);
-    ctx.fillStyle=`rgba(220,30,30,${(.7+lp*.3).toFixed(2)})`;ctx.fillRect(cw-68,12,54,22);
-    ctx.fillStyle="#fff";ctx.font="bold 14px monospace";ctx.fillText("LIVE",cw-60,28);
-    ctx.fillStyle=`rgba(255,60,60,${(.4+lp*.5).toFixed(2)})`;ctx.beginPath();ctx.arc(cw-12,23,3,0,Math.PI*2);ctx.fill();
-  }else{ctx.fillStyle="rgba(80,80,80,0.6)";ctx.fillRect(cw-90,12,76,22);ctx.fillStyle="#aaa";ctx.font="bold 12px monospace";ctx.fillText("STANDBY",cw-84,28);}
-  // Network header
-  ctx.fillStyle="rgba(100,160,240,0.6)";ctx.font="bold 18px monospace";ctx.fillText("MULLUSI NEWS",42,30);
-  ctx.fillStyle="rgba(80,130,200,0.4)";ctx.font="14px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",175,30);
-  ctx.fillStyle="rgba(80,120,180,0.3)";ctx.font="10px monospace";
-  ctx.fillText("CAM "+(S.liveCam+1)+(S.liveCam===3?" (JIB)":""),42,48);
-  const seg=RUNDOWN[S.rundownIdx]||RUNDOWN[0];
-  if(S.broadcastOn){ctx.fillStyle="rgba(180,80,80,0.4)";ctx.font="10px monospace";ctx.fillText("AIR: "+fmtTime(S.broadcastTimer),42,62);}
-  const now=new Date();ctx.fillStyle="rgba(150,180,220,0.45)";ctx.font="bold 14px monospace";ctx.fillText(now.toLocaleTimeString(),cw-100,55);
-  // Lower-third segment bar
-  ctx.fillStyle="rgba(4,12,30,0.8)";ctx.fillRect(0,ch-70,cw,16);
-  ctx.fillStyle="rgba(20,50,120,0.6)";ctx.fillRect(0,ch-70,75,16);
-  ctx.fillStyle="rgba(200,220,255,0.6)";ctx.font="bold 8px monospace";ctx.fillText("SEGMENT",6,ch-58);
-  ctx.fillStyle="rgba(255,200,80,0.7)";ctx.font="bold 9px monospace";ctx.fillText("["+seg.id+"] "+seg.label,82,ch-58);
-  // Dev watermark
-  ctx.fillStyle="rgba(40,60,100,0.1)";ctx.font="7px monospace";ctx.fillText("DEV: TAMIRAT LULIE WUBIE \u00B7 MULLUSI",cw-220,ch-74);
-  // ── DUAL TICKER CRAWLER ──
-  // Upper story line (Tamirat's journey — slower scroll, cycles through STORY_LINES)
-  ctx.fillStyle="rgba(8,16,40,0.85)";ctx.fillRect(0,ch-54,cw,16);
-  ctx.fillStyle="rgba(30,60,120,0.6)";ctx.fillRect(0,ch-54,80,16);
-  ctx.fillStyle="rgba(180,200,240,0.6)";ctx.font="bold 8px monospace";ctx.fillText("PROFILE",8,ch-43);
-  ctx.font="9px monospace";ctx.fillStyle="rgba(160,190,240,0.7)";
-  const storyIdx=Math.floor(t/12)%STORY_LINES.length;
-  const stLine=STORY_LINES[storyIdx]+"    \u25C6    "+STORY_LINES[(storyIdx+1)%STORY_LINES.length]+"    \u25C6    ";
-  const stSw=ctx.measureText(stLine).width,stSx=(t*35)%(stSw/2+50);
-  ctx.fillText(stLine,90-stSx,ch-43);
-  // Gradient fade edges for story ticker
-  const stFadeL=ctx.createLinearGradient(0,0,90,0);stFadeL.addColorStop(0,"rgba(8,16,40,1)");stFadeL.addColorStop(1,"rgba(8,16,40,0)");
-  ctx.fillStyle=stFadeL;ctx.fillRect(80,ch-54,40,16);
-  // Lower breaking news line (segment ticker)
-  ctx.fillStyle="#b81818";ctx.fillRect(0,ch-38,cw,38);ctx.fillStyle="#8a0e0e";ctx.fillRect(0,ch-38,110,38);
-  ctx.fillStyle="#fff";ctx.font="bold 10px monospace";ctx.fillText("BREAKING",15,ch-15);
-  ctx.font="11px monospace";const tk=S.headline||seg?.ticker||"MULLUSI NEWS";const tkF=tk+"  \u25CF  "+tk+"  \u25CF  ";
-  const sw=ctx.measureText(tkF).width,sx=(t*50)%(sw/2+40);ctx.fillText(tkF,120-sx,ch-15);
-  // Gradient fade edges for ticker
-  const tkFadeL=ctx.createLinearGradient(100,0,130,0);tkFadeL.addColorStop(0,"#8a0e0e");tkFadeL.addColorStop(1,"rgba(138,14,14,0)");
-  ctx.fillStyle=tkFadeL;ctx.fillRect(110,ch-38,30,38);
-  const tkFadeR=ctx.createLinearGradient(cw-30,0,cw,0);tkFadeR.addColorStop(0,"rgba(184,24,24,0)");tkFadeR.addColorStop(1,"#b81818");
-  ctx.fillStyle=tkFadeR;ctx.fillRect(cw-30,ch-38,30,38);
-  // Progress + fade + flash
-  if(S.autoAdvance&&S.broadcastOn){const pct=S.segTimer/10;ctx.fillStyle="rgba(0,80,200,0.15)";ctx.fillRect(0,0,cw,4);ctx.fillStyle=pct>.8?"rgba(220,60,30,0.6)":"rgba(0,150,255,0.4)";ctx.fillRect(0,0,cw*pct,4);ctx.fillStyle=pct>.8?"rgba(220,80,40,0.5)":"rgba(100,150,220,0.3)";ctx.font="bold 12px monospace";ctx.fillText(Math.max(0,10-S.segTimer).toFixed(0)+"s",cw-38,70);
-    // NEXT ON preview — shows upcoming segment in last 3 seconds
-    if(S.segTimer>7){
-      const nextSeg2=RUNDOWN[(S.rundownIdx+1)%RUNDOWN.length];
-      const nAlpha=Math.min(1,(S.segTimer-7)/2)*0.6;
-      ctx.fillStyle=`rgba(0,20,50,${nAlpha.toFixed(2)})`;ctx.fillRect(cw-180,78,168,22);
-      ctx.strokeStyle=`rgba(60,140,220,${(nAlpha*0.3).toFixed(2)})`;ctx.strokeRect(cw-180,78,168,22);
-      ctx.fillStyle=`rgba(140,200,255,${nAlpha.toFixed(2)})`;ctx.font="7px monospace";ctx.fillText("NEXT ON:",cw-175,88);
-      ctx.fillStyle=`rgba(220,200,120,${nAlpha.toFixed(2)})`;ctx.font="bold 8px monospace";ctx.fillText("["+nextSeg2.id+"] "+nextSeg2.label,cw-175,97);
-    }
-  }
-  // Backdrop fade (segment/mode transition)
-  if(backdropFade>0){ctx.fillStyle=`rgba(0,0,10,${backdropFade.toFixed(2)})`;ctx.fillRect(0,0,cw,ch);backdropFade=Math.max(0,backdropFade-.02);}
-  // Vignette overlay — subtle darkening at edges for cinematic look
-  const vigG=ctx.createRadialGradient(cw/2,ch/2,ch*.25,cw/2,ch/2,ch*.7);
-  vigG.addColorStop(0,"rgba(0,0,0,0)");vigG.addColorStop(1,"rgba(0,0,0,0.25)");
-  ctx.fillStyle=vigG;ctx.fillRect(0,0,cw,ch);
-  // Segment transition wipe (horizontal sweep line)
-  if(segFlash>0){
-    const wipeX=cw*(1-segFlash/0.6);
-    ctx.fillStyle=`rgba(80,160,255,${(segFlash*.4).toFixed(3)})`;ctx.fillRect(wipeX-3,0,6,ch);
-    ctx.fillStyle=`rgba(255,255,255,${(segFlash*.12).toFixed(3)})`;ctx.fillRect(0,0,wipeX,ch);
-    segFlash=Math.max(0,segFlash-.02);
-  }
-  ctx.fillStyle="rgba(0,100,200,0.03)";ctx.fillRect(0,(t*35)%ch,cw,2);
-  sTex.needsUpdate=true;
+  // Pulse ring
+  const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  ring.setAttribute('cx', x); ring.setAttribute('cy', y); ring.setAttribute('r', '12');
+  ring.setAttribute('fill', 'none'); ring.setAttribute('stroke', 'rgba(200,164,74,0.15)');
+  ring.setAttribute('stroke-width', '1');
+  nodesG.appendChild(ring);
 
-  // TV Fullscreen mode — shows live broadcast (cached refs)
-  if(S.tvFull){
-    if(!tvBarRefs){
-      const tc=ge('tv-canvas');
-      tvBarRefs={canvas:tc,ctx:tc.getContext('2d'),air:ge('tv-air'),seg:ge('tv-seg'),label:ge('tv-label'),timer:ge('tv-timer')};
-    }
-    const tvCtx=tvBarRefs.ctx,tw=tvBarRefs.canvas.width,th=tvBarRefs.canvas.height;
-    tvCtx.drawImage(sCvs,0,0,tw,th);
-    // Fidels on TV
-    if(window.fidelMeshes&&window.fidelMeshes.length){
-      window.fidelMeshes.forEach((fm,i)=>{
-        const fx=((fm.position.x+6.75)/13.5)*tw;
-        const fy=(1-(fm.position.y-1.75)/7.5)*th;
-        const hue=i<4?200:(180+i*8)%360;
-        const alpha=i<4?(0.75+0.2*Math.sin(t*1.5+i)):(0.35+0.2*Math.sin(t*0.8+i*0.5));
-        tvCtx.fillStyle=`hsla(${hue},70%,65%,${alpha.toFixed(2)})`;
-        tvCtx.font=(i<4?"bold ":"")+(i<4?32:20)+"px serif";
-        tvCtx.textAlign="center";tvCtx.textBaseline="middle";
-        tvCtx.fillText(FIDEL_CHARS[i],fx,fy);
-        tvCtx.textAlign="start";tvCtx.textBaseline="alphabetic";
-      });
-    }
-    // Scan lines + watermark
-    tvCtx.fillStyle="rgba(0,0,0,0.03)";for(let y=0;y<th;y+=3)tvCtx.fillRect(0,y,tw,1);
-    tvCtx.fillStyle="rgba(0,100,200,0.04)";tvCtx.fillRect(0,(t*60)%th,tw,3);
-    tvCtx.fillStyle="rgba(60,100,160,0.08)";tvCtx.font="12px serif";tvCtx.fillText("\u1219\u1209 \u12DC\u1293",tw-100,30);
-    // Update TV bar (cached refs)
-    const seg=RUNDOWN[S.rundownIdx]||RUNDOWN[0];
-    if(tvBarRefs.air)tvBarRefs.air.textContent=S.broadcastOn?"LIVE":"OFF";
-    if(tvBarRefs.seg)tvBarRefs.seg.textContent=seg.id;
-    if(tvBarRefs.label)tvBarRefs.label.textContent=seg.label;
-    if(tvBarRefs.timer)tvBarRefs.timer.textContent=S.broadcastOn?fmtTime(S.broadcastTimer):"--:--";
-  }
-}
+  // Node dot
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', '4');
+  c.setAttribute('fill', i === 0 ? '#c8a44a' : i === 12 ? '#2fd4a0' : '#8a6e2f');
+  nodesG.appendChild(c);
 
-function drawSide(cvs,t,type){
-  const ctx=getCachedCtx('side'+type,cvs),cw=320,ch=240;
-  ctx.fillStyle="#020208";ctx.fillRect(0,0,cw,ch);
-  if(type===0){
-    const ri=S.rundownIdx,seg2=RUNDOWN[ri];
-    ctx.fillStyle="rgba(60,140,200,0.35)";ctx.font="bold 9px monospace";ctx.fillText("ANALYTICS",8,16);
-    ctx.fillStyle="rgba(80,130,200,0.25)";ctx.font="10px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",70,16);
-    ctx.fillStyle="rgba(80,120,180,0.25)";ctx.font="8px monospace";ctx.fillText("SEG "+(seg2?.id||"?"),8,28);
-    for(let i=0;i<8;i++){const bh=12+Math.abs(Math.sin(t*.5+i*.8+ri))*40;ctx.fillStyle=i<4?"rgba(30,120,220,0.4)":"rgba(220,120,30,0.4)";ctx.fillRect(12+i*36,95-bh,28,bh);}
-    ctx.fillStyle="rgba(100,255,150,0.6)";ctx.font="bold 11px monospace";ctx.fillText((12400+Math.sin(t*2+ri*3)*800).toFixed(0)+" ops/s",8,120);
-    ctx.fillStyle=S.speakerActive===0?"rgba(0,170,255,0.5)":"rgba(255,136,0,0.5)";ctx.font="8px monospace";ctx.fillText("SPEAKER: "+(S.speakerActive===0?"ABEBE":"SELAM"),8,135);
-    ctx.fillStyle="rgba(150,170,200,0.3)";ctx.font="7px monospace";
-    ctx.fillText("CAM "+(S.liveCam+1)+" | AIR "+fmtTime(S.broadcastTimer)+" | LIGHT: "+LIGHT_PRESETS[S.lightPreset].name,8,150);
-    ctx.strokeStyle="#1a7a3a";ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<cw-16;x+=2){const y=175+Math.sin(x*.04+t+ri)*14;x===0?ctx.moveTo(8+x,y):ctx.lineTo(8+x,y);}ctx.stroke();
-    if(S.broadcastOn){ctx.fillStyle="rgba(220,30,30,0.5)";ctx.fillRect(cw-35,6,28,12);ctx.fillStyle="#fff";ctx.font="bold 7px monospace";ctx.fillText("LIVE",cw-31,15);}
-  }else{
-    ctx.fillStyle="rgba(80,100,130,0.3)";ctx.font="8px monospace";ctx.fillText("PROMPTER",8,14);
-    ctx.fillStyle="rgba(80,120,180,0.2)";ctx.font="9px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",65,14);
-    RUNDOWN.forEach((s,i)=>{const isCur=i===S.rundownIdx;ctx.fillStyle=isCur?"rgba(255,220,80,0.8)":i<S.rundownIdx?"rgba(80,100,130,0.2)":"rgba(180,200,230,0.5)";ctx.font=(isCur?"bold ":"")+"10px monospace";ctx.fillText((isCur?"\u25B6 ":"  ")+s.id+": "+s.label,10,35+i*18);});
-    const seg=RUNDOWN[S.rundownIdx];if(seg){ctx.fillStyle="rgba(200,210,230,0.6)";ctx.font="9px monospace";ctx.fillText(seg.ticker.substring(0,40),12,155);if(seg.ticker.length>40)ctx.fillText(seg.ticker.substring(40),12,168);}
-    if(S.broadcastOn){ctx.fillStyle="rgba(220,30,30,0.5)";ctx.font="7px monospace";ctx.fillText("LIVE",cw-28,14);}
-  }
-  (type===0?st1:st2).needsUpdate=true;
-}
+  // Label
+  const lx = Math.cos(angle) * (r + 30);
+  const ly = Math.sin(angle) * (r + 30);
+  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x', lx); t.setAttribute('y', ly);
+  t.setAttribute('text-anchor', 'middle'); t.setAttribute('dominant-baseline', 'central');
+  t.setAttribute('font-family', "'Space Mono',monospace"); t.setAttribute('font-size', '8');
+  t.setAttribute('fill', 'rgba(200,164,74,0.5)'); t.setAttribute('letter-spacing', '0.05em');
+  t.textContent = (i + 1).toString().padStart(2,'0');
+  nodesG.appendChild(t);
 
-function drawDMon(cvs,t,idx){
-  const ctx=getCachedCtx('dmon'+idx,cvs),cw=192,ch=128,mode=S.deskMonModes[idx];
-  ctx.fillStyle="#040410";ctx.fillRect(0,0,cw,ch);
-  if(mode===0){
-    // Camera feed viewfinder
-    ctx.strokeStyle="rgba(100,150,220,0.3)";ctx.lineWidth=1;ctx.strokeRect(8,8,cw-16,ch-16);
-    ctx.strokeStyle="rgba(255,80,80,0.35)";ctx.beginPath();ctx.moveTo(cw/2,12);ctx.lineTo(cw/2,ch-12);ctx.stroke();ctx.beginPath();ctx.moveTo(12,ch/2);ctx.lineTo(cw-12,ch/2);ctx.stroke();
-    // Corner brackets
-    [[10,10],[cw-18,10],[10,ch-18],[cw-18,ch-18]].forEach(([cx2,cy2])=>{ctx.strokeStyle="rgba(255,80,80,0.25)";ctx.strokeRect(cx2,cy2,8,8);});
-    ctx.fillStyle="rgba(255,80,80,0.4)";ctx.font="7px monospace";ctx.fillText("CAM "+(S.liveCam+1)+(S.liveCam===3?" JIB":""),12,20);
-    ctx.fillStyle="rgba(80,120,180,0.3)";ctx.font="6px monospace";ctx.fillText("F50 ISO800 WB:AUTO",12,ch-12);
-    // Timecode
-    const now2=new Date();ctx.fillStyle="rgba(100,140,200,0.35)";ctx.font="6px monospace";
-    ctx.fillText(now2.toLocaleTimeString()+":"+String(now2.getMilliseconds()).padStart(3,'0').substring(0,2),cw-70,ch-12);
-    if(S.broadcastOn&&Math.sin(t*4)>0){ctx.fillStyle="rgba(200,50,50,0.5)";ctx.font="bold 7px monospace";ctx.fillText("\u25CF REC",cw-38,20);}
-  }else if(mode===1){
-    // Prompter — current + next
-    ctx.fillStyle="rgba(80,100,140,0.25)";ctx.font="6px monospace";ctx.fillText("TELEPROMPTER",6,10);
-    const seg=RUNDOWN[S.rundownIdx];
-    ctx.fillStyle="rgba(255,220,80,0.6)";ctx.font="bold 8px monospace";
-    ctx.fillText("\u25B6 ["+(seg?.id||"")+"] "+(seg?.label||""),6,24);
-    ctx.fillStyle="rgba(180,200,230,0.4)";ctx.font="7px monospace";
-    const tk=seg?.ticker||"";
-    ctx.fillText(tk.substring(0,26),6,40);if(tk.length>26)ctx.fillText(tk.substring(26,52),6,52);
-    // Next segment preview
-    const nextSeg=RUNDOWN[(S.rundownIdx+1)%RUNDOWN.length];
-    ctx.fillStyle="rgba(100,120,160,0.25)";ctx.font="6px monospace";
-    ctx.fillText("NEXT: ["+nextSeg.id+"] "+nextSeg.label,6,72);
-    // Speaker
-    ctx.fillStyle=S.speakerActive===0?"rgba(0,170,255,0.4)":"rgba(255,136,0,0.4)";
-    ctx.fillText("SPEAKER: "+(S.speakerActive===0?"ABEBE":"SELAM"),6,86);
-  }else if(mode===2){
-    // Rundown list
-    ctx.fillStyle="rgba(100,200,130,0.3)";ctx.font="7px monospace";ctx.fillText("RUNDOWN",6,12);
-    RUNDOWN.forEach((s,i)=>{const act=i===S.rundownIdx;ctx.fillStyle=act?"rgba(255,200,80,0.7)":"rgba(150,170,200,0.3)";ctx.font=(act?"bold ":"")+"7px monospace";ctx.fillText((act?"\u25B6 ":"  ")+s.id+": "+s.label,6,24+i*14);});
-    ctx.fillStyle="rgba(150,170,200,0.25)";ctx.font="6px monospace";ctx.fillText("AIR: "+fmtTime(S.broadcastTimer),6,ch-8);
-    // Progress
-    if(S.autoAdvance&&S.broadcastOn){const pct=S.segTimer/10;ctx.fillStyle="rgba(0,80,200,0.2)";ctx.fillRect(6,110,cw-12,4);ctx.fillStyle=pct>.8?"rgba(220,60,30,0.5)":"rgba(0,150,255,0.4)";ctx.fillRect(6,110,(cw-12)*pct,4);}
-  }else if(mode===3){
-    // Mode 3: Broadcast stats
-    ctx.fillStyle="rgba(140,100,200,0.3)";ctx.font="7px monospace";ctx.fillText("BROADCAST",6,12);
-    ctx.fillStyle="rgba(100,130,200,0.25)";ctx.font="9px serif";ctx.fillText("\u1219\u1209 \u12DC\u1293",65,12);
-    ctx.fillStyle="rgba(200,210,230,0.5)";ctx.font="bold 10px monospace";
-    ctx.fillText(S.broadcastOn?"ON AIR":"OFF AIR",6,28);
-    ctx.font="9px monospace";ctx.fillText("DURATION: "+fmtTime(S.broadcastTimer),6,44);
-    ctx.fillText("SEGMENT: "+RUNDOWN[S.rundownIdx].id+" / "+RUNDOWN.length,6,58);
-    ctx.fillText("CAMERA: "+(S.liveCam+1)+(S.liveCam===3?" JIB":""),6,72);
-    ctx.fillText("LIGHT: "+LIGHT_PRESETS[S.lightPreset].name,6,86);
-    ctx.fillStyle="rgba(100,140,200,0.3)";ctx.font="6px monospace";
-    ctx.fillText("AUTO:"+(S.autoAdvance?"ON":"OFF")+" CUT:"+(S.autoCut?"ON":"OFF"),6,100);
-    ctx.fillText("CINEMA:"+(S.cinematic?"ON":"OFF"),6,112);
-  }else{
-    // Mode 4: SYMBIOSIS — LLM ↔ Symbolic AI scientific reasoning diagram
-    ctx.fillStyle="rgba(20,30,60,0.95)";ctx.fillRect(0,0,cw,ch);
-    ctx.fillStyle="rgba(100,160,240,0.4)";ctx.font="bold 6px monospace";ctx.fillText("LLM \u2194 SYMBOLIC AI SYMBIOSIS",6,10);
-    // LLM node (left)
-    const lx2=42,ly=52,nr=16;
-    ctx.strokeStyle="rgba(100,180,255,0.4)";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(lx2,ly,nr,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle="rgba(40,80,160,0.3)";ctx.beginPath();ctx.arc(lx2,ly,nr,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle="rgba(140,190,255,0.7)";ctx.font="bold 7px monospace";ctx.textAlign="center";ctx.fillText("LLM",lx2,ly+2);
-    ctx.font="5px monospace";ctx.fillStyle="rgba(120,160,220,0.4)";ctx.fillText("GENERATE",lx2,ly+10);
-    // Symbolic node (right)
-    const sx2=150,sy=52;
-    ctx.strokeStyle="rgba(255,160,60,0.4)";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(sx2,sy,nr,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle="rgba(140,80,20,0.3)";ctx.beginPath();ctx.arc(sx2,sy,nr,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle="rgba(255,200,100,0.7)";ctx.font="bold 6px monospace";ctx.fillText("SYMBOLIC",sx2,sy+2);
-    ctx.font="5px monospace";ctx.fillStyle="rgba(220,160,80,0.4)";ctx.fillText("VERIFY",sx2,sy+10);
-    ctx.textAlign="start";
-    // Animated flow arrows: LLM → Symbolic (top arc)
-    const flowT=t*2;
-    for(let f=0;f<3;f++){
-      const fp=(flowT+f*2.1)%6.3/6.3;
-      const fx=lx2+nr+(sx2-lx2-nr*2)*fp;
-      const fy=ly-12-Math.sin(fp*Math.PI)*10;
-      ctx.fillStyle=`rgba(100,220,255,${(.3+.3*Math.sin(flowT+f)).toFixed(2)})`;
-      ctx.beginPath();ctx.arc(fx,fy,2,0,Math.PI*2);ctx.fill();
-    }
-    // Animated flow arrows: Symbolic → LLM (bottom arc)
-    for(let f=0;f<3;f++){
-      const fp=(flowT+f*2.1+3.15)%6.3/6.3;
-      const fx=sx2-nr-(sx2-lx2-nr*2)*fp;
-      const fy=sy+12+Math.sin(fp*Math.PI)*10;
-      ctx.fillStyle=`rgba(255,180,60,${(.3+.3*Math.sin(flowT+f+1)).toFixed(2)})`;
-      ctx.beginPath();ctx.arc(fx,fy,2,0,Math.PI*2);ctx.fill();
-    }
-    // Labels on flows
-    ctx.fillStyle="rgba(100,200,255,0.35)";ctx.font="4px monospace";ctx.textAlign="center";
-    ctx.fillText("PATTERNS \u2192 HYPOTHESES",96,35);
-    ctx.fillStyle="rgba(255,180,80,0.35)";
-    ctx.fillText("PROOF \u2192 CONSTRAINTS",96,75);
-    ctx.textAlign="start";
-    // Φ governance bridge in center
-    ctx.fillStyle="rgba(160,120,255,0.3)";ctx.font="bold 10px monospace";ctx.textAlign="center";
-    ctx.fillText("\u03A6",96,55);ctx.textAlign="start";
-    // Bottom: causal flow text
-    ctx.fillStyle="rgba(140,170,220,0.3)";ctx.font="5px monospace";
-    ctx.fillText("LLM: EXPAND SEARCH SPACE",6,92);
-    ctx.fillText("SYMBOLIC: CONSTRAIN TO TRUTH",6,100);
-    ctx.fillText("TOGETHER: CREATIVE + CORRECT",6,108);
-    ctx.fillText("\u03A6 GOVERNS THE BOUNDARY",6,116);
-    // Pulsing connection line
-    ctx.strokeStyle=`rgba(160,140,255,${(.15+.1*Math.sin(t*3)).toFixed(2)})`;ctx.lineWidth=1;
-    ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(lx2+nr,ly);ctx.lineTo(sx2-nr,sy);ctx.stroke();ctx.setLineDash([]);
-  }
-  dMonT[idx].needsUpdate=true;
-}
-
-// ═══ ANIMATION ═══
-let frameCount=0,fpsTime=0,currentFps=0;
-let drawFrame=0; // frame counter for throttling
-
-// Cached canvas contexts (avoid getContext every frame)
-var cachedCtx={};
-var progEl=null,progBar=null;
-var tvBarRefs=null; // {air,seg,label,timer,canvas,ctx}
-var fpsEl=null;
-function getCachedCtx(id,cvs){if(!cachedCtx[id])cachedCtx[id]=cvs.getContext('2d');return cachedCtx[id];}
-
-function animate(){
-  requestAnimationFrame(animate);
-  const dt=Math.min(clock.getDelta(),0.05); // cap delta to prevent spiral
-  const t=clock.getElapsedTime();
-  drawFrame++;
-
-  // FPS
-  frameCount++;if(t-fpsTime>=1){currentFps=frameCount;frameCount=0;fpsTime=t;if(S.showFps){if(!fpsEl)fpsEl=ge('st-fps');fpsEl.textContent=currentFps+"fps";}}
-
-  // ── TIERED CANVAS DRAW SCHEDULE ──
-  // Main backdrop: every frame (visible, animated)
-  drawMain(t);
-
-  // Skip secondary draws in TV mode (not visible — major perf gain)
-  if(!S.tvFull){
-  // Side screens: every 2nd frame (less visible, still animated)
-  if(drawFrame%2===0){
-    drawSide(sc1,t,0);drawSide(sc2,t,1);
-  }
-
-  // Desk monitors: every 3rd frame (small, less critical)
-  if(drawFrame%3===0){
-    dMonC.forEach((c,i)=>drawDMon(c,t,i));
-  }
-
-  // Control room monitors: every 4th frame (far away, barely visible)
-  if(drawFrame%4===0&&ctrlCvs1){
-    let cx1=getCachedCtx('ctrl1',ctrlCvs1);cx1.fillStyle="#030308";cx1.fillRect(0,0,160,100);
-    cx1.strokeStyle="#1a6a2a";cx1.lineWidth=1;cx1.beginPath();for(let x=0;x<160;x+=2){const y=30+Math.sin(x*.1+t*3)*10;x===0?cx1.moveTo(x,y):cx1.lineTo(x,y);}cx1.stroke();
-    cx1.strokeStyle="#2a4a8a";cx1.lineWidth=1;cx1.beginPath();for(let x=0;x<160;x+=2){const y=60+Math.sin(x*.08+t*2.5+1)*8;x===0?cx1.moveTo(x,y):cx1.lineTo(x,y);}cx1.stroke();
-    cx1.fillStyle="rgba(60,140,80,0.3)";cx1.font="6px monospace";cx1.fillText("AUDIO L/R",4,12);
-    ctrlTex1.needsUpdate=true;
-
-    let cx2=getCachedCtx('ctrl2',ctrlCvs2);cx2.fillStyle="#030308";cx2.fillRect(0,0,160,100);
-    for(let i=0;i<5;i++){const bh=8+Math.abs(Math.sin(t*3+i*1.1))*15;cx2.fillStyle=bh>18?"rgba(220,60,30,0.5)":"rgba(30,180,60,0.4)";cx2.fillRect(6+i*12,90-bh,9,bh);}
-    for(let i=0;i<5;i++){const bh=6+Math.abs(Math.sin(t*2.5+i*.9+2))*12;cx2.fillStyle=bh>14?"rgba(220,160,30,0.5)":"rgba(30,120,180,0.4)";cx2.fillRect(80+i*12,90-bh,9,bh);}
-    cx2.fillStyle="rgba(60,120,200,0.3)";cx2.font="6px monospace";cx2.fillText("VU L",4,12);cx2.fillText("VU R",78,12);
-    cx2.fillStyle=S.broadcastOn?"rgba(220,40,40,0.6)":"rgba(80,80,80,0.3)";cx2.font="bold 7px monospace";cx2.fillText(S.broadcastOn?"ON AIR":"STDBY",110,12);
-    ctrlTex2.needsUpdate=true;
-
-    let cx3=getCachedCtx('ctrl3',ctrlCvs3);cx3.fillStyle="#030308";cx3.fillRect(0,0,160,100);
-    cx3.fillStyle="rgba(100,140,200,0.3)";cx3.font="6px monospace";cx3.fillText("PRODUCTION STATUS",4,12);
-    cx3.fillStyle="rgba(80,130,200,0.2)";cx3.font="8px serif";cx3.fillText("\u1219\u1209",130,12);
-    const curSeg=RUNDOWN[S.rundownIdx];
-    cx3.fillStyle="rgba(255,200,80,0.5)";cx3.font="bold 8px monospace";cx3.fillText("SEG "+curSeg.id,4,28);
-    cx3.fillStyle="rgba(150,180,220,0.4)";cx3.font="7px monospace";cx3.fillText("CAM "+(S.liveCam+1),80,28);
-    cx3.fillText("SPK "+(S.speakerActive+1),80,42);
-    cx3.fillText(S.autoAdvance?"AUTO ON":"AUTO OFF",4,42);
-    if(S.broadcastOn){cx3.fillStyle="rgba(200,80,80,0.4)";cx3.font="7px monospace";cx3.fillText("AIR "+fmtTime(S.broadcastTimer),4,56);}
-    if(S.autoAdvance&&S.broadcastOn){const pct=S.segTimer/10;cx3.fillStyle="rgba(0,80,200,0.2)";cx3.fillRect(4,62,150,6);cx3.fillStyle=pct>.8?"rgba(220,60,30,0.5)":"rgba(0,150,255,0.4)";cx3.fillRect(4,62,150*pct,6);}
-    cx3.fillStyle="rgba(150,180,220,0.4)";cx3.font="bold 10px monospace";cx3.fillText(new Date().toLocaleTimeString(),4,80);
-    ctrlTex3.needsUpdate=true;
-  }
-
-  // ═══ Φ GOVERNANCE HOLOGRAM (every 3rd frame) ═══
-  if(holoCvs&&drawFrame%3===0){
-    const hx=getCachedCtx('holo',holoCvs),hw=512,hh=320;
-    // Background
-    hx.fillStyle="rgba(2,4,12,0.92)";hx.fillRect(0,0,hw,hh);
-    // Grid
-    hx.strokeStyle="rgba(0,60,140,0.06)";hx.lineWidth=1;
-    for(let x=0;x<hw;x+=32){hx.beginPath();hx.moveTo(x,0);hx.lineTo(x,hh);hx.stroke();}
-    for(let y=0;y<hh;y+=32){hx.beginPath();hx.moveTo(0,y);hx.lineTo(hw,y);hx.stroke();}
-    // Title
-    hx.fillStyle="rgba(0,170,255,0.5)";hx.font="bold 10px monospace";hx.fillText("\u03A6 GOVERNANCE VISUALIZER",12,16);
-    hx.fillStyle="rgba(80,120,180,0.3)";hx.font="7px monospace";hx.fillText("SCCML CAUSAL CHAIN ENGINE · TAMIRAT LULIE WUBIE",12,28);
-    // Draw connection edges between related nodes
-    const edges=[["BROADCAST_TOGGLE","CAMERA_SWITCH"],["RUNDOWN_ADVANCE","BACKDROP_CYCLE"],["RUNDOWN_ADVANCE","ROBOT_GESTURE"],["AUTO_ADVANCE_TOGGLE","RUNDOWN_ADVANCE"],["AUTO_CUT_TOGGLE","CAMERA_SWITCH"],["CAMERA_SWITCH","MONITOR_CYCLE"],["LIGHT_TOGGLE","LIGHT_PRESET_CYCLE"],["CINEMATIC_TOGGLE","CAMERA_SWITCH"]];
-    hx.strokeStyle="rgba(60,100,180,0.08)";hx.lineWidth=1;
-    edges.forEach(([a,b])=>{const na=CHAIN_NODES[a],nb=CHAIN_NODES[b];if(na&&nb){hx.beginPath();hx.moveTo(na.x,na.y);hx.lineTo(nb.x,nb.y);hx.stroke();}});
-    // Draw nodes
-    Object.entries(CHAIN_NODES).forEach(([key,node])=>{
-      // Check if this node has an active event
-      const active=holoEvents.find(e=>e.chain===key&&e.time>0);
-      const pulse=active?(0.5+0.5*Math.sin(t*8)):0;
-      // Node circle
-      hx.beginPath();hx.arc(node.x,node.y,active?14+pulse*4:10,0,Math.PI*2);
-      hx.fillStyle=active?node.color+"cc":"rgba(30,50,80,0.3)";hx.fill();
-      hx.strokeStyle=active?node.color:"rgba(60,100,160,0.15)";hx.lineWidth=active?2:1;hx.stroke();
-      // Label
-      hx.fillStyle=active?"#fff":"rgba(120,150,200,0.4)";hx.font=(active?"bold ":"")+"8px monospace";hx.textAlign="center";
-      hx.fillText(node.label,node.x,node.y+3);hx.textAlign="start";
-      // Ripple effect on active
-      if(active&&active.time>1.5){
-        const rip=(2.5-active.time)*40;
-        hx.beginPath();hx.arc(node.x,node.y,rip,0,Math.PI*2);
-        hx.strokeStyle=node.color+"33";hx.lineWidth=1;hx.stroke();
-      }
-    });
-    // Draw active event edges (propagation glow)
-    holoEvents.forEach(ev=>{
-      if(ev.time<=0)return;
-      const src=CHAIN_NODES[ev.chain];if(!src)return;
-      edges.forEach(([a,b])=>{
-        if(a===ev.chain||b===ev.chain){
-          const na=CHAIN_NODES[a],nb=CHAIN_NODES[b];if(!na||!nb)return;
-          const alpha=Math.min(1,ev.time/1.5);
-          hx.strokeStyle=ev.color+(Math.floor(alpha*80).toString(16).padStart(2,'0'));
-          hx.lineWidth=2;hx.beginPath();hx.moveTo(na.x,na.y);hx.lineTo(nb.x,nb.y);hx.stroke();
-        }
-      });
-    });
-    // Event journal (right side)
-    hx.fillStyle="rgba(0,100,180,0.25)";hx.font="7px monospace";hx.fillText("JOURNAL:",370,16);
-    holoEvents.slice(0,6).forEach((ev,i)=>{
-      const alpha=Math.min(1,ev.time/1.5);
-      hx.fillStyle=ev.color+(Math.floor(alpha*180).toString(16).padStart(2,'0'));
-      hx.font="7px monospace";
-      hx.fillText(ev.chain.substring(0,12),370,30+i*14);
-      if(ev.deltas.length>0)hx.fillText("  "+ev.deltas[0],370,38+i*14);
-    });
-    // Decay events
-    holoEvents.forEach(ev=>{ev.time-=0.016;});
-    holoEvents=holoEvents.filter(ev=>ev.time>0);
-    // State summary at bottom
-    hx.fillStyle="rgba(60,100,160,0.25)";hx.font="7px monospace";
-    hx.fillText("STATE: C"+(S.liveCam+1)+" SEG:"+RUNDOWN[S.rundownIdx].id+" BG:"+S.backdropMode.slice(0,4)+" SPK:"+(S.speakerActive+1)+" AIR:"+fmtTime(S.broadcastTimer),12,hh-22);
-    // Governance proof hash — simulated deterministic hash from state
-    const stHash=((S.liveCam*7+S.rundownIdx*13+S.lightPreset*31+(S.broadcastOn?97:0)+(S.autoAdvance?53:0)+(S.autoCut?41:0)+Math.floor(S.broadcastTimer))&0xFFFF).toString(16).toUpperCase().padStart(4,'0');
-    hx.fillStyle="rgba(0,200,120,0.2)";hx.font="6px monospace";
-    hx.fillText("\u03A6 PROOF: 0x"+stHash+" \u2502 CONSTRAINTS: PASS \u2502 INVARIANTS: HOLD \u2502 LINEAGE: "+(holoEvents.length)+" EVENTS",12,hh-8);
-    // Φ symbol watermark
-    hx.fillStyle="rgba(0,100,200,0.06)";hx.font="bold 80px monospace";hx.textAlign="center";
-    hx.fillText("\u03A6",hw/2,hh/2+25);hx.textAlign="start";
-    holoTex.needsUpdate=true;
-  }
-  } // end TV-skip block for secondary draws
-
-  // Tally
-  tallyMats.forEach((tm,i)=>{if(i===S.liveCam&&S.broadcastOn)tm.emissiveIntensity=.4+.4*Math.sin(t*4);else tm.emissiveIntensity=.03;});
-  // Light rigs
-  const lp=LIGHT_PRESETS[S.lightPreset];
-  rigLights.forEach((rl,i)=>{if(S.lightsOn[i]){rl.color.setHex(lp.colors[i][0]);rl.intensity=lp.colors[i][1];}else rl.intensity=0;});
-  rigGlowMats.forEach((gm,i)=>gm.emissiveIntensity=S.lightsOn[i]?2.5:.1);
-  // ON AIR
-  if(S.broadcastOn){onAirMat.emissiveIntensity=.5+.3*Math.sin(t*3);onAirMat.color.setHex(0xcc2020);}else{onAirMat.emissiveIntensity=.15;onAirMat.color.setHex(0x444444);}
-  // Robots
-  robotAccents.forEach((ra,i)=>{const spk=S.speakerActive===i&&S.broadcastOn;ra.chest.emissiveIntensity=spk?(.6+.5*Math.sin(t*4)):(.2+.2*Math.sin(t*2.5+i*1.5));ra.ant.emissiveIntensity=Math.sin(t*5+i*3)>.7?(spk?2:1.2):.15;});
-  if(robotHeads.length>=2){
-    const spk=S.speakerActive;robotHeads[spk].rotation.y=Math.sin(t*.8)*.05;robotHeads[spk].rotation.x=Math.sin(t*1.2)*.02;
-    const oth=1-spk;robotHeads[oth].rotation.y=(spk===0?-.3:.3)+Math.sin(t*.2)*.03;robotHeads[oth].rotation.x=Math.sin(t*.15)*.015;
-    S.robotGesture.forEach((g,gi)=>{if(g){S.gestureTimers[gi]-=dt;if(S.gestureTimers[gi]<=0){S.robotGesture[gi]=null;return;}
-      if(g==="nod")robotHeads[gi].rotation.x=Math.sin(t*6)*.08;
-      else if(g==="turn")robotHeads[gi].rotation.y=Math.sin(t*2)*.4;
-      else if(g==="look_cam"){robotHeads[gi].rotation.y=0;robotHeads[gi].rotation.x=-.05;}
-      else if(g==="wave"){robotHeads[gi].rotation.y=Math.sin(t*3)*.15;robotHeads[gi].rotation.z=Math.sin(t*4)*.06;}
-      else if(g==="think"){robotHeads[gi].rotation.y=gi===0?-.2:.2;robotHeads[gi].rotation.x=.08;}}});
-  }
-  robotLabels.forEach(lb=>lb.quaternion.copy(camera.quaternion));
-  jib.rotation.y=Math.sin(t*.15)*.06;boom.rotation.y=Math.sin(t*.12+1)*.025;
-
-  // Animated Ge'ez fidel particles — inside TV screen (every 2nd frame)
-  if(window.fidelMeshes&&window.fidelMeshes.length&&drawFrame%2===0){
-  window.fidelMeshes.forEach((fm,i)=>{
-    const d=window.fidelData[i];
-    // Drift within screen bounds
-    let fx=d.baseX+Math.sin(t*d.driftSpeedX+d.phaseX)*d.rangeX;
-    let fy=d.baseY+Math.sin(t*d.driftSpeedY+d.phaseY)*d.rangeY+Math.sin(t*d.bobSpeed)*d.bobAmp;
-    // Clamp to screen: x[-6, 6], y[2.2, 8.8]
-    fx=Math.max(-6,Math.min(6,fx));
-    fy=Math.max(2.2,Math.min(8.8,fy));
-    fm.position.set(fx,fy,-9.68);
-    // Subtle rotation for background fidels, face-forward for ሙሉ ዜና
-    if(i>=4){
-      fm.rotation.set(0,0,Math.sin(t*0.3+i)*0.15);
-    }else{
-      fm.rotation.set(0,0,0);
-    }
-    // Opacity pulse — breathe effect
-    fm.material.opacity=i<4?(0.75+0.2*Math.sin(t*1.5+i)):(0.35+0.2*Math.sin(t*0.8+i*0.5));
-    // Scale pulse for ሙሉ ዜና chars
-    if(i<4){
-      const pulse=1+0.1*Math.sin(t*2+i*1.5);
-      fm.scale.set(pulse,pulse,1);
-    }
-  });
-  } // end fidel guard
-  rackLEDs.forEach((led,i)=>led.emissiveIntensity=.3+.3*Math.sin(t*(2+i*.7)+i*1.3));
-
-  // Animated clock hands
-  if(clockHourHand){
-    const now=new Date();
-    const sec=now.getSeconds()+now.getMilliseconds()/1000;
-    const min=now.getMinutes()+sec/60;
-    const hr=(now.getHours()%12)+min/60;
-    clockSecHand.rotation.set(0,0,-sec/60*Math.PI*2);
-    clockMinHand.rotation.set(0,0,-min/60*Math.PI*2);
-    clockHourHand.rotation.set(0,0,-hr/12*Math.PI*2);
-  }
-
-  // Broadcast duration timer
-  if(S.broadcastOn)S.broadcastTimer+=dt;
-
-  // Desk glow ring — pulse with broadcast
-  if(deskGlowRing){
-    const mat=deskGlowRing.material;
-    if(S.broadcastOn){mat.emissiveIntensity=.1+.08*Math.sin(t*2);mat.color.setHex(0xcc2020);}
-    else{mat.emissiveIntensity=.03;mat.color.setHex(0x2244cc);}
-  }
-
-  // ═══ CINEMATIC CAMERA DIRECTOR ═══
-  // Rich multi-move sequences: tilt, drone, dolly, zoom, crane, pan, rig sweep
-  // Each move blends multiple techniques simultaneously
-  if(S.cinematic&&!dragging){
-    cinematicTimer+=dt;
-    // 12 cinematic moves, 8 seconds each
-    const CINEMA_MOVES=[
-      // 0: ESTABLISHING — slow drone rise + wide pull-back
-      {dur:8,fn:(p)=>{
-        orbit.r=14+p*6;orbit.p=0.2+p*0.4;orbit.t=p*0.3;
-        orbit.cx=0;orbit.cy=1.5+p*2;orbit.cz=0;
-      }},
-      // 1: ANCHOR CLOSE-UP — dolly in on anchors + slight tilt down
-      {dur:7,fn:(p)=>{
-        orbit.r=7-p*3;orbit.p=0.18-p*0.06;orbit.t=Math.sin(p*1.5)*0.08;
-        orbit.cx=0;orbit.cy=2+p*0.3;orbit.cz=0;
-      }},
-      // 2: CRANE SWEEP LEFT — high crane arc over left side
-      {dur:9,fn:(p)=>{
-        orbit.r=10+Math.sin(p*Math.PI)*4;orbit.p=0.5+Math.sin(p*Math.PI)*0.4;
-        orbit.t=-0.3+p*1.2;orbit.cx=-2+p*4;orbit.cy=3;orbit.cz=0;
-      }},
-      // 3: ROBOT 1 FOCUS — tight zoom on ABEBE + tracking
-      {dur:6,fn:(p)=>{
-        orbit.r=3.5+Math.sin(p*Math.PI)*0.5;orbit.p=0.15+Math.sin(p*2)*0.04;
-        orbit.t=0.25+Math.sin(p*3)*0.06;orbit.cx=-1.6;orbit.cy=2;orbit.cz=1.3;
-      }},
-      // 4: LOW DOLLY — ground-level push through studio
-      {dur:8,fn:(p)=>{
-        orbit.r=12-p*4;orbit.p=0.04+Math.sin(p*Math.PI)*0.03;
-        orbit.t=0.1+p*0.4;orbit.cx=p*3-1.5;orbit.cy=0.8;orbit.cz=p*2;
-      }},
-      // 5: BACKDROP ZOOM — slow push into the TV screen
-      {dur:7,fn:(p)=>{
-        orbit.r=16-p*10;orbit.p=0.25+Math.sin(p*Math.PI)*0.08;
-        orbit.t=Math.sin(p*2)*0.05;orbit.cx=0;orbit.cy=4+p*2;orbit.cz=-2-p*3;
-      }},
-      // 6: TOP DOWN DRONE — bird's eye rotating descent
-      {dur:8,fn:(p)=>{
-        orbit.r=14-p*4;orbit.p=1.2-p*0.6;orbit.t=p*2;
-        orbit.cx=0;orbit.cy=0;orbit.cz=0;
-      }},
-      // 7: ROBOT 2 ORBIT — tight circle around SELAM
-      {dur:6,fn:(p)=>{
-        orbit.r=3.2+Math.sin(p*Math.PI)*0.8;orbit.p=0.12+Math.sin(p*Math.PI)*0.1;
-        orbit.t=-0.25+p*1.5;orbit.cx=1.6;orbit.cy=2;orbit.cz=1.3;
-      }},
-      // 8: DUTCH TILT — dramatic angle with slow zoom
-      {dur:7,fn:(p)=>{
-        orbit.r=8+Math.sin(p*Math.PI)*3;orbit.p=0.08+p*0.35;
-        orbit.t=-0.5+p*0.8;orbit.cx=-1;orbit.cy=1.5+p*2;orbit.cz=1;
-      }},
-      // 9: Φ HOLOGRAM — approach the governance display
-      {dur:7,fn:(p)=>{
-        orbit.r=5+Math.sin(p*Math.PI)*2;orbit.p=0.2+Math.sin(p*2)*0.08;
-        orbit.t=1.45+Math.sin(p*1.5)*0.15;orbit.cx=-15;orbit.cy=5.5;orbit.cz=4;
-      }},
-      // 10: EQUIPMENT PASS — dolly past racks and gear
-      {dur:8,fn:(p)=>{
-        orbit.r=6+p*4;orbit.p=0.2+Math.sin(p*Math.PI)*0.15;
-        orbit.t=0.8-p*1.6;orbit.cx=6-p*12;orbit.cy=2;orbit.cz=4+p*3;
-      }},
-      // 11: GRAND PULLBACK — final wide establishing + tilt up to ceiling
-      {dur:9,fn:(p)=>{
-        orbit.r=8+p*14;orbit.p=0.15+p*0.5;orbit.t=-0.2+p*0.4;
-        orbit.cx=0;orbit.cy=2+p*1;orbit.cz=0;
-      }},
-    ];
-    const totalMoves=CINEMA_MOVES.length;
-    const moveIdx=cinematicPresetIdx%totalMoves;
-    const move=CINEMA_MOVES[moveIdx];
-    const progress=Math.min(1,cinematicTimer/move.dur);
-    // Smooth easing
-    const eased=progress<0.5?2*progress*progress:1-Math.pow(-2*progress+2,2)/2;
-    move.fn(eased);
-    if(cinematicTimer>=move.dur){
-      cinematicTimer=0;
-      cinematicPresetIdx=(cinematicPresetIdx+1)%totalMoves;
-    }
-  }
-
-  // Auto-advance
-  if(S.autoAdvance&&S.broadcastOn){S.segTimer+=dt;if(S.segTimer>=10){S.segTimer=0;advanceSegment();holoFire("AUTO_ADVANCE_TOGGLE",["timer\u2192triggered"]);}}
-  if(!progEl){progEl=ge('progress');progBar=progEl?.querySelector('.bar');}
-  if(S.autoAdvance&&S.broadcastOn){progEl.style.display='block';progBar.style.width=Math.min(100,S.segTimer/10*100)+'%';progBar.style.background=S.segTimer>8?'rgba(220,60,30,0.7)':'rgba(0,140,255,0.5)';}else progEl.style.display='none';
-
-  // Particles (every 2nd frame)
-  if(drawFrame%2===1){
-    const pp=particles.geometry.attributes.position.array;
-    for(let i=0;i<pCount;i++){pp[i*3+1]+=Math.sin(t*.15+i*.7)*.001;if(pp[i*3+1]>11)pp[i*3+1]=.3;}
-    particles.geometry.attributes.position.needsUpdate=true;
-  }
-
-  // Auto-rotate (skip when cinematic active — they conflict on orbit.t)
-  if(S.autoRotate&&!dragging&&!S.cinematic)orbit.t+=.0018;
-
-  // Orbit momentum — apply velocity and decay
-  if(!dragging&&(Math.abs(velocityT)>0.0001||Math.abs(velocityP)>0.0001)){
-    orbit.t+=velocityT;
-    orbit.p=Math.max(-1.5,Math.min(1.5,orbit.p+velocityP));
-    velocityT*=0.95; // friction decay
-    velocityP*=0.95;
-    if(Math.abs(velocityT)<0.0001)velocityT=0;
-    if(Math.abs(velocityP)<0.0001)velocityP=0;
-  }
-
-  // Camera orbit — full 360 spherical
-  // theta = horizontal angle (unlimited wrap)
-  // phi = vertical angle: 0 = horizon, +PI/2 = top, -PI/2 = bottom
-  const ct=Math.cos(orbit.t),st2=Math.sin(orbit.t);
-  const cp=Math.cos(orbit.p),sp2=Math.sin(orbit.p);
-  const ex=orbit.cx+orbit.r*st2*cp;
-  const ey=orbit.cy+orbit.r*sp2;
-  const ez=orbit.cz+orbit.r*ct*cp;
-  const sp=.08+.06*(1-Math.min(orbit.r/18,1));
-  camera.position.x+=(ex-camera.position.x)*sp;camera.position.y+=(ey-camera.position.y)*sp;camera.position.z+=(ez-camera.position.z)*sp;
-  camera.lookAt(orbit.cx,orbit.cy,orbit.cz);
-  // Skip 3D render in TV fullscreen mode (not visible)
-  if(!S.tvFull)renderer.render(scene,camera);
-
-  // PiP (every 3rd frame — full scene render is expensive)
-  if(S.showPip&&drawFrame%3===0){
-    const pipPreset=PRESETS[S.liveCam<PRESETS.length?S.liveCam:0];
-    pipCamera.position.set(pipPreset.cx+pipPreset.r*Math.sin(pipPreset.t)*Math.cos(pipPreset.p),pipPreset.cy+pipPreset.r*Math.sin(pipPreset.p),pipPreset.cz+pipPreset.r*Math.cos(pipPreset.t)*Math.cos(pipPreset.p));
-    pipCamera.lookAt(pipPreset.cx,pipPreset.cy,pipPreset.cz);
-    pipRenderer.render(scene,pipCamera);
-  }
-
-  // Sync UI (throttled — DOM writes are expensive)
-  if(drawFrame%5===0)syncUI();
-}
-
-// ═══ ACTIONS ═══
-// ── SOUND ENGINE (Web Audio procedural synth) ──
-let audioCtx;
-function initAudio(){if(!audioCtx)try{
-  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  // Ambient studio hum — very low continuous tone
-  const hum=audioCtx.createOscillator(),humG=audioCtx.createGain();
-  hum.type='sine';hum.frequency.setValueAtTime(60,audioCtx.currentTime);
-  humG.gain.setValueAtTime(0.008,audioCtx.currentTime);
-  hum.connect(humG);humG.connect(audioCtx.destination);hum.start();
-  // Second harmonic
-  const hum2=audioCtx.createOscillator(),humG2=audioCtx.createGain();
-  hum2.type='sine';hum2.frequency.setValueAtTime(120,audioCtx.currentTime);
-  humG2.gain.setValueAtTime(0.004,audioCtx.currentTime);
-  hum2.connect(humG2);humG2.connect(audioCtx.destination);hum2.start();
-}catch(e){}}
-function sfx(freq,dur,type,vol){
-  if(!audioCtx)return;
-  if(audioCtx.state==='suspended')audioCtx.resume();
-  try{
-  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type=type||'sine';o.frequency.setValueAtTime(freq,audioCtx.currentTime);
-  g.gain.setValueAtTime(vol||0.04,audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+(dur||0.15));
-  o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+(dur||0.15));
-  }catch(e){}
-}
-function sndClick(){sfx(800,0.06,'sine',0.03);}
-function sndSegment(){
-  sfx(440,0.1,'sine',0.04);setTimeout(()=>sfx(660,0.1,'sine',0.03),80);setTimeout(()=>sfx(880,0.15,'sine',0.03),160);
-}
-function sndComingSoon(){
-  sfx(330,0.15,'sine',0.03);setTimeout(()=>sfx(440,0.15,'sine',0.03),120);
-  setTimeout(()=>sfx(550,0.2,'sine',0.04),240);setTimeout(()=>sfx(660,0.25,'sine',0.04),400);
-}
-function sndBroadcast(on){if(on){sfx(220,0.2,'square',0.02);sfx(330,0.2,'square',0.02);}else{sfx(330,0.15,'square',0.02);sfx(220,0.15,'square',0.02);}}
-function sndCam(){sfx(1200,0.04,'square',0.03);sfx(600,0.03,'square',0.02);}
-function sndGesture(){sfx(500,0.08,'triangle',0.03);}
-
-function advanceSegment(targetIdx){
-  pushUndo();
-  S.rundownIdx=targetIdx!==undefined?targetIdx:(S.rundownIdx+1)%RUNDOWN.length;
-  const seg=RUNDOWN[S.rundownIdx];
-  seg.id==="G"?sndComingSoon():sndSegment();S.backdropMode=seg.backdrop;S.speakerActive=seg.speaker;S.segTimer=0;backdropFade=.5;segFlash=.6;
-  if(S.autoCut&&S.broadcastOn)S.liveCam=seg.speaker===0?0:1;
-  log("SEG → "+seg.id+": "+seg.label);
-  holoFire("RUNDOWN_ADVANCE",["seg→"+seg.id,"bg→"+seg.backdrop,"spk→"+(seg.speaker+1)]);
-}
-function toggleBroadcast(){pushUndo();S.broadcastOn=!S.broadcastOn;if(!S.broadcastOn)S.broadcastTimer=0;sndBroadcast(S.broadcastOn);log("BROADCAST: "+(S.broadcastOn?"ON":"OFF"));holoFire("BROADCAST_TOGGLE",["air→"+(S.broadcastOn?"ON":"OFF")]);}
-function switchCam(id){pushUndo();sndCam();S.liveCam=id;log("CAM "+(id+1)+(id===3?" (JIB)":"")+" → LIVE");holoFire("CAMERA_SWITCH",["cam→"+(id+1)]);}
-function toggleLight(id){pushUndo();sndClick();S.lightsOn[id]=!S.lightsOn[id];log("LIGHT "+(id+1)+": "+(S.lightsOn[id]?"ON":"OFF"));holoFire("LIGHT_TOGGLE",["rig"+(id+1)+"→"+(S.lightsOn[id]?"on":"off")]);}
-function cycleBackdrop(){pushUndo();sndClick();const modes=["globe","data","weather","headline"];const i=modes.indexOf(S.backdropMode);S.backdropMode=modes[(i+1)%modes.length];backdropFade=.5;log("BG: "+S.backdropMode);holoFire("BACKDROP_CYCLE",["mode→"+S.backdropMode]);}
-function cycleDeskMon(id){pushUndo();sndClick();S.deskMonModes[id]=(S.deskMonModes[id]+1)%5;const names=["CAM","PROMPT","RUNDOWN","STATS","SYMBIOSIS"];log("MON "+(id+1)+": "+names[S.deskMonModes[id]]);holoFire("MONITOR_CYCLE",["mon"+(id+1)+"→"+names[S.deskMonModes[id]]]);}
-function robotGesture(id){pushUndo();sndGesture();const g=GESTURES[Math.floor(Math.random()*GESTURES.length)];S.robotGesture[id]=g;S.gestureTimers[id]=2.5;log("ROBOT "+(id+1)+": "+g);holoFire("ROBOT_GESTURE",["bot"+(id+1)+"→"+g]);}
-function cycleLightPreset(){pushUndo();sndClick();S.lightPreset=(S.lightPreset+1)%LIGHT_PRESETS.length;log("LIGHTS: "+LIGHT_PRESETS[S.lightPreset].name);holoFire("LIGHT_PRESET_CYCLE",["preset→"+LIGHT_PRESETS[S.lightPreset].name]);}
-function cycleGreenScreen(){
-  pushUndo();sndClick();S.greenScreen=(S.greenScreen+1)%3;
-  const colors=[0x00cc44,0x3366ff,0xdddddd];const names=["GREEN","BLUE","WHITE"];
-  if(greenScreenMesh){greenScreenMesh.material.color.setHex(colors[S.greenScreen]);greenScreenMesh.material.emissive.setHex(colors[S.greenScreen]);}
-  log("SCREEN: "+names[S.greenScreen]);holoFire("GREEN_SCREEN_CYCLE",["color→"+names[S.greenScreen]]);
-}
-function toggleCinematic(){sndClick();S.cinematic=!S.cinematic;cinematicTimer=0;log("CINEMA: "+(S.cinematic?"ON":"OFF"));holoFire("CINEMATIC_TOGGLE",["mode→"+(S.cinematic?"on":"off")]);}
-function toggleTVFull(){
-  sndClick();
-  S.tvFull=!S.tvFull;
-  const tvEl=ge('tv-full');
-  if(S.tvFull){
-    tvEl.style.display='block';
-    setTimeout(()=>tvEl.classList.add('show'),20); // fade in
-    ge('badge').style.display='none';ge('title').style.display='none';
-    ge('status').style.display='none';ge('ui').style.display='none';
-    ge('pip').style.display='none';ge('log').style.display='none';
-    ge('tooltip').style.display='none';
-    // Resize TV canvas to viewport
-    const tvC=ge('tv-canvas');tvC.width=Math.min(1920,window.innerWidth*2);tvC.height=Math.min(1080,window.innerHeight*2);
-    // Enter browser fullscreen
-    try{const el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen();else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();}catch(e){}
-  }else{
-    tvEl.classList.remove('show');
-    setTimeout(()=>{tvEl.style.display='none';},400);
-    tvBarRefs=null; // invalidate cache for re-entry
-    ge('badge').style.display='flex';ge('title').style.display='block';
-    ge('status').style.display='flex';ge('log').style.display='block';
-    if(S.showUI)ge('ui').style.display='block';
-  }
-  log("TV: "+(S.tvFull?"FULLSCREEN":"STUDIO"));
-}
-function tvClickHandler(e){
-  // Don't exit if clicking inside the control bar
-  if(e.target.closest&&e.target.closest('.tv-bar'))return;
-  toggleTVFull();
-}
-function fmtTime(s){const m=Math.floor(s/60),ss=Math.floor(s%60);return(m<10?"0":"")+m+":"+(ss<10?"0":"")+ss;}
-function holoFire(chain,deltas){
-  const node=CHAIN_NODES[chain];
-  holoEvents.push({chain,deltas:deltas||[],time:2.5,color:node?node.color:"#fff"});
-  if(holoEvents.length>8)holoEvents.shift();
-}
-function toggleUI(){
-  if(autoHideTimer){clearTimeout(autoHideTimer);autoHideTimer=null;}
-  S.showUI=!S.showUI;
-  const ui=ge('ui'),btn=ge('show-ui');
-  if(S.showUI){ui.style.display='block';ui.classList.remove('hidden');btn.style.display='none';btn.classList.remove('blink');}
-  else{ui.classList.add('hidden');btn.style.display='block';btn.classList.add('blink');}
-}
-function toggleHelp(){ge('help').style.display=ge('help').style.display==='flex'?'none':'flex';}
-function togglePip(){S.showPip=!S.showPip;ge('pip').style.display=S.showPip?'block':'none';log("PiP: "+(S.showPip?"ON":"OFF"));}
-function toggleFps(){S.showFps=!S.showFps;ge('st-fps').style.display=S.showFps?'inline':'none';}
-function setPreset(i){sndClick();S.preset=i;const p=PRESETS[i];orbit={t:p.t,p:p.p,r:p.r,cx:p.cx,cy:p.cy,cz:p.cz};velocityT=0;velocityP=0;}
-function takeScreenshot(){renderer.domElement.toBlob(b=>{if(!b)return;const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download="mullusi-studio.png";a.click();URL.revokeObjectURL(u);});}
-function toggleFullscreen(){
-  const el=document.documentElement;
-  if(!document.fullscreenElement&&!document.webkitFullscreenElement){
-    if(el.requestFullscreen)el.requestFullscreen();
-    else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
-  }else{
-    if(document.exitFullscreen)document.exitFullscreen();
-    else if(document.webkitExitFullscreen)document.webkitExitFullscreen();
-  }
-  // Force resize after small delay to catch fullscreen transition
-  setTimeout(()=>{const w=window.innerWidth,h=window.innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);},200);
-}
-
-// ═══ CLICK RAYCAST ═══
-function handleClick(cx,cy){
-  const rect=renderer.domElement.getBoundingClientRect();
-  const mouse=new THREE.Vector2(((cx-rect.left)/rect.width)*2-1,-((cy-rect.top)/rect.height)*2+1);
-  raycaster.setFromCamera(mouse,camera);
-  const hits=raycaster.intersectObjects(clickables.map(c=>c.mesh),true);
-  if(!hits.length)return;
-  const hit=hits[0].object;const entry=clickables.find(c=>c.mesh===hit||hit.parent===c.mesh);
-  if(!entry)return;
-  // Flash
-  try{if(hit.material&&hit.material.emissive){hit.material.emissive.setHex(0xffffff);setTimeout(()=>{try{hit.material.emissive.setHex(0);}catch(e){}},300);}}catch(e){}
-  const{type,id}=entry;
-  if(type==="camera")switchCam(id);
-  else if(type==="robot")robotGesture(id);
-  else if(type==="backdrop")cycleBackdrop();
-  else if(type==="deskmon")cycleDeskMon(id);
-  else if(type==="light")toggleLight(id);
-  else if(type==="onair")toggleBroadcast();
-  else if(type==="prompter")advanceSegment();
-  else if(type==="greenscreen")cycleGreenScreen();
-}
-
-// ═══ POINTER / TOUCH HANDLERS ═══
-// Uses touch cache for reliable multi-touch pinch zoom
-let prevPinchDist=0;
-
-function getTouchDist(e){
-  if(!e.touches||e.touches.length<2)return 0;
-  const dx=e.touches[0].clientX-e.touches[1].clientX;
-  const dy=e.touches[0].clientY-e.touches[1].clientY;
-  return Math.hypot(dx,dy);
-}
-
-function onPointerDown(e){
-  if(e.pointerType==='touch')return;
-  if(S.tvFull)return;
-  e.preventDefault();
-  const now=Date.now();
-  if(now-lastTap<300){setPreset(0);lastTap=0;velocityT=0;velocityP=0;return;}
-  lastTap=now;
-  dragging=true;dragDist=0;velocityT=0;velocityP=0;
-  const cx=e.clientX??0,cy=e.clientY??0;
-  lastMouse={x:cx,y:cy};
-}
-
-function onTouchStart(e){
-  if(S.tvFull)return;
-  e.preventDefault();
-  velocityT=0;velocityP=0;
-  if(e.touches.length===2){
-    prevPinchDist=getTouchDist(e);
-    dragging=false;
-    return;
-  }
-  const now=Date.now();
-  if(now-lastTap<300){setPreset(0);lastTap=0;return;}
-  lastTap=now;
-  dragging=true;dragDist=0;
-  lastMouse={x:e.touches[0].clientX,y:e.touches[0].clientY};
-}
-
-function onTouchMove(e){
-  e.preventDefault();
-  if(e.touches.length===2){
-    // Pinch zoom
-    const dist=getTouchDist(e);
-    if(prevPinchDist>0){
-      const delta=(prevPinchDist-dist)*0.06;
-      orbit.r=Math.max(2,Math.min(35,orbit.r+delta));
-    }
-    prevPinchDist=dist;
-    return;
-  }
-  if(!dragging||!e.touches.length)return;
-  const cx=e.touches[0].clientX,cy=e.touches[0].clientY;
-  const dx=cx-lastMouse.x,dy=cy-lastMouse.y;
-  dragDist+=Math.abs(dx)+Math.abs(dy);
-  const dtx=-dx*0.006, dtp=dy*0.006;
-  orbit.t+=dtx;
-  orbit.p=Math.max(-1.5,Math.min(1.5,orbit.p+dtp));
-  velocityT=dtx;velocityP=dtp;
-  lastMouse={x:cx,y:cy};
-  renderer.domElement.style.cursor='grabbing';
-}
-
-function onTouchEnd(e){
-  if(e.touches.length<2)prevPinchDist=0;
-  if(e.touches.length===0){
-    if(dragDist<8&&e.changedTouches?.length){
-      handleClick(e.changedTouches[0].clientX,e.changedTouches[0].clientY);
-      velocityT=0;velocityP=0;
-    }
-    dragging=false;
-  }
-}
-
-function onPointerMove(e){
-  if(e.pointerType==='touch')return;
-  if(!dragging){
-    const cx2=e.clientX??0,cy2=e.clientY??0;
-    const rect=renderer.domElement.getBoundingClientRect();
-    const mouse=new THREE.Vector2(((cx2-rect.left)/rect.width)*2-1,-((cy2-rect.top)/rect.height)*2+1);
-    raycaster.setFromCamera(mouse,camera);
-    const hits=raycaster.intersectObjects(clickables.map(c=>c.mesh),true);
-    renderer.domElement.style.cursor=hits.length?'pointer':'grab';
-    const tip=ge('tooltip');
-    if(hits.length){
-      const entry=clickables.find(c=>c.mesh===hits[0].object||hits[0].object.parent===c.mesh);
-      tip.style.display='block';
-      const labels={camera:"Switch Camera",robot:"Trigger Gesture",backdrop:"Cycle Backdrop",deskmon:"Cycle Monitor",light:"Toggle Light",onair:"Toggle Broadcast",prompter:"Next Segment",greenscreen:"Cycle Screen Color"};
-      tip.textContent=entry?(labels[entry.type]||entry.type)+(entry.type==="camera"?" "+(entry.id+1):entry.type==="robot"?" "+(entry.id===0?"ABEBE":"SELAM"):entry.type==="light"?" "+(entry.id+1):entry.type==="deskmon"?" "+(entry.id+1):""):'';
-    }else{tip.style.display='none';}
-    return;
-  }
-  renderer.domElement.style.cursor='grabbing';
-  const cx=e.clientX??0,cy=e.clientY??0;
-  const dx=cx-lastMouse.x,dy=cy-lastMouse.y;
-  dragDist+=Math.abs(dx)+Math.abs(dy);
-  const dtx=-dx*0.006, dtp=dy*0.006;
-  orbit.t+=dtx;
-  orbit.p=Math.max(-1.5,Math.min(1.5,orbit.p+dtp));
-  velocityT=dtx;velocityP=dtp;
-  lastMouse={x:cx,y:cy};
-}
-
-function onPointerUp(e){
-  if(e.pointerType==='touch')return;
-  dragging=false;
-  if(dragDist<8){
-    handleClick(e.clientX??0,e.clientY??0);
-    velocityT=0;velocityP=0;
-  }
-}
-
-function onWheel(e){
-  e.preventDefault();e.stopPropagation();
-  if(S.tvFull)return;
-  const delta=e.deltaY>0?1.08:1/1.08;
-  orbit.r=Math.max(2,Math.min(35,orbit.r*delta));
-}
-
-// ═══ KEYBOARD ═══
-document.addEventListener('keydown',e=>{
-  if(e.target.tagName==='INPUT')return;
-  const k=e.key;
-  // TV mode — limited keys only
-  if(S.tvFull){
-    if(k==='Escape'||k==='t'||k==='T')toggleTVFull();
-    if(k===' '){e.preventDefault();advanceSegment();}
-    if(k==='b'||k==='B')toggleBroadcast();
-    return;
-  }
-  if(k>='1'&&k<='8')setPreset(parseInt(k)-1);
-  if(k===' '){e.preventDefault();advanceSegment();}
-  if(k==='a'||k==='A'){S.autoAdvance=!S.autoAdvance;S.segTimer=0;log("AUTO: "+(S.autoAdvance?"ON":"OFF"));holoFire("AUTO_ADVANCE_TOGGLE",["auto→"+(S.autoAdvance?"on":"off")]);}
-  if(k==='c'||k==='C'){S.autoCut=!S.autoCut;log("CUT: "+(S.autoCut?"ON":"OFF"));holoFire("AUTO_CUT_TOGGLE",["cut→"+(S.autoCut?"on":"off")]);}
-  if(k==='b'||k==='B')toggleBroadcast();
-  if(k==='r'||k==='R'){S.autoRotate=!S.autoRotate;log("ROTATE: "+(S.autoRotate?"ON":"OFF"));}
-  if(k==='h'||k==='H')toggleUI();
-  if(k==='?'||k==='/')toggleHelp();
-  if(k==='f'||k==='F')toggleFullscreen();
-  if(k==='p'||k==='P')togglePip();
-  if(k==='l'||k==='L')cycleLightPreset();
-  if(k==='u'||k==='U')undo();
-  if(k==='='||k==='+')orbit.r=Math.max(2,orbit.r/1.15);
-  if(k==='-'||k==='_')orbit.r=Math.min(35,orbit.r*1.15);
-  if(k==='0')switchCam(3); // jib
-  if(k==='g'||k==='G')cycleGreenScreen();
-  if(k==='m'||k==='M')toggleCinematic();
-  if(k==='t'||k==='T')toggleTVFull();
+  // Mesh lines to center
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1', x); line.setAttribute('y1', y);
+  line.setAttribute('x2', 0); line.setAttribute('y2', 0);
+  line.setAttribute('stroke', i % 3 === 0 ? 'rgba(122,92,240,0.2)' : 'rgba(200,164,74,0.08)');
+  line.setAttribute('stroke-width', '0.5');
+  meshG.appendChild(line);
 });
 
-// ═══ SYNC UI ═══
-function syncUI(){
-  const seg=RUNDOWN[S.rundownIdx];
-  ge('seg-label').textContent="SEG "+seg.id+": "+seg.label;
-  ge('seg-timer').textContent=S.autoAdvance&&S.broadcastOn?" · "+Math.max(0,10-S.segTimer).toFixed(0)+"s":"";
-  ge('seg-timer').style.color=S.segTimer>8?'#d44':'#468';
-  const badge=ge('badge');badge.className=S.broadcastOn?'live':'off';badge.querySelector('.dot').className=S.broadcastOn?'dot on':'dot off';badge.querySelector('span').textContent=S.broadcastOn?'ON AIR':'STANDBY';
-  ge('st-cam').textContent="C"+(S.liveCam+1);ge('st-cam').style.color=S.broadcastOn?'#6af':'#445';
-  ge('st-auto').textContent="AUTO"+(S.autoAdvance?"+":"-");ge('st-auto').style.color=S.autoAdvance?'#6f6':'#445';
-  ge('st-cut').textContent="CUT"+(S.autoCut?"+":"-");ge('st-cut').style.color=S.autoCut?'#fa6':'#445';
-  ge('st-bg').textContent="BG:"+S.backdropMode.slice(0,3).toUpperCase();
-  ge('st-spk').textContent="SPK:"+(S.speakerActive+1);
-  // Broadcast timer
-  const btEl=ge('st-bt');if(btEl)btEl.textContent=S.broadcastOn?fmtTime(S.broadcastTimer):"--:--";
-  // Cinematic indicator
-  const ciEl=ge('st-cin');if(ciEl){ciEl.textContent=S.cinematic?"CIN+":"";ciEl.style.color=S.cinematic?"#f6a":"#445";}
-  // Dynamic button highlights
-  const s=(id,on)=>{const el=ge(id);if(el)el.classList.toggle('on',on);};
-  s('btn-auto',S.autoAdvance);
-  s('btn-cut',S.autoCut);
-  s('btn-live',S.broadcastOn);
-  [0,1,2,3].forEach(i=>s('btn-cam'+i,S.liveCam===i));
-  RUNDOWN.forEach((_,i)=>s('btn-seg'+i,S.rundownIdx===i));
-  s('btn-cin',S.cinematic);
+// Connect adjacent nodes
+for (let i = 0; i < points.length; i++) {
+  const next = (i + 1) % points.length;
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1', points[i][0]); line.setAttribute('y1', points[i][1]);
+  line.setAttribute('x2', points[next][0]); line.setAttribute('y2', points[next][1]);
+  line.setAttribute('stroke', 'rgba(200,164,74,0.18)');
+  line.setAttribute('stroke-width', '0.5');
+  meshG.appendChild(line);
 }
 
-// ═══ BUILD UI ═══
-function buildUI(){
-  // Row 1: presets
-  const r1=ge('row-presets');
-  PRESETS.forEach((p,i)=>{const b=document.createElement('button');b.className='btn'+(i===0?' on':'');b.textContent=p.n;b.dataset.idx=i;b.onclick=()=>{document.querySelectorAll('#row-presets .btn').forEach(b2=>b2.classList.remove('on'));b.classList.add('on');setPreset(i);};r1.appendChild(b);});
-  const spacer=()=>{const d=document.createElement('div');d.style.marginLeft='auto';d.style.display='flex';d.style.gap='3px';return d;};
-  const right1=spacer();
-  [{t:'SPIN',f:()=>{S.autoRotate=!S.autoRotate;log("ROTATE: "+(S.autoRotate?"ON":"OFF"));}},{t:'PiP',f:togglePip},{t:'TV',f:toggleTVFull},{t:'SNAP',f:takeScreenshot},{t:'FULL',f:toggleFullscreen},{t:'+',f:()=>{orbit.r=Math.max(2,orbit.r/1.15);}},{t:'-',f:()=>{orbit.r=Math.min(35,orbit.r*1.15);}},{t:'HIDE',f:toggleUI}].forEach(({t,f})=>{const b=document.createElement('button');b.className='btn';b.textContent=t;b.onclick=f;right1.appendChild(b);});
-  r1.appendChild(right1);
+// Animated scan arc
+const scanArc = document.getElementById('scanArc');
+let scanAngle = 0;
+function animScan() {
+  const a = (scanAngle % 360) * Math.PI / 180 - Math.PI/2;
+  const x = Math.cos(a) * 180;
+  const y = Math.sin(a) * 180;
+  const x0 = Math.cos(a - 0.6) * 180;
+  const y0 = Math.sin(a - 0.6) * 180;
+  scanArc.setAttribute('d', `M 0 0 L ${x0} ${y0} A 180 180 0 0 1 ${x} ${y} Z`);
+  scanArc.setAttribute('fill', 'rgba(200,164,74,0.03)');
+  scanArc.setAttribute('stroke', 'rgba(200,164,74,0.4)');
+  scanAngle += 0.5;
+  requestAnimationFrame(animScan);
+}
+animScan();
 
-  // Row 2: production
-  const r2=ge('row-prod');
-  [{t:'NEXT',id:'btn-next',f:()=>advanceSegment()},{t:'AUTO',id:'btn-auto',f:()=>{S.autoAdvance=!S.autoAdvance;S.segTimer=0;log("AUTO: "+(S.autoAdvance?"ON":"OFF"));holoFire("AUTO_ADVANCE_TOGGLE",["auto→"+(S.autoAdvance?"on":"off")]);}},{t:'CUT',id:'btn-cut',f:()=>{S.autoCut=!S.autoCut;log("CUT: "+(S.autoCut?"ON":"OFF"));holoFire("AUTO_CUT_TOGGLE",["cut→"+(S.autoCut?"on":"off")]);}},{t:'LIVE',id:'btn-live',f:toggleBroadcast}].forEach(({t,id,f})=>{const b=document.createElement('button');b.className='btn';b.id=id;b.textContent=t;b.onclick=f;r2.appendChild(b);});
-  r2.appendChild(Object.assign(document.createElement('div'),{className:'sep'}));
-  [0,1,2,3].forEach(i=>{const b=document.createElement('button');b.className='btn'+(i===0?' on':'');b.id='btn-cam'+i;b.textContent='C'+(i+1);b.onclick=()=>switchCam(i);r2.appendChild(b);});
-  r2.appendChild(Object.assign(document.createElement('div'),{className:'sep'}));
-  [{t:'BG',id:'btn-bg',f:cycleBackdrop},{t:'LIGHT',id:'btn-light',f:cycleLightPreset},{t:'GS',id:'btn-gs',f:cycleGreenScreen},{t:'CINEMA',id:'btn-cin',f:toggleCinematic},{t:'UNDO',id:'btn-undo',f:undo},{t:'?',id:'btn-help',f:toggleHelp}].forEach(({t,id,f})=>{const b=document.createElement('button');b.className='btn';b.id=id;b.textContent=t;b.onclick=f;r2.appendChild(b);});
+// Spin ring
+const spinRing = document.getElementById('spinRing');
+let spinA = 0;
+function animSpin() {
+  spinRing.setAttribute('transform', `rotate(${spinA})`);
+  spinA += 0.15;
+  requestAnimationFrame(animSpin);
+}
+animSpin();
 
-  // Row 3: segment jump
-  const r3=ge('row-extra');
-  const segLabel=document.createElement('span');segLabel.style.cssText='color:var(--text-dim);font-size:7px;flex-shrink:0';segLabel.textContent='JUMP:';r3.appendChild(segLabel);
-  RUNDOWN.forEach((s,i)=>{const b=document.createElement('button');b.className='btn';b.id='btn-seg'+i;b.textContent=s.id;b.onclick=()=>advanceSegment(i);r3.appendChild(b);});
-
-  // Ticker input
-  ge('ticker-input').addEventListener('input',e=>{S.headline=e.target.value;ge('ticker-clr').style.display=S.headline?'block':'none';if(S.headline.length===1||S.headline.length===0)holoFire("HEADLINE_SET",["text→"+(S.headline||"clear")]);});
-
-  // Event listeners on canvas
-  const c=renderer.domElement;
-  // Pointer events (mouse / stylus)
-  c.addEventListener('pointerdown',onPointerDown);
-  c.addEventListener('pointermove',onPointerMove);
-  c.addEventListener('pointerup',onPointerUp);
-  c.addEventListener('pointerleave',()=>{dragging=false;});
-  // Touch events (pinch zoom needs raw touch)
-  c.addEventListener('touchstart',onTouchStart,{passive:false});
-  c.addEventListener('touchmove',onTouchMove,{passive:false});
-  c.addEventListener('touchend',onTouchEnd,{passive:false});
-  // Wheel
-  c.addEventListener('wheel',onWheel,{passive:false});
-
-  // Resize handler — also handles fullscreen changes
-  const handleResize=()=>{
-    const w=window.innerWidth,h=window.innerHeight;
-    camera.aspect=w/h;camera.updateProjectionMatrix();
-    renderer.setSize(w,h);
-    // Resize TV canvas if active
-    if(S.tvFull){const tvC=ge('tv-canvas');tvC.width=Math.min(1920,w*2);tvC.height=Math.min(1080,h*2);}
-  };
-  window.addEventListener('resize',handleResize);
-  document.addEventListener('fullscreenchange',handleResize);
-  document.addEventListener('webkitfullscreenchange',handleResize);
+// Tick marks for fidel rows
+const tG = document.getElementById('ticks');
+for (let i = 0; i < 34; i++) {
+  const a = (i / 34) * Math.PI * 2 - Math.PI/2;
+  const inner = 225, outer = i % 8 === 0 ? 240 : 232;
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1', Math.cos(a)*inner); line.setAttribute('y1', Math.sin(a)*inner);
+  line.setAttribute('x2', Math.cos(a)*outer); line.setAttribute('y2', Math.sin(a)*outer);
+  line.setAttribute('stroke', i % 8 === 0 ? 'rgba(200,164,74,0.6)' : 'rgba(200,164,74,0.2)');
+  line.setAttribute('stroke-width', i % 8 === 0 ? '1.5' : '0.5');
+  tG.appendChild(line);
 }
 
-// GO
-function launchStudio(){
-  initAudio();
-  // Hide launch overlay
-  ge('launch').style.display='none';
-  // Show all UI
-  ge('badge').style.display='flex';
-  ge('title').style.display='block';
-  ge('status').style.display='flex';
-  ge('ui').style.display='block';
-  // Auto-hide UI after 5 seconds (cancellable)
-  autoHideTimer=setTimeout(()=>{
-    if(S.showUI&&!S.tvFull){
-      S.showUI=false;
-      ge('ui').classList.add('hidden');
-      const btn=ge('show-ui');btn.style.display='block';btn.classList.add('blink');
+// ── Fidel Grid (first 5 rows of 34) ──
+const fidels = [
+  ['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ','ሇ'],
+  ['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ','ሏ'],
+  ['ሐ','ሑ','ሒ','ሓ','ሔ','ሕ','ሖ','ሗ'],
+  ['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ','ሟ'],
+  ['ሠ','ሡ','ሢ','ሣ','ሤ','ሥ','ሦ','ሧ'],
+];
+// Row 17 (vowels) — mark differently
+const vowels = ['ኧ','ኡ','ኢ','ኣ','ኤ','እ','ኦ','አ'];
+const grid = document.getElementById('fidelGrid');
+fidels.forEach((row, ri) => {
+  row.forEach((f, ci) => {
+    const cell = document.createElement('div');
+    cell.className = 'fidel-cell';
+    cell.textContent = f;
+    // Tooltip
+    cell.title = `f[${ri+1}][${ci+1}] — Row ${ri+1}, Col ${ci+1}`;
+    grid.appendChild(cell);
+  });
+});
+// Show vowel row
+vowels.forEach((f, ci) => {
+  const cell = document.createElement('div');
+  cell.className = 'fidel-cell vowel';
+  cell.textContent = f;
+  cell.title = `Vowel f[17][${ci+1}]`;
+  grid.appendChild(cell);
+});
+
+// ── Manifesto scroll reveal ──
+const mLines = document.querySelectorAll('.manifesto-line');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = Array.from(mLines).indexOf(e.target);
+      setTimeout(() => e.target.classList.add('visible'), idx * 150);
     }
-    autoHideTimer=null;
-  },5000);
-  // Enter fullscreen
-  const el=document.documentElement;
-  try{
-    if(el.requestFullscreen)el.requestFullscreen();
-    else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
-  }catch(e){}
-  // Resize after fullscreen settles
-  setTimeout(()=>{const w=window.innerWidth,h=window.innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);},300);
-}
-init();
+  });
+}, { threshold: 0.3 });
+mLines.forEach(l => observer.observe(l));
+
+// ── Pillar scroll reveal ──
+const pillars = document.querySelectorAll('.pillar, .phase-card, .eco-card');
+const obs2 = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '0';
+      e.target.style.transform = 'translateY(20px)';
+      e.target.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      setTimeout(() => {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }, 80);
+      obs2.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+pillars.forEach(p => { p.style.opacity = '0'; obs2.observe(p); });
 </script>
 </body>
 </html>
