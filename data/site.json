@@ -13,12 +13,12 @@
     {
       "label": "Governance",
       "title": "Claims tied to evidence",
-      "summary": "Public claims are separated into proof-safe repositories, private incubation, planned domains, and operational interfaces."
+      "summary": "Public claims are separated into the deployed website, private incubation, planned domains, and operational interfaces."
     },
     {
       "label": "Structure",
       "title": "Content is data-backed",
-      "summary": "Proof repository cards, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records."
+      "summary": "Deployment card, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records."
     },
     {
       "label": "Evolution",
@@ -174,7 +174,7 @@
   "repositoryHandoff": {
     "label": "Lineage handoff",
     "title": "Registry state feeds release state.",
-    "summary": "A private incubation project becomes public only when its repository, proof surface, docs route, and demo boundary are attached.",
+    "summary": "A private incubation project becomes a public repository only when its proof surface, docs route, and demo boundary are attached.",
     "steps": [
       "Repository",
       "Proof",
@@ -186,7 +186,7 @@
     {
       "step": "01",
       "title": "Register",
-      "summary": "Add or revise a public proof-surface record in the structured registry."
+      "summary": "Add or revise a deployed public-surface record in the structured registry."
     },
     {
       "step": "02",

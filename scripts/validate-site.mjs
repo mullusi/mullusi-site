@@ -36,7 +36,7 @@ const requiredFiles = [
   "scripts/verify-registry-repos.mjs",
 ];
 
-const allowedSystemStatuses = new Set(["active", "public", "live demo", "research"]);
+const allowedSystemStatuses = new Set(["active", "public", "live demo", "research", "deployed"]);
 const allowedFutureStatuses = new Set(["planned"]);
 const allowedInterfaceStatuses = new Set(["public route", "experimental", "reserved"]);
 const allowedPublicRepoOwners = new Set(["mullusi"]);

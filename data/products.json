@@ -3,7 +3,7 @@
     "name": "Mullusi",
     "domain": "mullusi.com",
     "version": "2026.05.public-site",
-    "description": "Public repository and roadmap registry for Mullusi Symbolic Intelligence."
+    "description": "Public deployment and roadmap registry for Mullusi Symbolic Intelligence."
   },
   "principles": [
     "Symbols are atomic.",
@@ -14,22 +14,13 @@
   ],
   "systems": [
     {
-      "name": "Mullusi Foundation",
-      "repo": "mullusi/mullusi-foundation",
-      "href": "https://github.com/mullusi/mullusi-foundation",
-      "category": "Foundation",
-      "status": "public",
-      "summary": "Public symbolic foundation, governance principles, causality notes, semantics, and release-safe research framing.",
-      "tags": ["foundation", "governance", "semantics", "proof"]
-    },
-    {
-      "name": "Mullusi Core",
-      "repo": "mullusi/mullusi-core",
-      "href": "https://github.com/mullusi/mullusi-core",
-      "category": "Core",
-      "status": "research",
-      "summary": "Early public kernel surface for symbolic execution, type structure, and expression evaluation. Not a finished product contract.",
-      "tags": ["kernel", "types", "evaluator", "research"]
+      "name": "Mullusi Website",
+      "repo": "mullusi/mullusi-site",
+      "href": "https://github.com/mullusi/mullusi-site",
+      "category": "Website",
+      "status": "deployed",
+      "summary": "Public index page, GitHub Pages deployment, domain boundary, and website registry for Mullusi.",
+      "tags": ["website", "index", "github-pages", "public-boundary"]
     }
   ],
   "futureDomains": [
@@ -78,6 +69,12 @@
   ],
   "privateIncubation": [
     {
+      "name": "Foundation and core kernels",
+      "visibility": "private",
+      "summary": "Symbolic foundation, execution kernels, semantics, causality, proof principles, and Mfidel grounding stay private until they have stable public contracts.",
+      "publishGate": "Public only after README, license, examples, test evidence, release scope, and product-readiness boundary are complete."
+    },
+    {
       "name": "Governance runtime and control plane",
       "visibility": "private",
       "summary": "Operational routing, approvals, traces, budgets, deployments, and dashboard state remain private until contracts are stable.",
@@ -106,6 +103,12 @@
       "visibility": "private",
       "summary": "Compiler, token, machine-language, and causal-chain experiments stay private until the semantics are bounded and documented.",
       "publishGate": "Public only after spec, examples, failure modes, and compatibility commitments are written."
+    },
+    {
+      "name": "Token, fold, traversal, and reasoning experiments",
+      "visibility": "private",
+      "summary": "Deep symbolic experiments stay private while the research boundary, data limits, and demonstration path are not yet release-safe.",
+      "publishGate": "Public only after frozen snapshot, reproducible examples, documented limits, and explicit non-product status are present."
     }
   ]
 }

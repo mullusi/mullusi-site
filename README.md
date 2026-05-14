@@ -34,23 +34,23 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 
 ## Public registry contract
 
-`data/products.json` is the public source of truth for proof-safe repository cards and staged roadmap records.
+`data/products.json` is the public source of truth for deployed public-surface cards and staged roadmap records.
 
-Each public repository entry should use:
+Each public repository entry should represent a deployed public surface:
 
 ```json
 {
-  "name": "Mullusi Core",
-  "repo": "mullusi/mullusi-core",
-  "href": "https://github.com/mullusi/mullusi-core",
-  "category": "Core",
-  "status": "public",
+  "name": "Mullusi Website",
+  "repo": "mullusi/mullusi-site",
+  "href": "https://github.com/mullusi/mullusi-site",
+  "category": "Website",
+  "status": "deployed",
   "summary": "Short visitor-facing description.",
-  "tags": ["engine", "symbolic"]
+  "tags": ["website", "public-boundary"]
 }
 ```
 
-Future products use `futureDomains` until the repository exists:
+Future products use `futureDomains` until the repository and product surface are ready:
 
 ```json
 {
@@ -62,7 +62,7 @@ Future products use `futureDomains` until the repository exists:
 }
 ```
 
-Private repositories are intentionally excluded from `systems`. Add a repository there only when it is safe for public exposure, reachable without authentication, and supported by public-safe claims.
+Private repositories are intentionally excluded from `systems`. Add a repository there only when it is deployed, safe for public exposure, reachable without authentication, and supported by public-safe claims.
 
 Use `futureDomains` for planned domain engines and `privateIncubation` for public-safe descriptions of work that must remain private. Do not list private repository slugs, internal routes, credentials, deployment details, or unfinished product claims in the public registry.
 
@@ -131,7 +131,7 @@ node scripts/validate-site.mjs
 
 The validation script checks required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, public-safe text, and secret-like patterns.
 
-When product registry exposure changes, also verify that listed GitHub repositories are public and reachable:
+When registry exposure changes, also verify that listed GitHub repositories are public and reachable:
 
 ```bash
 node scripts/verify-registry-repos.mjs
@@ -139,7 +139,7 @@ node scripts/verify-registry-repos.mjs
 
 ## Update rule
 
-When a new product repository is ready for public exposure, update only `data/products.json` first. The page will render the new card automatically.
+When a new product repository is ready for public exposure, update only `data/products.json` first. The page will render the new card automatically. Until then, keep it in private incubation language or `futureDomains`.
 
 Recommended public domain repo names:
 

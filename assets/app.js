@@ -332,11 +332,11 @@ function renderStats() {
   if (!target || !state.registry) return;
   const products = state.registry.systems || [];
   const categories = new Set(products.map((item) => item.category)).size;
-  const science = products.filter((item) => item.category === "Science").length;
+  const productRepos = products.filter((item) => item.category !== "Website").length;
   target.innerHTML = `
-    <div><div class="k">${products.length}</div><div class="l">Public proof repos</div></div>
+    <div><div class="k">${products.length}</div><div class="l">Deployed public repos</div></div>
     <div><div class="k">${categories}</div><div class="l">Categories</div></div>
-    <div><div class="k">${science}</div><div class="l">Public science repos</div></div>
+    <div><div class="k">${productRepos}</div><div class="l">Public product repos</div></div>
   `;
   revealRendered(target);
 }
