@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "name": "Mullusi",
+    "version": "2026.05.site-content",
+    "purpose": "Structured public website content for Mullusi."
+  },
+  "proofLanes": [
+    {
+      "label": "Identity",
+      "title": "Immutable public boundary",
+      "summary": "Mullusi is presented as one governed system across website, docs, repositories, sandbox, metrics, and public contact paths."
+    },
+    {
+      "label": "Governance",
+      "title": "Claims tied to evidence",
+      "summary": "Public claims are separated into products, research surfaces, planned domains, and operational interfaces."
+    },
+    {
+      "label": "Structure",
+      "title": "Content is data-backed",
+      "summary": "Repository cards, domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records."
+    },
+    {
+      "label": "Evolution",
+      "title": "Expansion without redesign",
+      "summary": "New repositories and domains can enter the public site through data updates before they need dedicated pages."
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "Docs",
+      "href": "https://docs.mullusi.com",
+      "summary": "Reference material, architecture notes, and public learning paths.",
+      "status": "public route"
+    },
+    {
+      "name": "Sandbox",
+      "href": "https://sandbox.mullusi.com",
+      "summary": "Experimental surface for governed demonstrations and prototypes.",
+      "status": "experimental"
+    },
+    {
+      "name": "API",
+      "href": "https://api.mullusi.com",
+      "summary": "Public gateway reserved for service contracts and machine-facing endpoints.",
+      "status": "reserved"
+    },
+    {
+      "name": "Metrics",
+      "href": "https://metrics.mullusi.com",
+      "summary": "Evidence plane reserved for runtime metrics, audits, graphs, and release witnesses.",
+      "status": "reserved"
+    }
+  ],
+  "releaseStages": [
+    {
+      "step": "01",
+      "title": "Register",
+      "summary": "Add or revise a public product record in the structured registry."
+    },
+    {
+      "step": "02",
+      "title": "Attach",
+      "summary": "Connect repository, docs, demo, proof, status, and contact routes."
+    },
+    {
+      "step": "03",
+      "title": "Verify",
+      "summary": "Confirm claims, accessibility, local rendering, and public boundary constraints."
+    },
+    {
+      "step": "04",
+      "title": "Publish",
+      "summary": "Expose the product surface without changing the website architecture."
+    }
+  ]
+}

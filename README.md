@@ -13,6 +13,7 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 |-- robots.txt                         # Crawl policy
 |-- sitemap.xml                        # Search sitemap
 |-- data/products.json                 # Product/repository registry
+|-- data/site.json                     # Structured public site content
 |-- assets/
 |   |-- app.js                         # Repo search/filter renderer
 |   |-- styles.css                     # Full visual system

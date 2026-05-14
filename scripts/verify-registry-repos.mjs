@@ -7,6 +7,7 @@ Invariants: every listed system repository must resolve, remain public, and matc
 
 import fs from "node:fs";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
@@ -56,6 +57,10 @@ async function fetchRepo(repo) {
   });
 
   if (!response.ok) {
+    const ghResult = fetchRepoWithGh(repo);
+    if (ghResult.ok) {
+      return ghResult;
+    }
     return {
       ok: false,
       repo,
@@ -69,6 +74,29 @@ async function fetchRepo(repo) {
     repo,
     isPrivate: body.private,
     htmlUrl: body.html_url,
+  };
+}
+
+function fetchRepoWithGh(repo) {
+  const result = spawnSync("gh", ["repo", "view", repo, "--json", "visibility,url"], {
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+
+  if (result.status !== 0 || !result.stdout) {
+    return {
+      ok: false,
+      repo,
+      status: "gh_unavailable",
+    };
+  }
+
+  const body = JSON.parse(result.stdout);
+  return {
+    ok: true,
+    repo,
+    isPrivate: body.visibility !== "PUBLIC",
+    htmlUrl: body.url,
   };
 }
 

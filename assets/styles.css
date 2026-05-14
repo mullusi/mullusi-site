@@ -6,6 +6,8 @@
   --panel-2: #131723;
   --line: rgba(232, 197, 108, 0.16);
   --line-2: rgba(255, 255, 255, 0.09);
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-strong: rgba(255, 255, 255, 0.06);
   --gold: #e8c56c;
   --gold-2: #a5792c;
   --green: #60e8b8;
@@ -64,6 +66,13 @@ body::after {
 img, svg { max-width: 100%; display: block; }
 
 a { color: inherit; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(232, 197, 108, 0.86);
+  outline-offset: 4px;
+}
 
 code {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -205,6 +214,15 @@ code {
 
 .solid-link:hover,
 .button.primary:hover { transform: translateY(-1px); }
+
+.button,
+.ghost-link,
+.solid-link,
+.filter-button,
+.repo-link,
+.interface-card a {
+  min-width: 2.75rem;
+}
 
 .menu-toggle {
   display: none;
@@ -398,6 +416,36 @@ h3 {
   flex-wrap: wrap;
   gap: 0.85rem;
   margin-top: 2rem;
+}
+
+.hero-snapshot {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  max-width: 670px;
+  margin: 1.2rem 0 0;
+}
+
+.hero-snapshot div {
+  padding: 0.8rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.hero-snapshot dt {
+  color: var(--faint);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hero-snapshot dd {
+  margin: 0.25rem 0 0;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 800;
 }
 
 .hero-proof {
@@ -705,6 +753,8 @@ h3 {
 .spine-list span { color: var(--muted); line-height: 1.55; }
 
 .product-families,
+.evidence-grid,
+.interface-grid,
 .science-grid,
 .repo-grid {
   display: grid;
@@ -715,7 +765,14 @@ h3 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.evidence-grid,
+.interface-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .product-families article,
+.evidence-card,
+.interface-card,
 .science-card,
 .repo-card,
 .timeline-item {
@@ -727,12 +784,58 @@ h3 {
 }
 
 .product-families article:hover,
+.evidence-card:hover,
+.interface-card:hover,
 .science-card:hover,
 .repo-card:hover,
 .timeline-item:hover {
   transform: translateY(-3px);
   border-color: var(--line);
   background: linear-gradient(180deg, rgba(23, 28, 42, 0.9), rgba(14, 17, 26, 0.74));
+}
+
+.evidence-card,
+.interface-card {
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+}
+
+.evidence-card span,
+.interface-card span {
+  color: var(--green);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+.evidence-card p,
+.interface-card p {
+  flex: 1;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.interface-card a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  margin-top: 1rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.interface-card a:hover {
+  border-color: var(--line);
+  background: rgba(232, 197, 108, 0.06);
 }
 
 .family-icon {
@@ -1025,6 +1128,8 @@ h3 {
     max-width: 240px;
   }
   .product-families,
+  .evidence-grid,
+  .interface-grid,
   .science-grid,
   .repo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .repo-toolbar { align-items: stretch; flex-direction: column; }
@@ -1046,10 +1151,14 @@ h3 {
     padding: 7rem 1.25rem 4.5rem;
   }
   .hero-copy,
+  .hero-snapshot,
   .hero-proof,
   .status-panel {
     width: 100%;
     max-width: 320px;
+  }
+  .hero-snapshot {
+    grid-template-columns: 1fr;
   }
   .hero-lede {
     font-size: 0.98rem;
@@ -1064,6 +1173,8 @@ h3 {
     letter-spacing: 0.08em;
   }
   .product-families,
+  .evidence-grid,
+  .interface-grid,
   .science-grid,
   .repo-grid,
   .repo-stats,

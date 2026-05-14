@@ -10,9 +10,26 @@
   <meta property="og:description" content="Governed symbolic intelligence, deterministic causal chains, and domain engines for science, software, and future repositories." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mullusi.com" />
+  <meta name="twitter:card" content="summary" />
   <link rel="canonical" href="https://mullusi.com" />
   <link rel="icon" href="assets/mullusi-mark.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="assets/styles.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Mullusi",
+      "url": "https://mullusi.com",
+      "logo": "https://mullusi.com/assets/mullusi-mark.svg",
+      "email": "hello@mullusi.com",
+      "sameAs": [
+        "https://github.com/mullusi",
+        "https://docs.mullusi.com",
+        "https://sandbox.mullusi.com",
+        "https://metrics.mullusi.com"
+      ]
+    }
+  </script>
   <script defer src="assets/app.js"></script>
 </head>
 <body>
@@ -28,9 +45,9 @@
     <nav class="nav" aria-label="Primary navigation">
       <a href="#architecture">Architecture</a>
       <a href="#products">Products</a>
+      <a href="#evidence">Evidence</a>
       <a href="#sciences">Science Engines</a>
       <a href="#repos">Repos</a>
-      <a href="#roadmap">Roadmap</a>
     </nav>
 
     <div class="header-actions">
@@ -45,9 +62,9 @@
   <div class="mobile-menu" data-mobile-menu hidden>
     <a href="#architecture">Architecture</a>
     <a href="#products">Products</a>
+    <a href="#evidence">Evidence</a>
     <a href="#sciences">Science Engines</a>
     <a href="#repos">Repos</a>
-    <a href="#roadmap">Roadmap</a>
     <a href="https://docs.mullusi.com" rel="noopener">Docs</a>
     <a href="https://github.com/mullusi" rel="noopener">GitHub</a>
   </div>
@@ -74,8 +91,13 @@
         </p>
         <div class="hero-actions-row">
           <a class="button primary" href="#products">View product graph</a>
-          <a class="button secondary" href="#repos">Explore repositories</a>
+          <a class="button secondary" href="#evidence">Review evidence plane</a>
         </div>
+        <dl class="hero-snapshot" aria-label="Mullusi public surface snapshot">
+          <div><dt>Registry</dt><dd data-public-product-count>22 public products</dd></div>
+          <div><dt>Domains</dt><dd data-domain-count>5 staged engines</dd></div>
+          <div><dt>Boundary</dt><dd>Public claims only</dd></div>
+        </dl>
         <div class="hero-proof" aria-label="Symbolic formula">
           <code>𝕊 := ⟨ Ι, Λ, Σ, Γ, H ⟩</code>
           <span>Σ changes only through validated edits. H preserves causal continuity.</span>
@@ -129,6 +151,20 @@
       </div>
     </section>
 
+    <section class="section evidence-section" id="evidence" aria-labelledby="evidence-title">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Evidence Plane</p>
+        <h2 id="evidence-title">Public claims stay attached to structure, source, and release state.</h2>
+        <p>Each future page should be able to answer: what exists, where it lives, how it is governed, and what remains planned.</p>
+      </div>
+      <div class="evidence-grid reveal" data-proof-lanes>
+        <article class="evidence-card"><span>Identity</span><h3>Immutable public boundary</h3><p>Mullusi is presented as one governed system across website, docs, repositories, sandbox, metrics, and contact paths.</p></article>
+        <article class="evidence-card"><span>Governance</span><h3>Claims tied to evidence</h3><p>Public claims are separated into products, research surfaces, planned domains, and operational interfaces.</p></article>
+        <article class="evidence-card"><span>Structure</span><h3>Content is data-backed</h3><p>Repository cards, domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records.</p></article>
+        <article class="evidence-card"><span>Evolution</span><h3>Expansion without redesign</h3><p>New repositories and domains can enter the public site through data updates before they need dedicated pages.</p></article>
+      </div>
+    </section>
+
     <section class="section two-col" id="architecture">
       <div class="section-copy reveal">
         <p class="eyebrow">Architecture</p>
@@ -145,6 +181,20 @@
           <li><strong>Detect Conflicts</strong><span>Expose unresolved claims, missing evidence, unsafe transitions, and naming risk.</span></li>
           <li><strong>Settle Judgment</strong><span>Publish only stable meaning, action, repository, demo, or roadmap state.</span></li>
         </ol>
+      </div>
+    </section>
+
+    <section class="section interface-section" aria-labelledby="interfaces-title">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Interfaces</p>
+        <h2 id="interfaces-title">The public surface is organized as routes, not one-off pages.</h2>
+        <p>Interface links are treated as managed records so new public routes can be added without reworking the layout.</p>
+      </div>
+      <div class="interface-grid reveal" data-interface-links>
+        <article class="interface-card"><span>public route</span><h3>Docs</h3><p>Reference material, architecture notes, and public learning paths.</p><a href="https://docs.mullusi.com" rel="noopener">Open Docs</a></article>
+        <article class="interface-card"><span>experimental</span><h3>Sandbox</h3><p>Experimental surface for governed demonstrations and prototypes.</p><a href="https://sandbox.mullusi.com" rel="noopener">Open Sandbox</a></article>
+        <article class="interface-card"><span>reserved</span><h3>API</h3><p>Public gateway reserved for service contracts and machine-facing endpoints.</p><a href="https://api.mullusi.com" rel="noopener">Open API</a></article>
+        <article class="interface-card"><span>reserved</span><h3>Metrics</h3><p>Evidence plane reserved for runtime metrics, audits, graphs, and release witnesses.</p><a href="https://metrics.mullusi.com" rel="noopener">Open Metrics</a></article>
       </div>
     </section>
 
@@ -235,11 +285,11 @@
           <a class="button secondary" href="https://sandbox.mullusi.com" rel="noopener">Open sandbox</a>
         </div>
       </div>
-      <div class="timeline reveal">
-        <div class="timeline-item"><span>01</span><strong>Normalize repository registry</strong><p>Keep <code>data/products.json</code> as the public contract between GitHub and the site.</p></div>
-        <div class="timeline-item"><span>02</span><strong>Attach demos and docs</strong><p>Each product card gets demo, docs, status, proof, and changelog links when ready.</p></div>
-        <div class="timeline-item"><span>03</span><strong>Launch domain engines</strong><p>Math, biology, chemistry, and music become first-class public product pages.</p></div>
-        <div class="timeline-item"><span>04</span><strong>Expose evidence plane</strong><p>Metrics, graphs, audits, and governance witnesses become public credibility surfaces.</p></div>
+      <div class="timeline reveal" data-release-stages>
+        <div class="timeline-item"><span>01</span><strong>Register</strong><p>Add or revise a public product record in the structured registry.</p></div>
+        <div class="timeline-item"><span>02</span><strong>Attach</strong><p>Connect repository, docs, demo, proof, status, and contact routes.</p></div>
+        <div class="timeline-item"><span>03</span><strong>Verify</strong><p>Confirm claims, accessibility, local rendering, and public boundary constraints.</p></div>
+        <div class="timeline-item"><span>04</span><strong>Publish</strong><p>Expose the product surface without changing the website architecture.</p></div>
       </div>
     </section>
 

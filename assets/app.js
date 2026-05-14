@@ -2,6 +2,7 @@ document.documentElement.classList.add('js-enabled');
 
 const state = {
   registry: null,
+  siteContent: null,
   activeCategory: 'All',
   query: ''
 };
@@ -37,6 +38,60 @@ function filteredProducts() {
     const categoryOk = state.activeCategory === 'All' || item.category === state.activeCategory;
     return categoryOk && matchesQuery(item, query);
   });
+}
+
+function renderSnapshot() {
+  if (!state.registry) return;
+  const products = state.registry.systems || [];
+  const futureDomains = state.registry.futureDomains || [];
+  const productTarget = qs('[data-public-product-count]');
+  const domainTarget = qs('[data-domain-count]');
+
+  if (productTarget) productTarget.textContent = `${products.length} public products`;
+  if (domainTarget) domainTarget.textContent = `${futureDomains.length} staged engines`;
+}
+
+function renderProofLanes() {
+  const target = qs('[data-proof-lanes]');
+  const lanes = state.siteContent?.proofLanes || [];
+  if (!target || !lanes.length) return;
+
+  target.innerHTML = lanes.map((lane) => `
+    <article class="evidence-card">
+      <span>${escapeHtml(lane.label)}</span>
+      <h3>${escapeHtml(lane.title)}</h3>
+      <p>${escapeHtml(lane.summary)}</p>
+    </article>
+  `).join('');
+}
+
+function renderInterfaceLinks() {
+  const target = qs('[data-interface-links]');
+  const interfaces = state.siteContent?.interfaces || [];
+  if (!target || !interfaces.length) return;
+
+  target.innerHTML = interfaces.map((item) => `
+    <article class="interface-card">
+      <span>${escapeHtml(item.status)}</span>
+      <h3>${escapeHtml(item.name)}</h3>
+      <p>${escapeHtml(item.summary)}</p>
+      <a href="${escapeAttribute(item.href)}" rel="noopener">Open ${escapeHtml(item.name)}</a>
+    </article>
+  `).join('');
+}
+
+function renderReleaseStages() {
+  const target = qs('[data-release-stages]');
+  const stages = state.siteContent?.releaseStages || [];
+  if (!target || !stages.length) return;
+
+  target.innerHTML = stages.map((stage) => `
+    <div class="timeline-item">
+      <span>${escapeHtml(stage.step)}</span>
+      <strong>${escapeHtml(stage.title)}</strong>
+      <p>${escapeHtml(stage.summary)}</p>
+    </div>
+  `).join('');
 }
 
 function renderFutureDomains() {
@@ -214,6 +269,12 @@ async function loadRegistry() {
   return response.json();
 }
 
+async function loadSiteContent() {
+  const response = await fetch('data/site.json', { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Site content load failed: ${response.status}`);
+  return response.json();
+}
+
 async function init() {
   bindHeader();
   bindMenu();
@@ -221,7 +282,17 @@ async function init() {
   bindSearch();
 
   try {
+    state.siteContent = await loadSiteContent();
+    renderProofLanes();
+    renderInterfaceLinks();
+    renderReleaseStages();
+  } catch (error) {
+    console.error(error);
+  }
+
+  try {
     state.registry = await loadRegistry();
+    renderSnapshot();
     renderFutureDomains();
     renderFilters();
     renderStats();

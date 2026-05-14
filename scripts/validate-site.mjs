@@ -23,11 +23,13 @@ const requiredFiles = [
   "assets/styles.css",
   "assets/mullusi-mark.svg",
   "data/products.json",
+  "data/site.json",
   "scripts/verify-registry-repos.mjs",
 ];
 
 const allowedSystemStatuses = new Set(["active", "public", "live demo", "research"]);
 const allowedFutureStatuses = new Set(["planned"]);
+const allowedInterfaceStatuses = new Set(["public route", "experimental", "reserved"]);
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
@@ -197,6 +199,52 @@ function validateProductRegistry() {
   }
 }
 
+function validateSiteContent() {
+  const content = JSON.parse(readUtf8("data/site.json"));
+  requireString(content?.meta?.name, "site.meta.name");
+  requireString(content?.meta?.version, "site.meta.version");
+  requireString(content?.meta?.purpose, "site.meta.purpose");
+
+  if (!Array.isArray(content.proofLanes) || content.proofLanes.length === 0) {
+    recordFailure("site_proof_lanes_missing");
+  } else {
+    for (const [index, lane] of content.proofLanes.entries()) {
+      const label = `site.proofLanes.${index}`;
+      requireString(lane.label, `${label}.label`);
+      requireString(lane.title, `${label}.title`);
+      requireString(lane.summary, `${label}.summary`);
+    }
+  }
+
+  if (!Array.isArray(content.interfaces) || content.interfaces.length === 0) {
+    recordFailure("site_interfaces_missing");
+  } else {
+    for (const [index, item] of content.interfaces.entries()) {
+      const label = `site.interfaces.${index}`;
+      const name = requireString(item.name, `${label}.name`);
+      const href = requireString(item.href, `${label}.href`);
+      requireString(item.summary, `${label}.summary`);
+      if (!allowedInterfaceStatuses.has(item.status)) {
+        recordFailure(`site_interface_status_invalid:${name}:${item.status}`);
+      }
+      if (!/^https:\/\/[a-z0-9.-]+\.mullusi\.com$/.test(href) && href !== "https://mullusi.com") {
+        recordFailure(`site_interface_href_invalid:${name}:${href}`);
+      }
+    }
+  }
+
+  if (!Array.isArray(content.releaseStages) || content.releaseStages.length === 0) {
+    recordFailure("site_release_stages_missing");
+  } else {
+    for (const [index, stage] of content.releaseStages.entries()) {
+      const label = `site.releaseStages.${index}`;
+      requireString(stage.step, `${label}.step`);
+      requireString(stage.title, `${label}.title`);
+      requireString(stage.summary, `${label}.summary`);
+    }
+  }
+}
+
 function validatePublicText() {
   const blockedPatterns = [
     new RegExp("\\b" + "artificial\\s+" + "intelligence\\b", "i"),
@@ -232,6 +280,7 @@ function runValidation() {
   validateSitemap();
   validateLocalLinks();
   validateProductRegistry();
+  validateSiteContent();
   validatePublicText();
 
   if (failures.length > 0) {
