@@ -1,21 +1,89 @@
-document.documentElement.classList.add('js-enabled');
+/*
+Purpose: render Mullusi structured public content and operate the symbolic canvas substrate.
+Governance scope: deterministic JSON rendering, safe link output, searchable public repository catalog, and visual substrate runtime.
+Dependencies: data/products.json, data/site.json, DOM canvas APIs, IntersectionObserver, and browser fetch.
+Invariants: untrusted JSON text is escaped, non-public links are blocked, registry failures surface visibly, and reduced motion is respected.
+*/
+
+document.documentElement.classList.add("js-enabled");
 
 const state = {
   registry: null,
   siteContent: null,
-  activeCategory: 'All',
-  query: ''
+  activeCategory: "All",
+  query: "",
 };
 
 const qs = (selector, root = document) => root.querySelector(selector);
 const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+const themeStorageKey = "mullusi-theme";
+
+function storedTheme() {
+  try {
+    return localStorage.getItem(themeStorageKey);
+  } catch (error) {
+    console.warn(error);
+    return null;
+  }
+}
+
+function preferredTheme() {
+  const stored = storedTheme();
+  if (stored === "light" || stored === "dark") return stored;
+  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function persistTheme(theme) {
+  try {
+    localStorage.setItem(themeStorageKey, theme);
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
+function applyTheme(theme, persist = true) {
+  const normalizedTheme = theme === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = normalizedTheme;
+  if (persist) persistTheme(normalizedTheme);
+
+  const themeMeta = qs('meta[name="theme-color"]');
+  if (themeMeta) themeMeta.setAttribute("content", normalizedTheme === "light" ? "#f6f3ea" : "#050609");
+
+  qsa("[data-theme-toggle]").forEach((toggle) => {
+    const nextTheme = normalizedTheme === "light" ? "dark" : "light";
+    toggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+    toggle.setAttribute("aria-pressed", String(normalizedTheme === "light"));
+  });
+
+  qsa("[data-theme-label]").forEach((label) => {
+    label.textContent = normalizedTheme === "light" ? "Dark" : "Light";
+  });
+
+  window.dispatchEvent(new CustomEvent("mullusi-theme-change", { detail: { theme: normalizedTheme } }));
+}
+
+function bindThemeToggle() {
+  applyTheme(preferredTheme(), false);
+
+  qsa("[data-theme-toggle]").forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      const activeTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+      applyTheme(activeTheme === "light" ? "dark" : "light");
+    });
+  });
+
+  window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
+    if (storedTheme()) return;
+    applyTheme(event.matches ? "light" : "dark", false);
+  });
+}
 
 function normalize(value) {
-  return String(value || '').toLowerCase().trim();
+  return String(value || "").toLowerCase().trim();
 }
 
 function categorySet(products) {
-  return ['All', ...Array.from(new Set(products.map((item) => item.category))).sort()];
+  return ["All", ...Array.from(new Set(products.map((item) => item.category))).sort()];
 }
 
 function matchesQuery(item, query) {
@@ -26,8 +94,8 @@ function matchesQuery(item, query) {
     item.category,
     item.status,
     item.summary,
-    ...(item.tags || [])
-  ].map(normalize).join(' ');
+    ...(item.tags || []),
+  ].map(normalize).join(" ");
   return haystack.includes(query);
 }
 
@@ -35,131 +103,257 @@ function filteredProducts() {
   const products = state.registry?.systems || [];
   const query = normalize(state.query);
   return products.filter((item) => {
-    const categoryOk = state.activeCategory === 'All' || item.category === state.activeCategory;
+    const categoryOk = state.activeCategory === "All" || item.category === state.activeCategory;
     return categoryOk && matchesQuery(item, query);
   });
+}
+
+function revealRendered(target) {
+  prepareLinks(target || document);
+  const revealTarget = target?.classList?.contains("reveal") ? target : target?.closest?.(".reveal");
+  if (revealTarget) revealTarget.classList.add("in");
+}
+
+function proofSymbol(label, index) {
+  const symbols = {
+    Identity: "Ι",
+    Governance: "Λ",
+    Structure: "Σ",
+    Evolution: "H",
+  };
+  return symbols[label] || ["Ι", "Λ", "Σ", "H"][index % 4];
+}
+
+function titleForDomain(domain) {
+  return String(domain.name || "")
+    .replace(/^Mullusi\s+/i, "")
+    .replace(/\s+Engine$/i, "")
+    .replace(/\s+Lab$/i, "");
 }
 
 function renderSnapshot() {
   if (!state.registry) return;
   const products = state.registry.systems || [];
   const futureDomains = state.registry.futureDomains || [];
-  const productTarget = qs('[data-public-product-count]');
-  const domainTarget = qs('[data-domain-count]');
+  const productTarget = qs("[data-public-product-count]");
+  const domainTarget = qs("[data-domain-count]");
 
-  if (productTarget) productTarget.textContent = `${products.length} public products`;
-  if (domainTarget) domainTarget.textContent = `${futureDomains.length} staged engines`;
+  if (productTarget) productTarget.textContent = String(products.length);
+  if (domainTarget) domainTarget.textContent = String(futureDomains.length);
 }
 
 function renderProofLanes() {
-  const target = qs('[data-proof-lanes]');
+  const target = qs("[data-proof-lanes]");
   const lanes = state.siteContent?.proofLanes || [];
   if (!target || !lanes.length) return;
 
-  target.innerHTML = lanes.map((lane) => `
-    <article class="evidence-card">
-      <span>${escapeHtml(lane.label)}</span>
+  target.innerHTML = lanes.map((lane, index) => `
+    <article class="card">
+      <span class="kind">${escapeHtml(lane.label)}</span>
+      <div class="ix">${escapeHtml(proofSymbol(lane.label, index))}</div>
       <h3>${escapeHtml(lane.title)}</h3>
       <p>${escapeHtml(lane.summary)}</p>
     </article>
-  `).join('');
+  `).join("");
+  revealRendered(target);
 }
 
 function renderInterfaceLinks() {
-  const target = qs('[data-interface-links]');
+  const target = qs("[data-interface-links]");
   const interfaces = state.siteContent?.interfaces || [];
   if (!target || !interfaces.length) return;
 
   target.innerHTML = interfaces.map((item) => `
-    <article class="interface-card">
-      <span>${escapeHtml(item.status)}</span>
+    <article class="route">
+      <span class="badge">${escapeHtml(item.status)}</span>
       <h3>${escapeHtml(item.name)}</h3>
       <p>${escapeHtml(item.summary)}</p>
-      <a href="${escapeAttribute(item.href)}" rel="noopener">Open ${escapeHtml(item.name)}</a>
+      <a class="lnk" href="${escapeAttribute(item.href)}" rel="noopener">Open ${escapeHtml(item.name)} -&gt;</a>
     </article>
-  `).join('');
+  `).join("");
+  revealRendered(target);
+}
+
+function renderServices() {
+  const target = qs("[data-service-grid]");
+  const services = state.siteContent?.services || [];
+  if (!target || !services.length) return;
+
+  target.innerHTML = services.map((service) => `
+    <article class="service">
+      <span class="badge">${escapeHtml(service.status)}</span>
+      <h3>${escapeHtml(service.name)}</h3>
+      <p>${escapeHtml(service.summary)}</p>
+      <dl>
+        <div>
+          <dt>Delivery</dt>
+          <dd>${escapeHtml(service.delivery)}</dd>
+        </div>
+        <div>
+          <dt>Proof surface</dt>
+          <dd>${escapeHtml(service.proofSurface)}</dd>
+        </div>
+      </dl>
+    </article>
+  `).join("");
+  revealRendered(target);
+}
+
+function renderServiceTiers() {
+  const target = qs("[data-service-tiers]");
+  const tiers = state.siteContent?.serviceTiers || [];
+  if (!target || !tiers.length) return;
+
+  target.innerHTML = tiers.map((tier) => `
+    <article class="service">
+      <span class="badge">${escapeHtml(tier.status)}</span>
+      <h3>${escapeHtml(tier.name)}</h3>
+      <p>${escapeHtml(tier.summary)}</p>
+      <dl>
+        <div>
+          <dt>Audience</dt>
+          <dd>${escapeHtml(tier.audience)}</dd>
+        </div>
+        <div>
+          <dt>Commercial signal</dt>
+          <dd>${escapeHtml(tier.priceSignal)}</dd>
+        </div>
+      </dl>
+    </article>
+  `).join("");
+  revealRendered(target);
+}
+
+function renderApiContracts() {
+  const target = qs("[data-api-contracts]");
+  const contracts = state.siteContent?.apiContracts || [];
+  if (!target || !contracts.length) return;
+
+  target.innerHTML = contracts.map((contract) => `
+    <article class="service contract">
+      <span class="badge">${escapeHtml(contract.status)}</span>
+      <h3>${escapeHtml(contract.name)}</h3>
+      <code>${escapeHtml(contract.route)}</code>
+      <p>${escapeHtml(contract.summary)}</p>
+      <dl>
+        <div>
+          <dt>Input</dt>
+          <dd>${escapeHtml(contract.input)}</dd>
+        </div>
+        <div>
+          <dt>Output</dt>
+          <dd>${escapeHtml(contract.output)}</dd>
+        </div>
+        <div>
+          <dt>Host</dt>
+          <dd>${escapeHtml(contract.host)}</dd>
+        </div>
+      </dl>
+    </article>
+  `).join("");
+  revealRendered(target);
 }
 
 function renderReleaseStages() {
-  const target = qs('[data-release-stages]');
+  const target = qs("[data-release-stages]");
   const stages = state.siteContent?.releaseStages || [];
   if (!target || !stages.length) return;
 
   target.innerHTML = stages.map((stage) => `
-    <div class="timeline-item">
-      <span>${escapeHtml(stage.step)}</span>
-      <strong>${escapeHtml(stage.title)}</strong>
+    <article class="rd">
+      <div class="n">${escapeHtml(stage.step)}</div>
+      <h3>${escapeHtml(stage.title)}</h3>
       <p>${escapeHtml(stage.summary)}</p>
+    </article>
+  `).join("");
+  revealRendered(target);
+}
+
+function renderRepositoryHandoff() {
+  const target = qs("[data-repository-handoff]");
+  const handoff = state.siteContent?.repositoryHandoff;
+  const steps = Array.isArray(handoff?.steps) ? handoff.steps : [];
+  if (!target || !handoff || steps.length === 0) return;
+
+  target.innerHTML = `
+    <div>
+      <span class="handoff-kicker">${escapeHtml(handoff.label)}</span>
+      <p><strong>${escapeHtml(handoff.title)}</strong> ${escapeHtml(handoff.summary)}</p>
     </div>
-  `).join('');
+    <div class="handoff-chain" aria-hidden="true">
+      ${steps.map((step) => `<span>${escapeHtml(step)}</span>`).join("")}
+    </div>
+  `;
+  revealRendered(target);
 }
 
 function renderFutureDomains() {
-  const target = qs('[data-future-domains]');
+  const target = qs("[data-future-domains]");
   if (!target || !state.registry) return;
 
-  const physics = {
-    name: 'Mullusi Physics Engine',
-    slug: 'physics',
-    plannedRepo: 'mullusi-physics-engine',
-    status: 'live demo',
-    summary: 'Existing symbolic causal physics hypothesis engine for regimes, axioms, bridges, open problems, and solver execution plans.'
-  };
+  const futureDomains = (state.registry.futureDomains || [])
+    .filter((domain) => ["math", "physics", "biology", "chemistry", "music"].includes(domain.slug));
+  const domainOrder = new Map(["math", "physics", "biology", "chemistry", "music"].map((slug, index) => [slug, index]));
+  const domains = [...futureDomains].sort((left, right) => {
+    return (domainOrder.get(left.slug) ?? 99) - (domainOrder.get(right.slug) ?? 99);
+  });
 
-  const domains = [physics, ...(state.registry.futureDomains || [])];
   target.innerHTML = domains.map((domain) => `
-    <article class="science-card">
-      <span class="science-slug">${escapeHtml(domain.slug)} · ${escapeHtml(domain.status)}</span>
-      <h3>${escapeHtml(domain.name)}</h3>
-      <p>${escapeHtml(domain.summary)}</p>
-      <span class="planned-repo">${escapeHtml(domain.plannedRepo)}</span>
-    </article>
-  `).join('');
+      <article class="eng">
+        <span class="st">Staged</span>
+        <h3>${escapeHtml(titleForDomain(domain))}</h3>
+        <p>${escapeHtml(domain.summary)}</p>
+      </article>
+    `).join("");
+  revealRendered(target);
 }
 
 function renderFilters() {
-  const target = qs('[data-repo-filters]');
+  const target = qs("[data-repo-filters]");
   if (!target || !state.registry) return;
   target.innerHTML = categorySet(state.registry.systems).map((category) => `
-    <button class="filter-button ${category === state.activeCategory ? 'active' : ''}" type="button" data-category="${escapeHtml(category)}">
+    <button class="filter-button ${category === state.activeCategory ? "active" : ""}" type="button" data-category="${escapeHtml(category)}">
       ${escapeHtml(category)}
     </button>
-  `).join('');
+  `).join("");
 
-  qsa('[data-category]', target).forEach((button) => {
-    button.addEventListener('click', () => {
-      state.activeCategory = button.dataset.category || 'All';
+  qsa("[data-category]", target).forEach((button) => {
+    button.addEventListener("click", () => {
+      state.activeCategory = button.dataset.category || "All";
       renderFilters();
       renderRepoGrid();
     });
   });
+  revealRendered(target);
 }
 
 function renderStats() {
-  const target = qs('[data-repo-stats]');
+  const target = qs("[data-repo-stats]");
   if (!target || !state.registry) return;
-  const products = state.registry.systems;
+  const products = state.registry.systems || [];
   const categories = new Set(products.map((item) => item.category)).size;
-  const science = products.filter((item) => item.category === 'Science').length;
+  const science = products.filter((item) => item.category === "Science").length;
   target.innerHTML = `
-    <div><strong>${products.length}</strong><span>Public products</span></div>
-    <div><strong>${categories}</strong><span>Categories</span></div>
-    <div><strong>${science}</strong><span>Science engines</span></div>
+    <div><div class="k">${products.length}</div><div class="l">Public proof repos</div></div>
+    <div><div class="k">${categories}</div><div class="l">Categories</div></div>
+    <div><div class="k">${science}</div><div class="l">Public science repos</div></div>
   `;
+  revealRendered(target);
 }
 
 function renderRepoGrid() {
-  const target = qs('[data-repo-grid]');
+  const target = qs("[data-repo-grid]");
   if (!target) return;
   const products = filteredProducts();
 
   if (!products.length) {
     target.innerHTML = `
-      <article class="repo-card">
+      <article class="repo-card empty-card">
         <div class="repo-card-head"><h3>No matching public repository</h3></div>
         <p>Adjust the search term or category filter. Planned domain engines are listed above.</p>
       </article>
     `;
+    revealRendered(target);
     return;
   }
 
@@ -172,56 +366,106 @@ function renderRepoGrid() {
       <span class="repo-name">${escapeHtml(item.repo)}</span>
       <p>${escapeHtml(item.summary)}</p>
       <div class="tag-row">
-        ${(item.tags || []).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+        ${(item.tags || []).map((tag) => `<span class="tag-pill">${escapeHtml(tag)}</span>`).join("")}
       </div>
-      <a class="repo-link" href="${escapeAttribute(item.href)}" rel="noopener">Open repository →</a>
+      <a class="repo-link" href="${escapeAttribute(item.href)}" rel="noopener">Open repository -&gt;</a>
     </article>
-  `).join('');
+  `).join("");
+  revealRendered(target);
 }
 
 function bindSearch() {
-  const input = qs('[data-repo-search]');
+  const input = qs("[data-repo-search]");
   if (!input) return;
-  input.addEventListener('input', (event) => {
+  input.addEventListener("input", (event) => {
     state.query = event.target.value;
     renderRepoGrid();
   });
 }
 
 function bindHeader() {
-  const header = qs('[data-elevate]');
+  const header = qs("[data-elevate]");
   if (!header) return;
-  const update = () => header.classList.toggle('is-elevated', window.scrollY > 12);
+  const update = () => header.classList.toggle("is-elevated", window.scrollY > 12);
   update();
-  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener("scroll", update, { passive: true });
+}
+
+function prepareLinks(root = document) {
+  qsa('a[href^="https://"]', root).forEach((link) => {
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", "noopener noreferrer");
+  });
+}
+
+function bindLinkNavigation() {
+  prepareLinks();
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest?.("a[href]");
+    if (!link) return;
+
+    const href = link.getAttribute("href") || "";
+    if (/^https:\/\//.test(href)) {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      const openedWindow = window.open(href, "_blank");
+      if (openedWindow) {
+        openedWindow.opener = null;
+        return;
+      }
+      window.location.assign(href);
+      return;
+    }
+
+    if (!href.startsWith("#") || href.length <= 1) return;
+
+    const target = document.getElementById(href.slice(1));
+    if (!target) return;
+
+    event.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    history.pushState(null, "", href);
+  });
 }
 
 function bindMenu() {
-  const toggle = qs('[data-menu-toggle]');
-  const menu = qs('[data-mobile-menu]');
+  const toggle = qs("[data-menu-toggle]");
+  const menu = qs("[data-mobile-menu]");
   if (!toggle || !menu) return;
 
   const setOpen = (open) => {
-    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     menu.hidden = !open;
+    document.documentElement.classList.toggle("menu-open", open);
   };
 
-  toggle.addEventListener('click', () => {
-    const open = toggle.getAttribute('aria-expanded') !== 'true';
+  toggle.addEventListener("click", () => {
+    const open = toggle.getAttribute("aria-expanded") !== "true";
     setOpen(open);
   });
 
-  qsa('a', menu).forEach((link) => {
-    link.addEventListener('click', () => setOpen(false));
+  qsa("a", menu).forEach((link) => {
+    link.addEventListener("click", () => setOpen(false));
+  });
+
+  document.addEventListener("click", (event) => {
+    if (menu.hidden || menu.contains(event.target) || toggle.contains(event.target)) return;
+    setOpen(false);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setOpen(false);
   });
 }
 
 function bindReveal() {
-  const items = qsa('.reveal');
+  const items = qsa(".reveal");
   if (!items.length) return;
 
-  if (!('IntersectionObserver' in window)) {
-    items.forEach((item) => item.classList.add('is-visible'));
+  if (!("IntersectionObserver" in window)) {
+    items.forEach((item) => item.classList.add("in"));
     return;
   }
 
@@ -233,15 +477,15 @@ function bindReveal() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
+        entry.target.classList.add("in");
         observer.unobserve(entry.target);
       }
     });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.1 });
 
   items.forEach((item) => {
     if (isInViewport(item)) {
-      item.classList.add('is-visible');
+      item.classList.add("in");
       return;
     }
     observer.observe(item);
@@ -249,35 +493,37 @@ function bindReveal() {
 }
 
 function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function escapeAttribute(value) {
-  const text = String(value ?? '');
-  if (!/^https:\/\//.test(text) && !/^mailto:/.test(text)) return '#';
+  const text = String(value ?? "");
+  if (!/^https:\/\//.test(text) && !/^mailto:/.test(text)) return "#";
   return escapeHtml(text);
 }
 
 async function loadRegistry() {
-  const response = await fetch('data/products.json', { cache: 'no-store' });
+  const response = await fetch("data/products.json", { cache: "no-store" });
   if (!response.ok) throw new Error(`Registry load failed: ${response.status}`);
   return response.json();
 }
 
 async function loadSiteContent() {
-  const response = await fetch('data/site.json', { cache: 'no-store' });
+  const response = await fetch("data/site.json", { cache: "no-store" });
   if (!response.ok) throw new Error(`Site content load failed: ${response.status}`);
   return response.json();
 }
 
-async function init() {
+async function initContent() {
   bindHeader();
+  bindLinkNavigation();
   bindMenu();
+  bindThemeToggle();
   bindReveal();
   bindSearch();
 
@@ -285,7 +531,11 @@ async function init() {
     state.siteContent = await loadSiteContent();
     renderProofLanes();
     renderInterfaceLinks();
+    renderServices();
+    renderServiceTiers();
+    renderApiContracts();
     renderReleaseStages();
+    renderRepositoryHandoff();
   } catch (error) {
     console.error(error);
   }
@@ -299,16 +549,578 @@ async function init() {
     renderRepoGrid();
   } catch (error) {
     console.error(error);
-    const repoGrid = qs('[data-repo-grid]');
+    const repoGrid = qs("[data-repo-grid]");
     if (repoGrid) {
       repoGrid.innerHTML = `
-        <article class="repo-card">
+        <article class="repo-card error-card">
           <div class="repo-card-head"><h3>Product registry unavailable</h3></div>
           <p>The static registry did not load. Confirm <code>data/products.json</code> is deployed beside this page.</p>
         </article>
       `;
+      revealRendered(repoGrid);
     }
   }
 }
 
-init();
+function initSubstrate() {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const lat = qs("#c-lattice");
+  const wav = qs("#c-wave");
+  const chn = qs("#c-chain");
+  if (!lat || !wav || !chn) return;
+
+  const lx = lat.getContext("2d");
+  const wx = wav.getContext("2d");
+  const cx = chn.getContext("2d");
+  const readout = qs("#resonance-readout");
+  if (!lx || !wx || !cx) return;
+
+  let width = 0;
+  let height = 0;
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const cellSize = 68;
+  let cols = 0;
+  let rows = 0;
+  let energy = new Float32Array(0);
+  let particles = [];
+  let waves = [];
+  let randomState = 0x6d756c6c;
+  const fidels = ["ሙ", "ሉ", "ሊ", "ሰ", "መ", "ለ", "ኡ", "ኢ", "ኣ", "ፊ", "ደ", "ል"];
+
+  const zones = [
+    {
+      id: "Σ",
+      at: 0,
+      rgb: [92, 230, 196],
+      node: [60, 68, 92],
+      pRate: 1,
+      pSpeed: 1,
+      pMax: 4,
+      waveMax: 3.4,
+      waveOn: 1,
+      mesh: 0,
+      trail: 0,
+      decay: 0.965,
+      drift: 0,
+      latAlpha: 1,
+    },
+    {
+      id: "Λ",
+      at: 0.5,
+      rgb: [232, 177, 92],
+      node: [86, 78, 58],
+      pRate: 0.45,
+      pSpeed: 0.55,
+      pMax: 3,
+      waveMax: 2.8,
+      waveOn: 0.7,
+      mesh: 1,
+      trail: 0,
+      decay: 0.95,
+      drift: 0,
+      latAlpha: 1,
+    },
+    {
+      id: "H",
+      at: 1,
+      rgb: [122, 165, 232],
+      node: [52, 60, 90],
+      pRate: 0.5,
+      pSpeed: 0.4,
+      pMax: 4,
+      waveMax: 2.4,
+      waveOn: 0.15,
+      mesh: 0.2,
+      trail: 0.9,
+      decay: 0.985,
+      drift: 1,
+      latAlpha: 0.55,
+    },
+  ];
+
+  const zone = {
+    id: "Σ",
+    rgb: [92, 230, 196],
+    node: [60, 68, 92],
+    pRate: 1,
+    pSpeed: 1,
+    pMax: 4,
+    waveMax: 3.4,
+    waveOn: 1,
+    mesh: 0,
+    trail: 0,
+    decay: 0.965,
+    drift: 0,
+    latAlpha: 1,
+  };
+
+  const themePalettes = {
+    dark: [
+      { rgb: [92, 230, 196], node: [60, 68, 92] },
+      { rgb: [232, 177, 92], node: [86, 78, 58] },
+      { rgb: [122, 165, 232], node: [52, 60, 90] },
+    ],
+    light: [
+      { rgb: [20, 124, 111], node: [128, 139, 152] },
+      { rgb: [154, 100, 27], node: [150, 136, 112] },
+      { rgb: [76, 100, 150], node: [118, 128, 148] },
+    ],
+  };
+
+  let activeSubstrateTheme = "";
+
+  function applySubstrateTheme() {
+    const theme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+    if (theme === activeSubstrateTheme) return;
+    activeSubstrateTheme = theme;
+    themePalettes[theme].forEach((palette, index) => {
+      zones[index].rgb = [...palette.rgb];
+      zones[index].node = [...palette.node];
+    });
+  }
+
+  const ease = (value) => value * value * value * (value * (value * 6 - 15) + 10);
+  const accent = (alpha) => `rgba(${zone.rgb[0] | 0},${zone.rgb[1] | 0},${zone.rgb[2] | 0},${alpha})`;
+  const nodeColor = (alpha) => `rgba(${zone.node[0] | 0},${zone.node[1] | 0},${zone.node[2] | 0},${alpha})`;
+
+  let scrollFrac = 0;
+  let scrollTarget = 0;
+  let frame = 0;
+  let sigma = 0;
+  let perfTier = 0;
+  let lastTime = performance.now();
+  let slowStreak = 0;
+  let fastStreak = 0;
+  let throttleSkip = false;
+  let staticDrawn = false;
+  let motionLastTime = performance.now();
+
+  function readScroll() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    scrollTarget = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  }
+
+  function frameFactor(timestamp) {
+    const elapsed = timestamp - motionLastTime;
+    motionLastTime = timestamp;
+    if (!Number.isFinite(elapsed) || elapsed <= 0) return 1;
+    return Math.min(2.25, Math.max(0.35, elapsed / 16.667));
+  }
+
+  function easeFrame(base, factor) {
+    return 1 - Math.pow(1 - base, factor);
+  }
+
+  function updateZone(deltaFactor) {
+    scrollFrac += (scrollTarget - scrollFrac) * easeFrame(0.06, deltaFactor);
+    const fraction = scrollFrac;
+    let lowerIndex = 0;
+    while (lowerIndex < zones.length - 2 && fraction > zones[lowerIndex + 1].at) {
+      lowerIndex += 1;
+    }
+    const lower = zones[lowerIndex];
+    const upper = zones[lowerIndex + 1];
+    const span = upper.at - lower.at;
+    const local = span > 0 ? (fraction - lower.at) / span : 0;
+    const k = ease(Math.min(1, Math.max(0, local)));
+    const mix = (a, b) => a + (b - a) * k;
+
+    for (let index = 0; index < 3; index += 1) {
+      zone.rgb[index] = mix(lower.rgb[index], upper.rgb[index]);
+      zone.node[index] = mix(lower.node[index], upper.node[index]);
+    }
+
+    zone.pRate = mix(lower.pRate, upper.pRate);
+    zone.pSpeed = mix(lower.pSpeed, upper.pSpeed);
+    zone.pMax = mix(lower.pMax, upper.pMax);
+    zone.waveMax = mix(lower.waveMax, upper.waveMax);
+    zone.waveOn = mix(lower.waveOn, upper.waveOn);
+    zone.mesh = mix(lower.mesh, upper.mesh);
+    zone.trail = mix(lower.trail, upper.trail);
+    zone.decay = mix(lower.decay, upper.decay);
+    zone.drift = mix(lower.drift, upper.drift);
+    zone.latAlpha = mix(lower.latAlpha, upper.latAlpha);
+    zone.id = k < 0.5 ? lower.id : upper.id;
+  }
+
+  function zoneIntensity(center) {
+    const distance = Math.abs(scrollFrac - center);
+    return Math.max(0, Math.min(1, 1 - distance / 0.48));
+  }
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    [lat, wav, chn].forEach((canvas) => {
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0);
+    });
+    cols = Math.ceil(width / cellSize) + 1;
+    rows = Math.ceil(height / cellSize) + 1;
+    energy = new Float32Array(cols * rows);
+  }
+
+  function randomUnit() {
+    randomState = (randomState * 1664525 + 1013904223) >>> 0;
+    return randomState / 4294967296;
+  }
+
+  function spawnParticle() {
+    const lane = Math.floor(randomUnit() * rows);
+    particles.push({
+      x: randomUnit() * Math.max(width, 1),
+      y: randomUnit() * Math.max(height, 1),
+      vx: (randomUnit() - 0.5) * 0.18,
+      vy: (randomUnit() - 0.5) * 0.12,
+      lane,
+      phase: randomUnit() * Math.PI * 2,
+      radius: 64 + randomUnit() * 120,
+      pulse: randomUnit() * 320,
+      pulseEvery: 320 + randomUnit() * 360,
+      sides: 4 + Math.floor(randomUnit() * 4),
+      spin: (0.002 + randomUnit() * 0.004) * (randomUnit() > 0.5 ? 1 : -1),
+    });
+  }
+
+  function wrapFieldObject(fieldObject) {
+    const pad = fieldObject.radius + 40;
+    if (fieldObject.x < -pad) fieldObject.x = width + pad;
+    if (fieldObject.x > width + pad) fieldObject.x = -pad;
+    if (fieldObject.y < -pad) fieldObject.y = height + pad;
+    if (fieldObject.y > height + pad) fieldObject.y = -pad;
+  }
+
+  function feedEnergyAt(x, y, amount) {
+    const col = Math.floor(x / cellSize);
+    const row = Math.floor(y / cellSize);
+    if (col < 0 || col >= cols || row < 0 || row >= rows) return;
+    const index = row * cols + col;
+    energy[index] = Math.min(1, energy[index] + amount);
+  }
+
+  function drawSmoke(fieldObject, alphaScale, time) {
+    if (alphaScale <= 0.01) return;
+    const radius = fieldObject.radius * (0.82 + Math.sin(fieldObject.phase + time * 0.25) * 0.08);
+    const x = fieldObject.x + Math.sin(fieldObject.phase * 0.7) * 18;
+    const y = fieldObject.y + Math.cos(fieldObject.phase * 0.9) * 14;
+    const gradient = cx.createRadialGradient(x, y, 0, x, y, radius);
+    gradient.addColorStop(0, accent((0.038 * alphaScale).toFixed(3)));
+    gradient.addColorStop(0.52, accent((0.017 * alphaScale).toFixed(3)));
+    gradient.addColorStop(1, accent(0));
+
+    cx.save();
+    cx.globalCompositeOperation = "lighter";
+    cx.filter = "blur(10px)";
+    cx.fillStyle = gradient;
+    cx.beginPath();
+    cx.ellipse(
+      x,
+      y,
+      radius * 1.45,
+      radius * 0.42,
+      fieldObject.phase * 0.35,
+      0,
+      Math.PI * 2,
+    );
+    cx.fill();
+    cx.restore();
+  }
+
+  function drawMorph(fieldObject, alphaScale, time) {
+    if (alphaScale <= 0.01) return;
+    const size = fieldObject.radius * 0.36;
+    const sides = fieldObject.sides;
+    const basePhase = fieldObject.phase + time * fieldObject.spin * 60;
+
+    cx.save();
+    cx.globalCompositeOperation = "lighter";
+    cx.lineWidth = 1;
+    cx.strokeStyle = accent((0.075 * alphaScale).toFixed(3));
+    cx.fillStyle = accent((0.015 * alphaScale).toFixed(3));
+    cx.beginPath();
+    for (let index = 0; index < sides; index += 1) {
+      const angle = basePhase + index * Math.PI * 2 / sides;
+      const radius = size * (0.82 + Math.sin(basePhase * 0.9 + index * 1.7) * 0.24);
+      const x = fieldObject.x + Math.cos(angle) * radius;
+      const y = fieldObject.y + Math.sin(angle) * radius;
+      if (index === 0) cx.moveTo(x, y);
+      else cx.lineTo(x, y);
+    }
+    cx.closePath();
+    cx.fill();
+    cx.stroke();
+    cx.restore();
+  }
+
+  function drawWaveBands(alphaScale, time) {
+    if (alphaScale <= 0.01) return;
+    wx.save();
+    wx.globalCompositeOperation = "lighter";
+    wx.lineWidth = 1;
+    for (let band = 0; band < 2; band += 1) {
+      const baseY = height * (0.3 + band * 0.24);
+      const amplitude = 13 + band * 8;
+      wx.strokeStyle = accent((0.026 * alphaScale * (1 - band * 0.12)).toFixed(3));
+      wx.beginPath();
+      for (let x = -24; x <= width + 24; x += 32) {
+        const y = baseY
+          + Math.sin(x * 0.008 + time * (0.18 + band * 0.04) + band * 1.7) * amplitude
+          + Math.sin(x * 0.017 - time * 0.13) * 5;
+        if (x === -24) wx.moveTo(x, y);
+        else wx.lineTo(x, y);
+      }
+      wx.stroke();
+    }
+    wx.restore();
+  }
+
+  function drawStatic() {
+    lx.clearRect(0, 0, width, height);
+    wx.clearRect(0, 0, width, height);
+    cx.clearRect(0, 0, width, height);
+    for (let row = 0; row < rows; row += 2) {
+      for (let col = 0; col < cols; col += 2) {
+        lx.fillStyle = "rgba(60,68,92,.24)";
+        lx.fillRect(col * cellSize - 0.5, row * cellSize - 0.5, 1, 1);
+      }
+    }
+    if (readout) readout.textContent = "Σ 0.000";
+  }
+
+  function governPerf(now) {
+    let delta = now - lastTime;
+    lastTime = now;
+    if (frame < 30) return;
+    if (delta > 80) delta = 80;
+    if (delta > 34) {
+      slowStreak += 1;
+      fastStreak = 0;
+      if (perfTier === 0 && slowStreak > 36) {
+        perfTier = 1;
+        slowStreak = 0;
+      } else if (perfTier === 1 && slowStreak > 80) {
+        perfTier = 2;
+        slowStreak = 0;
+      }
+      return;
+    }
+
+    fastStreak += 1;
+    slowStreak = 0;
+    if (perfTier === 1 && fastStreak > 260) {
+      perfTier = 0;
+      fastStreak = 0;
+    }
+  }
+
+  function governStatic(renderCost) {
+    if (renderCost < 22) {
+      fastStreak += 1;
+      if (fastStreak > 12) {
+        perfTier = 1;
+        fastStreak = 0;
+        slowStreak = 0;
+      }
+      return;
+    }
+    fastStreak = 0;
+  }
+
+  function drawFrame(timestamp = performance.now()) {
+    frame += 1;
+    const renderStart = performance.now();
+    const deltaFactor = frameFactor(timestamp);
+    applySubstrateTheme();
+    updateZone(deltaFactor);
+    const time = timestamp * 0.001;
+    const smokeWeight = zoneIntensity(0);
+    const waveWeight = zoneIntensity(0.5);
+    const morphWeight = zoneIntensity(1);
+
+    const energyDecay = Math.pow(zone.decay, deltaFactor);
+    for (let index = 0; index < energy.length; index += 1) {
+      energy[index] *= energyDecay;
+    }
+
+    cx.globalCompositeOperation = "destination-out";
+    cx.fillStyle = `rgba(0,0,0,${(0.045 + waveWeight * 0.035 + smokeWeight * 0.02).toFixed(3)})`;
+    cx.fillRect(0, 0, width, height);
+    cx.globalCompositeOperation = "source-over";
+
+    const cap = Math.round(4 + smokeWeight * 2 + waveWeight * 1 + morphWeight * 2);
+    while (particles.length < cap) {
+      spawnParticle();
+    }
+    if (particles.length > cap + 4) particles.length = cap + 4;
+
+    cx.lineCap = "round";
+    cx.lineJoin = "round";
+    for (const particle of particles) {
+      particle.phase += (0.006 + morphWeight * 0.004) * deltaFactor;
+      particle.x += (particle.vx + Math.sin(particle.phase * 0.37) * 0.035) * deltaFactor * (1 + smokeWeight * 0.7);
+      particle.y += (particle.vy + Math.cos(particle.phase * 0.31) * 0.028) * deltaFactor * (1 + morphWeight * 0.55);
+      wrapFieldObject(particle);
+
+      particle.pulse += deltaFactor;
+      if (particle.pulse >= particle.pulseEvery) {
+        particle.pulse = 0;
+        if (waves.length > 10) waves.shift();
+        waves.push({
+          x: particle.x,
+          y: particle.y,
+          r: 0,
+          max: cellSize * zone.waveMax * (0.82 + waveWeight * 0.36),
+        });
+        feedEnergyAt(particle.x, particle.y, 0.18 + waveWeight * 0.12);
+      }
+
+      drawSmoke(particle, smokeWeight * 0.68 + waveWeight * 0.12, time);
+      drawMorph(particle, morphWeight * 0.58 + waveWeight * 0.14, time);
+    }
+
+    wx.clearRect(0, 0, width, height);
+    drawWaveBands(waveWeight * 0.64 + smokeWeight * 0.12, time);
+    let totalEnergy = 0;
+    let energyCount = 0;
+
+    for (const wave of waves) {
+      wave.r += 1.15 * deltaFactor;
+      const progress = wave.r / wave.max;
+      const alpha = (1 - progress) * 0.3 * zone.waveOn;
+      if (alpha <= 0.002) continue;
+
+      wx.strokeStyle = accent(alpha.toFixed(3));
+      wx.lineWidth = 1;
+      wx.beginPath();
+      wx.arc(wave.x, wave.y, wave.r, 0, Math.PI * 2);
+      wx.stroke();
+
+      const ringCol = Math.floor(wave.x / cellSize);
+      const row = Math.floor(wave.y / cellSize);
+      if (row >= 0 && row < rows && ringCol >= 0 && ringCol < cols) {
+        const energyIndex = row * cols + ringCol;
+        energy[energyIndex] = Math.min(1, energy[energyIndex] + alpha * 0.026);
+      }
+    }
+
+    waves = waves.filter((wave) => wave.r < wave.max);
+
+    lx.clearRect(0, 0, width, height);
+    lx.globalAlpha = zone.latAlpha;
+
+    if (zone.mesh > 0.02) {
+      lx.lineWidth = 1;
+      for (let row = 0; row < rows; row += 2) {
+        for (let col = 0; col < cols; col += 2) {
+          const value = energy[row * cols + col];
+          if (value < 0.18) continue;
+          const x = col * cellSize;
+          const y = row * cellSize;
+          const rightValue = col + 1 < cols ? energy[row * cols + col + 1] : 0;
+          const downValue = row + 1 < rows ? energy[(row + 1) * cols + col] : 0;
+          if (rightValue > 0.18) {
+            lx.strokeStyle = accent((Math.min(value, rightValue) * 0.22 * zone.mesh).toFixed(3));
+            lx.beginPath();
+            lx.moveTo(x, y);
+            lx.lineTo(x + cellSize, y);
+            lx.stroke();
+          }
+          if (downValue > 0.18) {
+            lx.strokeStyle = accent((Math.min(value, downValue) * 0.22 * zone.mesh).toFixed(3));
+            lx.beginPath();
+            lx.moveTo(x, y);
+            lx.lineTo(x, y + cellSize);
+            lx.stroke();
+          }
+        }
+      }
+    }
+
+    for (let row = 0; row < rows; row += 2) {
+      for (let col = 0; col < cols; col += 2) {
+        const value = energy[row * cols + col];
+        totalEnergy += value;
+        energyCount += 1;
+        const x = col * cellSize;
+        const y = row * cellSize;
+        lx.fillStyle = nodeColor((0.12 + value * 0.22).toFixed(3));
+        lx.fillRect(x - 0.5, y - 0.5, 1, 1);
+
+        if (value > 0.04) {
+          lx.strokeStyle = accent((value * 0.105).toFixed(3));
+          lx.lineWidth = 1;
+          lx.strokeRect(x + 3, y + 3, cellSize - 6, cellSize - 6);
+        }
+
+        if (value > 0.62 && (row * 7 + col) % 5 === 0) {
+          lx.fillStyle = accent((value * 0.26).toFixed(3));
+          lx.font = '13px "Newsreader", serif';
+          lx.fillText(fidels[(row * 3 + col) % fidels.length], x + cellSize / 2 - 6, y + cellSize / 2 + 5);
+        }
+      }
+    }
+
+    lx.globalAlpha = 1;
+
+    const meanEnergy = energyCount ? totalEnergy / energyCount : 0;
+    sigma += (meanEnergy - sigma) * easeFrame(0.05, deltaFactor);
+    if (readout && frame % 12 === 0) {
+      readout.textContent = `${zone.id} ${(sigma * 9).toFixed(3)}`;
+    }
+
+    const now = performance.now();
+    governPerf(now);
+    if (perfTier === 2) {
+      if (!staticDrawn) {
+        drawStatic();
+        staticDrawn = true;
+      }
+      governStatic(now - renderStart);
+      setTimeout(() => requestAnimationFrame(drawFrame), 200);
+      return;
+    }
+
+    staticDrawn = false;
+    if (perfTier === 0) {
+      throttleSkip = !throttleSkip;
+      if (throttleSkip) {
+        setTimeout(() => requestAnimationFrame(drawFrame), 16);
+        return;
+      }
+    }
+
+    if (perfTier === 1) {
+      throttleSkip = !throttleSkip;
+      if (throttleSkip) {
+        setTimeout(() => requestAnimationFrame(drawFrame), 48);
+        return;
+      }
+    }
+
+    requestAnimationFrame(drawFrame);
+  }
+
+  resize();
+  applySubstrateTheme();
+  for (let index = 0; index < 5; index += 1) spawnParticle();
+  window.addEventListener("mullusi-theme-change", applySubstrateTheme);
+  window.addEventListener("resize", () => {
+    resize();
+    if (reduce || perfTier === 2) drawStatic();
+  });
+  window.addEventListener("scroll", readScroll, { passive: true });
+
+  if (reduce) {
+    drawStatic();
+    return;
+  }
+
+  readScroll();
+  scrollFrac = scrollTarget;
+  requestAnimationFrame(drawFrame);
+}
+
+initSubstrate();
+initContent();

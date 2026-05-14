@@ -32,11 +32,11 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
     `-- verify-registry-repos.mjs      # Public GitHub repo visibility check
 ```
 
-## Product registry contract
+## Public registry contract
 
-`data/products.json` is the public source of truth for website product cards.
+`data/products.json` is the public source of truth for proof-safe repository cards and staged roadmap records.
 
-Each public product entry should use:
+Each public repository entry should use:
 
 ```json
 {
@@ -62,7 +62,39 @@ Future products use `futureDomains` until the repository exists:
 }
 ```
 
-Private repositories are intentionally excluded from the public registry. Add them only when they are safe for public exposure.
+Private repositories are intentionally excluded from `systems`. Add a repository there only when it is safe for public exposure, reachable without authentication, and supported by public-safe claims.
+
+Use `futureDomains` for planned domain engines and `privateIncubation` for public-safe descriptions of work that must remain private. Do not list private repository slugs, internal routes, credentials, deployment details, or unfinished product claims in the public registry.
+
+## Service stack contract
+
+`data/site.json` owns the public service ladder. Use `services` for hosted offers, developer packages, dashboards, inspection surfaces, validation endpoints, and enterprise deployment paths:
+
+```json
+{
+  "name": "Mullusi Govern Cloud",
+  "delivery": "hosted service",
+  "status": "primary offer",
+  "summary": "Hosted symbolic governance for constraint evaluation, causal verdicts, proof states, and append-only trace records.",
+  "proofSurface": "api.mullusi.com"
+}
+```
+
+The website renders these records into the Service Stack section. Keep npm packages as access tools and keep governed judgment, traces, proof stamps, and operational control on Mullusi service surfaces.
+
+`serviceTiers` and `apiContracts` define the first Govern Cloud commercial/API boundary. Keep tiers public-facing and keep endpoint records concise:
+
+```json
+{
+  "name": "Govern Evaluation",
+  "route": "POST /v1/govern/evaluate",
+  "host": "api.mullusi.com",
+  "status": "core v1",
+  "input": "project, action, symbols, constraints, context",
+  "output": "verdict, proof state, violations, trace reference, repair actions, proof stamp eligibility",
+  "summary": "Evaluates a proposed action or system state against Mullusi governance constraints and records a causal trace."
+}
+```
 
 ## Deploy to GitHub Pages
 
@@ -107,7 +139,7 @@ node scripts/verify-registry-repos.mjs
 
 ## Update rule
 
-When a new product repository is created, update only `data/products.json` first. The page will render the new card automatically.
+When a new product repository is ready for public exposure, update only `data/products.json` first. The page will render the new card automatically.
 
 Recommended public domain repo names:
 
@@ -127,4 +159,4 @@ Use `research@mullusi.com` for research conversations and `tamirat@mullusi.com` 
 
 ## Governance boundary
 
-The site presents public claims only. Keep launch claims separate from research claims, and keep private/internal repos out of the public registry until they are deliberately published.
+The site presents public claims only. Keep launch claims separate from research claims, and keep private/internal repos out of `systems` until they are deliberately published.

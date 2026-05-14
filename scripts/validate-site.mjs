@@ -196,7 +196,7 @@ function validateWebManifest() {
   requireString(manifest.short_name, "manifest.short_name");
   requireString(manifest.start_url, "manifest.start_url");
   requireString(manifest.display, "manifest.display");
-  if (manifest.theme_color !== "#05060a") {
+  if (manifest.theme_color !== "#050609") {
     recordFailure(`manifest_theme_color_invalid:${manifest.theme_color}`);
   }
   if (!Array.isArray(manifest.icons) || manifest.icons.length === 0) {
@@ -283,6 +283,26 @@ function validateProductRegistry() {
     }
     seenSlugs.add(slug);
   }
+
+  if (registry.privateIncubation !== undefined) {
+    if (!Array.isArray(registry.privateIncubation)) {
+      recordFailure("registry_private_incubation_not_array");
+      return;
+    }
+    for (const [index, item] of registry.privateIncubation.entries()) {
+      const label = `privateIncubation.${index}`;
+      requireString(item.name, `${label}.name`);
+      requireString(item.summary, `${label}.summary`);
+      requireString(item.publishGate, `${label}.publishGate`);
+      if (item.visibility !== "private") {
+        recordFailure(`private_incubation_visibility_invalid:${item.name}:${item.visibility}`);
+      }
+      const publicText = [item.name, item.summary, item.publishGate].join(" ");
+      if (/github\.com\/|[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+/.test(publicText)) {
+        recordFailure(`private_incubation_repo_reference_forbidden:${item.name}`);
+      }
+    }
+  }
 }
 
 function validateSiteContent() {
@@ -315,6 +335,72 @@ function validateSiteContent() {
       }
       if (!/^https:\/\/[a-z0-9.-]+\.mullusi\.com$/.test(href) && href !== "https://mullusi.com") {
         recordFailure(`site_interface_href_invalid:${name}:${href}`);
+      }
+    }
+  }
+
+  if (!Array.isArray(content.services) || content.services.length === 0) {
+    recordFailure("site_services_missing");
+  } else {
+    for (const [index, service] of content.services.entries()) {
+      const label = `site.services.${index}`;
+      requireString(service.name, `${label}.name`);
+      requireString(service.delivery, `${label}.delivery`);
+      requireString(service.status, `${label}.status`);
+      requireString(service.summary, `${label}.summary`);
+      const proofSurface = requireString(service.proofSurface, `${label}.proofSurface`);
+      if (!/^[a-z0-9.-]+\.mullusi\.com$/.test(proofSurface)) {
+        recordFailure(`site_service_proof_surface_invalid:${proofSurface}`);
+      }
+    }
+  }
+
+  if (!Array.isArray(content.serviceTiers) || content.serviceTiers.length === 0) {
+    recordFailure("site_service_tiers_missing");
+  } else {
+    for (const [index, tier] of content.serviceTiers.entries()) {
+      const label = `site.serviceTiers.${index}`;
+      requireString(tier.name, `${label}.name`);
+      requireString(tier.audience, `${label}.audience`);
+      requireString(tier.status, `${label}.status`);
+      requireString(tier.priceSignal, `${label}.priceSignal`);
+      requireString(tier.summary, `${label}.summary`);
+    }
+  }
+
+  if (!Array.isArray(content.apiContracts) || content.apiContracts.length === 0) {
+    recordFailure("site_api_contracts_missing");
+  } else {
+    for (const [index, contract] of content.apiContracts.entries()) {
+      const label = `site.apiContracts.${index}`;
+      requireString(contract.name, `${label}.name`);
+      const route = requireString(contract.route, `${label}.route`);
+      const host = requireString(contract.host, `${label}.host`);
+      requireString(contract.status, `${label}.status`);
+      requireString(contract.input, `${label}.input`);
+      requireString(contract.output, `${label}.output`);
+      requireString(contract.summary, `${label}.summary`);
+      if (!/^(GET|POST) \/v1\/[a-z0-9/_{}-]+$/.test(route)) {
+        recordFailure(`site_api_contract_route_invalid:${route}`);
+      }
+      if (!/^[a-z0-9.-]+\.mullusi\.com$/.test(host)) {
+        recordFailure(`site_api_contract_host_invalid:${host}`);
+      }
+    }
+  }
+
+  const handoff = content.repositoryHandoff;
+  if (!handoff || typeof handoff !== "object") {
+    recordFailure("site_repository_handoff_missing");
+  } else {
+    requireString(handoff.label, "site.repositoryHandoff.label");
+    requireString(handoff.title, "site.repositoryHandoff.title");
+    requireString(handoff.summary, "site.repositoryHandoff.summary");
+    if (!Array.isArray(handoff.steps) || handoff.steps.length < 2) {
+      recordFailure("site_repository_handoff_steps_missing");
+    } else {
+      for (const [index, step] of handoff.steps.entries()) {
+        requireString(step, `site.repositoryHandoff.steps.${index}`);
       }
     }
   }

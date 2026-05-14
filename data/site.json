@@ -13,17 +13,17 @@
     {
       "label": "Governance",
       "title": "Claims tied to evidence",
-      "summary": "Public claims are separated into products, research surfaces, planned domains, and operational interfaces."
+      "summary": "Public claims are separated into proof-safe repositories, private incubation, planned domains, and operational interfaces."
     },
     {
       "label": "Structure",
       "title": "Content is data-backed",
-      "summary": "Repository cards, domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records."
+      "summary": "Proof repository cards, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records."
     },
     {
       "label": "Evolution",
       "title": "Expansion without redesign",
-      "summary": "New repositories and domains can enter the public site through data updates before they need dedicated pages."
+      "summary": "New repositories and domains enter the public site only after their release boundary is verified."
     }
   ],
   "interfaces": [
@@ -52,11 +52,141 @@
       "status": "reserved"
     }
   ],
+  "services": [
+    {
+      "name": "Mullusi Govern Cloud",
+      "delivery": "hosted service",
+      "status": "primary offer",
+      "summary": "Hosted symbolic governance for constraint evaluation, causal verdicts, proof states, and append-only trace records.",
+      "proofSurface": "api.mullusi.com"
+    },
+    {
+      "name": "Developer Packages",
+      "delivery": "npm package",
+      "status": "access layer",
+      "summary": "Client SDK, CLI, and local validators that submit governed requests to Mullusi services without becoming the paid service itself.",
+      "proofSurface": "docs.mullusi.com"
+    },
+    {
+      "name": "Mullusi Dashboard",
+      "delivery": "web workspace",
+      "status": "operator surface",
+      "summary": "Project control, trace review, proof stamps, violations, usage, teams, and release witness visibility.",
+      "proofSurface": "dashboard.mullusi.com"
+    },
+    {
+      "name": "Mullu Inspect Service",
+      "delivery": "hosted inspection",
+      "status": "diagnostic offer",
+      "summary": "Website, API, repository, and workflow inspection that reports structural gaps, missing evidence, and unstable public claims.",
+      "proofSurface": "sandbox.mullusi.com"
+    },
+    {
+      "name": "Mfidel Validation Service",
+      "delivery": "specialized endpoint",
+      "status": "script safeguard",
+      "summary": "Atomic fidel validation for grid references, overlay metadata, and public text checks without shape or sound decomposition.",
+      "proofSurface": "api.mullusi.com"
+    },
+    {
+      "name": "Enterprise Mullusi",
+      "delivery": "private deployment",
+      "status": "contract offer",
+      "summary": "Private cloud or customer-controlled deployment with custom governance rules, audit export, and support boundaries.",
+      "proofSurface": "dashboard.mullusi.com"
+    }
+  ],
+  "serviceTiers": [
+    {
+      "name": "Free",
+      "audience": "developers and researchers",
+      "status": "starter",
+      "priceSignal": "limited public access",
+      "summary": "Explore the SDK, CLI, sandbox examples, public docs, and small-volume hosted evaluations."
+    },
+    {
+      "name": "Pro",
+      "audience": "builders and solo operators",
+      "status": "paid",
+      "priceSignal": "monthly usage plan",
+      "summary": "Higher hosted evaluation limits, persistent traces, project history, proof stamp access, and dashboard workspace control."
+    },
+    {
+      "name": "Team",
+      "audience": "small technical teams",
+      "status": "paid",
+      "priceSignal": "seat plus usage plan",
+      "summary": "Shared projects, team trace review, role boundaries, audit export, environment separation, and release witness records."
+    },
+    {
+      "name": "Enterprise",
+      "audience": "regulated or private deployments",
+      "status": "contract",
+      "priceSignal": "custom agreement",
+      "summary": "Private cloud or customer-controlled deployment, custom governance rules, support boundary, and compliance evidence exports."
+    },
+    {
+      "name": "Certification",
+      "audience": "systems needing external proof",
+      "status": "contract",
+      "priceSignal": "per assessment",
+      "summary": "Paid proof review, structural inspection, violation report, repair plan, and Mullusi proof-of-resolution stamp."
+    }
+  ],
+  "apiContracts": [
+    {
+      "name": "Govern Evaluation",
+      "route": "POST /v1/govern/evaluate",
+      "host": "api.mullusi.com",
+      "status": "core v1",
+      "input": "project, action, symbols, constraints, context",
+      "output": "verdict, proof state, violations, trace reference, repair actions, storage state, proof stamp eligibility",
+      "summary": "Evaluates a proposed action or system state against Mullusi governance constraints and records a causal trace."
+    },
+    {
+      "name": "Trace Retrieval",
+      "route": "GET /v1/evaluations/{evaluation_id}/trace",
+      "host": "api.mullusi.com",
+      "status": "core v1",
+      "input": "evaluation reference and authorized project context",
+      "output": "ordered phase deltas, blocked phase, judgments, and append-only lineage records",
+      "summary": "Returns the evidence path behind a verdict so users can inspect cause, constraint, and repair state."
+    },
+    {
+      "name": "Proof Stamp Verification",
+      "route": "GET /v1/proof-stamps/{stamp_id}",
+      "host": "api.mullusi.com",
+      "status": "core v1",
+      "input": "proof stamp reference",
+      "output": "stamp hash, signature state, verification state, evaluation reference, and persisted stamp envelope",
+      "summary": "Verifies that a proof stamp belongs to a recorded evaluation and has not drifted from its stored lineage."
+    },
+    {
+      "name": "Mfidel Validation",
+      "route": "POST /v1/mfidel/validate",
+      "host": "api.mullusi.com",
+      "status": "specialized v1",
+      "input": "atomic fidel references, grid coordinates, overlay metadata, and validation mode",
+      "output": "pass or violation state with atomicity-preserving diagnostics",
+      "summary": "Validates Mfidel records while preserving each fidel as an atomic symbol and rejecting decomposition paths."
+    }
+  ],
+  "repositoryHandoff": {
+    "label": "Lineage handoff",
+    "title": "Registry state feeds release state.",
+    "summary": "A private incubation project becomes public only when its repository, proof surface, docs route, and demo boundary are attached.",
+    "steps": [
+      "Repository",
+      "Proof",
+      "Route",
+      "Release"
+    ]
+  },
   "releaseStages": [
     {
       "step": "01",
       "title": "Register",
-      "summary": "Add or revise a public product record in the structured registry."
+      "summary": "Add or revise a public proof-surface record in the structured registry."
     },
     {
       "step": "02",
@@ -71,7 +201,7 @@
     {
       "step": "04",
       "title": "Publish",
-      "summary": "Expose the product surface without changing the website architecture."
+      "summary": "Expose the product surface only after the public boundary is verified."
     }
   ]
 }
