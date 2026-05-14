@@ -246,7 +246,7 @@ code {
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.44fr);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.54fr);
   gap: clamp(2rem, 5vw, 4rem);
   align-items: center;
   min-height: 100svh;
@@ -274,8 +274,9 @@ code {
 .hero-bg::before {
   z-index: 1;
   background:
-    linear-gradient(90deg, rgba(5, 6, 10, 0.96) 0%, rgba(5, 6, 10, 0.88) 42%, rgba(5, 6, 10, 0.48) 74%, rgba(5, 6, 10, 0.28) 100%),
-    linear-gradient(0deg, rgba(5, 6, 10, 0.88) 0%, transparent 30%, transparent 70%, rgba(5, 6, 10, 0.54) 100%);
+    radial-gradient(circle at 78% 28%, rgba(232, 197, 108, 0.14), transparent 25rem),
+    radial-gradient(circle at 58% 70%, rgba(96, 232, 184, 0.08), transparent 24rem),
+    linear-gradient(90deg, rgba(5, 6, 10, 0.98) 0%, rgba(5, 6, 10, 0.9) 52%, rgba(5, 6, 10, 0.7) 100%);
 }
 
 .hero-bg::after {
@@ -288,15 +289,28 @@ code {
   opacity: 0.26;
 }
 
-.hero-bg-image {
+.symbol-field {
   position: absolute;
-  inset: 0 0 0 auto;
-  width: min(68vw, 980px);
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  opacity: 0.78;
-  filter: saturate(0.88) contrast(1.04);
+  right: max(4vw, calc((100vw - var(--max)) / 2));
+  top: 18%;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.8rem;
+  width: min(42vw, 560px);
+  opacity: 0.9;
+}
+
+.symbol-field span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1px solid rgba(232, 197, 108, 0.14);
+  border-radius: var(--radius);
+  color: rgba(232, 197, 108, 0.64);
+  background: linear-gradient(180deg, rgba(19, 23, 35, 0.45), rgba(9, 11, 17, 0.32));
+  font-size: clamp(2.4rem, 5vw, 5.6rem);
+  font-weight: 900;
 }
 
 .grid-plane {
@@ -359,7 +373,7 @@ h3 {
 }
 
 .hero-lede,
-.founder-profile p,
+.architect-profile p,
 .section-copy p,
 .section-heading p,
 .timeline p,
@@ -405,25 +419,6 @@ h3 {
 }
 
 .hero-proof span { color: var(--muted); font-size: 0.88rem; }
-
-.founder-line {
-  display: grid;
-  gap: 0.25rem;
-  width: fit-content;
-  margin-top: 1.2rem;
-  padding-left: 0.9rem;
-  border-left: 3px solid var(--gold);
-}
-
-.founder-line strong {
-  color: var(--text);
-  font-size: 0.95rem;
-}
-
-.founder-line span {
-  color: var(--muted);
-  font-size: 0.86rem;
-}
 
 .status-panel {
   position: relative;
@@ -600,16 +595,17 @@ h3 {
   align-items: start;
 }
 
-.founder-section {
+.architect-section {
   display: grid;
-  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1fr);
-  gap: clamp(2rem, 6vw, 5rem);
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
   align-items: center;
+  padding-top: 4rem;
 }
 
-.founder-photo {
+.architect-photo {
   margin: 0;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -617,14 +613,14 @@ h3 {
   box-shadow: var(--shadow);
 }
 
-.founder-photo img {
+.architect-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 26%;
+  object-position: center 20%;
 }
 
-.founder-profile {
+.architect-profile {
   display: grid;
   gap: 1rem;
 }
@@ -1000,30 +996,33 @@ h3 {
   .solid-link { display: none; }
   .menu-toggle { display: block; }
   .hero,
-  .founder-section,
+  .architect-section,
   .two-col,
   .site-footer { grid-template-columns: 1fr; }
   .hero {
     min-height: auto;
     padding-top: 7.25rem;
   }
-  .hero-bg-image {
-    width: 100%;
-    opacity: 0.28;
-    object-position: center 24%;
-  }
   .hero-bg::before {
-    background: linear-gradient(180deg, rgba(5, 6, 10, 0.72) 0%, rgba(5, 6, 10, 0.94) 42%, rgba(5, 6, 10, 0.98) 100%);
+    background:
+      radial-gradient(circle at 70% 22%, rgba(232, 197, 108, 0.12), transparent 18rem),
+      linear-gradient(180deg, rgba(5, 6, 10, 0.72) 0%, rgba(5, 6, 10, 0.94) 42%, rgba(5, 6, 10, 0.98) 100%);
   }
   .hero-bg::after {
     mask-image: linear-gradient(to bottom, black, transparent 72%);
+  }
+  .symbol-field {
+    right: -2.5rem;
+    top: 8rem;
+    width: 22rem;
+    opacity: 0.22;
   }
   .status-panel {
     justify-self: start;
     max-width: 620px;
   }
-  .founder-photo {
-    max-width: 520px;
+  .architect-photo {
+    max-width: 240px;
   }
   .product-families,
   .science-grid,
