@@ -10,6 +10,7 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 .
 |-- index.html                         # Public landing page
 |-- CNAME                              # mullusi.com custom domain
+|-- favicon.ico                        # Legacy browser favicon
 |-- robots.txt                         # Crawl policy
 |-- sitemap.xml                        # Search sitemap
 |-- site.webmanifest                   # Browser/app icon manifest

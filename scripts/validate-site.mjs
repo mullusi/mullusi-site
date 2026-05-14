@@ -17,6 +17,7 @@ const requiredFiles = [
   "index.html",
   "README.md",
   "CNAME",
+  "favicon.ico",
   "robots.txt",
   "sitemap.xml",
   "site.webmanifest",
@@ -174,6 +175,20 @@ function validateIconPng(relativePath, expectedSize) {
   }
 }
 
+function validateIco(relativePath) {
+  const content = readBinary(relativePath);
+  if (content.length < 6) {
+    recordFailure(`ico_too_short:${relativePath}`);
+    return;
+  }
+  const reserved = content.readUInt16LE(0);
+  const type = content.readUInt16LE(2);
+  const count = content.readUInt16LE(4);
+  if (reserved !== 0 || type !== 1 || count === 0) {
+    recordFailure(`ico_header_invalid:${relativePath}`);
+  }
+}
+
 function validateWebManifest() {
   const manifest = JSON.parse(readUtf8("site.webmanifest"));
   requireString(manifest.name, "manifest.name");
@@ -207,6 +222,7 @@ function validateWebManifest() {
   }
   validateIconPng("assets/mullusi-icon-32.png", 32);
   validateIconPng("assets/mullusi-icon-180.png", 180);
+  validateIco("favicon.ico");
 }
 
 function validateProductRegistry() {
