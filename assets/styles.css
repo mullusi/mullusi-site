@@ -267,11 +267,11 @@ code {
   grid-template-columns: minmax(0, 1fr) minmax(320px, 0.54fr);
   gap: clamp(2rem, 5vw, 4rem);
   align-items: center;
-  min-height: 100svh;
+  min-height: clamp(740px, 92svh, 900px);
   max-width: none;
   margin: 0;
   overflow: hidden;
-  padding: 8rem max(clamp(1rem, 4vw, 2rem), calc((100vw - var(--max)) / 2 + 2rem)) 5.5rem;
+  padding: clamp(6.5rem, 11vh, 8rem) max(clamp(1rem, 4vw, 2rem), calc((100vw - var(--max)) / 2 + 2rem)) clamp(4rem, 7vh, 5.5rem);
 }
 
 .hero-bg {
@@ -310,7 +310,7 @@ code {
 .symbol-field {
   position: absolute;
   right: max(4vw, calc((100vw - var(--max)) / 2));
-  top: 18%;
+  top: clamp(6.5rem, 14vh, 8.75rem);
   z-index: 2;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -1152,10 +1152,13 @@ h3 {
   }
   .hero-copy,
   .hero-snapshot,
-  .hero-proof,
-  .status-panel {
+  .hero-proof {
     width: 100%;
     max-width: 320px;
+  }
+  .status-panel {
+    width: 100%;
+    max-width: 300px;
   }
   .hero-snapshot {
     grid-template-columns: 1fr;
@@ -1179,6 +1182,7 @@ h3 {
   .repo-grid,
   .repo-stats,
   .metric-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .omega {
     height: 125px;
     font-size: 3.25rem;
