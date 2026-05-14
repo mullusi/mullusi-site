@@ -12,12 +12,17 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 |-- CNAME                              # mullusi.com custom domain
 |-- robots.txt                         # Crawl policy
 |-- sitemap.xml                        # Search sitemap
+|-- site.webmanifest                   # Browser/app icon manifest
 |-- data/products.json                 # Product/repository registry
 |-- data/site.json                     # Structured public site content
 |-- assets/
 |   |-- app.js                         # Repo search/filter renderer
 |   |-- styles.css                     # Full visual system
 |   |-- mullusi-icon.svg                # Square favicon/header icon
+|   |-- mullusi-icon-32.png             # Browser PNG favicon fallback
+|   |-- mullusi-icon-180.png            # Apple touch icon
+|   |-- mullusi-icon-192.png            # Web app manifest icon
+|   |-- mullusi-icon-512.png            # Web app manifest icon
 |   |-- mullusi-logo.svg                # Horizontal public logo
 |   `-- mullusi-mark.svg                # Legacy compact mark reference
 `-- scripts/

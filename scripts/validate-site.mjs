@@ -19,9 +19,14 @@ const requiredFiles = [
   "CNAME",
   "robots.txt",
   "sitemap.xml",
+  "site.webmanifest",
   "assets/app.js",
   "assets/styles.css",
   "assets/mullusi-icon.svg",
+  "assets/mullusi-icon-32.png",
+  "assets/mullusi-icon-180.png",
+  "assets/mullusi-icon-192.png",
+  "assets/mullusi-icon-512.png",
   "assets/mullusi-logo.svg",
   "assets/mullusi-mark.svg",
   "data/products.json",
@@ -35,6 +40,10 @@ const allowedInterfaceStatuses = new Set(["public route", "experimental", "reser
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+}
+
+function readBinary(relativePath) {
+  return fs.readFileSync(path.join(repoRoot, relativePath));
 }
 
 function pathExists(relativePath) {
@@ -140,6 +149,64 @@ function validateLocalLinks() {
       recordFailure(`local_link_missing:${htmlFile}->${url}`);
     }
   }
+}
+
+function pngDimensions(relativePath) {
+  const content = readBinary(relativePath);
+  const signature = "89504e470d0a1a0a";
+  if (content.subarray(0, 8).toString("hex") !== signature) {
+    recordFailure(`png_signature_invalid:${relativePath}`);
+    return null;
+  }
+  return {
+    width: content.readUInt32BE(16),
+    height: content.readUInt32BE(20),
+  };
+}
+
+function validateIconPng(relativePath, expectedSize) {
+  const dimensions = pngDimensions(relativePath);
+  if (!dimensions) {
+    return;
+  }
+  if (dimensions.width !== expectedSize || dimensions.height !== expectedSize) {
+    recordFailure(`png_size_invalid:${relativePath}:${dimensions.width}x${dimensions.height}`);
+  }
+}
+
+function validateWebManifest() {
+  const manifest = JSON.parse(readUtf8("site.webmanifest"));
+  requireString(manifest.name, "manifest.name");
+  requireString(manifest.short_name, "manifest.short_name");
+  requireString(manifest.start_url, "manifest.start_url");
+  requireString(manifest.display, "manifest.display");
+  if (manifest.theme_color !== "#05060a") {
+    recordFailure(`manifest_theme_color_invalid:${manifest.theme_color}`);
+  }
+  if (!Array.isArray(manifest.icons) || manifest.icons.length === 0) {
+    recordFailure("manifest_icons_missing");
+    return;
+  }
+  for (const [index, icon] of manifest.icons.entries()) {
+    const label = `manifest.icons.${index}`;
+    const src = requireString(icon.src, `${label}.src`);
+    const sizes = requireString(icon.sizes, `${label}.sizes`);
+    if (icon.type !== "image/png") {
+      recordFailure(`manifest_icon_type_invalid:${src}:${icon.type}`);
+    }
+    if (!pathExists(src)) {
+      recordFailure(`manifest_icon_missing:${src}`);
+      continue;
+    }
+    const sizeMatch = sizes.match(/^(\d+)x\1$/);
+    if (!sizeMatch) {
+      recordFailure(`manifest_icon_size_format_invalid:${src}:${sizes}`);
+      continue;
+    }
+    validateIconPng(src, Number(sizeMatch[1]));
+  }
+  validateIconPng("assets/mullusi-icon-32.png", 32);
+  validateIconPng("assets/mullusi-icon-180.png", 180);
 }
 
 function validateProductRegistry() {
@@ -260,10 +327,11 @@ function validatePublicText() {
     new RegExp("api[_-]?" + "key\\s*[:=]", "i"),
     new RegExp("tok" + "en\\s*[:=]", "i"),
   ];
+  const textFilePattern = /\.(?:css|html|js|json|md|mjs|svg|txt|webmanifest|xml|ya?ml)$/i;
   const filesToScan = [
     ...requiredFiles,
     ".github/workflows/validate.yml",
-  ].filter(pathExists);
+  ].filter((fileName) => pathExists(fileName) && textFilePattern.test(fileName));
 
   for (const fileName of filesToScan) {
     const content = readUtf8(fileName);
@@ -281,6 +349,7 @@ function runValidation() {
   validateRobots();
   validateSitemap();
   validateLocalLinks();
+  validateWebManifest();
   validateProductRegistry();
   validateSiteContent();
   validatePublicText();
