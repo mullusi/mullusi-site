@@ -28,6 +28,7 @@ const requiredFiles = [
   "assets/mullusi-icon-180.png",
   "assets/mullusi-icon-192.png",
   "assets/mullusi-icon-512.png",
+  "assets/mullusi-icon-transparent.svg",
   "assets/mullusi-logo.svg",
   "assets/mullusi-mark.svg",
   "data/products.json",

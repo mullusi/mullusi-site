@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="mullusiTransparentIconTitle mullusiTransparentIconDesc">
+  <!--
+  Purpose: transparent-background Mullusi icon variant for profiles, embeds, and external brand usage.
+  Governance scope: standalone vector symbol; deterministic geometry; no runtime dependency.
+  Dependencies: SVG 1.1 rendering only.
+  Invariants: transparent canvas, square 128 viewBox, centered monogram, no page wiring.
+  -->
+  <title id="mullusiTransparentIconTitle">Mullusi transparent icon</title>
+  <desc id="mullusiTransparentIconDesc">A transparent Mullusi monogram with a minimal symbolic mesh and no background plate.</desc>
+  <defs>
+    <linearGradient id="transparentIconGold" x1="28" y1="22" x2="104" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff2b8"/>
+      <stop offset="0.52" stop-color="#e8c56c"/>
+      <stop offset="1" stop-color="#a5792c"/>
+    </linearGradient>
+    <linearGradient id="transparentIconCore" x1="32" y1="42" x2="96" y2="93" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4efe1"/>
+      <stop offset="0.55" stop-color="#e8c56c"/>
+      <stop offset="1" stop-color="#60e8b8"/>
+    </linearGradient>
+    <filter id="transparentIconLift" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#05060a" flood-opacity="0.42"/>
+    </filter>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="64" cy="64" r="43" stroke="url(#transparentIconGold)" stroke-width="3"/>
+    <circle cx="64" cy="64" r="27" stroke="#60e8b8" stroke-opacity="0.34" stroke-width="2"/>
+    <path d="M31 70h66M64 27v76M42 42l44 44M86 42 42 86" stroke="#e8c56c" stroke-opacity="0.24" stroke-width="2"/>
+  </g>
+  <path filter="url(#transparentIconLift)" d="M31 88V42c0-3.2 4.1-4.7 6.2-2.3L64 69.1l26.8-29.4c2.1-2.4 6.2-.9 6.2 2.3v46H84.6V62.9L68.2 80.8c-2.3 2.5-6.1 2.5-8.4 0L43.4 62.9V88H31Z" fill="url(#transparentIconCore)"/>
+  <path d="M39 98h50" fill="none" stroke="#60e8b8" stroke-opacity="0.82" stroke-width="4" stroke-linecap="round"/>
+  <g fill="#f4efe1">
+    <circle cx="64" cy="27" r="3.4"/>
+    <circle cx="31" cy="70" r="3.1"/>
+    <circle cx="97" cy="70" r="3.1"/>
+  </g>
+  <g fill="#e8c56c">
+    <circle cx="42" cy="42" r="2.8"/>
+    <circle cx="86" cy="42" r="2.8"/>
+    <circle cx="42" cy="86" r="2.8"/>
+    <circle cx="86" cy="86" r="2.8"/>
+  </g>
+</svg>

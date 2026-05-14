@@ -24,6 +24,7 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 |   |-- mullusi-icon-180.png            # Apple touch icon
 |   |-- mullusi-icon-192.png            # Web app manifest icon
 |   |-- mullusi-icon-512.png            # Web app manifest icon
+|   |-- mullusi-icon-transparent.svg    # Transparent icon variant
 |   |-- mullusi-logo.svg                # Horizontal public logo
 |   `-- mullusi-mark.svg                # Legacy compact mark reference
 `-- scripts/
