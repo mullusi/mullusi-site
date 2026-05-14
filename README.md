@@ -116,6 +116,14 @@ Recommended public domain repo names:
 - `mullusi-music-engine`
 - `mullusi-unified-science-lab`
 
+## Contact routing
+
+Public website contact is currently `mullusiofficial@gmail.com`.
+
+Use `social@mullusi.com` for social media platform ownership, verification messages, and platform notices. Keep it separate from public website contact unless the site intentionally exposes a social-team address.
+
+Use `research@mullusi.com` for research conversations and `tamirat@mullusi.com` for named stewardship access.
+
 ## Governance boundary
 
 The site presents public claims only. Keep launch claims separate from research claims, and keep private/internal repos out of the public registry until they are deliberately published.
