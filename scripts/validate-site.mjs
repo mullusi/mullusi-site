@@ -21,6 +21,8 @@ const requiredFiles = [
   "sitemap.xml",
   "assets/app.js",
   "assets/styles.css",
+  "assets/mullusi-icon.svg",
+  "assets/mullusi-logo.svg",
   "assets/mullusi-mark.svg",
   "data/products.json",
   "data/site.json",

@@ -17,7 +17,9 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 |-- assets/
 |   |-- app.js                         # Repo search/filter renderer
 |   |-- styles.css                     # Full visual system
-|   `-- mullusi-mark.svg               # Site icon / mark
+|   |-- mullusi-icon.svg                # Square favicon/header icon
+|   |-- mullusi-logo.svg                # Horizontal public logo
+|   `-- mullusi-mark.svg                # Legacy compact mark reference
 `-- scripts/
     |-- validate-site.mjs              # Static validation gate
     `-- verify-registry-repos.mjs      # Public GitHub repo visibility check

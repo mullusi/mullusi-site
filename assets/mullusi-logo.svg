@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 192" role="img" aria-labelledby="mullusiLogoTitle mullusiLogoDesc">
+  <!--
+  Purpose: primary Mullusi horizontal logo for website, documents, and public brand surfaces.
+  Governance scope: standalone vector wordmark plus compact icon; deterministic geometry; no runtime dependency.
+  Dependencies: SVG 1.1 rendering and local system sans-serif font fallback.
+  Invariants: transparent outer background, 128-unit icon, readable wordmark at public website sizes.
+  -->
+  <title id="mullusiLogoTitle">Mullusi logo</title>
+  <desc id="mullusiLogoDesc">The Mullusi wordmark paired with a professional symbolic mesh icon.</desc>
+  <defs>
+    <linearGradient id="logoBackground" x1="42" y1="44" x2="136" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#131723"/>
+      <stop offset="0.55" stop-color="#090b11"/>
+      <stop offset="1" stop-color="#05060a"/>
+    </linearGradient>
+    <linearGradient id="logoRim" x1="44" y1="48" x2="132" y2="144" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff2b8"/>
+      <stop offset="0.52" stop-color="#e8c56c"/>
+      <stop offset="1" stop-color="#60e8b8"/>
+    </linearGradient>
+    <linearGradient id="logoMonogram" x1="60" y1="74" x2="118" y2="122" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4efe1"/>
+      <stop offset="0.55" stop-color="#e8c56c"/>
+      <stop offset="1" stop-color="#60e8b8"/>
+    </linearGradient>
+    <linearGradient id="logoRule" x1="184" y1="145" x2="624" y2="145" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#60e8b8"/>
+      <stop offset="0.55" stop-color="#e8c56c"/>
+      <stop offset="1" stop-color="#9982ff"/>
+    </linearGradient>
+    <filter id="logoLift" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <g aria-hidden="true">
+    <rect x="24" y="32" width="128" height="128" rx="30" fill="url(#logoBackground)"/>
+    <rect x="32" y="40" width="112" height="112" rx="26" fill="none" stroke="url(#logoRim)" stroke-opacity="0.46" stroke-width="2"/>
+    <path d="M56 104h64M88 64v64M65 73l46 46M111 73 65 119" fill="none" stroke="#e8c56c" stroke-opacity="0.13" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="88" cy="96" r="38" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.5"/>
+    <path filter="url(#logoLift)" d="M58 119V76c0-3 3.8-4.4 5.8-2.2L88 100.3l24.2-26.5c2-2.2 5.8-.8 5.8 2.2v43h-11.5V96.2l-14.6 15.9c-2.1 2.3-5.7 2.3-7.8 0L69.5 96.2V119H58Z" fill="url(#logoMonogram)"/>
+    <path d="M64 128h48" fill="none" stroke="#60e8b8" stroke-opacity="0.72" stroke-width="3" stroke-linecap="round"/>
+    <g fill="#f4efe1">
+      <circle cx="88" cy="64" r="3"/>
+      <circle cx="56" cy="104" r="2.6"/>
+      <circle cx="120" cy="104" r="2.6"/>
+    </g>
+    <g fill="#e8c56c">
+      <circle cx="65" cy="73" r="2.4"/>
+      <circle cx="111" cy="73" r="2.4"/>
+      <circle cx="65" cy="119" r="2.4"/>
+      <circle cx="111" cy="119" r="2.4"/>
+    </g>
+  </g>
+  <text x="184" y="91" fill="#f4efe1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="48" font-weight="900" letter-spacing="13">MULLUSI</text>
+  <text x="187" y="126" fill="#a6a092" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14" font-weight="800" letter-spacing="3.2">SYMBOLIC INTELLIGENCE INFRASTRUCTURE</text>
+  <path d="M188 146h426" fill="none" stroke="url(#logoRule)" stroke-width="3" stroke-linecap="round"/>
+  <g fill="#e8c56c">
+    <circle cx="188" cy="146" r="4"/>
+    <circle cx="614" cy="146" r="4"/>
+  </g>
+  <g fill="#60e8b8">
+    <circle cx="314" cy="146" r="3"/>
+    <circle cx="456" cy="146" r="3"/>
+  </g>
+</svg>
