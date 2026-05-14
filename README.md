@@ -1,18 +1,94 @@
-# mullusi-site
+# Mullusi Website
 
-This is the public website repository for **Mullu Symbolic Intelligence (MulluSI)**.
+Static public website package for `mullusi.com`.
 
-URL: [https://mullusi.github.io](https://mullusi.github.io)  
-(Will later link to: **https://mullusi.com** via custom DNS)
+This package is designed for the current `mullusi/mullusi-site` GitHub Pages flow. It does not require a build step, package manager, framework, database, or server runtime.
 
-## 🔍 Purpose
+## What is included
 
-- Showcase symbolic AI foundations (Mfidel, TaToken, etc.)
-- Present vision, architecture, and applications of Mullu
-- Share research, demos, and symbolic tools with the world
-- Enable global access to Mullu-based services
+```text
+.
+├── index.html              # Public landing page
+├── CNAME                   # mullusi.com custom domain
+├── robots.txt              # Crawl policy
+├── sitemap.xml             # Search sitemap
+├── data/products.json      # Product/repository registry
+└── assets/
+    ├── app.js              # Repo search/filter renderer
+    ├── styles.css          # Full visual system
+    └── mullusi-mark.svg    # Site icon / mark
+```
 
-## 🛠️ Built with
+## Product registry contract
 
-- GitHub Pages (static site)
-- Future options: React, Jekyll, Next.js, or Docusaurus
+`data/products.json` is the public source of truth for website product cards.
+
+Each public product entry should use:
+
+```json
+{
+  "name": "Mullusi Core",
+  "repo": "mullusi/mullusi-core",
+  "href": "https://github.com/mullusi/mullusi-core",
+  "category": "Core",
+  "status": "public",
+  "summary": "Short visitor-facing description.",
+  "tags": ["engine", "symbolic"]
+}
+```
+
+Future products use `futureDomains` until the repository exists:
+
+```json
+{
+  "name": "Mullusi Biology Engine",
+  "slug": "biology",
+  "plannedRepo": "mullusi-biology-engine",
+  "status": "planned",
+  "summary": "Causal biological structure engine..."
+}
+```
+
+Private repositories are intentionally excluded from the public registry. Add them only when they are safe for public exposure.
+
+## Deploy to GitHub Pages
+
+1. Copy this package into the root of `mullusi/mullusi-site`.
+2. Commit the files.
+3. Push to `main`.
+4. Confirm GitHub Pages is serving from the repository root.
+5. Confirm DNS points `mullusi.com` to GitHub Pages and that the `CNAME` file remains present.
+
+Commands:
+
+```bash
+git clone https://github.com/mullusi/mullusi-site.git
+cd mullusi-site
+cp -R /path/to/mullusi_website/* .
+git add .
+git commit -m "Create Mullusi public product website"
+git push origin main
+```
+
+## Local preview
+
+```bash
+python3 -m http.server 8080
+# open http://localhost:8080
+```
+
+## Update rule
+
+When a new product repository is created, update only `data/products.json` first. The page will render the new card automatically.
+
+Recommended public domain repo names:
+
+- `mullusi-math-engine`
+- `mullusi-biology-engine`
+- `mullusi-chemistry-engine`
+- `mullusi-music-engine`
+- `mullusi-unified-science-lab`
+
+## Governance boundary
+
+The site presents public claims only. Keep launch claims separate from research claims, and keep private/internal repos out of the public registry until they are deliberately published.

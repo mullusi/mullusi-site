@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Mullusi mark">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#fff0ae"/>
+      <stop offset="55%" stop-color="#e8c56c"/>
+      <stop offset="100%" stop-color="#7a5cf0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="#05060a"/>
+  <circle cx="64" cy="64" r="46" fill="none" stroke="url(#g)" stroke-width="4" opacity="0.86"/>
+  <circle cx="64" cy="64" r="22" fill="none" stroke="#60e8b8" stroke-width="2" opacity="0.8"/>
+  <path d="M64 16v96M16 64h96M31 31l66 66M97 31 31 97" stroke="#e8c56c" stroke-width="1.5" opacity="0.42"/>
+  <text x="64" y="74" font-size="36" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" fill="#f4efe1">ሙ</text>
+</svg>

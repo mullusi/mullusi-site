@@ -1,0 +1,252 @@
+{
+  "meta": {
+    "name": "Mullusi",
+    "domain": "mullusi.com",
+    "version": "2026.05.public-site",
+    "description": "Public product and research website for Mullusi Symbolic Intelligence."
+  },
+  "principles": [
+    "Symbols are atomic.",
+    "Meaning is relational.",
+    "Traversal is governed.",
+    "Judgment is earned.",
+    "Every effect must carry lineage."
+  ],
+  "systems": [
+    {
+      "name": "Mullusi Core",
+      "repo": "mullusi/mullusi-core",
+      "href": "https://github.com/mullusi/mullusi-core",
+      "category": "Core",
+      "status": "public",
+      "summary": "Symbolic execution engine, type system, and expression tree evaluator for Mullu.",
+      "tags": ["engine", "types", "evaluator", "symbolic"]
+    },
+    {
+      "name": "Mullusi Foundation",
+      "repo": "mullusi/mullusi-foundation",
+      "href": "https://github.com/mullusi/mullusi-foundation",
+      "category": "Core",
+      "status": "public",
+      "summary": "Formal symbolic blueprints for causality, type theory, Yoneda reasoning, and core semantics.",
+      "tags": ["formal", "causality", "semantics", "proofs"]
+    },
+    {
+      "name": "Mullu Control Plane",
+      "repo": "tamirat-wubie/mullu-control-plane",
+      "href": "https://github.com/tamirat-wubie/mullu-control-plane",
+      "category": "Platform",
+      "status": "active",
+      "summary": "Governed symbolic work platform: gateway, approvals, traces, budgets, lineage, and deployment controls.",
+      "tags": ["governance", "gateway", "approvals", "audit"]
+    },
+    {
+      "name": "SymbolAgent",
+      "repo": "tamirat-wubie/symbolagent",
+      "href": "https://github.com/tamirat-wubie/symbolagent",
+      "category": "Platform",
+      "status": "active",
+      "summary": "Governed multi-channel symbolic assistant runtime with deterministic kernel, audit ledger, and channel gateway.",
+      "tags": ["assistant", "kernel", "multi-channel", "audit"]
+    },
+    {
+      "name": "MSIC SDK",
+      "repo": "tamirat-wubie/msic-sdk",
+      "href": "https://github.com/tamirat-wubie/msic-sdk",
+      "category": "SDK",
+      "status": "public",
+      "summary": "Mullu Symbolic Intelligence Cell SDK for deterministic governed causal-chain symbolic computation.",
+      "tags": ["sdk", "msic", "mfidel", "typescript"]
+    },
+    {
+      "name": "Mullusi Physics Engine",
+      "repo": "tamirat-wubie/mullusi-physics-engine",
+      "href": "https://github.com/tamirat-wubie/mullusi-physics-engine",
+      "category": "Science",
+      "status": "live demo",
+      "summary": "Symbolic causal physics hypothesis engine that maps regimes, axioms, bridges, open problems, and execution plans.",
+      "tags": ["physics", "hypothesis", "causal", "research"]
+    },
+    {
+      "name": "Symbolic Physics Research Engine",
+      "repo": "tamirat-wubie/symbolic-physics-research-engine",
+      "href": "https://github.com/tamirat-wubie/symbolic-physics-research-engine",
+      "category": "Science",
+      "status": "research",
+      "summary": "Research workspace for symbolic physics reasoning and causal scientific exploration.",
+      "tags": ["physics", "research", "symbolic"]
+    },
+    {
+      "name": "Phi DNA v2",
+      "repo": "tamirat-wubie/phi-dna-v2",
+      "href": "https://github.com/tamirat-wubie/phi-dna-v2",
+      "category": "Science",
+      "status": "research",
+      "summary": "Phi/DNA symbolic research surface for biological structure, lineage, and causal representation.",
+      "tags": ["biology", "phi", "dna", "symbolic"]
+    },
+    {
+      "name": "Glyph Geometry Engine",
+      "repo": "tamirat-wubie/glyph-geometry-engine",
+      "href": "https://github.com/tamirat-wubie/glyph-geometry-engine",
+      "category": "Science",
+      "status": "public",
+      "summary": "Geometry layer for glyph-anchored symbolic structures and visual reasoning.",
+      "tags": ["geometry", "glyph", "visual", "math"]
+    },
+    {
+      "name": "Temporal Causal Chain Reasoning",
+      "repo": "tamirat-wubie/temporal-causal-chain-reasoning",
+      "href": "https://github.com/tamirat-wubie/temporal-causal-chain-reasoning",
+      "category": "Reasoning",
+      "status": "public",
+      "summary": "Temporal causal chain reasoning experiments for durable state, sequence, and continuity.",
+      "tags": ["temporal", "causal", "reasoning"]
+    },
+    {
+      "name": "Mullu SCC",
+      "repo": "tamirat-wubie/mullu-scc",
+      "href": "https://github.com/tamirat-wubie/mullu-scc",
+      "category": "Governance",
+      "status": "public",
+      "summary": "Symbolic causal chain layer for governance, constraint propagation, and auditable transitions.",
+      "tags": ["scc", "chain", "governance"]
+    },
+    {
+      "name": "SCC Harness",
+      "repo": "tamirat-wubie/scc-harness",
+      "href": "https://github.com/tamirat-wubie/scc-harness",
+      "category": "Governance",
+      "status": "public",
+      "summary": "Harness for validating symbolic causal chain behavior and closure evidence.",
+      "tags": ["test", "harness", "evidence"]
+    },
+    {
+      "name": "SCC Blockchain",
+      "repo": "tamirat-wubie/scc-blockchain",
+      "href": "https://github.com/tamirat-wubie/scc-blockchain",
+      "category": "Governance",
+      "status": "public",
+      "summary": "Chain-anchored audit and ledger experiments for symbolic causal closure.",
+      "tags": ["ledger", "audit", "blockchain"]
+    },
+    {
+      "name": "Mullu Search",
+      "repo": "tamirat-wubie/mullu-search",
+      "href": "https://github.com/tamirat-wubie/mullu-search",
+      "category": "Interface",
+      "status": "public",
+      "summary": "Search surface for symbolic systems, repositories, concepts, and governed memory.",
+      "tags": ["search", "retrieval", "memory"]
+    },
+    {
+      "name": "Mullu Inspect",
+      "repo": "tamirat-wubie/mullu-inspect",
+      "href": "https://github.com/tamirat-wubie/mullu-inspect",
+      "category": "Interface",
+      "status": "public",
+      "summary": "Inspection surface for traces, states, symbolic transitions, and runtime evidence.",
+      "tags": ["inspect", "trace", "runtime"]
+    },
+    {
+      "name": "Mullu Capsule",
+      "repo": "tamirat-wubie/mullu-capsule",
+      "href": "https://github.com/tamirat-wubie/mullu-capsule",
+      "category": "Interface",
+      "status": "public",
+      "summary": "Portable symbolic capsule pattern for bounded tasks, memory, and proof packets.",
+      "tags": ["capsule", "portable", "proof"]
+    },
+    {
+      "name": "Mullu 3D",
+      "repo": "tamirat-wubie/mullu3d",
+      "href": "https://github.com/tamirat-wubie/mullu3d",
+      "category": "Interface",
+      "status": "public",
+      "summary": "3D visualization and spatial interface experiments for symbolic intelligence systems.",
+      "tags": ["3d", "visualization", "interface"]
+    },
+    {
+      "name": "Tatoken Kernel",
+      "repo": "tamirat-wubie/tatoken-kernel",
+      "href": "https://github.com/tamirat-wubie/tatoken-kernel",
+      "category": "Language",
+      "status": "public",
+      "summary": "Token/kernel layer for symbolic representation, bounded transformation, and causal continuity.",
+      "tags": ["token", "kernel", "language"]
+    },
+    {
+      "name": "General Programming Language",
+      "repo": "tamirat-wubie/general-programming-language",
+      "href": "https://github.com/tamirat-wubie/general-programming-language",
+      "category": "Language",
+      "status": "public",
+      "summary": "Programming language exploration for symbolic computation and governed execution.",
+      "tags": ["language", "compiler", "programming"]
+    },
+    {
+      "name": "Symbolic Causal Chain Machine Language",
+      "repo": "tamirat-wubie/symbolic-causal-chain-machine-language",
+      "href": "https://github.com/tamirat-wubie/symbolic-causal-chain-machine-language",
+      "category": "Language",
+      "status": "public",
+      "summary": "Machine-language direction for symbolic causal chain operations and formal transition control.",
+      "tags": ["machine-language", "scc", "formal"]
+    },
+    {
+      "name": "Phi Fold",
+      "repo": "tamirat-wubie/phi-fold",
+      "href": "https://github.com/tamirat-wubie/phi-fold",
+      "category": "Reasoning",
+      "status": "public",
+      "summary": "Phi folding operator research for compression, traversal, and governed reasoning state.",
+      "tags": ["phi", "fold", "compression"]
+    },
+    {
+      "name": "InceptaDive",
+      "repo": "tamirat-wubie/InceptaDive",
+      "href": "https://github.com/tamirat-wubie/InceptaDive",
+      "category": "Reasoning",
+      "status": "public",
+      "summary": "Deep traversal operator workspace for symbolic search, recursion, and structured discovery.",
+      "tags": ["traversal", "discovery", "operator"]
+    }
+  ],
+  "futureDomains": [
+    {
+      "name": "Mullusi Math Engine",
+      "slug": "math",
+      "plannedRepo": "mullusi-math-engine",
+      "status": "planned",
+      "summary": "Symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow."
+    },
+    {
+      "name": "Mullusi Biology Engine",
+      "slug": "biology",
+      "plannedRepo": "mullusi-biology-engine",
+      "status": "planned",
+      "summary": "Causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning."
+    },
+    {
+      "name": "Mullusi Chemistry Engine",
+      "slug": "chemistry",
+      "plannedRepo": "mullusi-chemistry-engine",
+      "status": "planned",
+      "summary": "Symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation."
+    },
+    {
+      "name": "Mullusi Music Engine",
+      "slug": "music",
+      "plannedRepo": "mullusi-music-engine",
+      "status": "planned",
+      "summary": "Symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure."
+    },
+    {
+      "name": "Mullusi Unified Science Lab",
+      "slug": "unified-science",
+      "plannedRepo": "mullusi-unified-science-lab",
+      "status": "planned",
+      "summary": "Cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures."
+    }
+  ]
+}
