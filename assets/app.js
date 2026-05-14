@@ -1,3 +1,5 @@
+document.documentElement.classList.add('js-enabled');
+
 const state = {
   registry: null,
   activeCategory: 'All',
@@ -168,6 +170,11 @@ function bindReveal() {
     return;
   }
 
+  const isInViewport = (item) => {
+    const rect = item.getBoundingClientRect();
+    return rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
+  };
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -177,7 +184,13 @@ function bindReveal() {
     });
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
 
-  items.forEach((item) => observer.observe(item));
+  items.forEach((item) => {
+    if (isInViewport(item)) {
+      item.classList.add('is-visible');
+      return;
+    }
+    observer.observe(item);
+  });
 }
 
 function escapeHtml(value) {

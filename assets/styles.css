@@ -26,6 +26,8 @@
 
 html { scroll-behavior: smooth; }
 
+section[id] { scroll-margin-top: 5.5rem; }
+
 body {
   margin: 0;
   background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 52%, var(--bg) 100%);
@@ -316,6 +318,7 @@ code {
 .hero-copy {
   position: relative;
   z-index: 4;
+  min-width: 0;
   max-width: 760px;
 }
 
@@ -325,6 +328,7 @@ code {
   font-weight: 800;
   letter-spacing: 0.18em;
   font-size: 0.72rem;
+  line-height: 1.45;
   margin: 0 0 1.15rem;
 }
 
@@ -336,7 +340,10 @@ h1 {
   letter-spacing: 0;
   margin-bottom: 1.5rem;
   max-width: 880px;
+  text-wrap: balance;
 }
+
+h1 span { display: block; }
 
 h2 {
   font-size: 3.45rem;
@@ -380,6 +387,7 @@ h3 {
 }
 
 .hero-proof {
+  width: 100%;
   margin-top: 2.2rem;
   padding: 1rem;
   border: 1px solid var(--line);
@@ -393,6 +401,7 @@ h3 {
   display: block;
   margin-bottom: 0.35rem;
   font-size: 1.05rem;
+  overflow-wrap: anywhere;
 }
 
 .hero-proof span { color: var(--muted); font-size: 0.88rem; }
@@ -421,6 +430,8 @@ h3 {
   z-index: 4;
   align-self: end;
   justify-self: end;
+  width: min(100%, 430px);
+  min-width: 0;
   max-width: 430px;
   padding: 1.2rem;
   border: 1px solid var(--line);
@@ -968,12 +979,17 @@ h3 {
 }
 
 .reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-enabled .reveal {
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 0.55s ease, transform 0.55s ease;
 }
 
-.reveal.is-visible {
+.js-enabled .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -1021,15 +1037,42 @@ h3 {
   .site-header { padding-inline: 0.9rem; }
   .brand { min-width: auto; }
   .brand-sub { display: none; }
-  h1 { font-size: 3.1rem; }
-  h2 { font-size: 2.35rem; }
-  .hero { padding-top: 7rem; }
+  .eyebrow {
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+  }
+  h1 { font-size: 2.45rem; }
+  h2 { font-size: 2.15rem; }
+  .hero {
+    padding: 7rem 1.25rem 4.5rem;
+  }
+  .hero-copy,
+  .hero-proof,
+  .status-panel {
+    width: 100%;
+    max-width: 340px;
+  }
+  .hero-lede {
+    font-size: 0.98rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+  .hero-proof { padding: 0.9rem; }
+  .panel-topline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    letter-spacing: 0.08em;
+  }
   .product-families,
   .science-grid,
   .repo-grid,
   .repo-stats,
   .metric-grid { grid-template-columns: 1fr; }
-  .omega { height: 190px; }
+  .omega {
+    height: 170px;
+    font-size: 4.4rem;
+  }
   .section { padding-block: 4.8rem; }
   .dark-section { padding-inline: 1rem; }
 }
