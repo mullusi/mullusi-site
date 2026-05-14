@@ -8,17 +8,18 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 
 ```text
 .
-├── index.html              # Public landing page
-├── CNAME                   # mullusi.com custom domain
-├── robots.txt              # Crawl policy
-├── sitemap.xml             # Search sitemap
-├── data/products.json      # Product/repository registry
-├── assets/
-    ├── app.js              # Repo search/filter renderer
-    ├── styles.css          # Full visual system
-    └── mullusi-mark.svg    # Site icon / mark
-└── scripts/
-    └── validate-site.mjs   # Static validation gate
+|-- index.html                         # Public landing page
+|-- CNAME                              # mullusi.com custom domain
+|-- robots.txt                         # Crawl policy
+|-- sitemap.xml                        # Search sitemap
+|-- data/products.json                 # Product/repository registry
+|-- assets/
+|   |-- app.js                         # Repo search/filter renderer
+|   |-- styles.css                     # Full visual system
+|   `-- mullusi-mark.svg               # Site icon / mark
+`-- scripts/
+    |-- validate-site.mjs              # Static validation gate
+    `-- verify-registry-repos.mjs      # Public GitHub repo visibility check
 ```
 
 ## Product registry contract
@@ -87,6 +88,12 @@ node scripts/validate-site.mjs
 ```
 
 The validation script checks required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, public-safe text, and secret-like patterns.
+
+When product registry exposure changes, also verify that listed GitHub repositories are public and reachable:
+
+```bash
+node scripts/verify-registry-repos.mjs
+```
 
 ## Update rule
 

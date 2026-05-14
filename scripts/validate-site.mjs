@@ -23,6 +23,7 @@ const requiredFiles = [
   "assets/styles.css",
   "assets/mullusi-mark.svg",
   "data/products.json",
+  "scripts/verify-registry-repos.mjs",
 ];
 
 const allowedSystemStatuses = new Set(["active", "public", "live demo", "research"]);
