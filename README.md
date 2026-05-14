@@ -13,10 +13,12 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 ├── robots.txt              # Crawl policy
 ├── sitemap.xml             # Search sitemap
 ├── data/products.json      # Product/repository registry
-└── assets/
+├── assets/
     ├── app.js              # Repo search/filter renderer
     ├── styles.css          # Full visual system
     └── mullusi-mark.svg    # Site icon / mark
+└── scripts/
+    └── validate-site.mjs   # Static validation gate
 ```
 
 ## Product registry contract
@@ -76,6 +78,15 @@ git push origin main
 python3 -m http.server 8080
 # open http://localhost:8080
 ```
+
+## Validation
+
+```bash
+node --check assets/app.js
+node scripts/validate-site.mjs
+```
+
+The validation script checks required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, public-safe text, and secret-like patterns.
 
 ## Update rule
 

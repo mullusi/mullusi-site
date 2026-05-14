@@ -1,0 +1,30 @@
+# Purpose: verify Mullusi public website package before GitHub Pages deployment.
+# Governance scope: static site files, product registry, sitemap, robots policy, local links, and public text gates.
+# Dependencies: GitHub Actions and Node.js.
+# Invariants: pushes and pull requests fail when website validation fails.
+
+name: Validate Site
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Check website JavaScript syntax
+        run: node --check assets/app.js
+
+      - name: Validate static website
+        run: node scripts/validate-site.mjs
