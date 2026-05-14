@@ -39,6 +39,7 @@ const requiredFiles = [
 const allowedSystemStatuses = new Set(["active", "public", "live demo", "research"]);
 const allowedFutureStatuses = new Set(["planned"]);
 const allowedInterfaceStatuses = new Set(["public route", "experimental", "reserved"]);
+const allowedPublicRepoOwners = new Set(["mullusi"]);
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
@@ -258,6 +259,10 @@ function validateProductRegistry() {
     }
     if (href !== `https://github.com/${repo}`) {
       recordFailure(`system_href_repo_mismatch:${name}`);
+    }
+    const [repoOwner] = repo.split("/");
+    if (!allowedPublicRepoOwners.has(repoOwner)) {
+      recordFailure(`system_repo_owner_not_public_surface:${name}:${repoOwner}`);
     }
     if (seenRepos.has(repo)) {
       recordFailure(`system_repo_duplicate:${repo}`);
