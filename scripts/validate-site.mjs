@@ -15,6 +15,8 @@ const failures = [];
 
 const requiredFiles = [
   "index.html",
+  "mullu/index.html",
+  "proof/index.html",
   "README.md",
   "CNAME",
   "favicon.ico",
