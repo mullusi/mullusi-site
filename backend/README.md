@@ -1,15 +1,15 @@
 <!--
-Purpose: document the Mullusi Govern Cloud backend skeleton.
+Purpose: document the Mullusi Govern Cloud backend package.
 Governance scope: service boundary, local setup, evaluator contract, and verification commands.
 Dependencies: Python, FastAPI runtime dependencies, and stdlib tests for the deterministic evaluator.
-Invariants: backend files remain isolated from the GitHub Pages static site and expose no runtime secrets.
+Invariants: backend files remain isolated from the public GitHub Pages site and expose no runtime secrets.
 -->
 
 # Mullusi Govern Cloud Backend
 
-This directory contains the first isolated backend skeleton for `api.mullusi.com`.
+This backend package contains the first isolated service skeleton for `api.mullusi.com`.
 
-The static website remains deployable without this backend. This service is a separate FastAPI application for the first Govern Cloud vertical slice:
+The public static website remains deployable from `mullusi/mullusi-site` without this backend. This service is a separate FastAPI application for the first Govern Cloud vertical slice:
 
 ```text
 API key -> POST /v1/govern/evaluate -> deterministic evaluator -> trace envelope -> verdict
@@ -98,7 +98,6 @@ Verification by ID requires `MULLUSI_DATABASE_URL` because the route must read t
 ## Local Setup
 
 ```bash
-cd backend
 python -m venv .venv
 .venv/Scripts/activate
 pip install -r requirements.txt
@@ -157,7 +156,6 @@ python scripts/probe_persistence.py
 Run the API and PostgreSQL together with Docker Compose:
 
 ```bash
-cd backend
 docker compose up --build
 ```
 
@@ -191,7 +189,7 @@ Production deployment order:
 2. Set `MULLUSI_DATABASE_URL` to the private database endpoint.
 3. Apply `app/db/schema.sql` using `python scripts/apply_schema.py`.
 4. Run `python scripts/preflight_release.py`.
-5. Start the API container from `backend/Dockerfile`.
+5. Start the API container from `Dockerfile`.
 6. Route `api.mullusi.com` to the container load balancer.
 7. Confirm `/v1/health`, `/v1/version`, and `scripts/probe_persistence.py`.
 
@@ -205,7 +203,7 @@ docs/api-mullusi-release-checklist.md
 ## Verification
 
 ```bash
-python -m compileall app tests
+python -m compileall app scripts tests
 python -m unittest discover -s tests
 python scripts/preflight_release.py
 ```
@@ -213,15 +211,15 @@ python scripts/preflight_release.py
 Repository CI also runs:
 
 ```text
-node --check assets/app.js
-node scripts/validate-site.mjs
 python -m compileall app scripts tests
 python -m unittest discover -s tests
 python scripts/preflight_release.py with local placeholders and expected block
-docker build -t mullusi-govern-cloud:ci backend
+docker build -t mullusi-govern-cloud:ci .
 ```
 
 CI is a release gate only. It does not publish images, route DNS, or access production secrets.
+
+`backend/.github/workflows/govern-cloud-ci.yml` is a backend-local CI template for the same service if the backend is later split into a dedicated repository.
 
 ## Governance Boundary
 

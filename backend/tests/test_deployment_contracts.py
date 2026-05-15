@@ -47,6 +47,31 @@ class DeploymentContractTests(unittest.TestCase):
         self.assertIn("release_preflight state=ready", checklist)
         self.assertIn("probe_passed", checklist)
 
+    def test_production_compose_uses_external_database_and_local_proxy_binding(self) -> None:
+        compose = (BACKEND_ROOT / "deploy" / "docker-compose.production.yaml").read_text(encoding="utf-8")
+
+        self.assertIn("${MULLUSI_IMAGE:?MULLUSI_IMAGE is required}", compose)
+        self.assertIn("/etc/mullusi/govern.env", compose)
+        self.assertIn('"127.0.0.1:8000:8000"', compose)
+        self.assertNotIn("postgres:", compose)
+
+    def test_production_environment_template_requires_replacement_values(self) -> None:
+        env_template = (BACKEND_ROOT / "deploy" / "production.env.example").read_text(encoding="utf-8")
+
+        self.assertIn("MULLUSI_REQUIRE_PERSISTENCE=true", env_template)
+        self.assertIn("MULLUSI_ALLOWED_ORIGINS=https://mullusi.com", env_template)
+        self.assertIn("replace-with-production-api-key", env_template)
+        self.assertNotIn("local-dev-key", env_template)
+
+    def test_nginx_and_systemd_templates_pin_expected_runtime_boundaries(self) -> None:
+        nginx = (BACKEND_ROOT / "deploy" / "nginx" / "api.mullusi.com.conf").read_text(encoding="utf-8")
+        systemd = (BACKEND_ROOT / "deploy" / "systemd" / "mullusi-govern.service").read_text(encoding="utf-8")
+
+        self.assertIn("server_name api.mullusi.com", nginx)
+        self.assertIn("proxy_pass http://127.0.0.1:8000", nginx)
+        self.assertIn("EnvironmentFile=/etc/mullusi/govern.env", systemd)
+        self.assertIn("docker-compose.production.yaml", systemd)
+
 
 if __name__ == "__main__":
     unittest.main()

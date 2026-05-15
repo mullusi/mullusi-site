@@ -32,7 +32,6 @@ MULLUSI_ALLOWED_ORIGINS contains only HTTPS Mullusi origins
 3. Confirm database baseline:
 
 ```bash
-cd backend
 export PYTHONPATH=$PWD
 python scripts/apply_schema.py
 python scripts/check_persistence.py
@@ -50,7 +49,6 @@ persistence_check state=ready detail=postgres_schema_ready
 Run:
 
 ```bash
-cd backend
 export PYTHONPATH=$PWD
 python scripts/preflight_release.py
 ```
@@ -76,7 +74,7 @@ database_schema state=fail
 1. Build image:
 
 ```bash
-docker build -t <registry>/mullusi-govern-cloud:<version> backend
+docker build -t <registry>/mullusi-govern-cloud:<version> .
 ```
 
 2. Publish image:
@@ -85,11 +83,20 @@ docker build -t <registry>/mullusi-govern-cloud:<version> backend
 docker push <registry>/mullusi-govern-cloud:<version>
 ```
 
-3. Deploy image to production runtime.
+3. Install host deployment templates if using the VPS/container handoff path:
 
-4. Route `api.mullusi.com` to the new runtime through TLS.
+```text
+deploy/docker-compose.production.yaml -> /opt/mullusi/govern-cloud/docker-compose.production.yaml
+deploy/production.env.example -> /etc/mullusi/govern.env after replacing placeholders
+deploy/nginx/api.mullusi.com.conf -> /etc/nginx/sites-available/api.mullusi.com.conf
+deploy/systemd/mullusi-govern.service -> /etc/systemd/system/mullusi-govern.service
+```
 
-5. Confirm health:
+4. Deploy image to production runtime.
+
+5. Route `api.mullusi.com` to the new runtime through TLS.
+
+6. Confirm health:
 
 ```bash
 curl https://api.mullusi.com/v1/health
@@ -108,7 +115,6 @@ Expected:
 Run the full request path:
 
 ```bash
-cd backend
 export PYTHONPATH=$PWD
 export MULLUSI_API_BASE_URL=https://api.mullusi.com
 python scripts/probe_persistence.py

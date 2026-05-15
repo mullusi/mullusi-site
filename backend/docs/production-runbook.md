@@ -40,7 +40,7 @@ MULLUSI_ALLOWED_ORIGINS contains only HTTPS Mullusi public origins
 3. Set production environment variables in the deployment platform secret store.
 4. Apply the schema with `python scripts/apply_schema.py`.
 5. Run `python scripts/preflight_release.py`; release is blocked unless state is `ready`.
-6. Deploy the container built from `backend/Dockerfile`.
+6. Deploy the container built from `Dockerfile`.
 7. Route `api.mullusi.com` through the load balancer with TLS.
 8. Run `python scripts/probe_persistence.py` against `https://api.mullusi.com`.
 9. Record the release evidence: image digest, schema hash, preflight output, probe output, operator, and timestamp.
@@ -74,7 +74,6 @@ postgres
 Apply schema:
 
 ```bash
-cd backend
 export PYTHONPATH=$PWD
 python scripts/apply_schema.py
 ```
@@ -102,7 +101,6 @@ persistence_check state=ready detail=postgres_schema_ready
 Run before any public traffic shift:
 
 ```bash
-cd backend
 export PYTHONPATH=$PWD
 python scripts/preflight_release.py
 ```
@@ -122,7 +120,7 @@ Any `state=fail` blocks release.
 Build and publish:
 
 ```bash
-docker build -t mullusi-govern-cloud:<version> backend
+docker build -t mullusi-govern-cloud:<version> .
 docker push <registry>/mullusi-govern-cloud:<version>
 ```
 
@@ -130,6 +128,24 @@ Start command:
 
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+Host-side deployment templates live in:
+
+```text
+deploy/production.env.example
+deploy/docker-compose.production.yaml
+deploy/nginx/api.mullusi.com.conf
+deploy/systemd/mullusi-govern.service
+```
+
+Production host layout:
+
+```text
+/opt/mullusi/govern-cloud/docker-compose.production.yaml
+/etc/mullusi/govern.env
+/etc/nginx/sites-available/api.mullusi.com.conf
+/etc/systemd/system/mullusi-govern.service
 ```
 
 Health routes:
@@ -144,7 +160,6 @@ GET /v1/version
 Probe production:
 
 ```bash
-cd backend
 export PYTHONPATH=$PWD
 export MULLUSI_API_BASE_URL=https://api.mullusi.com
 python scripts/probe_persistence.py
