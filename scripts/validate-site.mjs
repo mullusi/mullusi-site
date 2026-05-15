@@ -138,20 +138,46 @@ function validateSitemap() {
 }
 
 function validateLocalLinks() {
-  const htmlFile = "index.html";
-  const ids = idsForHtmlFile(htmlFile);
-  const html = readUtf8(htmlFile);
-  for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
-    const url = match[1];
-    if (/^(https?:|mailto:|#)/.test(url)) {
-      if (url.startsWith("#") && !ids.has(url.slice(1))) {
-        recordFailure(`local_anchor_missing:${url}`);
+  for (const htmlFile of ["index.html", "mullu/index.html", "proof/index.html"]) {
+    const ids = idsForHtmlFile(htmlFile);
+    const html = readUtf8(htmlFile);
+    for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
+      const url = match[1];
+      if (/^(https?:|mailto:|#)/.test(url)) {
+        if (url.startsWith("#") && !ids.has(url.slice(1))) {
+          recordFailure(`local_anchor_missing:${htmlFile}:${url}`);
+        }
+        continue;
       }
-      continue;
+      const target = localTargetPath(htmlFile, url);
+      if (!pathExists(target)) {
+        recordFailure(`local_link_missing:${htmlFile}->${url}`);
+      }
     }
-    const target = localTargetPath(htmlFile, url);
-    if (!pathExists(target)) {
-      recordFailure(`local_link_missing:${htmlFile}->${url}`);
+  }
+}
+
+function validateProductionClaimBoundary() {
+  const requiredTerms = [
+    "Production Claim Boundary",
+    "Mullusi",
+    "Mullu",
+    "AwaitingEvidence",
+    "/health",
+    "/gateway/witness",
+    "/runtime/conformance",
+    "/proof/",
+  ];
+
+  for (const htmlFile of ["index.html", "mullu/index.html"]) {
+    const html = readUtf8(htmlFile);
+    if (!html.includes('id="production-boundary"')) {
+      recordFailure(`production_boundary_section_missing:${htmlFile}`);
+    }
+    for (const term of requiredTerms) {
+      if (!html.includes(term)) {
+        recordFailure(`production_boundary_term_missing:${htmlFile}:${term}`);
+      }
     }
   }
 }
@@ -459,6 +485,7 @@ function runValidation() {
   validateRobots();
   validateSitemap();
   validateLocalLinks();
+  validateProductionClaimBoundary();
   validateWebManifest();
   validateProductRegistry();
   validateSiteContent();
