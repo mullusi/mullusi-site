@@ -819,6 +819,66 @@ p {
   border-bottom: 1px solid var(--line);
 }
 
+.claim-boundary {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+.claim-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+  gap: 34px;
+  align-items: start;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  padding: clamp(24px, 4vw, 44px);
+  backdrop-filter: blur(6px);
+}
+
+.claim-panel h2 {
+  margin-top: 14px;
+  max-width: 18ch;
+}
+
+.claim-panel p {
+  margin-top: 16px;
+  max-width: 54ch;
+}
+
+.claim-ledger {
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.claim-ledger div {
+  background: var(--panel-field);
+  padding: 18px 20px;
+}
+
+.claim-ledger dt {
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.claim-ledger dd {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.claim-ledger a,
+.state-token {
+  color: var(--accent);
+}
+
+.state-token {
+  font-weight: 700;
+}
+
 #repos {
   padding-bottom: 58px;
 }
@@ -1645,6 +1705,10 @@ p {
 
   .hero-foot {
     display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .claim-panel {
     grid-template-columns: 1fr;
   }
 
