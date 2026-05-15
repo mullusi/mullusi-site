@@ -1,0 +1,51 @@
+# Purpose: provide local PostgreSQL for Mullusi Govern Cloud persistence.
+# Governance scope: local-only database process, named volume, and deterministic port binding.
+# Dependencies: Docker Compose and the official PostgreSQL image.
+# Invariants: this file is for local development only and does not contain production credentials.
+services:
+  api:
+    build:
+      context: .
+    container_name: mullusi-govern-api
+    environment:
+      MULLUSI_DEV_API_KEY: ${MULLUSI_DEV_API_KEY:-local-dev-key}
+      MULLUSI_PROOF_SIGNING_KEY: ${MULLUSI_PROOF_SIGNING_KEY:-local-proof-key}
+      MULLUSI_DATABASE_URL: postgresql://mullusi:${MULLUSI_POSTGRES_PASSWORD:-mullusi_local_dev}@postgres:5432/mullusi_govern
+      MULLUSI_REQUIRE_PERSISTENCE: "true"
+      MULLUSI_ALLOWED_ORIGINS: ${MULLUSI_ALLOWED_ORIGINS:-https://mullusi.com,https://www.mullusi.com,https://dashboard.mullusi.com,http://localhost:5173,http://127.0.0.1:5173}
+    ports:
+      - "${MULLUSI_API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/v1/health', timeout=3).read()",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: mullusi-govern-postgres
+    environment:
+      POSTGRES_DB: mullusi_govern
+      POSTGRES_USER: mullusi
+      POSTGRES_PASSWORD: ${MULLUSI_POSTGRES_PASSWORD:-mullusi_local_dev}
+    ports:
+      - "55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mullusi -d mullusi_govern"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - mullusi_govern_pgdata:/var/lib/postgresql/data
+
+volumes:
+  mullusi_govern_pgdata:
