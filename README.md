@@ -144,10 +144,6 @@ When registry exposure changes, also verify that listed GitHub repositories are 
 node scripts/verify-registry-repos.mjs
 ```
 
-## CI gate
-
-`.github/workflows/mullusi-ci.yml` runs the public site validation, backend compile/tests, local release-preflight block, and Govern Cloud container build. It is a verification gate only; it does not deploy or use production secrets.
-
 ## Update rule
 
 When a new product repository is ready for public exposure, update only `data/products.json` first. The page will render the new card automatically. Until then, keep it in private incubation language or `futureDomains`.
