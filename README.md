@@ -9,6 +9,8 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 ```text
 .
 |-- index.html                         # Public landing page
+|-- mullu/index.html                   # Flagship Mullu product route
+|-- proof/index.html                   # Public proof-boundary route
 |-- CNAME                              # mullusi.com custom domain
 |-- favicon.ico                        # Legacy browser favicon
 |-- robots.txt                         # Crawl policy
@@ -130,6 +132,11 @@ node scripts/validate-site.mjs
 ```
 
 The validation script checks required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, public-safe text, and secret-like patterns.
+
+The public homepage must keep this product boundary explicit: Mullusi is the
+company umbrella, Mullu is the flagship governed symbolic product, and live
+runtime readiness stays AwaitingEvidence until witness endpoints are published
+and validated.
 
 When registry exposure changes, also verify that listed GitHub repositories are public and reachable:
 
