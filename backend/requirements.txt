@@ -1,8 +1,0 @@
-# Purpose: declare runtime dependencies for the Mullusi Govern Cloud FastAPI skeleton.
-# Governance scope: transport dependencies only; deterministic evaluator remains stdlib-only.
-# Dependencies: FastAPI, Uvicorn, and Pydantic through FastAPI.
-# Invariants: no secret values, lockfile, or environment-specific paths belong in this file.
-fastapi>=0.110,<1.0
-uvicorn[standard]>=0.27,<1.0
-psycopg[binary]>=3.1,<4.0
-httpx>=0.27,<1.0
