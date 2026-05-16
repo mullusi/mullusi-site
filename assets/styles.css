@@ -374,6 +374,11 @@ p {
   background: linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
 }
 
+.lang-toggle [data-lang-label] {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .menu-toggle {
   display: none;
   flex: 0 0 auto;

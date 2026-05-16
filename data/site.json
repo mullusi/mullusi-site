@@ -8,22 +8,42 @@
     {
       "label": "Identity",
       "title": "Immutable public boundary",
-      "summary": "Mullusi is presented as one governed system across website, docs, repositories, sandbox, metrics, and public contact paths."
+      "summary": "Mullusi is presented as one governed system across website, docs, repositories, sandbox, metrics, and public contact paths.",
+      "am": {
+        "label": "ማንነት",
+        "title": "የማይለወጥ ይፋዊ ወሰን",
+        "summary": "ሙሉሲ በድረ-ገጽ፣ በሰነዶች፣ በሪፖዚቶሪዎች፣ በsandbox፣ በmetrics እና በይፋዊ የመገናኛ መንገዶች ላይ እንደ አንድ የሚተዳደር ሥርዓት ይቀርባል።"
+      }
     },
     {
       "label": "Governance",
       "title": "Claims tied to evidence",
-      "summary": "Public claims are separated into the deployed website, private incubation, planned domains, and operational interfaces."
+      "summary": "Public claims are separated into the deployed website, private incubation, planned domains, and operational interfaces.",
+      "am": {
+        "label": "አስተዳደር",
+        "title": "የይገባኛል ጥያቄዎች ከማስረጃ ጋር የተሳሰሩ",
+        "summary": "ይፋዊ የይገባኛል ጥያቄዎች ወደ ተሰማራው ድረ-ገጽ፣ የግል ማብሰያ፣ ታቅደው ያሉ ጎራዎችና የአሠራር በይነገጾች ይከፋፈላሉ።"
+      }
     },
     {
       "label": "Structure",
       "title": "Content is data-backed",
-      "summary": "Deployment card, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records."
+      "summary": "Deployment card, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records.",
+      "am": {
+        "label": "መዋቅር",
+        "title": "ይዘት በውሂብ የተደገፈ ነው",
+        "summary": "የስምሪት ካርድ፣ የተዘጋጁ የጎራ ሞተሮች፣ የበይነገጽ አገናኞች፣ የማረጋገጫ መስመሮችና የመንገድ ካርታ ደረጃዎች እንደ የተዋቀሩ መዝገቦች ተቀርጸዋል።"
+      }
     },
     {
       "label": "Evolution",
       "title": "Expansion without redesign",
-      "summary": "New repositories and domains enter the public site only after their release boundary is verified."
+      "summary": "New repositories and domains enter the public site only after their release boundary is verified.",
+      "am": {
+        "label": "ዝግመተ ለውጥ",
+        "title": "ያለ ድጋሚ ንድፍ መስፋፋት",
+        "summary": "አዲስ ሪፖዚቶሪዎችና ጎራዎች የመለቀቅ ወሰናቸው ከተረጋገጠ በኋላ ብቻ ወደ ይፋዊ ጣቢያ ይገባሉ።"
+      }
     }
   ],
   "interfaces": [
@@ -31,25 +51,45 @@
       "name": "Docs",
       "href": "https://docs.mullusi.com",
       "summary": "Reference material, architecture notes, and public learning paths.",
-      "status": "public route"
+      "status": "public route",
+      "am": {
+        "name": "ሰነዶች",
+        "status": "ይፋዊ መንገድ",
+        "summary": "የማመሳከሪያ ቁሳቁስ፣ የአርክቴክቸር ማስታወሻዎችና ይፋዊ የመማሪያ መንገዶች።"
+      }
     },
     {
       "name": "Sandbox",
       "href": "https://sandbox.mullusi.com",
       "summary": "Experimental surface for governed demonstrations and prototypes.",
-      "status": "experimental"
+      "status": "experimental",
+      "am": {
+        "name": "Sandbox",
+        "status": "ሙከራዊ",
+        "summary": "ለሚተዳደሩ ማሳያዎችና ፕሮቶታይፖች ሙከራዊ ገጽ።"
+      }
     },
     {
       "name": "API",
       "href": "https://api.mullusi.com",
       "summary": "Public gateway reserved for service contracts and machine-facing endpoints.",
-      "status": "reserved"
+      "status": "reserved",
+      "am": {
+        "name": "API",
+        "status": "የተያዘ",
+        "summary": "ለአገልግሎት ውሎችና ለማሽን-ተኮር መዳረሻዎች የተያዘ ይፋዊ መግቢያ።"
+      }
     },
     {
       "name": "Metrics",
       "href": "https://metrics.mullusi.com",
       "summary": "Evidence plane reserved for runtime metrics, audits, graphs, and release witnesses.",
-      "status": "reserved"
+      "status": "reserved",
+      "am": {
+        "name": "Metrics",
+        "status": "የተያዘ",
+        "summary": "ለruntime መለኪያዎች፣ ኦዲቶች፣ ግራፎችና የመለቀቅ ምስክሮች የተያዘ የማስረጃ ሰሌዳ።"
+      }
     }
   ],
   "services": [
@@ -58,42 +98,78 @@
       "delivery": "hosted service",
       "status": "primary offer",
       "summary": "Hosted symbolic governance for constraint evaluation, causal verdicts, proof states, and append-only trace records.",
-      "proofSurface": "api.mullusi.com"
+      "proofSurface": "api.mullusi.com",
+      "am": {
+        "name": "ሙሉሲ Govern Cloud",
+        "delivery": "የተስተናገደ አገልግሎት",
+        "status": "ዋና አቅርቦት",
+        "summary": "ለገደብ ግምገማ፣ ለምክንያታዊ ፍርዶች፣ ለማረጋገጫ ሁኔታዎችና ለተጨማሪ-ብቻ የዱካ መዝገቦች የተስተናገደ ምልክታዊ አስተዳደር።"
+      }
     },
     {
       "name": "Developer Packages",
       "delivery": "npm package",
       "status": "access layer",
       "summary": "Client SDK, CLI, and local validators that submit governed requests to Mullusi services without becoming the paid service itself.",
-      "proofSurface": "docs.mullusi.com"
+      "proofSurface": "docs.mullusi.com",
+      "am": {
+        "name": "የአበልጻጊ ጥቅሎች",
+        "delivery": "npm ጥቅል",
+        "status": "የመዳረሻ ሽፋን",
+        "summary": "ወደ ሙሉሲ አገልግሎቶች የሚተዳደር ጥያቄ የሚያስገቡ የደንበኛ SDK፣ CLI እና አካባቢያዊ አረጋጋጮች — ራሳቸው የሚከፈልበት አገልግሎት ሳይሆኑ።"
+      }
     },
     {
       "name": "Mullusi Dashboard",
       "delivery": "web workspace",
       "status": "operator surface",
       "summary": "Project control, trace review, proof stamps, violations, usage, teams, and release witness visibility.",
-      "proofSurface": "dashboard.mullusi.com"
+      "proofSurface": "dashboard.mullusi.com",
+      "am": {
+        "name": "ሙሉሲ ዳሽቦርድ",
+        "delivery": "የድር ቦታ",
+        "status": "የአስተናጋጅ ገጽ",
+        "summary": "የፕሮጀክት ቁጥጥር፣ የዱካ ግምገማ፣ የማረጋገጫ ማህተሞች፣ ጥሰቶች፣ አጠቃቀም፣ ቡድኖችና የመለቀቅ ምስክር ታይነት።"
+      }
     },
     {
       "name": "Mullu Inspect Service",
       "delivery": "hosted inspection",
       "status": "diagnostic offer",
       "summary": "Website, API, repository, and workflow inspection that reports structural gaps, missing evidence, and unstable public claims.",
-      "proofSurface": "sandbox.mullusi.com"
+      "proofSurface": "sandbox.mullusi.com",
+      "am": {
+        "name": "የሙሉ ምርመራ አገልግሎት",
+        "delivery": "የተስተናገደ ምርመራ",
+        "status": "የምርመራ አቅርቦት",
+        "summary": "የድረ-ገጽ፣ የAPI፣ የሪፖዚቶሪና የworkflow ምርመራ — የመዋቅር ክፍተቶችን፣ የጎደለ ማስረጃንና ያልተረጋጉ ይፋዊ የይገባኛል ጥያቄዎችን ይዘግባል።"
+      }
     },
     {
       "name": "Mfidel Validation Service",
       "delivery": "specialized endpoint",
       "status": "script safeguard",
       "summary": "Atomic fidel validation for grid references, overlay metadata, and public text checks without shape or sound decomposition.",
-      "proofSurface": "api.mullusi.com"
+      "proofSurface": "api.mullusi.com",
+      "am": {
+        "name": "የMfidel ማረጋገጥ አገልግሎት",
+        "delivery": "ልዩ መዳረሻ",
+        "status": "የስክሪፕት ጥበቃ",
+        "summary": "ለgrid ማመሳከሪያዎች፣ ለoverlay ሜታዳታና ለይፋዊ ጽሑፍ ፍተሻዎች አቶማዊ የfidel ማረጋገጥ — ያለ ቅርጽ ወይም ድምፅ መበስበስ።"
+      }
     },
     {
       "name": "Enterprise Mullusi",
       "delivery": "private deployment",
       "status": "contract offer",
       "summary": "Private cloud or customer-controlled deployment with custom governance rules, audit export, and support boundaries.",
-      "proofSurface": "dashboard.mullusi.com"
+      "proofSurface": "dashboard.mullusi.com",
+      "am": {
+        "name": "የድርጅት ሙሉሲ",
+        "delivery": "የግል ስምሪት",
+        "status": "የውል አቅርቦት",
+        "summary": "ብጁ የአስተዳደር ደንቦች፣ የኦዲት ወጪና የድጋፍ ወሰኖች ያሉት የግል ደመና ወይም በደንበኛ የሚቆጣጠር ስምሪት።"
+      }
     }
   ],
   "serviceTiers": [
@@ -102,35 +178,70 @@
       "audience": "developers and researchers",
       "status": "starter",
       "priceSignal": "limited public access",
-      "summary": "Explore the SDK, CLI, sandbox examples, public docs, and small-volume hosted evaluations."
+      "summary": "Explore the SDK, CLI, sandbox examples, public docs, and small-volume hosted evaluations.",
+      "am": {
+        "name": "ነጻ",
+        "audience": "አበልጻጊዎችና ተመራማሪዎች",
+        "status": "ጀማሪ",
+        "priceSignal": "የተወሰነ ይፋዊ መዳረሻ",
+        "summary": "SDK፣ CLI፣ የsandbox ምሳሌዎች፣ ይፋዊ ሰነዶችና አነስተኛ-መጠን የተስተናገዱ ግምገማዎችን ያስሱ።"
+      }
     },
     {
       "name": "Pro",
       "audience": "builders and solo operators",
       "status": "paid",
       "priceSignal": "monthly usage plan",
-      "summary": "Higher hosted evaluation limits, persistent traces, project history, proof stamp access, and dashboard workspace control."
+      "summary": "Higher hosted evaluation limits, persistent traces, project history, proof stamp access, and dashboard workspace control.",
+      "am": {
+        "name": "Pro",
+        "audience": "ገንቢዎችና ብቸኛ አንቀሳቃሾች",
+        "status": "የሚከፈል",
+        "priceSignal": "ወርሃዊ የአጠቃቀም እቅድ",
+        "summary": "ከፍተኛ የተስተናገደ ግምገማ ገደቦች፣ ቋሚ ዱካዎች፣ የፕሮጀክት ታሪክ፣ የማረጋገጫ ማህተም መዳረሻና የዳሽቦርድ ቦታ ቁጥጥር።"
+      }
     },
     {
       "name": "Team",
       "audience": "small technical teams",
       "status": "paid",
       "priceSignal": "seat plus usage plan",
-      "summary": "Shared projects, team trace review, role boundaries, audit export, environment separation, and release witness records."
+      "summary": "Shared projects, team trace review, role boundaries, audit export, environment separation, and release witness records.",
+      "am": {
+        "name": "ቡድን",
+        "audience": "አነስተኛ ቴክኒካል ቡድኖች",
+        "status": "የሚከፈል",
+        "priceSignal": "የመቀመጫ እና አጠቃቀም እቅድ",
+        "summary": "የተጋሩ ፕሮጀክቶች፣ የቡድን ዱካ ግምገማ፣ የሚና ወሰኖች፣ የኦዲት ወጪ፣ የአካባቢ መለያየትና የመለቀቅ ምስክር መዝገቦች።"
+      }
     },
     {
       "name": "Enterprise",
       "audience": "regulated or private deployments",
       "status": "contract",
       "priceSignal": "custom agreement",
-      "summary": "Private cloud or customer-controlled deployment, custom governance rules, support boundary, and compliance evidence exports."
+      "summary": "Private cloud or customer-controlled deployment, custom governance rules, support boundary, and compliance evidence exports.",
+      "am": {
+        "name": "ድርጅት",
+        "audience": "ቁጥጥር የሚደረግባቸው ወይም የግል ስምሪቶች",
+        "status": "ውል",
+        "priceSignal": "ብጁ ስምምነት",
+        "summary": "የግል ደመና ወይም በደንበኛ የሚቆጣጠር ስምሪት፣ ብጁ የአስተዳደር ደንቦች፣ የድጋፍ ወሰንና የተገዢነት ማስረጃ ወጪዎች።"
+      }
     },
     {
       "name": "Certification",
       "audience": "systems needing external proof",
       "status": "contract",
       "priceSignal": "per assessment",
-      "summary": "Paid proof review, structural inspection, violation report, repair plan, and Mullusi proof-of-resolution stamp."
+      "summary": "Paid proof review, structural inspection, violation report, repair plan, and Mullusi proof-of-resolution stamp.",
+      "am": {
+        "name": "ማረጋገጫ",
+        "audience": "ውጫዊ ማረጋገጫ የሚያስፈልጋቸው ሥርዓቶች",
+        "status": "ውል",
+        "priceSignal": "በግምገማ",
+        "summary": "የሚከፈል የማረጋገጫ ግምገማ፣ የመዋቅር ምርመራ፣ የጥሰት ሪፖርት፣ የጥገና እቅድና የሙሉሲ የመፍትሄ-ማረጋገጫ ማህተም።"
+      }
     }
   ],
   "apiContracts": [
@@ -141,7 +252,14 @@
       "status": "core v1",
       "input": "project, action, symbols, constraints, context",
       "output": "verdict, proof state, violations, trace reference, repair actions, storage state, proof stamp eligibility",
-      "summary": "Evaluates a proposed action or system state against Mullusi governance constraints and records a causal trace."
+      "summary": "Evaluates a proposed action or system state against Mullusi governance constraints and records a causal trace.",
+      "am": {
+        "name": "Govern ግምገማ",
+        "status": "ኮር v1",
+        "input": "ፕሮጀክት፣ ድርጊት፣ ምልክቶች፣ ገደቦች፣ አውድ",
+        "output": "ፍርድ፣ የማረጋገጫ ሁኔታ፣ ጥሰቶች፣ የዱካ ማመሳከሪያ፣ የጥገና ድርጊቶች፣ የማከማቻ ሁኔታ፣ የማረጋገጫ ማህተም ብቁነት",
+        "summary": "የቀረበ ድርጊትን ወይም የሥርዓት ሁኔታን ከሙሉሲ የአስተዳደር ገደቦች ጋር ይገመግማል፤ ምክንያታዊ ዱካም ይመዘግባል።"
+      }
     },
     {
       "name": "Trace Retrieval",
@@ -150,7 +268,14 @@
       "status": "core v1",
       "input": "evaluation reference and authorized project context",
       "output": "ordered phase deltas, blocked phase, judgments, and append-only lineage records",
-      "summary": "Returns the evidence path behind a verdict so users can inspect cause, constraint, and repair state."
+      "summary": "Returns the evidence path behind a verdict so users can inspect cause, constraint, and repair state.",
+      "am": {
+        "name": "የዱካ ማውጣት",
+        "status": "ኮር v1",
+        "input": "የግምገማ ማመሳከሪያና የተፈቀደ የፕሮጀክት አውድ",
+        "output": "የተደረደሩ የደረጃ ለውጦች፣ የተዘጋ ደረጃ፣ ፍርዶችና ተጨማሪ-ብቻ የሐረግ መዝገቦች",
+        "summary": "ከፍርድ ጀርባ ያለውን የማስረጃ መንገድ ይመልሳል — ተጠቃሚዎች ምክንያትን፣ ገደብንና የጥገና ሁኔታን እንዲመረምሩ።"
+      }
     },
     {
       "name": "Proof Stamp Verification",
@@ -159,7 +284,14 @@
       "status": "core v1",
       "input": "proof stamp reference",
       "output": "stamp hash, signature state, verification state, evaluation reference, and persisted stamp envelope",
-      "summary": "Verifies that a proof stamp belongs to a recorded evaluation and has not drifted from its stored lineage."
+      "summary": "Verifies that a proof stamp belongs to a recorded evaluation and has not drifted from its stored lineage.",
+      "am": {
+        "name": "የማረጋገጫ ማህተም ማረጋገጥ",
+        "status": "ኮር v1",
+        "input": "የማረጋገጫ ማህተም ማመሳከሪያ",
+        "output": "የማህተም ሃሽ፣ የፊርማ ሁኔታ፣ የማረጋገጥ ሁኔታ፣ የግምገማ ማመሳከሪያ፣ የተቀመጠ የማህተም ኤንቨሎፕ",
+        "summary": "የማረጋገጫ ማህተም የተመዘገበ ግምገማ መሆኑንና ከተቀመጠው ሐረግ አለመንሸራተቱን ያረጋግጣል።"
+      }
     },
     {
       "name": "Mfidel Validation",
@@ -168,7 +300,14 @@
       "status": "specialized v1",
       "input": "atomic fidel references, grid coordinates, overlay metadata, and validation mode",
       "output": "pass or violation state with atomicity-preserving diagnostics",
-      "summary": "Validates Mfidel records while preserving each fidel as an atomic symbol and rejecting decomposition paths."
+      "summary": "Validates Mfidel records while preserving each fidel as an atomic symbol and rejecting decomposition paths.",
+      "am": {
+        "name": "Mfidel ማረጋገጥ",
+        "status": "ልዩ v1",
+        "input": "አቶማዊ የfidel ማመሳከሪያዎች፣ የgrid መጋጠሚያዎች፣ overlay ሜታዳታና የማረጋገጥ ሁነታ",
+        "output": "የማለፍ ወይም የጥሰት ሁኔታ ከአቶማዊነት-ጠባቂ ምርመራ ጋር",
+        "summary": "የMfidel መዝገቦችን እያንዳንዱን fidel እንደ አቶማዊ ምልክት እየጠበቀ ያረጋግጣል፤ የመበስበስ መንገዶችን ይከለክላል።"
+      }
     }
   ],
   "repositoryHandoff": {
@@ -180,28 +319,55 @@
       "Proof",
       "Route",
       "Release"
+    ],
+    "am": {
+      "label": "የሐረግ ማስተላለፍ",
+      "title": "የመዝገብ ሁኔታ የመለቀቅ ሁኔታን ይመግባል።",
+      "summary": "የግል ማብሰያ ፕሮጀክት ይፋዊ ሪፖዚቶሪ የሚሆነው የማረጋገጫ ገጹ፣ የሰነድ መንገዱና የማሳያ ወሰኑ ሲያያዙ ብቻ ነው።"
+    },
+    "amSteps": [
+      "ሪፖዚቶሪ",
+      "ማረጋገጫ",
+      "መንገድ",
+      "መለቀቅ"
     ]
   },
   "releaseStages": [
     {
       "step": "01",
       "title": "Register",
-      "summary": "Add or revise a deployed public-surface record in the structured registry."
+      "summary": "Add or revise a deployed public-surface record in the structured registry.",
+      "am": {
+        "title": "መዝግብ",
+        "summary": "በተዋቀረው መዝገብ ውስጥ የተሰማራ ይፋዊ-ገጽ መዝገብ ይጨምሩ ወይም ያሻሽሉ።"
+      }
     },
     {
       "step": "02",
       "title": "Attach",
-      "summary": "Connect repository, docs, demo, proof, status, and contact routes."
+      "summary": "Connect repository, docs, demo, proof, status, and contact routes.",
+      "am": {
+        "title": "አያይዝ",
+        "summary": "ሪፖዚቶሪ፣ ሰነድ፣ ማሳያ፣ ማረጋገጫ፣ ሁኔታና የመገናኛ መንገዶችን ያገናኙ።"
+      }
     },
     {
       "step": "03",
       "title": "Verify",
-      "summary": "Confirm claims, accessibility, local rendering, and public boundary constraints."
+      "summary": "Confirm claims, accessibility, local rendering, and public boundary constraints.",
+      "am": {
+        "title": "አረጋግጥ",
+        "summary": "የይገባኛል ጥያቄዎችን፣ ተደራሽነትን፣ አካባቢያዊ ማሳየትንና የይፋዊ ወሰን ገደቦችን ያረጋግጡ።"
+      }
     },
     {
       "step": "04",
       "title": "Publish",
-      "summary": "Expose the product surface only after the public boundary is verified."
+      "summary": "Expose the product surface only after the public boundary is verified.",
+      "am": {
+        "title": "አትም",
+        "summary": "የምርቱን ገጽ የይፋዊ ወሰኑ ከተረጋገጠ በኋላ ብቻ ያጋልጡ።"
+      }
     }
   ]
 }

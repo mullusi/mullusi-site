@@ -17,6 +17,7 @@ const requiredFiles = [
   "index.html",
   "mullu/index.html",
   "proof/index.html",
+  "404.html",
   "README.md",
   "CNAME",
   "favicon.ico",
@@ -35,6 +36,7 @@ const requiredFiles = [
   "assets/mullusi-mark.svg",
   "data/products.json",
   "data/site.json",
+  "data/i18n.json",
   "scripts/verify-registry-repos.mjs",
 ];
 
@@ -138,7 +140,7 @@ function validateSitemap() {
 }
 
 function validateLocalLinks() {
-  for (const htmlFile of ["index.html", "mullu/index.html", "proof/index.html"]) {
+  for (const htmlFile of ["index.html", "mullu/index.html", "proof/index.html", "404.html"]) {
     const ids = idsForHtmlFile(htmlFile);
     const html = readUtf8(htmlFile);
     for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
@@ -450,6 +452,52 @@ function validateSiteContent() {
   }
 }
 
+function validateI18n() {
+  const dictionary = JSON.parse(readUtf8("data/i18n.json"));
+  const languages = dictionary?.meta?.languages;
+  if (!Array.isArray(languages) || !languages.includes("en") || !languages.includes("am")) {
+    recordFailure("i18n_languages_invalid");
+  }
+  for (const lang of ["en", "am"]) {
+    if (typeof dictionary?.languageNames?.[lang] !== "string" || dictionary.languageNames[lang].trim().length === 0) {
+      recordFailure(`i18n_language_name_missing:${lang}`);
+    }
+  }
+
+  const strings = dictionary?.strings;
+  if (!strings || typeof strings !== "object") {
+    recordFailure("i18n_strings_not_object");
+    return;
+  }
+
+  for (const [key, entry] of Object.entries(strings)) {
+    for (const lang of ["en", "am"]) {
+      if (typeof entry?.[lang] !== "string" || entry[lang].trim().length === 0) {
+        recordFailure(`i18n_translation_missing:${key}:${lang}`);
+      }
+    }
+  }
+
+  const referencedKeys = new Set();
+  const html = readUtf8("index.html");
+  for (const match of html.matchAll(/\sdata-i18n="([^"]+)"/g)) {
+    referencedKeys.add(match[1]);
+  }
+  for (const match of html.matchAll(/\sdata-i18n-attr="([^"]+)"/g)) {
+    for (const pair of match[1].split(";")) {
+      const key = pair.split(":")[1];
+      if (key && key.trim().length > 0) {
+        referencedKeys.add(key.trim());
+      }
+    }
+  }
+  for (const key of referencedKeys) {
+    if (!Object.prototype.hasOwnProperty.call(strings, key)) {
+      recordFailure(`i18n_key_undefined:index.html:${key}`);
+    }
+  }
+}
+
 function validatePublicText() {
   const blockedPatterns = [
     new RegExp("\\b" + "artificial\\s+" + "intelligence\\b", "i"),
@@ -522,6 +570,7 @@ function runValidation() {
   validateWebManifest();
   validateProductRegistry();
   validateSiteContent();
+  validateI18n();
   validatePublicText();
 
   if (failures.length > 0) {

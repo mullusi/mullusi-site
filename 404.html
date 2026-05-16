@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#070806" />
+  <title>Route not published - Mullusi</title>
+  <meta name="description" content="This route has no published public surface under the Mullusi domain.">
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <script>
+    (() => {
+      try {
+        const stored = localStorage.getItem("mullusi-theme");
+        const systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        document.documentElement.dataset.theme = stored || (systemLight ? "light" : "dark");
+      } catch (error) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070806;
+      --panel: #10120d;
+      --line: #283124;
+      --text: #ece7d8;
+      --muted: #aaa38f;
+      --gold: #d6ad48;
+      --green: #54c99a;
+      --nav-bg: rgba(7, 8, 6, 0.88);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f4f1e6;
+      --panel: #fbf8ee;
+      --line: #d6cdb5;
+      --text: #1b1d15;
+      --muted: #5d5847;
+      --gold: #8a6914;
+      --green: #1f7d56;
+      --nav-bg: rgba(244, 241, 230, 0.86);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      align-content: center;
+      gap: 30px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      line-height: 1.6;
+      padding: 64px 0;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 5;
+      padding: 10px 16px;
+      background: var(--gold);
+      color: #121006;
+      font-size: 13px;
+      text-decoration: none;
+      transform: translateY(-200%);
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    main {
+      width: min(820px, calc(100% - 32px));
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+    }
+
+    main:focus { outline: none; }
+
+    .eyebrow {
+      color: var(--green);
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .code {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(64px, 18vw, 168px);
+      line-height: 0.9;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 40px);
+      font-weight: 700;
+      line-height: 1.12;
+    }
+
+    p {
+      margin: 0;
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .button.primary {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: #121006;
+      font-weight: 700;
+    }
+
+    .law {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main" tabindex="-1">
+    <div class="eyebrow">Public route boundary</div>
+    <p class="code">404</p>
+    <h1>This route has no published public surface.</h1>
+    <p>
+      The Mullusi public site exposes only verified routes. This address is
+      not a deployed surface, or its release boundary has not been published
+      yet. Return to a governed route below.
+    </p>
+    <div class="actions">
+      <a class="button primary" href="/">Mullusi home</a>
+      <a class="button" href="/mullu/">Open Mullu</a>
+      <a class="button" href="/proof/">Review proof boundary</a>
+    </div>
+    <div class="law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+  </main>
+</body>
+</html>

@@ -10,13 +10,123 @@ document.documentElement.classList.add("js-enabled");
 const state = {
   registry: null,
   siteContent: null,
+  i18n: null,
+  lang: "en",
   activeCategory: "All",
   query: "",
 };
 
+const fallbackLanguageNames = { en: "English", am: "አማርኛ" };
+
 const qs = (selector, root = document) => root.querySelector(selector);
 const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 const themeStorageKey = "mullusi-theme";
+const langStorageKey = "mullusi-lang";
+
+function normalizeLang(value) {
+  return value === "am" ? "am" : "en";
+}
+
+function storedLang() {
+  try {
+    return localStorage.getItem(langStorageKey);
+  } catch (error) {
+    console.warn(error);
+    return null;
+  }
+}
+
+function preferredLang() {
+  const stored = storedLang();
+  if (stored === "am" || stored === "en") return stored;
+  const navLang = (navigator.language || "").toLowerCase();
+  return navLang.startsWith("am") ? "am" : "en";
+}
+
+function persistLang(lang) {
+  try {
+    localStorage.setItem(langStorageKey, lang);
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
+function i18nText(key) {
+  const entry = state.i18n?.strings?.[key];
+  if (!entry) return null;
+  const value = entry[state.lang];
+  if (typeof value === "string" && value.length > 0) return value;
+  return typeof entry.en === "string" ? entry.en : null;
+}
+
+function languageName(lang) {
+  return state.i18n?.languageNames?.[lang] || fallbackLanguageNames[lang] || lang;
+}
+
+function localized(record, field) {
+  if (
+    state.lang === "am" &&
+    record &&
+    record.am &&
+    typeof record.am[field] === "string" &&
+    record.am[field].trim().length > 0
+  ) {
+    return record.am[field];
+  }
+  return record ? record[field] : "";
+}
+
+function applyLang(lang, persist = true) {
+  const normalized = normalizeLang(lang);
+  state.lang = normalized;
+  document.documentElement.lang = normalized;
+  document.documentElement.dataset.lang = normalized;
+  if (persist) persistLang(normalized);
+
+  qsa("[data-i18n]").forEach((node) => {
+    const text = i18nText(node.dataset.i18n);
+    if (text !== null) node.textContent = text;
+  });
+
+  qsa("[data-i18n-attr]").forEach((node) => {
+    node.dataset.i18nAttr.split(";").forEach((pair) => {
+      const [attr, key] = pair.split(":").map((part) => part && part.trim());
+      if (!attr || !key) return;
+      const text = i18nText(key);
+      if (text !== null) node.setAttribute(attr, text);
+    });
+  });
+
+  const otherLang = normalized === "am" ? "en" : "am";
+  qsa("[data-lang-toggle]").forEach((toggle) => {
+    toggle.setAttribute("aria-label", i18nText("lang.toggleAria") || "Switch language");
+    toggle.setAttribute("aria-pressed", String(normalized === "am"));
+    const label = toggle.querySelector("[data-lang-label]");
+    if (label) {
+      label.textContent = languageName(otherLang);
+      label.setAttribute("lang", otherLang);
+    }
+  });
+
+  const activeTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  applyTheme(activeTheme, false);
+
+  window.dispatchEvent(new CustomEvent("mullusi-lang-change", { detail: { lang: normalized } }));
+}
+
+function bindLangToggle() {
+  qsa("[data-lang-toggle]").forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      applyLang(state.lang === "am" ? "en" : "am");
+    });
+  });
+}
+
+async function loadI18n() {
+  const response = await fetch("data/i18n.json", { cache: "no-store" });
+  if (!response.ok) throw new Error(`i18n load failed: ${response.status}`);
+  return response.json();
+}
 
 function storedTheme() {
   try {
@@ -51,12 +161,15 @@ function applyTheme(theme, persist = true) {
 
   qsa("[data-theme-toggle]").forEach((toggle) => {
     const nextTheme = normalizedTheme === "light" ? "dark" : "light";
-    toggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+    const ariaKey = nextTheme === "light" ? "theme.toLightAria" : "theme.toDarkAria";
+    toggle.setAttribute("aria-label", i18nText(ariaKey) || `Switch to ${nextTheme} mode`);
     toggle.setAttribute("aria-pressed", String(normalizedTheme === "light"));
   });
 
   qsa("[data-theme-label]").forEach((label) => {
-    label.textContent = normalizedTheme === "light" ? "Dark" : "Light";
+    label.textContent = normalizedTheme === "light"
+      ? (i18nText("theme.dark") || "Dark")
+      : (i18nText("theme.light") || "Light");
   });
 
   window.dispatchEvent(new CustomEvent("mullusi-theme-change", { detail: { theme: normalizedTheme } }));
@@ -149,10 +262,10 @@ function renderProofLanes() {
 
   target.innerHTML = lanes.map((lane, index) => `
     <article class="card">
-      <span class="kind">${escapeHtml(lane.label)}</span>
+      <span class="kind">${escapeHtml(localized(lane, "label"))}</span>
       <div class="ix">${escapeHtml(proofSymbol(lane.label, index))}</div>
-      <h3>${escapeHtml(lane.title)}</h3>
-      <p>${escapeHtml(lane.summary)}</p>
+      <h3>${escapeHtml(localized(lane, "title"))}</h3>
+      <p>${escapeHtml(localized(lane, "summary"))}</p>
     </article>
   `).join("");
   revealRendered(target);
@@ -165,10 +278,10 @@ function renderInterfaceLinks() {
 
   target.innerHTML = interfaces.map((item) => `
     <article class="route">
-      <span class="badge">${escapeHtml(item.status)}</span>
-      <h3>${escapeHtml(item.name)}</h3>
-      <p>${escapeHtml(item.summary)}</p>
-      <a class="lnk" href="${escapeAttribute(item.href)}" rel="noopener">Open ${escapeHtml(item.name)} -&gt;</a>
+      <span class="badge">${escapeHtml(localized(item, "status"))}</span>
+      <h3>${escapeHtml(localized(item, "name"))}</h3>
+      <p>${escapeHtml(localized(item, "summary"))}</p>
+      <a class="lnk" href="${escapeAttribute(item.href)}" rel="noopener">${escapeHtml(i18nText("interfaces.openLink") || "Open")} ${escapeHtml(localized(item, "name"))} -&gt;</a>
     </article>
   `).join("");
   revealRendered(target);
@@ -181,16 +294,16 @@ function renderServices() {
 
   target.innerHTML = services.map((service) => `
     <article class="service">
-      <span class="badge">${escapeHtml(service.status)}</span>
-      <h3>${escapeHtml(service.name)}</h3>
-      <p>${escapeHtml(service.summary)}</p>
+      <span class="badge">${escapeHtml(localized(service, "status"))}</span>
+      <h3>${escapeHtml(localized(service, "name"))}</h3>
+      <p>${escapeHtml(localized(service, "summary"))}</p>
       <dl>
         <div>
-          <dt>Delivery</dt>
-          <dd>${escapeHtml(service.delivery)}</dd>
+          <dt>${escapeHtml(i18nText("field.delivery") || "Delivery")}</dt>
+          <dd>${escapeHtml(localized(service, "delivery"))}</dd>
         </div>
         <div>
-          <dt>Proof surface</dt>
+          <dt>${escapeHtml(i18nText("field.proofSurface") || "Proof surface")}</dt>
           <dd>${escapeHtml(service.proofSurface)}</dd>
         </div>
       </dl>
@@ -206,17 +319,17 @@ function renderServiceTiers() {
 
   target.innerHTML = tiers.map((tier) => `
     <article class="service">
-      <span class="badge">${escapeHtml(tier.status)}</span>
-      <h3>${escapeHtml(tier.name)}</h3>
-      <p>${escapeHtml(tier.summary)}</p>
+      <span class="badge">${escapeHtml(localized(tier, "status"))}</span>
+      <h3>${escapeHtml(localized(tier, "name"))}</h3>
+      <p>${escapeHtml(localized(tier, "summary"))}</p>
       <dl>
         <div>
-          <dt>Audience</dt>
-          <dd>${escapeHtml(tier.audience)}</dd>
+          <dt>${escapeHtml(i18nText("field.audience") || "Audience")}</dt>
+          <dd>${escapeHtml(localized(tier, "audience"))}</dd>
         </div>
         <div>
-          <dt>Commercial signal</dt>
-          <dd>${escapeHtml(tier.priceSignal)}</dd>
+          <dt>${escapeHtml(i18nText("field.commercialSignal") || "Commercial signal")}</dt>
+          <dd>${escapeHtml(localized(tier, "priceSignal"))}</dd>
         </div>
       </dl>
     </article>
@@ -231,21 +344,21 @@ function renderApiContracts() {
 
   target.innerHTML = contracts.map((contract) => `
     <article class="service contract">
-      <span class="badge">${escapeHtml(contract.status)}</span>
-      <h3>${escapeHtml(contract.name)}</h3>
+      <span class="badge">${escapeHtml(localized(contract, "status"))}</span>
+      <h3>${escapeHtml(localized(contract, "name"))}</h3>
       <code>${escapeHtml(contract.route)}</code>
-      <p>${escapeHtml(contract.summary)}</p>
+      <p>${escapeHtml(localized(contract, "summary"))}</p>
       <dl>
         <div>
-          <dt>Input</dt>
-          <dd>${escapeHtml(contract.input)}</dd>
+          <dt>${escapeHtml(i18nText("field.input") || "Input")}</dt>
+          <dd>${escapeHtml(localized(contract, "input"))}</dd>
         </div>
         <div>
-          <dt>Output</dt>
-          <dd>${escapeHtml(contract.output)}</dd>
+          <dt>${escapeHtml(i18nText("field.output") || "Output")}</dt>
+          <dd>${escapeHtml(localized(contract, "output"))}</dd>
         </div>
         <div>
-          <dt>Host</dt>
+          <dt>${escapeHtml(i18nText("field.host") || "Host")}</dt>
           <dd>${escapeHtml(contract.host)}</dd>
         </div>
       </dl>
@@ -262,8 +375,8 @@ function renderReleaseStages() {
   target.innerHTML = stages.map((stage) => `
     <article class="rd">
       <div class="n">${escapeHtml(stage.step)}</div>
-      <h3>${escapeHtml(stage.title)}</h3>
-      <p>${escapeHtml(stage.summary)}</p>
+      <h3>${escapeHtml(localized(stage, "title"))}</h3>
+      <p>${escapeHtml(localized(stage, "summary"))}</p>
     </article>
   `).join("");
   revealRendered(target);
@@ -275,13 +388,16 @@ function renderRepositoryHandoff() {
   const steps = Array.isArray(handoff?.steps) ? handoff.steps : [];
   if (!target || !handoff || steps.length === 0) return;
 
+  const localSteps = state.lang === "am" && Array.isArray(handoff.amSteps) && handoff.amSteps.length === steps.length
+    ? handoff.amSteps
+    : steps;
   target.innerHTML = `
     <div>
-      <span class="handoff-kicker">${escapeHtml(handoff.label)}</span>
-      <p><strong>${escapeHtml(handoff.title)}</strong> ${escapeHtml(handoff.summary)}</p>
+      <span class="handoff-kicker">${escapeHtml(localized(handoff, "label"))}</span>
+      <p><strong>${escapeHtml(localized(handoff, "title"))}</strong> ${escapeHtml(localized(handoff, "summary"))}</p>
     </div>
     <div class="handoff-chain" aria-hidden="true">
-      ${steps.map((step) => `<span>${escapeHtml(step)}</span>`).join("")}
+      ${localSteps.map((step) => `<span>${escapeHtml(step)}</span>`).join("")}
     </div>
   `;
   revealRendered(target);
@@ -298,13 +414,17 @@ function renderFutureDomains() {
     return (domainOrder.get(left.slug) ?? 99) - (domainOrder.get(right.slug) ?? 99);
   });
 
-  target.innerHTML = domains.map((domain) => `
+  const stagedLabel = i18nText("status.staged") || "Staged";
+  target.innerHTML = domains.map((domain) => {
+    const title = state.lang === "am" && domain.am && domain.am.title ? domain.am.title : titleForDomain(domain);
+    return `
       <article class="eng">
-        <span class="st">Staged</span>
-        <h3>${escapeHtml(titleForDomain(domain))}</h3>
-        <p>${escapeHtml(domain.summary)}</p>
+        <span class="st">${escapeHtml(stagedLabel)}</span>
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(localized(domain, "summary"))}</p>
       </article>
-    `).join("");
+    `;
+  }).join("");
   revealRendered(target);
 }
 
@@ -334,9 +454,9 @@ function renderStats() {
   const categories = new Set(products.map((item) => item.category)).size;
   const productRepos = products.filter((item) => item.category !== "Website").length;
   target.innerHTML = `
-    <div><div class="k">${products.length}</div><div class="l">Deployed public repos</div></div>
-    <div><div class="k">${categories}</div><div class="l">Categories</div></div>
-    <div><div class="k">${productRepos}</div><div class="l">Public product repos</div></div>
+    <div><div class="k">${products.length}</div><div class="l">${escapeHtml(i18nText("repo.statDeployed") || "Deployed public repos")}</div></div>
+    <div><div class="k">${categories}</div><div class="l">${escapeHtml(i18nText("repo.statCategories") || "Categories")}</div></div>
+    <div><div class="k">${productRepos}</div><div class="l">${escapeHtml(i18nText("repo.statProductRepos") || "Public product repos")}</div></div>
   `;
   revealRendered(target);
 }
@@ -349,8 +469,8 @@ function renderRepoGrid() {
   if (!products.length) {
     target.innerHTML = `
       <article class="repo-card empty-card">
-        <div class="repo-card-head"><h3>No matching public repository</h3></div>
-        <p>Adjust the search term or category filter. Planned domain engines are listed above.</p>
+        <div class="repo-card-head"><h3>${escapeHtml(i18nText("repo.emptyTitle") || "No matching public repository")}</h3></div>
+        <p>${escapeHtml(i18nText("repo.emptyBody") || "Adjust the search term or category filter. Planned domain engines are listed above.")}</p>
       </article>
     `;
     revealRendered(target);
@@ -364,11 +484,11 @@ function renderRepoGrid() {
         <span class="status-pill">${escapeHtml(item.status)}</span>
       </div>
       <span class="repo-name">${escapeHtml(item.repo)}</span>
-      <p>${escapeHtml(item.summary)}</p>
+      <p>${escapeHtml(localized(item, "summary"))}</p>
       <div class="tag-row">
         ${(item.tags || []).map((tag) => `<span class="tag-pill">${escapeHtml(tag)}</span>`).join("")}
       </div>
-      <a class="repo-link" href="${escapeAttribute(item.href)}" rel="noopener">Open repository -&gt;</a>
+      <a class="repo-link" href="${escapeAttribute(item.href)}" rel="noopener">${escapeHtml(i18nText("repo.openRepository") || "Open repository")} -&gt;</a>
     </article>
   `).join("");
   revealRendered(target);
@@ -519,6 +639,26 @@ async function loadSiteContent() {
   return response.json();
 }
 
+function renderSiteContent() {
+  if (!state.siteContent) return;
+  renderProofLanes();
+  renderInterfaceLinks();
+  renderServices();
+  renderServiceTiers();
+  renderApiContracts();
+  renderReleaseStages();
+  renderRepositoryHandoff();
+}
+
+function renderRegistryContent() {
+  if (!state.registry) return;
+  renderSnapshot();
+  renderFutureDomains();
+  renderFilters();
+  renderStats();
+  renderRepoGrid();
+}
+
 async function initContent() {
   bindHeader();
   bindLinkNavigation();
@@ -526,35 +666,38 @@ async function initContent() {
   bindThemeToggle();
   bindReveal();
   bindSearch();
+  bindLangToggle();
+
+  try {
+    state.i18n = await loadI18n();
+  } catch (error) {
+    console.error(error);
+  }
+  applyLang(preferredLang(), false);
+
+  window.addEventListener("mullusi-lang-change", () => {
+    renderSiteContent();
+    renderRegistryContent();
+  });
 
   try {
     state.siteContent = await loadSiteContent();
-    renderProofLanes();
-    renderInterfaceLinks();
-    renderServices();
-    renderServiceTiers();
-    renderApiContracts();
-    renderReleaseStages();
-    renderRepositoryHandoff();
+    renderSiteContent();
   } catch (error) {
     console.error(error);
   }
 
   try {
     state.registry = await loadRegistry();
-    renderSnapshot();
-    renderFutureDomains();
-    renderFilters();
-    renderStats();
-    renderRepoGrid();
+    renderRegistryContent();
   } catch (error) {
     console.error(error);
     const repoGrid = qs("[data-repo-grid]");
     if (repoGrid) {
       repoGrid.innerHTML = `
         <article class="repo-card error-card">
-          <div class="repo-card-head"><h3>Product registry unavailable</h3></div>
-          <p>The static registry did not load. Confirm <code>data/products.json</code> is deployed beside this page.</p>
+          <div class="repo-card-head"><h3>${escapeHtml(i18nText("repo.errorTitle") || "Product registry unavailable")}</h3></div>
+          <p>${escapeHtml(i18nText("repo.errorBody") || "The static registry did not load. Confirm data/products.json is deployed beside this page.")}</p>
         </article>
       `;
       revealRendered(repoGrid);

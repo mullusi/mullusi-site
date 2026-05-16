@@ -1,0 +1,535 @@
+{
+  "meta": {
+    "name": "Mullusi",
+    "version": "2026.05.i18n",
+    "purpose": "Structured public website translation dictionary for Mullusi.",
+    "defaultLang": "en",
+    "languages": ["en", "am"]
+  },
+  "languageNames": {
+    "en": "English",
+    "am": "አማርኛ"
+  },
+  "strings": {
+    "skip.toContent": {
+      "en": "Skip to content",
+      "am": "ወደ ይዘት ዝለል"
+    },
+    "nav.brandAria": {
+      "en": "Mullusi home",
+      "am": "ሙሉሲ መነሻ"
+    },
+    "nav.architecture": {
+      "en": "Architecture",
+      "am": "አርክቴክቸር"
+    },
+    "nav.mullu": {
+      "en": "Mullu",
+      "am": "ሙሉ"
+    },
+    "nav.products": {
+      "en": "Products",
+      "am": "ምርቶች"
+    },
+    "nav.services": {
+      "en": "Services",
+      "am": "አገልግሎቶች"
+    },
+    "nav.evidence": {
+      "en": "Evidence",
+      "am": "ማስረጃ"
+    },
+    "nav.proof": {
+      "en": "Proof",
+      "am": "ማረጋገጫ"
+    },
+    "nav.sciences": {
+      "en": "Science Engines",
+      "am": "የሳይንስ ሞተሮች"
+    },
+    "nav.repos": {
+      "en": "Repos",
+      "am": "ሪፖዚቶሪዎች"
+    },
+    "nav.github": {
+      "en": "GitHub",
+      "am": "GitHub"
+    },
+    "nav.docs": {
+      "en": "Docs",
+      "am": "ሰነዶች"
+    },
+    "nav.menuOpen": {
+      "en": "Open menu",
+      "am": "ምናሌ ክፈት"
+    },
+    "lang.toggleAria": {
+      "en": "Switch language",
+      "am": "ቋንቋ ቀይር"
+    },
+    "lang.kicker": {
+      "en": "Lang",
+      "am": "ቋንቋ"
+    },
+    "theme.mode": {
+      "en": "Mode",
+      "am": "ገጽታ"
+    },
+    "theme.light": {
+      "en": "Light",
+      "am": "ብርሃን"
+    },
+    "theme.dark": {
+      "en": "Dark",
+      "am": "ጨለማ"
+    },
+    "theme.toLightAria": {
+      "en": "Switch to light mode",
+      "am": "ወደ ብርሃን ገጽታ ቀይር"
+    },
+    "theme.toDarkAria": {
+      "en": "Switch to dark mode",
+      "am": "ወደ ጨለማ ገጽታ ቀይር"
+    },
+    "hero.tag": {
+      "en": "Mullusi umbrella · Mullu flagship product",
+      "am": "ሙሉሲ ጃንጥላ · ሙሉ ዋና ምርት"
+    },
+    "hero.title": {
+      "en": "Mullusi builds governed symbolic products. Mullu is the first product surface.",
+      "am": "ሙሉሲ የሚተዳደሩ ምልክታዊ ምርቶችን ይገነባል። ሙሉ የመጀመሪያው የምርት ገጽ ነው።"
+    },
+    "hero.lead": {
+      "en": "Mullusi is the company, research, governance, and trust umbrella. Mullu is the flagship governed product for proof-backed work, private beta access, and symbolic execution surfaces. Runtime readiness remains bounded by the public proof page until live witness endpoints close.",
+      "am": "ሙሉሲ የኩባንያው፣ የምርምሩ፣ የአስተዳደሩና የመተማመኛ ጃንጥላ ነው። ሙሉ ለማስረጃ-የተደገፈ ሥራ፣ ለግል ቤታ መዳረሻና ለምልክታዊ አፈጻጸም ገጾች የተዘጋጀ ዋናው የሚተዳደር ምርት ነው። የቀጥታ ምስክር መዳረሻዎች እስኪዘጉ ድረስ የruntime ዝግጁነት በይፋዊ የማረጋገጫ ገጽ የተገደበ ሆኖ ይቆያል።"
+    },
+    "hero.openMullu": {
+      "en": "Open Mullu",
+      "am": "ሙሉን ክፈት"
+    },
+    "hero.reviewProof": {
+      "en": "Review proof boundary",
+      "am": "የማረጋገጫ ወሰንን ይመልከቱ"
+    },
+    "hero.viewGraph": {
+      "en": "View staged graph",
+      "am": "የተዘጋጀ ግራፍ ይመልከቱ"
+    },
+    "hero.snapshotAria": {
+      "en": "Mullusi public surface snapshot",
+      "am": "የሙሉሲ ይፋዊ ገጽ ቅጽበታዊ እይታ"
+    },
+    "hero.footMullu": {
+      "en": "Flagship product route",
+      "am": "ዋና የምርት መንገድ"
+    },
+    "hero.footRepo": {
+      "en": "Deployed public repo",
+      "am": "የተሰማራ ይፋዊ ሪፖ"
+    },
+    "hero.footRuntime": {
+      "en": "Runtime witness state",
+      "am": "የruntime ምስክር ሁኔታ"
+    },
+    "marquee.1": {
+      "en": "Mfidel substrate",
+      "am": "የMfidel መሠረት"
+    },
+    "marquee.2": {
+      "en": "Symbolic causal chain",
+      "am": "ምልክታዊ ምክንያታዊ ሰንሰለት"
+    },
+    "marquee.3": {
+      "en": "Fail-closed governance",
+      "am": "ዝግ-የሚወድቅ አስተዳደር"
+    },
+    "marquee.4": {
+      "en": "Hash-chain lineage",
+      "am": "የሃሽ-ሰንሰለት ሐረግ"
+    },
+    "marquee.5": {
+      "en": "Staged engines",
+      "am": "የተዘጋጁ ሞተሮች"
+    },
+    "marquee.6": {
+      "en": "Deployed site graph",
+      "am": "የተሰማራ ጣቢያ ግራፍ"
+    },
+    "claim.tag": {
+      "en": "Production Claim Boundary",
+      "am": "የምርት የይገባኛል ወሰን"
+    },
+    "claim.title": {
+      "en": "Mullusi is the umbrella. Mullu is the product. Runtime publication is still AwaitingEvidence.",
+      "am": "ሙሉሲ ጃንጥላው ነው። ሙሉ ምርቱ ነው። የRuntime ይፋ ማድረግ አሁንም AwaitingEvidence ላይ ነው።"
+    },
+    "claim.body": {
+      "en": "The website proves the public company and product route boundary. It does not claim a live governed runtime until the deployment witness endpoints publish signed evidence.",
+      "am": "ድረ-ገጹ የይፋዊ ኩባንያውንና የምርት መንገድ ወሰንን ያረጋግጣል። የስምሪት ምስክር መዳረሻዎች የተፈረመ ማስረጃ እስኪያትሙ ድረስ ቀጥታ የሚተዳደር runtime አይናገርም።"
+    },
+    "claim.ledger.mullusiV": {
+      "en": "Company, research, governance authority, trust boundary, and public domain owner.",
+      "am": "ኩባንያ፣ ምርምር፣ የአስተዳደር ሥልጣን፣ የመተማመኛ ወሰንና የይፋዊ ጎራ ባለቤት።"
+    },
+    "claim.ledger.mulluV": {
+      "en": "Flagship governed product under Mullusi for proof-backed symbolic work.",
+      "am": "በሙሉሲ ሥር ለማስረጃ-የተደገፈ ምልክታዊ ሥራ የተዘጋጀ ዋናው የሚተዳደር ምርት።"
+    },
+    "claim.ledger.runtimeK": {
+      "en": "Live Runtime",
+      "am": "ቀጥታ Runtime"
+    },
+    "claim.ledger.runtimeUntil": {
+      "en": "until /health, /gateway/witness, and /runtime/conformance close.",
+      "am": "/health, /gateway/witness, እና /runtime/conformance እስኪዘጉ ድረስ።"
+    },
+    "claim.ledger.proofK": {
+      "en": "Proof Route",
+      "am": "የማረጋገጫ መንገድ"
+    },
+    "claim.ledger.proofV": {
+      "en": "is the public boundary for verified and pending evidence.",
+      "am": "ለተረጋገጠና በመጠባበቅ ላይ ላለ ማስረጃ ይፋዊ ወሰን ነው።"
+    },
+    "evidence.tag": {
+      "en": "Evidence Plane",
+      "am": "የማስረጃ ሰሌዳ"
+    },
+    "evidence.title": {
+      "en": "Public claims stay attached to structure, source, release state, and runtime witness state.",
+      "am": "ይፋዊ የይገባኛል ጥያቄዎች ከመዋቅር፣ ከምንጭ፣ ከመለቀቅ ሁኔታና ከruntime ምስክር ሁኔታ ጋር ተያይዘው ይቆያሉ።"
+    },
+    "evidence.body": {
+      "en": "Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether live runtime evidence is closed.",
+      "am": "እያንዳንዱ ገጽ ተመሳሳይ ጥያቄዎችን ይመልሳል፦ ምን አለ፣ የት ይኖራል፣ እንዴት ይተዳደራል፣ ምን ታቅዶ ይቀራል፣ እና ቀጥታ የruntime ማስረጃ ተዘግቷል ወይ።"
+    },
+    "architecture.tag": {
+      "en": "Architecture",
+      "am": "አርክቴክቸር"
+    },
+    "architecture.title": {
+      "en": "One website, one release map, one governed symbolic spine.",
+      "am": "አንድ ድረ-ገጽ፣ አንድ የመለቀቅ ካርታ፣ አንድ የሚተዳደር ምልክታዊ አከርካሪ።"
+    },
+    "architecture.body": {
+      "en": "The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.",
+      "am": "ጣቢያው በሙሉሲ ቋሚ ሞዴል ዙሪያ የተዋቀረ ነው። ይፋዊ ገጾች የግል ማብሰያ ሥራን ሳያጋልጡ ወደ ተሰማራው የድረ-ገጽ ገጽ፣ ወደ ተዘጋጁ የጎራ ሞተሮች፣ ወደ ማረጋገጫ ቅርሶች፣ ወደ ማሳያዎች ወይም ወደ ታቀዱ የመንገድ ካርታ ቦታዎች ብቻ ይጠቁማሉ።"
+    },
+    "architecture.step1.title": {
+      "en": "Input",
+      "am": "ግቤት"
+    },
+    "architecture.step1.body": {
+      "en": "Observe task, repo, paper, engine, or product intent.",
+      "am": "ተግባርን፣ ሪፖን፣ ጽሑፍን፣ ሞተርን ወይም የምርት ሐሳብን ይመልከቱ።"
+    },
+    "architecture.step2.title": {
+      "en": "Activate Symbols",
+      "am": "ምልክቶችን አንቃ"
+    },
+    "architecture.step2.body": {
+      "en": "Map objects into Mfidel, MSIC, SCC, and product-domain terms.",
+      "am": "ነገሮችን ወደ Mfidel, MSIC, SCC እና የምርት-ጎራ ቃላት ያሳዩ።"
+    },
+    "architecture.step3.title": {
+      "en": "Propagate Constraints",
+      "am": "ገደቦችን አስፋፋ"
+    },
+    "architecture.step3.body": {
+      "en": "Apply Λ rules, budget, policy, causality, proof, and lineage constraints.",
+      "am": "የΛ ደንቦችን፣ በጀትን፣ ፖሊሲን፣ ምክንያታዊነትን፣ ማረጋገጫንና የሐረግ ገደቦችን ይተግብሩ።"
+    },
+    "architecture.step4.title": {
+      "en": "Detect Conflicts",
+      "am": "ግጭቶችን ለይ"
+    },
+    "architecture.step4.body": {
+      "en": "Expose unresolved claims, missing evidence, unsafe transitions, and naming risk.",
+      "am": "ያልተፈቱ የይገባኛል ጥያቄዎችን፣ የጎደለ ማስረጃን፣ ደህንነቱ ያልተጠበቀ ሽግግርንና የስያሜ ስጋትን ያጋልጡ።"
+    },
+    "architecture.step5.title": {
+      "en": "Settle Judgment",
+      "am": "ፍርድ አጽና"
+    },
+    "architecture.step5.body": {
+      "en": "Publish only stable meaning, action, deployed surface, demo, or roadmap state.",
+      "am": "የተረጋጋ ትርጉም፣ ድርጊት፣ የተሰማራ ገጽ፣ ማሳያ ወይም የመንገድ ካርታ ሁኔታን ብቻ ያትሙ።"
+    },
+    "interfaces.tag": {
+      "en": "Interfaces",
+      "am": "በይነገጾች"
+    },
+    "interfaces.title": {
+      "en": "The public surface is organized as routes, not one-off pages.",
+      "am": "ይፋዊው ገጽ እንደ መንገዶች የተደራጀ ነው እንጂ እንደ ነጠላ ገጾች አይደለም።"
+    },
+    "interfaces.body": {
+      "en": "Interface links are treated as managed records so new public routes can be added without reworking the layout.",
+      "am": "የበይነገጽ አገናኞች እንደ የሚተዳደሩ መዝገቦች ይያዛሉ፤ ስለዚህ አዲስ ይፋዊ መንገዶች አቀማመጡን ሳይቀይሩ ሊጨመሩ ይችላሉ።"
+    },
+    "services.tag": {
+      "en": "Service Stack",
+      "am": "የአገልግሎት ድርድር"
+    },
+    "services.title": {
+      "en": "Packages distribute tools. Mullusi services carry governed judgment.",
+      "am": "ጥቅሎች መሣሪያዎችን ያሰራጫሉ። የሙሉሲ አገልግሎቶች የሚተዳደር ፍርድን ይሸከማሉ።"
+    },
+    "services.body": {
+      "en": "Packages help users connect, validate, and submit work. Hosted services perform governance, preserve traces, issue proof stamps, and expose operational control.",
+      "am": "ጥቅሎች ተጠቃሚዎች እንዲገናኙ፣ እንዲያረጋግጡና ሥራ እንዲያስገቡ ይረዳሉ። የተስተናገዱ አገልግሎቶች አስተዳደርን ያከናውናሉ፣ ዱካዎችን ይጠብቃሉ፣ የማረጋገጫ ማህተሞችን ይሰጣሉ፣ የአሠራር ቁጥጥርንም ያጋልጣሉ።"
+    },
+    "govern.tag": {
+      "en": "Govern Cloud v1",
+      "am": "Govern Cloud v1"
+    },
+    "govern.title": {
+      "en": "The first sellable service is evaluation, trace, and proof.",
+      "am": "የመጀመሪያው የሚሸጥ አገልግሎት ግምገማ፣ ዱካና ማረጋገጫ ነው።"
+    },
+    "govern.body": {
+      "en": "Start with one vertical contract: authorized request, deterministic evaluation, append-only trace, proof state, repair action, and dashboard visibility.",
+      "am": "በአንድ ቀጥ ያለ ውል ይጀምሩ፦ የተፈቀደ ጥያቄ፣ ቆራጥ ግምገማ፣ ተጨማሪ-ብቻ ዱካ፣ የማረጋገጫ ሁኔታ፣ የጥገና ድርጊትና የዳሽቦርድ ታይነት።"
+    },
+    "products.tag": {
+      "en": "Product Graph",
+      "am": "የምርት ግራፍ"
+    },
+    "products.title": {
+      "en": "Mullu is the flagship product. Other engines stay staged until their proof boundary is ready.",
+      "am": "ሙሉ ዋናው ምርት ነው። ሌሎች ሞተሮች የማረጋገጫ ወሰናቸው እስኪዘጋጅ ድረስ ተዘጋጅተው ይቆያሉ።"
+    },
+    "products.body": {
+      "en": "The public site now separates the Mullusi umbrella, the Mullu product route, and the proof boundary. Product-shaped runtime, SDK, science, language, and interface work remains private until release gates are met.",
+      "am": "ይፋዊው ጣቢያ አሁን የሙሉሲ ጃንጥላን፣ የሙሉ የምርት መንገድንና የማረጋገጫ ወሰንን ይለያል። የምርት-ቅርጽ ያለው runtime፣ SDK፣ ሳይንስ፣ ቋንቋና የበይነገጽ ሥራ የመለቀቅ በሮች እስኪሟሉ ድረስ የግል ሆኖ ይቆያል።"
+    },
+    "products.pg1.title": {
+      "en": "Mullu",
+      "am": "ሙሉ"
+    },
+    "products.pg1.body": {
+      "en": "Flagship governed product for proof-backed work, private beta access, product surfaces, and runtime-bound symbolic execution.",
+      "am": "ለማስረጃ-የተደገፈ ሥራ፣ ለግል ቤታ መዳረሻ፣ ለምርት ገጾችና ለruntime-የተሳሰረ ምልክታዊ አፈጻጸም የተዘጋጀ ዋናው የሚተዳደር ምርት።"
+    },
+    "products.pg2.title": {
+      "en": "Mullu Control Plane",
+      "am": "የሙሉ መቆጣጠሪያ ሰሌዳ"
+    },
+    "products.pg2.body": {
+      "en": "Governance, channels, approvals, budgets, audit traces, multi-provider runtime boundaries, and live witness closure work.",
+      "am": "አስተዳደር፣ ሰርጦች፣ ፈቃዶች፣ በጀቶች፣ የኦዲት ዱካዎች፣ የብዙ-አቅራቢ runtime ወሰኖችና የቀጥታ ምስክር መዝጊያ ሥራ።"
+    },
+    "products.pg3.title": {
+      "en": "SDK & Cells",
+      "am": "SDK እና ሴሎች"
+    },
+    "products.pg3.body": {
+      "en": "MSIC, symbol cells, causal-chain linking, mesh binding, deterministic memory routing, Φ traversal.",
+      "am": "MSIC፣ የምልክት ሴሎች፣ የምክንያት-ሰንሰለት ማገናኘት፣ የመረብ ማሰር፣ ቆራጥ የማስታወሻ መንገድ ማስያዝ፣ የΦ መሻገር።"
+    },
+    "products.pg4.title": {
+      "en": "Evidence & Interfaces",
+      "am": "ማስረጃ እና በይነገጾች"
+    },
+    "products.pg4.body": {
+      "en": "Search, inspect, capsule, 3D, SCC harnesses, trace surfaces, and proof-carrying public demos.",
+      "am": "ፍለጋ፣ ምርመራ፣ ካፕሱል፣ 3D፣ የSCC መሣሪያዎች፣ የዱካ ገጾችና ማረጋገጫ-የያዙ ይፋዊ ማሳያዎች።"
+    },
+    "sciences.tag": {
+      "en": "Science Engines",
+      "am": "የሳይንስ ሞተሮች"
+    },
+    "sciences.title": {
+      "en": "Future repositories become domain engines, not disconnected projects.",
+      "am": "የወደፊት ሪፖዚቶሪዎች ተለያይተው የቆሙ ፕሮጀክቶች ሳይሆኑ የጎራ ሞተሮች ይሆናሉ።"
+    },
+    "sciences.body": {
+      "en": "Physics, math, biology, chemistry, and music are staged as governed product and repository slots. None are exposed as product-ready repositories yet.",
+      "am": "ፊዚክስ፣ ሒሳብ፣ ባዮሎጂ፣ ኬሚስትሪና ሙዚቃ እንደ የሚተዳደር ምርትና የሪፖዚቶሪ ቦታዎች ተዘጋጅተዋል። እስካሁን አንዳቸውም እንደ ለምርት-ዝግጁ ሪፖዚቶሪዎች አልተጋለጡም።"
+    },
+    "repos.tag": {
+      "en": "Repository Observatory",
+      "am": "የሪፖዚቶሪ መመልከቻ"
+    },
+    "repos.title": {
+      "en": "Only deployed public surfaces are linked.",
+      "am": "የተሰማሩ ይፋዊ ገጾች ብቻ ተያይዘዋል።"
+    },
+    "repos.searchPlaceholder": {
+      "en": "website, index, github pages, public...",
+      "am": "ድረ-ገጽ፣ መነሻ፣ github pages፣ ይፋዊ..."
+    },
+    "roadmap.tag": {
+      "en": "Roadmap",
+      "am": "የመንገድ ካርታ"
+    },
+    "roadmap.title": {
+      "en": "Publish each domain only after the release gate is met.",
+      "am": "እያንዳንዱን ጎራ የመለቀቅ በሩ ከተሟላ በኋላ ብቻ ያትሙ።"
+    },
+    "roadmap.body": {
+      "en": "The public site is ready for direct repository expansion, but each new domain stays private until it has a repo, demo route, docs route, governance status, and product card that can be defended.",
+      "am": "ይፋዊው ጣቢያ ለቀጥታ የሪፖዚቶሪ መስፋፋት ዝግጁ ነው፤ ነገር ግን እያንዳንዱ አዲስ ጎራ ሊከላከለው የሚችል ሪፖ፣ የማሳያ መንገድ፣ የሰነድ መንገድ፣ የአስተዳደር ሁኔታና የምርት ካርድ እስኪኖረው ድረስ የግል ሆኖ ይቆያል።"
+    },
+    "governance.tag": {
+      "en": "Judgment Kernel",
+      "am": "የፍርድ ኬርነል"
+    },
+    "governance.title": {
+      "en": "Ψ produces traceable public claims.",
+      "am": "Ψ ሊከታተሉ የሚችሉ ይፋዊ የይገባኛል ጥያቄዎችን ያመነጫል።"
+    },
+    "governance.body": {
+      "en": "Website claims follow the same discipline as the system: observable source, stated boundary, reversible update, and no silent failure. That is why the repo graph separates the deployed website repository, private incubation, staged domains, and operational interfaces.",
+      "am": "የድረ-ገጽ የይገባኛል ጥያቄዎች እንደ ሥርዓቱ ተመሳሳይ ዲሲፕሊን ይከተላሉ፦ ሊታይ የሚችል ምንጭ፣ የተገለጸ ወሰን፣ ሊቀለበስ የሚችል ዝመናና ምንም ጸጥ ያለ ውድቀት የለም። ለዚህም ነው የሪፖ ግራፉ የተሰማራውን የድረ-ገጽ ሪፖዚቶሪ፣ የግል ማብሰያን፣ የተዘጋጁ ጎራዎችንና የአሠራር በይነገጾችን የሚለየው።"
+    },
+    "governance.profileTag": {
+      "en": "Architect Note",
+      "am": "የአርክቴክት ማስታወሻ"
+    },
+    "governance.profileTitle": {
+      "en": "Mullusi is the public subject. Tamirat Wubie is the current architect.",
+      "am": "ሙሉሲ ይፋዊው ርዕሰ ጉዳይ ነው። ታምራት ውቤ የአሁኑ አርክቴክት ነው።"
+    },
+    "governance.profileBody": {
+      "en": "The company surface stays centered on the Mullusi system: deployed website surface, private incubation boundary, staged domain engines, and public evidence. The creator profile is intentionally secondary; it exists only to make stewardship and contact paths explicit.",
+      "am": "የኩባንያው ገጽ በሙሉሲ ሥርዓት ላይ ያተኩራል፦ የተሰማራ የድረ-ገጽ ገጽ፣ የግል ማብሰያ ወሰን፣ የተዘጋጁ የጎራ ሞተሮችና ይፋዊ ማስረጃ። የፈጣሪው መገለጫ ሆን ተብሎ ሁለተኛ ነው፤ የኃላፊነትና የመገናኛ መንገዶችን ግልጽ ለማድረግ ብቻ ይኖራል።"
+    },
+    "governance.roleK": {
+      "en": "Role",
+      "am": "ሚና"
+    },
+    "governance.roleV": {
+      "en": "Architect, contributor, and current solo developer.",
+      "am": "አርክቴክት፣ አስተዋጽኦ አድራጊና የአሁኑ ብቸኛ አበልጻጊ።"
+    },
+    "governance.boundaryK": {
+      "en": "Boundary",
+      "am": "ወሰን"
+    },
+    "governance.boundaryV": {
+      "en": "Company claims remain tied to visible products, domains, and repository evidence.",
+      "am": "የኩባንያ የይገባኛል ጥያቄዎች ከሚታዩ ምርቶች፣ ጎራዎችና የሪፖዚቶሪ ማስረጃ ጋር ተሳስረው ይቆያሉ።"
+    },
+    "governance.accessK": {
+      "en": "Access",
+      "am": "መዳረሻ"
+    },
+    "cta.tag": {
+      "en": "Expansion",
+      "am": "መስፋፋት"
+    },
+    "cta.title": {
+      "en": "Promote a repository only after product evidence is ready.",
+      "am": "ሪፖዚቶሪን የምርት ማስረጃ ከተዘጋጀ በኋላ ብቻ ያሳድጉ።"
+    },
+    "cta.body": {
+      "en": "Each new domain can move from private incubation to public surface when the repo, demo route, docs route, governance status, and release boundary are verified. Mullu remains the first product path under the Mullusi umbrella.",
+      "am": "እያንዳንዱ አዲስ ጎራ ሪፖው፣ የማሳያ መንገዱ፣ የሰነድ መንገዱ፣ የአስተዳደር ሁኔታውና የመለቀቅ ወሰኑ ሲረጋገጡ ከግል ማብሰያ ወደ ይፋዊ ገጽ ሊሸጋገር ይችላል። ሙሉ በሙሉሲ ጃንጥላ ሥር የመጀመሪያው የምርት መንገድ ሆኖ ይቆያል።"
+    },
+    "cta.contactResearch": {
+      "en": "Contact research",
+      "am": "ምርምርን ያግኙ"
+    },
+    "footer.brandLine": {
+      "en": "Symbolic intelligence infrastructure for governed causal systems.",
+      "am": "ለሚተዳደሩ ምክንያታዊ ሥርዓቶች ምልክታዊ የማሰብ መሠረተ ልማት።"
+    },
+    "footer.surfaces": {
+      "en": "Surfaces",
+      "am": "ገጾች"
+    },
+    "footer.learn": {
+      "en": "Learn",
+      "am": "ይማሩ"
+    },
+    "footer.dashboard": {
+      "en": "Dashboard",
+      "am": "ዳሽቦርድ"
+    },
+    "footer.system": {
+      "en": "System",
+      "am": "ሥርዓት"
+    },
+    "footer.contact": {
+      "en": "Contact",
+      "am": "መገናኛ"
+    },
+    "footer.law": {
+      "en": "Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.",
+      "am": "ምልክቶች አቶማዊ ናቸው። ትርጉም ዝምድናዊ ነው። መሻገር ይተዳደራል። ፍርድ ይገኛል።"
+    },
+    "footer.rights": {
+      "en": "© 2026 Mullusi — Public claims only.",
+      "am": "© 2026 ሙሉሲ — ይፋዊ የይገባኛል ጥያቄዎች ብቻ።"
+    },
+    "interfaces.openLink": {
+      "en": "Open",
+      "am": "ክፈት"
+    },
+    "status.staged": {
+      "en": "Staged",
+      "am": "ተዘጋጅቷል"
+    },
+    "field.delivery": {
+      "en": "Delivery",
+      "am": "አቅርቦት"
+    },
+    "field.proofSurface": {
+      "en": "Proof surface",
+      "am": "የማረጋገጫ ገጽ"
+    },
+    "field.audience": {
+      "en": "Audience",
+      "am": "ታዳሚ"
+    },
+    "field.commercialSignal": {
+      "en": "Commercial signal",
+      "am": "የንግድ ምልክት"
+    },
+    "field.input": {
+      "en": "Input",
+      "am": "ግቤት"
+    },
+    "field.output": {
+      "en": "Output",
+      "am": "ውጤት"
+    },
+    "field.host": {
+      "en": "Host",
+      "am": "አስተናጋጅ"
+    },
+    "repo.statDeployed": {
+      "en": "Deployed public repos",
+      "am": "የተሰማሩ ይፋዊ ሪፖዎች"
+    },
+    "repo.statCategories": {
+      "en": "Categories",
+      "am": "ምድቦች"
+    },
+    "repo.statProductRepos": {
+      "en": "Public product repos",
+      "am": "ይፋዊ የምርት ሪፖዎች"
+    },
+    "repo.openRepository": {
+      "en": "Open repository",
+      "am": "ሪፖዚቶሪ ክፈት"
+    },
+    "repo.emptyTitle": {
+      "en": "No matching public repository",
+      "am": "ተዛማጅ ይፋዊ ሪፖዚቶሪ የለም"
+    },
+    "repo.emptyBody": {
+      "en": "Adjust the search term or category filter. Planned domain engines are listed above.",
+      "am": "የፍለጋ ቃሉን ወይም የምድብ ማጣሪያውን ያስተካክሉ። የታቀዱ የጎራ ሞተሮች ከላይ ተዘርዝረዋል።"
+    },
+    "repo.errorTitle": {
+      "en": "Product registry unavailable",
+      "am": "የምርት መዝገብ አይገኝም"
+    },
+    "repo.errorBody": {
+      "en": "The static registry did not load. Confirm data/products.json is deployed beside this page.",
+      "am": "የማይለወጠው መዝገብ አልተጫነም። data/products.json ከዚህ ገጽ ጎን መሰማራቱን ያረጋግጡ።"
+    }
+  }
+}

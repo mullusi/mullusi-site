@@ -13,6 +13,8 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <title>Mullusi - Mullu Governed Symbolic Product Company</title>
   <meta name="description" content="Mullusi is the umbrella company for governed symbolic intelligence systems. Mullu is the flagship product for proof-backed work, private beta access, and governed execution." />
   <link rel="canonical" href="https://mullusi.com" />
+  <meta property="og:site_name" content="Mullusi" />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Mullusi - Mullu Governed Symbolic Product Company" />
   <meta property="og:description" content="Mullusi is the umbrella company. Mullu is the flagship governed symbolic product." />
   <meta property="og:type" content="website" />
@@ -39,20 +41,42 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       document.documentElement.dataset.theme = storedTheme || (systemLight ? "light" : "dark");
     })();
   </script>
+  <script>
+    (() => {
+      try {
+        const stored = localStorage.getItem("mullusi-lang");
+        const navLang = (navigator.language || "").toLowerCase();
+        const lang = stored || (navLang.indexOf("am") === 0 ? "am" : "en");
+        document.documentElement.lang = lang;
+        document.documentElement.dataset.lang = lang;
+      } catch (error) {
+        document.documentElement.lang = "en";
+        document.documentElement.dataset.lang = "en";
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="assets/styles.css" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Mullusi",
-      "url": "https://mullusi.com",
-      "logo": "https://mullusi.com/assets/mullusi-logo.svg",
-      "email": "mullusiofficial@gmail.com",
-      "sameAs": [
-        "https://github.com/mullusi",
-        "https://docs.mullusi.com",
-        "https://sandbox.mullusi.com",
-        "https://metrics.mullusi.com"
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://mullusi.com/#organization",
+          "name": "Mullusi",
+          "url": "https://mullusi.com",
+          "logo": "https://mullusi.com/assets/mullusi-logo.svg",
+          "description": "Mullusi is the umbrella company for governed symbolic intelligence systems. Mullu is its flagship governed symbolic product.",
+          "email": "mullusiofficial@gmail.com",
+          "sameAs": ["https://github.com/mullusi"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://mullusi.com/#website",
+          "name": "Mullusi",
+          "url": "https://mullusi.com",
+          "publisher": { "@id": "https://mullusi.com/#organization" }
+        }
       ]
     }
   </script>
@@ -65,31 +89,35 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <canvas id="c-chain"></canvas>
   </div>
 
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main" data-i18n="skip.toContent">Skip to content</a>
 
   <nav class="site-nav" data-elevate aria-label="Primary navigation">
     <div class="wrap nav-in">
-      <a href="#top" class="brand" aria-label="Mullusi home">
+      <a href="#top" class="brand" aria-label="Mullusi home" data-i18n-attr="aria-label:nav.brandAria">
         <img class="brand-logo nav-logo" src="assets/mullusi-logo.svg" alt="Mullusi" width="190" height="48" />
       </a>
       <div class="nav-links">
-        <a href="#architecture">Architecture</a>
-        <a href="/mullu/">Mullu</a>
-        <a href="#products">Products</a>
-        <a href="#services">Services</a>
-        <a href="#evidence">Evidence</a>
-        <a href="/proof/">Proof</a>
-        <a href="#sciences">Science Engines</a>
-        <a href="#repos">Repos</a>
+        <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
+        <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
+        <a href="#products" data-i18n="nav.products">Products</a>
+        <a href="#services" data-i18n="nav.services">Services</a>
+        <a href="#evidence" data-i18n="nav.evidence">Evidence</a>
+        <a href="/proof/" data-i18n="nav.proof">Proof</a>
+        <a href="#sciences" data-i18n="nav.sciences">Science Engines</a>
+        <a href="#repos" data-i18n="nav.repos">Repos</a>
       </div>
       <div class="nav-cta">
+        <button class="theme-toggle lang-toggle" type="button" data-lang-toggle aria-label="Switch language" aria-pressed="false">
+          <span class="theme-toggle-mode" data-i18n="lang.kicker">Lang</span>
+          <span data-lang-label lang="am">አማርኛ</span>
+        </button>
         <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
           <span class="theme-toggle-icon" aria-hidden="true"></span>
-          <span class="theme-toggle-mode">Mode</span>
+          <span class="theme-toggle-mode" data-i18n="theme.mode">Mode</span>
           <span data-theme-label>Light</span>
         </button>
-        <a href="https://github.com/mullusi" class="btn" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://docs.mullusi.com" class="btn btn-solid" target="_blank" rel="noopener noreferrer">Docs</a>
+        <a href="https://github.com/mullusi" class="btn" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
+        <a href="https://docs.mullusi.com" class="btn btn-solid" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
         <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
           <span></span><span></span><span></span>
         </button>
@@ -102,16 +130,16 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       <img src="assets/mullusi-icon.svg" alt="" width="32" height="32" />
       <span>Mullusi</span>
     </div>
-    <a href="#architecture">Architecture</a>
-    <a href="/mullu/">Mullu</a>
-    <a href="#products">Products</a>
-    <a href="#services">Services</a>
-    <a href="#evidence">Evidence</a>
-    <a href="/proof/">Proof</a>
-    <a href="#sciences">Science Engines</a>
-    <a href="#repos">Repos</a>
-    <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Docs</a>
-    <a href="https://github.com/mullusi" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
+    <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
+    <a href="#products" data-i18n="nav.products">Products</a>
+    <a href="#services" data-i18n="nav.services">Services</a>
+    <a href="#evidence" data-i18n="nav.evidence">Evidence</a>
+    <a href="/proof/" data-i18n="nav.proof">Proof</a>
+    <a href="#sciences" data-i18n="nav.sciences">Science Engines</a>
+    <a href="#repos" data-i18n="nav.repos">Repos</a>
+    <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
+    <a href="https://github.com/mullusi" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
   </div>
 
   <main id="main">
@@ -131,28 +159,28 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <span class="latin-name" data-text="Mullu">Mullu</span>
           <span class="latin-tag">[Mullu]</span>
         </div>
-        <div class="tag">Mullusi umbrella · Mullu flagship product</div>
-        <h1 id="hero-title">Mullusi builds governed symbolic products. Mullu is the first product surface.</h1>
-        <p class="lead">Mullusi is the company, research, governance, and trust umbrella. Mullu is the flagship governed product for proof-backed work, private beta access, and symbolic execution surfaces. Runtime readiness remains bounded by the public proof page until live witness endpoints close.</p>
+        <div class="tag" data-i18n="hero.tag">Mullusi umbrella · Mullu flagship product</div>
+        <h1 id="hero-title" data-i18n="hero.title">Mullusi builds governed symbolic products. Mullu is the first product surface.</h1>
+        <p class="lead" data-i18n="hero.lead">Mullusi is the company, research, governance, and trust umbrella. Mullu is the flagship governed product for proof-backed work, private beta access, and symbolic execution surfaces. Runtime readiness remains bounded by the public proof page until live witness endpoints close.</p>
         <div class="hero-actions">
-          <a href="/mullu/" class="btn btn-solid">Open Mullu</a>
-          <a href="/proof/" class="btn">Review proof boundary</a>
-          <a href="#products" class="btn">View staged graph</a>
+          <a href="/mullu/" class="btn btn-solid" data-i18n="hero.openMullu">Open Mullu</a>
+          <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
+          <a href="#products" class="btn" data-i18n="hero.viewGraph">View staged graph</a>
         </div>
-        <dl class="hero-foot" aria-label="Mullusi public surface snapshot">
-          <div><dt class="k">Mullu</dt><dd class="l">Flagship product route</dd></div>
-          <div><dt class="k" data-public-product-count>1</dt><dd class="l">Deployed public repo</dd></div>
-          <div><dt class="k live">AwaitingEvidence</dt><dd class="l">Runtime witness state</dd></div>
+        <dl class="hero-foot" aria-label="Mullusi public surface snapshot" data-i18n-attr="aria-label:hero.snapshotAria">
+          <div><dt class="k">Mullu</dt><dd class="l" data-i18n="hero.footMullu">Flagship product route</dd></div>
+          <div><dt class="k" data-public-product-count>1</dt><dd class="l" data-i18n="hero.footRepo">Deployed public repo</dd></div>
+          <div><dt class="k live">AwaitingEvidence</dt><dd class="l" data-i18n="hero.footRuntime">Runtime witness state</dd></div>
         </dl>
       </div>
     </section>
 
     <section class="marquee" aria-label="Mullusi operating line">
       <div class="mtrack">
-        <span>Mfidel substrate</span><span>Symbolic causal chain</span><span>Fail-closed governance</span>
-        <span>Hash-chain lineage</span><span>Staged engines</span><span>Deployed site graph</span>
-        <span>Mfidel substrate</span><span>Symbolic causal chain</span><span>Fail-closed governance</span>
-        <span>Hash-chain lineage</span><span>Staged engines</span><span>Deployed site graph</span>
+        <span data-i18n="marquee.1">Mfidel substrate</span><span data-i18n="marquee.2">Symbolic causal chain</span><span data-i18n="marquee.3">Fail-closed governance</span>
+        <span data-i18n="marquee.4">Hash-chain lineage</span><span data-i18n="marquee.5">Staged engines</span><span data-i18n="marquee.6">Deployed site graph</span>
+        <span data-i18n="marquee.1">Mfidel substrate</span><span data-i18n="marquee.2">Symbolic causal chain</span><span data-i18n="marquee.3">Fail-closed governance</span>
+        <span data-i18n="marquee.4">Hash-chain lineage</span><span data-i18n="marquee.5">Staged engines</span><span data-i18n="marquee.6">Deployed site graph</span>
       </div>
     </section>
 
@@ -160,26 +188,26 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       <div class="wrap">
         <div class="claim-panel reveal">
           <div>
-            <div class="tag">Production Claim Boundary</div>
-            <h2 id="production-boundary-title">Mullusi is the umbrella. Mullu is the product. Runtime publication is still AwaitingEvidence.</h2>
-            <p>The website proves the public company and product route boundary. It does not claim a live governed runtime until the deployment witness endpoints publish signed evidence.</p>
+            <div class="tag" data-i18n="claim.tag">Production Claim Boundary</div>
+            <h2 id="production-boundary-title" data-i18n="claim.title">Mullusi is the umbrella. Mullu is the product. Runtime publication is still AwaitingEvidence.</h2>
+            <p data-i18n="claim.body">The website proves the public company and product route boundary. It does not claim a live governed runtime until the deployment witness endpoints publish signed evidence.</p>
           </div>
           <dl class="claim-ledger" aria-label="Production claim ledger">
             <div>
               <dt>Mullusi</dt>
-              <dd>Company, research, governance authority, trust boundary, and public domain owner.</dd>
+              <dd data-i18n="claim.ledger.mullusiV">Company, research, governance authority, trust boundary, and public domain owner.</dd>
             </div>
             <div>
               <dt>Mullu</dt>
-              <dd>Flagship governed product under Mullusi for proof-backed symbolic work.</dd>
+              <dd data-i18n="claim.ledger.mulluV">Flagship governed product under Mullusi for proof-backed symbolic work.</dd>
             </div>
             <div>
-              <dt>Live Runtime</dt>
-              <dd><span class="state-token">AwaitingEvidence</span> until /health, /gateway/witness, and /runtime/conformance close.</dd>
+              <dt data-i18n="claim.ledger.runtimeK">Live Runtime</dt>
+              <dd><span class="state-token">AwaitingEvidence</span> <span data-i18n="claim.ledger.runtimeUntil">until /health, /gateway/witness, and /runtime/conformance close.</span></dd>
             </div>
             <div>
-              <dt>Proof Route</dt>
-              <dd><a href="/proof/">mullusi.com/proof/</a> is the public boundary for verified and pending evidence.</dd>
+              <dt data-i18n="claim.ledger.proofK">Proof Route</dt>
+              <dd><a href="/proof/">mullusi.com/proof/</a> <span data-i18n="claim.ledger.proofV">is the public boundary for verified and pending evidence.</span></dd>
             </div>
           </dl>
         </div>
@@ -189,9 +217,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" id="evidence" aria-labelledby="evidence-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Evidence Plane</div>
-          <h2 id="evidence-title">Public claims stay attached to structure, source, release state, and runtime witness state.</h2>
-          <p>Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether live runtime evidence is closed.</p>
+          <div class="tag" data-i18n="evidence.tag">Evidence Plane</div>
+          <h2 id="evidence-title" data-i18n="evidence.title">Public claims stay attached to structure, source, release state, and runtime witness state.</h2>
+          <p data-i18n="evidence.body">Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether live runtime evidence is closed.</p>
         </div>
         <div class="cards-4 reveal" data-proof-lanes>
           <article class="card"><span class="kind">Identity</span><div class="ix">Ι</div><h3>Immutable public boundary</h3><p>Mullusi is presented as one governed system across website, docs, repositories, sandbox, metrics, and contact paths.</p></article>
@@ -205,16 +233,16 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" id="architecture" aria-labelledby="architecture-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Architecture</div>
-          <h2 id="architecture-title">One website, one release map, one governed symbolic spine.</h2>
-          <p>The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.</p>
+          <div class="tag" data-i18n="architecture.tag">Architecture</div>
+          <h2 id="architecture-title" data-i18n="architecture.title">One website, one release map, one governed symbolic spine.</h2>
+          <p data-i18n="architecture.body">The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.</p>
         </div>
         <div class="pipe reveal">
-          <article class="step"><div class="num">01</div><h3>Input</h3><p>Observe task, repo, paper, engine, or product intent.</p></article>
-          <article class="step"><div class="num">02</div><h3>Activate Symbols</h3><p>Map objects into Mfidel, MSIC, SCC, and product-domain terms.</p></article>
-          <article class="step"><div class="num">03</div><h3>Propagate Constraints</h3><p>Apply Λ rules, budget, policy, causality, proof, and lineage constraints.</p></article>
-          <article class="step"><div class="num">04</div><h3>Detect Conflicts</h3><p>Expose unresolved claims, missing evidence, unsafe transitions, and naming risk.</p></article>
-          <article class="step"><div class="num">05</div><h3>Settle Judgment</h3><p>Publish only stable meaning, action, deployed surface, demo, or roadmap state.</p></article>
+          <article class="step"><div class="num">01</div><h3 data-i18n="architecture.step1.title">Input</h3><p data-i18n="architecture.step1.body">Observe task, repo, paper, engine, or product intent.</p></article>
+          <article class="step"><div class="num">02</div><h3 data-i18n="architecture.step2.title">Activate Symbols</h3><p data-i18n="architecture.step2.body">Map objects into Mfidel, MSIC, SCC, and product-domain terms.</p></article>
+          <article class="step"><div class="num">03</div><h3 data-i18n="architecture.step3.title">Propagate Constraints</h3><p data-i18n="architecture.step3.body">Apply Λ rules, budget, policy, causality, proof, and lineage constraints.</p></article>
+          <article class="step"><div class="num">04</div><h3 data-i18n="architecture.step4.title">Detect Conflicts</h3><p data-i18n="architecture.step4.body">Expose unresolved claims, missing evidence, unsafe transitions, and naming risk.</p></article>
+          <article class="step"><div class="num">05</div><h3 data-i18n="architecture.step5.title">Settle Judgment</h3><p data-i18n="architecture.step5.body">Publish only stable meaning, action, deployed surface, demo, or roadmap state.</p></article>
         </div>
       </div>
     </section>
@@ -222,9 +250,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" aria-labelledby="interfaces-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Interfaces</div>
-          <h2 id="interfaces-title">The public surface is organized as routes, not one-off pages.</h2>
-          <p>Interface links are treated as managed records so new public routes can be added without reworking the layout.</p>
+          <div class="tag" data-i18n="interfaces.tag">Interfaces</div>
+          <h2 id="interfaces-title" data-i18n="interfaces.title">The public surface is organized as routes, not one-off pages.</h2>
+          <p data-i18n="interfaces.body">Interface links are treated as managed records so new public routes can be added without reworking the layout.</p>
         </div>
         <div class="routes reveal" data-interface-links>
           <article class="route"><span class="badge">Public route</span><h3>Docs</h3><p>Reference material, architecture notes, and public learning paths.</p><a class="lnk" href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Open Docs →</a></article>
@@ -238,9 +266,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" id="services" aria-labelledby="services-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Service Stack</div>
-          <h2 id="services-title">Packages distribute tools. Mullusi services carry governed judgment.</h2>
-          <p>Packages help users connect, validate, and submit work. Hosted services perform governance, preserve traces, issue proof stamps, and expose operational control.</p>
+          <div class="tag" data-i18n="services.tag">Service Stack</div>
+          <h2 id="services-title" data-i18n="services.title">Packages distribute tools. Mullusi services carry governed judgment.</h2>
+          <p data-i18n="services.body">Packages help users connect, validate, and submit work. Hosted services perform governance, preserve traces, issue proof stamps, and expose operational control.</p>
         </div>
         <div class="services reveal" data-service-grid>
           <noscript>
@@ -255,9 +283,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" id="govern-cloud" aria-labelledby="govern-cloud-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Govern Cloud v1</div>
-          <h2 id="govern-cloud-title">The first sellable service is evaluation, trace, and proof.</h2>
-          <p>Start with one vertical contract: authorized request, deterministic evaluation, append-only trace, proof state, repair action, and dashboard visibility.</p>
+          <div class="tag" data-i18n="govern.tag">Govern Cloud v1</div>
+          <h2 id="govern-cloud-title" data-i18n="govern.title">The first sellable service is evaluation, trace, and proof.</h2>
+          <p data-i18n="govern.body">Start with one vertical contract: authorized request, deterministic evaluation, append-only trace, proof state, repair action, and dashboard visibility.</p>
         </div>
         <div class="services reveal" data-service-tiers>
           <noscript>
@@ -277,15 +305,15 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" id="products" aria-labelledby="products-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Product Graph</div>
-          <h2 id="products-title">Mullu is the flagship product. Other engines stay staged until their proof boundary is ready.</h2>
-          <p>The public site now separates the Mullusi umbrella, the Mullu product route, and the proof boundary. Product-shaped runtime, SDK, science, language, and interface work remains private until release gates are met.</p>
+          <div class="tag" data-i18n="products.tag">Product Graph</div>
+          <h2 id="products-title" data-i18n="products.title">Mullu is the flagship product. Other engines stay staged until their proof boundary is ready.</h2>
+          <p data-i18n="products.body">The public site now separates the Mullusi umbrella, the Mullu product route, and the proof boundary. Product-shaped runtime, SDK, science, language, and interface work remains private until release gates are met.</p>
         </div>
         <div class="pgraph reveal">
-          <article class="pg"><span class="sym">M</span><h3>Mullu</h3><p>Flagship governed product for proof-backed work, private beta access, product surfaces, and runtime-bound symbolic execution.</p></article>
-          <article class="pg"><span class="sym">G</span><h3>Mullu Control Plane</h3><p>Governance, channels, approvals, budgets, audit traces, multi-provider runtime boundaries, and live witness closure work.</p></article>
-          <article class="pg"><span class="sym">Σ</span><h3>SDK &amp; Cells</h3><p>MSIC, symbol cells, causal-chain linking, mesh binding, deterministic memory routing, Φ traversal.</p></article>
-          <article class="pg"><span class="sym">H</span><h3>Evidence &amp; Interfaces</h3><p>Search, inspect, capsule, 3D, SCC harnesses, trace surfaces, and proof-carrying public demos.</p></article>
+          <article class="pg"><span class="sym">M</span><h3 data-i18n="products.pg1.title">Mullu</h3><p data-i18n="products.pg1.body">Flagship governed product for proof-backed work, private beta access, product surfaces, and runtime-bound symbolic execution.</p></article>
+          <article class="pg"><span class="sym">G</span><h3 data-i18n="products.pg2.title">Mullu Control Plane</h3><p data-i18n="products.pg2.body">Governance, channels, approvals, budgets, audit traces, multi-provider runtime boundaries, and live witness closure work.</p></article>
+          <article class="pg"><span class="sym">Σ</span><h3 data-i18n="products.pg3.title">SDK &amp; Cells</h3><p data-i18n="products.pg3.body">MSIC, symbol cells, causal-chain linking, mesh binding, deterministic memory routing, Φ traversal.</p></article>
+          <article class="pg"><span class="sym">H</span><h3 data-i18n="products.pg4.title">Evidence &amp; Interfaces</h3><p data-i18n="products.pg4.body">Search, inspect, capsule, 3D, SCC harnesses, trace surfaces, and proof-carrying public demos.</p></article>
         </div>
       </div>
     </section>
@@ -293,9 +321,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" id="sciences" aria-labelledby="sciences-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Science Engines</div>
-          <h2 id="sciences-title">Future repositories become domain engines, not disconnected projects.</h2>
-          <p>Physics, math, biology, chemistry, and music are staged as governed product and repository slots. None are exposed as product-ready repositories yet.</p>
+          <div class="tag" data-i18n="sciences.tag">Science Engines</div>
+          <h2 id="sciences-title" data-i18n="sciences.title">Future repositories become domain engines, not disconnected projects.</h2>
+          <p data-i18n="sciences.body">Physics, math, biology, chemistry, and music are staged as governed product and repository slots. None are exposed as product-ready repositories yet.</p>
         </div>
         <div class="engines reveal" data-future-domains>
           <article class="eng"><span class="st">Staged</span><h3>Math</h3><p>Symbolic proof, algebra, category maps, optimization, theorem workflow.</p></article>
@@ -310,15 +338,15 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" id="repos" aria-labelledby="repos-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Repository Observatory</div>
-          <h2 id="repos-title">Only deployed public surfaces are linked.</h2>
+          <div class="tag" data-i18n="repos.tag">Repository Observatory</div>
+          <h2 id="repos-title" data-i18n="repos.title">Only deployed public surfaces are linked.</h2>
           <p>Search the single deployed public repository. Product, runtime, SDK, science, and research repositories are intentionally excluded from this catalog until release gates are met. The registry is generated from <span class="inline-accent">data/products.json</span>.</p>
         </div>
 
         <div class="repo-toolbar reveal">
           <label class="search-box">
             <span>Search</span>
-            <input type="search" placeholder="website, index, github pages, public..." data-repo-search />
+            <input type="search" placeholder="website, index, github pages, public..." data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder" />
           </label>
           <div class="filters" role="group" aria-label="Repository category filters" data-repo-filters></div>
         </div>
@@ -353,9 +381,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="band" id="roadmap" aria-labelledby="roadmap-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag">Roadmap</div>
-          <h2 id="roadmap-title">Publish each domain only after the release gate is met.</h2>
-          <p>The public site is ready for direct repository expansion, but each new domain stays private until it has a repo, demo route, docs route, governance status, and product card that can be defended.</p>
+          <div class="tag" data-i18n="roadmap.tag">Roadmap</div>
+          <h2 id="roadmap-title" data-i18n="roadmap.title">Publish each domain only after the release gate is met.</h2>
+          <p data-i18n="roadmap.body">The public site is ready for direct repository expansion, but each new domain stays private until it has a repo, demo route, docs route, governance status, and product card that can be defended.</p>
         </div>
         <div class="road reveal" data-release-stages>
           <article class="rd"><div class="n">01</div><h3>Register</h3><p>Add or revise a deployed public-surface record in the structured registry.</p></article>
@@ -370,10 +398,10 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       <div class="wrap">
         <div class="split reveal">
           <div>
-            <div class="tag">Judgment Kernel</div>
-            <h2 id="governance-title">Ψ produces traceable public claims.</h2>
+            <div class="tag" data-i18n="governance.tag">Judgment Kernel</div>
+            <h2 id="governance-title" data-i18n="governance.title">Ψ produces traceable public claims.</h2>
             <div class="kernel-eq">Ψ(PS, SE, EFF, SG, PRR, CPM, ERL, PCE, PCB, K) → J***</div>
-            <p>Website claims follow the same discipline as the system: observable source, stated boundary, reversible update, and no silent failure. That is why the repo graph separates the deployed website repository, private incubation, staged domains, and operational interfaces.</p>
+            <p data-i18n="governance.body">Website claims follow the same discipline as the system: observable source, stated boundary, reversible update, and no silent failure. That is why the repo graph separates the deployed website repository, private incubation, staged domains, and operational interfaces.</p>
           </div>
           <div>
             <div class="architect-note" id="profile">
@@ -381,13 +409,13 @@ Invariants: no private repository claims, no silent content failure, all dynamic
                 <img src="assets/tamirat-profile.jpg" alt="Tamirat Wubie at a laptop" width="1280" height="1707" loading="lazy" decoding="async" />
               </figure>
               <div class="architect-copy">
-                <div class="tag">Architect Note</div>
-                <h2 id="profile-title">Mullusi is the public subject. Tamirat Wubie is the current architect.</h2>
-                <p>The company surface stays centered on the Mullusi system: deployed website surface, private incubation boundary, staged domain engines, and public evidence. The creator profile is intentionally secondary; it exists only to make stewardship and contact paths explicit.</p>
+                <div class="tag" data-i18n="governance.profileTag">Architect Note</div>
+                <h2 id="profile-title" data-i18n="governance.profileTitle">Mullusi is the public subject. Tamirat Wubie is the current architect.</h2>
+                <p data-i18n="governance.profileBody">The company surface stays centered on the Mullusi system: deployed website surface, private incubation boundary, staged domain engines, and public evidence. The creator profile is intentionally secondary; it exists only to make stewardship and contact paths explicit.</p>
                 <div class="meta-row">
-                  <div class="mr"><div class="mk">Role</div><div class="mv">Architect, contributor, and current solo developer.</div></div>
-                  <div class="mr"><div class="mk">Boundary</div><div class="mv">Company claims remain tied to visible products, domains, and repository evidence.</div></div>
-                  <div class="mr"><div class="mk">Access</div><div class="mv"><a href="mailto:tamirat@mullusi.com">tamirat@mullusi.com</a> · <a href="mailto:research@mullusi.com">research@mullusi.com</a></div></div>
+                  <div class="mr"><div class="mk" data-i18n="governance.roleK">Role</div><div class="mv" data-i18n="governance.roleV">Architect, contributor, and current solo developer.</div></div>
+                  <div class="mr"><div class="mk" data-i18n="governance.boundaryK">Boundary</div><div class="mv" data-i18n="governance.boundaryV">Company claims remain tied to visible products, domains, and repository evidence.</div></div>
+                  <div class="mr"><div class="mk" data-i18n="governance.accessK">Access</div><div class="mv"><a href="mailto:tamirat@mullusi.com">tamirat@mullusi.com</a> · <a href="mailto:research@mullusi.com">research@mullusi.com</a></div></div>
                 </div>
               </div>
             </div>
@@ -398,13 +426,13 @@ Invariants: no private repository claims, no silent content failure, all dynamic
 
     <section class="cta">
       <div class="wrap">
-        <div class="tag center-tag">Expansion</div>
-        <h2>Promote a repository only after product evidence is ready.</h2>
-        <p>Each new domain can move from private incubation to public surface when the repo, demo route, docs route, governance status, and release boundary are verified. Mullu remains the first product path under the Mullusi umbrella.</p>
+        <div class="tag center-tag" data-i18n="cta.tag">Expansion</div>
+        <h2 data-i18n="cta.title">Promote a repository only after product evidence is ready.</h2>
+        <p data-i18n="cta.body">Each new domain can move from private incubation to public surface when the repo, demo route, docs route, governance status, and release boundary are verified. Mullu remains the first product path under the Mullusi umbrella.</p>
         <div class="cta-actions">
-          <a href="/mullu/" class="btn btn-solid">Open Mullu</a>
-          <a href="/proof/" class="btn">Review proof boundary</a>
-          <a href="mailto:research@mullusi.com" class="btn">Contact research</a>
+          <a href="/mullu/" class="btn btn-solid" data-i18n="hero.openMullu">Open Mullu</a>
+          <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
+          <a href="mailto:research@mullusi.com" class="btn" data-i18n="cta.contactResearch">Contact research</a>
         </div>
       </div>
     </section>
@@ -414,35 +442,35 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <div class="wrap">
       <div class="foot-grid">
         <div class="foot-brand">
-          <a href="#top" class="brand" aria-label="Mullusi home">
+          <a href="#top" class="brand" aria-label="Mullusi home" data-i18n-attr="aria-label:nav.brandAria">
             <img class="brand-logo footer-logo" src="assets/mullusi-logo.svg" alt="Mullusi" width="260" height="66" />
           </a>
-          <p>Symbolic intelligence infrastructure for governed causal systems.</p>
+          <p data-i18n="footer.brandLine">Symbolic intelligence infrastructure for governed causal systems.</p>
         </div>
         <div class="foot-cols">
           <div class="col">
-            <h3>Surfaces</h3>
-            <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Docs</a>
-            <a href="https://learn.mullusi.com" target="_blank" rel="noopener noreferrer">Learn</a>
-            <a href="https://dashboard.mullusi.com" target="_blank" rel="noopener noreferrer">Dashboard</a>
+            <h3 data-i18n="footer.surfaces">Surfaces</h3>
+            <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
+            <a href="https://learn.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.learn">Learn</a>
+            <a href="https://dashboard.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.dashboard">Dashboard</a>
           </div>
           <div class="col">
-            <h3>System</h3>
+            <h3 data-i18n="footer.system">System</h3>
             <a href="https://api.mullusi.com" target="_blank" rel="noopener noreferrer">API</a>
             <a href="https://metrics.mullusi.com" target="_blank" rel="noopener noreferrer">Metrics</a>
             <a href="https://sandbox.mullusi.com" target="_blank" rel="noopener noreferrer">Sandbox</a>
           </div>
           <div class="col">
-            <h3>Contact</h3>
-            <a href="https://github.com/mullusi" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <h3 data-i18n="footer.contact">Contact</h3>
+            <a href="https://github.com/mullusi" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
             <a href="mailto:mullusiofficial@gmail.com">mullusiofficial@gmail.com</a>
             <a href="mailto:research@mullusi.com">research@mullusi.com</a>
           </div>
         </div>
       </div>
       <div class="foot-base">
-        <span class="law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</span>
-        <span>© 2026 Mullusi — Public claims only.</span>
+        <span class="law" data-i18n="footer.law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</span>
+        <span data-i18n="footer.rights">© 2026 Mullusi — Public claims only.</span>
       </div>
     </div>
   </footer>
