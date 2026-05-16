@@ -479,12 +479,45 @@ function validatePublicText() {
   }
 }
 
+function validateHeadContract() {
+  const ogImage = "https://mullusi.com/assets/mullusi-icon-512.png";
+  const routes = [
+    { file: "index.html", url: "https://mullusi.com" },
+    { file: "mullu/index.html", url: "https://mullusi.com/mullu/" },
+    { file: "proof/index.html", url: "https://mullusi.com/proof/" },
+  ];
+  for (const { file, url } of routes) {
+    const html = readUtf8(file);
+    const checks = [
+      [/<meta\s+charset=/i, "charset"],
+      [/<meta\s+name="viewport"/i, "viewport"],
+      [/<title>[^<]+<\/title>/i, "title"],
+      [/<meta\s+name="description"\s+content="[^"]+"/i, "description"],
+      [`<link rel="canonical" href="${url}"`, "canonical"],
+      [`<meta property="og:title" content="`, "og:title"],
+      [`<meta property="og:description" content="`, "og:description"],
+      [`<meta property="og:type" content="website"`, "og:type"],
+      [`<meta property="og:url" content="${url}"`, "og:url"],
+      [`<meta property="og:image" content="${ogImage}"`, "og:image"],
+      [`<meta name="twitter:card" content="`, "twitter:card"],
+      [`<meta name="twitter:image" content="${ogImage}"`, "twitter:image"],
+    ];
+    for (const [matcher, label] of checks) {
+      const present = matcher instanceof RegExp ? matcher.test(html) : html.includes(matcher);
+      if (!present) {
+        recordFailure(`head_contract_missing:${file}:${label}`);
+      }
+    }
+  }
+}
+
 function runValidation() {
   validateRequiredFiles();
   validateCname();
   validateRobots();
   validateSitemap();
   validateLocalLinks();
+  validateHeadContract();
   validateProductionClaimBoundary();
   validateWebManifest();
   validateProductRegistry();
