@@ -369,5 +369,34 @@
         "summary": "የምርቱን ገጽ የይፋዊ ወሰኑ ከተረጋገጠ በኋላ ብቻ ያጋልጡ።"
       }
     }
-  ]
+  ],
+  "evaluationExample": {
+    "label": "Worked Example",
+    "title": "What a governed evaluation looks like.",
+    "disclaimer": "Illustrative only. Not a live endpoint. Runtime stays AwaitingEvidence until witness endpoints publish signed evidence.",
+    "route": "POST /v1/govern/evaluate",
+    "request": "{ project, action: \"deploy gateway\", symbols: [Σ, Λ], constraints: [budget, policy, causality], context }",
+    "verdict": "BLOCK",
+    "summary": "An ordinary pipeline would run the action and report failure afterward. A governed evaluation refuses the unsafe transition before execution and emits a verifiable record of why.",
+    "steps": [
+      { "k": "Verdict", "v": "BLOCK — an unsafe transition was detected before any effect ran." },
+      { "k": "Violation", "v": "Causality constraint Λ unsatisfied: an effect was declared without lineage." },
+      { "k": "Trace", "v": "Append-only record of every phase, constraint, and judgment that produced the verdict." },
+      { "k": "Repair", "v": "Attach the missing lineage record, then re-evaluate the same action." },
+      { "k": "Proof stamp", "v": "Pending — issued only when the evaluation closes against signed runtime evidence." }
+    ],
+    "am": {
+      "label": "የተሰራ ምሳሌ",
+      "title": "የሚተዳደር ግምገማ ምን እንደሚመስል።",
+      "disclaimer": "ለማሳያ ብቻ። ቀጥታ መዳረሻ አይደለም። የምስክር መዳረሻዎች የተፈረመ ማስረጃ እስኪያትሙ ድረስ runtime AwaitingEvidence ሆኖ ይቆያል።",
+      "summary": "ተራ pipeline ድርጊቱን አሂዶ ከዚያ ውድቀቱን ይዘግባል። የሚተዳደር ግምገማ ግን ደህንነቱ ያልተጠበቀ ሽግግርን ከመፈጸሙ በፊት ይከለክላል፤ ለምን እንደሆነ ሊረጋገጥ የሚችል መዝገብም ያወጣል።",
+      "steps": [
+        { "k": "ፍርድ", "v": "BLOCK — ማንኛውም ውጤት ከመፈጸሙ በፊት ደህንነቱ ያልተጠበቀ ሽግግር ተገኝቷል።" },
+        { "k": "ጥሰት", "v": "የምክንያታዊነት ገደብ Λ አልተሟላም፦ ውጤት ያለ ሐረግ ተገልጿል።" },
+        { "k": "ዱካ", "v": "ፍርዱን ያስገኘውን እያንዳንዱን ደረጃ፣ ገደብና ፍርድ የያዘ ተጨማሪ-ብቻ መዝገብ።" },
+        { "k": "ጥገና", "v": "የጎደለውን የሐረግ መዝገብ ያያይዙ፣ ከዚያ ተመሳሳዩን ድርጊት እንደገና ይገምግሙ።" },
+        { "k": "የማረጋገጫ ማህተም", "v": "በመጠባበቅ ላይ — ግምገማው በተፈረመ runtime ማስረጃ ላይ ሲዘጋ ብቻ ይሰጣል።" }
+      ]
+    }
+  }
 }

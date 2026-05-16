@@ -403,6 +403,42 @@ function renderRepositoryHandoff() {
   revealRendered(target);
 }
 
+function renderEvaluationExample() {
+  const target = qs("[data-evaluation-example]");
+  const example = state.siteContent?.evaluationExample;
+  if (!target || !example) return;
+
+  const baseSteps = Array.isArray(example.steps) ? example.steps : [];
+  const amSteps = example.am && Array.isArray(example.am.steps) ? example.am.steps : null;
+  const steps = state.lang === "am" && amSteps && amSteps.length === baseSteps.length ? amSteps : baseSteps;
+
+  target.innerHTML = `
+    <article class="eval-card">
+      <div class="eval-head">
+        <span class="badge">${escapeHtml(localized(example, "label"))}</span>
+        <span class="status-pill eval-verdict">${escapeHtml(example.verdict)}</span>
+      </div>
+      <h3>${escapeHtml(localized(example, "title"))}</h3>
+      <p class="eval-disclaimer">${escapeHtml(localized(example, "disclaimer"))}</p>
+      <div class="eval-req">
+        <span class="eval-k">${escapeHtml(i18nText("field.request") || "Request")}</span>
+        <code>${escapeHtml(example.route)}</code>
+        <code>${escapeHtml(example.request)}</code>
+      </div>
+      <p class="eval-summary">${escapeHtml(localized(example, "summary"))}</p>
+      <dl class="eval-steps">
+        ${steps.map((step) => `
+          <div>
+            <dt>${escapeHtml(step.k)}</dt>
+            <dd>${escapeHtml(step.v)}</dd>
+          </div>
+        `).join("")}
+      </dl>
+    </article>
+  `;
+  revealRendered(target);
+}
+
 function renderFutureDomains() {
   const target = qs("[data-future-domains]");
   if (!target || !state.registry) return;
@@ -646,6 +682,7 @@ function renderSiteContent() {
   renderServices();
   renderServiceTiers();
   renderApiContracts();
+  renderEvaluationExample();
   renderReleaseStages();
   renderRepositoryHandoff();
 }

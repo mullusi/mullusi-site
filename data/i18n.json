@@ -530,6 +530,26 @@
     "repo.errorBody": {
       "en": "The static registry did not load. Confirm data/products.json is deployed beside this page.",
       "am": "የማይለወጠው መዝገብ አልተጫነም። data/products.json ከዚህ ገጽ ጎን መሰማራቱን ያረጋግጡ።"
+    },
+    "field.request": {
+      "en": "Request",
+      "am": "ጥያቄ"
+    },
+    "field.verdict": {
+      "en": "Verdict",
+      "am": "ፍርድ"
+    },
+    "architecture.plain": {
+      "en": "In plain terms: every public claim points to a real surface, a planned slot, or nothing — never a guess.",
+      "am": "በቀላል አነጋገር፦ እያንዳንዱ ይፋዊ የይገባኛል ጥያቄ ወደ እውነተኛ ገጽ፣ ወደ ታቀደ ቦታ ወይም ወደ ምንም ይጠቁማል — ግምት ፈጽሞ የለም።"
+    },
+    "evidence.plain": {
+      "en": "In plain terms: if it is stated here, you can check where it lives and how it is governed.",
+      "am": "በቀላል አነጋገር፦ እዚህ የተገለጸ ከሆነ የት እንደሚኖርና እንዴት እንደሚተዳደር ማረጋገጥ ትችላለህ።"
+    },
+    "govern.plain": {
+      "en": "In plain terms: send an action, get back a verdict, the reason, an audit trace, and a proof stamp.",
+      "am": "በቀላል አነጋገር፦ ድርጊት ላክ፣ ፍርድ፣ ምክንያቱን፣ የኦዲት ዱካና የማረጋገጫ ማህተም ተቀበል።"
     }
   }
 }
