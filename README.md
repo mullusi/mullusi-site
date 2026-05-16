@@ -101,6 +101,13 @@ The website renders these records into the Service Stack section. Keep npm packa
 }
 ```
 
+`evaluationExample` renders one illustrative governed evaluation (request,
+verdict, violation, trace, repair, proof stamp) in the Govern Cloud section so
+the abstract contract is tangible. It is **not** a live endpoint: the validator
+requires its `disclaimer` to keep the `AwaitingEvidence` / "not a live
+endpoint" boundary, and requires a parallel `am` translation (matching `steps`
+length). Keep the example public-safe and illustrative only.
+
 ## Internationalization (i18n) contract
 
 `data/i18n.json` is the public translation dictionary. The site ships English in

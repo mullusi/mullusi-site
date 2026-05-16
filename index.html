@@ -56,7 +56,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       }
     })();
   </script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.i18n.3" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.i18n.4" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -81,7 +81,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/app.js?v=2026.05.i18n.3"></script>
+  <script defer src="assets/app.js?v=2026.05.i18n.4"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -222,6 +222,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="tag" data-i18n="evidence.tag">Evidence Plane</div>
           <h2 id="evidence-title" data-i18n="evidence.title">Public claims stay attached to structure, source, release state, and runtime witness state.</h2>
           <p data-i18n="evidence.body">Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether live runtime evidence is closed.</p>
+          <p class="plain" data-i18n="evidence.plain">In plain terms: if it is stated here, you can check where it lives and how it is governed.</p>
         </div>
         <div class="cards-4 reveal" data-proof-lanes>
           <article class="card"><span class="kind">Identity</span><div class="ix">Ι</div><h3>Immutable public boundary</h3><p>Mullusi is presented as one governed system across website, docs, repositories, sandbox, metrics, and contact paths.</p></article>
@@ -238,6 +239,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="tag" data-i18n="architecture.tag">Architecture</div>
           <h2 id="architecture-title" data-i18n="architecture.title">One website, one release map, one governed symbolic spine.</h2>
           <p data-i18n="architecture.body">The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.</p>
+          <p class="plain" data-i18n="architecture.plain">In plain terms: every public claim points to a real surface, a planned slot, or nothing — never a guess.</p>
         </div>
         <div class="pipe reveal">
           <article class="step"><div class="num">01</div><h3 data-i18n="architecture.step1.title">Input</h3><p data-i18n="architecture.step1.body">Observe task, repo, paper, engine, or product intent.</p></article>
@@ -288,6 +290,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="tag" data-i18n="govern.tag">Govern Cloud v1</div>
           <h2 id="govern-cloud-title" data-i18n="govern.title">The first sellable service is evaluation, trace, and proof.</h2>
           <p data-i18n="govern.body">Start with one vertical contract: authorized request, deterministic evaluation, append-only trace, proof state, repair action, and dashboard visibility.</p>
+          <p class="plain" data-i18n="govern.plain">In plain terms: send an action, get back a verdict, the reason, an audit trace, and a proof stamp.</p>
         </div>
         <div class="services reveal" data-service-tiers>
           <noscript>
@@ -299,6 +302,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="services contracts reveal" data-api-contracts>
           <noscript>
             <article class="service contract"><span class="badge">Core v1</span><h3>Govern Evaluation</h3><code>POST /v1/govern/evaluate</code><p>Evaluates a proposed action or system state against Mullusi governance constraints.</p></article>
+          </noscript>
+        </div>
+        <div class="eval-wrap reveal" data-evaluation-example>
+          <noscript>
+            <p>Enable JavaScript to view the illustrative governed-evaluation example. It is generated from <code>data/site.json</code> and is not a live endpoint.</p>
           </noscript>
         </div>
       </div>

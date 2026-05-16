@@ -451,6 +451,47 @@ function validateSiteContent() {
       requireString(stage.summary, `${label}.summary`);
     }
   }
+
+  const example = content.evaluationExample;
+  if (!example || typeof example !== "object") {
+    recordFailure("site_evaluation_example_missing");
+  } else {
+    requireString(example.label, "site.evaluationExample.label");
+    requireString(example.title, "site.evaluationExample.title");
+    requireString(example.disclaimer, "site.evaluationExample.disclaimer");
+    requireString(example.route, "site.evaluationExample.route");
+    requireString(example.request, "site.evaluationExample.request");
+    requireString(example.verdict, "site.evaluationExample.verdict");
+    requireString(example.summary, "site.evaluationExample.summary");
+    if (!/(AwaitingEvidence|not a live endpoint)/i.test(example.disclaimer)) {
+      recordFailure("site_evaluation_example_disclaimer_weak");
+    }
+    if (!Array.isArray(example.steps) || example.steps.length < 2) {
+      recordFailure("site_evaluation_example_steps_missing");
+    } else {
+      for (const [index, step] of example.steps.entries()) {
+        requireString(step.k, `site.evaluationExample.steps.${index}.k`);
+        requireString(step.v, `site.evaluationExample.steps.${index}.v`);
+      }
+    }
+    const am = example.am;
+    if (!am || typeof am !== "object") {
+      recordFailure("site_evaluation_example_am_missing");
+    } else {
+      requireString(am.label, "site.evaluationExample.am.label");
+      requireString(am.title, "site.evaluationExample.am.title");
+      requireString(am.disclaimer, "site.evaluationExample.am.disclaimer");
+      requireString(am.summary, "site.evaluationExample.am.summary");
+      if (!Array.isArray(am.steps) || am.steps.length !== (example.steps || []).length) {
+        recordFailure("site_evaluation_example_am_steps_mismatch");
+      } else {
+        for (const [index, step] of am.steps.entries()) {
+          requireString(step.k, `site.evaluationExample.am.steps.${index}.k`);
+          requireString(step.v, `site.evaluationExample.am.steps.${index}.v`);
+        }
+      }
+    }
+  }
 }
 
 function validateI18n() {

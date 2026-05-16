@@ -920,6 +920,12 @@ p {
   font-size: 14px;
 }
 
+.sec-head .plain {
+  margin-top: 10px;
+  color: var(--accent);
+  font-size: 13px;
+}
+
 .cards-4,
 .pipe,
 .engines,
@@ -1132,6 +1138,100 @@ p {
   font-size: 11px;
   padding: 6px 8px;
   overflow-wrap: anywhere;
+}
+
+.eval-wrap {
+  margin-top: 16px;
+}
+
+.eval-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel-glass);
+  padding: clamp(20px, 3vw, 30px);
+}
+
+.eval-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eval-verdict {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.eval-card h3 {
+  font-size: 18px;
+}
+
+.eval-disclaimer {
+  color: var(--ink-dim);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.eval-req {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eval-req .eval-k {
+  color: var(--ink-dim);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eval-req code {
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 12px;
+  padding: 8px 10px;
+  overflow-wrap: anywhere;
+}
+
+.eval-summary {
+  font-size: 13px;
+}
+
+.eval-steps {
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.eval-steps > div {
+  display: grid;
+  grid-template-columns: minmax(120px, 170px) 1fr;
+  gap: 16px;
+  background: var(--panel-field);
+  padding: 13px 16px;
+}
+
+.eval-steps dt {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 14px;
+}
+
+.eval-steps dd {
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
+@media (max-width: 680px) {
+  .eval-steps > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 
 .engines {
