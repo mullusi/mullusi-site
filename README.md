@@ -173,6 +173,15 @@ When registry exposure changes, also verify that listed GitHub repositories are 
 node scripts/verify-registry-repos.mjs
 ```
 
+## Asset cache busting
+
+GitHub Pages serves `assets/*` with `Cache-Control: max-age=600`, so a returning
+visitor can otherwise get new `index.html` with a stale cached `assets/app.js`
+(button visible, no handler). `index.html` references `assets/app.js` and
+`assets/styles.css` with a `?v=` query; bump that token whenever either asset
+changes so the new HTML forces a fresh fetch. The JSON data files are fetched
+with `cache: "no-store"` and do not need a version token.
+
 ## Update rule
 
 When a new product repository is ready for public exposure, update only `data/products.json` first. The page will render the new card automatically. Until then, keep it in private incubation language or `futureDomains`.

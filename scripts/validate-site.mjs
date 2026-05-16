@@ -62,7 +62,7 @@ function recordFailure(message) {
 }
 
 function localTargetPath(sourceFile, url) {
-  const cleanUrl = url.split("#")[0];
+  const cleanUrl = url.split(/[?#]/)[0];
   if (cleanUrl.length === 0) {
     return sourceFile;
   }
