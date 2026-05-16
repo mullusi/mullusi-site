@@ -1,0 +1,33 @@
+# Purpose: verify public reachability of repositories listed in the Mullusi product registry.
+# Governance scope: data/products.json registry exposure, repository visibility, and reality drift.
+# Dependencies: GitHub Actions, Node.js, and public GitHub REST API access.
+# Invariants: a listed system repository going private, deleted, or renamed fails this gate
+#             even when no commit occurred (scheduled), and at registry change time (push/PR).
+
+name: Verify Registry Repos
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch: {}
+  push:
+    branches: ["main"]
+    paths: ["data/products.json"]
+  pull_request:
+    branches: ["main"]
+    paths: ["data/products.json"]
+
+jobs:
+  verify-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Verify registry repositories are public and reachable
+        run: node scripts/verify-registry-repos.mjs
