@@ -3,9 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070806" />
   <title>Mullusi Proof Boundary</title>
   <meta name="description" content="Public proof boundary for Mullusi and Mullu website, product, and runtime evidence claims.">
   <link rel="canonical" href="https://mullusi.com/proof/" />
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta property="og:site_name" content="Mullusi" />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Mullusi Proof Boundary" />
   <meta property="og:description" content="Public proof boundary for Mullusi and Mullu website, product, and runtime evidence claims." />
   <meta property="og:type" content="website" />
@@ -17,6 +25,17 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
   <meta name="twitter:image:alt" content="Mullusi" />
+  <script>
+    (() => {
+      try {
+        const stored = localStorage.getItem("mullusi-theme");
+        const systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        document.documentElement.dataset.theme = stored || (systemLight ? "light" : "dark");
+      } catch (error) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    })();
+  </script>
   <style>
     :root {
       color-scheme: dark;
@@ -29,6 +48,21 @@
       --green: #54c99a;
       --violet: #9283ff;
       --red: #ff7b72;
+      --nav-bg: rgba(7, 8, 6, 0.88);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f4f1e6;
+      --panel: #fbf8ee;
+      --line: #d6cdb5;
+      --text: #1b1d15;
+      --muted: #5d5847;
+      --gold: #8a6914;
+      --green: #1f7d56;
+      --violet: #5446c0;
+      --red: #b3262c;
+      --nav-bg: rgba(244, 241, 230, 0.86);
     }
 
     * { box-sizing: border-box; }
@@ -42,6 +76,37 @@
 
     a { color: inherit; }
 
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 5;
+      padding: 10px 16px;
+      background: var(--gold);
+      color: #121006;
+      font-size: 13px;
+      text-decoration: none;
+      transform: translateY(-200%);
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    #main {
+      scroll-margin-top: 80px;
+    }
+
+    #main:focus { outline: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skip-link { transition: none; }
+    }
+
     header, main, footer {
       width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
@@ -54,7 +119,7 @@
       right: 0;
       z-index: 2;
       border-bottom: 1px solid rgba(214, 173, 72, 0.18);
-      background: rgba(7, 8, 6, 0.88);
+      background: var(--nav-bg);
       backdrop-filter: blur(12px);
     }
 
@@ -85,6 +150,36 @@
 
     .nav-links a { text-decoration: none; }
     .nav-links a:hover { color: var(--gold); }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid rgba(214, 173, 72, 0.3);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .theme-dot {
+      width: 11px;
+      height: 11px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      background: linear-gradient(90deg, currentColor 0 50%, transparent 50%);
+    }
 
     header {
       min-height: 72vh;
@@ -215,6 +310,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <nav aria-label="Primary">
     <div class="nav-inner">
       <a class="brand" href="/">Mullusi</a>
@@ -224,6 +320,10 @@
         <a href="#runtime">Runtime</a>
         <a href="mailto:mullusiofficial@gmail.com">Contact</a>
       </div>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Toggle color theme">
+        <span class="theme-dot" aria-hidden="true"></span>
+        <span data-theme-label>Light</span>
+      </button>
     </div>
   </nav>
 
@@ -244,7 +344,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <section id="claims">
       <h2>Current public evidence lanes.</h2>
       <div class="grid">
@@ -281,5 +381,35 @@
     <div>Mullusi proof boundary</div>
     <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
   </footer>
+  <script>
+    (() => {
+      const KEY = "mullusi-theme";
+      const root = document.documentElement;
+      const toggle = document.querySelector("[data-theme-toggle]");
+      const label = toggle && toggle.querySelector("[data-theme-label]");
+      const meta = document.querySelector('meta[name="theme-color"]');
+      const sync = (theme) => {
+        root.dataset.theme = theme;
+        if (meta) meta.setAttribute("content", theme === "light" ? "#f4f1e6" : "#070806");
+        if (toggle) toggle.setAttribute("aria-pressed", String(theme === "light"));
+        if (label) label.textContent = theme === "light" ? "Dark" : "Light";
+      };
+      sync(root.dataset.theme === "light" ? "light" : "dark");
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          const next = root.dataset.theme === "light" ? "dark" : "light";
+          try { localStorage.setItem(KEY, next); } catch (error) { /* storage unavailable */ }
+          sync(next);
+        });
+      }
+      try {
+        window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
+          let stored = null;
+          try { stored = localStorage.getItem(KEY); } catch (error) { /* storage unavailable */ }
+          if (!stored) sync(event.matches ? "light" : "dark");
+        });
+      } catch (error) { /* matchMedia listener unsupported */ }
+    })();
+  </script>
 </body>
 </html>

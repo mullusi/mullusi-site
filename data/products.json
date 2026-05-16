@@ -20,7 +20,10 @@
       "category": "Website",
       "status": "deployed",
       "summary": "Public index page, GitHub Pages deployment, domain boundary, and website registry for Mullusi.",
-      "tags": ["website", "index", "github-pages", "public-boundary"]
+      "tags": ["website", "index", "github-pages", "public-boundary"],
+      "am": {
+        "summary": "የሙሉሲ ይፋዊ መነሻ ገጽ፣ የGitHub Pages ስምሪት፣ የጎራ ወሰንና የድረ-ገጽ መዝገብ።"
+      }
     }
   ],
   "futureDomains": [
@@ -29,42 +32,66 @@
       "slug": "physics",
       "plannedRepo": "mullusi-physics-engine",
       "status": "planned",
-      "summary": "Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans."
+      "summary": "Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans.",
+      "am": {
+        "title": "ፊዚክስ",
+        "summary": "ለregimes፣ axioms፣ bridges፣ ክፍት ችግሮችና solver execution plans የታቀደ ምልክታዊ ምክንያታዊ የፊዚክስ ሞተር።"
+      }
     },
     {
       "name": "Mullusi Math Engine",
       "slug": "math",
       "plannedRepo": "mullusi-math-engine",
       "status": "planned",
-      "summary": "Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow."
+      "summary": "Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow.",
+      "am": {
+        "title": "ሒሳብ",
+        "summary": "ለማረጋገጫዎች፣ ለአልጀብራ መዋቅሮች፣ ለcategory-theoretic ካርታዎች፣ ለoptimization እና ለtheorem workflow የታቀደ ምልክታዊ የሒሳብ ሞተር።"
+      }
     },
     {
       "name": "Mullusi Biology Engine",
       "slug": "biology",
       "plannedRepo": "mullusi-biology-engine",
       "status": "planned",
-      "summary": "Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning."
+      "summary": "Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning.",
+      "am": {
+        "title": "ባዮሎጂ",
+        "summary": "ለDNA/protein ሐረግ፣ ለphenotype ገደቦች፣ ለsystems biology እና ለexperiment planning የታቀደ ምክንያታዊ የባዮሎጂ መዋቅር ሞተር።"
+      }
     },
     {
       "name": "Mullusi Chemistry Engine",
       "slug": "chemistry",
       "plannedRepo": "mullusi-chemistry-engine",
       "status": "planned",
-      "summary": "Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation."
+      "summary": "Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation.",
+      "am": {
+        "title": "ኬሚስትሪ",
+        "summary": "ለreaction graphs፣ ለmolecular constraints፣ ለregime bridges እና ለlab-safe hypothesis generation የታቀደ ምልክታዊ የኬሚስትሪ ሽፋን።"
+      }
     },
     {
       "name": "Mullusi Music Engine",
       "slug": "music",
       "plannedRepo": "mullusi-music-engine",
       "status": "planned",
-      "summary": "Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure."
+      "summary": "Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure.",
+      "am": {
+        "title": "ሙዚቃ",
+        "summary": "ለrhythm፣ harmony፣ scale systems፣ cultural motifs፣ composition logic እና audio structure የታቀደ ምልክታዊ የሙዚቃ ምክንያት ሞተር።"
+      }
     },
     {
       "name": "Mullusi Unified Science Lab",
       "slug": "unified-science",
       "plannedRepo": "mullusi-unified-science-lab",
       "status": "planned",
-      "summary": "Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures."
+      "summary": "Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures.",
+      "am": {
+        "title": "የተዋሃደ ሳይንስ",
+        "summary": "math, physics, biology, chemistry እና music በሚተዳደሩ ምክንያታዊ መዋቅሮች የሚያገናኝ የታቀደ ተሻጋሪ-ጎራ ሽፋን።"
+      }
     }
   ],
   "privateIncubation": [

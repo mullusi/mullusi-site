@@ -11,6 +11,7 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 |-- index.html                         # Public landing page
 |-- mullu/index.html                   # Flagship Mullu product route
 |-- proof/index.html                   # Public proof-boundary route
+|-- 404.html                           # Branded not-found route (GitHub Pages)
 |-- CNAME                              # mullusi.com custom domain
 |-- favicon.ico                        # Legacy browser favicon
 |-- robots.txt                         # Crawl policy
@@ -18,6 +19,7 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 |-- site.webmanifest                   # Browser/app icon manifest
 |-- data/products.json                 # Product/repository registry
 |-- data/site.json                     # Structured public site content
+|-- data/i18n.json                     # en/am translation dictionary
 |-- assets/
 |   |-- app.js                         # Repo search/filter renderer
 |   |-- styles.css                     # Full visual system
@@ -97,6 +99,33 @@ The website renders these records into the Service Stack section. Keep npm packa
   "summary": "Evaluates a proposed action or system state against Mullusi governance constraints and records a causal trace."
 }
 ```
+
+## Internationalization (i18n) contract
+
+`data/i18n.json` is the public translation dictionary. The site ships English in
+the static HTML (the no-JS and SEO default) and swaps to the selected language
+at runtime, mirroring the theme system: the choice is stored in `localStorage`
+under `mullusi-lang`, applied via `data-i18n` / `data-i18n-attr` hooks, and a
+nav toggle flips it. A pre-paint script sets `<html lang>` early to avoid a
+flash.
+
+Contract:
+
+- `meta.languages` must include `en` and `am`; `languageNames` must name both.
+- Every entry in `strings` must provide a non-empty `en` **and** `am` value.
+- Every `data-i18n` / `data-i18n-attr` key used in `index.html` must exist in
+  `strings` (the validator fails the build otherwise — translation gaps are
+  treated like any other silent gap).
+
+Data-rendered sections (`data/site.json`, `data/products.json`) localize via an
+optional `am` object on each record (and `amSteps` for the repository handoff).
+When an `am` field is absent the renderer falls back to English, so partial
+translation degrades gracefully rather than breaking the layout.
+
+Add a language by extending `meta.languages`, `languageNames`, every `strings`
+entry, and the `am`-style record fields, then wiring a toggle option. Keep
+product names, code identifiers, routes, and state tokens (for example
+`Mullu`, `Mfidel`, `AwaitingEvidence`, `/health`) untranslated.
 
 ## Deploy to GitHub Pages
 
