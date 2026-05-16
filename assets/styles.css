@@ -252,6 +252,7 @@ p {
 
 .brand {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   min-width: 0;
   gap: 11px;
@@ -274,8 +275,16 @@ p {
   max-height: 66px;
 }
 
-:root[data-theme="light"] .brand-logo {
-  filter: invert(1) hue-rotate(180deg) saturate(0.72) contrast(0.95);
+.logo-light {
+  display: none;
+}
+
+:root[data-theme="light"] .logo-dark {
+  display: none;
+}
+
+:root[data-theme="light"] .logo-light {
+  display: block;
 }
 
 .brand .glyph {
