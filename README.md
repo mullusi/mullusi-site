@@ -29,7 +29,8 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 |   |-- mullusi-icon-192.png            # Web app manifest icon
 |   |-- mullusi-icon-512.png            # Web app manifest icon
 |   |-- mullusi-icon-transparent.svg    # Transparent icon variant
-|   |-- mullusi-logo.svg                # Horizontal public logo
+|   |-- mullusi-logo.svg                # Horizontal public logo (dark theme)
+|   |-- mullusi-logo-light.svg          # Horizontal public logo (light theme)
 |   `-- mullusi-mark.svg                # Legacy compact mark reference
 `-- scripts/
     |-- validate-site.mjs              # Static validation gate
