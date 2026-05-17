@@ -603,6 +603,14 @@
       "en": "points",
       "am": "ነጥቦች"
     },
+    "news.updated": {
+      "en": "Updated",
+      "am": "ተዘምኗል"
+    },
+    "news.via": {
+      "en": "via",
+      "am": "በ"
+    },
     "news.emptyTitle": {
       "en": "Signal is refreshing",
       "am": "ምልክቱ እየታደሰ ነው"

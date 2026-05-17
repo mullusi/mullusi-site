@@ -592,12 +592,32 @@ function renderUseCases() {
 
 function newsMeta(item) {
   const parts = [];
-  if (item.source) parts.push(escapeHtml(item.source));
-  if (Number.isFinite(item.points) && item.points > 0) {
-    parts.push(`${item.points} ${escapeHtml(i18nText("news.points") || "points")}`);
+  if (item.source) {
+    parts.push(`<span class="news-source">${escapeHtml(item.source)}</span>`);
   }
-  if (item.date) parts.push(escapeHtml(item.date));
-  return parts.join(" &middot; ");
+  if (Number.isFinite(item.points) && item.points > 0) {
+    parts.push(`<span>${item.points} ${escapeHtml(i18nText("news.points") || "points")}</span>`);
+  }
+  if (item.date) parts.push(`<span>${escapeHtml(item.date)}</span>`);
+  return parts.join('<span class="news-dot" aria-hidden="true">&middot;</span>');
+}
+
+function newsCaption() {
+  const meta = state.news?.meta || {};
+  const bits = [];
+  if (meta.updated) {
+    bits.push(`${escapeHtml(i18nText("news.updated") || "Updated")} ${escapeHtml(meta.updated)}`);
+  }
+  if (meta.source) {
+    bits.push(`${escapeHtml(i18nText("news.via") || "via")} ${escapeHtml(meta.source)}`);
+  }
+  if (!bits.length) return "";
+  return `
+    <p class="news-cap">
+      <span class="news-pulse" aria-hidden="true"></span>
+      ${bits.join('<span class="news-dot" aria-hidden="true">&middot;</span>')}
+    </p>
+  `;
 }
 
 function renderNews() {
@@ -607,22 +627,27 @@ function renderNews() {
 
   if (!items.length) {
     target.innerHTML = `
-      <article class="card">
+      <div class="news-empty">
         <h3>${escapeHtml(i18nText("news.emptyTitle") || "Signal is refreshing")}</h3>
         <p>${escapeHtml(i18nText("news.emptyBody") || "The daily research and systems digest will appear here after the next scheduled refresh.")}</p>
-      </article>
+      </div>
     `;
     revealRendered(target);
     return;
   }
 
-  target.innerHTML = items.map((item) => `
-    <article class="card">
-      <span class="kind">${escapeHtml(item.source || "")}</span>
-      <h3><a class="lnk" href="${escapeAttribute(item.url)}" rel="noopener">${escapeHtml(item.title)}</a></h3>
-      <p>${newsMeta(item)}</p>
-    </article>
+  const rows = items.map((item, index) => `
+    <li class="news-item">
+      <span class="news-rank" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
+      <a class="news-headline" href="${escapeAttribute(item.url)}" rel="noopener">
+        <span class="news-title">${escapeHtml(item.title)}</span>
+        <span class="news-arrow" aria-hidden="true">-&gt;</span>
+      </a>
+      <p class="news-meta">${newsMeta(item)}</p>
+    </li>
   `).join("");
+
+  target.innerHTML = `${newsCaption()}<ol class="news-list">${rows}</ol>`;
   revealRendered(target);
 }
 
