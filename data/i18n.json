@@ -612,12 +612,12 @@
       "am": "የግንባር ምልክት"
     },
     "news.title": {
-      "en": "Research and systems news the governed runtime tracks.",
-      "am": "የሚተዳደረው runtime የሚከታተለው የምርምርና የሥርዓት ዜና።"
+      "en": "General technology news, breakthroughs, and research releases.",
+      "am": "አጠቃላይ የቴክኖሎጂ ዜና፣ ግኝቶችና የምርምር ልቀቶች።"
     },
     "news.body": {
-      "en": "A daily ranked digest of frontier model and systems work, refreshed automatically from public discussion. Links are external and illustrative, not Mullusi claims.",
-      "am": "በየዕለቱ የሚደረደር የግንባር ሞዴልና የሥርዓት ሥራ ማጠቃለያ፣ ከይፋዊ ውይይት በራስ-ሰር የሚታደስ። አገናኞች ውጫዊና ለማሳያ ናቸው፣ የMullusi የይገባኛል ጥያቄዎች አይደሉም።"
+      "en": "A daily ranked digest of notable technology, science breakthroughs, and research releases, refreshed automatically from public discussion. Links are external and illustrative, not Mullusi claims.",
+      "am": "በየዕለቱ የሚደረደር የጎላ ቴክኖሎጂ፣ የሳይንስ ግኝቶችና የምርምር ልቀቶች ማጠቃለያ፣ ከይፋዊ ውይይት በራስ-ሰር የሚታደስ። አገናኞች ውጫዊና ለማሳያ ናቸው፣ የMullusi የይገባኛል ጥያቄዎች አይደሉም።"
     },
     "news.points": {
       "en": "points",
