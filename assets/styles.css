@@ -1380,6 +1380,122 @@ p {
   }
 }
 
+.diagram {
+  margin-top: 22px;
+  display: grid;
+  gap: 14px;
+  overflow-x: auto;
+}
+
+.diagram-svg {
+  display: block;
+  width: 100%;
+  min-width: 540px;
+  max-width: 920px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.dg-node rect {
+  fill: var(--panel-glass);
+  stroke: var(--line-bright);
+  stroke-width: 1;
+}
+
+.dg-label {
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-size: 15px;
+}
+
+.dg-node.is-root rect {
+  fill: var(--bg-raise);
+  stroke: var(--accent-deep);
+}
+
+.dg-node.is-root .dg-label {
+  fill: var(--accent);
+  font-family: var(--serif);
+  font-size: 18px;
+}
+
+.dg-node.is-public rect {
+  stroke: var(--accent-deep);
+}
+
+.dg-node.is-terminal rect {
+  stroke: var(--accent-deep);
+  animation: dg-pulse 2.6s ease-in-out infinite;
+}
+
+.dg-node.is-terminal .dg-label {
+  fill: var(--accent);
+}
+
+.dg-node.is-staged rect {
+  fill: transparent;
+  stroke: var(--line-bright);
+  stroke-dasharray: 5 4;
+}
+
+.dg-node.is-staged .dg-label {
+  fill: var(--ink-dim);
+}
+
+.dg-conn {
+  fill: none;
+  stroke: var(--line-bright);
+  stroke-width: 1.5;
+}
+
+.dg-conn.is-dashed {
+  stroke: var(--ink-dim);
+  stroke-dasharray: 5 5;
+}
+
+.dg-arrow {
+  fill: var(--accent-deep);
+}
+
+@keyframes dg-pulse {
+  50% {
+    stroke-opacity: 0.45;
+  }
+}
+
+.diagram-caption {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.diagram-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  color: var(--ink-dim);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.diagram-legend .lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.diagram-legend .lg::before {
+  content: "";
+  width: 14px;
+  height: 0;
+  border-top: 2px solid var(--accent-deep);
+}
+
+.diagram-legend .lg-staged::before {
+  border-top-style: dashed;
+  border-top-color: var(--ink-dim);
+}
+
 .engines {
   grid-template-columns: repeat(5, 1fr);
 }

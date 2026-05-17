@@ -586,6 +586,46 @@
     "hero.tryPlayground": {
       "en": "Try the playground",
       "am": "የሙከራ ሜዳውን ይሞክሩ"
+    },
+    "flow.caption": {
+      "en": "Every request is checked, traced, and judged before a result returns.",
+      "am": "እያንዳንዱ ጥያቄ ውጤት ከመመለሱ በፊት ይፈተሻል፣ ይከታተላል፣ ይፈረዳል።"
+    },
+    "flow.request": {
+      "en": "Request",
+      "am": "ጥያቄ"
+    },
+    "flow.evaluate": {
+      "en": "Evaluate rules",
+      "am": "ደንቦችን ገምግም"
+    },
+    "flow.trace": {
+      "en": "Record trace",
+      "am": "ዱካ መዝግብ"
+    },
+    "flow.verdict": {
+      "en": "Verdict",
+      "am": "ፍርድ"
+    },
+    "flow.proof": {
+      "en": "Proof stamp",
+      "am": "የማረጋገጫ ማህተም"
+    },
+    "map.caption": {
+      "en": "One umbrella. Public routes are linked; product engines stay private until their gate is met.",
+      "am": "አንድ ጃንጥላ። ይፋዊ መንገዶች ተያይዘዋል፤ የምርት ሞተሮች በራቸው እስኪሟላ ድረስ የግል ሆነው ይቆያሉ።"
+    },
+    "map.publicRoutes": {
+      "en": "Public routes",
+      "am": "ይፋዊ መንገዶች"
+    },
+    "map.stagedPrivate": {
+      "en": "Staged · private",
+      "am": "ተዘጋጅቷል · የግል"
+    },
+    "release.caption": {
+      "en": "A repository becomes a public route only after each gate closes.",
+      "am": "ሪፖዚቶሪ ይፋዊ መንገድ የሚሆነው እያንዳንዱ በር ከተዘጋ በኋላ ብቻ ነው።"
     }
   }
 }

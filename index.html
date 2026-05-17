@@ -56,7 +56,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       }
     })();
   </script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.i18n.5" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.i18n.6" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -81,7 +81,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/app.js?v=2026.05.i18n.5"></script>
+  <script defer src="assets/app.js?v=2026.05.i18n.6"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -256,6 +256,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <article class="step"><div class="num">04</div><h3 data-i18n="architecture.step4.title">Detect Conflicts</h3><p data-i18n="architecture.step4.body">Expose unresolved claims, missing evidence, unsafe transitions, and naming risk.</p></article>
           <article class="step"><div class="num">05</div><h3 data-i18n="architecture.step5.title">Settle Judgment</h3><p data-i18n="architecture.step5.body">Publish only stable meaning, action, deployed surface, demo, or roadmap state.</p></article>
         </div>
+        <div class="diagram reveal" data-boundary-map>
+          <noscript>
+            <p>Mullusi is the umbrella. Public routes (Mullu, Proof, Playground) are linked; product engines stay private until their release gate is met.</p>
+          </noscript>
+        </div>
       </div>
     </section>
 
@@ -310,6 +315,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="services contracts reveal" data-api-contracts>
           <noscript>
             <article class="service contract"><span class="badge">Core v1</span><h3>Govern Evaluation</h3><code>POST /v1/govern/evaluate</code><p>Evaluates a proposed action or system state against Mullusi governance constraints.</p></article>
+          </noscript>
+        </div>
+        <div class="diagram reveal" data-flow-diagram>
+          <noscript>
+            <p>Request &rarr; Evaluate rules &rarr; Record trace &rarr; Verdict &rarr; Proof stamp.</p>
           </noscript>
         </div>
         <div class="eval-wrap reveal" data-evaluation-example>
@@ -407,6 +417,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
             <span>Route</span>
             <span>Release</span>
           </div>
+        </div>
+        <div class="diagram reveal" data-release-machine>
+          <noscript>
+            <p>Repository &rarr; Proof &rarr; Route &rarr; Release &rarr; AwaitingEvidence.</p>
+          </noscript>
         </div>
       </div>
     </section>

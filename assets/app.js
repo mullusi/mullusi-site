@@ -403,6 +403,126 @@ function renderRepositoryHandoff() {
   revealRendered(target);
 }
 
+function diagramArrowDefs() {
+  return `
+    <defs>
+      <marker id="dg-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" class="dg-arrow" />
+      </marker>
+    </defs>
+  `;
+}
+
+function diagramNode(x, y, w, h, label, variant) {
+  const cls = variant ? `dg-node ${variant}` : "dg-node";
+  return `
+    <g class="${cls}">
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" />
+      <text x="${x + w / 2}" y="${y + h / 2}" class="dg-label" text-anchor="middle" dominant-baseline="middle">${escapeHtml(label)}</text>
+    </g>
+  `;
+}
+
+function svgFrame(viewBox, ariaLabel, inner) {
+  return `<svg class="diagram-svg" viewBox="${viewBox}" role="img" aria-label="${escapeAttribute(ariaLabel)}" preserveAspectRatio="xMidYMid meet">${diagramArrowDefs()}${inner}</svg>`;
+}
+
+function renderFlowDiagram() {
+  const target = qs("[data-flow-diagram]");
+  if (!target) return;
+  const steps = [
+    i18nText("flow.request") || "Request",
+    i18nText("flow.evaluate") || "Evaluate rules",
+    i18nText("flow.trace") || "Record trace",
+    i18nText("flow.verdict") || "Verdict",
+    i18nText("flow.proof") || "Proof stamp",
+  ];
+  const w = 188;
+  const h = 66;
+  const gap = 26;
+  const y = 30;
+  let inner = "";
+  steps.forEach((label, index) => {
+    const x = index * (w + gap);
+    const variant = index === steps.length - 1 ? "is-terminal" : "";
+    inner += diagramNode(x, y, w, h, label, variant);
+    if (index < steps.length - 1) {
+      const x1 = x + w + 4;
+      const x2 = x + w + gap - 4;
+      inner += `<line class="dg-conn" x1="${x1}" y1="${y + h / 2}" x2="${x2}" y2="${y + h / 2}" marker-end="url(#dg-arrow)" />`;
+    }
+  });
+  const total = steps.length * w + (steps.length - 1) * gap;
+  target.innerHTML = `
+    ${svgFrame(`0 0 ${total} 126`, i18nText("flow.caption") || "Governed evaluation flow", inner)}
+    <p class="diagram-caption">${escapeHtml(i18nText("flow.caption") || "Every request is checked, traced, and judged before a result returns.")}</p>
+  `;
+  revealRendered(target);
+}
+
+function renderBoundaryMap() {
+  const target = qs("[data-boundary-map]");
+  if (!target) return;
+  const routes = ["Mullu", "Proof", "Playground"];
+  const w = 196;
+  const h = 60;
+  const gap = 30;
+  const rowW = routes.length * w + (routes.length - 1) * gap;
+  const cx = rowW / 2;
+  let inner = "";
+  // umbrella
+  inner += diagramNode(cx - 110, 8, 220, 60, "Mullusi", "is-root");
+  // connectors from umbrella to each public route
+  routes.forEach((label, index) => {
+    const x = index * (w + gap);
+    inner += `<path class="dg-conn" d="M ${cx} 68 C ${cx} 110, ${x + w / 2} 100, ${x + w / 2} 140" fill="none" marker-end="url(#dg-arrow)" />`;
+    inner += diagramNode(x, 142, w, h, label, "is-public");
+  });
+  // staged/private cluster (dashed, dim)
+  inner += `<line class="dg-conn is-dashed" x1="${cx}" y1="68" x2="${cx}" y2="232" marker-end="url(#dg-arrow)" />`;
+  inner += diagramNode(cx - 130, 234, 260, 56, i18nText("map.stagedPrivate") || "Staged · private", "is-staged");
+  target.innerHTML = `
+    <div class="diagram-legend">
+      <span class="lg lg-public">${escapeHtml(i18nText("map.publicRoutes") || "Public routes")}</span>
+      <span class="lg lg-staged">${escapeHtml(i18nText("map.stagedPrivate") || "Staged · private")}</span>
+    </div>
+    ${svgFrame(`0 0 ${rowW} 300`, i18nText("map.caption") || "Mullusi route boundary map", inner)}
+    <p class="diagram-caption">${escapeHtml(i18nText("map.caption") || "One umbrella. Public routes are linked; product engines stay private until their gate is met.")}</p>
+  `;
+  revealRendered(target);
+}
+
+function renderReleaseMachine() {
+  const target = qs("[data-release-machine]");
+  const handoff = state.siteContent?.repositoryHandoff;
+  const baseSteps = Array.isArray(handoff?.steps) ? handoff.steps : [];
+  if (!target || baseSteps.length === 0) return;
+  const amSteps = handoff.am && Array.isArray(handoff.amSteps) ? handoff.amSteps : null;
+  const steps = state.lang === "am" && amSteps && amSteps.length === baseSteps.length ? amSteps : baseSteps;
+
+  const w = 172;
+  const h = 60;
+  const gap = 30;
+  const y = 26;
+  let inner = "";
+  steps.forEach((label, index) => {
+    const x = index * (w + gap);
+    inner += diagramNode(x, y, w, h, label, "is-state");
+    if (index < steps.length - 1) {
+      inner += `<line class="dg-conn" x1="${x + w + 4}" y1="${y + h / 2}" x2="${x + w + gap - 4}" y2="${y + h / 2}" marker-end="url(#dg-arrow)" />`;
+    }
+  });
+  const lastX = (steps.length - 1) * (w + gap);
+  inner += `<line class="dg-conn is-dashed" x1="${lastX + w + 4}" y1="${y + h / 2}" x2="${lastX + w + gap - 4}" y2="${y + h / 2}" marker-end="url(#dg-arrow)" />`;
+  inner += diagramNode(lastX + w + gap, y, 200, h, "AwaitingEvidence", "is-terminal");
+  const total = steps.length * (w + gap) + 200;
+  target.innerHTML = `
+    ${svgFrame(`0 0 ${total} 112`, "Release state machine", inner)}
+    <p class="diagram-caption">${escapeHtml(i18nText("release.caption") || "A repository becomes a public route only after each gate closes.")}</p>
+  `;
+  revealRendered(target);
+}
+
 const statusMeta = {
   "live": { key: "status.live", fallback: "Live", cls: "is-live" },
   "awaiting-evidence": { key: "status.awaitingEvidence", fallback: "Awaiting Evidence", cls: "is-awaiting" },
@@ -753,6 +873,9 @@ function renderSiteContent() {
   renderUseCases();
   renderReleaseStages();
   renderRepositoryHandoff();
+  renderFlowDiagram();
+  renderBoundaryMap();
+  renderReleaseMachine();
 }
 
 function renderRegistryContent() {
