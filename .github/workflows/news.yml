@@ -1,0 +1,45 @@
+# Purpose: refresh the public Frontier Signal news data daily and deploy it via GitHub Pages.
+# Governance scope: data/news.json only — a non-claim public data file, never product/runtime claims.
+# Dependencies: GitHub Actions, Node.js, and the keyless public Hacker News Algolia API.
+# Invariants: commits only when data/news.json changes; touches no other file; site validation still gates the push.
+
+name: Refresh News
+
+on:
+  schedule:
+    - cron: "23 7 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-news
+  cancel-in-progress: false
+
+jobs:
+  refresh-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Refresh news data
+        run: node scripts/fetch-news.mjs
+
+      - name: Commit refreshed news data
+        run: |
+          if git diff --quiet -- data/news.json; then
+            echo "no news change to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/news.json
+          git commit -m "Refresh Frontier Signal news data"
+          git push origin HEAD:main

@@ -583,6 +583,34 @@
       "en": "Playground",
       "am": "የሙከራ ሜዳ"
     },
+    "nav.news": {
+      "en": "News",
+      "am": "ዜና"
+    },
+    "news.tag": {
+      "en": "Frontier Signal",
+      "am": "የግንባር ምልክት"
+    },
+    "news.title": {
+      "en": "Research and systems news the governed runtime tracks.",
+      "am": "የሚተዳደረው runtime የሚከታተለው የምርምርና የሥርዓት ዜና።"
+    },
+    "news.body": {
+      "en": "A daily ranked digest of frontier model and systems work, refreshed automatically from public discussion. Links are external and illustrative, not Mullusi claims.",
+      "am": "በየዕለቱ የሚደረደር የግንባር ሞዴልና የሥርዓት ሥራ ማጠቃለያ፣ ከይፋዊ ውይይት በራስ-ሰር የሚታደስ። አገናኞች ውጫዊና ለማሳያ ናቸው፣ የMullusi የይገባኛል ጥያቄዎች አይደሉም።"
+    },
+    "news.points": {
+      "en": "points",
+      "am": "ነጥቦች"
+    },
+    "news.emptyTitle": {
+      "en": "Signal is refreshing",
+      "am": "ምልክቱ እየታደሰ ነው"
+    },
+    "news.emptyBody": {
+      "en": "The daily research and systems digest will appear here after the next scheduled refresh.",
+      "am": "የዕለታዊ ምርምርና ሥርዓት ማጠቃለያ በሚቀጥለው የታቀደ ዕድሳት በኋላ እዚህ ይታያል።"
+    },
     "hero.tryPlayground": {
       "en": "Try the playground",
       "am": "የሙከራ ሜዳውን ይሞክሩ"
