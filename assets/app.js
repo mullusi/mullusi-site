@@ -727,9 +727,10 @@ function renderFutureDomains() {
   const target = qs("[data-future-domains]");
   if (!target || !state.registry) return;
 
+  const domainSlugs = ["math", "physics", "engineering", "biology", "chemistry", "music"];
   const futureDomains = (state.registry.futureDomains || [])
-    .filter((domain) => ["math", "physics", "biology", "chemistry", "music"].includes(domain.slug));
-  const domainOrder = new Map(["math", "physics", "biology", "chemistry", "music"].map((slug, index) => [slug, index]));
+    .filter((domain) => domainSlugs.includes(domain.slug));
+  const domainOrder = new Map(domainSlugs.map((slug, index) => [slug, index]));
   const domains = [...futureDomains].sort((left, right) => {
     return (domainOrder.get(left.slug) ?? 99) - (domainOrder.get(right.slug) ?? 99);
   });
