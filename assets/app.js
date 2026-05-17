@@ -403,6 +403,72 @@ function renderRepositoryHandoff() {
   revealRendered(target);
 }
 
+const statusMeta = {
+  "live": { key: "status.live", fallback: "Live", cls: "is-live" },
+  "awaiting-evidence": { key: "status.awaitingEvidence", fallback: "Awaiting Evidence", cls: "is-awaiting" },
+  "planned": { key: "status.planned", fallback: "Planned", cls: "is-planned" },
+};
+
+function renderStatusBoard() {
+  const target = qs("[data-system-status]");
+  const board = state.siteContent?.statusBoard;
+  const rows = Array.isArray(board?.rows) ? board.rows : [];
+  if (!target || !board || rows.length === 0) return;
+
+  const amRows = board.am && Array.isArray(board.am.rows) ? board.am.rows : [];
+  const followHref = /^https:\/\//.test(board.followHref || "") ? board.followHref : null;
+
+  target.innerHTML = `
+    <div class="status-head">
+      <span class="handoff-kicker">${escapeHtml(localized(board, "label"))}</span>
+      <h3>${escapeHtml(localized(board, "title"))}</h3>
+    </div>
+    <ul class="status-list">
+      ${rows.map((row, index) => {
+        const meta = statusMeta[row.state] || statusMeta.planned;
+        const amRow = amRows[index] || {};
+        const component = state.lang === "am" && amRow.component ? amRow.component : row.component;
+        const note = state.lang === "am" && amRow.note ? amRow.note : row.note;
+        return `
+          <li class="status-row ${meta.cls}">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-name">${escapeHtml(component)}</span>
+            <span class="status-state">${escapeHtml(i18nText(meta.key) || meta.fallback)}</span>
+            <span class="status-note">${escapeHtml(note)}</span>
+          </li>
+        `;
+      }).join("")}
+    </ul>
+    <p class="status-follow">
+      ${escapeHtml(localized(board, "follow"))}
+      ${followHref ? `<a href="${escapeAttribute(followHref)}" rel="noopener">${escapeHtml(localized(board, "followLabel"))} -&gt;</a>` : ""}
+    </p>
+  `;
+  revealRendered(target);
+}
+
+function renderUseCases() {
+  const target = qs("[data-use-cases]");
+  const useCases = state.siteContent?.useCases;
+  const items = Array.isArray(useCases?.items) ? useCases.items : [];
+  if (!target || items.length === 0) return;
+
+  const amItems = useCases.am && Array.isArray(useCases.am.items) ? useCases.am.items : [];
+  target.innerHTML = items.map((item, index) => {
+    const amItem = amItems[index] || {};
+    const title = state.lang === "am" && amItem.title ? amItem.title : item.title;
+    const body = state.lang === "am" && amItem.body ? amItem.body : item.body;
+    return `
+      <article class="usecase">
+        <span class="usecase-n">${String(index + 1).padStart(2, "0")}</span>
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(body)}</p>
+      </article>
+    `;
+  }).join("");
+  revealRendered(target);
+}
+
 function renderEvaluationExample() {
   const target = qs("[data-evaluation-example]");
   const example = state.siteContent?.evaluationExample;
@@ -683,6 +749,8 @@ function renderSiteContent() {
   renderServiceTiers();
   renderApiContracts();
   renderEvaluationExample();
+  renderStatusBoard();
+  renderUseCases();
   renderReleaseStages();
   renderRepositoryHandoff();
 }

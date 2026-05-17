@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate" />
+  <meta name="theme-color" content="#070806" />
+  <title>Mullusi Playground - Simulated Govern Evaluation</title>
+  <meta name="description" content="A static, simulated Mullusi govern evaluation. Runs entirely in your browser. Not a live endpoint and not a proof stamp.">
+  <link rel="canonical" href="https://mullusi.com/playground/" />
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta property="og:site_name" content="Mullusi" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Mullusi Playground - Simulated Govern Evaluation" />
+  <meta property="og:description" content="A static, simulated Mullusi govern evaluation. Runs entirely in your browser. Not a live endpoint and not a proof stamp." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mullusi.com/playground/" />
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:image:alt" content="Mullusi" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
+  <meta name="twitter:image:alt" content="Mullusi" />
+  <script>
+    (() => {
+      try {
+        const stored = localStorage.getItem("mullusi-theme");
+        const systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        document.documentElement.dataset.theme = stored || (systemLight ? "light" : "dark");
+      } catch (error) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070806;
+      --panel: #10120d;
+      --line: #283124;
+      --text: #ece7d8;
+      --muted: #aaa38f;
+      --gold: #d6ad48;
+      --green: #54c99a;
+      --red: #ff7b72;
+      --nav-bg: rgba(7, 8, 6, 0.88);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f4f1e6;
+      --panel: #fbf8ee;
+      --line: #d6cdb5;
+      --text: #1b1d15;
+      --muted: #5d5847;
+      --gold: #8a6914;
+      --green: #1f7d56;
+      --red: #b3262c;
+      --nav-bg: rgba(244, 241, 230, 0.86);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 5;
+      padding: 10px 16px;
+      background: var(--gold);
+      color: #121006;
+      font-size: 13px;
+      text-decoration: none;
+      transform: translateY(-200%);
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    #main { scroll-margin-top: 80px; }
+    #main:focus { outline: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skip-link { transition: none; }
+    }
+
+    header, main, footer {
+      width: min(900px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      border-bottom: 1px solid rgba(214, 173, 72, 0.18);
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-inner {
+      width: min(900px, calc(100% - 32px));
+      height: 64px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--gold); }
+
+    header {
+      min-height: 56vh;
+      display: grid;
+      align-content: center;
+      gap: 22px;
+      padding: 112px 0 40px;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(36px, 7vw, 72px);
+      line-height: 0.98;
+    }
+
+    .lede {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .sim-banner {
+      border: 1px solid var(--red);
+      color: var(--red);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+    }
+
+    section {
+      padding: 48px 0 72px;
+      border-top: 1px solid rgba(214, 173, 72, 0.16);
+    }
+
+    h2 {
+      margin: 0 0 20px;
+      font-size: clamp(24px, 4vw, 40px);
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+      max-width: 520px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    select, input {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      padding: 0 12px;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      grid-auto-flow: column;
+      justify-content: start;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .check input { min-height: auto; width: 18px; height: 18px; }
+
+    button {
+      min-height: 46px;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: #121006;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0 20px;
+      justify-self: start;
+    }
+
+    .result {
+      margin-top: 28px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .result[hidden] { display: none; }
+
+    .verdict {
+      display: inline-flex;
+      align-self: start;
+      border: 1px solid currentColor;
+      padding: 6px 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .verdict.pass { color: var(--green); }
+    .verdict.violation { color: var(--red); }
+
+    pre {
+      margin: 0;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 13px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .trace {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .trace li {
+      background: var(--panel);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 40px 0 56px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav aria-label="Primary">
+    <div class="nav-inner">
+      <a class="brand" href="/">Mullusi</a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/mullu/">Mullu</a>
+        <a href="/proof/">Proof</a>
+        <a href="mailto:research@mullusi.com">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div>
+      <div class="eyebrow">Simulated Playground</div>
+      <h1>See the shape of a verdict.</h1>
+    </div>
+    <p class="lede">
+      This page runs a deterministic mock of a governed evaluation entirely
+      in your browser. It contacts no server, issues no proof stamp, and is
+      not the live runtime. It exists only to make the output shape tangible
+      while the runtime stays AwaitingEvidence.
+    </p>
+    <p class="sim-banner">Simulated — not a live endpoint, not a proof stamp.</p>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section>
+      <h2>Simulate a govern evaluation.</h2>
+      <form id="sim-form">
+        <label>
+          Action
+          <select id="action">
+            <option value="transfer_funds">transfer_funds</option>
+            <option value="read_balance">read_balance</option>
+            <option value="deploy_gateway">deploy_gateway</option>
+            <option value="purge_ledger">purge_ledger</option>
+          </select>
+        </label>
+        <label>
+          Account balance
+          <input id="balance" type="number" value="100" min="0" step="1" inputmode="numeric" />
+        </label>
+        <label>
+          Amount
+          <input id="amount" type="number" value="150" min="0" step="1" inputmode="numeric" />
+        </label>
+        <label class="check">
+          <input id="lineage" type="checkbox" />
+          Declare lineage for this effect
+        </label>
+        <button type="submit">Simulate govern evaluation</button>
+      </form>
+
+      <div class="result" id="result" hidden aria-live="polite">
+        <span class="verdict" id="verdict"></span>
+        <pre id="payload"></pre>
+        <div>
+          <div class="eyebrow" style="margin-bottom:10px;">Simulated trace</div>
+          <ul class="trace" id="trace"></ul>
+        </div>
+        <p class="sim-banner" id="result-banner">Simulated — not a live proof stamp. The live runtime remains AwaitingEvidence.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>Mullusi playground</div>
+    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+  </footer>
+
+  <script>
+    (() => {
+      const form = document.getElementById("sim-form");
+      const allowed = new Set(["transfer_funds", "read_balance", "deploy_gateway"]);
+      let counter = 1;
+
+      const evaluate = (action, balance, amount, lineage) => {
+        const trace = [
+          "01 Observe — action \"" + action + "\" with balance " + balance + ", amount " + amount + ".",
+          "02 Activate symbols — Σ(action), Λ(policy, budget, causality) bound.",
+        ];
+        let verdict = "pass";
+        let reason = "All constraints satisfied.";
+
+        if (!allowed.has(action)) {
+          verdict = "violation";
+          reason = "policy: action \"" + action + "\" is not permitted.";
+          trace.push("03 Propagate — policy constraint Λ rejected the action.");
+        } else if (action === "transfer_funds" && amount > balance) {
+          verdict = "violation";
+          reason = "budget: amount " + amount + " exceeds balance " + balance + ".";
+          trace.push("03 Propagate — budget constraint exceeded before execution.");
+        } else if (!lineage) {
+          verdict = "violation";
+          reason = "causality: effect declared without lineage.";
+          trace.push("03 Propagate — causality constraint Λ requires declared lineage.");
+        } else {
+          trace.push("03 Propagate — budget, policy, and causality constraints held.");
+        }
+
+        trace.push(
+          verdict === "pass"
+            ? "04 Settle — stable judgment; no unsafe transition."
+            : "04 Settle — unsafe transition blocked before any effect ran."
+        );
+        trace.push("05 Stamp — proof stamp NOT issued (runtime AwaitingEvidence).");
+
+        return {
+          payload: {
+            verdict: verdict,
+            reason: reason,
+            trace_ref: "sim-" + String(counter++).padStart(4, "0"),
+            proof_stamp: "not issued (AwaitingEvidence)",
+            simulated: true,
+          },
+          trace: trace,
+        };
+      };
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const action = document.getElementById("action").value;
+        const balance = Number(document.getElementById("balance").value) || 0;
+        const amount = Number(document.getElementById("amount").value) || 0;
+        const lineage = document.getElementById("lineage").checked;
+        const out = evaluate(action, balance, amount, lineage);
+
+        const verdictEl = document.getElementById("verdict");
+        verdictEl.textContent = out.payload.verdict;
+        verdictEl.className = "verdict " + out.payload.verdict;
+
+        document.getElementById("payload").textContent = JSON.stringify(out.payload, null, 2);
+
+        const traceEl = document.getElementById("trace");
+        traceEl.innerHTML = "";
+        for (const step of out.trace) {
+          const li = document.createElement("li");
+          li.textContent = step;
+          traceEl.appendChild(li);
+        }
+
+        document.getElementById("result").hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>

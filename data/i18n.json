@@ -550,6 +550,42 @@
     "govern.plain": {
       "en": "In plain terms: send an action, get back a verdict, the reason, an audit trace, and a proof stamp.",
       "am": "በቀላል አነጋገር፦ ድርጊት ላክ፣ ፍርድ፣ ምክንያቱን፣ የኦዲት ዱካና የማረጋገጫ ማህተም ተቀበል።"
+    },
+    "status.live": {
+      "en": "Live",
+      "am": "ቀጥታ"
+    },
+    "status.awaitingEvidence": {
+      "en": "Awaiting Evidence",
+      "am": "ማስረጃ በመጠባበቅ"
+    },
+    "status.planned": {
+      "en": "Planned",
+      "am": "ታቅዷል"
+    },
+    "usecases.tag": {
+      "en": "Use Cases",
+      "am": "የአጠቃቀም ሁኔታዎች"
+    },
+    "usecases.title": {
+      "en": "Where a governed evaluation earns its keep.",
+      "am": "የሚተዳደር ግምገማ ዋጋውን የሚያስገኝበት።"
+    },
+    "usecases.body": {
+      "en": "Illustrative scenarios — the shape of value the governed runtime will deliver once evidence is published.",
+      "am": "ለማሳያ የቀረቡ ሁኔታዎች — ማስረጃ ከታተመ በኋላ የሚተዳደረው runtime የሚያቀርበው የዋጋ ቅርጽ።"
+    },
+    "nav.usecases": {
+      "en": "Use Cases",
+      "am": "የአጠቃቀም ሁኔታዎች"
+    },
+    "nav.playground": {
+      "en": "Playground",
+      "am": "የሙከራ ሜዳ"
+    },
+    "hero.tryPlayground": {
+      "en": "Try the playground",
+      "am": "የሙከራ ሜዳውን ይሞክሩ"
     }
   }
 }

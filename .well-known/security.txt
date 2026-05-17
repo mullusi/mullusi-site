@@ -1,0 +1,5 @@
+Contact: mailto:research@mullusi.com
+Contact: mailto:tamirat@mullusi.com
+Expires: 2027-05-16T00:00:00.000Z
+Preferred-Languages: en, am
+Canonical: https://mullusi.com/.well-known/security.txt

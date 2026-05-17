@@ -11,7 +11,10 @@ This package is designed for the current `mullusi/mullusi-site` GitHub Pages flo
 |-- index.html                         # Public landing page
 |-- mullu/index.html                   # Flagship Mullu product route
 |-- proof/index.html                   # Public proof-boundary route
+|-- playground/index.html              # Simulated (client-only) govern-evaluation demo
 |-- 404.html                           # Branded not-found route (GitHub Pages)
+|-- .nojekyll                          # Serve files as-is (lets Pages serve .well-known/)
+|-- .well-known/security.txt           # RFC 9116 disclosure contact
 |-- CNAME                              # mullusi.com custom domain
 |-- favicon.ico                        # Legacy browser favicon
 |-- robots.txt                         # Crawl policy
@@ -107,6 +110,14 @@ the abstract contract is tangible. It is **not** a live endpoint: the validator
 requires its `disclaimer` to keep the `AwaitingEvidence` / "not a live
 endpoint" boundary, and requires a parallel `am` translation (matching `steps`
 length). Keep the example public-safe and illustrative only.
+
+`statusBoard` and `useCases` in `data/site.json` render the system-status
+panel and the use-case scenarios on the homepage (both `en`/`am`, gated by the
+validator). `/playground/` is a self-contained route that simulates a govern
+evaluation **entirely client-side** — it contacts no server and issues no
+proof stamp. Keep it deterministic and clearly labelled "Simulated"; it must
+not call or imply a live runtime while it stays AwaitingEvidence. `.nojekyll`
+disables Jekyll so GitHub Pages serves `.well-known/security.txt` as-is.
 
 ## Internationalization (i18n) contract
 
