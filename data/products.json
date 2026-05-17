@@ -83,6 +83,17 @@
       }
     },
     {
+      "name": "Mullusi Engineering Engine",
+      "slug": "engineering",
+      "plannedRepo": "mullusi-engineering-engine",
+      "status": "planned",
+      "summary": "Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications across many engineering products.",
+      "am": {
+        "title": "ኢንጂነሪንግ",
+        "summary": "ለdesign constraints፣ systems modeling፣ tolerance እና safety analysis፣ simulation bridges እና በብዙ የኢንጂነሪንግ ምርቶች ላይ ሊረጋገጡ የሚችሉ build specifications የታቀደ ምልክታዊ የኢንጂነሪንግ ሞተር።"
+      }
+    },
+    {
       "name": "Mullusi Unified Science Lab",
       "slug": "unified-science",
       "plannedRepo": "mullusi-unified-science-lab",

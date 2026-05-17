@@ -211,6 +211,7 @@ Recommended public domain repo names:
 - `mullusi-biology-engine`
 - `mullusi-chemistry-engine`
 - `mullusi-music-engine`
+- `mullusi-engineering-engine`
 - `mullusi-unified-science-lab`
 
 ## Contact routing

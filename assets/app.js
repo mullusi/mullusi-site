@@ -727,24 +727,44 @@ function renderFutureDomains() {
   const target = qs("[data-future-domains]");
   if (!target || !state.registry) return;
 
-  const futureDomains = (state.registry.futureDomains || [])
-    .filter((domain) => ["math", "physics", "biology", "chemistry", "music"].includes(domain.slug));
-  const domainOrder = new Map(["math", "physics", "biology", "chemistry", "music"].map((slug, index) => [slug, index]));
-  const domains = [...futureDomains].sort((left, right) => {
-    return (domainOrder.get(left.slug) ?? 99) - (domainOrder.get(right.slug) ?? 99);
-  });
+  const engineSlugs = ["math", "physics", "engineering", "biology", "chemistry", "music"];
+  const bridgeSlug = "unified-science";
+  const glyphs = {
+    math: "Σ",
+    physics: "Λ",
+    engineering: "Γ",
+    biology: "Ψ",
+    chemistry: "Δ",
+    music: "Φ",
+    "unified-science": "Ω",
+  };
+  const order = new Map([...engineSlugs, bridgeSlug].map((slug, index) => [slug, index]));
+  const all = state.registry.futureDomains || [];
+  const engines = all
+    .filter((domain) => engineSlugs.includes(domain.slug))
+    .sort((left, right) => (order.get(left.slug) ?? 99) - (order.get(right.slug) ?? 99));
+  const bridge = all.find((domain) => domain.slug === bridgeSlug) || null;
 
   const stagedLabel = i18nText("status.staged") || "Staged";
-  target.innerHTML = domains.map((domain) => {
+  const bridgeLabel = i18nText("sciences.bridge") || "Bridge layer";
+
+  const card = (domain, { variant, badge }) => {
     const title = state.lang === "am" && domain.am && domain.am.title ? domain.am.title : titleForDomain(domain);
     return `
-      <article class="eng">
-        <span class="st">${escapeHtml(stagedLabel)}</span>
+      <article class="eng${variant ? ` ${variant}` : ""}">
+        <span class="st" aria-hidden="true">${escapeHtml(badge)}</span>
+        <div class="eng-sym" aria-hidden="true">${escapeHtml(glyphs[domain.slug] || "·")}</div>
         <h3>${escapeHtml(title)}</h3>
         <p>${escapeHtml(localized(domain, "summary"))}</p>
+        <span class="eng-repo">${escapeHtml(domain.plannedRepo || "")}</span>
       </article>
     `;
-  }).join("");
+  };
+
+  const html = engines.map((domain) => card(domain, { badge: stagedLabel })).join("");
+  target.innerHTML = bridge
+    ? html + card(bridge, { variant: "eng-bridge", badge: bridgeLabel })
+    : html;
   revealRendered(target);
 }
 

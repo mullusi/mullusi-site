@@ -1706,7 +1706,35 @@ p {
 }
 
 .engines {
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.eng-sym {
+  margin-bottom: 10px;
+  color: var(--accent-deep);
+  font-family: var(--serif);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.eng-repo {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+  overflow-wrap: anywhere;
+}
+
+.eng-bridge {
+  grid-column: 1 / -1;
+  border-top: 2px solid var(--accent-deep);
+}
+
+.eng-bridge .st,
+.eng-bridge .eng-sym {
+  color: var(--accent);
 }
 
 .eng {

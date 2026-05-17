@@ -344,8 +344,16 @@
       "am": "የወደፊት ሪፖዚቶሪዎች ተለያይተው የቆሙ ፕሮጀክቶች ሳይሆኑ የጎራ ሞተሮች ይሆናሉ።"
     },
     "sciences.body": {
-      "en": "Physics, math, biology, chemistry, and music are staged as governed product and repository slots. None are exposed as product-ready repositories yet.",
-      "am": "ፊዚክስ፣ ሒሳብ፣ ባዮሎጂ፣ ኬሚስትሪና ሙዚቃ እንደ የሚተዳደር ምርትና የሪፖዚቶሪ ቦታዎች ተዘጋጅተዋል። እስካሁን አንዳቸውም እንደ ለምርት-ዝግጁ ሪፖዚቶሪዎች አልተጋለጡም።"
+      "en": "Math, physics, engineering, biology, chemistry, and music are staged as governed product and repository slots, connected by a cross-domain bridge layer. None are exposed as product-ready repositories yet.",
+      "am": "ሒሳብ፣ ፊዚክስ፣ ኢንጂነሪንግ፣ ባዮሎጂ፣ ኬሚስትሪና ሙዚቃ እንደ የሚተዳደር ምርትና የሪፖዚቶሪ ቦታዎች ተዘጋጅተዋል፣ በተሻጋሪ-ጎራ የድልድይ ሽፋን የተገናኙ። እስካሁን አንዳቸውም እንደ ለምርት-ዝግጁ ሪፖዚቶሪዎች አልተጋለጡም።"
+    },
+    "sciences.bridge": {
+      "en": "Bridge layer",
+      "am": "የድልድይ ሽፋን"
+    },
+    "sciences.gridAria": {
+      "en": "Staged domain engines and cross-domain bridge layer",
+      "am": "የተዘጋጁ የጎራ ሞተሮችና ተሻጋሪ-ጎራ የድልድይ ሽፋን"
     },
     "repos.tag": {
       "en": "Repository Observatory",
