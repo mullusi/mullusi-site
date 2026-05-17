@@ -471,6 +471,18 @@
       "en": "© 2026 Mullusi — Public claims only.",
       "am": "© 2026 ሙሉሲ — ይፋዊ የይገባኛል ጥያቄዎች ብቻ።"
     },
+    "footer.localVisits": {
+      "en": "Local visits",
+      "am": "የአካባቢ ጉብኝቶች"
+    },
+    "footer.signal": {
+      "en": "Signal",
+      "am": "ምልክት"
+    },
+    "footer.meterAria": {
+      "en": "This visit count is stored only in your browser and is not site-wide analytics.",
+      "am": "ይህ የጉብኝት ቆጠራ በአሳሽዎ ውስጥ ብቻ ይቀመጣል፤ የጣቢያ-አቀፍ ትንታኔ አይደለም።"
+    },
     "interfaces.openLink": {
       "en": "Open",
       "am": "ክፈት"
