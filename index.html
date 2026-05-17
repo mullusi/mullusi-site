@@ -68,7 +68,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           "url": "https://mullusi.com",
           "logo": "https://mullusi.com/assets/mullusi-logo.svg",
           "description": "Mullusi builds governed software that checks, traces, and proves a decision before it runs. Mullu is its flagship product.",
-          "email": "mullusiofficial@gmail.com",
+          "email": "research@mullusi.com",
           "sameAs": ["https://github.com/mullusi"]
         },
         {
@@ -236,7 +236,27 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="eval-wrap reveal" data-evaluation-example>
           <noscript>
-            <p>Enable JavaScript to view the illustrative governed-evaluation example. It is generated from <code>data/site.json</code> and is not a live endpoint.</p>
+            <article class="eval-card">
+              <div class="eval-head">
+                <span class="badge">Worked Example</span>
+                <span class="status-pill eval-verdict">BLOCK</span>
+              </div>
+              <h3>What a governed evaluation looks like.</h3>
+              <p class="eval-disclaimer">Illustrative only. Not a live endpoint. Runtime stays AwaitingEvidence until witness endpoints publish signed evidence.</p>
+              <div class="eval-req">
+                <span class="eval-k">Request</span>
+                <code>POST /v1/govern/evaluate</code>
+                <code>{ project, action: "deploy gateway", symbols: [&#931;, &#923;], constraints: [budget, policy, causality], context }</code>
+              </div>
+              <p class="eval-summary">An ordinary pipeline would run the action and report failure afterward. A governed evaluation refuses the unsafe transition before execution and emits a verifiable record of why.</p>
+              <dl class="eval-steps">
+                <div><dt>Verdict</dt><dd>BLOCK — an unsafe transition was detected before any effect ran.</dd></div>
+                <div><dt>Violation</dt><dd>Causality constraint &#923; unsatisfied: an effect was declared without lineage.</dd></div>
+                <div><dt>Trace</dt><dd>Append-only record of every phase, constraint, and judgment that produced the verdict.</dd></div>
+                <div><dt>Repair</dt><dd>Attach the missing lineage record, then re-evaluate the same action.</dd></div>
+                <div><dt>Proof stamp</dt><dd>Pending — issued only when the evaluation closes against signed runtime evidence.</dd></div>
+              </dl>
+            </article>
           </noscript>
         </div>
       </div>
@@ -251,7 +271,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="usecases reveal" data-use-cases>
           <noscript>
-            <p>Enable JavaScript to view the use-case scenarios. They are generated from <code>data/site.json</code> and are illustrative, not live runtime claims.</p>
+            <article class="usecase"><span class="usecase-n">01</span><h3>Audit trail for an autonomous agent</h3><p>Record every decision, constraint check, and tool call as an immutable, append-only trace you can replay later.</p></article>
+            <article class="usecase"><span class="usecase-n">02</span><h3>Compliance gate for a financial workflow</h3><p>Prove a transaction satisfied every internal policy before it executes — not after it fails.</p></article>
+            <article class="usecase"><span class="usecase-n">03</span><h3>Reproducibility proof for a research result</h3><p>Capture the exact symbols, constraints, and lineage so a result can be re-verified independently.</p></article>
           </noscript>
         </div>
       </div>
@@ -374,7 +396,10 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="news-feed reveal" data-news>
           <noscript>
-            <p>Enable JavaScript to view the daily technology and research digest. It is generated from <code>data/news.json</code> and links to external public sources, not Mullusi claims.</p>
+            <div class="news-empty">
+              <h3>Daily digest — source available without scripts</h3>
+              <p>This is the one region that changes daily: a ranked digest of external technology, science, and research links, refreshed automatically by a scheduled job. Rather than embed a snapshot that would go stale within hours, the live list is read from <code>data/news.json</code>. Inspect the current digest and its refresh history directly: <a href="https://github.com/mullusi/mullusi-site/blob/main/data/news.json" rel="noopener noreferrer" target="_blank">data/news.json on GitHub</a>. Links there are external public sources, not Mullusi claims.</p>
+            </div>
           </noscript>
         </div>
       </div>
@@ -424,7 +449,30 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="status-board reveal" data-ecosystem-map>
           <noscript>
-            <p>Enable JavaScript to view the ecosystem map. It is generated from <code>data/products.json</code>: one deployed public surface, staged domain engines, and name-free private incubation tracks.</p>
+            <div class="status-head"><span class="handoff-kicker">Deployed</span><h3>1</h3></div>
+            <ul class="status-list">
+              <li class="status-row is-live"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Mullusi Website</span><span class="status-state">mullusi/mullusi-site</span><span class="status-note">Public index page, GitHub Pages deployment, domain boundary, and website registry for Mullusi.</span></li>
+            </ul>
+            <div class="status-head"><span class="handoff-kicker">Staged</span><h3>7</h3></div>
+            <ul class="status-list">
+              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Physics</span><span class="status-state">mullusi-physics-engine</span><span class="status-note">Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans.</span></li>
+              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Math</span><span class="status-state">mullusi-math-engine</span><span class="status-note">Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow.</span></li>
+              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Biology</span><span class="status-state">mullusi-biology-engine</span><span class="status-note">Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning.</span></li>
+              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Chemistry</span><span class="status-state">mullusi-chemistry-engine</span><span class="status-note">Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation.</span></li>
+              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Music</span><span class="status-state">mullusi-music-engine</span><span class="status-note">Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure.</span></li>
+              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Engineering</span><span class="status-state">mullusi-engineering-engine</span><span class="status-note">Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications.</span></li>
+              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Unified Science</span><span class="status-state">mullusi-unified-science-lab</span><span class="status-note">Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures.</span></li>
+            </ul>
+            <div class="status-head"><span class="handoff-kicker">Private incubation</span><h3>7</h3></div>
+            <ul class="status-list">
+              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Foundation and core kernels</span><span class="status-state">Publish gate</span><span class="status-note">Public only after README, license, examples, test evidence, release scope, and product-readiness boundary are complete.</span></li>
+              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Governance runtime and control plane</span><span class="status-state">Publish gate</span><span class="status-note">Public only after documented API contracts, test evidence, deployment boundary, and secret scan pass.</span></li>
+              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">SDK and developer package work</span><span class="status-state">Publish gate</span><span class="status-note">Public only after reproducible install, examples, license, changelog, and hosted-service dependency statement.</span></li>
+              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Science and research engines</span><span class="status-state">Publish gate</span><span class="status-note">Public only as frozen research snapshots, demos, or papers with explicit limits and no product-readiness claim.</span></li>
+              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Inspection, search, capsule, and interface surfaces</span><span class="status-state">Publish gate</span><span class="status-note">Public only after demo route, README, privacy boundary, and rollback path are present.</span></li>
+              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Language kernels and machine-layer experiments</span><span class="status-state">Publish gate</span><span class="status-note">Public only after spec, examples, failure modes, and compatibility commitments are written.</span></li>
+              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Token, fold, traversal, and reasoning experiments</span><span class="status-state">Publish gate</span><span class="status-note">Public only after frozen snapshot, reproducible examples, documented limits, and explicit non-product status are present.</span></li>
+            </ul>
           </noscript>
         </div>
       </div>
@@ -447,14 +495,28 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
 
         <div class="hero-foot repo-stats reveal" data-repo-stats>
-          <div><div class="k">0</div><div class="l">Deployed public repos</div></div>
-          <div><div class="k">0</div><div class="l">Categories</div></div>
+          <div><div class="k">1</div><div class="l">Deployed public repos</div></div>
+          <div><div class="k">1</div><div class="l">Categories</div></div>
           <div><div class="k">0</div><div class="l">Public product repos</div></div>
         </div>
 
         <div class="repo-grid reveal" data-repo-grid>
           <noscript>
-            <p>Enable JavaScript to view the searchable deployment registry. The public registry is available in <code>data/products.json</code>.</p>
+            <article class="repo-card">
+              <div class="repo-card-head">
+                <h3>Mullusi Website</h3>
+                <span class="status-pill">deployed</span>
+              </div>
+              <span class="repo-name">mullusi/mullusi-site</span>
+              <p>Public index page, GitHub Pages deployment, domain boundary, and website registry for Mullusi.</p>
+              <div class="tag-row">
+                <span class="tag-pill">website</span>
+                <span class="tag-pill">index</span>
+                <span class="tag-pill">github-pages</span>
+                <span class="tag-pill">public-boundary</span>
+              </div>
+              <a class="repo-link" href="https://github.com/mullusi/mullusi-site" rel="noopener noreferrer" target="_blank">Open repository -&gt;</a>
+            </article>
           </noscript>
         </div>
 
@@ -567,8 +629,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <h2 data-i18n="cta.title">Promote a repository only after product evidence is ready.</h2>
         <p data-i18n="cta.body">Each new domain can move from private incubation to public surface when the repo, demo route, docs route, governance status, and release boundary are verified. Mullu remains the first product path under the Mullusi umbrella.</p>
         <div class="cta-actions">
-          <a href="/mullu/" class="btn btn-solid" data-i18n="hero.openMullu">Open Mullu</a>
-          <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
+          <a href="#paths" class="btn btn-solid" data-i18n="nav.paths">Start here</a>
           <a href="mailto:research@mullusi.com" class="btn" data-i18n="cta.contactResearch">Contact research</a>
         </div>
       </div>
@@ -602,8 +663,8 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="col">
             <h3 data-i18n="footer.contact">Contact</h3>
             <a href="https://github.com/mullusi" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
-            <a href="mailto:mullusiofficial@gmail.com">mullusiofficial@gmail.com</a>
             <a href="mailto:research@mullusi.com">research@mullusi.com</a>
+            <a href="mailto:tamirat@mullusi.com">tamirat@mullusi.com</a>
           </div>
         </div>
       </div>
