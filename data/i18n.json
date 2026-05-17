@@ -92,16 +92,16 @@
       "am": "ወደ ጨለማ ገጽታ ቀይር"
     },
     "hero.tag": {
-      "en": "Mullusi umbrella · Mullu flagship product",
-      "am": "ሙሉሲ ጃንጥላ · ሙሉ ዋና ምርት"
+      "en": "Mullusi — the company. Mullu — the flagship product.",
+      "am": "ሙሉሲ — ኩባንያው። ሙሉ — ዋናው ምርት።"
     },
     "hero.title": {
-      "en": "Mullusi builds governed symbolic products. Mullu is the first product surface.",
-      "am": "ሙሉሲ የሚተዳደሩ ምልክታዊ ምርቶችን ይገነባል። ሙሉ የመጀመሪያው የምርት ገጽ ነው።"
+      "en": "Software that checks, traces, and proves every decision before it runs.",
+      "am": "እያንዳንዱን ውሳኔ ከመፈጸሙ በፊት የሚፈትሽ፣ የሚከታተልና የሚያረጋግጥ ሶፍትዌር።"
     },
     "hero.lead": {
-      "en": "Mullusi is the company, research, governance, and trust umbrella. Mullu is the flagship governed product for proof-backed work, private beta access, and symbolic execution surfaces. Runtime readiness remains bounded by the public proof page until live witness endpoints close.",
-      "am": "ሙሉሲ የኩባንያው፣ የምርምሩ፣ የአስተዳደሩና የመተማመኛ ጃንጥላ ነው። ሙሉ ለማስረጃ-የተደገፈ ሥራ፣ ለግል ቤታ መዳረሻና ለምልክታዊ አፈጻጸም ገጾች የተዘጋጀ ዋናው የሚተዳደር ምርት ነው። የቀጥታ ምስክር መዳረሻዎች እስኪዘጉ ድረስ የruntime ዝግጁነት በይፋዊ የማረጋገጫ ገጽ የተገደበ ሆኖ ይቆያል።"
+      "en": "Mullu evaluates a proposed action against your rules, records an append-only trace of exactly why, and returns a verdict — before anything executes. It turns governed symbolic reasoning into work you can audit and reproduce. The live runtime is still publishing its signed evidence; until then, this site is the public proof boundary.",
+      "am": "ሙሉ የቀረበን ድርጊት ከደንቦችዎ ጋር ይገመግማል፣ ለምን እንደሆነ በትክክል ተጨማሪ-ብቻ ዱካ ይመዘግባል፣ እና ማንኛውም ነገር ከመፈጸሙ በፊት ፍርድ ይመልሳል። የሚተዳደር ምልክታዊ ምክንያትን ሊመረመርና ሊደገም ወደሚችል ሥራ ይለውጣል። ቀጥታ runtime ገና የተፈረመ ማስረጃውን እያተመ ነው፤ እስከዚያ ድረስ ይህ ጣቢያ ይፋዊ የማረጋገጫ ወሰን ነው።"
     },
     "hero.openMullu": {
       "en": "Open Mullu",
@@ -128,32 +128,32 @@
       "am": "የተሰማራ ይፋዊ ሪፖ"
     },
     "hero.footRuntime": {
-      "en": "Runtime witness state",
-      "am": "የruntime ምስክር ሁኔታ"
+      "en": "Live runtime",
+      "am": "ቀጥታ runtime"
     },
     "marquee.1": {
-      "en": "Mfidel substrate",
-      "am": "የMfidel መሠረት"
+      "en": "Checked before it runs",
+      "am": "ከመፈጸሙ በፊት ይፈተሻል"
     },
     "marquee.2": {
-      "en": "Symbolic causal chain",
-      "am": "ምልክታዊ ምክንያታዊ ሰንሰለት"
+      "en": "Traceable reasoning",
+      "am": "ሊከታተል የሚችል ምክንያት"
     },
     "marquee.3": {
-      "en": "Fail-closed governance",
-      "am": "ዝግ-የሚወድቅ አስተዳደር"
+      "en": "Fail-closed by default",
+      "am": "በነባሪ ዝግ-የሚወድቅ"
     },
     "marquee.4": {
-      "en": "Hash-chain lineage",
-      "am": "የሃሽ-ሰንሰለት ሐረግ"
+      "en": "Tamper-evident trace",
+      "am": "ሊረጋገጥ የሚችል ዱካ"
     },
     "marquee.5": {
-      "en": "Staged engines",
-      "am": "የተዘጋጁ ሞተሮች"
+      "en": "Domain engines, staged",
+      "am": "የተዘጋጁ የጎራ ሞተሮች"
     },
     "marquee.6": {
-      "en": "Deployed site graph",
-      "am": "የተሰማራ ጣቢያ ግራፍ"
+      "en": "Verifiable public surface",
+      "am": "ሊረጋገጥ የሚችል ይፋዊ ገጽ"
     },
     "claim.tag": {
       "en": "Production Claim Boundary",
@@ -228,16 +228,16 @@
       "am": "ምልክቶችን አንቃ"
     },
     "architecture.step2.body": {
-      "en": "Map objects into Mfidel, MSIC, SCC, and product-domain terms.",
-      "am": "ነገሮችን ወደ Mfidel, MSIC, SCC እና የምርት-ጎራ ቃላት ያሳዩ።"
+      "en": "Map the task into the system's symbol, rule, and causal-chain terms.",
+      "am": "ተግባሩን ወደ ሥርዓቱ ምልክት፣ ደንብና ምክንያት-ሰንሰለት ቃላት ያሳዩ።"
     },
     "architecture.step3.title": {
       "en": "Propagate Constraints",
       "am": "ገደቦችን አስፋፋ"
     },
     "architecture.step3.body": {
-      "en": "Apply Λ rules, budget, policy, causality, proof, and lineage constraints.",
-      "am": "የΛ ደንቦችን፣ በጀትን፣ ፖሊሲን፣ ምክንያታዊነትን፣ ማረጋገጫንና የሐረግ ገደቦችን ይተግብሩ።"
+      "en": "Apply governance rules: budget, policy, causality, proof, and lineage.",
+      "am": "የአስተዳደር ደንቦችን ይተግብሩ፦ በጀት፣ ፖሊሲ፣ ምክንያታዊነት፣ ማረጋገጫና ሐረግ።"
     },
     "architecture.step4.title": {
       "en": "Detect Conflicts",
@@ -391,6 +391,10 @@
       "en": "Website claims follow the same discipline as the system: observable source, stated boundary, reversible update, and no silent failure. That is why the repo graph separates the deployed website repository, private incubation, staged domains, and operational interfaces.",
       "am": "የድረ-ገጽ የይገባኛል ጥያቄዎች እንደ ሥርዓቱ ተመሳሳይ ዲሲፕሊን ይከተላሉ፦ ሊታይ የሚችል ምንጭ፣ የተገለጸ ወሰን፣ ሊቀለበስ የሚችል ዝመናና ምንም ጸጥ ያለ ውድቀት የለም። ለዚህም ነው የሪፖ ግራፉ የተሰማራውን የድረ-ገጽ ሪፖዚቶሪ፣ የግል ማብሰያን፣ የተዘጋጁ ጎራዎችንና የአሠራር በይነገጾችን የሚለየው።"
     },
+    "governance.plain": {
+      "en": "In plain terms: Ψ is the judgment step. It releases a public claim only when state, effects, safety guards, proof, and lineage all hold. Anything unresolved, nothing is published.",
+      "am": "በቀላል አነጋገር፦ Ψ የፍርድ ደረጃ ነው። ሁኔታ፣ ውጤቶች፣ የደህንነት ጥበቃዎች፣ ማረጋገጫና ሐረግ ሁሉም ሲሟሉ ብቻ ይፋዊ የይገባኛል ጥያቄ ይለቃል። ያልተፈታ ነገር ካለ ምንም አይታተምም።"
+    },
     "governance.profileTag": {
       "en": "Architect Note",
       "am": "የአርክቴክት ማስታወሻ"
@@ -440,8 +444,8 @@
       "am": "ምርምርን ያግኙ"
     },
     "footer.brandLine": {
-      "en": "Symbolic intelligence infrastructure for governed causal systems.",
-      "am": "ለሚተዳደሩ ምክንያታዊ ሥርዓቶች ምልክታዊ የማሰብ መሠረተ ልማት።"
+      "en": "Governed software that checks, traces, and proves a decision before it runs.",
+      "am": "እያንዳንዱን ውሳኔ ከመፈጸሙ በፊት የሚፈትሽ፣ የሚከታተልና የሚያረጋግጥ የሚተዳደር ሶፍትዌር።"
     },
     "footer.surfaces": {
       "en": "Surfaces",
