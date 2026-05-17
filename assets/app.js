@@ -10,6 +10,7 @@ document.documentElement.classList.add("js-enabled");
 const state = {
   registry: null,
   siteContent: null,
+  news: null,
   i18n: null,
   lang: "en",
   activeCategory: "All",
@@ -589,6 +590,42 @@ function renderUseCases() {
   revealRendered(target);
 }
 
+function newsMeta(item) {
+  const parts = [];
+  if (item.source) parts.push(escapeHtml(item.source));
+  if (Number.isFinite(item.points) && item.points > 0) {
+    parts.push(`${item.points} ${escapeHtml(i18nText("news.points") || "points")}`);
+  }
+  if (item.date) parts.push(escapeHtml(item.date));
+  return parts.join(" &middot; ");
+}
+
+function renderNews() {
+  const target = qs("[data-news]");
+  const items = Array.isArray(state.news?.items) ? state.news.items : [];
+  if (!target) return;
+
+  if (!items.length) {
+    target.innerHTML = `
+      <article class="card">
+        <h3>${escapeHtml(i18nText("news.emptyTitle") || "Signal is refreshing")}</h3>
+        <p>${escapeHtml(i18nText("news.emptyBody") || "The daily research and systems digest will appear here after the next scheduled refresh.")}</p>
+      </article>
+    `;
+    revealRendered(target);
+    return;
+  }
+
+  target.innerHTML = items.map((item) => `
+    <article class="card">
+      <span class="kind">${escapeHtml(item.source || "")}</span>
+      <h3><a class="lnk" href="${escapeAttribute(item.url)}" rel="noopener">${escapeHtml(item.title)}</a></h3>
+      <p>${newsMeta(item)}</p>
+    </article>
+  `).join("");
+  revealRendered(target);
+}
+
 function renderEvaluationExample() {
   const target = qs("[data-evaluation-example]");
   const example = state.siteContent?.evaluationExample;
@@ -861,6 +898,12 @@ async function loadSiteContent() {
   return response.json();
 }
 
+async function loadNews() {
+  const response = await fetch("data/news.json", { cache: "no-store" });
+  if (!response.ok) throw new Error(`News load failed: ${response.status}`);
+  return response.json();
+}
+
 function renderSiteContent() {
   if (!state.siteContent) return;
   renderProofLanes();
@@ -906,6 +949,7 @@ async function initContent() {
   window.addEventListener("mullusi-lang-change", () => {
     renderSiteContent();
     renderRegistryContent();
+    renderNews();
   });
 
   try {
@@ -913,6 +957,14 @@ async function initContent() {
     renderSiteContent();
   } catch (error) {
     console.error(error);
+  }
+
+  try {
+    state.news = await loadNews();
+    renderNews();
+  } catch (error) {
+    console.error(error);
+    renderNews();
   }
 
   try {
