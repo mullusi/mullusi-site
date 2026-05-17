@@ -307,6 +307,10 @@
       "en": "The public site now separates the Mullusi umbrella, the Mullu product route, and the proof boundary. Product-shaped runtime, SDK, science, language, and interface work remains private until release gates are met.",
       "am": "ይፋዊው ጣቢያ አሁን የሙሉሲ ጃንጥላን፣ የሙሉ የምርት መንገድንና የማረጋገጫ ወሰንን ይለያል። የምርት-ቅርጽ ያለው runtime፣ SDK፣ ሳይንስ፣ ቋንቋና የበይነገጽ ሥራ የመለቀቅ በሮች እስኪሟሉ ድረስ የግል ሆኖ ይቆያል።"
     },
+    "products.plain": {
+      "en": "In plain terms: Mullu is the only product surface today. The rest are internal building blocks, not separate tools you can use yet.",
+      "am": "በቀላል አነጋገር፦ ዛሬ ሙሉ ብቸኛው የምርት ገጽ ነው። የቀሩት ውስጣዊ ግንባታ ብሎኮች ናቸው እንጂ ገና ሊጠቀሙባቸው የሚችሉ የተለያዩ መሣሪያዎች አይደሉም።"
+    },
     "products.pg1.title": {
       "en": "Mullu",
       "am": "ሙሉ"
@@ -350,6 +354,10 @@
     "sciences.body": {
       "en": "Mullu's governed evaluation is the focus today. Math, physics, engineering, biology, chemistry, and music are staged behind it as a sequenced roadmap — each opens only after the core is proven and that domain clears its own release gate. None are product-ready, and none ship in parallel.",
       "am": "የሙሉ የሚተዳደር ግምገማ ዛሬ ትኩረቱ ነው። ሒሳብ፣ ፊዚክስ፣ ኢንጂነሪንግ፣ ባዮሎጂ፣ ኬሚስትሪና ሙዚቃ ከእሱ ጀርባ እንደ ቅደም-ተከተል ያለው የመንገድ ካርታ ተዘጋጅተዋል — እያንዳንዱ የሚከፈተው ዋናው ከተረጋገጠና ያ ጎራ የራሱን የመለቀቅ በር ካለፈ በኋላ ብቻ ነው። አንዳቸውም ለምርት-ዝግጁ አይደሉም፣ አንዳቸውም በትይዩ አይለቀቁም።"
+    },
+    "sciences.plain": {
+      "en": "In plain terms: none of these are built yet. This is a queued roadmap, not shipped capability.",
+      "am": "በቀላል አነጋገር፦ ከእነዚህ ውስጥ አንዳቸውም ገና አልተገነቡም። ይህ የተሰለፈ የመንገድ ካርታ ነው እንጂ የተለቀቀ ችሎታ አይደለም።"
     },
     "sciences.bridge": {
       "en": "Bridge layer",
