@@ -398,5 +398,46 @@
         { "k": "የማረጋገጫ ማህተም", "v": "በመጠባበቅ ላይ — ግምገማው በተፈረመ runtime ማስረጃ ላይ ሲዘጋ ብቻ ይሰጣል።" }
       ]
     }
+  },
+  "statusBoard": {
+    "label": "System status",
+    "title": "What is live, what is not.",
+    "follow": "Endpoints are not yet live. Watch the public repository to see evidence the moment it publishes.",
+    "followHref": "https://github.com/mullusi",
+    "followLabel": "Watch the repository",
+    "rows": [
+      { "component": "Website", "state": "live", "note": "Public site serving mullusi.com from the main branch." },
+      { "component": "Govern API", "state": "awaiting-evidence", "note": "Endpoints publish only after signed witness evidence closes." },
+      { "component": "Proof Stamps", "state": "planned", "note": "Issued once runtime conformance is reachable and verified." }
+    ],
+    "am": {
+      "label": "የሥርዓት ሁኔታ",
+      "title": "ምን ቀጥታ ነው፣ ምን አይደለም።",
+      "follow": "መዳረሻዎቹ ገና ቀጥታ አይደሉም። ማስረጃው ሲወጣ ወዲያውኑ ለማየት ይፋዊውን ሪፖዚቶሪ ይከታተሉ።",
+      "followLabel": "ሪፖዚቶሪውን ይከታተሉ",
+      "rows": [
+        { "component": "ድረ-ገጽ", "note": "ከmain ቅርንጫፍ mullusi.com የሚያቀርብ ይፋዊ ጣቢያ።" },
+        { "component": "Govern API", "note": "መዳረሻዎች የሚታተሙት የተፈረመ የምስክር ማስረጃ ከተዘጋ በኋላ ብቻ ነው።" },
+        { "component": "የማረጋገጫ ማህተሞች", "note": "runtime conformance ሲደረስና ሲረጋገጥ ይሰጣል።" }
+      ]
+    }
+  },
+  "useCases": {
+    "label": "Use Cases",
+    "title": "Where a governed evaluation earns its keep.",
+    "items": [
+      { "title": "Audit trail for an autonomous agent", "body": "Record every decision, constraint check, and tool call as an immutable, append-only trace you can replay later." },
+      { "title": "Compliance gate for a financial workflow", "body": "Prove a transaction satisfied every internal policy before it executes — not after it fails." },
+      { "title": "Reproducibility proof for a research result", "body": "Capture the exact symbols, constraints, and lineage so a result can be re-verified independently." }
+    ],
+    "am": {
+      "label": "የአጠቃቀም ሁኔታዎች",
+      "title": "የሚተዳደር ግምገማ ዋጋውን የሚያስገኝበት።",
+      "items": [
+        { "title": "ለራስ-ገዝ ወኪል የኦዲት ዱካ", "body": "እያንዳንዱን ውሳኔ፣ የገደብ ፍተሻና የመሣሪያ ጥሪ ወደፊት ሊደገም የሚችል የማይለወጥ ተጨማሪ-ብቻ ዱካ አድርጎ ይመዝግቡ።" },
+        { "title": "ለፋይናንስ workflow የተገዢነት በር", "body": "ግብይት ከመፈጸሙ በፊት እያንዳንዱን ውስጣዊ ፖሊሲ ማሟላቱን ያረጋግጡ — ከከሸፈ በኋላ ሳይሆን።" },
+        { "title": "ለምርምር ውጤት የድግግሞሽ ማረጋገጫ", "body": "ውጤቱ ራሱን ችሎ እንደገና እንዲረጋገጥ ትክክለኛዎቹን ምልክቶች፣ ገደቦችና ሐረግ ይያዙ።" }
+      ]
+    }
   }
 }

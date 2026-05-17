@@ -56,7 +56,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       }
     })();
   </script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.i18n.4" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.i18n.5" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -81,7 +81,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/app.js?v=2026.05.i18n.4"></script>
+  <script defer src="assets/app.js?v=2026.05.i18n.5"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -137,6 +137,8 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <a href="#products" data-i18n="nav.products">Products</a>
     <a href="#services" data-i18n="nav.services">Services</a>
     <a href="#evidence" data-i18n="nav.evidence">Evidence</a>
+    <a href="#use-cases" data-i18n="nav.usecases">Use Cases</a>
+    <a href="/playground/" data-i18n="nav.playground">Playground</a>
     <a href="/proof/" data-i18n="nav.proof">Proof</a>
     <a href="#sciences" data-i18n="nav.sciences">Science Engines</a>
     <a href="#repos" data-i18n="nav.repos">Repos</a>
@@ -168,6 +170,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <a href="/mullu/" class="btn btn-solid" data-i18n="hero.openMullu">Open Mullu</a>
           <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
           <a href="#products" class="btn" data-i18n="hero.viewGraph">View staged graph</a>
+          <a href="/playground/" class="btn" data-i18n="hero.tryPlayground">Try the playground</a>
         </div>
         <dl class="hero-foot" aria-label="Mullusi public surface snapshot" data-i18n-attr="aria-label:hero.snapshotAria">
           <div><dt class="k">Mullu</dt><dd class="l" data-i18n="hero.footMullu">Flagship product route</dd></div>
@@ -212,6 +215,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
               <dd><a href="/proof/">mullusi.com/proof/</a> <span data-i18n="claim.ledger.proofV">is the public boundary for verified and pending evidence.</span></dd>
             </div>
           </dl>
+        </div>
+        <div class="status-board reveal" data-system-status>
+          <noscript>
+            <p>Website is live. Govern API and proof stamps remain AwaitingEvidence until signed runtime evidence publishes. The status board is generated from <code>data/site.json</code>.</p>
+          </noscript>
         </div>
       </div>
     </section>
@@ -307,6 +315,21 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="eval-wrap reveal" data-evaluation-example>
           <noscript>
             <p>Enable JavaScript to view the illustrative governed-evaluation example. It is generated from <code>data/site.json</code> and is not a live endpoint.</p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="use-cases" aria-labelledby="use-cases-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="usecases.tag">Use Cases</div>
+          <h2 id="use-cases-title" data-i18n="usecases.title">Where a governed evaluation earns its keep.</h2>
+          <p data-i18n="usecases.body">Illustrative scenarios — the shape of value the governed runtime will deliver once evidence is published.</p>
+        </div>
+        <div class="usecases reveal" data-use-cases>
+          <noscript>
+            <p>Enable JavaScript to view the use-case scenarios. They are generated from <code>data/site.json</code> and are illustrative, not live runtime claims.</p>
           </noscript>
         </div>
       </div>
@@ -467,6 +490,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           </div>
           <div class="col">
             <h3 data-i18n="footer.system">System</h3>
+            <a href="/playground/" data-i18n="nav.playground">Playground</a>
             <a href="https://api.mullusi.com" target="_blank" rel="noopener noreferrer">API</a>
             <a href="https://metrics.mullusi.com" target="_blank" rel="noopener noreferrer">Metrics</a>
             <a href="https://sandbox.mullusi.com" target="_blank" rel="noopener noreferrer">Sandbox</a>

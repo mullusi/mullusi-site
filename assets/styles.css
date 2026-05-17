@@ -1234,6 +1234,152 @@ p {
   }
 }
 
+.status-board {
+  margin-top: 26px;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  padding: clamp(20px, 3vw, 30px);
+  backdrop-filter: blur(6px);
+}
+
+.status-head h3 {
+  margin-top: 6px;
+  font-size: 20px;
+}
+
+.status-list {
+  display: grid;
+  gap: 1px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.status-row {
+  display: grid;
+  grid-template-columns: 16px minmax(110px, 160px) minmax(120px, 180px) 1fr;
+  align-items: center;
+  gap: 14px;
+  background: var(--panel-field);
+  padding: 14px 16px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink-dim);
+}
+
+.status-row.is-live .status-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(92, 230, 196, 0.16);
+}
+
+.status-row.is-awaiting .status-dot {
+  background: var(--accent-warm);
+}
+
+.status-row.is-planned .status-dot {
+  background: transparent;
+  border: 1px solid var(--ink-dim);
+}
+
+.status-name {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 15px;
+}
+
+.status-state {
+  color: var(--ink-soft);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.status-row.is-live .status-state {
+  color: var(--accent);
+}
+
+.status-row.is-awaiting .status-state {
+  color: var(--accent-warm);
+}
+
+.status-note {
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
+.status-follow {
+  margin-top: 16px;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
+.status-follow a {
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.status-follow a:hover {
+  text-decoration: underline;
+}
+
+.usecases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.usecase {
+  background: var(--panel-glass);
+  padding: 26px 22px;
+}
+
+.usecase:hover {
+  background: var(--hover-panel);
+}
+
+.usecase-n {
+  color: var(--accent-deep);
+  font-family: var(--serif);
+  font-size: 30px;
+}
+
+.usecase h3 {
+  margin: 12px 0 8px;
+  font-size: 17px;
+}
+
+.usecase p {
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .usecases {
+    grid-template-columns: 1fr;
+  }
+
+  .status-row {
+    grid-template-columns: 16px 1fr;
+    row-gap: 4px;
+  }
+
+  .status-row .status-state {
+    grid-column: 2;
+  }
+
+  .status-row .status-note {
+    grid-column: 2;
+  }
+}
+
 .engines {
   grid-template-columns: repeat(5, 1fr);
 }

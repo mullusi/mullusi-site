@@ -17,7 +17,10 @@ const requiredFiles = [
   "index.html",
   "mullu/index.html",
   "proof/index.html",
+  "playground/index.html",
   "404.html",
+  ".nojekyll",
+  ".well-known/security.txt",
   "README.md",
   "CNAME",
   "favicon.ico",
@@ -141,7 +144,7 @@ function validateSitemap() {
 }
 
 function validateLocalLinks() {
-  for (const htmlFile of ["index.html", "mullu/index.html", "proof/index.html", "404.html"]) {
+  for (const htmlFile of ["index.html", "mullu/index.html", "proof/index.html", "playground/index.html", "404.html"]) {
     const ids = idsForHtmlFile(htmlFile);
     const html = readUtf8(htmlFile);
     for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
@@ -575,6 +578,7 @@ function validateHeadContract() {
     { file: "index.html", url: "https://mullusi.com" },
     { file: "mullu/index.html", url: "https://mullusi.com/mullu/" },
     { file: "proof/index.html", url: "https://mullusi.com/proof/" },
+    { file: "playground/index.html", url: "https://mullusi.com/playground/" },
   ];
   for (const { file, url } of routes) {
     const html = readUtf8(file);
