@@ -1,5 +1,5 @@
 /*
-Purpose: refresh data/news.json with a daily ranked set of frontier model and systems research links.
+Purpose: refresh data/news.json with a daily ranked set of general technology news, breakthroughs, and research releases.
 Governance scope: public-safe external links only, deterministic output, and non-destructive refresh.
 Dependencies: Node.js standard library and the keyless public Hacker News Algolia search API.
 Invariants: output is HTTPS-only, deterministic, capped, and never overwritten with an empty result.
@@ -14,18 +14,24 @@ const repoRoot = path.resolve(path.dirname(scriptPath), "..");
 const newsPath = path.join(repoRoot, "data", "news.json");
 
 const SEARCH_ENDPOINT = "https://hn.algolia.com/api/v1/search";
+// The Hacker News front page is the community's general technology-news signal
+// (programming, hardware, security, science, space, biotech, releases). The
+// queries below are domain-agnostic and bias toward breakthroughs and research
+// releases that may sit just below the front page — deliberately not AI-only.
 const QUERIES = [
-  "LLM",
-  "machine learning",
-  "neural network",
-  "language model",
-  "deep learning",
-  "generative model",
-  "OpenAI",
-  "Anthropic",
+  "breakthrough",
+  "research",
+  "open source release",
+  "scientists",
+  "discovery",
+  "launches",
+  "study finds",
 ];
-const MAX_AGE_DAYS = 4;
-const MIN_POINTS = 40;
+const MAX_AGE_DAYS = 5;
+const MIN_POINTS = 60;
+const FRONT_PAGE_MIN_POINTS = 20;
+const FRONT_PAGE_HITS = 40;
+const QUERY_HITS = 20;
 const MAX_ITEMS = 7;
 const MIN_ITEMS_TO_WRITE = 3;
 const REQUEST_TIMEOUT_MS = 15000;
@@ -58,13 +64,7 @@ function safeUrl(rawUrl, objectId) {
   return { url: parsed.toString(), source: parsed.hostname.replace(/^www\./, "") };
 }
 
-async function fetchQuery(query) {
-  const params = new URLSearchParams({
-    query,
-    tags: "story",
-    hitsPerPage: "20",
-    numericFilters: `points>=${MIN_POINTS},created_at_i>${nowSeconds() - MAX_AGE_DAYS * 86400}`,
-  });
+async function fetchHits(label, params) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
@@ -73,24 +73,42 @@ async function fetchQuery(query) {
       signal: controller.signal,
     });
     if (!response.ok) {
-      console.warn(`query_failed:${query}:http_${response.status}`);
+      console.warn(`fetch_failed:${label}:http_${response.status}`);
       return [];
     }
     const body = await response.json();
     return Array.isArray(body.hits) ? body.hits : [];
   } catch (error) {
-    console.warn(`query_error:${query}:${error.message}`);
+    console.warn(`fetch_error:${label}:${error.message}`);
     return [];
   } finally {
     clearTimeout(timer);
   }
 }
 
-function toItem(hit) {
+function fetchFrontPage() {
+  return fetchHits("front_page", new URLSearchParams({
+    tags: "front_page",
+    hitsPerPage: String(FRONT_PAGE_HITS),
+  }));
+}
+
+function fetchQuery(query) {
+  return fetchHits(query, new URLSearchParams({
+    query,
+    tags: "story",
+    hitsPerPage: String(QUERY_HITS),
+    numericFilters: `points>=${MIN_POINTS},created_at_i>${nowSeconds() - MAX_AGE_DAYS * 86400}`,
+  }));
+}
+
+function toItem(hit, minPoints, cutoff) {
   const title = cleanTitle(hit.title || hit.story_title);
   if (!title) return null;
   const points = Number.isFinite(hit.points) ? hit.points : 0;
-  if (points < MIN_POINTS) return null;
+  if (points < minPoints) return null;
+  const createdAtI = Number.isFinite(hit.created_at_i) ? hit.created_at_i : null;
+  if (createdAtI !== null && createdAtI < cutoff) return null;
   const { url, source } = safeUrl(hit.url || hit.story_url, hit.objectID);
   const createdAt = typeof hit.created_at === "string" ? hit.created_at.slice(0, 10) : "";
   return {
@@ -124,11 +142,17 @@ function readExisting() {
 }
 
 async function refreshNews() {
+  const cutoff = nowSeconds() - MAX_AGE_DAYS * 86400;
   const collected = [];
+
+  for (const hit of await fetchFrontPage()) {
+    const item = toItem(hit, FRONT_PAGE_MIN_POINTS, cutoff);
+    if (item) collected.push(item);
+  }
+
   for (const query of QUERIES) {
-    const hits = await fetchQuery(query);
-    for (const hit of hits) {
-      const item = toItem(hit);
+    for (const hit of await fetchQuery(query)) {
+      const item = toItem(hit, MIN_POINTS, cutoff);
       if (item) collected.push(item);
     }
   }

@@ -8,59 +8,59 @@
   },
   "items": [
     {
-      "title": "Claude for Small Business",
-      "url": "https://www.anthropic.com/news/claude-for-small-business",
-      "source": "anthropic.com",
-      "points": 535,
-      "comments": 470,
-      "date": "2026-05-14"
-    },
-    {
-      "title": "Codex is now in the ChatGPT mobile app",
-      "url": "https://openai.com/index/work-with-codex-from-anywhere/",
-      "source": "openai.com",
-      "points": 481,
-      "comments": 246,
-      "date": "2026-05-14"
-    },
-    {
-      "title": "Tell HN: Dont use Claude Design, lost access to my projects after unsubscribing",
-      "url": "https://news.ycombinator.com/item?id=48128003",
-      "source": "news.ycombinator.com",
-      "points": 293,
-      "comments": 84,
-      "date": "2026-05-13"
-    },
-    {
-      "title": "Show HN: Find the best local LLM for your hardware, ranked by benchmarks",
-      "url": "https://github.com/Andyyyy64/whichllm",
-      "source": "github.com",
-      "points": 282,
-      "comments": 66,
+      "title": "I believe there are entire companies right now under AI psychosis",
+      "url": "https://twitter.com/mitchellh/status/2055380239711457578",
+      "source": "twitter.com",
+      "points": 1896,
+      "comments": 1087,
       "date": "2026-05-15"
     },
     {
-      "title": "Access to frontier AI will soon be limited by economic and security constraints",
-      "url": "https://writing.antonleicht.me/p/cut-off",
-      "source": "writing.antonleicht.me",
-      "points": 221,
-      "comments": 215,
-      "date": "2026-05-15"
+      "title": "Moving away from Tailwind, and learning to structure my CSS",
+      "url": "https://jvns.ca/blog/2026/05/15/moving-away-from-tailwind--and-learning-to-structure-my-css-/",
+      "source": "jvns.ca",
+      "points": 447,
+      "comments": 288,
+      "date": "2026-05-16"
     },
     {
-      "title": "Claude for Legal",
-      "url": "https://github.com/anthropics/claude-for-legal",
-      "source": "github.com",
-      "points": 211,
-      "comments": 190,
-      "date": "2026-05-14"
+      "title": "Frontier AI has broken the open CTF format",
+      "url": "https://kabir.au/blog/the-ctf-scene-is-dead",
+      "source": "kabir.au",
+      "points": 339,
+      "comments": 333,
+      "date": "2026-05-16"
     },
     {
-      "title": "DeepSeek-V4-Flash means LLM steering is interesting again",
-      "url": "https://www.seangoedecke.com/steering-vectors/",
-      "source": "seangoedecke.com",
-      "points": 203,
-      "comments": 67,
+      "title": "SANA-WM, a 2.6B open-source world model for 1-minute 720p video",
+      "url": "https://nvlabs.github.io/Sana/WM/",
+      "source": "nvlabs.github.io",
+      "points": 303,
+      "comments": 128,
+      "date": "2026-05-16"
+    },
+    {
+      "title": "Accelerando (2005)",
+      "url": "https://www.antipope.org/charlie/blog-static/fiction/accelerando/accelerando.html",
+      "source": "antipope.org",
+      "points": 248,
+      "comments": 143,
+      "date": "2026-05-16"
+    },
+    {
+      "title": "EFF to 4th Circuit: Electronic Device Searches at the Border Require a Warrant",
+      "url": "https://www.eff.org/deeplinks/2026/05/eff-fourth-circuit-electronic-device-searches-border-require-warrant",
+      "source": "eff.org",
+      "points": 235,
+      "comments": 49,
+      "date": "2026-05-12"
+    },
+    {
+      "title": "We've made the world too complicated",
+      "url": "https://user8.bearblog.dev/the-world-is-too-complicated/",
+      "source": "user8.bearblog.dev",
+      "points": 199,
+      "comments": 189,
       "date": "2026-05-16"
     }
   ]
