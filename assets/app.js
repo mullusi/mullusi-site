@@ -15,6 +15,7 @@ const state = {
   lang: "en",
   activeCategory: "All",
   query: "",
+  visits: 0,
 };
 
 const fallbackLanguageNames = { en: "English", am: "አማርኛ" };
@@ -23,6 +24,7 @@ const qs = (selector, root = document) => root.querySelector(selector);
 const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 const themeStorageKey = "mullusi-theme";
 const langStorageKey = "mullusi-lang";
+const visitStorageKey = "mullusi-visits";
 
 function normalizeLang(value) {
   return value === "am" ? "am" : "en";
@@ -620,6 +622,32 @@ function newsCaption() {
   `;
 }
 
+function bumpVisits() {
+  try {
+    const raw = parseInt(localStorage.getItem(visitStorageKey) || "0", 10);
+    const next = (Number.isFinite(raw) && raw > 0 ? raw : 0) + 1;
+    localStorage.setItem(visitStorageKey, String(next));
+    return next;
+  } catch (error) {
+    console.warn(error);
+    return 1;
+  }
+}
+
+function renderVisitMeter() {
+  const target = qs("[data-visit-meter]");
+  if (!target) return;
+  const parts = [];
+  if (state.visits > 0) {
+    parts.push(`${escapeHtml(i18nText("footer.localVisits") || "Local visits")} ${state.visits}`);
+  }
+  const version = state.siteContent?.meta?.version;
+  if (version) parts.push(`v${escapeHtml(version)}`);
+  const signal = state.news?.meta?.updated;
+  if (signal) parts.push(`${escapeHtml(i18nText("footer.signal") || "Signal")} ${escapeHtml(signal)}`);
+  target.innerHTML = parts.join(" &middot; ");
+}
+
 function renderNews() {
   const target = qs("[data-news]");
   const items = Array.isArray(state.news?.items) ? state.news.items : [];
@@ -1021,6 +1049,7 @@ async function initContent() {
   bindReveal();
   bindSearch();
   bindLangToggle();
+  state.visits = bumpVisits();
 
   try {
     state.i18n = await loadI18n();
@@ -1028,16 +1057,19 @@ async function initContent() {
     console.error(error);
   }
   applyLang(preferredLang(), false);
+  renderVisitMeter();
 
   window.addEventListener("mullusi-lang-change", () => {
     renderSiteContent();
     renderRegistryContent();
     renderNews();
+    renderVisitMeter();
   });
 
   try {
     state.siteContent = await loadSiteContent();
     renderSiteContent();
+    renderVisitMeter();
   } catch (error) {
     console.error(error);
   }
@@ -1045,6 +1077,7 @@ async function initContent() {
   try {
     state.news = await loadNews();
     renderNews();
+    renderVisitMeter();
   } catch (error) {
     console.error(error);
     renderNews();
