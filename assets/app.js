@@ -651,6 +651,42 @@ function renderNews() {
   revealRendered(target);
 }
 
+function metricCell(value, labelKey, fallbackLabel) {
+  if (value === null || value === undefined || value === "") return "";
+  return `
+    <div>
+      <dt class="m-k">${escapeHtml(value)}</dt>
+      <dd class="m-l">${escapeHtml(i18nText(labelKey) || fallbackLabel)}</dd>
+    </div>
+  `;
+}
+
+function renderMetrics() {
+  const target = qs("[data-metrics]");
+  if (!target) return;
+  if (!state.registry || !state.siteContent) return;
+
+  const systems = state.registry.systems || [];
+  const futureDomains = state.registry.futureDomains || [];
+  const interfaces = state.siteContent.interfaces || [];
+  const apiContracts = state.siteContent.apiContracts || [];
+  const releaseStages = state.siteContent.releaseStages || [];
+  const signalUpdated = state.news?.meta?.updated || null;
+
+  const cells = [
+    metricCell(systems.length, "metrics.deployed", "Deployed public surfaces"),
+    metricCell(interfaces.length, "metrics.routes", "Governed public routes"),
+    metricCell(apiContracts.length, "metrics.contracts", "Govern API contracts v1"),
+    metricCell(releaseStages.length, "metrics.gates", "Release-gate stages"),
+    metricCell(futureDomains.length, "metrics.staged", "Staged domain engines"),
+    metricCell(signalUpdated, "metrics.signal", "Signal last refreshed"),
+  ].filter(Boolean).join("");
+
+  if (!cells) return;
+  target.innerHTML = cells;
+  revealRendered(target);
+}
+
 function renderEvaluationExample() {
   const target = qs("[data-evaluation-example]");
   const example = state.siteContent?.evaluationExample;
@@ -944,6 +980,7 @@ function renderSiteContent() {
   renderFlowDiagram();
   renderBoundaryMap();
   renderReleaseMachine();
+  renderMetrics();
 }
 
 function renderRegistryContent() {
@@ -953,6 +990,7 @@ function renderRegistryContent() {
   renderFilters();
   renderStats();
   renderRepoGrid();
+  renderMetrics();
 }
 
 async function initContent() {

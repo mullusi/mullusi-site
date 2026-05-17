@@ -56,7 +56,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       }
     })();
   </script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.news.2" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.metrics.1" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -81,7 +81,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/app.js?v=2026.05.news.2"></script>
+  <script defer src="assets/app.js?v=2026.05.metrics.1"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -181,12 +181,77 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
+    <section class="band metrics-section" id="metrics" aria-labelledby="metrics-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="metrics.tag">Public Surface Metrics</div>
+          <h2 id="metrics-title" data-i18n="metrics.title">Standard figures, derived from the public registry — not projected.</h2>
+          <p data-i18n="metrics.body">Every number below is computed at load time from the same governed JSON the rest of the site renders. If it is shown here, it is verifiable.</p>
+        </div>
+        <dl class="metrics-band reveal" data-metrics aria-label="Mullusi public surface metrics" data-i18n-attr="aria-label:metrics.bandAria">
+          <noscript>
+            <div><dt class="m-k">1</dt><dd class="m-l">Deployed public surfaces</dd></div>
+            <div><dt class="m-k">v1</dt><dd class="m-l">Govern API contract</dd></div>
+            <div><dt class="m-k">AwaitingEvidence</dt><dd class="m-l">Runtime witness state</dd></div>
+          </noscript>
+        </dl>
+      </div>
+    </section>
+
     <section class="marquee" aria-label="Mullusi operating line">
       <div class="mtrack">
         <span data-i18n="marquee.1">Mfidel substrate</span><span data-i18n="marquee.2">Symbolic causal chain</span><span data-i18n="marquee.3">Fail-closed governance</span>
         <span data-i18n="marquee.4">Hash-chain lineage</span><span data-i18n="marquee.5">Staged engines</span><span data-i18n="marquee.6">Deployed site graph</span>
         <span data-i18n="marquee.1">Mfidel substrate</span><span data-i18n="marquee.2">Symbolic causal chain</span><span data-i18n="marquee.3">Fail-closed governance</span>
         <span data-i18n="marquee.4">Hash-chain lineage</span><span data-i18n="marquee.5">Staged engines</span><span data-i18n="marquee.6">Deployed site graph</span>
+      </div>
+    </section>
+
+    <section class="band" id="govern-cloud" aria-labelledby="govern-cloud-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="govern.tag">Govern Cloud v1</div>
+          <h2 id="govern-cloud-title" data-i18n="govern.title">The first sellable service is evaluation, trace, and proof.</h2>
+          <p data-i18n="govern.body">Start with one vertical contract: authorized request, deterministic evaluation, append-only trace, proof state, repair action, and dashboard visibility.</p>
+          <p class="plain" data-i18n="govern.plain">In plain terms: send an action, get back a verdict, the reason, an audit trace, and a proof stamp.</p>
+        </div>
+        <div class="services reveal" data-service-tiers>
+          <noscript>
+            <article class="service"><span class="badge">Starter</span><h3>Free</h3><p>Explore SDK, CLI, sandbox examples, public docs, and small-volume hosted evaluations.</p></article>
+            <article class="service"><span class="badge">Paid</span><h3>Pro</h3><p>Higher hosted evaluation limits, persistent traces, proof stamp access, and dashboard workspace control.</p></article>
+            <article class="service"><span class="badge">Contract</span><h3>Enterprise</h3><p>Private cloud or customer-controlled deployment with custom governance rules and support boundaries.</p></article>
+          </noscript>
+        </div>
+        <div class="services contracts reveal" data-api-contracts>
+          <noscript>
+            <article class="service contract"><span class="badge">Core v1</span><h3>Govern Evaluation</h3><code>POST /v1/govern/evaluate</code><p>Evaluates a proposed action or system state against Mullusi governance constraints.</p></article>
+          </noscript>
+        </div>
+        <div class="diagram reveal" data-flow-diagram>
+          <noscript>
+            <p>Request &rarr; Evaluate rules &rarr; Record trace &rarr; Verdict &rarr; Proof stamp.</p>
+          </noscript>
+        </div>
+        <div class="eval-wrap reveal" data-evaluation-example>
+          <noscript>
+            <p>Enable JavaScript to view the illustrative governed-evaluation example. It is generated from <code>data/site.json</code> and is not a live endpoint.</p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="use-cases" aria-labelledby="use-cases-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="usecases.tag">Use Cases</div>
+          <h2 id="use-cases-title" data-i18n="usecases.title">Where a governed evaluation earns its keep.</h2>
+          <p data-i18n="usecases.body">Illustrative scenarios — the shape of value the governed runtime will deliver once evidence is published.</p>
+        </div>
+        <div class="usecases reveal" data-use-cases>
+          <noscript>
+            <p>Enable JavaScript to view the use-case scenarios. They are generated from <code>data/site.json</code> and are illustrative, not live runtime claims.</p>
+          </noscript>
+        </div>
       </div>
     </section>
 
@@ -293,54 +358,6 @@ Invariants: no private repository claims, no silent content failure, all dynamic
             <article class="service"><span class="badge">Primary offer</span><h3>Mullusi Govern Cloud</h3><p>Hosted symbolic governance for constraint evaluation, causal verdicts, proof states, and trace records.</p></article>
             <article class="service"><span class="badge">Access layer</span><h3>Developer Packages</h3><p>Client SDK, CLI, and local validators for connecting to Mullusi services.</p></article>
             <article class="service"><span class="badge">Operator surface</span><h3>Mullusi Dashboard</h3><p>Project control, trace review, proof stamps, violations, usage, teams, and release witness visibility.</p></article>
-          </noscript>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" id="govern-cloud" aria-labelledby="govern-cloud-title">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="govern.tag">Govern Cloud v1</div>
-          <h2 id="govern-cloud-title" data-i18n="govern.title">The first sellable service is evaluation, trace, and proof.</h2>
-          <p data-i18n="govern.body">Start with one vertical contract: authorized request, deterministic evaluation, append-only trace, proof state, repair action, and dashboard visibility.</p>
-          <p class="plain" data-i18n="govern.plain">In plain terms: send an action, get back a verdict, the reason, an audit trace, and a proof stamp.</p>
-        </div>
-        <div class="services reveal" data-service-tiers>
-          <noscript>
-            <article class="service"><span class="badge">Starter</span><h3>Free</h3><p>Explore SDK, CLI, sandbox examples, public docs, and small-volume hosted evaluations.</p></article>
-            <article class="service"><span class="badge">Paid</span><h3>Pro</h3><p>Higher hosted evaluation limits, persistent traces, proof stamp access, and dashboard workspace control.</p></article>
-            <article class="service"><span class="badge">Contract</span><h3>Enterprise</h3><p>Private cloud or customer-controlled deployment with custom governance rules and support boundaries.</p></article>
-          </noscript>
-        </div>
-        <div class="services contracts reveal" data-api-contracts>
-          <noscript>
-            <article class="service contract"><span class="badge">Core v1</span><h3>Govern Evaluation</h3><code>POST /v1/govern/evaluate</code><p>Evaluates a proposed action or system state against Mullusi governance constraints.</p></article>
-          </noscript>
-        </div>
-        <div class="diagram reveal" data-flow-diagram>
-          <noscript>
-            <p>Request &rarr; Evaluate rules &rarr; Record trace &rarr; Verdict &rarr; Proof stamp.</p>
-          </noscript>
-        </div>
-        <div class="eval-wrap reveal" data-evaluation-example>
-          <noscript>
-            <p>Enable JavaScript to view the illustrative governed-evaluation example. It is generated from <code>data/site.json</code> and is not a live endpoint.</p>
-          </noscript>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" id="use-cases" aria-labelledby="use-cases-title">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="usecases.tag">Use Cases</div>
-          <h2 id="use-cases-title" data-i18n="usecases.title">Where a governed evaluation earns its keep.</h2>
-          <p data-i18n="usecases.body">Illustrative scenarios — the shape of value the governed runtime will deliver once evidence is published.</p>
-        </div>
-        <div class="usecases reveal" data-use-cases>
-          <noscript>
-            <p>Enable JavaScript to view the use-case scenarios. They are generated from <code>data/site.json</code> and are illustrative, not live runtime claims.</p>
           </noscript>
         </div>
       </div>

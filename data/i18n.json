@@ -619,6 +619,46 @@
       "en": "The daily research and systems digest will appear here after the next scheduled refresh.",
       "am": "የዕለታዊ ምርምርና ሥርዓት ማጠቃለያ በሚቀጥለው የታቀደ ዕድሳት በኋላ እዚህ ይታያል።"
     },
+    "metrics.tag": {
+      "en": "Public Surface Metrics",
+      "am": "የይፋዊ ገጽ መለኪያዎች"
+    },
+    "metrics.title": {
+      "en": "Standard figures, derived from the public registry — not projected.",
+      "am": "መደበኛ አሃዞች፣ ከይፋዊ መዝገብ የተወሰዱ — ግምት አይደሉም።"
+    },
+    "metrics.body": {
+      "en": "Every number below is computed at load time from the same governed JSON the rest of the site renders. If it is shown here, it is verifiable.",
+      "am": "ከታች ያለው እያንዳንዱ ቁጥር ቀሪው ጣቢያ ከሚያቀርበው ተመሳሳይ የሚተዳደር JSON በመጫን ጊዜ ይሰላል። እዚህ ከታየ፣ ሊረጋገጥ የሚችል ነው።"
+    },
+    "metrics.bandAria": {
+      "en": "Mullusi public surface metrics",
+      "am": "የሙሉሲ ይፋዊ ገጽ መለኪያዎች"
+    },
+    "metrics.deployed": {
+      "en": "Deployed public surfaces",
+      "am": "የተሰማሩ ይፋዊ ገጾች"
+    },
+    "metrics.routes": {
+      "en": "Governed public routes",
+      "am": "የሚተዳደሩ ይፋዊ መንገዶች"
+    },
+    "metrics.contracts": {
+      "en": "Govern API contracts v1",
+      "am": "የGovern API ውሎች v1"
+    },
+    "metrics.gates": {
+      "en": "Release-gate stages",
+      "am": "የመለቀቅ-በር ደረጃዎች"
+    },
+    "metrics.staged": {
+      "en": "Staged domain engines",
+      "am": "የተዘጋጁ የጎራ ሞተሮች"
+    },
+    "metrics.signal": {
+      "en": "Signal last refreshed",
+      "am": "ምልክት መጨረሻ የታደሰበት"
+    },
     "hero.tryPlayground": {
       "en": "Try the playground",
       "am": "የሙከራ ሜዳውን ይሞክሩ"
