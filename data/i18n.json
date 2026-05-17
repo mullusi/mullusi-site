@@ -51,6 +51,10 @@
       "en": "Repos",
       "am": "ሪፖዚቶሪዎች"
     },
+    "nav.ecosystem": {
+      "en": "Ecosystem",
+      "am": "ሥነ-ምህዳር"
+    },
     "nav.github": {
       "en": "GitHub",
       "am": "GitHub"
@@ -726,6 +730,34 @@
     "release.caption": {
       "en": "A repository becomes a public route only after each gate closes.",
       "am": "ሪፖዚቶሪ ይፋዊ መንገድ የሚሆነው እያንዳንዱ በር ከተዘጋ በኋላ ብቻ ነው።"
+    },
+    "ecosystem.tag": {
+      "en": "Ecosystem Map",
+      "am": "የሥነ-ምህዳር ካርታ"
+    },
+    "ecosystem.title": {
+      "en": "One view of what is deployed, what is staged, and what is still private.",
+      "am": "ምን እንደተሰማራ፣ ምን እንደተዘጋጀ፣ ምን አሁንም የግል እንደሆነ በአንድ እይታ።"
+    },
+    "ecosystem.body": {
+      "en": "Generated from the same public registry as the rest of the site. Deployed surfaces carry a repository; staged engines name only a planned repository; private-incubation tracks expose a publish gate, never a name.",
+      "am": "ከቀሪው ጣቢያ ጋር ከተመሳሳዩ ይፋዊ መዝገብ የተፈጠረ። የተሰማሩ ገጾች ሪፖዚቶሪ ይይዛሉ፤ የተዘጋጁ ሞተሮች የታቀደ ሪፖዚቶሪ ብቻ ይሰይማሉ፤ የግል ማብሰያ መስመሮች ስም ሳይሆን የመለቀቅ በር ብቻ ያሳያሉ።"
+    },
+    "ecosystem.tierDeployed": {
+      "en": "Deployed",
+      "am": "ተሰማርቷል"
+    },
+    "ecosystem.tierStaged": {
+      "en": "Staged",
+      "am": "ተዘጋጅቷል"
+    },
+    "ecosystem.tierPrivate": {
+      "en": "Private incubation",
+      "am": "የግል ማብሰያ"
+    },
+    "ecosystem.gateLabel": {
+      "en": "Publish gate",
+      "am": "የመለቀቅ በር"
     }
   }
 }

@@ -829,6 +829,56 @@ function renderStats() {
   revealRendered(target);
 }
 
+function renderEcosystemMap() {
+  const target = qs("[data-ecosystem-map]");
+  if (!target || !state.registry) return;
+
+  const systems = state.registry.systems || [];
+  const domains = state.registry.futureDomains || [];
+  const incubation = state.registry.privateIncubation || [];
+  const gateLabel = i18nText("ecosystem.gateLabel") || "Publish gate";
+
+  const row = (name, tag, note, cls) => `
+    <li class="status-row ${cls}">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="status-name">${escapeHtml(name)}</span>
+      <span class="status-state">${escapeHtml(tag)}</span>
+      <span class="status-note">${escapeHtml(note)}</span>
+    </li>
+  `;
+
+  const tiers = [
+    {
+      label: i18nText("ecosystem.tierDeployed") || "Deployed",
+      rows: systems.map((item) => row(item.name, item.repo, localized(item, "summary"), "is-live")),
+    },
+    {
+      label: i18nText("ecosystem.tierStaged") || "Staged",
+      rows: domains.map((domain) => row(
+        state.lang === "am" && domain.am && domain.am.title ? domain.am.title : titleForDomain(domain),
+        domain.plannedRepo || "",
+        localized(domain, "summary"),
+        "is-planned",
+      )),
+    },
+    {
+      label: i18nText("ecosystem.tierPrivate") || "Private incubation",
+      rows: incubation.map((item) => row(item.name, gateLabel, item.publishGate || "", "is-awaiting")),
+    },
+  ].filter((tier) => tier.rows.length > 0);
+
+  if (tiers.length === 0) return;
+
+  target.innerHTML = tiers.map((tier) => `
+    <div class="status-head">
+      <span class="handoff-kicker">${escapeHtml(tier.label)}</span>
+      <h3>${tier.rows.length}</h3>
+    </div>
+    <ul class="status-list">${tier.rows.join("")}</ul>
+  `).join("");
+  revealRendered(target);
+}
+
 function renderRepoGrid() {
   const target = qs("[data-repo-grid]");
   if (!target) return;
@@ -1038,6 +1088,7 @@ function renderRegistryContent() {
   renderFilters();
   renderStats();
   renderRepoGrid();
+  renderEcosystemMap();
   renderMetrics();
 }
 
