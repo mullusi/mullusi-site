@@ -758,6 +758,86 @@
     "ecosystem.gateLabel": {
       "en": "Publish gate",
       "am": "የመለቀቅ በር"
+    },
+    "nav.paths": {
+      "en": "Start here",
+      "am": "ከዚህ ይጀምሩ"
+    },
+    "paths.tag": {
+      "en": "Start Here",
+      "am": "ከዚህ ይጀምሩ"
+    },
+    "paths.title": {
+      "en": "What can you do here?",
+      "am": "እዚህ ምን ማድረግ ይችላሉ?"
+    },
+    "paths.body": {
+      "en": "Four paths in, by what you need. Every link goes to something real on this site — not a placeholder.",
+      "am": "በሚፈልጉት መሠረት አራት መግቢያ መንገዶች። እያንዳንዱ አገናኝ በዚህ ጣቢያ ላይ ወዳለ እውነተኛ ነገር ይወስዳል — ቦታ-መያዣ አይደለም።"
+    },
+    "paths.devBadge": {
+      "en": "Developers",
+      "am": "አበልጻጊዎች"
+    },
+    "paths.devTitle": {
+      "en": "Inspect the architecture",
+      "am": "አርክቴክቸሩን ይመርምሩ"
+    },
+    "paths.devBody": {
+      "en": "Walk the governed-evaluation flow: how an action is checked, traced, and judged before it runs.",
+      "am": "የሚተዳደር ግምገማ ፍሰትን ይከተሉ፦ ድርጊት ከመፈጸሙ በፊት እንዴት እንደሚፈተሽ፣ እንደሚከታተልና እንደሚፈረድ።"
+    },
+    "paths.devCta": {
+      "en": "See the architecture",
+      "am": "አርክቴክቸሩን ይዩ"
+    },
+    "paths.resBadge": {
+      "en": "Researchers",
+      "am": "ተመራማሪዎች"
+    },
+    "paths.resTitle": {
+      "en": "Review the proof boundary",
+      "am": "የማረጋገጫ ወሰንን ይመልከቱ"
+    },
+    "paths.resBody": {
+      "en": "See exactly what is verified and what stays AwaitingEvidence until signed runtime evidence publishes.",
+      "am": "ምን እንደተረጋገጠና የተፈረመ runtime ማስረጃ እስኪታተም ድረስ ምን AwaitingEvidence ሆኖ እንደሚቆይ በትክክል ይዩ።"
+    },
+    "paths.resCta": {
+      "en": "Open the proof boundary",
+      "am": "የማረጋገጫ ወሰንን ይክፈቱ"
+    },
+    "paths.partBadge": {
+      "en": "Partners",
+      "am": "አጋሮች"
+    },
+    "paths.partTitle": {
+      "en": "Explore governed integration",
+      "am": "የሚተዳደር ውህደትን ያስሱ"
+    },
+    "paths.partBody": {
+      "en": "The Govern Cloud service stack and tiers — where a hosted governed evaluation fits your systems.",
+      "am": "የGovern Cloud የአገልግሎት ድርድርና ደረጃዎች — የተስተናገደ የሚተዳደር ግምገማ ከሥርዓቶችዎ ጋር የሚገጥምበት።"
+    },
+    "paths.partCta": {
+      "en": "View the service stack",
+      "am": "የአገልግሎት ድርድርን ይዩ"
+    },
+    "paths.bldBadge": {
+      "en": "Builders",
+      "am": "ገንቢዎች"
+    },
+    "paths.bldTitle": {
+      "en": "Try the playground",
+      "am": "የሙከራ ሜዳውን ይሞክሩ"
+    },
+    "paths.bldBody": {
+      "en": "A client-only, simulated governed evaluation you can run in the browser. No account, no runtime claim.",
+      "am": "በአሳሽ ውስጥ ሊያሄዱት የሚችሉት ደንበኛ-ብቻ፣ የተመሰለ የሚተዳደር ግምገማ። መለያ የለም፣ የruntime ይገባኛል የለም።"
+    },
+    "paths.bldCta": {
+      "en": "Open the playground",
+      "am": "የሙከራ ሜዳውን ይክፈቱ"
     }
   }
 }
