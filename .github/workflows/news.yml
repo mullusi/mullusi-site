@@ -1,7 +1,7 @@
 # Purpose: refresh the public Frontier Signal news data daily and deploy it via GitHub Pages.
 # Governance scope: data/news.json only — a non-claim public data file, never product/runtime claims.
 # Dependencies: GitHub Actions, Node.js, and the keyless public Hacker News Algolia API.
-# Invariants: commits only when data/news.json changes; touches no other file; site validation still gates the push.
+# Invariants: commits only when data/news.json changes; touches no other file; lands via PR so the protected-branch validate check still gates the merge.
 
 name: Refresh News
 
@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: refresh-news
@@ -32,14 +33,29 @@ jobs:
       - name: Refresh news data
         run: node scripts/fetch-news.mjs
 
-      - name: Commit refreshed news data
+      - name: Open news refresh PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet -- data/news.json; then
             echo "no news change to commit"
             exit 0
           fi
+          branch="automation/news-refresh"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
           git add data/news.json
           git commit -m "Refresh Frontier Signal news data"
-          git push origin HEAD:main
+          git push --force origin "$branch"
+          if [ -z "$(gh pr list --head "$branch" --state open --json number --jq '.[].number')" ]; then
+            gh pr create \
+              --base main \
+              --head "$branch" \
+              --title "Refresh Frontier Signal news data" \
+              --body "Automated daily refresh of \`data/news.json\` from the public Hacker News Algolia API. Public non-claim news data only — no product or runtime claims. Merge once the \`validate\` check passes."
+          else
+            echo "existing news refresh PR updated with new commit"
+          fi
+          gh pr merge "$branch" --squash --auto \
+            || echo "auto-merge unavailable; PR left open for manual merge"
