@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-05-17",
+    "updated": "2026-05-19",
     "count": 7
   },
   "items": [
     {
-      "title": "I believe there are entire companies right now under AI psychosis",
-      "url": "https://twitter.com/mitchellh/status/2055380239711457578",
-      "source": "twitter.com",
-      "points": 1896,
-      "comments": 1087,
-      "date": "2026-05-15"
+      "title": "Security researcher says Microsoft built a Bitlocker backdoor, releases exploit",
+      "url": "https://www.techspot.com/news/112410-security-researcher-microsoft-secretly-built-backdoor-bitlocker-releases.html",
+      "source": "techspot.com",
+      "points": 588,
+      "comments": 262,
+      "date": "2026-05-17"
     },
     {
-      "title": "Moving away from Tailwind, and learning to structure my CSS",
-      "url": "https://jvns.ca/blog/2026/05/15/moving-away-from-tailwind--and-learning-to-structure-my-css-/",
-      "source": "jvns.ca",
-      "points": 447,
-      "comments": 288,
-      "date": "2026-05-16"
+      "title": "The last six months in LLMs in five minutes",
+      "url": "https://simonwillison.net/2026/May/19/5-minute-llms/",
+      "source": "simonwillison.net",
+      "points": 588,
+      "comments": 479,
+      "date": "2026-05-19"
     },
     {
-      "title": "Frontier AI has broken the open CTF format",
-      "url": "https://kabir.au/blog/the-ctf-scene-is-dead",
-      "source": "kabir.au",
-      "points": 339,
-      "comments": 333,
-      "date": "2026-05-16"
+      "title": "Anthropic acquires Stainless",
+      "url": "https://www.anthropic.com/news/anthropic-acquires-stainless",
+      "source": "anthropic.com",
+      "points": 497,
+      "comments": 351,
+      "date": "2026-05-18"
     },
     {
-      "title": "SANA-WM, a 2.6B open-source world model for 1-minute 720p video",
-      "url": "https://nvlabs.github.io/Sana/WM/",
-      "source": "nvlabs.github.io",
-      "points": 303,
-      "comments": 128,
-      "date": "2026-05-16"
+      "title": "Show HN: Semble – Code search for agents that uses 98% fewer tokens than grep",
+      "url": "https://github.com/MinishLab/semble",
+      "source": "github.com",
+      "points": 436,
+      "comments": 146,
+      "date": "2026-05-17"
     },
     {
-      "title": "Accelerando (2005)",
-      "url": "https://www.antipope.org/charlie/blog-static/fiction/accelerando/accelerando.html",
-      "source": "antipope.org",
-      "points": 248,
-      "comments": 143,
-      "date": "2026-05-16"
+      "title": "Click (2016)",
+      "url": "https://clickclickclick.click/",
+      "source": "clickclickclick.click",
+      "points": 340,
+      "comments": 85,
+      "date": "2026-05-18"
     },
     {
-      "title": "EFF to 4th Circuit: Electronic Device Searches at the Border Require a Warrant",
-      "url": "https://www.eff.org/deeplinks/2026/05/eff-fourth-circuit-electronic-device-searches-border-require-warrant",
-      "source": "eff.org",
-      "points": 235,
-      "comments": 49,
-      "date": "2026-05-12"
+      "title": "We let AIs run radio stations",
+      "url": "https://andonlabs.com/blog/andon-fm",
+      "source": "andonlabs.com",
+      "points": 318,
+      "comments": 238,
+      "date": "2026-05-18"
     },
     {
-      "title": "We've made the world too complicated",
-      "url": "https://user8.bearblog.dev/the-world-is-too-complicated/",
-      "source": "user8.bearblog.dev",
-      "points": 199,
-      "comments": 189,
-      "date": "2026-05-16"
+      "title": "Gaussian Splat of a Strawberry",
+      "url": "https://superspl.at/scene/84df8849",
+      "source": "superspl.at",
+      "points": 268,
+      "comments": 120,
+      "date": "2026-05-19"
     }
   ]
 }
