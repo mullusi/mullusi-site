@@ -592,23 +592,73 @@ function renderUseCases() {
   revealRendered(target);
 }
 
+function compactNumber(value) {
+  const n = Math.max(0, Math.round(Number(value) || 0));
+  if (n < 1000) return String(n);
+  const k = n / 1000;
+  return `${k < 10 ? k.toFixed(1).replace(/\.0$/, "") : Math.round(k)}k`;
+}
+
+function daysAgo(dateStr) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr || "")) return null;
+  const then = Date.parse(`${dateStr}T00:00:00Z`);
+  if (Number.isNaN(then)) return null;
+  const today = Date.parse(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`);
+  return Math.max(0, Math.round((today - then) / 86400000));
+}
+
+function relativeDay(dateStr) {
+  const d = daysAgo(dateStr);
+  if (d === null) return escapeHtml(dateStr || "");
+  if (d === 0) return escapeHtml(i18nText("news.today") || "today");
+  return `${d}d ${escapeHtml(i18nText("news.ago") || "ago")}`;
+}
+
+function newsTopic(item) {
+  const src = String(item.source || "").toLowerCase();
+  const title = String(item.title || "");
+  if (/^show hn[:\s]/i.test(title)) return { key: "news.tagProject", fallback: "Project" };
+  if (/(^|\.)(github|gitlab)\.com$/.test(src)) return { key: "news.tagOpenSource", fallback: "Open source" };
+  if (/(^|\.)arxiv\.org$|\.edu$|(^|\.)(nature|science|acm|ieee)\.(com|org)$/.test(src)) {
+    return { key: "news.tagResearch", fallback: "Research" };
+  }
+  if (/\.gov$|(^|\.)eff\.org$/.test(src)) return { key: "news.tagPolicy", fallback: "Policy" };
+  return { key: "news.tagArticle", fallback: "Article" };
+}
+
+function newsChip(item) {
+  const topic = newsTopic(item);
+  return `<span class="news-chip">${escapeHtml(i18nText(topic.key) || topic.fallback)}</span>`;
+}
+
 function newsMeta(item) {
   const parts = [];
   if (item.source) {
     parts.push(`<span class="news-source">${escapeHtml(item.source)}</span>`);
   }
   if (Number.isFinite(item.points) && item.points > 0) {
-    parts.push(`<span>${item.points} ${escapeHtml(i18nText("news.points") || "points")}</span>`);
+    parts.push(`<span>${compactNumber(item.points)} ${escapeHtml(i18nText("news.points") || "points")}</span>`);
   }
-  if (item.date) parts.push(`<span>${escapeHtml(item.date)}</span>`);
+  if (Number.isFinite(item.comments) && item.comments > 0) {
+    parts.push(`<span>${compactNumber(item.comments)} ${escapeHtml(i18nText("news.discussion") || "discussion")}</span>`);
+  }
+  if (item.date) parts.push(`<span>${relativeDay(item.date)}</span>`);
   return parts.join('<span class="news-dot" aria-hidden="true">&middot;</span>');
 }
 
 function newsCaption() {
   const meta = state.news?.meta || {};
+  const items = Array.isArray(state.news?.items) ? state.news.items : [];
   const bits = [];
+  let freshClass = "is-stale";
   if (meta.updated) {
-    bits.push(`${escapeHtml(i18nText("news.updated") || "Updated")} ${escapeHtml(meta.updated)}`);
+    const d = daysAgo(meta.updated);
+    if (d === 0) freshClass = "is-fresh";
+    else if (d === 1) freshClass = "is-recent";
+    bits.push(`${escapeHtml(i18nText("news.updated") || "Updated")} ${relativeDay(meta.updated)}`);
+  }
+  if (items.length) {
+    bits.push(`${items.length} ${escapeHtml(i18nText("news.selRule") || "top by public discussion")}`);
   }
   if (meta.source) {
     bits.push(`${escapeHtml(i18nText("news.via") || "via")} ${escapeHtml(meta.source)}`);
@@ -616,7 +666,7 @@ function newsCaption() {
   if (!bits.length) return "";
   return `
     <p class="news-cap">
-      <span class="news-pulse" aria-hidden="true"></span>
+      <span class="news-pulse ${freshClass}" aria-hidden="true"></span>
       ${bits.join('<span class="news-dot" aria-hidden="true">&middot;</span>')}
     </p>
   `;
@@ -664,18 +714,33 @@ function renderNews() {
     return;
   }
 
-  const rows = items.map((item, index) => `
+  const [lead, ...rest] = items;
+  const leadHtml = `
+    <article class="news-lead">
+      <div class="news-lead-head">
+        ${newsChip(lead)}
+        <span class="news-lead-rank" aria-hidden="true">01</span>
+      </div>
+      <a class="news-headline" href="${escapeAttribute(lead.url)}" rel="noopener">
+        <span class="news-title">${escapeHtml(lead.title)}</span>
+        <span class="news-arrow" aria-hidden="true">-&gt;</span>
+      </a>
+      <p class="news-meta">${newsMeta(lead)}</p>
+    </article>
+  `;
+
+  const rows = rest.map((item, index) => `
     <li class="news-item">
-      <span class="news-rank" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
+      <span class="news-rank" aria-hidden="true">${String(index + 2).padStart(2, "0")}</span>
       <a class="news-headline" href="${escapeAttribute(item.url)}" rel="noopener">
         <span class="news-title">${escapeHtml(item.title)}</span>
         <span class="news-arrow" aria-hidden="true">-&gt;</span>
       </a>
-      <p class="news-meta">${newsMeta(item)}</p>
+      <p class="news-meta">${newsChip(item)}${newsMeta(item)}</p>
     </li>
   `).join("");
 
-  target.innerHTML = `${newsCaption()}<ol class="news-list">${rows}</ol>`;
+  target.innerHTML = `${newsCaption()}${leadHtml}${rows ? `<ol class="news-list">${rows}</ol>` : ""}`;
   revealRendered(target);
 }
 
