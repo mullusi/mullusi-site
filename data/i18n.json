@@ -647,6 +647,42 @@
       "en": "via",
       "am": "በ"
     },
+    "news.discussion": {
+      "en": "discussion",
+      "am": "ውይይት"
+    },
+    "news.today": {
+      "en": "today",
+      "am": "ዛሬ"
+    },
+    "news.ago": {
+      "en": "ago",
+      "am": "በፊት"
+    },
+    "news.selRule": {
+      "en": "top by public discussion",
+      "am": "በይፋዊ ውይይት ከፍተኛ"
+    },
+    "news.tagProject": {
+      "en": "Project",
+      "am": "ፕሮጀክት"
+    },
+    "news.tagOpenSource": {
+      "en": "Open source",
+      "am": "ክፍት ምንጭ"
+    },
+    "news.tagResearch": {
+      "en": "Research",
+      "am": "ምርምር"
+    },
+    "news.tagPolicy": {
+      "en": "Policy",
+      "am": "ፖሊሲ"
+    },
+    "news.tagArticle": {
+      "en": "Article",
+      "am": "ጽሑፍ"
+    },
     "news.emptyTitle": {
       "en": "Signal is refreshing",
       "am": "ምልክቱ እየታደሰ ነው"
