@@ -59,6 +59,8 @@ const requiredFiles = [
   "scripts/verify-registry-repos.mjs",
   "scripts/check-ops-gates.mjs",
   "scripts/test-ops-gates.mjs",
+  "scripts/promote-recovery-witness.mjs",
+  "scripts/test-promote-recovery-witness.mjs",
 ];
 
 const allowedSystemStatuses = new Set(["active", "public", "live demo", "research", "deployed"]);
@@ -989,6 +991,95 @@ function validateSiteContent() {
         for (const path of requiredProtectedPaths) {
           if (!observedProtectedPaths.has(path)) {
             recordFailure(`site_status_board_gateway_witness_protected_path_missing:${path}`);
+          }
+        }
+      }
+      const requiredGatewayStates = new Set(["AwaitingEvidence", "SolvedVerified"]);
+      if (!Array.isArray(gatewayWitness.responseExamples) || gatewayWitness.responseExamples.length < requiredGatewayStates.size) {
+        recordFailure("site_status_board_gateway_witness_examples_missing");
+      } else {
+        const observedGatewayStates = new Set();
+        for (const [index, example] of gatewayWitness.responseExamples.entries()) {
+          const label = `site.statusBoard.gatewayWitness.responseExamples.${index}`;
+          requireString(example.title, `${label}.title`);
+          const runtimeState = requireString(example.runtimeState, `${label}.runtimeState`);
+          requireString(example.purpose, `${label}.purpose`);
+          if (!requiredGatewayStates.has(runtimeState)) {
+            recordFailure(`site_status_board_gateway_witness_example_state_invalid:${runtimeState}`);
+          }
+          if (example.statusCode !== 200) {
+            recordFailure(`site_status_board_gateway_witness_example_status_invalid:${runtimeState}:${example.statusCode}`);
+          }
+          const body = example.body;
+          if (!body || typeof body !== "object" || Array.isArray(body)) {
+            recordFailure(`site_status_board_gateway_witness_example_body_invalid:${runtimeState}`);
+            continue;
+          }
+          const requiredGatewayBodyKeys = [
+            "service",
+            "api",
+            "evaluator",
+            "runtime_state",
+            "release_gate",
+            "health_path",
+            "conformance_path",
+            "protected_paths",
+            "findings",
+          ];
+          for (const key of requiredGatewayBodyKeys) {
+            if (!(key in body)) {
+              recordFailure(`site_status_board_gateway_witness_example_body_key_missing:${runtimeState}:${key}`);
+            }
+          }
+          if (body.service !== "mullusi-govern-cloud" || body.api !== "2026.05.v1" || body.evaluator !== "govern-evaluator.v1") {
+            recordFailure(`site_status_board_gateway_witness_example_metadata_invalid:${runtimeState}`);
+          }
+          if (body.runtime_state !== runtimeState) {
+            recordFailure(`site_status_board_gateway_witness_example_body_state_mismatch:${runtimeState}:${body.runtime_state}`);
+          }
+          if (runtimeState === "AwaitingEvidence" && body.release_gate !== "blocked") {
+            recordFailure(`site_status_board_gateway_witness_example_blocked_gate_invalid:${body.release_gate}`);
+          }
+          if (runtimeState === "SolvedVerified" && body.release_gate !== "ready") {
+            recordFailure(`site_status_board_gateway_witness_example_ready_gate_invalid:${body.release_gate}`);
+          }
+          if (body.health_path !== "/health" || body.conformance_path !== "/runtime/conformance") {
+            recordFailure(`site_status_board_gateway_witness_example_path_invalid:${runtimeState}:${body.health_path}:${body.conformance_path}`);
+          }
+          if (!Array.isArray(body.protected_paths) || body.protected_paths.length !== requiredProtectedPaths.size) {
+            recordFailure(`site_status_board_gateway_witness_example_protected_paths_invalid:${runtimeState}`);
+          } else {
+            const observedExampleProtectedPaths = new Set(body.protected_paths);
+            for (const path of requiredProtectedPaths) {
+              if (!observedExampleProtectedPaths.has(path)) {
+                recordFailure(`site_status_board_gateway_witness_example_protected_path_missing:${runtimeState}:${path}`);
+              }
+            }
+          }
+          if (!Array.isArray(body.findings) || body.findings.length === 0) {
+            recordFailure(`site_status_board_gateway_witness_example_findings_missing:${runtimeState}`);
+          } else {
+            for (const [findingIndex, finding] of body.findings.entries()) {
+              const findingLabel = `${label}.body.findings.${findingIndex}`;
+              requireString(finding.name, `${findingLabel}.name`);
+              const findingState = requireString(finding.state, `${findingLabel}.state`);
+              requireString(finding.detail, `${findingLabel}.detail`);
+              if (!["pass", "fail"].includes(findingState)) {
+                recordFailure(`site_status_board_gateway_witness_example_finding_state_invalid:${runtimeState}:${findingState}`);
+              }
+            }
+          }
+          const serialized = JSON.stringify(body);
+          for (const forbiddenSecret of ["prod-proof-key", "prod-api-key", "prod-operator-key", "prod-db-secret"]) {
+            if (serialized.includes(forbiddenSecret)) {
+              recordFailure(`site_status_board_gateway_witness_example_secret_leak:${forbiddenSecret}`);
+            }
+          }
+          observedGatewayStates.add(runtimeState);
+        }
+        for (const runtimeState of requiredGatewayStates) {
+          if (!observedGatewayStates.has(runtimeState)) {
+            recordFailure(`site_status_board_gateway_witness_example_missing:${runtimeState}`);
           }
         }
       }
@@ -2027,9 +2118,12 @@ function validateProofPageContract() {
     "renderRuntimeWitnessBoard = async",
     "finding-contract-grid",
     "runtime-response-grid",
+    "gateway-response-grid",
     "protected-path-grid",
     "runtimeConformance",
     "gatewayWitness",
+    "gatewayResponseCard",
+    "Gateway witness response examples",
     "protectedPaths",
     'id="stamp"',
     "Proof stamp artifact",
@@ -2216,7 +2310,8 @@ function lineValue(content, key) {
 function validateRuntimeGateState() {
   const recoveryWitness = readUtf8("ops/recovery-completion-witness.md");
   const apiGate = readUtf8("ops/api-production-readiness-gate.md");
-  const nginxTemplate = readUtf8("backend/deploy/nginx/api.mullusi.com.conf");
+  const runtimeHostPath = readUtf8("ops/api-runtime-host-path.md");
+  const infrastructureRoot = readUtf8("ops/MULLUSI_INFRASTRUCTURE_ROOT.md");
   const recoveryState = lineValue(recoveryWitness, "recovery_witness_state");
   const apiAllowed = lineValue(recoveryWitness, "api_provisioning_allowed");
 
@@ -2238,11 +2333,21 @@ function validateRuntimeGateState() {
   if (!apiGate.includes("ops/recovery-completion-witness.md") || !apiGate.includes("ReadyForProvisioning")) {
     recordFailure("api_readiness_gate_missing_recovery_witness_dependency");
   }
-  if (!nginxTemplate.includes('Strict-Transport-Security "max-age=86400"')) {
-    recordFailure("api_nginx_hsts_stage_one_missing");
-  }
-  if (/includeSubDomains|preload/i.test(nginxTemplate)) {
-    recordFailure("api_nginx_hsts_premature_strict_mode");
+  if (pathExists("backend/deploy/nginx/api.mullusi.com.conf")) {
+    const nginxTemplate = readUtf8("backend/deploy/nginx/api.mullusi.com.conf");
+    if (!nginxTemplate.includes('Strict-Transport-Security "max-age=86400"')) {
+      recordFailure("api_nginx_hsts_stage_one_missing");
+    }
+    if (/includeSubDomains|preload/i.test(nginxTemplate)) {
+      recordFailure("api_nginx_hsts_premature_strict_mode");
+    }
+  } else {
+    if (!runtimeHostPath.includes("Strict-Transport-Security: max-age=86400")) {
+      recordFailure("api_ops_hsts_stage_one_missing");
+    }
+    if (!infrastructureRoot.includes("HSTS: deferred") || !infrastructureRoot.includes("Stage 1: max-age=86400, no includeSubDomains, no preload")) {
+      recordFailure("api_ops_hsts_rollout_boundary_missing");
+    }
   }
 
   const opsFiles = [

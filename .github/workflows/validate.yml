@@ -41,6 +41,12 @@ jobs:
       - name: Check ops gate test syntax
         run: node --check scripts/test-ops-gates.mjs
 
+      - name: Check recovery witness promotion script syntax
+        run: node --check scripts/promote-recovery-witness.mjs
+
+      - name: Check recovery witness promotion test syntax
+        run: node --check scripts/test-promote-recovery-witness.mjs
+
       - name: Validate static website
         run: node scripts/validate-site.mjs
 
@@ -52,3 +58,6 @@ jobs:
 
       - name: Test operational gate behavior
         run: node scripts/test-ops-gates.mjs
+
+      - name: Test recovery witness promotion behavior
+        run: node scripts/test-promote-recovery-witness.mjs

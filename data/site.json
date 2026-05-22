@@ -820,6 +820,71 @@
         "/v1/proof-stamps/{stamp_id}",
         "/v1/proof-stamps/{stamp_id}/revoke",
         "/v1/proof-stamps/{stamp_id}/revocation"
+      ],
+      "responseExamples": [
+        {
+          "title": "Blocked gateway witness",
+          "runtimeState": "AwaitingEvidence",
+          "statusCode": 200,
+          "purpose": "Returned when release inputs are incomplete but the gateway witness route remains reachable.",
+          "body": {
+            "service": "mullusi-govern-cloud",
+            "api": "2026.05.v1",
+            "evaluator": "govern-evaluator.v1",
+            "runtime_state": "AwaitingEvidence",
+            "release_gate": "blocked",
+            "health_path": "/health",
+            "conformance_path": "/runtime/conformance",
+            "protected_paths": [
+              "/v1/govern/evaluate",
+              "/v1/evaluations/{evaluation_id}/trace",
+              "/v1/proof-stamps/{stamp_id}",
+              "/v1/proof-stamps/{stamp_id}/revoke",
+              "/v1/proof-stamps/{stamp_id}/revocation"
+            ],
+            "findings": [
+              {
+                "name": "required_environment",
+                "state": "fail",
+                "detail": "MULLUSI_IMAGE,MULLUSI_DEV_API_KEY,MULLUSI_OPERATOR_API_KEY,MULLUSI_PROOF_SIGNING_KEY,MULLUSI_DATABASE_URL,MULLUSI_REQUIRE_PERSISTENCE,MULLUSI_ALLOWED_ORIGINS"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Ready gateway witness",
+          "runtimeState": "SolvedVerified",
+          "statusCode": 200,
+          "purpose": "Returned when gateway metadata and runtime conformance close for release.",
+          "body": {
+            "service": "mullusi-govern-cloud",
+            "api": "2026.05.v1",
+            "evaluator": "govern-evaluator.v1",
+            "runtime_state": "SolvedVerified",
+            "release_gate": "ready",
+            "health_path": "/health",
+            "conformance_path": "/runtime/conformance",
+            "protected_paths": [
+              "/v1/govern/evaluate",
+              "/v1/evaluations/{evaluation_id}/trace",
+              "/v1/proof-stamps/{stamp_id}",
+              "/v1/proof-stamps/{stamp_id}/revoke",
+              "/v1/proof-stamps/{stamp_id}/revocation"
+            ],
+            "findings": [
+              {
+                "name": "required_environment",
+                "state": "pass",
+                "detail": "complete"
+              },
+              {
+                "name": "database_schema",
+                "state": "pass",
+                "detail": "postgres_schema_ready"
+              }
+            ]
+          }
+        }
       ]
     },
     "am": {

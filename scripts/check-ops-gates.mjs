@@ -1,7 +1,7 @@
 /*
 Purpose: report Mullusi operational gate state before API provisioning.
 Governance scope: recovery witness, API readiness dependency, staged HSTS, and secret-free ops documents.
-Dependencies: Node.js standard library, ops gate files, and backend Nginx deployment template.
+Dependencies: Node.js standard library, ops gate files, and optional backend Nginx deployment template.
 Invariants: this script performs read-only checks and never reads private recovery inventories.
 */
 
@@ -24,6 +24,10 @@ const opsFiles = [
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+}
+
+function pathExists(relativePath) {
+  return fs.existsSync(path.join(repoRoot, relativePath));
 }
 
 function recordFailure(message) {
@@ -55,12 +59,24 @@ function validateSecretBoundary() {
 }
 
 function validateHstsStage() {
-  const nginxTemplate = readUtf8("backend/deploy/nginx/api.mullusi.com.conf");
-  if (!nginxTemplate.includes('Strict-Transport-Security "max-age=86400"')) {
-    recordFailure("api_nginx_hsts_stage_one_missing");
+  if (pathExists("backend/deploy/nginx/api.mullusi.com.conf")) {
+    const nginxTemplate = readUtf8("backend/deploy/nginx/api.mullusi.com.conf");
+    if (!nginxTemplate.includes('Strict-Transport-Security "max-age=86400"')) {
+      recordFailure("api_nginx_hsts_stage_one_missing");
+    }
+    if (/includeSubDomains|preload/i.test(nginxTemplate)) {
+      recordFailure("api_nginx_hsts_premature_strict_mode");
+    }
+    return;
   }
-  if (/includeSubDomains|preload/i.test(nginxTemplate)) {
-    recordFailure("api_nginx_hsts_premature_strict_mode");
+
+  const runtimeHostPath = readUtf8("ops/api-runtime-host-path.md");
+  const infrastructureRoot = readUtf8("ops/MULLUSI_INFRASTRUCTURE_ROOT.md");
+  if (!runtimeHostPath.includes("Strict-Transport-Security: max-age=86400")) {
+    recordFailure("api_ops_hsts_stage_one_missing");
+  }
+  if (!infrastructureRoot.includes("HSTS: deferred") || !infrastructureRoot.includes("Stage 1: max-age=86400, no includeSubDomains, no preload")) {
+    recordFailure("api_ops_hsts_rollout_boundary_missing");
   }
 }
 

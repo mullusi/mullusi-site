@@ -557,6 +557,7 @@
     .finding-contract-grid,
     .health-witness-grid,
     .runtime-response-grid,
+    .gateway-response-grid,
     .protected-path-grid {
       display: grid;
       gap: 10px;
@@ -570,7 +571,8 @@
     }
 
     .health-witness-grid,
-    .runtime-response-grid {
+    .runtime-response-grid,
+    .gateway-response-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -584,6 +586,7 @@
     .finding-contract-card,
     .health-witness-card,
     .runtime-response-card,
+    .gateway-response-card,
     .protected-path-card {
       display: grid;
       gap: 9px;
@@ -595,7 +598,8 @@
 
     .finding-contract-card h4,
     .health-witness-card h4,
-    .runtime-response-card h4 {
+    .runtime-response-card h4,
+    .gateway-response-card h4 {
       margin: 0;
       color: var(--gold);
       font-size: 14px;
@@ -611,14 +615,16 @@
 
     .finding-contract-card p,
     .health-witness-card p,
-    .runtime-response-card p {
+    .runtime-response-card p,
+    .gateway-response-card p {
       margin: 0;
       color: var(--muted);
       font-size: 12px;
     }
 
     .health-witness-card pre,
-    .runtime-response-card pre {
+    .runtime-response-card pre,
+    .gateway-response-card pre {
       margin: 0;
       max-width: 100%;
       max-height: 260px;
@@ -1299,6 +1305,7 @@
       .health-witness-grid,
       .finding-contract-grid,
       .runtime-response-grid,
+      .gateway-response-grid,
       .protected-path-grid,
       .stamp-field-grid,
       .stamp-lists,
@@ -1595,6 +1602,18 @@
         </article>
       `;
 
+      const gatewayResponseCard = (example) => `
+        <article class="gateway-response-card">
+          <div class="response-status-pills">
+            <span class="status-pill">${escapeHtml(example.runtimeState)}</span>
+            <span class="status-pill">${escapeHtml(example.statusCode)}</span>
+          </div>
+          <h4>${escapeHtml(example.title)}</h4>
+          <p>${escapeHtml(example.purpose)}</p>
+          <pre aria-label="${escapeHtml(example.runtimeState)} gateway witness example"><code>${escapeHtml(JSON.stringify(example.body, null, 2))}</code></pre>
+        </article>
+      `;
+
       const healthWitnessCard = (example) => `
         <article class="health-witness-card">
           <div class="response-status-pills">
@@ -1769,6 +1788,7 @@
             ? board.gatewayWitness
             : null;
           const protectedPaths = Array.isArray(gatewayWitness?.protectedPaths) ? gatewayWitness.protectedPaths : [];
+          const gatewayExamples = Array.isArray(gatewayWitness?.responseExamples) ? gatewayWitness.responseExamples : [];
           if (
             !rows.length
             || !checks.length
@@ -1780,6 +1800,7 @@
             || !responseExamples.length
             || !gatewayWitness
             || !protectedPaths.length
+            || !gatewayExamples.length
           ) throw new Error("Runtime witness board is incomplete");
           const followHref = safeFollowHref(board.followHref);
           target.innerHTML = `
@@ -1834,6 +1855,9 @@
               </div>
               <div class="protected-path-grid" aria-label="Protected API paths">
                 ${protectedPaths.map(protectedPathCard).join("")}
+              </div>
+              <div class="gateway-response-grid" aria-label="Gateway witness response examples">
+                ${gatewayExamples.map(gatewayResponseCard).join("")}
               </div>
             </section>
           `;

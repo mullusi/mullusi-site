@@ -1,0 +1,141 @@
+/*
+Purpose: safely promote the Mullusi recovery completion witness after manual recovery checks.
+Governance scope: recovery confirmation flags, public-safe witness update, API provisioning permission, and dry-run default.
+Dependencies: Node.js standard library and ops/recovery-completion-witness.md.
+Invariants: this script never accepts or writes recovery codes, passwords, API keys, database URLs, host addresses, billing details, or private storage paths.
+*/
+
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const scriptPath = fileURLToPath(import.meta.url);
+const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const witnessPath = path.join(repoRoot, "ops", "recovery-completion-witness.md");
+
+const requiredFlags = [
+  "--cloudflare-recovery",
+  "--github-recovery",
+  "--google-workspace-recovery",
+  "--namecheap-recovery",
+  "--namecheap-transfer-lock",
+  "--billing-renewal",
+  "--private-inventory",
+];
+
+const args = new Set(process.argv.slice(2).filter((arg) => !arg.startsWith("--date=")));
+const dateArg = process.argv.slice(2).find((arg) => arg.startsWith("--date="));
+const reviewDate = dateArg ? dateArg.slice("--date=".length) : new Date().toISOString().slice(0, 10);
+const writeMode = args.has("--write");
+const helpMode = args.has("--help") || args.has("-h");
+const failures = [];
+
+function usage() {
+  return [
+    "Usage:",
+    "  node scripts/promote-recovery-witness.mjs [required confirmations] [--date=YYYY-MM-DD] [--write]",
+    "",
+    "Required confirmations:",
+    ...requiredFlags.map((flag) => `  ${flag}`),
+    "",
+    "Default behavior is dry-run. Add --write only after manual recovery checks are complete.",
+  ].join("\n");
+}
+
+function recordFailure(message) {
+  failures.push(message);
+}
+
+function validateArgs() {
+  const allowedFlags = new Set([...requiredFlags, "--write", "--help", "-h"]);
+  for (const arg of args) {
+    if (!allowedFlags.has(arg)) {
+      recordFailure(`unsupported_flag:${arg}`);
+    }
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(reviewDate)) {
+    recordFailure(`invalid_review_date:${reviewDate}`);
+  }
+  for (const flag of requiredFlags) {
+    if (!args.has(flag)) {
+      recordFailure(`missing_confirmation:${flag}`);
+    }
+  }
+}
+
+function promotedWitnessContent(originalContent) {
+  let content = originalContent;
+  content = content.replace("recovery_witness_state=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning");
+  content = content.replace("api_provisioning_allowed=false", "api_provisioning_allowed=true");
+  content = content.replace(/last_reviewed=\d{4}-\d{2}-\d{2}/, `last_reviewed=${reviewDate}`);
+  content = content.replaceAll("| AwaitingEvidence |", "| Confirmed |");
+  content = content.replace(
+    "This state is intentionally blocked until the private recovery inventory is\nfilled outside Git and the operator confirms each root recovery path.",
+    "This state means the private recovery inventory exists outside Git and the\noperator has confirmed each root recovery path."
+  );
+  content = content.replace(
+    "While `api_provisioning_allowed=false`, the next actions are limited to:",
+    "When `api_provisioning_allowed=true`, the next actions are limited to:"
+  );
+  content = content.replace(
+    [
+      "complete_private_recovery_inventory",
+      "confirm_namecheap_transfer_lock",
+      "confirm_google_workspace_recovery",
+      "confirm_github_recovery_codes",
+      "confirm_cloudflare_recovery_codes",
+      "confirm_billing_renewal_path",
+    ].join("\n"),
+    [
+      "provision_private_runtime_host",
+      "provision_managed_postgresql",
+      "create_production_secret_store",
+      "run_api_production_readiness_gate",
+      "keep_api_dns_absent_until_pre_dns_evidence_passes",
+    ].join("\n")
+  );
+  content = content.replace(
+    "Do not provision production host/database and do not create `api` DNS until this\nwitness is promoted.",
+    "Do not create `api` DNS until host, database, secret, TLS, and pre-DNS\nevidence pass."
+  );
+  content = content.replace(
+    "Open issues: all recovery witnesses remain AwaitingEvidence",
+    "Open issues: host/database provisioning still pending"
+  );
+  content = content.replace(
+    "Next action: complete private recovery inventory outside Git, then promote this witness only after manual confirmation",
+    "Next action: provision private host and managed PostgreSQL, then run the API production readiness gate"
+  );
+  return content;
+}
+
+function runPromotion() {
+  if (helpMode) {
+    console.log(usage());
+    return;
+  }
+
+  validateArgs();
+  if (failures.length > 0) {
+    console.error([usage(), "", ...failures].join("\n"));
+    process.exit(1);
+  }
+
+  const originalContent = fs.readFileSync(witnessPath, "utf8");
+  const nextContent = promotedWitnessContent(originalContent);
+
+  if (nextContent === originalContent) {
+    console.error("witness_already_promoted_or_unexpected_shape");
+    process.exit(1);
+  }
+
+  if (!writeMode) {
+    console.log(`recovery_witness_promotable=true write=false review_date=${reviewDate}`);
+    return;
+  }
+
+  fs.writeFileSync(witnessPath, nextContent, "utf8");
+  console.log(`recovery_witness_promoted=true write=true review_date=${reviewDate}`);
+}
+
+runPromotion();
