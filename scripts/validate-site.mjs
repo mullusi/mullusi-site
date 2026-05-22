@@ -61,6 +61,8 @@ const requiredFiles = [
   "scripts/test-ops-gates.mjs",
   "scripts/promote-recovery-witness.mjs",
   "scripts/test-promote-recovery-witness.mjs",
+  "scripts/check-private-recovery-inventory.mjs",
+  "scripts/test-private-recovery-inventory.mjs",
 ];
 
 const allowedSystemStatuses = new Set(["active", "public", "live demo", "research", "deployed"]);

@@ -47,6 +47,12 @@ jobs:
       - name: Check recovery witness promotion test syntax
         run: node --check scripts/test-promote-recovery-witness.mjs
 
+      - name: Check private recovery inventory script syntax
+        run: node --check scripts/check-private-recovery-inventory.mjs
+
+      - name: Check private recovery inventory test syntax
+        run: node --check scripts/test-private-recovery-inventory.mjs
+
       - name: Validate static website
         run: node scripts/validate-site.mjs
 
@@ -61,3 +67,9 @@ jobs:
 
       - name: Test recovery witness promotion behavior
         run: node scripts/test-promote-recovery-witness.mjs
+
+      - name: Allow missing private recovery inventory in CI
+        run: node scripts/check-private-recovery-inventory.mjs --allow-missing
+
+      - name: Test private recovery inventory checker
+        run: node scripts/test-private-recovery-inventory.mjs

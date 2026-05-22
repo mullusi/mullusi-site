@@ -219,11 +219,15 @@ node --check scripts/check-ops-gates.mjs
 node --check scripts/test-ops-gates.mjs
 node --check scripts/promote-recovery-witness.mjs
 node --check scripts/test-promote-recovery-witness.mjs
+node --check scripts/check-private-recovery-inventory.mjs
+node --check scripts/test-private-recovery-inventory.mjs
 node scripts/validate-site.mjs
 node scripts/verify-registry-repos.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
 node scripts/test-promote-recovery-witness.mjs
+node scripts/check-private-recovery-inventory.mjs --allow-missing
+node scripts/test-private-recovery-inventory.mjs
 ```
 
 ## Local preview
@@ -241,6 +245,8 @@ node scripts/validate-site.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
 node scripts/test-promote-recovery-witness.mjs
+node scripts/check-private-recovery-inventory.mjs --allow-missing
+node scripts/test-private-recovery-inventory.mjs
 ```
 
 The validation scripts check required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, homepage hierarchy, repeated-caveat regressions, symbol-font licensing and size budget, dynamic fallback behavior, public-safe text, Mfidel-safe no-combining-mark text, mojibake, secret-like patterns, recovery/API gate consistency, and staged HSTS.
