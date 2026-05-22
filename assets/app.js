@@ -14,6 +14,7 @@ const state = {
   i18n: null,
   lang: "en",
   activeCategory: "All",
+  activeProductStatus: "All",
   query: "",
   visits: 0,
 };
@@ -202,6 +203,23 @@ function categorySet(products) {
   return ["All", ...Array.from(new Set(products.map((item) => item.category))).sort()];
 }
 
+function productStatusSet(products) {
+  const preferredOrder = ["All", "awaiting-evidence", "private-incubation", "planned", "restricted"];
+  const knownStatuses = new Set(products.map((item) => item.status).filter(Boolean));
+  const ordered = preferredOrder.filter((status) => status === "All" || knownStatuses.has(status));
+  const extra = Array.from(knownStatuses).filter((status) => !preferredOrder.includes(status)).sort();
+  return [...ordered, ...extra];
+}
+
+function productStatusCounts(products) {
+  const counts = new Map([["All", products.length]]);
+  products.forEach((product) => {
+    const status = product.status || "unknown";
+    counts.set(status, (counts.get(status) || 0) + 1);
+  });
+  return counts;
+}
+
 function matchesQuery(item, query) {
   if (!query) return true;
   const haystack = [
@@ -223,6 +241,44 @@ function filteredProducts() {
     const categoryOk = state.activeCategory === "All" || item.category === state.activeCategory;
     return categoryOk && matchesQuery(item, query);
   });
+}
+
+function filteredProductRegistry() {
+  const products = state.registry?.productRegistry || [];
+  if (state.activeProductStatus === "All") return products;
+  return products.filter((product) => product.status === state.activeProductStatus);
+}
+
+function productDocsHref(product) {
+  const docsPath = String(product?.docsPath || "");
+  if (!/^docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsPath)) return "";
+  return `https://${docsPath}`;
+}
+
+function productEvidenceHref(product) {
+  return activityHref(product?.evidencePath);
+}
+
+function renderProductRouteActions(product) {
+  const docsHref = productDocsHref(product);
+  const evidenceHref = productEvidenceHref(product);
+  const apiPath = String(product?.apiPath || "");
+  const apiIsPublic = /^POST \/v1\//.test(apiPath) || /^GET \/v1\//.test(apiPath) || apiPath === "GET /health";
+  const apiLabel = apiPath === "no public endpoint"
+    ? (i18nText("product.noPublicApi") || "No public API")
+    : apiPath;
+
+  return `
+    <div class="product-route-actions" aria-label="${escapeAttribute(i18nText("product.routesAria") || "Product evidence routes")}">
+      ${docsHref
+        ? `<a href="${escapeAttribute(docsHref)}">${escapeHtml(i18nText("product.openDocs") || "Docs")}</a>`
+        : `<span>${escapeHtml(i18nText("product.privateDocs") || "Private docs")}</span>`}
+      ${evidenceHref
+        ? `<a href="${escapeAttribute(evidenceHref)}">${escapeHtml(i18nText("product.openProof") || "Proof boundary")}</a>`
+        : `<span>${escapeHtml(i18nText("product.noProofRoute") || "No public proof route")}</span>`}
+      <code class="${apiIsPublic ? "is-public-api" : "is-private-api"}">${escapeHtml(apiLabel)}</code>
+    </div>
+  `;
 }
 
 function revealRendered(target) {
@@ -371,6 +427,116 @@ function renderApiContracts() {
   revealRendered(target);
 }
 
+function renderPlatformLayers() {
+  const target = qs("[data-platform-layers]");
+  const layers = state.siteContent?.platformLayers || [];
+  if (!target || !layers.length) return;
+
+  target.innerHTML = layers.map((layer, index) => {
+    const components = Array.isArray(layer.components) ? layer.components : [];
+    const governingQuestion = localized(layer, "governs");
+    return `
+      <article class="platform-layer">
+        <div class="platform-layer-head">
+          <div>
+            <span class="badge">${escapeHtml(localized(layer, "role"))}</span>
+            <h3>${escapeHtml(localized(layer, "name"))}</h3>
+          </div>
+          <span class="platform-layer-index" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
+        </div>
+        <p>${escapeHtml(localized(layer, "boundary"))}</p>
+        ${governingQuestion ? `
+          <div class="platform-layer-rule">
+            <span>${escapeHtml(i18nText("platform.governs") || "Governs")}</span>
+            <strong>${escapeHtml(governingQuestion)}</strong>
+          </div>
+        ` : ""}
+        <div class="component-row">
+          ${components.map((component) => `<span>${escapeHtml(component)}</span>`).join("")}
+        </div>
+      </article>
+    `;
+  }).join("");
+  revealRendered(target);
+}
+
+function renderRequestFlow() {
+  const target = qs("[data-request-flow]");
+  const flow = state.siteContent?.requestFlow;
+  const steps = Array.isArray(flow?.steps) ? flow.steps : [];
+  const guards = Array.isArray(flow?.guards) ? flow.guards : [];
+  if (!target || !flow || steps.length === 0) return;
+
+  target.innerHTML = `
+    <article class="request-flow-card">
+      <div>
+        <span class="handoff-kicker">${escapeHtml(localized(flow, "label"))}</span>
+        <h3>${escapeHtml(localized(flow, "title"))}</h3>
+        <p>${escapeHtml(localized(flow, "summary"))}</p>
+        ${guards.length ? `
+          <div class="request-flow-guards" aria-label="Control plane guards">
+            <span>${escapeHtml(i18nText("platform.guards") || "Control guards")}</span>
+            ${guards.map((guard) => `<strong>${escapeHtml(guard)}</strong>`).join("")}
+          </div>
+        ` : ""}
+      </div>
+      <ol class="request-flow-steps">
+        ${steps.map((step, index) => `
+          <li>
+            <span>${String(index + 1).padStart(2, "0")}</span>
+            <strong>${escapeHtml(step)}</strong>
+          </li>
+        `).join("")}
+      </ol>
+    </article>
+  `;
+  revealRendered(target);
+}
+
+function renderPlatformBuildSequence() {
+  const target = qs("[data-platform-build-sequence]");
+  const sequence = state.siteContent?.platformBuildSequence;
+  const steps = Array.isArray(sequence?.steps) ? sequence.steps : [];
+  if (!target || !sequence || steps.length === 0) return;
+
+  target.innerHTML = `
+    <article class="platform-build-card" aria-label="${escapeAttribute(localized(sequence, "label"))}">
+      <div class="platform-build-copy">
+        <span class="handoff-kicker">${escapeHtml(localized(sequence, "label"))}</span>
+        <h3>${escapeHtml(localized(sequence, "title"))}</h3>
+        <p>${escapeHtml(localized(sequence, "summary"))}</p>
+      </div>
+      <ol class="platform-build-steps">
+        ${steps.map((step) => `
+          <li>
+            <span class="platform-build-phase">${escapeHtml(step.phase)}</span>
+            <div>
+              <strong>${escapeHtml(localized(step, "name"))}</strong>
+              <em>${escapeHtml(localized(step, "status"))}</em>
+              <p>${escapeHtml(localized(step, "reason"))}</p>
+            </div>
+          </li>
+        `).join("")}
+      </ol>
+    </article>
+  `;
+  revealRendered(target);
+}
+
+function renderProductQuestions() {
+  const target = qs("[data-product-questions]");
+  const questions = state.siteContent?.productQuestions || [];
+  if (!target || !questions.length) return;
+
+  target.innerHTML = questions.map((question, index) => `
+    <li>
+      <span>${String(index + 1).padStart(2, "0")}</span>
+      <strong>${escapeHtml(question)}</strong>
+    </li>
+  `).join("");
+  revealRendered(target);
+}
+
 function renderReleaseStages() {
   const target = qs("[data-release-stages]");
   const stages = state.siteContent?.releaseStages || [];
@@ -407,10 +573,10 @@ function renderRepositoryHandoff() {
   revealRendered(target);
 }
 
-function diagramArrowDefs() {
+function diagramArrowDefs(markerId) {
   return `
     <defs>
-      <marker id="dg-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <marker id="${escapeAttribute(markerId)}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0 0 L10 5 L0 10 z" class="dg-arrow" />
       </marker>
     </defs>
@@ -427,8 +593,10 @@ function diagramNode(x, y, w, h, label, variant) {
   `;
 }
 
-function svgFrame(viewBox, ariaLabel, inner) {
-  return `<svg class="diagram-svg" viewBox="${viewBox}" role="img" aria-label="${escapeAttribute(ariaLabel)}" preserveAspectRatio="xMidYMid meet">${diagramArrowDefs()}${inner}</svg>`;
+function svgFrame(viewBox, ariaLabel, inner, markerId) {
+  const safeMarkerId = markerId || `dg-arrow-${normalize(ariaLabel).replace(/[^a-z0-9-]+/g, "-") || "diagram"}`;
+  const scopedInner = inner.replaceAll("url(#dg-arrow)", `url(#${safeMarkerId})`);
+  return `<svg class="diagram-svg" viewBox="${viewBox}" role="img" aria-label="${escapeAttribute(ariaLabel)}" preserveAspectRatio="xMidYMid meet">${diagramArrowDefs(safeMarkerId)}${scopedInner}</svg>`;
 }
 
 function renderFlowDiagram() {
@@ -458,7 +626,7 @@ function renderFlowDiagram() {
   });
   const total = steps.length * w + (steps.length - 1) * gap;
   target.innerHTML = `
-    ${svgFrame(`0 0 ${total} 126`, i18nText("flow.caption") || "Governed evaluation flow", inner)}
+    ${svgFrame(`0 0 ${total} 126`, i18nText("flow.caption") || "Governed evaluation flow", inner, "dg-arrow-flow")}
     <p class="diagram-caption">${escapeHtml(i18nText("flow.caption") || "Every request is checked, traced, and judged before a result returns.")}</p>
   `;
   revealRendered(target);
@@ -490,7 +658,7 @@ function renderBoundaryMap() {
       <span class="lg lg-public">${escapeHtml(i18nText("map.publicRoutes") || "Public routes")}</span>
       <span class="lg lg-staged">${escapeHtml(i18nText("map.stagedPrivate") || "Staged · private")}</span>
     </div>
-    ${svgFrame(`0 0 ${rowW} 300`, i18nText("map.caption") || "Mullusi route boundary map", inner)}
+    ${svgFrame(`0 0 ${rowW} 300`, i18nText("map.caption") || "Mullusi route boundary map", inner, "dg-arrow-boundary")}
     <p class="diagram-caption">${escapeHtml(i18nText("map.caption") || "One umbrella. Public routes are linked; product engines stay private until their gate is met.")}</p>
   `;
   revealRendered(target);
@@ -521,7 +689,7 @@ function renderReleaseMachine() {
   inner += diagramNode(lastX + w + gap, y, 200, h, "AwaitingEvidence", "is-terminal");
   const total = steps.length * (w + gap) + 200;
   target.innerHTML = `
-    ${svgFrame(`0 0 ${total} 112`, "Release state machine", inner)}
+    ${svgFrame(`0 0 ${total} 112`, "Release state machine", inner, "dg-arrow-release")}
     <p class="diagram-caption">${escapeHtml(i18nText("release.caption") || "A private incubation project becomes a public route only after each gate closes.")}</p>
   `;
   revealRendered(target);
@@ -537,10 +705,12 @@ function renderStatusBoard() {
   const target = qs("[data-system-status]");
   const board = state.siteContent?.statusBoard;
   const rows = Array.isArray(board?.rows) ? board.rows : [];
+  const witnessChecks = Array.isArray(board?.witnessChecks) ? board.witnessChecks : [];
+  const closureGates = Array.isArray(board?.closureGates) ? board.closureGates : [];
   if (!target || !board || rows.length === 0) return;
 
   const amRows = board.am && Array.isArray(board.am.rows) ? board.am.rows : [];
-  const followHref = /^https:\/\//.test(board.followHref || "") ? board.followHref : null;
+  const followHref = /^(https:\/\/|mailto:)/.test(board.followHref || "") ? board.followHref : null;
 
   target.innerHTML = `
     <div class="status-head">
@@ -563,6 +733,41 @@ function renderStatusBoard() {
         `;
       }).join("")}
     </ul>
+    ${witnessChecks.length ? `
+      <div class="status-checks" aria-label="Runtime witness checks">
+        ${witnessChecks.map((check) => {
+          const meta = statusMeta[check.state] || statusMeta.planned;
+          return `
+            <div class="status-check ${meta.cls}">
+              <code>${escapeHtml(check.path)}</code>
+              <span>${escapeHtml(i18nText(meta.key) || meta.fallback)}</span>
+              <p>${escapeHtml(check.purpose)}</p>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    ` : ""}
+    ${closureGates.length ? `
+      <div class="status-closure-gates" aria-label="Runtime closure gates">
+        ${closureGates.map((gate) => {
+          const meta = statusMeta[gate.state] || statusMeta.planned;
+          return `
+            <article class="status-closure ${meta.cls}">
+              <div>
+                <span>${escapeHtml(i18nText(meta.key) || meta.fallback)}</span>
+                <h4>${escapeHtml(gate.gate)}</h4>
+              </div>
+              <code>${escapeHtml(gate.dependsOn)}</code>
+              <p>${escapeHtml(gate.evidence)}</p>
+              <dl>
+                <div><dt>Protects</dt><dd>${escapeHtml(gate.protects)}</dd></div>
+                <div><dt>Fallback</dt><dd>${escapeHtml(gate.failureAction)}</dd></div>
+              </dl>
+            </article>
+          `;
+        }).join("")}
+      </div>
+    ` : ""}
     <p class="status-follow">
       ${escapeHtml(localized(board, "follow"))}
       ${followHref ? `<a href="${escapeAttribute(followHref)}" rel="noopener">${escapeHtml(localized(board, "followLabel"))} -&gt;</a>` : ""}
@@ -680,6 +885,97 @@ function renderNews() {
   revealRendered(target);
 }
 
+function activityMeta(item) {
+  const parts = [];
+  if (item.status) parts.push(`<span class="news-source">${escapeHtml(item.status)}</span>`);
+  if (item.scope) parts.push(`<span>${escapeHtml(item.scope)}</span>`);
+  if (item.surface) parts.push(`<span>${escapeHtml(item.surface)}</span>`);
+  if (item.date) parts.push(`<span>${escapeHtml(item.date)}</span>`);
+  return parts.join('<span class="news-dot" aria-hidden="true">&middot;</span>');
+}
+
+function activityCaption(activity) {
+  const bits = [];
+  if (activity.updated) {
+    bits.push(`${escapeHtml(i18nText("activity.updated") || "Updated")} ${escapeHtml(activity.updated)}`);
+  }
+  if (activity.label) {
+    bits.push(escapeHtml(localized(activity, "label")));
+  }
+  if (!bits.length) return "";
+  return `
+    <p class="news-cap activity-cap">
+      <span class="news-pulse" aria-hidden="true"></span>
+      ${bits.join('<span class="news-dot" aria-hidden="true">&middot;</span>')}
+    </p>
+  `;
+}
+
+function activityStatusSummary(items) {
+  const counts = new Map();
+  items.forEach((item) => {
+    const key = item.status || "activity";
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
+  if (!counts.size) return "";
+  const chips = Array.from(counts.entries()).map(([status, count]) => `
+    <span>
+      <strong>${escapeHtml(String(count))}</strong>
+      ${escapeHtml(status)}
+    </span>
+  `).join("");
+  return `<div class="activity-summary" aria-label="Mullu activity status summary">${chips}</div>`;
+}
+
+function renderMulluActivity() {
+  const target = qs("[data-mullu-activity]");
+  const activity = state.siteContent?.mulluActivity;
+  const items = Array.isArray(activity?.items) ? activity.items : [];
+  if (!target || !activity) return;
+
+  if (!items.length) {
+    target.innerHTML = `
+      <div class="news-empty">
+        <h3>${escapeHtml(i18nText("activity.emptyTitle") || "Mullu activity is being recorded")}</h3>
+        <p>${escapeHtml(i18nText("activity.emptyBody") || "Product updates and platform activity will appear here after the next governed release note.")}</p>
+      </div>
+    `;
+    revealRendered(target);
+    return;
+  }
+
+  const rows = items.map((item, index) => {
+    const href = activityHref(item.href);
+    const headline = href
+      ? `<a class="news-headline activity-headline" href="${escapeAttribute(href)}">
+          <span class="news-title">${escapeHtml(item.title)}</span>
+          <span class="news-arrow" aria-hidden="true">-&gt;</span>
+        </a>`
+      : `<div class="news-headline activity-headline">
+          <span class="news-title">${escapeHtml(item.title)}</span>
+        </div>`;
+    return `
+      <li class="news-item activity-item">
+        <span class="news-rank" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
+        ${headline}
+        <p class="news-meta">${activityMeta(item)}</p>
+        <p class="activity-body">${escapeHtml(item.body)}</p>
+      </li>
+    `;
+  }).join("");
+
+  target.innerHTML = `
+    ${activityCaption(activity)}
+    <div class="activity-intro">
+      <h3>${escapeHtml(localized(activity, "title"))}</h3>
+      <p>${escapeHtml(localized(activity, "summary"))}</p>
+    </div>
+    ${activityStatusSummary(items)}
+    <ol class="news-list activity-list">${rows}</ol>
+  `;
+  revealRendered(target);
+}
+
 function renderNewsLoadError() {
   const target = qs("[data-news]");
   if (!target) return;
@@ -709,6 +1005,7 @@ function renderMetrics() {
 
   const systems = state.registry.systems || [];
   const futureDomains = state.registry.futureDomains || [];
+  const productRegistry = state.registry.productRegistry || [];
   const interfaces = state.siteContent.interfaces || [];
   const apiContracts = state.siteContent.apiContracts || [];
   const releaseStages = state.siteContent.releaseStages || [];
@@ -716,6 +1013,7 @@ function renderMetrics() {
 
   const cells = [
     metricCell(systems.length, "metrics.deployed", "Deployed public surfaces"),
+    metricCell(productRegistry.length, "metrics.products", "Governed product records"),
     metricCell(interfaces.length, "metrics.routes", "Governed public routes"),
     metricCell(apiContracts.length, "metrics.contracts", "Govern API contracts v1"),
     metricCell(releaseStages.length, "metrics.gates", "Release-gate stages"),
@@ -725,6 +1023,108 @@ function renderMetrics() {
 
   if (!cells) return;
   target.innerHTML = cells;
+  revealRendered(target);
+}
+
+function renderProductRegistry() {
+  const target = qs("[data-product-registry]");
+  const products = filteredProductRegistry();
+  if (!target) return;
+
+  if (!products.length) {
+    target.innerHTML = `
+      <article class="product-card empty-card">
+        <div class="product-card-head">
+          <h3>${escapeHtml(i18nText("product.emptyTitle") || "No matching product records")}</h3>
+        </div>
+        <p>${escapeHtml(i18nText("product.emptyBody") || "Choose another product status to inspect the governed registry.")}</p>
+      </article>
+    `;
+    revealRendered(target);
+    return;
+  }
+
+  target.innerHTML = products.map((product) => `
+    <article class="product-card">
+      <div class="product-card-head">
+        <span class="badge">${escapeHtml(product.classification)}</span>
+        <span class="status-pill">${escapeHtml(product.status)}</span>
+      </div>
+      <h3>${escapeHtml(product.name)}</h3>
+      <p>${escapeHtml(product.summary)}</p>
+      <dl class="product-meta">
+        <div>
+          <dt>${escapeHtml(i18nText("field.owner") || "Owner")}</dt>
+          <dd>${escapeHtml(product.owner)}</dd>
+        </div>
+        <div>
+          <dt>${escapeHtml(i18nText("field.sourceBoundary") || "Source boundary")}</dt>
+          <dd>${escapeHtml(product.sourceBoundary)}</dd>
+        </div>
+        <div>
+          <dt>${escapeHtml(i18nText("field.runtimeType") || "Runtime")}</dt>
+          <dd>${escapeHtml(product.runtimeType)}</dd>
+        </div>
+        <div>
+          <dt>${escapeHtml(i18nText("field.dataType") || "Data")}</dt>
+          <dd>${escapeHtml(product.dataType)}</dd>
+        </div>
+        <div>
+          <dt>${escapeHtml(i18nText("field.releaseGate") || "Release gate")}</dt>
+          <dd>${escapeHtml(product.releaseGate)}</dd>
+        </div>
+        <div>
+          <dt>${escapeHtml(i18nText("field.docsPath") || "Docs")}</dt>
+          <dd>${escapeHtml(product.docsPath)}</dd>
+        </div>
+        <div>
+          <dt>${escapeHtml(i18nText("field.apiPath") || "API")}</dt>
+          <dd>${escapeHtml(product.apiPath)}</dd>
+        </div>
+        <div>
+          <dt>${escapeHtml(i18nText("field.failureMode") || "Failure")}</dt>
+          <dd>${escapeHtml(product.failureMode)}</dd>
+        </div>
+      </dl>
+      ${renderProductRouteActions(product)}
+    </article>
+  `).join("");
+  revealRendered(target);
+}
+
+function renderProductRegistryControls() {
+  const target = qs("[data-product-registry-controls]");
+  const products = state.registry?.productRegistry || [];
+  if (!target || !products.length) return;
+
+  const statuses = productStatusSet(products);
+  const counts = productStatusCounts(products);
+  const visibleCount = filteredProductRegistry().length;
+  const classifications = new Set(products.map((product) => product.classification)).size;
+
+  target.innerHTML = `
+    <div class="product-summary-strip" aria-label="${escapeAttribute(i18nText("product.summaryAria") || "Product registry summary")}">
+      <span><strong>${escapeHtml(String(products.length))}</strong>${escapeHtml(i18nText("product.total") || "total records")}</span>
+      <span><strong>${escapeHtml(String(visibleCount))}</strong>${escapeHtml(i18nText("product.showing") || "showing")}</span>
+      <span><strong>${escapeHtml(String(classifications))}</strong>${escapeHtml(i18nText("product.classes") || "product classes")}</span>
+    </div>
+    <div class="product-filter-row" role="group" aria-label="${escapeAttribute(i18nText("product.filterAria") || "Product status filters")}">
+      ${statuses.map((status) => `
+        <button class="filter-button product-filter-button ${status === state.activeProductStatus ? "active" : ""}" type="button" data-product-status="${escapeHtml(status)}" aria-pressed="${status === state.activeProductStatus ? "true" : "false"}">
+          <span>${escapeHtml(status)}</span>
+          <strong>${escapeHtml(String(counts.get(status) || 0))}</strong>
+        </button>
+      `).join("")}
+    </div>
+  `;
+
+  qsa("[data-product-status]", target).forEach((button) => {
+    button.addEventListener("click", () => {
+      state.activeProductStatus = button.dataset.productStatus || "All";
+      renderProductRegistryControls();
+      renderProductRegistry();
+    });
+  });
   revealRendered(target);
 }
 
@@ -1007,6 +1407,14 @@ function escapeAttribute(value) {
   return escapeHtml(text);
 }
 
+function activityHref(value) {
+  const text = String(value ?? "").trim();
+  if (/^#[A-Za-z][A-Za-z0-9_-]*$/.test(text)) return text;
+  if (/^\/[A-Za-z0-9/_-]*\/?$/.test(text)) return text;
+  if (/^https:\/\/(?:[a-z0-9.-]+\.)?mullusi\.com(?:\/.*)?$/i.test(text)) return text;
+  return "";
+}
+
 async function loadRegistry() {
   const response = await fetch("data/products.json", { cache: "no-store" });
   if (!response.ok) throw new Error(`Registry load failed: ${response.status}`);
@@ -1027,6 +1435,10 @@ async function loadNews() {
 
 function renderSiteContent() {
   if (!state.siteContent) return;
+  renderPlatformLayers();
+  renderRequestFlow();
+  renderPlatformBuildSequence();
+  renderProductQuestions();
   renderProofLanes();
   renderInterfaceLinks();
   renderServices();
@@ -1035,6 +1447,7 @@ function renderSiteContent() {
   renderEvaluationExample();
   renderStatusBoard();
   renderUseCases();
+  renderMulluActivity();
   renderReleaseStages();
   renderRepositoryHandoff();
   renderFlowDiagram();
@@ -1047,6 +1460,8 @@ function renderRegistryContent() {
   if (!state.registry) return;
   renderSnapshot();
   renderFutureDomains();
+  renderProductRegistryControls();
+  renderProductRegistry();
   renderFilters();
   renderStats();
   renderRepoGrid();
@@ -1102,7 +1517,7 @@ async function initContent() {
     console.error(error);
   }
   applyLang(preferredLang(), false);
-  const registryFallbacks = captureFallbackContent(["[data-proof-lanes]", "[data-interface-links]", "[data-release-stages]", "[data-future-domains]"]);
+  const registryFallbacks = captureFallbackContent(["[data-platform-layers]", "[data-request-flow]", "[data-platform-build-sequence]", "[data-product-questions]", "[data-proof-lanes]", "[data-interface-links]", "[data-release-stages]", "[data-future-domains]", "[data-product-registry-controls]", "[data-product-registry]", "[data-mullu-activity]"]);
   renderVisitMeter();
 
   window.addEventListener("mullusi-lang-change", () => {
@@ -1121,6 +1536,10 @@ async function initContent() {
     promoteNoscriptFallbacks([
       "[data-proof-lanes]",
       "[data-interface-links]",
+      "[data-platform-layers]",
+      "[data-request-flow]",
+      "[data-platform-build-sequence]",
+      "[data-product-questions]",
       "[data-service-grid]",
       "[data-service-tiers]",
       "[data-api-contracts]",
@@ -1128,13 +1547,14 @@ async function initContent() {
       "[data-evaluation-example]",
       "[data-system-status]",
       "[data-use-cases]",
+      "[data-mullu-activity]",
       "[data-release-stages]",
       "[data-repository-handoff]",
       "[data-boundary-map]",
       "[data-release-machine]",
       "[data-metrics]",
     ]);
-    restoreFallbackContent(registryFallbacks, ["[data-proof-lanes]", "[data-interface-links]", "[data-release-stages]"]);
+    restoreFallbackContent(registryFallbacks, ["[data-platform-layers]", "[data-request-flow]", "[data-platform-build-sequence]", "[data-product-questions]", "[data-proof-lanes]", "[data-interface-links]", "[data-mullu-activity]", "[data-release-stages]"]);
   }
 
   try {
@@ -1163,10 +1583,12 @@ async function initContent() {
     }
     promoteNoscriptFallbacks([
       "[data-future-domains]",
+      "[data-product-registry-controls]",
+      "[data-product-registry]",
       "[data-repo-stats]",
       "[data-metrics]",
     ]);
-    restoreFallbackContent(registryFallbacks, ["[data-future-domains]"]);
+    restoreFallbackContent(registryFallbacks, ["[data-future-domains]", "[data-product-registry-controls]", "[data-product-registry]"]);
   }
 }
 

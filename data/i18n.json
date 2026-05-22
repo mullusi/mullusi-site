@@ -26,6 +26,10 @@
       "en": "Start",
       "am": "መነሻ"
     },
+    "nav.platform": {
+      "en": "Platform",
+      "am": "Platform"
+    },
     "nav.architecture": {
       "en": "Architecture",
       "am": "አርክቴክቸር"
@@ -103,24 +107,28 @@
       "am": "ወደ ጨለማ ገጽታ ቀይር"
     },
     "hero.tag": {
-      "en": "Mullusi — the company. Mullu — the flagship product.",
+      "en": "Mullusi = company + governed platform + product ecosystem.",
       "am": "ሙሉሲ — ኩባንያው። ሙሉ — ዋናው ምርት።"
     },
     "hero.title": {
-      "en": "Software that checks, traces, and proves every decision before it runs.",
+      "en": "A governed symbolic platform where every product has a controlled place.",
       "am": "እያንዳንዱን ውሳኔ ከመፈጸሙ በፊት የሚፈትሽ፣ የሚከታተልና የሚያረጋግጥ ሶፍትዌር።"
     },
     "hero.lead": {
-      "en": "Mullu evaluates a proposed action against your rules, records an append-only trace of exactly why, and returns a verdict — before anything executes. It turns governed symbolic reasoning into work you can audit and reproduce. The live runtime is still publishing its signed evidence; until then, this site is the public proof boundary.",
+      "en": "Mullusi connects the public website, docs, dashboard, API, control plane, product services, storage, runtime infrastructure, and source delivery. The website is the public map, not the runtime, and every product moves through a release gate before it becomes public.",
       "am": "ሙሉ የቀረበን ድርጊት ከደንቦችዎ ጋር ይገመግማል፣ ለምን እንደሆነ በትክክል ተጨማሪ-ብቻ ዱካ ይመዘግባል፣ እና ማንኛውም ነገር ከመፈጸሙ በፊት ፍርድ ይመልሳል። የሚተዳደር ምልክታዊ ምክንያትን ሊመረመርና ሊደገም ወደሚችል ሥራ ይለውጣል። ቀጥታ runtime ገና የተፈረመ ማስረጃውን እያተመ ነው፤ እስከዚያ ድረስ ይህ ጣቢያ ይፋዊ የማረጋገጫ ወሰን ነው።"
     },
     "hero.plain": {
-      "en": "In plain terms: Mullu checks whether work is allowed, explains why, and leaves a proof record.",
+      "en": "In plain terms: mullusi.com shows what exists, what is live, what is research, and which gate controls each product.",
       "am": "በቀላል አነጋገር፦ ሙሉ ሥራው የተፈቀደ መሆኑን ይፈትሻል፣ ምክንያቱን ያብራራል፣ እና የማረጋገጫ መዝገብ ይተዋል።"
     },
     "hero.openMullu": {
       "en": "Open Mullu",
       "am": "ሙሉን ክፈት"
+    },
+    "hero.viewPlatform": {
+      "en": "View platform map",
+      "am": "View platform map"
     },
     "hero.reviewProof": {
       "en": "Review proof boundary",
@@ -199,11 +207,11 @@
       "am": "መዋቅር"
     },
     "start.architecture.t": {
-      "en": "Read the architecture",
+      "en": "Read the platform map",
       "am": "አርክቴክቸሩን ያንብቡ"
     },
     "start.architecture.b": {
-      "en": "Public route map and release discipline.",
+      "en": "Layer map, request flow, and release discipline.",
       "am": "ይፋዊ የመንገድ ካርታና የመለቀቅ ዲሲፕሊን።"
     },
     "boundary.title": {
@@ -213,6 +221,30 @@
     "boundary.body": {
       "en": "Live surfaces are linked directly. Staged engines are roadmap records. Illustrative examples show the intended evaluation shape and are not runtime claims until the proof route publishes signed witness evidence.",
       "am": "ቀጥታ ገጾች በቀጥታ ተያይዘዋል። የተዘጋጁ ሞተሮች የመንገድ ካርታ መዝገቦች ናቸው። ማሳያዎች የታሰበውን የግምገማ ቅርጽ ያሳያሉ፣ ነገር ግን የማረጋገጫ መንገዱ የተፈረመ የምስክር ማስረጃ እስኪያትም ድረስ runtime የይገባኛል ጥያቄዎች አይደሉም።"
+    },
+    "platform.tag": {
+      "en": "Platform Spine",
+      "am": "Platform Spine"
+    },
+    "platform.title": {
+      "en": "Company, platform, products",
+      "am": "Company, platform, products"
+    },
+    "platform.body": {
+      "en": "Mullusi is layered: public surfaces route users, the control plane governs actions, product services execute privately, storage preserves memory, Cloudflare protects the edge, and GitHub remains the source factory.",
+      "am": "Mullusi is layered: public surfaces route users, the control plane governs actions, product services execute privately, storage preserves memory, Cloudflare protects the edge, and GitHub remains the source factory."
+    },
+    "platform.plain": {
+      "en": "In plain terms: the website shows the city map; the dashboard is the control room; the API is the machine road; the control plane is the government.",
+      "am": "In plain terms: the website shows the city map; the dashboard is the control room; the API is the machine road; the control plane is the government."
+    },
+    "platform.governs": {
+      "en": "Governs",
+      "am": "Governs"
+    },
+    "platform.guards": {
+      "en": "Control guards",
+      "am": "Control guards"
     },
     "marquee.1": {
       "en": "Checked before it runs",
@@ -422,6 +454,58 @@
       "en": "Search, inspect, capsule, 3D, SCC harnesses, trace surfaces, and proof-carrying public demos.",
       "am": "ፍለጋ፣ ምርመራ፣ ካፕሱል፣ 3D፣ የSCC መሣሪያዎች፣ የዱካ ገጾችና ማረጋገጫ-የያዙ ይፋዊ ማሳያዎች።"
     },
+    "product.summaryAria": {
+      "en": "Product registry summary",
+      "am": "Product registry summary"
+    },
+    "product.total": {
+      "en": "total records",
+      "am": "total records"
+    },
+    "product.showing": {
+      "en": "showing",
+      "am": "showing"
+    },
+    "product.classes": {
+      "en": "product classes",
+      "am": "product classes"
+    },
+    "product.filterAria": {
+      "en": "Product status filters",
+      "am": "Product status filters"
+    },
+    "product.emptyTitle": {
+      "en": "No matching product records",
+      "am": "No matching product records"
+    },
+    "product.emptyBody": {
+      "en": "Choose another product status to inspect the governed registry.",
+      "am": "Choose another product status to inspect the governed registry."
+    },
+    "product.routesAria": {
+      "en": "Product evidence routes",
+      "am": "Product evidence routes"
+    },
+    "product.openDocs": {
+      "en": "Docs",
+      "am": "Docs"
+    },
+    "product.privateDocs": {
+      "en": "Private docs",
+      "am": "Private docs"
+    },
+    "product.openProof": {
+      "en": "Proof boundary",
+      "am": "Proof boundary"
+    },
+    "product.noProofRoute": {
+      "en": "No public proof route",
+      "am": "No public proof route"
+    },
+    "product.noPublicApi": {
+      "en": "No public API",
+      "am": "No public API"
+    },
     "sciences.tag": {
       "en": "Science Engines",
       "am": "የሳይንስ ሞተሮች"
@@ -614,6 +698,38 @@
       "en": "Host",
       "am": "አስተናጋጅ"
     },
+    "field.owner": {
+      "en": "Owner",
+      "am": "Owner"
+    },
+    "field.sourceBoundary": {
+      "en": "Source boundary",
+      "am": "Source boundary"
+    },
+    "field.runtimeType": {
+      "en": "Runtime",
+      "am": "Runtime"
+    },
+    "field.dataType": {
+      "en": "Data",
+      "am": "Data"
+    },
+    "field.releaseGate": {
+      "en": "Release gate",
+      "am": "Release gate"
+    },
+    "field.docsPath": {
+      "en": "Docs",
+      "am": "Docs"
+    },
+    "field.apiPath": {
+      "en": "API",
+      "am": "API"
+    },
+    "field.failureMode": {
+      "en": "Failure",
+      "am": "Failure"
+    },
     "repo.statDeployed": {
       "en": "Deployed public surfaces",
       "am": "የተሰማሩ ይፋዊ ሪፖዎች"
@@ -711,7 +827,7 @@
       "am": "አጠቃላይ የቴክኖሎጂ ዜና፣ ግኝቶችና የምርምር ልቀቶች"
     },
     "news.body": {
-      "en": "A daily ranked digest of notable technology, science breakthroughs, and research releases, refreshed automatically from public discussion.",
+      "en": "A daily ranked digest of notable technology, science breakthroughs, and research releases, followed by Mullu product activity and platform release notes.",
       "am": "በየዕለቱ የሚደረደር የጎላ ቴክኖሎጂ፣ የሳይንስ ግኝቶችና የምርምር ልቀቶች ማጠቃለያ፣ ከይፋዊ ውይይት በራስ-ሰር የሚታደስ። አገናኞች ውጫዊና ለማሳያ ናቸው፣ የMullusi የይገባኛል ጥያቄዎች አይደሉም።"
     },
     "news.points": {
@@ -742,6 +858,18 @@
       "en": "The static news registry did not load. Confirm the registry is deployed beside this page.",
       "am": "??????? ??? ???? ??????? ???? ??? ?? ?? ?????? ??????"
     },
+    "activity.updated": {
+      "en": "Updated",
+      "am": "Updated"
+    },
+    "activity.emptyTitle": {
+      "en": "Mullu activity is being recorded",
+      "am": "Mullu activity is being recorded"
+    },
+    "activity.emptyBody": {
+      "en": "Product updates and platform activity will appear here after the next governed release note.",
+      "am": "Product updates and platform activity will appear here after the next governed release note."
+    },
     "metrics.tag": {
       "en": "Public Surface Metrics",
       "am": "የይፋዊ ገጽ መለኪያዎች"
@@ -761,6 +889,10 @@
     "metrics.deployed": {
       "en": "Deployed public surfaces",
       "am": "የተሰማሩ ይፋዊ ገጾች"
+    },
+    "metrics.products": {
+      "en": "Governed product records",
+      "am": "Governed product records"
     },
     "metrics.routes": {
       "en": "Governed public routes",

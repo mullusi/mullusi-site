@@ -294,6 +294,997 @@
       border-bottom: 1px solid var(--line);
     }
 
+    .evidence-note {
+      max-width: 780px;
+      margin: -8px 0 24px;
+      color: var(--muted);
+    }
+
+    .proof-registry {
+      display: grid;
+      gap: 14px;
+    }
+
+    .proof-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .proof-summary div {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 14px;
+    }
+
+    .proof-summary dt {
+      color: var(--green);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .proof-summary dd {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .product-proof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .product-proof-card {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .product-proof-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .product-proof-card h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 18px;
+    }
+
+    .product-proof-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-pill {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      color: var(--violet);
+      padding: 3px 7px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .proof-meta {
+      display: grid;
+      gap: 1px;
+      margin: 0;
+      background: var(--line);
+    }
+
+    .proof-meta div {
+      display: grid;
+      grid-template-columns: minmax(96px, 0.34fr) minmax(0, 0.66fr);
+      gap: 10px;
+      background: var(--panel);
+      padding: 9px 10px;
+    }
+
+    .proof-meta dt {
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .proof-meta dd {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .proof-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    .proof-actions a,
+    .proof-actions span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 5px 9px;
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .proof-actions a {
+      color: var(--green);
+    }
+
+    .proof-actions a:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .proof-empty {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      padding: 18px;
+    }
+
+    .runtime-witness {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .runtime-status-grid,
+    .runtime-check-grid,
+    .runtime-closure-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .runtime-status-card,
+    .runtime-check-card,
+    .runtime-closure-card {
+      display: grid;
+      gap: 9px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 16px;
+    }
+
+    .runtime-status-card h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 17px;
+    }
+
+    .runtime-status-card p,
+    .runtime-check-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .runtime-check-card code {
+      color: var(--green);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .runtime-closure-card h4 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .runtime-closure-card code {
+      color: var(--green);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .runtime-closure-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .runtime-closure-card dl {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+    }
+
+    .runtime-closure-card div {
+      min-width: 0;
+    }
+
+    .runtime-closure-card dt {
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .runtime-closure-card dd {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .runtime-contract {
+      display: grid;
+      gap: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .runtime-contract-head {
+      display: grid;
+      gap: 8px;
+    }
+
+    .runtime-contract-head h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .runtime-contract-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .finding-contract-grid,
+    .health-witness-grid,
+    .runtime-response-grid,
+    .gateway-response-grid,
+    .protected-path-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .finding-contract-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .health-witness-grid,
+    .runtime-response-grid,
+    .gateway-response-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .protected-path-grid {
+      grid-template-columns: repeat(5, minmax(160px, 1fr));
+      max-width: 100%;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .finding-contract-card,
+    .health-witness-card,
+    .runtime-response-card,
+    .gateway-response-card,
+    .protected-path-card {
+      display: grid;
+      gap: 9px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+    }
+
+    .finding-contract-card h4,
+    .health-witness-card h4,
+    .runtime-response-card h4,
+    .gateway-response-card h4 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .finding-contract-card code,
+    .protected-path-card code {
+      color: var(--green);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .finding-contract-card p,
+    .health-witness-card p,
+    .runtime-response-card p,
+    .gateway-response-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .health-witness-card pre,
+    .runtime-response-card pre,
+    .gateway-response-card pre {
+      margin: 0;
+      max-width: 100%;
+      max-height: 260px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: #070806;
+      color: var(--green);
+      padding: 12px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .proof-stamp {
+      display: grid;
+      gap: 14px;
+    }
+
+    .stamp-head {
+      display: grid;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .stamp-head h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .stamp-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stamp-version {
+      color: var(--green);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .stamp-field-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stamp-field {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 14px;
+    }
+
+    .stamp-field code {
+      color: var(--green);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .stamp-field p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stamp-field-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .stamp-field-meta span {
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 3px 7px;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .stamp-lists {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .stamp-list {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 16px;
+    }
+
+    .stamp-list h3 {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 16px;
+    }
+
+    .stamp-list ol,
+    .stamp-list dl {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .stamp-list ol {
+      list-style: none;
+      counter-reset: stamp-requirement;
+    }
+
+    .stamp-list li {
+      position: relative;
+      color: var(--muted);
+      font-size: 12px;
+      padding-left: 28px;
+    }
+
+    .stamp-list li::before {
+      counter-increment: stamp-requirement;
+      content: counter(stamp-requirement, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-size: 10px;
+    }
+
+    .stamp-list dl div {
+      border-left: 2px solid var(--green);
+      padding-left: 10px;
+    }
+
+    .stamp-list dt {
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .stamp-list dd {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .verifier-card {
+      display: grid;
+      gap: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .verifier-head {
+      display: grid;
+      gap: 8px;
+    }
+
+    .verifier-head h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .verifier-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .verifier-route {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .verifier-route div {
+      min-width: 0;
+      background: var(--panel);
+      padding: 10px;
+    }
+
+    .verifier-route dt {
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .verifier-route dd {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .verifier-check-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .verifier-check {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+    }
+
+    .verifier-check h4 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .verifier-check code {
+      color: var(--green);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .verifier-check span {
+      color: var(--red);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .verifier-check p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .verifier-outcomes {
+      display: grid;
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .verifier-outcomes div {
+      display: grid;
+      grid-template-columns: minmax(118px, 0.28fr) minmax(0, 0.72fr);
+      gap: 12px;
+      background: var(--panel);
+      padding: 10px;
+    }
+
+    .verifier-outcomes dt {
+      color: var(--green);
+      font-size: 12px;
+    }
+
+    .verifier-outcomes dd {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .verifier-decision-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .verifier-decision-card {
+      display: grid;
+      gap: 9px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+    }
+
+    .verifier-decision-card header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .verifier-decision-card b {
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .verifier-decision-card h4 {
+      margin: 0;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .verifier-decision-card dl {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+    }
+
+    .verifier-decision-card dt {
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .verifier-decision-card dd {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .verifier-state-model {
+      display: grid;
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .state-model-row {
+      display: grid;
+      grid-template-columns: minmax(130px, 0.22fr) minmax(130px, 0.2fr) minmax(0, 0.58fr);
+      gap: 12px;
+      background: var(--panel);
+      padding: 12px;
+    }
+
+    .state-model-row code {
+      color: var(--gold);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .state-model-row strong {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .state-model-row p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .state-model-row span {
+      display: block;
+      margin-top: 6px;
+      color: var(--red);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .verifier-sample {
+      margin: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      background: #070806;
+      color: var(--muted);
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .verifier-sample code {
+      color: var(--green);
+      white-space: pre;
+    }
+
+    .verifier-response-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .verifier-response-card {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+    }
+
+    .verifier-response-card header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .verifier-response-card h4 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .verifier-response-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .response-status-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .verifier-response-card pre {
+      margin: 0;
+      max-width: 100%;
+      max-height: 260px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: #070806;
+      color: var(--green);
+      padding: 12px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .verifier-response-card code {
+      color: inherit;
+      white-space: pre;
+    }
+
+    .operator-boundary {
+      display: grid;
+      gap: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .operator-route-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .operator-route-card {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+    }
+
+    .operator-route-card h4 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .operator-route-card code {
+      color: var(--green);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .operator-route-card dl {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+    }
+
+    .operator-route-card dt {
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .operator-route-card dd {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .operator-route-card pre {
+      margin: 0;
+      max-width: 100%;
+      max-height: 220px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: #070806;
+      color: var(--green);
+      padding: 12px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .operator-failure-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .operator-failure-list li {
+      display: grid;
+      gap: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      border-left: 2px solid var(--red);
+      padding-left: 10px;
+    }
+
+    .operator-failure-list strong {
+      color: var(--red);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .verifier-implementation {
+      display: grid;
+      gap: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .implementation-file-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .implementation-file {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      border-left: 2px solid var(--green);
+      padding: 0 0 0 12px;
+    }
+
+    .implementation-file code {
+      color: var(--gold);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .implementation-file p,
+    .implementation-list li {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .implementation-lists {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .release-witness-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(170px, 1fr));
+      gap: 10px;
+      max-width: 100%;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .release-witness-card {
+      display: grid;
+      gap: 9px;
+      min-width: 170px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+    }
+
+    .release-witness-card h4 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .release-witness-card code {
+      color: var(--green);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .release-witness-card dl {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+    }
+
+    .release-witness-card dt {
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .release-witness-card dd {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .implementation-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .implementation-lists h4 {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .runtime-follow {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .runtime-follow a {
+      color: var(--green);
+    }
+
     footer {
       display: flex;
       justify-content: space-between;
@@ -305,7 +1296,35 @@
 
     @media (max-width: 820px) {
       .nav-links { display: none; }
-      .grid { grid-template-columns: 1fr; }
+      .grid,
+      .proof-summary,
+      .product-proof-grid,
+      .runtime-status-grid,
+      .runtime-check-grid,
+      .runtime-closure-grid,
+      .health-witness-grid,
+      .finding-contract-grid,
+      .runtime-response-grid,
+      .gateway-response-grid,
+      .protected-path-grid,
+      .stamp-field-grid,
+      .stamp-lists,
+      .verifier-route,
+      .verifier-check-grid,
+      .verifier-outcomes div,
+      .verifier-decision-grid,
+      .state-model-row,
+      .verifier-response-grid,
+      .verifier-response-card header,
+      .operator-route-grid,
+      .implementation-file-grid,
+      .implementation-lists,
+      .release-witness-grid {
+        grid-template-columns: 1fr;
+      }
+      .protected-path-grid { overflow-x: visible; }
+      .release-witness-grid { overflow-x: visible; }
+      .proof-meta div { grid-template-columns: 1fr; }
       footer { flex-direction: column; }
     }
   </style>
@@ -318,7 +1337,9 @@
       <div class="nav-links">
         <a href="/mullu/">Mullu</a>
         <a href="#claims">Claims</a>
+        <a href="#products">Products</a>
         <a href="#runtime">Runtime</a>
+        <a href="#stamp">Stamp</a>
         <a href="mailto:hello@mullusi.com">Contact</a>
       </div>
       <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Toggle color theme">
@@ -367,14 +1388,45 @@
       </div>
     </section>
 
+    <section id="products" aria-labelledby="product-evidence-title">
+      <h2 id="product-evidence-title">Product evidence lanes.</h2>
+      <p class="evidence-note">
+        Product records are loaded from the public registry. Each lane states the current product state, release gate,
+        API boundary, docs route, and proof boundary without exposing private source.
+      </p>
+      <div class="proof-registry" data-product-evidence>
+        <noscript>
+          <div class="proof-empty">Enable JavaScript to view product evidence lanes generated from <code>data/products.json</code>.</div>
+        </noscript>
+      </div>
+    </section>
+
     <section id="runtime">
       <h2>Runtime claim boundary.</h2>
+      <div class="runtime-witness" data-runtime-witness>
+        <noscript>
+          <div class="proof-empty">Enable JavaScript to view runtime witness state generated from <code>data/site.json</code>.</div>
+        </noscript>
+      </div>
       <ul class="proof-list">
         <li>Published website routes are public-surface evidence, not proof of live governed runtime availability.</li>
         <li>Live deployment closure requires runtime secrets, gateway URL configuration, expected runtime environment configuration, and reachable witness endpoints.</li>
         <li>Until those endpoints are published and validated, runtime readiness remains AwaitingEvidence.</li>
         <li>Marketing, docs, dashboard, and product pages should not claim production runtime closure ahead of live witness evidence.</li>
       </ul>
+    </section>
+
+    <section id="stamp" aria-labelledby="stamp-title">
+      <h2 id="stamp-title">Proof stamp artifact.</h2>
+      <p class="evidence-note">
+        The stamp schema states which fields must exist before a public proof stamp can be issued.
+        It binds a verdict to policy, registry state, runtime witnesses, trace reference, hash, and signature.
+      </p>
+      <div class="proof-stamp" data-proof-stamp-artifact>
+        <noscript>
+          <div class="proof-empty">Enable JavaScript to view the proof stamp artifact contract generated from <code>data/site.json</code>.</div>
+        </noscript>
+      </div>
     </section>
   </main>
 
@@ -410,6 +1462,566 @@
           if (!stored) sync(event.matches ? "light" : "dark");
         });
       } catch (error) { /* matchMedia listener unsupported */ }
+
+      const escapeHtml = (value) => String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+      const statusLabel = (status) => ({
+        live: "Live",
+        "awaiting-evidence": "AwaitingEvidence",
+        "private-incubation": "Private incubation",
+        planned: "Planned",
+        restricted: "Restricted",
+      }[status] || status || "Unknown");
+
+      const docsHref = (docsPath) => /^docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsPath || "")
+        ? `https://${docsPath}`
+        : "";
+
+      const evidenceHref = (path) => path === "/proof/" || path === "#evidence" ? path : "";
+
+      const apiLabel = (apiPath) => apiPath === "no public endpoint" ? "No public API" : (apiPath || "No public API");
+
+      const safeFollowHref = (href) => /^(https:\/\/|mailto:)/.test(href || "") ? href : "";
+
+      const summaryCell = (value, label) => `
+        <div>
+          <dt>${escapeHtml(value)}</dt>
+          <dd>${escapeHtml(label)}</dd>
+        </div>
+      `;
+
+      const productCard = (product) => {
+        const docs = docsHref(product.docsPath);
+        const proof = evidenceHref(product.evidencePath);
+        return `
+          <article class="product-proof-card">
+            <div class="product-proof-head">
+              <h3>${escapeHtml(product.name)}</h3>
+              <span class="status-pill">${escapeHtml(statusLabel(product.status))}</span>
+            </div>
+            <p>${escapeHtml(product.summary)}</p>
+            <dl class="proof-meta">
+              <div><dt>Class</dt><dd>${escapeHtml(product.classification)}</dd></div>
+              <div><dt>Owner</dt><dd>${escapeHtml(product.owner)}</dd></div>
+              <div><dt>Gate</dt><dd>${escapeHtml(product.releaseGate)}</dd></div>
+              <div><dt>API</dt><dd>${escapeHtml(apiLabel(product.apiPath))}</dd></div>
+            </dl>
+            <div class="proof-actions">
+              ${docs ? `<a href='${escapeHtml(docs)}'>Docs</a>` : "<span>Private docs</span>"}
+              ${proof ? `<a href='${escapeHtml(proof)}'>Proof boundary</a>` : "<span>No proof route</span>"}
+            </div>
+          </article>
+        `;
+      };
+
+      const renderProductEvidenceLanes = async () => {
+        const target = document.querySelector("[data-product-evidence]");
+        if (!target) return;
+        try {
+          const response = await fetch("../data/products.json", { cache: "no-store" });
+          if (!response.ok) throw new Error(`Product registry load failed: ${response.status}`);
+          const registry = await response.json();
+          const products = Array.isArray(registry.productRegistry) ? registry.productRegistry : [];
+          if (!products.length) throw new Error("Product registry is empty");
+
+          const awaiting = products.filter((product) => product.status === "awaiting-evidence").length;
+          const restricted = products.filter((product) => product.status === "restricted").length;
+          const proofLinked = products.filter((product) => evidenceHref(product.evidencePath)).length;
+          const docsLinked = products.filter((product) => docsHref(product.docsPath)).length;
+          target.innerHTML = `
+            <dl class="proof-summary" aria-label="Product evidence registry summary">
+              ${summaryCell(products.length, "product records")}
+              ${summaryCell(awaiting, "awaiting evidence")}
+              ${summaryCell(restricted, "restricted")}
+              ${summaryCell(`${proofLinked}/${docsLinked}`, "proof/docs linked")}
+            </dl>
+            <div class="product-proof-grid">
+              ${products.map(productCard).join("")}
+            </div>
+          `;
+        } catch (error) {
+          target.innerHTML = `
+            <div class="proof-empty">
+              Product evidence lanes are unavailable. Confirm <code>data/products.json</code> is deployed with the proof page.
+            </div>
+          `;
+        }
+      };
+
+      const runtimeStatusCard = (row) => `
+        <article class="runtime-status-card">
+          <span class="status-pill">${escapeHtml(statusLabel(row.state))}</span>
+          <h3>${escapeHtml(row.component)}</h3>
+          <p>${escapeHtml(row.note)}</p>
+        </article>
+      `;
+
+      const runtimeCheckCard = (check) => `
+        <article class="runtime-check-card">
+          <code>${escapeHtml(check.path)}</code>
+          <span class="status-pill">${escapeHtml(statusLabel(check.state))}</span>
+          <p>${escapeHtml(check.purpose)}</p>
+        </article>
+      `;
+
+      const runtimeClosureCard = (gate) => `
+        <article class="runtime-closure-card">
+          <span class="status-pill">${escapeHtml(statusLabel(gate.state))}</span>
+          <h4>${escapeHtml(gate.gate)}</h4>
+          <code>${escapeHtml(gate.dependsOn)}</code>
+          <p>${escapeHtml(gate.evidence)}</p>
+          <dl>
+            <div><dt>Protects</dt><dd>${escapeHtml(gate.protects)}</dd></div>
+            <div><dt>Fallback</dt><dd>${escapeHtml(gate.failureAction)}</dd></div>
+          </dl>
+        </article>
+      `;
+
+      const findingContractCard = (finding) => `
+        <article class="finding-contract-card">
+          <h4>${escapeHtml(finding.name)}</h4>
+          <code>${escapeHtml(finding.passDetail)}</code>
+          <p>${escapeHtml(finding.blocks)}</p>
+        </article>
+      `;
+
+      const runtimeResponseCard = (example) => `
+        <article class="runtime-response-card">
+          <div class="response-status-pills">
+            <span class="status-pill">${escapeHtml(example.runtimeState)}</span>
+            <span class="status-pill">${escapeHtml(example.statusCode)}</span>
+          </div>
+          <h4>${escapeHtml(example.title)}</h4>
+          <p>${escapeHtml(example.purpose)}</p>
+          <pre aria-label="${escapeHtml(example.runtimeState)} runtime conformance example"><code>${escapeHtml(JSON.stringify(example.body, null, 2))}</code></pre>
+        </article>
+      `;
+
+      const gatewayResponseCard = (example) => `
+        <article class="gateway-response-card">
+          <div class="response-status-pills">
+            <span class="status-pill">${escapeHtml(example.runtimeState)}</span>
+            <span class="status-pill">${escapeHtml(example.statusCode)}</span>
+          </div>
+          <h4>${escapeHtml(example.title)}</h4>
+          <p>${escapeHtml(example.purpose)}</p>
+          <pre aria-label="${escapeHtml(example.runtimeState)} gateway witness example"><code>${escapeHtml(JSON.stringify(example.body, null, 2))}</code></pre>
+        </article>
+      `;
+
+      const healthWitnessCard = (example) => `
+        <article class="health-witness-card">
+          <div class="response-status-pills">
+            <span class="status-pill">${escapeHtml(example.state)}</span>
+            <span class="status-pill">${escapeHtml(example.statusCode)}</span>
+          </div>
+          <h4>${escapeHtml(example.title)}</h4>
+          <p>${escapeHtml(example.purpose)}</p>
+          <pre aria-label="${escapeHtml(example.title)} example"><code>${escapeHtml(JSON.stringify(example.body, null, 2))}</code></pre>
+        </article>
+      `;
+
+      const protectedPathCard = (path) => `
+        <article class="protected-path-card">
+          <code>${escapeHtml(path)}</code>
+        </article>
+      `;
+
+      const stampFieldCard = (field) => `
+        <article class="stamp-field">
+          <code>${escapeHtml(field.name)}</code>
+          <div class="stamp-field-meta">
+            <span>${escapeHtml(field.type)}</span>
+            <span>${field.required ? "Required" : "Optional"}</span>
+          </div>
+          <p>${escapeHtml(field.purpose)}</p>
+        </article>
+      `;
+
+      const stampLifecycleItem = (item) => `
+        <div>
+          <dt>${escapeHtml(item.state)}</dt>
+          <dd>${escapeHtml(item.meaning)}</dd>
+        </div>
+      `;
+
+      const verifierCheckCard = (check) => `
+        <article class="verifier-check">
+          <h4>${escapeHtml(check.name)}</h4>
+          <code>${escapeHtml(check.dependsOn)}</code>
+          <span>Fail closed: ${escapeHtml(check.failureState)}</span>
+          <p>${escapeHtml(check.purpose)}</p>
+        </article>
+      `;
+
+      const verifierOutcomeItem = (item) => `
+        <div>
+          <dt>${escapeHtml(item.state)}</dt>
+          <dd>${escapeHtml(item.meaning)}</dd>
+        </div>
+      `;
+
+      const verifierDecisionCard = (item) => `
+        <article class="verifier-decision-card">
+          <header>
+            <b>${escapeHtml(item.step)}</b>
+            <span class="status-pill">${escapeHtml(item.publicState)}</span>
+          </header>
+          <h4>${escapeHtml(item.condition)}</h4>
+          <dl>
+            <div><dt>Evidence</dt><dd>${escapeHtml(item.evidence)}</dd></div>
+            <div><dt>Action</dt><dd>${escapeHtml(item.action)}</dd></div>
+          </dl>
+        </article>
+      `;
+
+      const verifierResponseExampleCard = (example) => `
+        <article class="verifier-response-card">
+          <header>
+            <div>
+              <h4>${escapeHtml(example.title)}</h4>
+              <p>${escapeHtml(example.purpose)}</p>
+            </div>
+            <div class="response-status-pills">
+              <span class="status-pill">${escapeHtml(example.state)}</span>
+              <span class="status-pill">${escapeHtml(example.statusCode)}</span>
+            </div>
+          </header>
+          <pre aria-label="${escapeHtml(example.state)} verifier response example"><code>${escapeHtml(JSON.stringify(example.body, null, 2))}</code></pre>
+        </article>
+      `;
+
+      const operatorFailureItem = (failure) => `
+        <li>
+          <strong>${escapeHtml(failure.statusCode)} ${escapeHtml(failure.detail)}</strong>
+          <span>${escapeHtml(failure.meaning)}</span>
+        </li>
+      `;
+
+      const operatorRouteCard = (route) => `
+        <article class="operator-route-card">
+          <h4>${escapeHtml(route.name)}</h4>
+          <code>${escapeHtml(route.method)} ${escapeHtml(route.route)}</code>
+          <dl>
+            <div><dt>Host</dt><dd>${escapeHtml(route.host)}</dd></div>
+            <div><dt>Exposure</dt><dd>${escapeHtml(route.exposure)}</dd></div>
+            <div><dt>Mutation</dt><dd>${escapeHtml(route.mutation)}</dd></div>
+            <div><dt>Input</dt><dd>${escapeHtml(route.input)}</dd></div>
+          </dl>
+          <pre aria-label="${escapeHtml(route.name)} success response"><code>${escapeHtml(JSON.stringify(route.successBody, null, 2))}</code></pre>
+          ${route.alternateBody ? `<pre aria-label="${escapeHtml(route.name)} alternate response"><code>${escapeHtml(JSON.stringify(route.alternateBody, null, 2))}</code></pre>` : ""}
+          <ul class="operator-failure-list" aria-label="${escapeHtml(route.name)} failure modes">
+            ${Array.isArray(route.failureModes) ? route.failureModes.map(operatorFailureItem).join("") : ""}
+          </ul>
+        </article>
+      `;
+
+      const verifierStateModelRow = (item) => `
+        <div class="state-model-row">
+          <code>${escapeHtml(item.internal)}</code>
+          <strong>${escapeHtml(item.publicState)}</strong>
+          <p>
+            ${escapeHtml(item.evidence)}
+            <span>${escapeHtml(item.responseBoundary)}</span>
+          </p>
+        </div>
+      `;
+
+      const verifierImplementationFile = (file) => `
+        <div class="implementation-file">
+          <code>${escapeHtml(file.path)}</code>
+          <p>${escapeHtml(file.role)}</p>
+        </div>
+      `;
+
+      const releaseWitnessCard = (witness) => `
+        <article class="release-witness-card">
+          <h4>${escapeHtml(witness.name)}</h4>
+          <code>${escapeHtml(witness.command)}</code>
+          <dl>
+            <div><dt>Expected</dt><dd>${escapeHtml(witness.expected)}</dd></div>
+            <div><dt>Boundary</dt><dd>${escapeHtml(witness.boundary)}</dd></div>
+            <div><dt>Blocks</dt><dd>${escapeHtml(witness.blocks)}</dd></div>
+          </dl>
+        </article>
+      `;
+
+      const implementationList = (title, items) => `
+        <div>
+          <h4>${escapeHtml(title)}</h4>
+          <ul class="implementation-list">
+            ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+
+      const renderRuntimeWitnessBoard = async () => {
+        const target = document.querySelector("[data-runtime-witness]");
+        if (!target) return;
+        try {
+          const response = await fetch("../data/site.json", { cache: "no-store" });
+          if (!response.ok) throw new Error(`Runtime status load failed: ${response.status}`);
+          const content = await response.json();
+          const board = content.statusBoard;
+          const rows = Array.isArray(board?.rows) ? board.rows : [];
+          const checks = Array.isArray(board?.witnessChecks) ? board.witnessChecks : [];
+          const closureGates = Array.isArray(board?.closureGates) ? board.closureGates : [];
+          const healthWitness = board?.healthWitness && typeof board.healthWitness === "object"
+            ? board.healthWitness
+            : null;
+          const healthExamples = Array.isArray(healthWitness?.responseExamples) ? healthWitness.responseExamples : [];
+          const runtimeConformance = board?.runtimeConformance && typeof board.runtimeConformance === "object"
+            ? board.runtimeConformance
+            : null;
+          const findingContract = Array.isArray(runtimeConformance?.findingContract)
+            ? runtimeConformance.findingContract
+            : [];
+          const responseExamples = Array.isArray(runtimeConformance?.responseExamples)
+            ? runtimeConformance.responseExamples
+            : [];
+          const gatewayWitness = board?.gatewayWitness && typeof board.gatewayWitness === "object"
+            ? board.gatewayWitness
+            : null;
+          const protectedPaths = Array.isArray(gatewayWitness?.protectedPaths) ? gatewayWitness.protectedPaths : [];
+          const gatewayExamples = Array.isArray(gatewayWitness?.responseExamples) ? gatewayWitness.responseExamples : [];
+          if (
+            !rows.length
+            || !checks.length
+            || !closureGates.length
+            || !healthWitness
+            || !healthExamples.length
+            || !runtimeConformance
+            || !findingContract.length
+            || !responseExamples.length
+            || !gatewayWitness
+            || !protectedPaths.length
+            || !gatewayExamples.length
+          ) throw new Error("Runtime witness board is incomplete");
+          const followHref = safeFollowHref(board.followHref);
+          target.innerHTML = `
+            <div>
+              <div class="eyebrow">${escapeHtml(board.label || "System status")}</div>
+              <h3>${escapeHtml(board.title || "What is live, what is not.")}</h3>
+              <p class="runtime-follow">
+                ${escapeHtml(board.follow || "")}
+                ${followHref ? `<a href='${escapeHtml(followHref)}'>${escapeHtml(board.followLabel || "Request access")}</a>` : ""}
+              </p>
+            </div>
+            <div class="runtime-status-grid">
+              ${rows.map(runtimeStatusCard).join("")}
+            </div>
+            <div class="runtime-check-grid" aria-label="Runtime witness checks">
+              ${checks.map(runtimeCheckCard).join("")}
+            </div>
+            <div class="runtime-closure-grid" aria-label="Runtime closure gates">
+              ${closureGates.map(runtimeClosureCard).join("")}
+            </div>
+            <section class="runtime-contract" aria-label="Health and version witness">
+              <div class="runtime-contract-head">
+                <span class="status-pill">${escapeHtml(statusLabel(healthWitness.status))}</span>
+                <h3>${escapeHtml(healthWitness.title)}</h3>
+                <p>${escapeHtml(healthWitness.summary)}</p>
+                <code class="stamp-version">${escapeHtml(healthWitness.route)} / ${escapeHtml(healthWitness.versionedRoute)} / ${escapeHtml(healthWitness.versionRoute)}</code>
+              </div>
+              <div class="health-witness-grid" aria-label="Health and version response examples">
+                ${healthExamples.map(healthWitnessCard).join("")}
+              </div>
+            </section>
+            <section class="runtime-contract" aria-label="Runtime conformance contract">
+              <div class="runtime-contract-head">
+                <span class="status-pill">${escapeHtml(statusLabel(runtimeConformance.status))}</span>
+                <h3>${escapeHtml(runtimeConformance.title)}</h3>
+                <p>${escapeHtml(runtimeConformance.summary)}</p>
+                <code class="stamp-version">${escapeHtml(runtimeConformance.route)} / ${escapeHtml(runtimeConformance.versionedRoute)}</code>
+              </div>
+              <div class="finding-contract-grid" aria-label="Runtime conformance findings">
+                ${findingContract.map(findingContractCard).join("")}
+              </div>
+              <div class="runtime-response-grid" aria-label="Runtime conformance response examples">
+                ${responseExamples.map(runtimeResponseCard).join("")}
+              </div>
+            </section>
+            <section class="runtime-contract" aria-label="Gateway protected path witness">
+              <div class="runtime-contract-head">
+                <span class="status-pill">${escapeHtml(statusLabel(gatewayWitness.status))}</span>
+                <h3>${escapeHtml(gatewayWitness.label)}</h3>
+                <p>${escapeHtml(gatewayWitness.summary)}</p>
+                <code class="stamp-version">${escapeHtml(gatewayWitness.route)} / ${escapeHtml(gatewayWitness.versionedRoute)}</code>
+              </div>
+              <div class="protected-path-grid" aria-label="Protected API paths">
+                ${protectedPaths.map(protectedPathCard).join("")}
+              </div>
+              <div class="gateway-response-grid" aria-label="Gateway witness response examples">
+                ${gatewayExamples.map(gatewayResponseCard).join("")}
+              </div>
+            </section>
+          `;
+        } catch (error) {
+          target.innerHTML = `
+            <div class="proof-empty">
+              Runtime witness state is unavailable. Confirm <code>data/site.json</code> is deployed with the proof page.
+            </div>
+          `;
+        }
+      };
+
+      const renderProofStampArtifact = async () => {
+        const target = document.querySelector("[data-proof-stamp-artifact]");
+        if (!target) return;
+        try {
+          const response = await fetch("../data/site.json", { cache: "no-store" });
+          if (!response.ok) throw new Error(`Proof stamp artifact load failed: ${response.status}`);
+          const content = await response.json();
+          const artifact = content.proofStampArtifact;
+          const verifier = content.proofStampVerifier;
+          const fields = Array.isArray(artifact?.fields) ? artifact.fields : [];
+          const requirements = Array.isArray(artifact?.issueRequirements) ? artifact.issueRequirements : [];
+          const lifecycle = Array.isArray(artifact?.lifecycle) ? artifact.lifecycle : [];
+          const verifierChecks = Array.isArray(verifier?.checks) ? verifier.checks : [];
+          const verifierOutcomes = Array.isArray(verifier?.outcomes) ? verifier.outcomes : [];
+          const verifierDecisionLadder = Array.isArray(verifier?.decisionLadder) ? verifier.decisionLadder : [];
+          const verifierStateModel = Array.isArray(verifier?.stateModel) ? verifier.stateModel : [];
+          const verifierResponseExamples = Array.isArray(verifier?.responseExamples) ? verifier.responseExamples : [];
+          const operatorBoundary = verifier?.operatorBoundary && typeof verifier.operatorBoundary === "object"
+            ? verifier.operatorBoundary
+            : null;
+          const operatorRoutes = Array.isArray(operatorBoundary?.routes) ? operatorBoundary.routes : [];
+          const verifierImplementation = verifier?.implementation && typeof verifier.implementation === "object"
+            ? verifier.implementation
+            : null;
+          const implementationFiles = Array.isArray(verifierImplementation?.files) ? verifierImplementation.files : [];
+          const implementationTests = Array.isArray(verifierImplementation?.tests) ? verifierImplementation.tests : [];
+          const implementationGates = Array.isArray(verifierImplementation?.deploymentGates)
+            ? verifierImplementation.deploymentGates
+            : [];
+          const implementationWitnesses = Array.isArray(verifierImplementation?.releaseWitnesses)
+            ? verifierImplementation.releaseWitnesses
+            : [];
+          const verifierSample = verifier?.sampleResponse && typeof verifier.sampleResponse === "object"
+            ? verifier.sampleResponse
+            : null;
+          if (
+            !artifact
+            || !fields.length
+            || !requirements.length
+            || !lifecycle.length
+            || !verifier
+            || !verifierChecks.length
+            || !verifierOutcomes.length
+            || !verifierDecisionLadder.length
+            || !verifierStateModel.length
+            || !verifierResponseExamples.length
+            || !operatorBoundary
+            || !operatorRoutes.length
+            || !verifierSample
+            || !verifierImplementation
+            || !implementationFiles.length
+            || !implementationTests.length
+            || !implementationGates.length
+            || !implementationWitnesses.length
+          ) {
+            throw new Error("Proof stamp and verifier contract is incomplete");
+          }
+          const verifierSampleText = JSON.stringify(verifierSample, null, 2);
+          target.innerHTML = `
+            <div class="stamp-head">
+              <span class="status-pill">${escapeHtml(statusLabel(artifact.status))}</span>
+              <h3>${escapeHtml(artifact.title)}</h3>
+              <p>${escapeHtml(artifact.summary)}</p>
+              <code class="stamp-version">${escapeHtml(artifact.version)}</code>
+            </div>
+            <div class="stamp-field-grid" aria-label="Proof stamp envelope fields">
+              ${fields.map(stampFieldCard).join("")}
+            </div>
+            <div class="stamp-lists">
+              <section class="stamp-list" aria-label="Proof stamp issuance requirements">
+                <h3>Issuance requirements</h3>
+                <ol>
+                  ${requirements.map((requirement) => `<li>${escapeHtml(requirement)}</li>`).join("")}
+                </ol>
+              </section>
+              <section class="stamp-list" aria-label="Proof stamp lifecycle">
+                <h3>Lifecycle</h3>
+                <dl>
+                  ${lifecycle.map(stampLifecycleItem).join("")}
+                </dl>
+              </section>
+            </div>
+            <article class="verifier-card" aria-label="Proof stamp verifier contract">
+              <div class="verifier-head">
+                <span class="status-pill">${escapeHtml(statusLabel(verifier.status))}</span>
+                <h3>${escapeHtml(verifier.title)}</h3>
+                <p>${escapeHtml(verifier.summary)}</p>
+              </div>
+              <dl class="verifier-route">
+                <div><dt>Route</dt><dd>${escapeHtml(verifier.route)}</dd></div>
+                <div><dt>Host</dt><dd>${escapeHtml(verifier.host)}</dd></div>
+                <div><dt>Input</dt><dd>${escapeHtml(verifier.input)}</dd></div>
+                <div><dt>Output</dt><dd>${escapeHtml(verifier.output)}</dd></div>
+              </dl>
+              <div class="verifier-check-grid" aria-label="Verifier checks">
+                ${verifierChecks.map(verifierCheckCard).join("")}
+              </div>
+              <dl class="verifier-outcomes" aria-label="Verifier outcomes">
+                ${verifierOutcomes.map(verifierOutcomeItem).join("")}
+              </dl>
+              <div class="verifier-decision-grid" aria-label="Fail-closed verifier decision ladder">
+                ${verifierDecisionLadder.map(verifierDecisionCard).join("")}
+              </div>
+              <div class="verifier-state-model" aria-label="Verifier internal-to-public state model">
+                ${verifierStateModel.map(verifierStateModelRow).join("")}
+              </div>
+              <pre class="verifier-sample" aria-label="Static verifier response example"><code>${escapeHtml(verifierSampleText)}</code></pre>
+              <div class="verifier-response-grid" aria-label="Verifier response examples">
+                ${verifierResponseExamples.map(verifierResponseExampleCard).join("")}
+              </div>
+            </article>
+            <section class="operator-boundary" aria-label="Private revocation operator boundary">
+              <div class="verifier-head">
+                <span class="status-pill">${escapeHtml(statusLabel(operatorBoundary.status))}</span>
+                <h3>${escapeHtml(operatorBoundary.title)}</h3>
+                <p>${escapeHtml(operatorBoundary.summary)}</p>
+                <code class="stamp-version">${escapeHtml((operatorBoundary.requiredHeaders || []).join(" + "))}</code>
+              </div>
+              <div class="operator-route-grid">
+                ${operatorRoutes.map(operatorRouteCard).join("")}
+              </div>
+            </section>
+            <section class="verifier-implementation" aria-label="Verifier implementation boundary">
+              <div class="verifier-head">
+                <span class="status-pill">${escapeHtml(statusLabel(verifierImplementation.status))}</span>
+                <h3>${escapeHtml(verifierImplementation.label)}</h3>
+                <p>${escapeHtml(verifierImplementation.runtimeBoundary)}</p>
+              </div>
+              <div class="implementation-file-grid" aria-label="Verifier implementation files">
+                ${implementationFiles.map(verifierImplementationFile).join("")}
+              </div>
+              <div class="release-witness-grid" aria-label="Release witness commands">
+                ${implementationWitnesses.map(releaseWitnessCard).join("")}
+              </div>
+              <div class="implementation-lists">
+                ${implementationList("Tests", implementationTests)}
+                ${implementationList("Deployment gates", implementationGates)}
+              </div>
+            </section>
+          `;
+        } catch (error) {
+          target.innerHTML = `
+            <div class="proof-empty">
+              Proof stamp artifact contract is unavailable. Confirm <code>data/site.json</code> is deployed with the proof page.
+            </div>
+          `;
+        }
+      };
+
+      renderProductEvidenceLanes();
+      renderRuntimeWitnessBoard();
+      renderProofStampArtifact();
     })();
   </script>
 </body>

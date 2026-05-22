@@ -1,0 +1,84 @@
+# Purpose: verify Mullusi public website package before static host deployment.
+# Governance scope: static site files, Cloudflare Pages artifact, product registry, sitemap, robots policy, local links, and public text gates.
+# Dependencies: GitHub Actions and Node.js.
+# Invariants: pushes and pull requests fail when website validation fails.
+
+name: Validate Site
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Check website JavaScript syntax
+        run: node --check assets/app.js
+
+      - name: Check validation script syntax
+        run: node --check scripts/validate-site.mjs
+
+      - name: Check news refresh script syntax
+        run: node --check scripts/fetch-news.mjs
+
+      - name: Check Cloudflare Pages build script syntax
+        run: node --check scripts/build-cloudflare-pages.mjs
+
+      - name: Check Cloudflare Pages build test syntax
+        run: node --check scripts/test-build-cloudflare-pages.mjs
+
+      - name: Check registry boundary script syntax
+        run: node --check scripts/verify-registry-repos.mjs
+
+      - name: Check ops gate script syntax
+        run: node --check scripts/check-ops-gates.mjs
+
+      - name: Check ops gate test syntax
+        run: node --check scripts/test-ops-gates.mjs
+
+      - name: Check recovery witness promotion script syntax
+        run: node --check scripts/promote-recovery-witness.mjs
+
+      - name: Check recovery witness promotion test syntax
+        run: node --check scripts/test-promote-recovery-witness.mjs
+
+      - name: Check private recovery inventory script syntax
+        run: node --check scripts/check-private-recovery-inventory.mjs
+
+      - name: Check private recovery inventory test syntax
+        run: node --check scripts/test-private-recovery-inventory.mjs
+
+      - name: Validate static website
+        run: node scripts/validate-site.mjs
+
+      - name: Test Cloudflare Pages artifact boundary
+        run: node scripts/test-build-cloudflare-pages.mjs
+
+      - name: Validate registry source boundary
+        run: node scripts/verify-registry-repos.mjs
+
+      - name: Validate operational gates
+        run: node scripts/check-ops-gates.mjs
+
+      - name: Test operational gate behavior
+        run: node scripts/test-ops-gates.mjs
+
+      - name: Test recovery witness promotion behavior
+        run: node scripts/test-promote-recovery-witness.mjs
+
+      - name: Allow missing private recovery inventory in CI
+        run: node scripts/check-private-recovery-inventory.mjs --allow-missing
+
+      - name: Test private recovery inventory checker
+        run: node scripts/test-private-recovery-inventory.mjs

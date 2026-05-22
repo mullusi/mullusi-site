@@ -3,65 +3,49 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-05-21",
-    "count": 7
+    "updated": "2026-05-17",
+    "count": 5
   },
   "items": [
     {
-      "title": "An OpenAI model has disproved a central conjecture in discrete geometry",
-      "url": "https://openai.com/index/model-disproves-discrete-geometry-conjecture/",
-      "source": "openai.com",
-      "points": 1196,
-      "comments": 871,
-      "date": "2026-05-20"
+      "title": "Moving away from Tailwind, and learning to structure my CSS",
+      "url": "https://jvns.ca/blog/2026/05/15/moving-away-from-tailwind--and-learning-to-structure-my-css-/",
+      "source": "jvns.ca",
+      "points": 447,
+      "comments": 288,
+      "date": "2026-05-16"
     },
     {
-      "title": "Gemini 3.5 Flash",
-      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
-      "source": "blog.google",
-      "points": 940,
-      "comments": 646,
-      "date": "2026-05-19"
+      "title": "SANA-WM, a 2.6B open-source world model for 1-minute 720p video",
+      "url": "https://nvlabs.github.io/Sana/WM/",
+      "source": "nvlabs.github.io",
+      "points": 303,
+      "comments": 128,
+      "date": "2026-05-16"
     },
     {
-      "title": "GitHub confirms breach of 3,800 repos via malicious VSCode extension",
-      "url": "https://www.bleepingcomputer.com/news/security/github-confirms-breach-of-3-800-repos-via-malicious-vscode-extension/",
-      "source": "bleepingcomputer.com",
-      "points": 865,
-      "comments": 359,
-      "date": "2026-05-20"
+      "title": "Accelerando (2005)",
+      "url": "https://www.antipope.org/charlie/blog-static/fiction/accelerando/accelerando.html",
+      "source": "antipope.org",
+      "points": 248,
+      "comments": 143,
+      "date": "2026-05-16"
     },
     {
-      "title": "Google changes its search box",
-      "url": "https://blog.google/products-and-platforms/products/search/search-io-2026/",
-      "source": "blog.google",
-      "points": 677,
-      "comments": 915,
-      "date": "2026-05-19"
+      "title": "EFF to 4th Circuit: Electronic Device Searches at the Border Require a Warrant",
+      "url": "https://www.eff.org/deeplinks/2026/05/eff-fourth-circuit-electronic-device-searches-border-require-warrant",
+      "source": "eff.org",
+      "points": 235,
+      "comments": 49,
+      "date": "2026-05-12"
     },
     {
-      "title": "Show HN: Forge – Guardrails take an 8B model from 53% to 99% on agentic tasks",
-      "url": "https://github.com/antoinezambelli/forge",
-      "source": "github.com",
-      "points": 656,
-      "comments": 239,
-      "date": "2026-05-19"
-    },
-    {
-      "title": "Security researcher says Microsoft built a Bitlocker backdoor, releases exploit",
-      "url": "https://www.techspot.com/news/112410-security-researcher-microsoft-secretly-built-backdoor-bitlocker-releases.html",
-      "source": "techspot.com",
-      "points": 590,
-      "comments": 263,
-      "date": "2026-05-17"
-    },
-    {
-      "title": "Show HN: Semble – Code search for agents that uses 98% fewer tokens than grep",
-      "url": "https://github.com/MinishLab/semble",
-      "source": "github.com",
-      "points": 441,
-      "comments": 150,
-      "date": "2026-05-17"
+      "title": "We've made the world too complicated",
+      "url": "https://user8.bearblog.dev/the-world-is-too-complicated/",
+      "source": "user8.bearblog.dev",
+      "points": 199,
+      "comments": 189,
+      "date": "2026-05-16"
     }
   ]
 }

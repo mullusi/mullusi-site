@@ -4,6 +4,211 @@
     "version": "2026.05.site-content",
     "purpose": "Structured public website content for Mullusi."
   },
+  "platformLayers": [
+    {
+      "name": "Public Surface",
+      "role": "public map",
+      "boundary": "identity, trust, roadmap, product discovery, documentation entry, and proof boundary",
+      "governs": "What can the public see?",
+      "components": ["mullusi.com", "docs.mullusi.com", "learn.mullusi.com", "status.mullusi.com later"],
+      "am": {
+        "name": "Public Surface",
+        "role": "public map",
+        "boundary": "identity, trust, roadmap, product discovery, documentation entry, and proof boundary",
+        "governs": "What can the public see?"
+      }
+    },
+    {
+      "name": "User Surface",
+      "role": "human control room",
+      "boundary": "dashboard workspaces, sandbox demos, product apps, and private operator views",
+      "governs": "Who acts through a workspace?",
+      "components": ["dashboard.mullusi.com", "sandbox.mullusi.com", "product apps"],
+      "am": {
+        "name": "User Surface",
+        "role": "human control room",
+        "boundary": "dashboard workspaces, sandbox demos, product apps, and private operator views",
+        "governs": "Who acts through a workspace?"
+      }
+    },
+    {
+      "name": "API Surface",
+      "role": "machine gateway",
+      "boundary": "versioned endpoints, job access, artifact access, and governed service contracts",
+      "governs": "Which machine requests are admitted?",
+      "components": ["api.mullusi.com", "GET /health", "POST /v1/govern/evaluate", "GET /v1/jobs/{id}"],
+      "am": {
+        "name": "API Surface",
+        "role": "machine gateway",
+        "boundary": "versioned endpoints, job access, artifact access, and governed service contracts",
+        "governs": "Which machine requests are admitted?"
+      }
+    },
+    {
+      "name": "Control Plane",
+      "role": "governance brain",
+      "boundary": "auth, organizations, roles, entitlements, policy, audit, service registry, and job registry",
+      "governs": "Who is allowed and what policy applies?",
+      "components": ["auth", "users and organizations", "product registry", "governance evaluator", "audit logs"],
+      "am": {
+        "name": "Control Plane",
+        "role": "governance brain",
+        "boundary": "auth, organizations, roles, entitlements, policy, audit, service registry, and job registry",
+        "governs": "Who is allowed and what policy applies?"
+      }
+    },
+    {
+      "name": "Product Services",
+      "role": "private execution layer",
+      "boundary": "search, agents, chain, video, music, science, robotics, and developer services",
+      "governs": "Which private service executes?",
+      "components": ["search-index-service", "agent-runner-service", "video-processing-service", "math-proof-service", "analytics-service"],
+      "am": {
+        "name": "Product Services",
+        "role": "private execution layer",
+        "boundary": "search, agents, chain, video, music, science, robotics, and developer services",
+        "governs": "Which private service executes?"
+      }
+    },
+    {
+      "name": "Data Layer",
+      "role": "memory and artifact layer",
+      "boundary": "structured records, object artifacts, indexes, audit events, logs, and backups",
+      "governs": "What state, artifact, or trace is preserved?",
+      "components": ["Postgres", "object storage", "indexes", "artifact storage", "append-only audit storage", "backups"],
+      "am": {
+        "name": "Data Layer",
+        "role": "memory and artifact layer",
+        "boundary": "structured records, object artifacts, indexes, audit events, logs, and backups",
+        "governs": "What state, artifact, or trace is preserved?"
+      }
+    },
+    {
+      "name": "Runtime Infrastructure",
+      "role": "traffic, compute, and operations",
+      "boundary": "DNS, HTTPS, security, CDN, workers, queues, compute nodes, and monitoring",
+      "governs": "Where do traffic, compute, and recovery live?",
+      "components": ["Cloudflare", "backend host", "workers", "job queues", "compute nodes", "monitoring"],
+      "am": {
+        "name": "Runtime Infrastructure",
+        "role": "traffic, compute, and operations",
+        "boundary": "DNS, HTTPS, security, CDN, workers, queues, compute nodes, and monitoring",
+        "governs": "Where do traffic, compute, and recovery live?"
+      }
+    },
+    {
+      "name": "Development Layer",
+      "role": "source factory",
+      "boundary": "private source, selected public releases, CI/CD, tests, release gates, and documentation",
+      "governs": "Where source, tests, and release evidence originate?",
+      "components": ["GitHub org", "private source", "CI/CD", "tests", "release gates", "documentation"],
+      "am": {
+        "name": "Development Layer",
+        "role": "source factory",
+        "boundary": "private source, selected public releases, CI/CD, tests, release gates, and documentation",
+        "governs": "Where source, tests, and release evidence originate?"
+      }
+    }
+  ],
+  "requestFlow": {
+    "label": "Request Flow",
+    "title": "A product request always crosses the control plane.",
+    "summary": "Human and machine requests enter through public surfaces, pass governance, create a job, run a private product service, store outputs, record a trace, and return only safe results.",
+    "steps": [
+      "User surface",
+      "API gateway",
+      "Control plane checks",
+      "Job registry",
+      "Product service",
+      "Storage and audit",
+      "Result surface"
+    ],
+    "guards": [
+      "identity",
+      "product access",
+      "policy",
+      "cost limit",
+      "data class",
+      "audit trace"
+    ],
+    "am": {
+      "label": "Request Flow",
+      "title": "A product request always crosses the control plane.",
+      "summary": "Human and machine requests enter through public surfaces, pass governance, create a job, run a private product service, store outputs, record a trace, and return only safe results."
+    }
+  },
+  "platformBuildSequence": {
+    "label": "Foundation Sequence",
+    "title": "Build the spine before broad product services.",
+    "summary": "The platform becomes stable when the public map, docs, source boundary, edge gate, control-plane skeleton, API health, identity layer, and first governed product arrive in order.",
+    "steps": [
+      {
+        "phase": "01",
+        "name": "Public website",
+        "status": "live surface",
+        "reason": "identity, product discovery, roadmap, and proof boundary"
+      },
+      {
+        "phase": "02",
+        "name": "Docs route",
+        "status": "public knowledge",
+        "reason": "architecture, API contracts, governance rules, and developer guides"
+      },
+      {
+        "phase": "03",
+        "name": "Private source boundary",
+        "status": "source factory",
+        "reason": "repos, issues, CI/CD, version history, and release tags"
+      },
+      {
+        "phase": "04",
+        "name": "Cloudflare edge",
+        "status": "public gate",
+        "reason": "DNS, HTTPS, routing, security, CDN, and traffic protection"
+      },
+      {
+        "phase": "05",
+        "name": "Control-plane skeleton",
+        "status": "governance spine",
+        "reason": "product registry, permissions, policy checks, job registry, and audit logs"
+      },
+      {
+        "phase": "06",
+        "name": "API health endpoint",
+        "status": "machine entry",
+        "reason": "GET /health, service readiness, and deployment witness"
+      },
+      {
+        "phase": "07",
+        "name": "User/auth layer",
+        "status": "later gate",
+        "reason": "users, organizations, roles, entitlements, and usage limits"
+      },
+      {
+        "phase": "08",
+        "name": "First governed product",
+        "status": "release candidate",
+        "reason": "Mullu route connected to registry, policy, evidence, and docs"
+      }
+    ],
+    "am": {
+      "label": "Foundation Sequence",
+      "title": "Build the spine before broad product services.",
+      "summary": "The platform becomes stable when the public map, docs, source boundary, edge gate, control-plane skeleton, API health, identity layer, and first governed product arrive in order."
+    }
+  },
+  "productQuestions": [
+    "What is it?",
+    "Who can use it?",
+    "Where is its source boundary?",
+    "Where does it run?",
+    "What data does it store?",
+    "What API does it expose?",
+    "What policy governs it?",
+    "What evidence proves it works?",
+    "What docs explain it?",
+    "What happens if it fails?"
+  ],
   "proofLanes": [
     {
       "label": "Identity",
@@ -294,6 +499,24 @@
       }
     },
     {
+      "name": "Proof Stamp Revocation",
+      "route": "POST /v1/proof-stamps/{stamp_id}/revoke",
+      "host": "api.mullusi.com",
+      "status": "private operator",
+      "input": "proof stamp reference, reason, authority, trace reference, API key, and operator key",
+      "output": "revocation id, stamp id, revocation state, trace reference, and storage state",
+      "summary": "Appends a private operator revocation record without deleting the original proof stamp lineage."
+    },
+    {
+      "name": "Proof Stamp Revocation Readback",
+      "route": "GET /v1/proof-stamps/{stamp_id}/revocation",
+      "host": "api.mullusi.com",
+      "status": "private operator",
+      "input": "proof stamp reference, API key, and operator key",
+      "output": "stamp id, revocation state, reason, trace reference, and revoked timestamp",
+      "summary": "Returns private operator readback for the active proof-stamp revocation record without exposing the write path publicly."
+    },
+    {
       "name": "Mfidel Validation",
       "route": "POST /v1/mfidel/validate",
       "host": "api.mullusi.com",
@@ -410,6 +633,260 @@
       { "component": "Govern API", "state": "awaiting-evidence", "note": "Endpoints publish only after signed witness evidence closes." },
       { "component": "Proof Stamps", "state": "planned", "note": "Issued once runtime conformance is reachable and verified." }
     ],
+    "witnessChecks": [
+      {
+        "path": "/health",
+        "state": "awaiting-evidence",
+        "purpose": "Service readiness and deployment witness."
+      },
+      {
+        "path": "/gateway/witness",
+        "state": "awaiting-evidence",
+        "purpose": "Gateway witness closure and edge-to-runtime binding."
+      },
+      {
+        "path": "/runtime/conformance",
+        "state": "awaiting-evidence",
+        "purpose": "Runtime contract conformance before production claims."
+      }
+    ],
+    "closureGates": [
+      {
+        "gate": "Health witness",
+        "dependsOn": "/health",
+        "state": "awaiting-evidence",
+        "evidence": "Reachable health response with status=ok and service name; /v1/version publishes API and evaluator identifiers.",
+        "protects": "Runtime readiness claim.",
+        "failureAction": "Keep Govern API and proof stamp state AwaitingEvidence."
+      },
+      {
+        "gate": "Gateway witness",
+        "dependsOn": "/gateway/witness",
+        "state": "awaiting-evidence",
+        "evidence": "Reachable response with edge host, policy version, registry version, and witness id.",
+        "protects": "API gateway production claim.",
+        "failureAction": "Keep API surface reserved and route users to the proof boundary."
+      },
+      {
+        "gate": "Runtime conformance",
+        "dependsOn": "/runtime/conformance",
+        "state": "awaiting-evidence",
+        "evidence": "Reachable response with contract hash, endpoint checks, and proof stamp eligibility.",
+        "protects": "Proof stamp issuance claim.",
+        "failureAction": "Block proof stamp issuance until conformance evidence closes."
+      }
+    ],
+    "healthWitness": {
+      "label": "Health and version witness",
+      "title": "Health is the first public runtime liveness check.",
+      "route": "/health",
+      "versionedRoute": "/v1/health",
+      "versionRoute": "/v1/version",
+      "status": "awaiting-evidence",
+      "summary": "The health alias and versioned health route return the same deterministic service envelope. The version route publishes only public API and evaluator identifiers.",
+      "responseExamples": [
+        {
+          "title": "Health response",
+          "state": "ok",
+          "statusCode": 200,
+          "purpose": "Public liveness witness for the Govern Cloud service.",
+          "body": {
+            "status": "ok",
+            "service": "mullusi-govern-cloud"
+          }
+        },
+        {
+          "title": "Version response",
+          "state": "versioned",
+          "statusCode": 200,
+          "purpose": "Public version witness for the API and evaluator contract.",
+          "body": {
+            "api": "2026.05.v1",
+            "evaluator": "govern-evaluator.v1"
+          }
+        }
+      ]
+    },
+    "runtimeConformance": {
+      "label": "Runtime conformance contract",
+      "title": "Conformance is the public release gate witness.",
+      "route": "/runtime/conformance",
+      "versionedRoute": "/v1/runtime/conformance",
+      "status": "awaiting-evidence",
+      "summary": "The conformance route returns runtime_state, release_gate, and redacted findings. It never exposes secret values and keeps runtime claims AwaitingEvidence until every finding passes.",
+      "findingContract": [
+        {
+          "name": "required_environment",
+          "passDetail": "complete",
+          "blocks": "Missing required runtime keys block release."
+        },
+        {
+          "name": "image",
+          "passDetail": "tag:<version>",
+          "blocks": "latest or unpinned images block release."
+        },
+        {
+          "name": "MULLUSI_DEV_API_KEY",
+          "passDetail": "configured",
+          "blocks": "Missing, placeholder, or short caller key blocks release."
+        },
+        {
+          "name": "MULLUSI_OPERATOR_API_KEY",
+          "passDetail": "configured",
+          "blocks": "Missing, placeholder, or short operator key blocks private revocation."
+        },
+        {
+          "name": "MULLUSI_PROOF_SIGNING_KEY",
+          "passDetail": "configured",
+          "blocks": "Missing, placeholder, or short signing key blocks proof stamp verification."
+        },
+        {
+          "name": "database_url",
+          "passDetail": "remote_postgresql_configured",
+          "blocks": "Local or malformed database URLs block durable lineage."
+        },
+        {
+          "name": "persistence_policy",
+          "passDetail": "required",
+          "blocks": "Production must fail closed when persistence is unavailable."
+        },
+        {
+          "name": "allowed_origins",
+          "passDetail": "count:<n>",
+          "blocks": "Non-HTTPS or non-Mullusi origins block public release."
+        },
+        {
+          "name": "database_schema",
+          "passDetail": "postgres_schema_ready",
+          "blocks": "Missing schema blocks trace, proof stamp, and revocation persistence."
+        }
+      ],
+      "responseExamples": [
+        {
+          "title": "Blocked conformance response",
+          "runtimeState": "AwaitingEvidence",
+          "statusCode": 200,
+          "purpose": "Returned when production inputs or persistence witnesses are incomplete.",
+          "body": {
+            "runtime_state": "AwaitingEvidence",
+            "release_gate": "blocked",
+            "findings": [
+              {
+                "name": "required_environment",
+                "state": "fail",
+                "detail": "MULLUSI_IMAGE,MULLUSI_DEV_API_KEY,MULLUSI_OPERATOR_API_KEY,MULLUSI_PROOF_SIGNING_KEY,MULLUSI_DATABASE_URL,MULLUSI_REQUIRE_PERSISTENCE,MULLUSI_ALLOWED_ORIGINS"
+              },
+              {
+                "name": "database_schema",
+                "state": "fail",
+                "detail": "database_url_missing"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Ready conformance response",
+          "runtimeState": "SolvedVerified",
+          "statusCode": 200,
+          "purpose": "Returned only when every release preflight and persistence finding passes.",
+          "body": {
+            "runtime_state": "SolvedVerified",
+            "release_gate": "ready",
+            "findings": [
+              {
+                "name": "required_environment",
+                "state": "pass",
+                "detail": "complete"
+              },
+              {
+                "name": "database_schema",
+                "state": "pass",
+                "detail": "postgres_schema_ready"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "gatewayWitness": {
+      "label": "Gateway witness protected paths",
+      "route": "/gateway/witness",
+      "versionedRoute": "/v1/gateway/witness",
+      "status": "awaiting-evidence",
+      "summary": "The gateway witness binds public service metadata to protected API paths without exposing secrets.",
+      "protectedPaths": [
+        "/v1/govern/evaluate",
+        "/v1/evaluations/{evaluation_id}/trace",
+        "/v1/proof-stamps/{stamp_id}",
+        "/v1/proof-stamps/{stamp_id}/revoke",
+        "/v1/proof-stamps/{stamp_id}/revocation"
+      ],
+      "responseExamples": [
+        {
+          "title": "Blocked gateway witness",
+          "runtimeState": "AwaitingEvidence",
+          "statusCode": 200,
+          "purpose": "Returned when release inputs are incomplete but the gateway witness route remains reachable.",
+          "body": {
+            "service": "mullusi-govern-cloud",
+            "api": "2026.05.v1",
+            "evaluator": "govern-evaluator.v1",
+            "runtime_state": "AwaitingEvidence",
+            "release_gate": "blocked",
+            "health_path": "/health",
+            "conformance_path": "/runtime/conformance",
+            "protected_paths": [
+              "/v1/govern/evaluate",
+              "/v1/evaluations/{evaluation_id}/trace",
+              "/v1/proof-stamps/{stamp_id}",
+              "/v1/proof-stamps/{stamp_id}/revoke",
+              "/v1/proof-stamps/{stamp_id}/revocation"
+            ],
+            "findings": [
+              {
+                "name": "required_environment",
+                "state": "fail",
+                "detail": "MULLUSI_IMAGE,MULLUSI_DEV_API_KEY,MULLUSI_OPERATOR_API_KEY,MULLUSI_PROOF_SIGNING_KEY,MULLUSI_DATABASE_URL,MULLUSI_REQUIRE_PERSISTENCE,MULLUSI_ALLOWED_ORIGINS"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Ready gateway witness",
+          "runtimeState": "SolvedVerified",
+          "statusCode": 200,
+          "purpose": "Returned when gateway metadata and runtime conformance close for release.",
+          "body": {
+            "service": "mullusi-govern-cloud",
+            "api": "2026.05.v1",
+            "evaluator": "govern-evaluator.v1",
+            "runtime_state": "SolvedVerified",
+            "release_gate": "ready",
+            "health_path": "/health",
+            "conformance_path": "/runtime/conformance",
+            "protected_paths": [
+              "/v1/govern/evaluate",
+              "/v1/evaluations/{evaluation_id}/trace",
+              "/v1/proof-stamps/{stamp_id}",
+              "/v1/proof-stamps/{stamp_id}/revoke",
+              "/v1/proof-stamps/{stamp_id}/revocation"
+            ],
+            "findings": [
+              {
+                "name": "required_environment",
+                "state": "pass",
+                "detail": "complete"
+              },
+              {
+                "name": "database_schema",
+                "state": "pass",
+                "detail": "postgres_schema_ready"
+              }
+            ]
+          }
+        }
+      ]
+    },
     "am": {
       "label": "የሥርዓት ሁኔታ",
       "title": "ምን ቀጥታ ነው፣ ምን አይደለም።",
@@ -419,6 +896,595 @@
         { "component": "ድረ-ገጽ", "note": "ከmain ቅርንጫፍ mullusi.com የሚያቀርብ ይፋዊ ጣቢያ።" },
         { "component": "Govern API", "note": "መዳረሻዎች የሚታተሙት የተፈረመ የምስክር ማስረጃ ከተዘጋ በኋላ ብቻ ነው።" },
         { "component": "የማረጋገጫ ማህተሞች", "note": "runtime conformance ሲደረስና ሲረጋገጥ ይሰጣል።" }
+      ]
+    }
+  },
+  "proofStampArtifact": {
+    "label": "Proof Stamp Artifact",
+    "title": "A proof stamp is an evidence envelope, not a marketing badge.",
+    "summary": "A stamp can be issued only when runtime witness checks close, the evaluated action has an immutable trace, and the stored envelope can be verified against the public proof boundary.",
+    "status": "planned",
+    "version": "proof-stamp-envelope/v1",
+    "fields": [
+      {
+        "name": "stamp_id",
+        "type": "string",
+        "required": true,
+        "purpose": "Stable public reference for the stamp envelope."
+      },
+      {
+        "name": "evaluation_id",
+        "type": "string",
+        "required": true,
+        "purpose": "Traceable link to the governed evaluation that produced the verdict."
+      },
+      {
+        "name": "subject",
+        "type": "object",
+        "required": true,
+        "purpose": "Product, action, route, or artifact the stamp is allowed to describe."
+      },
+      {
+        "name": "verdict",
+        "type": "enum",
+        "required": true,
+        "purpose": "Closed judgment such as pass, block, or awaiting evidence."
+      },
+      {
+        "name": "proof_state",
+        "type": "enum",
+        "required": true,
+        "purpose": "Verification state bound to the evidence set."
+      },
+      {
+        "name": "policy_version",
+        "type": "string",
+        "required": true,
+        "purpose": "Governance policy version used during evaluation."
+      },
+      {
+        "name": "registry_version",
+        "type": "string",
+        "required": true,
+        "purpose": "Product registry version used for product and route context."
+      },
+      {
+        "name": "witness_set",
+        "type": "array",
+        "required": true,
+        "purpose": "Runtime witness endpoint results and closure evidence."
+      },
+      {
+        "name": "trace_ref",
+        "type": "uri",
+        "required": true,
+        "purpose": "Authorized reference to the append-only causal trace."
+      },
+      {
+        "name": "issued_at",
+        "type": "datetime",
+        "required": true,
+        "purpose": "Observed issuance time after witness closure."
+      },
+      {
+        "name": "content_hash",
+        "type": "hash",
+        "required": true,
+        "purpose": "Hash of the canonical stamp envelope."
+      },
+      {
+        "name": "signature",
+        "type": "signature",
+        "required": true,
+        "purpose": "Signature over the canonical envelope and content hash."
+      }
+    ],
+    "issueRequirements": [
+      "Runtime witness checks close for /health, /gateway/witness, and /runtime/conformance.",
+      "Evaluation trace is stored in append-only lineage.",
+      "Policy version and product registry version are recorded.",
+      "Canonical envelope hash is computed before signature.",
+      "Public verifier can resolve the stamp without exposing private source or customer data."
+    ],
+    "lifecycle": [
+      {
+        "state": "Eligible",
+        "meaning": "Evaluation has the data needed to request a stamp, but no signed public envelope exists yet."
+      },
+      {
+        "state": "Issued",
+        "meaning": "Envelope hash and signature are committed after witness closure."
+      },
+      {
+        "state": "Verified",
+        "meaning": "Verifier confirms signature, hash, trace reference, policy version, and witness set."
+      },
+      {
+        "state": "Revoked",
+        "meaning": "A later governance event invalidates the public claim while preserving the original lineage."
+      }
+    ]
+  },
+  "proofStampVerifier": {
+    "label": "Verifier Route",
+    "title": "Verification is a fail-closed read path.",
+    "summary": "The verifier route reads a proof stamp envelope, recomputes its canonical hash, checks signature state, confirms trace and witness linkage, and returns a bounded verification result without exposing private source or customer data.",
+    "status": "planned",
+    "route": "GET /v1/proof-stamps/{stamp_id}",
+    "host": "api.mullusi.com",
+    "input": "stamp_id",
+    "output": "verification_state, stamp_id, envelope_version, content_hash, signature_state, evaluation_id, witness_state, revocation_state, checked_at",
+    "checks": [
+      {
+        "name": "Envelope exists",
+        "dependsOn": "stamp_id",
+        "failureState": "NotFound",
+        "purpose": "Reject unknown or unpublished stamp references."
+      },
+      {
+        "name": "Canonical hash matches",
+        "dependsOn": "content_hash",
+        "failureState": "Invalid",
+        "purpose": "Detect drift between stored envelope and returned envelope."
+      },
+      {
+        "name": "Signature verifies",
+        "dependsOn": "signature",
+        "failureState": "Invalid",
+        "purpose": "Confirm that the envelope was signed after canonicalization."
+      },
+      {
+        "name": "Evaluation trace resolves",
+        "dependsOn": "evaluation_id",
+        "failureState": "AwaitingEvidence",
+        "purpose": "Confirm the stamp points to a retained append-only trace."
+      },
+      {
+        "name": "Witness set closes",
+        "dependsOn": "witness_set",
+        "failureState": "AwaitingEvidence",
+        "purpose": "Confirm /health, /gateway/witness, and /runtime/conformance are represented in the stamp."
+      },
+      {
+        "name": "Revocation state checked",
+        "dependsOn": "stamp_id",
+        "failureState": "Revoked",
+        "purpose": "Preserve lineage while blocking stale public claims."
+      }
+    ],
+    "outcomes": [
+      {
+        "state": "Verified",
+        "meaning": "All hash, signature, trace, witness, and revocation checks pass."
+      },
+      {
+        "state": "AwaitingEvidence",
+        "meaning": "The stamp or trace exists but runtime witness closure is incomplete."
+      },
+      {
+        "state": "Invalid",
+        "meaning": "The envelope, hash, signature, or trace linkage fails verification."
+      },
+      {
+        "state": "Revoked",
+        "meaning": "The original stamp remains in lineage, but the public claim is no longer valid."
+      },
+      {
+        "state": "NotFound",
+        "meaning": "No public stamp envelope exists for the requested reference."
+      }
+    ],
+    "decisionLadder": [
+      {
+        "step": "01",
+        "condition": "No persisted proof stamp resolves for stamp_id.",
+        "publicState": "NotFound",
+        "evidence": "stamp_id lookup returns no public envelope.",
+        "action": "Return HTTP 404 and stop verification."
+      },
+      {
+        "step": "02",
+        "condition": "Envelope exists but signature or signing key is missing.",
+        "publicState": "AwaitingEvidence",
+        "evidence": "signature_state is not-issued or key-unavailable.",
+        "action": "Block Verified and keep the stamp in evidence collection."
+      },
+      {
+        "step": "03",
+        "condition": "Hash, signature, algorithm, or trace linkage fails.",
+        "publicState": "Invalid",
+        "evidence": "Verifier recomputation conflicts with persisted envelope metadata.",
+        "action": "Return Invalid and preserve the failed check trace."
+      },
+      {
+        "step": "04",
+        "condition": "Trace readback or runtime witness closure is incomplete.",
+        "publicState": "AwaitingEvidence",
+        "evidence": "Trace route, witness set, or runtime conformance does not close.",
+        "action": "Block public proof claims until missing evidence closes."
+      },
+      {
+        "step": "05",
+        "condition": "Active revocation exists for stamp_id.",
+        "publicState": "Revoked",
+        "evidence": "Revocation ledger readback returns active revoked state.",
+        "action": "Keep original lineage and block the stale public claim."
+      },
+      {
+        "step": "06",
+        "condition": "Hash, signature, trace, witness, and revocation checks all close.",
+        "publicState": "Verified",
+        "evidence": "Verifier returns verification_state=Verified with retained content hash.",
+        "action": "Return Verified without exposing private source or customer data."
+      }
+    ],
+    "stateModel": [
+      {
+        "internal": "record_missing",
+        "publicState": "NotFound",
+        "evidence": "No persisted proof stamp record resolves for the requested stamp_id.",
+        "responseBoundary": "Return HTTP 404 with proof_stamp_not_found detail."
+      },
+      {
+        "internal": "unsigned",
+        "publicState": "AwaitingEvidence",
+        "evidence": "A record exists but no signature has been issued.",
+        "responseBoundary": "Return not-issued signature_state and block Verified."
+      },
+      {
+        "internal": "signing_key_missing",
+        "publicState": "AwaitingEvidence",
+        "evidence": "A signed record cannot be checked because the runtime signing key is unavailable.",
+        "responseBoundary": "Return key-unavailable signature_state and block Verified."
+      },
+      {
+        "internal": "valid",
+        "publicState": "Verified",
+        "evidence": "The recomputed signature matches the persisted envelope hash and evaluation reference.",
+        "responseBoundary": "Return Verified only after hash, signature, witness, and revocation checks close."
+      },
+      {
+        "internal": "invalid",
+        "publicState": "Invalid",
+        "evidence": "The recomputed signature does not match the persisted signature.",
+        "responseBoundary": "Return Invalid and preserve the failed verification trace."
+      },
+      {
+        "internal": "unsupported_algorithm",
+        "publicState": "Invalid",
+        "evidence": "The persisted signature algorithm is outside the governed verifier contract.",
+        "responseBoundary": "Return Invalid without attempting fallback interpretation."
+      },
+      {
+        "internal": "revoked",
+        "publicState": "Revoked",
+        "evidence": "A later governance event invalidates the public claim while preserving lineage.",
+        "responseBoundary": "Return Revoked when an active revocation ledger row exists."
+      }
+    ],
+    "sampleResponse": {
+      "verification_state": "AwaitingEvidence",
+      "stamp_id": "stamp_sample_0001",
+      "envelope_version": "proof-stamp-envelope/v1",
+      "content_hash": "sha256:awaiting-evidence-sample",
+      "signature_state": "not-issued",
+      "evaluation_id": "eval_sample_0001",
+      "witness_state": "awaiting-evidence",
+      "revocation_state": "not-revoked",
+      "checked_at": "2026-05-21T00:00:00Z",
+      "note": "Static example response. It does not claim live runtime availability."
+    },
+    "responseExamples": [
+      {
+        "title": "Verified response",
+        "state": "Verified",
+        "statusCode": 200,
+        "purpose": "Public verifier closure after hash, signature, trace, witness, and revocation checks pass.",
+        "body": {
+          "verification_state": "Verified",
+          "stamp_id": "stamp_sample_verified",
+          "envelope_version": "proof-stamp-envelope/v1",
+          "content_hash": "sha256:verified-sample",
+          "signature_state": "valid",
+          "witness_state": "awaiting-evidence",
+          "revocation_state": "not-revoked",
+          "checked_at": "2026-05-21T00:00:00Z",
+          "id": "stamp_sample_verified",
+          "evaluation_id": "eval_sample_verified",
+          "state": "issued",
+          "stamp_hash": "sha256:verified-sample",
+          "algorithm": "HMAC-SHA256",
+          "signature": "sample-signature-verified",
+          "internal_verification_state": "valid"
+        }
+      },
+      {
+        "title": "Awaiting evidence response",
+        "state": "AwaitingEvidence",
+        "statusCode": 200,
+        "purpose": "Public verifier response when the stamp exists but the signature or witness evidence has not closed.",
+        "body": {
+          "verification_state": "AwaitingEvidence",
+          "stamp_id": "stamp_sample_awaiting",
+          "envelope_version": "proof-stamp-envelope/v1",
+          "content_hash": "sha256:awaiting-evidence-sample",
+          "signature_state": "not-issued",
+          "witness_state": "awaiting-evidence",
+          "revocation_state": "not-revoked",
+          "checked_at": "2026-05-21T00:00:00Z",
+          "id": "stamp_sample_awaiting",
+          "evaluation_id": "eval_sample_awaiting",
+          "state": "signing_disabled",
+          "stamp_hash": "sha256:awaiting-evidence-sample",
+          "algorithm": "HMAC-SHA256",
+          "signature": null,
+          "internal_verification_state": "unsigned"
+        }
+      },
+      {
+        "title": "Invalid response",
+        "state": "Invalid",
+        "statusCode": 200,
+        "purpose": "Public verifier response when signature, hash, algorithm, or trace linkage fails.",
+        "body": {
+          "verification_state": "Invalid",
+          "stamp_id": "stamp_sample_invalid",
+          "envelope_version": "proof-stamp-envelope/v1",
+          "content_hash": "sha256:invalid-sample",
+          "signature_state": "invalid",
+          "witness_state": "awaiting-evidence",
+          "revocation_state": "not-revoked",
+          "checked_at": "2026-05-21T00:00:00Z",
+          "id": "stamp_sample_invalid",
+          "evaluation_id": "eval_sample_invalid",
+          "state": "issued",
+          "stamp_hash": "sha256:invalid-sample",
+          "algorithm": "HMAC-SHA256",
+          "signature": "sample-signature-invalid",
+          "internal_verification_state": "invalid"
+        }
+      },
+      {
+        "title": "Revoked response",
+        "state": "Revoked",
+        "statusCode": 200,
+        "purpose": "Public verifier response when a later governance event invalidates a previously issued claim.",
+        "body": {
+          "verification_state": "Revoked",
+          "stamp_id": "stamp_sample_revoked",
+          "envelope_version": "proof-stamp-envelope/v1",
+          "content_hash": "sha256:revoked-sample",
+          "signature_state": "valid",
+          "witness_state": "awaiting-evidence",
+          "revocation_state": "revoked",
+          "checked_at": "2026-05-21T00:00:00Z",
+          "id": "stamp_sample_revoked",
+          "evaluation_id": "eval_sample_revoked",
+          "state": "issued",
+          "stamp_hash": "sha256:revoked-sample",
+          "algorithm": "HMAC-SHA256",
+          "signature": "sample-signature-revoked",
+          "internal_verification_state": "revoked"
+        }
+      },
+      {
+        "title": "Not found response",
+        "state": "NotFound",
+        "statusCode": 404,
+        "purpose": "Public verifier response when no persisted proof stamp resolves for the requested stamp_id.",
+        "body": {
+          "detail": "proof_stamp_not_found:stamp_sample_missing"
+        }
+      },
+      {
+        "title": "Persistence unavailable response",
+        "state": "PersistenceUnavailable",
+        "statusCode": 503,
+        "purpose": "Fail-closed transport response when durable proof stamp storage cannot be queried.",
+        "body": {
+          "detail": "persistence_unavailable:postgres_schema_unreachable"
+        }
+      }
+    ],
+    "operatorBoundary": {
+      "label": "Private revocation operator boundary",
+      "title": "Revocation is private, append-only, and operator-authenticated.",
+      "status": "private operator",
+      "summary": "Public verifier state can become Revoked only through operator-authenticated routes that preserve the original proof stamp lineage. The website never exposes revocation as a public action.",
+      "requiredHeaders": ["X-Mullusi-Key", "X-Mullusi-Operator-Key"],
+      "routes": [
+        {
+          "name": "Append revocation",
+          "route": "POST /v1/proof-stamps/{stamp_id}/revoke",
+          "host": "api.mullusi.com",
+          "method": "POST",
+          "exposure": "private operator",
+          "mutation": "append-only revocation write",
+          "input": "reason, authority, trace_ref",
+          "successStatus": 200,
+          "successBody": {
+            "stamp_id": "stamp_sample_revoked",
+            "revocation_id": "revocation_sample_0001",
+            "revocation_state": "revoked",
+            "reason": "policy-withdrawn",
+            "authority": "operator:tamirat",
+            "trace_ref": "trace-revocation-001",
+            "storage_state": "stored",
+            "detail": "proof_stamp_revoked:stamp_sample_revoked"
+          },
+          "failureModes": [
+            {
+              "statusCode": 401,
+              "detail": "operator_key_required",
+              "meaning": "Operator header is missing, so mutation is blocked."
+            },
+            {
+              "statusCode": 422,
+              "detail": "expected_non_empty_single_line",
+              "meaning": "Reason, authority, and trace reference must remain single-line lineage atoms."
+            },
+            {
+              "statusCode": 503,
+              "detail": "persistence_unavailable:database_url_missing",
+              "meaning": "Storage is unavailable, so no revocation write is accepted."
+            }
+          ]
+        },
+        {
+          "name": "Read revocation state",
+          "route": "GET /v1/proof-stamps/{stamp_id}/revocation",
+          "host": "api.mullusi.com",
+          "method": "GET",
+          "exposure": "private operator",
+          "mutation": "read-only revocation readback",
+          "input": "stamp_id",
+          "successStatus": 200,
+          "successBody": {
+            "stamp_id": "stamp_sample_revoked",
+            "revocation_state": "revoked",
+            "reason": "policy-withdrawn",
+            "trace_ref": "trace-revocation-001",
+            "revoked_at": "2026-05-21 00:00:00+00"
+          },
+          "alternateBody": {
+            "stamp_id": "stamp_sample_clean",
+            "revocation_state": "not-revoked",
+            "reason": null,
+            "trace_ref": null,
+            "revoked_at": null
+          },
+          "failureModes": [
+            {
+              "statusCode": 401,
+              "detail": "operator_key_required",
+              "meaning": "Operator header is missing, so private readback is blocked."
+            },
+            {
+              "statusCode": 503,
+              "detail": "persistence_unavailable:database_url_missing",
+              "meaning": "Storage is unavailable, so revocation state cannot be proven."
+            }
+          ]
+        }
+      ]
+    },
+    "implementation": {
+      "label": "Local implementation evidence",
+      "status": "local contract",
+      "runtimeBoundary": "The verifier has a local FastAPI route and tests. Public api.mullusi.com remains AwaitingEvidence until deployed runtime witness endpoints close.",
+      "files": [
+        {
+          "path": "backend/app/api/routes_proof.py",
+          "role": "HTTP verifier route, private revocation write/readback routes, response models, persistence lookup, and fail-closed error mapping."
+        },
+        {
+          "path": "backend/app/api/routes_evaluations.py",
+          "role": "Read-only evaluation trace retrieval route required by proof-stamp trace resolution."
+        },
+        {
+          "path": "backend/app/core/security.py",
+          "role": "API key boundary and private operator key boundary for proof-state mutation."
+        },
+        {
+          "path": "backend/app/govern/proof.py",
+          "role": "Proof stamp hash basis, signature verification, public outcome mapping, and witness boundary fields."
+        },
+        {
+          "path": "backend/app/db/schema.sql",
+          "role": "Persistent proof stamp and append-only revocation ledger schema."
+        },
+        {
+          "path": "backend/app/db/repository.py",
+          "role": "Proof stamp lookup with active revocation readback from persistence."
+        },
+        {
+          "path": "backend/scripts/revoke_proof_stamp.py",
+          "role": "Private operator command that appends revocation and verifies readback."
+        },
+        {
+          "path": "backend/scripts/read_proof_stamp_revocation.py",
+          "role": "Read-only operator command for inspecting current revocation state without mutation."
+        },
+        {
+          "path": "backend/scripts/probe_trace.py",
+          "role": "End-to-end trace probe that writes an evaluation and verifies ordered persisted trace readback."
+        },
+        {
+          "path": "backend/tests/test_routes.py",
+          "role": "Route-level proof that persisted records return the public verifier contract."
+        },
+        {
+          "path": "backend/tests/test_proof.py",
+          "role": "Unit proof for valid, invalid, unsigned, missing-key, unsupported-algorithm, and revoked verification states."
+        },
+        {
+          "path": "backend/tests/test_migration.py",
+          "role": "Schema proof that revocation storage exists before runtime readiness can pass."
+        },
+        {
+          "path": "backend/tests/test_revoke_proof_stamp_script.py",
+          "role": "Command proof for required keys, write/readback sequence, and mismatch blocking."
+        },
+        {
+          "path": "backend/tests/test_read_proof_stamp_revocation_script.py",
+          "role": "Readback command proof for required keys, revoked state, not-revoked state, and malformed lineage blocking."
+        },
+        {
+          "path": "backend/tests/test_probe_trace_script.py",
+          "role": "Trace probe proof for storage witness, phase matching, and ordered phase-index validation."
+        }
+      ],
+      "tests": [
+        "python -m unittest discover -s tests",
+        "node scripts/validate-site.mjs"
+      ],
+      "deploymentGates": [
+        "Configure MULLUSI_PROOF_SIGNING_KEY in the runtime secret boundary.",
+        "Configure MULLUSI_OPERATOR_API_KEY before enabling private revocation writes.",
+        "Enable persistent proof stamp records before public verification.",
+        "Confirm GET /v1/evaluations/{evaluation_id}/trace resolves ordered append-only trace deltas.",
+        "Run python scripts/probe_trace.py after persistence and schema are ready; require trace_probe_passed.",
+        "Close /health, /gateway/witness, and /runtime/conformance as runtime evidence.",
+        "Apply the revocation ledger migration before issuing public proof stamps.",
+        "Run python scripts/read_proof_stamp_revocation.py before and after any revocation action.",
+        "Run python scripts/revoke_proof_stamp.py only from an operator-controlled environment."
+      ],
+      "releaseWitnesses": [
+        {
+          "name": "Deployment environment",
+          "command": "python scripts/check_deploy_env.py /etc/mullusi/govern.env",
+          "expected": "deploy_env_check state=ready",
+          "boundary": "Production values are present without local placeholders.",
+          "blocks": "Blocks public runtime promotion."
+        },
+        {
+          "name": "Release preflight",
+          "command": "python scripts/preflight_release.py",
+          "expected": "release_preflight state=ready",
+          "boundary": "Runtime settings, signing key, persistence, and schema are ready.",
+          "blocks": "Blocks image rollout."
+        },
+        {
+          "name": "Persistence probe",
+          "command": "python scripts/probe_persistence.py",
+          "expected": "probe_passed storage=stored verification=Verified",
+          "boundary": "Evaluation write, proof stamp issue, and public verifier readback close.",
+          "blocks": "Blocks proof stamp publication."
+        },
+        {
+          "name": "Trace probe",
+          "command": "python scripts/probe_trace.py",
+          "expected": "trace_probe_passed",
+          "boundary": "Evaluation trace readback matches stored phase order and trace identity.",
+          "blocks": "Blocks Verified stamp state."
+        },
+        {
+          "name": "Revocation readback",
+          "command": "python scripts/read_proof_stamp_revocation.py <stamp_id>",
+          "expected": "revocation_readback state=<revoked|not-revoked>",
+          "boundary": "Operator-only revocation state is observable without exposing private source.",
+          "blocks": "Blocks stale public claims."
+        }
       ]
     }
   },
@@ -439,5 +1505,58 @@
         { "title": "ለምርምር ውጤት የድግግሞሽ ማረጋገጫ", "body": "ውጤቱ ራሱን ችሎ እንደገና እንዲረጋገጥ ትክክለኛዎቹን ምልክቶች፣ ገደቦችና ሐረግ ይያዙ።" }
       ]
     }
+  },
+  "mulluActivity": {
+    "label": "Mullu Activity",
+    "title": "Mullu related news and activity",
+    "summary": "Internal activity records for the Mullu product path, platform spine, proof boundary, and release gates.",
+    "updated": "2026-05-21",
+    "items": [
+      {
+        "title": "Platform map promoted to the public site",
+        "body": "mullusi.com now presents Mullusi as company, governed platform, and product ecosystem instead of one isolated website.",
+        "status": "live surface",
+        "scope": "Public Surface",
+        "surface": "mullusi.com",
+        "href": "#platform",
+        "date": "2026-05-21"
+      },
+      {
+        "title": "Mullusi Product Registry added",
+        "body": "The registry now tracks product classification, source boundary, runtime type, data type, API path, docs path, release gate, and failure mode.",
+        "status": "registry",
+        "scope": "Product Registry",
+        "surface": "data/products.json",
+        "href": "#products",
+        "date": "2026-05-21"
+      },
+      {
+        "title": "Control plane spine clarified",
+        "body": "The public map now separates public surfaces, user surfaces, API surface, control plane, product services, storage, runtime infrastructure, and development layer.",
+        "status": "architecture",
+        "scope": "Control Plane",
+        "surface": "#platform",
+        "href": "#platform",
+        "date": "2026-05-21"
+      },
+      {
+        "title": "Proof boundary remains explicit",
+        "body": "Govern API and proof stamp claims stay AwaitingEvidence until signed runtime witness endpoints are reachable and verified.",
+        "status": "awaiting-evidence",
+        "scope": "Proof Boundary",
+        "surface": "/proof/",
+        "href": "/proof/",
+        "date": "2026-05-21"
+      },
+      {
+        "title": "Mobile menu and public surface navigation refined",
+        "body": "The menu is viewport-bounded, scrollable, and labeled around surfaces so public navigation matches the platform map.",
+        "status": "interface",
+        "scope": "Interface",
+        "surface": "mullusi.com",
+        "href": "#start",
+        "date": "2026-05-21"
+      }
+    ]
   }
 }
