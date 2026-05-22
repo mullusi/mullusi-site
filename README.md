@@ -215,8 +215,12 @@ node --check assets/app.js
 node --check scripts/validate-site.mjs
 node --check scripts/fetch-news.mjs
 node --check scripts/verify-registry-repos.mjs
+node --check scripts/check-ops-gates.mjs
+node --check scripts/test-ops-gates.mjs
 node scripts/validate-site.mjs
 node scripts/verify-registry-repos.mjs
+node scripts/check-ops-gates.mjs
+node scripts/test-ops-gates.mjs
 ```
 
 ## Local preview
@@ -231,9 +235,11 @@ python3 -m http.server 8080
 ```bash
 node --check assets/app.js
 node scripts/validate-site.mjs
+node scripts/check-ops-gates.mjs
+node scripts/test-ops-gates.mjs
 ```
 
-The validation script checks required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, homepage hierarchy, repeated-caveat regressions, symbol-font licensing and size budget, dynamic fallback behavior, public-safe text, Mfidel-safe no-combining-mark text, mojibake, and secret-like patterns.
+The validation scripts check required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, homepage hierarchy, repeated-caveat regressions, symbol-font licensing and size budget, dynamic fallback behavior, public-safe text, Mfidel-safe no-combining-mark text, mojibake, secret-like patterns, recovery/API gate consistency, and staged HSTS.
 
 The public homepage must keep this product boundary explicit: Mullusi is the
 company umbrella, Mullu is the flagship governed symbolic product, and live

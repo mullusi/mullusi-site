@@ -57,6 +57,8 @@ const requiredFiles = [
   "data/i18n.json",
   "scripts/fetch-news.mjs",
   "scripts/verify-registry-repos.mjs",
+  "scripts/check-ops-gates.mjs",
+  "scripts/test-ops-gates.mjs",
 ];
 
 const allowedSystemStatuses = new Set(["active", "public", "live demo", "research", "deployed"]);
