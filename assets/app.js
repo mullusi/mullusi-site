@@ -1,6 +1,6 @@
 /*
 Purpose: render Mullusi structured public content and operate the symbolic canvas substrate.
-Governance scope: deterministic JSON rendering, safe link output, searchable public repository catalog, and visual substrate runtime.
+Governance scope: deterministic JSON rendering, safe link output, searchable public surface catalog, and visual substrate runtime.
 Dependencies: data/products.json, data/site.json, DOM canvas APIs, IntersectionObserver, and browser fetch.
 Invariants: untrusted JSON text is escaped, non-public links are blocked, registry failures surface visibly, and reduced motion is respected.
 */
@@ -206,7 +206,8 @@ function matchesQuery(item, query) {
   if (!query) return true;
   const haystack = [
     item.name,
-    item.repo,
+    item.href,
+    item.sourceState,
     item.category,
     item.status,
     item.summary,
@@ -521,7 +522,7 @@ function renderReleaseMachine() {
   const total = steps.length * (w + gap) + 200;
   target.innerHTML = `
     ${svgFrame(`0 0 ${total} 112`, "Release state machine", inner)}
-    <p class="diagram-caption">${escapeHtml(i18nText("release.caption") || "A repository becomes a public route only after each gate closes.")}</p>
+    <p class="diagram-caption">${escapeHtml(i18nText("release.caption") || "A private incubation project becomes a public route only after each gate closes.")}</p>
   `;
   revealRendered(target);
 }
@@ -592,73 +593,23 @@ function renderUseCases() {
   revealRendered(target);
 }
 
-function compactNumber(value) {
-  const n = Math.max(0, Math.round(Number(value) || 0));
-  if (n < 1000) return String(n);
-  const k = n / 1000;
-  return `${k < 10 ? k.toFixed(1).replace(/\.0$/, "") : Math.round(k)}k`;
-}
-
-function daysAgo(dateStr) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr || "")) return null;
-  const then = Date.parse(`${dateStr}T00:00:00Z`);
-  if (Number.isNaN(then)) return null;
-  const today = Date.parse(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`);
-  return Math.max(0, Math.round((today - then) / 86400000));
-}
-
-function relativeDay(dateStr) {
-  const d = daysAgo(dateStr);
-  if (d === null) return escapeHtml(dateStr || "");
-  if (d === 0) return escapeHtml(i18nText("news.today") || "today");
-  return `${d}d ${escapeHtml(i18nText("news.ago") || "ago")}`;
-}
-
-function newsTopic(item) {
-  const src = String(item.source || "").toLowerCase();
-  const title = String(item.title || "");
-  if (/^show hn[:\s]/i.test(title)) return { key: "news.tagProject", fallback: "Project" };
-  if (/(^|\.)(github|gitlab)\.com$/.test(src)) return { key: "news.tagOpenSource", fallback: "Open source" };
-  if (/(^|\.)arxiv\.org$|\.edu$|(^|\.)(nature|science|acm|ieee)\.(com|org)$/.test(src)) {
-    return { key: "news.tagResearch", fallback: "Research" };
-  }
-  if (/\.gov$|(^|\.)eff\.org$/.test(src)) return { key: "news.tagPolicy", fallback: "Policy" };
-  return { key: "news.tagArticle", fallback: "Article" };
-}
-
-function newsChip(item) {
-  const topic = newsTopic(item);
-  return `<span class="news-chip">${escapeHtml(i18nText(topic.key) || topic.fallback)}</span>`;
-}
-
 function newsMeta(item) {
   const parts = [];
   if (item.source) {
     parts.push(`<span class="news-source">${escapeHtml(item.source)}</span>`);
   }
   if (Number.isFinite(item.points) && item.points > 0) {
-    parts.push(`<span>${compactNumber(item.points)} ${escapeHtml(i18nText("news.points") || "points")}</span>`);
+    parts.push(`<span>${item.points} ${escapeHtml(i18nText("news.points") || "points")}</span>`);
   }
-  if (Number.isFinite(item.comments) && item.comments > 0) {
-    parts.push(`<span>${compactNumber(item.comments)} ${escapeHtml(i18nText("news.discussion") || "discussion")}</span>`);
-  }
-  if (item.date) parts.push(`<span>${relativeDay(item.date)}</span>`);
+  if (item.date) parts.push(`<span>${escapeHtml(item.date)}</span>`);
   return parts.join('<span class="news-dot" aria-hidden="true">&middot;</span>');
 }
 
 function newsCaption() {
   const meta = state.news?.meta || {};
-  const items = Array.isArray(state.news?.items) ? state.news.items : [];
   const bits = [];
-  let freshClass = "is-stale";
   if (meta.updated) {
-    const d = daysAgo(meta.updated);
-    if (d === 0) freshClass = "is-fresh";
-    else if (d === 1) freshClass = "is-recent";
-    bits.push(`${escapeHtml(i18nText("news.updated") || "Updated")} ${relativeDay(meta.updated)}`);
-  }
-  if (items.length) {
-    bits.push(`${items.length} ${escapeHtml(i18nText("news.selRule") || "top by public discussion")}`);
+    bits.push(`${escapeHtml(i18nText("news.updated") || "Updated")} ${escapeHtml(meta.updated)}`);
   }
   if (meta.source) {
     bits.push(`${escapeHtml(i18nText("news.via") || "via")} ${escapeHtml(meta.source)}`);
@@ -666,7 +617,7 @@ function newsCaption() {
   if (!bits.length) return "";
   return `
     <p class="news-cap">
-      <span class="news-pulse ${freshClass}" aria-hidden="true"></span>
+      <span class="news-pulse" aria-hidden="true"></span>
       ${bits.join('<span class="news-dot" aria-hidden="true">&middot;</span>')}
     </p>
   `;
@@ -714,33 +665,30 @@ function renderNews() {
     return;
   }
 
-  const [lead, ...rest] = items;
-  const leadHtml = `
-    <article class="news-lead">
-      <div class="news-lead-head">
-        ${newsChip(lead)}
-        <span class="news-lead-rank" aria-hidden="true">01</span>
-      </div>
-      <a class="news-headline" href="${escapeAttribute(lead.url)}" rel="noopener">
-        <span class="news-title">${escapeHtml(lead.title)}</span>
-        <span class="news-arrow" aria-hidden="true">-&gt;</span>
-      </a>
-      <p class="news-meta">${newsMeta(lead)}</p>
-    </article>
-  `;
-
-  const rows = rest.map((item, index) => `
+  const rows = items.map((item, index) => `
     <li class="news-item">
-      <span class="news-rank" aria-hidden="true">${String(index + 2).padStart(2, "0")}</span>
+      <span class="news-rank" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
       <a class="news-headline" href="${escapeAttribute(item.url)}" rel="noopener">
         <span class="news-title">${escapeHtml(item.title)}</span>
         <span class="news-arrow" aria-hidden="true">-&gt;</span>
       </a>
-      <p class="news-meta">${newsChip(item)}${newsMeta(item)}</p>
+      <p class="news-meta">${newsMeta(item)}</p>
     </li>
   `).join("");
 
-  target.innerHTML = `${newsCaption()}${leadHtml}${rows ? `<ol class="news-list">${rows}</ol>` : ""}`;
+  target.innerHTML = `${newsCaption()}<ol class="news-list">${rows}</ol>`;
+  revealRendered(target);
+}
+
+function renderNewsLoadError() {
+  const target = qs("[data-news]");
+  if (!target) return;
+  target.innerHTML = `
+    <div class="news-empty error-card">
+      <h3>${escapeHtml(i18nText("news.errorTitle") || "Frontier signal unavailable")}</h3>
+      <p>${escapeHtml(i18nText("news.errorBody") || "The static news registry did not load. Confirm the registry is deployed beside this page.")}</p>
+    </div>
+  `;
   revealRendered(target);
 }
 
@@ -848,8 +796,7 @@ function renderFutureDomains() {
         <span class="st" aria-hidden="true">${escapeHtml(badge)}</span>
         <div class="eng-sym" aria-hidden="true">${escapeHtml(glyphs[domain.slug] || "·")}</div>
         <h3>${escapeHtml(title)}</h3>
-        <p>${escapeHtml(localized(domain, "summary"))}</p>
-        <span class="eng-repo">${escapeHtml(domain.plannedRepo || "")}</span>
+        <span class="eng-boundary">${escapeHtml(domain.releaseBoundary || "private incubation")}</span>
       </article>
     `;
   };
@@ -885,62 +832,12 @@ function renderStats() {
   if (!target || !state.registry) return;
   const products = state.registry.systems || [];
   const categories = new Set(products.map((item) => item.category)).size;
-  const productRepos = products.filter((item) => item.category !== "Website").length;
+  const productSurfaces = products.filter((item) => item.category !== "Website").length;
   target.innerHTML = `
-    <div><div class="k">${products.length}</div><div class="l">${escapeHtml(i18nText("repo.statDeployed") || "Deployed public repos")}</div></div>
+    <div><div class="k">${products.length}</div><div class="l">${escapeHtml(i18nText("repo.statDeployed") || "Deployed public surfaces")}</div></div>
     <div><div class="k">${categories}</div><div class="l">${escapeHtml(i18nText("repo.statCategories") || "Categories")}</div></div>
-    <div><div class="k">${productRepos}</div><div class="l">${escapeHtml(i18nText("repo.statProductRepos") || "Public product repos")}</div></div>
+    <div><div class="k">${productSurfaces}</div><div class="l">${escapeHtml(i18nText("repo.statProductRepos") || "Public product surfaces")}</div></div>
   `;
-  revealRendered(target);
-}
-
-function renderEcosystemMap() {
-  const target = qs("[data-ecosystem-map]");
-  if (!target || !state.registry) return;
-
-  const systems = state.registry.systems || [];
-  const domains = state.registry.futureDomains || [];
-  const incubation = state.registry.privateIncubation || [];
-  const gateLabel = i18nText("ecosystem.gateLabel") || "Publish gate";
-
-  const row = (name, tag, note, cls) => `
-    <li class="status-row ${cls}">
-      <span class="status-dot" aria-hidden="true"></span>
-      <span class="status-name">${escapeHtml(name)}</span>
-      <span class="status-state">${escapeHtml(tag)}</span>
-      <span class="status-note">${escapeHtml(note)}</span>
-    </li>
-  `;
-
-  const tiers = [
-    {
-      label: i18nText("ecosystem.tierDeployed") || "Deployed",
-      rows: systems.map((item) => row(item.name, item.repo, localized(item, "summary"), "is-live")),
-    },
-    {
-      label: i18nText("ecosystem.tierStaged") || "Staged",
-      rows: domains.map((domain) => row(
-        state.lang === "am" && domain.am && domain.am.title ? domain.am.title : titleForDomain(domain),
-        domain.plannedRepo || "",
-        localized(domain, "summary"),
-        "is-planned",
-      )),
-    },
-    {
-      label: i18nText("ecosystem.tierPrivate") || "Private incubation",
-      rows: incubation.map((item) => row(item.name, gateLabel, item.publishGate || "", "is-awaiting")),
-    },
-  ].filter((tier) => tier.rows.length > 0);
-
-  if (tiers.length === 0) return;
-
-  target.innerHTML = tiers.map((tier) => `
-    <div class="status-head">
-      <span class="handoff-kicker">${escapeHtml(tier.label)}</span>
-      <h3>${tier.rows.length}</h3>
-    </div>
-    <ul class="status-list">${tier.rows.join("")}</ul>
-  `).join("");
   revealRendered(target);
 }
 
@@ -952,7 +849,7 @@ function renderRepoGrid() {
   if (!products.length) {
     target.innerHTML = `
       <article class="repo-card empty-card">
-        <div class="repo-card-head"><h3>${escapeHtml(i18nText("repo.emptyTitle") || "No matching public repository")}</h3></div>
+        <div class="repo-card-head"><h3>${escapeHtml(i18nText("repo.emptyTitle") || "No matching public surface")}</h3></div>
         <p>${escapeHtml(i18nText("repo.emptyBody") || "Adjust the search term or category filter. Planned domain engines are listed above.")}</p>
       </article>
     `;
@@ -966,12 +863,12 @@ function renderRepoGrid() {
         <h3>${escapeHtml(item.name)}</h3>
         <span class="status-pill">${escapeHtml(item.status)}</span>
       </div>
-      <span class="repo-name">${escapeHtml(item.repo)}</span>
+      <span class="repo-name">${escapeHtml(item.sourceState || "private-source")}</span>
       <p>${escapeHtml(localized(item, "summary"))}</p>
       <div class="tag-row">
         ${(item.tags || []).map((tag) => `<span class="tag-pill">${escapeHtml(tag)}</span>`).join("")}
       </div>
-      <a class="repo-link" href="${escapeAttribute(item.href)}" rel="noopener">${escapeHtml(i18nText("repo.openRepository") || "Open repository")} -&gt;</a>
+      <a class="repo-link" href="${escapeAttribute(item.href)}" rel="noopener">${escapeHtml(i18nText("repo.openRepository") || "Open surface")} -&gt;</a>
     </article>
   `).join("");
   revealRendered(target);
@@ -1153,8 +1050,40 @@ function renderRegistryContent() {
   renderFilters();
   renderStats();
   renderRepoGrid();
-  renderEcosystemMap();
   renderMetrics();
+}
+
+function captureFallbackContent(selectors) {
+  const fallbacks = new Map();
+  selectors.forEach((selector) => {
+    const target = qs(selector);
+    if (!target) return;
+    fallbacks.set(selector, target.innerHTML);
+  });
+  return fallbacks;
+}
+
+function promoteNoscriptFallbacks(selectors) {
+  selectors.forEach((selector) => {
+    const target = qs(selector);
+    const fallback = target?.querySelector("noscript");
+    if (!target || !fallback) return;
+
+    const template = document.createElement("template");
+    template.innerHTML = fallback.textContent.trim();
+    target.replaceChildren(template.content.cloneNode(true));
+    revealRendered(target);
+  });
+}
+
+function restoreFallbackContent(fallbacks, selectors) {
+  selectors.forEach((selector) => {
+    const target = qs(selector);
+    const fallback = fallbacks.get(selector);
+    if (!target || !fallback || target.children.length > 0) return;
+    target.innerHTML = fallback;
+    revealRendered(target);
+  });
 }
 
 async function initContent() {
@@ -1173,6 +1102,7 @@ async function initContent() {
     console.error(error);
   }
   applyLang(preferredLang(), false);
+  const registryFallbacks = captureFallbackContent(["[data-proof-lanes]", "[data-interface-links]", "[data-release-stages]", "[data-future-domains]"]);
   renderVisitMeter();
 
   window.addEventListener("mullusi-lang-change", () => {
@@ -1188,6 +1118,23 @@ async function initContent() {
     renderVisitMeter();
   } catch (error) {
     console.error(error);
+    promoteNoscriptFallbacks([
+      "[data-proof-lanes]",
+      "[data-interface-links]",
+      "[data-service-grid]",
+      "[data-service-tiers]",
+      "[data-api-contracts]",
+      "[data-flow-diagram]",
+      "[data-evaluation-example]",
+      "[data-system-status]",
+      "[data-use-cases]",
+      "[data-release-stages]",
+      "[data-repository-handoff]",
+      "[data-boundary-map]",
+      "[data-release-machine]",
+      "[data-metrics]",
+    ]);
+    restoreFallbackContent(registryFallbacks, ["[data-proof-lanes]", "[data-interface-links]", "[data-release-stages]"]);
   }
 
   try {
@@ -1196,7 +1143,7 @@ async function initContent() {
     renderVisitMeter();
   } catch (error) {
     console.error(error);
-    renderNews();
+    renderNewsLoadError();
   }
 
   try {
@@ -1209,11 +1156,17 @@ async function initContent() {
       repoGrid.innerHTML = `
         <article class="repo-card error-card">
           <div class="repo-card-head"><h3>${escapeHtml(i18nText("repo.errorTitle") || "Product registry unavailable")}</h3></div>
-          <p>${escapeHtml(i18nText("repo.errorBody") || "The static registry did not load. Confirm data/products.json is deployed beside this page.")}</p>
+          <p>${escapeHtml(i18nText("repo.errorBody") || "The static product registry did not load. Confirm the registry is deployed beside this page.")}</p>
         </article>
       `;
       revealRendered(repoGrid);
     }
+    promoteNoscriptFallbacks([
+      "[data-future-domains]",
+      "[data-repo-stats]",
+      "[data-metrics]",
+    ]);
+    restoreFallbackContent(registryFallbacks, ["[data-future-domains]"]);
   }
 }
 

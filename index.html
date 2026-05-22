@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
-Purpose: public Mullusi landing page with governed product, service, repository, and science-engine surfaces.
-Governance scope: public claims, route boundaries, repository observatory, evidence plane, and visual substrate.
+Purpose: public Mullusi landing page with governed product, service, public-surface, and science-engine surfaces.
+Governance scope: public claims, route boundaries, public surface registry, evidence plane, and visual substrate.
 Dependencies: assets/styles.css, assets/app.js, data/products.json, data/site.json, Mullusi icons, and public Mullusi domains.
 Invariants: no private repository claims, no silent content failure, all dynamic public records load from structured JSON.
 -->
@@ -56,7 +56,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       }
     })();
   </script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.newsux.1" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.hierarchy.1" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -68,8 +68,8 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           "url": "https://mullusi.com",
           "logo": "https://mullusi.com/assets/mullusi-logo.svg",
           "description": "Mullusi builds governed software that checks, traces, and proves a decision before it runs. Mullu is its flagship product.",
-          "email": "research@mullusi.com",
-          "sameAs": ["https://github.com/mullusi"]
+          "email": "hello@mullusi.com",
+          "sameAs": ["https://mullusi.com"]
         },
         {
           "@type": "WebSite",
@@ -81,7 +81,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/app.js?v=2026.05.newsux.1"></script>
+  <script defer src="assets/app.js?v=2026.05.hierarchy.1"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -99,6 +99,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <img class="brand-logo nav-logo logo-light" src="assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="190" height="48" />
       </a>
       <div class="nav-links">
+        <a href="#start" data-i18n="nav.start">Start</a>
         <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
         <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
         <a href="#products" data-i18n="nav.products">Products</a>
@@ -118,7 +119,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <span class="theme-toggle-mode" data-i18n="theme.mode">Mode</span>
           <span data-theme-label>Light</span>
         </button>
-        <a href="https://github.com/mullusi" class="btn" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
+        <a href="mailto:hello@mullusi.com" class="btn" data-i18n="nav.contact">Contact</a>
         <a href="https://docs.mullusi.com" class="btn btn-solid" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
         <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
           <span></span><span></span><span></span>
@@ -132,21 +133,20 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       <img src="assets/mullusi-icon.svg" alt="" width="32" height="32" />
       <span>Mullusi</span>
     </div>
-    <a href="#paths" data-i18n="nav.paths">Start here</a>
+    <a href="#start" data-i18n="nav.start">Start</a>
     <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
     <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
     <a href="#products" data-i18n="nav.products">Products</a>
     <a href="#services" data-i18n="nav.services">Services</a>
     <a href="#evidence" data-i18n="nav.evidence">Evidence</a>
     <a href="#use-cases" data-i18n="nav.usecases">Use Cases</a>
-    <a href="#news" data-i18n="nav.news">News</a>
     <a href="/playground/" data-i18n="nav.playground">Playground</a>
     <a href="/proof/" data-i18n="nav.proof">Proof</a>
     <a href="#sciences" data-i18n="nav.sciences">Science Engines</a>
-    <a href="#ecosystem" data-i18n="nav.ecosystem">Ecosystem</a>
     <a href="#repos" data-i18n="nav.repos">Repos</a>
+    <a href="#news" data-i18n="nav.news">News</a>
     <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
-    <a href="https://github.com/mullusi" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
+    <a href="mailto:hello@mullusi.com" data-i18n="nav.contact">Contact</a>
   </div>
 
   <main id="main">
@@ -169,61 +169,39 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="tag" data-i18n="hero.tag">Mullusi — the company. Mullu — the flagship product.</div>
         <h1 id="hero-title" data-i18n="hero.title">Software that checks, traces, and proves every decision before it runs.</h1>
         <p class="lead" data-i18n="hero.lead">Mullu evaluates a proposed action against your rules, records an append-only trace of exactly why, and returns a verdict — before anything executes. It turns governed symbolic reasoning into work you can audit and reproduce. The live runtime is still publishing its signed evidence; until then, this site is the public proof boundary.</p>
+        <p class="plain hero-plain" data-i18n="hero.plain">In plain terms: Mullu checks whether work is allowed, explains why, and leaves a proof record.</p>
         <div class="hero-actions">
           <a href="/mullu/" class="btn btn-solid" data-i18n="hero.openMullu">Open Mullu</a>
           <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
-          <a href="#products" class="btn" data-i18n="hero.viewGraph">View staged graph</a>
-          <a href="/playground/" class="btn" data-i18n="hero.tryPlayground">Try the playground</a>
         </div>
-        <dl class="hero-foot" aria-label="Mullusi public surface snapshot" data-i18n-attr="aria-label:hero.snapshotAria">
-          <div><dt class="k">Mullu</dt><dd class="l" data-i18n="hero.footMullu">Flagship product route</dd></div>
-          <div><dt class="k" data-public-product-count>1</dt><dd class="l" data-i18n="hero.footRepo">Deployed public repo</dd></div>
-          <div><dt class="k live">AwaitingEvidence</dt><dd class="l" data-i18n="hero.footRuntime">Live runtime</dd></div>
-        </dl>
       </div>
     </section>
 
-    <section class="band" id="paths" aria-labelledby="paths-title">
+    <section class="band tier-primary start-here" id="start" aria-labelledby="start-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag" data-i18n="paths.tag">Start Here</div>
-          <h2 id="paths-title" data-i18n="paths.title">What can you do here?</h2>
-          <p data-i18n="paths.body">Four paths in, by what you need. Every link goes to something real on this site — not a placeholder.</p>
+          <div class="tag" data-i18n="start.tag">Start Here</div>
+          <h2 id="start-title" data-i18n="start.title">Choose the surface</h2>
+          <p data-i18n="start.body">A first visit should route quickly: product, proof, sandbox, or public structure.</p>
         </div>
-        <div class="routes reveal">
-          <article class="route">
-            <span class="badge" data-i18n="paths.devBadge">Developers</span>
-            <h3 data-i18n="paths.devTitle">Inspect the architecture</h3>
-            <p data-i18n="paths.devBody">Walk the governed-evaluation flow: how an action is checked, traced, and judged before it runs.</p>
-            <a class="lnk" href="#architecture"><span data-i18n="paths.devCta">See the architecture</span> →</a>
-          </article>
-          <article class="route">
-            <span class="badge" data-i18n="paths.resBadge">Researchers</span>
-            <h3 data-i18n="paths.resTitle">Review the proof boundary</h3>
-            <p data-i18n="paths.resBody">See exactly what is verified and what stays AwaitingEvidence until signed runtime evidence publishes.</p>
-            <a class="lnk" href="/proof/"><span data-i18n="paths.resCta">Open the proof boundary</span> →</a>
-          </article>
-          <article class="route">
-            <span class="badge" data-i18n="paths.partBadge">Partners</span>
-            <h3 data-i18n="paths.partTitle">Explore governed integration</h3>
-            <p data-i18n="paths.partBody">The Govern Cloud service stack and tiers — where a hosted governed evaluation fits your systems.</p>
-            <a class="lnk" href="#services"><span data-i18n="paths.partCta">View the service stack</span> →</a>
-          </article>
-          <article class="route">
-            <span class="badge" data-i18n="paths.bldBadge">Builders</span>
-            <h3 data-i18n="paths.bldTitle">Try the playground</h3>
-            <p data-i18n="paths.bldBody">A client-only, simulated governed evaluation you can run in the browser. No account, no runtime claim.</p>
-            <a class="lnk" href="/playground/"><span data-i18n="paths.bldCta">Open the playground</span> →</a>
-          </article>
+        <div class="start-grid reveal">
+          <a class="start-card" href="/mullu/"><span data-i18n="start.mullu.k">Product</span><strong data-i18n="start.mullu.t">Open Mullu</strong><em data-i18n="start.mullu.b">Flagship governed product route.</em></a>
+          <a class="start-card" href="/proof/"><span data-i18n="start.proof.k">Evidence</span><strong data-i18n="start.proof.t">Review proof boundary</strong><em data-i18n="start.proof.b">Verified and pending runtime claims.</em></a>
+          <a class="start-card" href="/playground/"><span data-i18n="start.playground.k">Demo</span><strong data-i18n="start.playground.t">Try the playground</strong><em data-i18n="start.playground.b">Illustrative governed evaluation flow.</em></a>
+          <a class="start-card" href="#architecture"><span data-i18n="start.architecture.k">Structure</span><strong data-i18n="start.architecture.t">Read the architecture</strong><em data-i18n="start.architecture.b">Public route map and release discipline.</em></a>
         </div>
+        <aside class="read-boundary reveal" aria-labelledby="read-boundary-title">
+          <h3 id="read-boundary-title" data-i18n="boundary.title">How to read this site</h3>
+          <p data-i18n="boundary.body">Live surfaces are linked directly. Staged engines are roadmap records. Illustrative examples show the intended evaluation shape and are not runtime claims until the proof route publishes signed witness evidence.</p>
+        </aside>
       </div>
     </section>
 
-    <section class="band metrics-section" id="metrics" aria-labelledby="metrics-title">
+    <section class="band tier-secondary metrics-section" id="metrics" aria-labelledby="metrics-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="metrics.tag">Public Surface Metrics</div>
-          <h2 id="metrics-title" data-i18n="metrics.title">Standard figures, derived from the public registry — not projected.</h2>
+          <h2 id="metrics-title" data-i18n="metrics.title">Public surface metrics</h2>
           <p data-i18n="metrics.body">Every number below is computed at load time from the same governed JSON the rest of the site renders. If it is shown here, it is verifiable.</p>
         </div>
         <dl class="metrics-band reveal" data-metrics aria-label="Mullusi public surface metrics" data-i18n-attr="aria-label:metrics.bandAria">
@@ -232,6 +210,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
             <div><dt class="m-k">v1</dt><dd class="m-l">Govern API contract</dd></div>
             <div><dt class="m-k">AwaitingEvidence</dt><dd class="m-l">Runtime witness state</dd></div>
           </noscript>
+        </dl>
+        <dl class="hero-foot surface-snapshot reveal" aria-label="Mullusi public surface snapshot" data-i18n-attr="aria-label:hero.snapshotAria">
+          <div><dt class="k">Mullu</dt><dd class="l" data-i18n="hero.footMullu">Flagship product route</dd></div>
+          <div><dt class="k" data-public-product-count>1</dt><dd class="l" data-i18n="hero.footRepo">Deployed public surface</dd></div>
+          <div><dt class="k live">AwaitingEvidence</dt><dd class="l" data-i18n="hero.footRuntime">Live runtime</dd></div>
         </dl>
       </div>
     </section>
@@ -245,11 +228,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band" id="govern-cloud" aria-labelledby="govern-cloud-title">
+    <section class="band tier-primary" id="govern-cloud" aria-labelledby="govern-cloud-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="govern.tag">Govern Cloud v1</div>
-          <h2 id="govern-cloud-title" data-i18n="govern.title">The first sellable service is evaluation, trace, and proof.</h2>
+          <h2 id="govern-cloud-title" data-i18n="govern.title">Govern evaluation service</h2>
           <p data-i18n="govern.body">Start with one vertical contract: authorized request, deterministic evaluation, append-only trace, proof state, repair action, and dashboard visibility.</p>
           <p class="plain" data-i18n="govern.plain">In plain terms: send an action, get back a verdict, the reason, an audit trace, and a proof stamp.</p>
         </div>
@@ -272,55 +255,33 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="eval-wrap reveal" data-evaluation-example>
           <noscript>
-            <article class="eval-card">
-              <div class="eval-head">
-                <span class="badge">Worked Example</span>
-                <span class="status-pill eval-verdict">BLOCK</span>
-              </div>
-              <h3>What a governed evaluation looks like.</h3>
-              <p class="eval-disclaimer">Illustrative only. Not a live endpoint. Runtime stays AwaitingEvidence until witness endpoints publish signed evidence.</p>
-              <div class="eval-req">
-                <span class="eval-k">Request</span>
-                <code>POST /v1/govern/evaluate</code>
-                <code>{ project, action: "deploy gateway", symbols: [&#931;, &#923;], constraints: [budget, policy, causality], context }</code>
-              </div>
-              <p class="eval-summary">An ordinary pipeline would run the action and report failure afterward. A governed evaluation refuses the unsafe transition before execution and emits a verifiable record of why.</p>
-              <dl class="eval-steps">
-                <div><dt>Verdict</dt><dd>BLOCK — an unsafe transition was detected before any effect ran.</dd></div>
-                <div><dt>Violation</dt><dd>Causality constraint &#923; unsatisfied: an effect was declared without lineage.</dd></div>
-                <div><dt>Trace</dt><dd>Append-only record of every phase, constraint, and judgment that produced the verdict.</dd></div>
-                <div><dt>Repair</dt><dd>Attach the missing lineage record, then re-evaluate the same action.</dd></div>
-                <div><dt>Proof stamp</dt><dd>Pending — issued only when the evaluation closes against signed runtime evidence.</dd></div>
-              </dl>
-            </article>
+            <p>Enable JavaScript to view the governed-evaluation example generated from <code>data/site.json</code>.</p>
           </noscript>
         </div>
       </div>
     </section>
 
-    <section class="band" id="use-cases" aria-labelledby="use-cases-title">
+    <section class="band tier-secondary" id="use-cases" aria-labelledby="use-cases-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="usecases.tag">Use Cases</div>
-          <h2 id="use-cases-title" data-i18n="usecases.title">Where a governed evaluation earns its keep.</h2>
+          <h2 id="use-cases-title" data-i18n="usecases.title">Use-case fit</h2>
           <p data-i18n="usecases.body">Illustrative scenarios — the shape of value the governed runtime will deliver once evidence is published.</p>
         </div>
         <div class="usecases reveal" data-use-cases>
           <noscript>
-            <article class="usecase"><span class="usecase-n">01</span><h3>Audit trail for an autonomous agent</h3><p>Record every decision, constraint check, and tool call as an immutable, append-only trace you can replay later.</p></article>
-            <article class="usecase"><span class="usecase-n">02</span><h3>Compliance gate for a financial workflow</h3><p>Prove a transaction satisfied every internal policy before it executes — not after it fails.</p></article>
-            <article class="usecase"><span class="usecase-n">03</span><h3>Reproducibility proof for a research result</h3><p>Capture the exact symbols, constraints, and lineage so a result can be re-verified independently.</p></article>
+            <p>Enable JavaScript to view the use-case scenarios generated from <code>data/site.json</code>.</p>
           </noscript>
         </div>
       </div>
     </section>
 
-    <section class="band claim-boundary" id="production-boundary" aria-labelledby="production-boundary-title">
+    <section class="band tier-primary claim-boundary" id="production-boundary" aria-labelledby="production-boundary-title">
       <div class="wrap">
         <div class="claim-panel reveal">
           <div>
             <div class="tag" data-i18n="claim.tag">Production Claim Boundary</div>
-            <h2 id="production-boundary-title" data-i18n="claim.title">Mullusi is the umbrella. Mullu is the product. Runtime publication is still AwaitingEvidence.</h2>
+            <h2 id="production-boundary-title" data-i18n="claim.title">Production claim boundary</h2>
             <p data-i18n="claim.body">The website proves the public company and product route boundary. It does not claim a live governed runtime until the deployment witness endpoints publish signed evidence.</p>
           </div>
           <dl class="claim-ledger" aria-label="Production claim ledger">
@@ -350,33 +311,33 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band" id="evidence" aria-labelledby="evidence-title">
+    <section class="band tier-primary" id="evidence" aria-labelledby="evidence-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="evidence.tag">Evidence Plane</div>
-          <h2 id="evidence-title" data-i18n="evidence.title">Public claims stay attached to structure, source, release state, and runtime witness state.</h2>
+          <h2 id="evidence-title" data-i18n="evidence.title">Evidence plane</h2>
           <p data-i18n="evidence.body">Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether live runtime evidence is closed.</p>
           <p class="plain" data-i18n="evidence.plain">In plain terms: if it is stated here, you can check where it lives and how it is governed.</p>
         </div>
         <div class="cards-4 reveal" data-proof-lanes>
-          <article class="card"><span class="kind">Identity</span><div class="ix">Ι</div><h3>Immutable public boundary</h3><p>Mullusi is presented as one governed system across website, docs, repositories, sandbox, metrics, and contact paths.</p></article>
+          <article class="card"><span class="kind">Identity</span><div class="ix">Ι</div><h3>Immutable public boundary</h3><p>Mullusi is presented as one governed system across website, docs, release evidence, sandbox, metrics, and contact paths.</p></article>
           <article class="card"><span class="kind">Governance</span><div class="ix">Λ</div><h3>Claims tied to evidence</h3><p>Public claims are separated into the deployed website, private incubation, planned domains, and operational interfaces.</p></article>
           <article class="card"><span class="kind">Structure</span><div class="ix">Σ</div><h3>Content is data-backed</h3><p>Deployment card, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records.</p></article>
-          <article class="card"><span class="kind">Evolution</span><div class="ix">H</div><h3>Expansion without redesign</h3><p>New repositories and domains enter the public site through data updates before they need dedicated pages.</p></article>
+          <article class="card"><span class="kind">Evolution</span><div class="ix">H</div><h3>Expansion without redesign</h3><p>New product surfaces and domains enter the public site through data updates before they need dedicated pages.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="band" id="architecture" aria-labelledby="architecture-title">
+    <section class="band tier-primary" id="architecture" aria-labelledby="architecture-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="architecture.tag">Architecture</div>
-          <h2 id="architecture-title" data-i18n="architecture.title">One website, one release map, one governed symbolic spine.</h2>
+          <h2 id="architecture-title" data-i18n="architecture.title">Governed public spine</h2>
           <p data-i18n="architecture.body">The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.</p>
           <p class="plain" data-i18n="architecture.plain">In plain terms: every public claim points to a real surface, a planned slot, or nothing — never a guess.</p>
         </div>
         <div class="pipe reveal">
-          <article class="step"><div class="num">01</div><h3 data-i18n="architecture.step1.title">Input</h3><p data-i18n="architecture.step1.body">Observe task, repo, paper, engine, or product intent.</p></article>
+          <article class="step"><div class="num">01</div><h3 data-i18n="architecture.step1.title">Input</h3><p data-i18n="architecture.step1.body">Observe task, paper, engine, or product intent.</p></article>
           <article class="step"><div class="num">02</div><h3 data-i18n="architecture.step2.title">Activate Symbols</h3><p data-i18n="architecture.step2.body">Map the task into the system's symbol, rule, and causal-chain terms.</p></article>
           <article class="step"><div class="num">03</div><h3 data-i18n="architecture.step3.title">Propagate Constraints</h3><p data-i18n="architecture.step3.body">Apply governance rules: budget, policy, causality, proof, and lineage.</p></article>
           <article class="step"><div class="num">04</div><h3 data-i18n="architecture.step4.title">Detect Conflicts</h3><p data-i18n="architecture.step4.body">Expose unresolved claims, missing evidence, unsafe transitions, and naming risk.</p></article>
@@ -390,11 +351,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band" aria-labelledby="interfaces-title">
+    <section class="band tier-secondary" aria-labelledby="interfaces-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="interfaces.tag">Interfaces</div>
-          <h2 id="interfaces-title" data-i18n="interfaces.title">The public surface is organized as routes, not one-off pages.</h2>
+          <h2 id="interfaces-title" data-i18n="interfaces.title">Public routes</h2>
           <p data-i18n="interfaces.body">Interface links are treated as managed records so new public routes can be added without reworking the layout.</p>
         </div>
         <div class="routes reveal" data-interface-links>
@@ -406,11 +367,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band" id="services" aria-labelledby="services-title">
+    <section class="band tier-primary" id="services" aria-labelledby="services-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="services.tag">Service Stack</div>
-          <h2 id="services-title" data-i18n="services.title">Packages distribute tools. Mullusi services carry governed judgment.</h2>
+          <h2 id="services-title" data-i18n="services.title">Service stack</h2>
           <p data-i18n="services.body">Packages help users connect, validate, and submit work. Hosted services perform governance, preserve traces, issue proof stamps, and expose operational control.</p>
         </div>
         <div class="services reveal" data-service-grid>
@@ -423,31 +384,13 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band" id="news" aria-labelledby="news-title">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="news.tag">Frontier Signal</div>
-          <h2 id="news-title" data-i18n="news.title">General technology news, breakthroughs, and research releases.</h2>
-          <p data-i18n="news.body">A daily ranked digest of notable technology, science breakthroughs, and research releases, refreshed automatically from public discussion. Links are external and illustrative, not Mullusi claims.</p>
-        </div>
-        <div class="news-feed reveal" data-news>
-          <noscript>
-            <div class="news-empty">
-              <h3>Daily digest — source available without scripts</h3>
-              <p>This is the one region that changes daily: a ranked digest of external technology, science, and research links, refreshed automatically by a scheduled job. Rather than embed a snapshot that would go stale within hours, the live list is read from <code>data/news.json</code>. Inspect the current digest and its refresh history directly: <a href="https://github.com/mullusi/mullusi-site/blob/main/data/news.json" rel="noopener noreferrer" target="_blank">data/news.json on GitHub</a>. Links there are external public sources, not Mullusi claims.</p>
-            </div>
-          </noscript>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" id="products" aria-labelledby="products-title">
+    <section class="band tier-primary" id="products" aria-labelledby="products-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="products.tag">Product Graph</div>
-          <h2 id="products-title" data-i18n="products.title">Mullu is the flagship product. Other engines stay staged until their proof boundary is ready.</h2>
+          <h2 id="products-title" data-i18n="products.title">Product graph</h2>
           <p data-i18n="products.body">The public site now separates the Mullusi umbrella, the Mullu product route, and the proof boundary. Product-shaped runtime, SDK, science, language, and interface work remains private until release gates are met.</p>
-          <p class="plain" data-i18n="products.plain">In plain terms: Mullu is the only product surface today. The rest are internal building blocks, not separate tools you can use yet.</p>
+          <p class="plain" data-i18n="products.plain">In plain terms: Mullu is public-facing first; the other engines wait for proof-ready release gates.</p>
         </div>
         <div class="pgraph reveal">
           <article class="pg"><span class="sym">M</span><h3 data-i18n="products.pg1.title">Mullu</h3><p data-i18n="products.pg1.body">Flagship governed product for proof-backed work, private beta access, product surfaces, and runtime-bound symbolic execution.</p></article>
@@ -458,113 +401,61 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band" id="sciences" aria-labelledby="sciences-title">
+    <section class="band tier-secondary" id="sciences" aria-labelledby="sciences-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="sciences.tag">Science Engines</div>
-          <h2 id="sciences-title" data-i18n="sciences.title">Domain engines come after the governed core earns trust — one at a time, not all at once.</h2>
-          <p data-i18n="sciences.body">Mullu's governed evaluation is the focus today. Math, physics, engineering, biology, chemistry, and music are staged behind it as a sequenced roadmap — each opens only after the core is proven and that domain clears its own release gate. None are product-ready, and none ship in parallel.</p>
-          <p class="plain" data-i18n="sciences.plain">In plain terms: none of these are built yet. This is a queued roadmap, not shipped capability.</p>
+          <h2 id="sciences-title" data-i18n="sciences.title">Science roadmap</h2>
+          <p data-i18n="sciences.body">Math, physics, engineering, biology, chemistry, and music are staged as governed product families, connected by a cross-domain bridge layer. None are exposed as product-ready public-source releases yet.</p>
+          <p class="plain" data-i18n="sciences.plain">In plain terms: the roadmap is sequential; staged domains do not compete with the live product path.</p>
         </div>
         <div class="engines reveal" data-future-domains aria-label="Staged domain engines and cross-domain bridge layer" data-i18n-attr="aria-label:sciences.gridAria">
-          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Σ</div><h3>Math</h3><p>Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow.</p><span class="eng-repo">mullusi-math-engine</span></article>
-          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Λ</div><h3>Physics</h3><p>Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans.</p><span class="eng-repo">mullusi-physics-engine</span></article>
-          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Γ</div><h3>Engineering</h3><p>Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications across many engineering products.</p><span class="eng-repo">mullusi-engineering-engine</span></article>
-          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Ψ</div><h3>Biology</h3><p>Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning.</p><span class="eng-repo">mullusi-biology-engine</span></article>
-          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Δ</div><h3>Chemistry</h3><p>Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation.</p><span class="eng-repo">mullusi-chemistry-engine</span></article>
-          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Φ</div><h3>Music</h3><p>Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure.</p><span class="eng-repo">mullusi-music-engine</span></article>
-          <article class="eng eng-bridge"><span class="st" aria-hidden="true">Bridge layer</span><div class="eng-sym" aria-hidden="true">Ω</div><h3>Unified Science</h3><p>Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures.</p><span class="eng-repo">mullusi-unified-science-lab</span></article>
+          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Σ</div><h3>Math</h3><span class="eng-boundary">private incubation</span></article>
+          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Λ</div><h3>Physics</h3><span class="eng-boundary">private incubation</span></article>
+          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Γ</div><h3>Engineering</h3><span class="eng-boundary">private incubation</span></article>
+          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Ψ</div><h3>Biology</h3><span class="eng-boundary">private incubation</span></article>
+          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Δ</div><h3>Chemistry</h3><span class="eng-boundary">private incubation</span></article>
+          <article class="eng"><span class="st" aria-hidden="true">Staged</span><div class="eng-sym" aria-hidden="true">Φ</div><h3>Music</h3><span class="eng-boundary">private incubation</span></article>
+          <article class="eng eng-bridge"><span class="st" aria-hidden="true">Bridge layer</span><div class="eng-sym" aria-hidden="true">Ω</div><h3>Unified Science</h3><span class="eng-boundary">private incubation</span></article>
         </div>
       </div>
     </section>
 
-    <section class="band" id="ecosystem" aria-labelledby="ecosystem-title">
+    <section class="band tier-secondary" id="repos" aria-labelledby="repos-title">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div class="tag" data-i18n="ecosystem.tag">Ecosystem Map</div>
-          <h2 id="ecosystem-title" data-i18n="ecosystem.title">One view of what is deployed, what is staged, and what is still private.</h2>
-          <p data-i18n="ecosystem.body">Generated from the same public registry as the rest of the site. Deployed surfaces carry a repository; staged engines name only a planned repository; private-incubation tracks expose a publish gate, never a name.</p>
-        </div>
-        <div class="status-board reveal" data-ecosystem-map>
-          <noscript>
-            <div class="status-head"><span class="handoff-kicker">Deployed</span><h3>1</h3></div>
-            <ul class="status-list">
-              <li class="status-row is-live"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Mullusi Website</span><span class="status-state">mullusi/mullusi-site</span><span class="status-note">Public index page, GitHub Pages deployment, domain boundary, and website registry for Mullusi.</span></li>
-            </ul>
-            <div class="status-head"><span class="handoff-kicker">Staged</span><h3>7</h3></div>
-            <ul class="status-list">
-              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Physics</span><span class="status-state">mullusi-physics-engine</span><span class="status-note">Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans.</span></li>
-              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Math</span><span class="status-state">mullusi-math-engine</span><span class="status-note">Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow.</span></li>
-              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Biology</span><span class="status-state">mullusi-biology-engine</span><span class="status-note">Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning.</span></li>
-              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Chemistry</span><span class="status-state">mullusi-chemistry-engine</span><span class="status-note">Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation.</span></li>
-              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Music</span><span class="status-state">mullusi-music-engine</span><span class="status-note">Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure.</span></li>
-              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Engineering</span><span class="status-state">mullusi-engineering-engine</span><span class="status-note">Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications.</span></li>
-              <li class="status-row is-planned"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Unified Science</span><span class="status-state">mullusi-unified-science-lab</span><span class="status-note">Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures.</span></li>
-            </ul>
-            <div class="status-head"><span class="handoff-kicker">Private incubation</span><h3>7</h3></div>
-            <ul class="status-list">
-              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Foundation and core kernels</span><span class="status-state">Publish gate</span><span class="status-note">Public only after README, license, examples, test evidence, release scope, and product-readiness boundary are complete.</span></li>
-              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Governance runtime and control plane</span><span class="status-state">Publish gate</span><span class="status-note">Public only after documented API contracts, test evidence, deployment boundary, and secret scan pass.</span></li>
-              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">SDK and developer package work</span><span class="status-state">Publish gate</span><span class="status-note">Public only after reproducible install, examples, license, changelog, and hosted-service dependency statement.</span></li>
-              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Science and research engines</span><span class="status-state">Publish gate</span><span class="status-note">Public only as frozen research snapshots, demos, or papers with explicit limits and no product-readiness claim.</span></li>
-              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Inspection, search, capsule, and interface surfaces</span><span class="status-state">Publish gate</span><span class="status-note">Public only after demo route, README, privacy boundary, and rollback path are present.</span></li>
-              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Language kernels and machine-layer experiments</span><span class="status-state">Publish gate</span><span class="status-note">Public only after spec, examples, failure modes, and compatibility commitments are written.</span></li>
-              <li class="status-row is-awaiting"><span class="status-dot" aria-hidden="true"></span><span class="status-name">Token, fold, traversal, and reasoning experiments</span><span class="status-state">Publish gate</span><span class="status-note">Public only after frozen snapshot, reproducible examples, documented limits, and explicit non-product status are present.</span></li>
-            </ul>
-          </noscript>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" id="repos" aria-labelledby="repos-title">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="repos.tag">Repository Observatory</div>
-          <h2 id="repos-title" data-i18n="repos.title">Only deployed public surfaces are linked.</h2>
-          <p>Search the single deployed public repository. Product, runtime, SDK, science, and research repositories are intentionally excluded from this catalog until release gates are met. The registry is generated from <span class="inline-accent">data/products.json</span>.</p>
+          <div class="tag" data-i18n="repos.tag">Public Surface Registry</div>
+          <h2 id="repos-title" data-i18n="repos.title">Public surface registry</h2>
+          <p>Search the deployed public surfaces. Product, runtime, SDK, science, and research source repositories are intentionally excluded from this catalog unless Mullusi approves a separate public-source release.</p>
         </div>
 
         <div class="repo-toolbar reveal">
           <label class="search-box">
             <span>Search</span>
-            <input type="search" placeholder="website, index, github pages, public..." data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder" />
+            <input type="search" placeholder="website, index, domain, public..." data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder" />
           </label>
-          <div class="filters" role="group" aria-label="Repository category filters" data-repo-filters></div>
+          <div class="filters" role="group" aria-label="Public surface category filters" data-repo-filters></div>
         </div>
 
         <div class="hero-foot repo-stats reveal" data-repo-stats>
-          <div><div class="k">1</div><div class="l">Deployed public repos</div></div>
-          <div><div class="k">1</div><div class="l">Categories</div></div>
-          <div><div class="k">0</div><div class="l">Public product repos</div></div>
+          <div><div class="k">0</div><div class="l">Deployed public surfaces</div></div>
+          <div><div class="k">0</div><div class="l">Categories</div></div>
+          <div><div class="k">0</div><div class="l">Public product surfaces</div></div>
         </div>
 
         <div class="repo-grid reveal" data-repo-grid>
           <noscript>
-            <article class="repo-card">
-              <div class="repo-card-head">
-                <h3>Mullusi Website</h3>
-                <span class="status-pill">deployed</span>
-              </div>
-              <span class="repo-name">mullusi/mullusi-site</span>
-              <p>Public index page, GitHub Pages deployment, domain boundary, and website registry for Mullusi.</p>
-              <div class="tag-row">
-                <span class="tag-pill">website</span>
-                <span class="tag-pill">index</span>
-                <span class="tag-pill">github-pages</span>
-                <span class="tag-pill">public-boundary</span>
-              </div>
-              <a class="repo-link" href="https://github.com/mullusi/mullusi-site" rel="noopener noreferrer" target="_blank">Open repository -&gt;</a>
-            </article>
+            <p>Enable JavaScript to view the searchable deployment registry. The public registry is available in <code>data/products.json</code>.</p>
           </noscript>
         </div>
 
-        <div class="repo-handoff reveal" aria-label="Repository to roadmap continuity" data-repository-handoff>
+        <div class="repo-handoff reveal" aria-label="Public surface to roadmap continuity" data-repository-handoff>
           <div>
             <span class="handoff-kicker">Lineage handoff</span>
-            <p><strong>Registry state feeds release state.</strong> A private incubation project becomes a public repository only when its proof surface, docs route, and demo boundary are ready.</p>
+            <p><strong>Registry state feeds release state.</strong> A private incubation project becomes a public surface only when its proof surface, docs route, and demo boundary are ready.</p>
           </div>
           <div class="handoff-chain" aria-hidden="true">
-            <span>Repository</span>
+            <span>Surface</span>
             <span>Proof</span>
             <span>Route</span>
             <span>Release</span>
@@ -572,36 +463,36 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="diagram reveal" data-release-machine>
           <noscript>
-            <p>Repository &rarr; Proof &rarr; Route &rarr; Release &rarr; AwaitingEvidence.</p>
+            <p>Surface &rarr; Proof &rarr; Route &rarr; Release &rarr; AwaitingEvidence.</p>
           </noscript>
         </div>
       </div>
     </section>
 
-    <section class="band" id="roadmap" aria-labelledby="roadmap-title">
+    <section class="band tier-tertiary" id="roadmap" aria-labelledby="roadmap-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="roadmap.tag">Roadmap</div>
-          <h2 id="roadmap-title" data-i18n="roadmap.title">Publish each domain only after the release gate is met.</h2>
-          <p data-i18n="roadmap.body">The public site is ready for direct repository expansion, but each new domain stays private until it has a repo, demo route, docs route, governance status, and product card that can be defended.</p>
+          <h2 id="roadmap-title" data-i18n="roadmap.title">Release gates</h2>
+          <p data-i18n="roadmap.body">The public site is ready for direct surface expansion, but each new domain stays private until it has a route, demo boundary, docs route, governance status, and product card that can be defended.</p>
         </div>
         <div class="road reveal" data-release-stages>
           <article class="rd"><div class="n">01</div><h3>Register</h3><p>Add or revise a deployed public-surface record in the structured registry.</p></article>
-          <article class="rd"><div class="n">02</div><h3>Attach</h3><p>Connect repository, docs, demo, proof, status, and contact routes.</p></article>
+          <article class="rd"><div class="n">02</div><h3>Attach</h3><p>Connect docs, demo, proof, status, and contact routes.</p></article>
           <article class="rd"><div class="n">03</div><h3>Verify</h3><p>Confirm claims, accessibility, local rendering, and public boundary constraints.</p></article>
           <article class="rd"><div class="n">04</div><h3>Publish</h3><p>Expose the product surface only after the public boundary is verified.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="band" aria-labelledby="governance-title">
+    <section class="band tier-tertiary" aria-labelledby="governance-title">
       <div class="wrap">
         <div class="split reveal">
           <div>
             <div class="tag" data-i18n="governance.tag">Judgment Kernel</div>
-            <h2 id="governance-title" data-i18n="governance.title">Ψ produces traceable public claims.</h2>
+            <h2 id="governance-title" data-i18n="governance.title">Judgment kernel</h2>
             <div class="kernel-eq">Ψ(PS, SE, EFF, SG, PRR, CPM, ERL, PCE, PCB, K) → J***</div>
-            <p data-i18n="governance.body">Website claims follow the same discipline as the system: observable source, stated boundary, reversible update, and no silent failure. That is why the repo graph separates the deployed website repository, private incubation, staged domains, and operational interfaces.</p>
+            <p data-i18n="governance.body">Website claims follow the same discipline as the system: observable public surface, stated boundary, reversible update, and no silent failure. That is why the public graph separates deployed surfaces, private incubation, staged domains, and operational interfaces.</p>
             <p class="plain" data-i18n="governance.plain">In plain terms: Ψ is the judgment step. It releases a public claim only when state, effects, safety guards, proof, and lineage all hold. Anything unresolved, nothing is published.</p>
           </div>
           <div>
@@ -611,11 +502,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
               </figure>
               <div class="architect-copy">
                 <div class="tag" data-i18n="governance.profileTag">Architect Note</div>
-                <h2 id="profile-title" data-i18n="governance.profileTitle">Mullusi is the public subject. Tamirat Wubie is the current architect.</h2>
+                <h2 id="profile-title" data-i18n="governance.profileTitle">Architect note</h2>
                 <p data-i18n="governance.profileBody">The company surface stays centered on the Mullusi system: deployed website surface, private incubation boundary, staged domain engines, and public evidence. The creator profile is intentionally secondary; it exists only to make stewardship and contact paths explicit.</p>
                 <div class="meta-row">
                   <div class="mr"><div class="mk" data-i18n="governance.roleK">Role</div><div class="mv" data-i18n="governance.roleV">Architect, contributor, and current solo developer.</div></div>
-                  <div class="mr"><div class="mk" data-i18n="governance.boundaryK">Boundary</div><div class="mv" data-i18n="governance.boundaryV">Company claims remain tied to visible products, domains, and repository evidence.</div></div>
+                  <div class="mr"><div class="mk" data-i18n="governance.boundaryK">Boundary</div><div class="mv" data-i18n="governance.boundaryV">Company claims remain tied to visible products, domains, release evidence, and contact paths.</div></div>
                   <div class="mr"><div class="mk" data-i18n="governance.accessK">Access</div><div class="mv"><a href="mailto:tamirat@mullusi.com">tamirat@mullusi.com</a> · <a href="mailto:research@mullusi.com">research@mullusi.com</a></div></div>
                 </div>
               </div>
@@ -625,13 +516,29 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="cta">
+    <section class="band tier-tertiary" id="news" aria-labelledby="news-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="news.tag">Frontier Signal</div>
+          <h2 id="news-title" data-i18n="news.title">Frontier signal</h2>
+          <p data-i18n="news.body">A daily ranked digest of notable technology, science breakthroughs, and research releases, refreshed automatically from public discussion.</p>
+        </div>
+        <div class="news-feed reveal" data-news>
+          <noscript>
+            <p>Enable JavaScript to view the daily technology and research digest. It is generated from <code>data/news.json</code>.</p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="cta-title">
       <div class="wrap">
         <div class="tag center-tag" data-i18n="cta.tag">Expansion</div>
-        <h2 data-i18n="cta.title">Promote a repository only after product evidence is ready.</h2>
-        <p data-i18n="cta.body">Each new domain can move from private incubation to public surface when the repo, demo route, docs route, governance status, and release boundary are verified. Mullu remains the first product path under the Mullusi umbrella.</p>
+        <h2 id="cta-title" data-i18n="cta.title">Promote after proof</h2>
+        <p data-i18n="cta.body">Each new domain can move from private incubation to public surface when the route, demo boundary, docs route, governance status, and release boundary are verified. Mullu remains the first product path under the Mullusi umbrella.</p>
         <div class="cta-actions">
-          <a href="#paths" class="btn btn-solid" data-i18n="nav.paths">Start here</a>
+          <a href="/mullu/" class="btn btn-solid" data-i18n="hero.openMullu">Open Mullu</a>
+          <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
           <a href="mailto:research@mullusi.com" class="btn" data-i18n="cta.contactResearch">Contact research</a>
         </div>
       </div>
@@ -664,15 +571,15 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           </div>
           <div class="col">
             <h3 data-i18n="footer.contact">Contact</h3>
-            <a href="https://github.com/mullusi" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
+            <a href="mailto:hello@mullusi.com" data-i18n="nav.contact">Contact</a>
+            <a href="mailto:hello@mullusi.com">hello@mullusi.com</a>
             <a href="mailto:research@mullusi.com">research@mullusi.com</a>
-            <a href="mailto:tamirat@mullusi.com">tamirat@mullusi.com</a>
           </div>
         </div>
       </div>
       <div class="foot-base">
         <span class="law" data-i18n="footer.law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</span>
-        <span data-i18n="footer.rights">© 2026 Mullusi — Public claims only.</span>
+        <span data-i18n="footer.rights">© 2026 Mullusi — All rights reserved.</span>
       </div>
       <p class="foot-meter" data-visit-meter aria-label="This visit count is stored only in your browser and is not site-wide analytics." data-i18n-attr="aria-label:footer.meterAria"></p>
     </div>

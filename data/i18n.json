@@ -4,7 +4,10 @@
     "version": "2026.05.i18n",
     "purpose": "Structured public website translation dictionary for Mullusi.",
     "defaultLang": "en",
-    "languages": ["en", "am"]
+    "languages": [
+      "en",
+      "am"
+    ]
   },
   "languageNames": {
     "en": "English",
@@ -18,6 +21,10 @@
     "nav.brandAria": {
       "en": "Mullusi home",
       "am": "ሙሉሲ መነሻ"
+    },
+    "nav.start": {
+      "en": "Start",
+      "am": "መነሻ"
     },
     "nav.architecture": {
       "en": "Architecture",
@@ -48,16 +55,16 @@
       "am": "የሳይንስ ሞተሮች"
     },
     "nav.repos": {
-      "en": "Repos",
-      "am": "ሪፖዚቶሪዎች"
-    },
-    "nav.ecosystem": {
-      "en": "Ecosystem",
-      "am": "ሥነ-ምህዳር"
+      "en": "Surfaces",
+      "am": "Surfaces"
     },
     "nav.github": {
-      "en": "GitHub",
-      "am": "GitHub"
+      "en": "Source",
+      "am": "Source"
+    },
+    "nav.contact": {
+      "en": "Contact",
+      "am": "Contact"
     },
     "nav.docs": {
       "en": "Docs",
@@ -107,6 +114,10 @@
       "en": "Mullu evaluates a proposed action against your rules, records an append-only trace of exactly why, and returns a verdict — before anything executes. It turns governed symbolic reasoning into work you can audit and reproduce. The live runtime is still publishing its signed evidence; until then, this site is the public proof boundary.",
       "am": "ሙሉ የቀረበን ድርጊት ከደንቦችዎ ጋር ይገመግማል፣ ለምን እንደሆነ በትክክል ተጨማሪ-ብቻ ዱካ ይመዘግባል፣ እና ማንኛውም ነገር ከመፈጸሙ በፊት ፍርድ ይመልሳል። የሚተዳደር ምልክታዊ ምክንያትን ሊመረመርና ሊደገም ወደሚችል ሥራ ይለውጣል። ቀጥታ runtime ገና የተፈረመ ማስረጃውን እያተመ ነው፤ እስከዚያ ድረስ ይህ ጣቢያ ይፋዊ የማረጋገጫ ወሰን ነው።"
     },
+    "hero.plain": {
+      "en": "In plain terms: Mullu checks whether work is allowed, explains why, and leaves a proof record.",
+      "am": "በቀላል አነጋገር፦ ሙሉ ሥራው የተፈቀደ መሆኑን ይፈትሻል፣ ምክንያቱን ያብራራል፣ እና የማረጋገጫ መዝገብ ይተዋል።"
+    },
     "hero.openMullu": {
       "en": "Open Mullu",
       "am": "ሙሉን ክፈት"
@@ -128,12 +139,80 @@
       "am": "ዋና የምርት መንገድ"
     },
     "hero.footRepo": {
-      "en": "Deployed public repo",
-      "am": "የተሰማራ ይፋዊ ሪፖ"
+      "en": "Deployed public surface",
+      "am": "Deployed public surface"
     },
     "hero.footRuntime": {
       "en": "Live runtime",
       "am": "ቀጥታ runtime"
+    },
+    "start.tag": {
+      "en": "Start Here",
+      "am": "ከዚህ ይጀምሩ"
+    },
+    "start.title": {
+      "en": "Choose the surface",
+      "am": "ገጹን ይምረጡ"
+    },
+    "start.body": {
+      "en": "A first visit should route quickly: product, proof, sandbox, or public structure.",
+      "am": "የመጀመሪያ ጉብኝት በፍጥነት መመራት አለበት፦ ምርት፣ ማረጋገጫ፣ sandbox፣ ወይም ይፋዊ መዋቅር።"
+    },
+    "start.mullu.k": {
+      "en": "Product",
+      "am": "ምርት"
+    },
+    "start.mullu.t": {
+      "en": "Open Mullu",
+      "am": "ሙሉን ክፈት"
+    },
+    "start.mullu.b": {
+      "en": "Flagship governed product route.",
+      "am": "ዋናው የሚተዳደር የምርት መንገድ።"
+    },
+    "start.proof.k": {
+      "en": "Evidence",
+      "am": "ማስረጃ"
+    },
+    "start.proof.t": {
+      "en": "Review proof boundary",
+      "am": "የማረጋገጫ ወሰንን ይመልከቱ"
+    },
+    "start.proof.b": {
+      "en": "Verified and pending runtime claims.",
+      "am": "የተረጋገጡና በመጠባበቅ ላይ ያሉ runtime የይገባኛል ጥያቄዎች።"
+    },
+    "start.playground.k": {
+      "en": "Demo",
+      "am": "ማሳያ"
+    },
+    "start.playground.t": {
+      "en": "Try the playground",
+      "am": "playgroundን ይሞክሩ"
+    },
+    "start.playground.b": {
+      "en": "Illustrative governed evaluation flow.",
+      "am": "የሚተዳደር የግምገማ ፍሰት ማሳያ።"
+    },
+    "start.architecture.k": {
+      "en": "Structure",
+      "am": "መዋቅር"
+    },
+    "start.architecture.t": {
+      "en": "Read the architecture",
+      "am": "አርክቴክቸሩን ያንብቡ"
+    },
+    "start.architecture.b": {
+      "en": "Public route map and release discipline.",
+      "am": "ይፋዊ የመንገድ ካርታና የመለቀቅ ዲሲፕሊን።"
+    },
+    "boundary.title": {
+      "en": "How to read this site",
+      "am": "ይህን ጣቢያ እንዴት ማንበብ እንደሚገባ"
+    },
+    "boundary.body": {
+      "en": "Live surfaces are linked directly. Staged engines are roadmap records. Illustrative examples show the intended evaluation shape and are not runtime claims until the proof route publishes signed witness evidence.",
+      "am": "ቀጥታ ገጾች በቀጥታ ተያይዘዋል። የተዘጋጁ ሞተሮች የመንገድ ካርታ መዝገቦች ናቸው። ማሳያዎች የታሰበውን የግምገማ ቅርጽ ያሳያሉ፣ ነገር ግን የማረጋገጫ መንገዱ የተፈረመ የምስክር ማስረጃ እስኪያትም ድረስ runtime የይገባኛል ጥያቄዎች አይደሉም።"
     },
     "marquee.1": {
       "en": "Checked before it runs",
@@ -164,8 +243,8 @@
       "am": "የምርት የይገባኛል ወሰን"
     },
     "claim.title": {
-      "en": "Mullusi is the umbrella. Mullu is the product. Runtime publication is still AwaitingEvidence.",
-      "am": "ሙሉሲ ጃንጥላው ነው። ሙሉ ምርቱ ነው። የRuntime ይፋ ማድረግ አሁንም AwaitingEvidence ላይ ነው።"
+      "en": "Production claim boundary",
+      "am": "ሙሉሲ ጃንጥላው ነው። ሙሉ ምርቱ ነው። የRuntime ይፋ ማድረግ አሁንም AwaitingEvidence ላይ ነው"
     },
     "claim.body": {
       "en": "The website proves the public company and product route boundary. It does not claim a live governed runtime until the deployment witness endpoints publish signed evidence.",
@@ -200,8 +279,8 @@
       "am": "የማስረጃ ሰሌዳ"
     },
     "evidence.title": {
-      "en": "Public claims stay attached to structure, source, release state, and runtime witness state.",
-      "am": "ይፋዊ የይገባኛል ጥያቄዎች ከመዋቅር፣ ከምንጭ፣ ከመለቀቅ ሁኔታና ከruntime ምስክር ሁኔታ ጋር ተያይዘው ይቆያሉ።"
+      "en": "Evidence plane",
+      "am": "ይፋዊ የይገባኛል ጥያቄዎች ከመዋቅር፣ ከምንጭ፣ ከመለቀቅ ሁኔታና ከruntime ምስክር ሁኔታ ጋር ተያይዘው ይቆያሉ"
     },
     "evidence.body": {
       "en": "Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether live runtime evidence is closed.",
@@ -212,8 +291,8 @@
       "am": "አርክቴክቸር"
     },
     "architecture.title": {
-      "en": "One website, one release map, one governed symbolic spine.",
-      "am": "አንድ ድረ-ገጽ፣ አንድ የመለቀቅ ካርታ፣ አንድ የሚተዳደር ምልክታዊ አከርካሪ።"
+      "en": "Governed public spine",
+      "am": "አንድ ድረ-ገጽ፣ አንድ የመለቀቅ ካርታ፣ አንድ የሚተዳደር ምልክታዊ አከርካሪ"
     },
     "architecture.body": {
       "en": "The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.",
@@ -224,7 +303,7 @@
       "am": "ግቤት"
     },
     "architecture.step1.body": {
-      "en": "Observe task, repo, paper, engine, or product intent.",
+      "en": "Observe task, paper, engine, or product intent.",
       "am": "ተግባርን፣ ሪፖን፣ ጽሑፍን፣ ሞተርን ወይም የምርት ሐሳብን ይመልከቱ።"
     },
     "architecture.step2.title": {
@@ -264,8 +343,8 @@
       "am": "በይነገጾች"
     },
     "interfaces.title": {
-      "en": "The public surface is organized as routes, not one-off pages.",
-      "am": "ይፋዊው ገጽ እንደ መንገዶች የተደራጀ ነው እንጂ እንደ ነጠላ ገጾች አይደለም።"
+      "en": "Public routes",
+      "am": "ይፋዊው ገጽ እንደ መንገዶች የተደራጀ ነው እንጂ እንደ ነጠላ ገጾች አይደለም"
     },
     "interfaces.body": {
       "en": "Interface links are treated as managed records so new public routes can be added without reworking the layout.",
@@ -276,8 +355,8 @@
       "am": "የአገልግሎት ድርድር"
     },
     "services.title": {
-      "en": "Packages distribute tools. Mullusi services carry governed judgment.",
-      "am": "ጥቅሎች መሣሪያዎችን ያሰራጫሉ። የሙሉሲ አገልግሎቶች የሚተዳደር ፍርድን ይሸከማሉ።"
+      "en": "Service stack",
+      "am": "ጥቅሎች መሣሪያዎችን ያሰራጫሉ። የሙሉሲ አገልግሎቶች የሚተዳደር ፍርድን ይሸከማሉ"
     },
     "services.body": {
       "en": "Packages help users connect, validate, and submit work. Hosted services perform governance, preserve traces, issue proof stamps, and expose operational control.",
@@ -288,8 +367,8 @@
       "am": "Govern Cloud v1"
     },
     "govern.title": {
-      "en": "The first sellable service is evaluation, trace, and proof.",
-      "am": "የመጀመሪያው የሚሸጥ አገልግሎት ግምገማ፣ ዱካና ማረጋገጫ ነው።"
+      "en": "Govern evaluation service",
+      "am": "የመጀመሪያው የሚሸጥ አገልግሎት ግምገማ፣ ዱካና ማረጋገጫ ነው"
     },
     "govern.body": {
       "en": "Start with one vertical contract: authorized request, deterministic evaluation, append-only trace, proof state, repair action, and dashboard visibility.",
@@ -300,16 +379,16 @@
       "am": "የምርት ግራፍ"
     },
     "products.title": {
-      "en": "Mullu is the flagship product. Other engines stay staged until their proof boundary is ready.",
-      "am": "ሙሉ ዋናው ምርት ነው። ሌሎች ሞተሮች የማረጋገጫ ወሰናቸው እስኪዘጋጅ ድረስ ተዘጋጅተው ይቆያሉ።"
+      "en": "Product graph",
+      "am": "ሙሉ ዋናው ምርት ነው። ሌሎች ሞተሮች የማረጋገጫ ወሰናቸው እስኪዘጋጅ ድረስ ተዘጋጅተው ይቆያሉ"
     },
     "products.body": {
       "en": "The public site now separates the Mullusi umbrella, the Mullu product route, and the proof boundary. Product-shaped runtime, SDK, science, language, and interface work remains private until release gates are met.",
       "am": "ይፋዊው ጣቢያ አሁን የሙሉሲ ጃንጥላን፣ የሙሉ የምርት መንገድንና የማረጋገጫ ወሰንን ይለያል። የምርት-ቅርጽ ያለው runtime፣ SDK፣ ሳይንስ፣ ቋንቋና የበይነገጽ ሥራ የመለቀቅ በሮች እስኪሟሉ ድረስ የግል ሆኖ ይቆያል።"
     },
     "products.plain": {
-      "en": "In plain terms: Mullu is the only product surface today. The rest are internal building blocks, not separate tools you can use yet.",
-      "am": "በቀላል አነጋገር፦ ዛሬ ሙሉ ብቸኛው የምርት ገጽ ነው። የቀሩት ውስጣዊ ግንባታ ብሎኮች ናቸው እንጂ ገና ሊጠቀሙባቸው የሚችሉ የተለያዩ መሣሪያዎች አይደሉም።"
+      "en": "In plain terms: Mullu is public-facing first; the other engines wait for proof-ready release gates.",
+      "am": "በቀላል አነጋገር፦ ሙሉ መጀመሪያ ይፋዊ የምርት መንገድ ነው፤ ሌሎች ሞተሮች ለማረጋገጫ ዝግጁ የመለቀቅ በሮችን ይጠብቃሉ።"
     },
     "products.pg1.title": {
       "en": "Mullu",
@@ -348,16 +427,16 @@
       "am": "የሳይንስ ሞተሮች"
     },
     "sciences.title": {
-      "en": "Domain engines come after the governed core earns trust — one at a time, not all at once.",
-      "am": "የጎራ ሞተሮች የሚመጡት የሚተዳደረው ዋና ክፍል መተማመንን ካገኘ በኋላ ነው — በተራ አንድ በአንድ እንጂ ሁሉም በአንድ ጊዜ አይደለም።"
+      "en": "Science roadmap",
+      "am": "የወደፊት ሪፖዚቶሪዎች ተለያይተው የቆሙ ፕሮጀክቶች ሳይሆኑ የጎራ ሞተሮች ይሆናሉ"
     },
     "sciences.body": {
-      "en": "Mullu's governed evaluation is the focus today. Math, physics, engineering, biology, chemistry, and music are staged behind it as a sequenced roadmap — each opens only after the core is proven and that domain clears its own release gate. None are product-ready, and none ship in parallel.",
-      "am": "የሙሉ የሚተዳደር ግምገማ ዛሬ ትኩረቱ ነው። ሒሳብ፣ ፊዚክስ፣ ኢንጂነሪንግ፣ ባዮሎጂ፣ ኬሚስትሪና ሙዚቃ ከእሱ ጀርባ እንደ ቅደም-ተከተል ያለው የመንገድ ካርታ ተዘጋጅተዋል — እያንዳንዱ የሚከፈተው ዋናው ከተረጋገጠና ያ ጎራ የራሱን የመለቀቅ በር ካለፈ በኋላ ብቻ ነው። አንዳቸውም ለምርት-ዝግጁ አይደሉም፣ አንዳቸውም በትይዩ አይለቀቁም።"
+      "en": "Math, physics, engineering, biology, chemistry, and music are staged as governed product families, connected by a cross-domain bridge layer. None are exposed as product-ready public-source releases yet.",
+      "am": "ሒሳብ፣ ፊዚክስ፣ ኢንጂነሪንግ፣ ባዮሎጂ፣ ኬሚስትሪና ሙዚቃ እንደ የሚተዳደር ምርትና የሪፖዚቶሪ ቦታዎች ተዘጋጅተዋል፣ በተሻጋሪ-ጎራ የድልድይ ሽፋን የተገናኙ። እስካሁን አንዳቸውም እንደ ለምርት-ዝግጁ ሪፖዚቶሪዎች አልተጋለጡም።"
     },
     "sciences.plain": {
-      "en": "In plain terms: none of these are built yet. This is a queued roadmap, not shipped capability.",
-      "am": "በቀላል አነጋገር፦ ከእነዚህ ውስጥ አንዳቸውም ገና አልተገነቡም። ይህ የተሰለፈ የመንገድ ካርታ ነው እንጂ የተለቀቀ ችሎታ አይደለም።"
+      "en": "In plain terms: the roadmap is sequential; staged domains do not compete with the live product path.",
+      "am": "በቀላል አነጋገር፦ የመንገድ ካርታው ተከታታይ ነው፤ የተዘጋጁ ጎራዎች ከቀጥታ የምርት መንገድ ጋር አይወዳደሩም።"
     },
     "sciences.bridge": {
       "en": "Bridge layer",
@@ -368,27 +447,27 @@
       "am": "የተዘጋጁ የጎራ ሞተሮችና ተሻጋሪ-ጎራ የድልድይ ሽፋን"
     },
     "repos.tag": {
-      "en": "Repository Observatory",
+      "en": "Public Surface Registry",
       "am": "የሪፖዚቶሪ መመልከቻ"
     },
     "repos.title": {
-      "en": "Only deployed public surfaces are linked.",
-      "am": "የተሰማሩ ይፋዊ ገጾች ብቻ ተያይዘዋል።"
+      "en": "Public surface registry",
+      "am": "የተሰማሩ ይፋዊ ገጾች ብቻ ተያይዘዋል"
     },
     "repos.searchPlaceholder": {
-      "en": "website, index, github pages, public...",
-      "am": "ድረ-ገጽ፣ መነሻ፣ github pages፣ ይፋዊ..."
+      "en": "website, index, domain, public...",
+      "am": "website, index, domain, public..."
     },
     "roadmap.tag": {
       "en": "Roadmap",
       "am": "የመንገድ ካርታ"
     },
     "roadmap.title": {
-      "en": "Publish each domain only after the release gate is met.",
-      "am": "እያንዳንዱን ጎራ የመለቀቅ በሩ ከተሟላ በኋላ ብቻ ያትሙ።"
+      "en": "Release gates",
+      "am": "እያንዳንዱን ጎራ የመለቀቅ በሩ ከተሟላ በኋላ ብቻ ያትሙ"
     },
     "roadmap.body": {
-      "en": "The public site is ready for direct repository expansion, but each new domain stays private until it has a repo, demo route, docs route, governance status, and product card that can be defended.",
+      "en": "The public site is ready for direct surface expansion, but each new domain stays private until it has a route, demo boundary, docs route, governance status, and product card that can be defended.",
       "am": "ይፋዊው ጣቢያ ለቀጥታ የሪፖዚቶሪ መስፋፋት ዝግጁ ነው፤ ነገር ግን እያንዳንዱ አዲስ ጎራ ሊከላከለው የሚችል ሪፖ፣ የማሳያ መንገድ፣ የሰነድ መንገድ፣ የአስተዳደር ሁኔታና የምርት ካርድ እስኪኖረው ድረስ የግል ሆኖ ይቆያል።"
     },
     "governance.tag": {
@@ -396,11 +475,11 @@
       "am": "የፍርድ ኬርነል"
     },
     "governance.title": {
-      "en": "Ψ produces traceable public claims.",
-      "am": "Ψ ሊከታተሉ የሚችሉ ይፋዊ የይገባኛል ጥያቄዎችን ያመነጫል።"
+      "en": "Judgment kernel",
+      "am": "Ψ ሊከታተሉ የሚችሉ ይፋዊ የይገባኛል ጥያቄዎችን ያመነጫል"
     },
     "governance.body": {
-      "en": "Website claims follow the same discipline as the system: observable source, stated boundary, reversible update, and no silent failure. That is why the repo graph separates the deployed website repository, private incubation, staged domains, and operational interfaces.",
+      "en": "Website claims follow the same discipline as the system: observable public surface, stated boundary, reversible update, and no silent failure. That is why the public graph separates deployed surfaces, private incubation, staged domains, and operational interfaces.",
       "am": "የድረ-ገጽ የይገባኛል ጥያቄዎች እንደ ሥርዓቱ ተመሳሳይ ዲሲፕሊን ይከተላሉ፦ ሊታይ የሚችል ምንጭ፣ የተገለጸ ወሰን፣ ሊቀለበስ የሚችል ዝመናና ምንም ጸጥ ያለ ውድቀት የለም። ለዚህም ነው የሪፖ ግራፉ የተሰማራውን የድረ-ገጽ ሪፖዚቶሪ፣ የግል ማብሰያን፣ የተዘጋጁ ጎራዎችንና የአሠራር በይነገጾችን የሚለየው።"
     },
     "governance.plain": {
@@ -412,8 +491,8 @@
       "am": "የአርክቴክት ማስታወሻ"
     },
     "governance.profileTitle": {
-      "en": "Mullusi is the public subject. Tamirat Wubie is the current architect.",
-      "am": "ሙሉሲ ይፋዊው ርዕሰ ጉዳይ ነው። ታምራት ውቤ የአሁኑ አርክቴክት ነው።"
+      "en": "Architect note",
+      "am": "ሙሉሲ ይፋዊው ርዕሰ ጉዳይ ነው። ታምራት ውቤ የአሁኑ አርክቴክት ነው"
     },
     "governance.profileBody": {
       "en": "The company surface stays centered on the Mullusi system: deployed website surface, private incubation boundary, staged domain engines, and public evidence. The creator profile is intentionally secondary; it exists only to make stewardship and contact paths explicit.",
@@ -432,7 +511,7 @@
       "am": "ወሰን"
     },
     "governance.boundaryV": {
-      "en": "Company claims remain tied to visible products, domains, and repository evidence.",
+      "en": "Company claims remain tied to visible products, domains, release evidence, and contact paths.",
       "am": "የኩባንያ የይገባኛል ጥያቄዎች ከሚታዩ ምርቶች፣ ጎራዎችና የሪፖዚቶሪ ማስረጃ ጋር ተሳስረው ይቆያሉ።"
     },
     "governance.accessK": {
@@ -444,11 +523,11 @@
       "am": "መስፋፋት"
     },
     "cta.title": {
-      "en": "Promote a repository only after product evidence is ready.",
-      "am": "ሪፖዚቶሪን የምርት ማስረጃ ከተዘጋጀ በኋላ ብቻ ያሳድጉ።"
+      "en": "Promote after proof",
+      "am": "ሪፖዚቶሪን የምርት ማስረጃ ከተዘጋጀ በኋላ ብቻ ያሳድጉ"
     },
     "cta.body": {
-      "en": "Each new domain can move from private incubation to public surface when the repo, demo route, docs route, governance status, and release boundary are verified. Mullu remains the first product path under the Mullusi umbrella.",
+      "en": "Each new domain can move from private incubation to public surface when the route, demo boundary, docs route, governance status, and release boundary are verified. Mullu remains the first product path under the Mullusi umbrella.",
       "am": "እያንዳንዱ አዲስ ጎራ ሪፖው፣ የማሳያ መንገዱ፣ የሰነድ መንገዱ፣ የአስተዳደር ሁኔታውና የመለቀቅ ወሰኑ ሲረጋገጡ ከግል ማብሰያ ወደ ይፋዊ ገጽ ሊሸጋገር ይችላል። ሙሉ በሙሉሲ ጃንጥላ ሥር የመጀመሪያው የምርት መንገድ ሆኖ ይቆያል።"
     },
     "cta.contactResearch": {
@@ -484,8 +563,8 @@
       "am": "ምልክቶች አቶማዊ ናቸው። ትርጉም ዝምድናዊ ነው። መሻገር ይተዳደራል። ፍርድ ይገኛል።"
     },
     "footer.rights": {
-      "en": "© 2026 Mullusi — Public claims only.",
-      "am": "© 2026 ሙሉሲ — ይፋዊ የይገባኛል ጥያቄዎች ብቻ።"
+      "en": "© 2026 Mullusi — All rights reserved.",
+      "am": "© 2026 ሙሉሲ — መብቶች ሁሉ የተጠበቁ ናቸው።"
     },
     "footer.localVisits": {
       "en": "Local visits",
@@ -536,7 +615,7 @@
       "am": "አስተናጋጅ"
     },
     "repo.statDeployed": {
-      "en": "Deployed public repos",
+      "en": "Deployed public surfaces",
       "am": "የተሰማሩ ይፋዊ ሪፖዎች"
     },
     "repo.statCategories": {
@@ -544,15 +623,15 @@
       "am": "ምድቦች"
     },
     "repo.statProductRepos": {
-      "en": "Public product repos",
+      "en": "Public product surfaces",
       "am": "ይፋዊ የምርት ሪፖዎች"
     },
     "repo.openRepository": {
-      "en": "Open repository",
+      "en": "Open surface",
       "am": "ሪፖዚቶሪ ክፈት"
     },
     "repo.emptyTitle": {
-      "en": "No matching public repository",
+      "en": "No matching public surface",
       "am": "ተዛማጅ ይፋዊ ሪፖዚቶሪ የለም"
     },
     "repo.emptyBody": {
@@ -564,8 +643,8 @@
       "am": "የምርት መዝገብ አይገኝም"
     },
     "repo.errorBody": {
-      "en": "The static registry did not load. Confirm data/products.json is deployed beside this page.",
-      "am": "የማይለወጠው መዝገብ አልተጫነም። data/products.json ከዚህ ገጽ ጎን መሰማራቱን ያረጋግጡ።"
+      "en": "The static product registry did not load. Confirm the registry is deployed beside this page.",
+      "am": "??????? ???? ???? ??????? ???? ??? ?? ?? ?????? ??????"
     },
     "field.request": {
       "en": "Request",
@@ -604,8 +683,8 @@
       "am": "የአጠቃቀም ሁኔታዎች"
     },
     "usecases.title": {
-      "en": "Where a governed evaluation earns its keep.",
-      "am": "የሚተዳደር ግምገማ ዋጋውን የሚያስገኝበት።"
+      "en": "Use-case fit",
+      "am": "የሚተዳደር ግምገማ ዋጋውን የሚያስገኝበት"
     },
     "usecases.body": {
       "en": "Illustrative scenarios — the shape of value the governed runtime will deliver once evidence is published.",
@@ -628,11 +707,11 @@
       "am": "የግንባር ምልክት"
     },
     "news.title": {
-      "en": "General technology news, breakthroughs, and research releases.",
-      "am": "አጠቃላይ የቴክኖሎጂ ዜና፣ ግኝቶችና የምርምር ልቀቶች።"
+      "en": "Frontier signal",
+      "am": "አጠቃላይ የቴክኖሎጂ ዜና፣ ግኝቶችና የምርምር ልቀቶች"
     },
     "news.body": {
-      "en": "A daily ranked digest of notable technology, science breakthroughs, and research releases, refreshed automatically from public discussion. Links are external and illustrative, not Mullusi claims.",
+      "en": "A daily ranked digest of notable technology, science breakthroughs, and research releases, refreshed automatically from public discussion.",
       "am": "በየዕለቱ የሚደረደር የጎላ ቴክኖሎጂ፣ የሳይንስ ግኝቶችና የምርምር ልቀቶች ማጠቃለያ፣ ከይፋዊ ውይይት በራስ-ሰር የሚታደስ። አገናኞች ውጫዊና ለማሳያ ናቸው፣ የMullusi የይገባኛል ጥያቄዎች አይደሉም።"
     },
     "news.points": {
@@ -647,42 +726,6 @@
       "en": "via",
       "am": "በ"
     },
-    "news.discussion": {
-      "en": "discussion",
-      "am": "ውይይት"
-    },
-    "news.today": {
-      "en": "today",
-      "am": "ዛሬ"
-    },
-    "news.ago": {
-      "en": "ago",
-      "am": "በፊት"
-    },
-    "news.selRule": {
-      "en": "top by public discussion",
-      "am": "በይፋዊ ውይይት ከፍተኛ"
-    },
-    "news.tagProject": {
-      "en": "Project",
-      "am": "ፕሮጀክት"
-    },
-    "news.tagOpenSource": {
-      "en": "Open source",
-      "am": "ክፍት ምንጭ"
-    },
-    "news.tagResearch": {
-      "en": "Research",
-      "am": "ምርምር"
-    },
-    "news.tagPolicy": {
-      "en": "Policy",
-      "am": "ፖሊሲ"
-    },
-    "news.tagArticle": {
-      "en": "Article",
-      "am": "ጽሑፍ"
-    },
     "news.emptyTitle": {
       "en": "Signal is refreshing",
       "am": "ምልክቱ እየታደሰ ነው"
@@ -691,13 +734,21 @@
       "en": "The daily research and systems digest will appear here after the next scheduled refresh.",
       "am": "የዕለታዊ ምርምርና ሥርዓት ማጠቃለያ በሚቀጥለው የታቀደ ዕድሳት በኋላ እዚህ ይታያል።"
     },
+    "news.errorTitle": {
+      "en": "Frontier signal unavailable",
+      "am": "የግንባር ምልክት አልተገኘም"
+    },
+    "news.errorBody": {
+      "en": "The static news registry did not load. Confirm the registry is deployed beside this page.",
+      "am": "??????? ??? ???? ??????? ???? ??? ?? ?? ?????? ??????"
+    },
     "metrics.tag": {
       "en": "Public Surface Metrics",
       "am": "የይፋዊ ገጽ መለኪያዎች"
     },
     "metrics.title": {
-      "en": "Standard figures, derived from the public registry — not projected.",
-      "am": "መደበኛ አሃዞች፣ ከይፋዊ መዝገብ የተወሰዱ — ግምት አይደሉም።"
+      "en": "Public surface metrics",
+      "am": "መደበኛ አሃዞች፣ ከይፋዊ መዝገብ የተወሰዱ — ግምት አይደሉም"
     },
     "metrics.body": {
       "en": "Every number below is computed at load time from the same governed JSON the rest of the site renders. If it is shown here, it is verifiable.",
@@ -772,116 +823,8 @@
       "am": "ተዘጋጅቷል · የግል"
     },
     "release.caption": {
-      "en": "A repository becomes a public route only after each gate closes.",
+      "en": "A private incubation project becomes a public route only after each gate closes.",
       "am": "ሪፖዚቶሪ ይፋዊ መንገድ የሚሆነው እያንዳንዱ በር ከተዘጋ በኋላ ብቻ ነው።"
-    },
-    "ecosystem.tag": {
-      "en": "Ecosystem Map",
-      "am": "የሥነ-ምህዳር ካርታ"
-    },
-    "ecosystem.title": {
-      "en": "One view of what is deployed, what is staged, and what is still private.",
-      "am": "ምን እንደተሰማራ፣ ምን እንደተዘጋጀ፣ ምን አሁንም የግል እንደሆነ በአንድ እይታ።"
-    },
-    "ecosystem.body": {
-      "en": "Generated from the same public registry as the rest of the site. Deployed surfaces carry a repository; staged engines name only a planned repository; private-incubation tracks expose a publish gate, never a name.",
-      "am": "ከቀሪው ጣቢያ ጋር ከተመሳሳዩ ይፋዊ መዝገብ የተፈጠረ። የተሰማሩ ገጾች ሪፖዚቶሪ ይይዛሉ፤ የተዘጋጁ ሞተሮች የታቀደ ሪፖዚቶሪ ብቻ ይሰይማሉ፤ የግል ማብሰያ መስመሮች ስም ሳይሆን የመለቀቅ በር ብቻ ያሳያሉ።"
-    },
-    "ecosystem.tierDeployed": {
-      "en": "Deployed",
-      "am": "ተሰማርቷል"
-    },
-    "ecosystem.tierStaged": {
-      "en": "Staged",
-      "am": "ተዘጋጅቷል"
-    },
-    "ecosystem.tierPrivate": {
-      "en": "Private incubation",
-      "am": "የግል ማብሰያ"
-    },
-    "ecosystem.gateLabel": {
-      "en": "Publish gate",
-      "am": "የመለቀቅ በር"
-    },
-    "nav.paths": {
-      "en": "Start here",
-      "am": "ከዚህ ይጀምሩ"
-    },
-    "paths.tag": {
-      "en": "Start Here",
-      "am": "ከዚህ ይጀምሩ"
-    },
-    "paths.title": {
-      "en": "What can you do here?",
-      "am": "እዚህ ምን ማድረግ ይችላሉ?"
-    },
-    "paths.body": {
-      "en": "Four paths in, by what you need. Every link goes to something real on this site — not a placeholder.",
-      "am": "በሚፈልጉት መሠረት አራት መግቢያ መንገዶች። እያንዳንዱ አገናኝ በዚህ ጣቢያ ላይ ወዳለ እውነተኛ ነገር ይወስዳል — ቦታ-መያዣ አይደለም።"
-    },
-    "paths.devBadge": {
-      "en": "Developers",
-      "am": "አበልጻጊዎች"
-    },
-    "paths.devTitle": {
-      "en": "Inspect the architecture",
-      "am": "አርክቴክቸሩን ይመርምሩ"
-    },
-    "paths.devBody": {
-      "en": "Walk the governed-evaluation flow: how an action is checked, traced, and judged before it runs.",
-      "am": "የሚተዳደር ግምገማ ፍሰትን ይከተሉ፦ ድርጊት ከመፈጸሙ በፊት እንዴት እንደሚፈተሽ፣ እንደሚከታተልና እንደሚፈረድ።"
-    },
-    "paths.devCta": {
-      "en": "See the architecture",
-      "am": "አርክቴክቸሩን ይዩ"
-    },
-    "paths.resBadge": {
-      "en": "Researchers",
-      "am": "ተመራማሪዎች"
-    },
-    "paths.resTitle": {
-      "en": "Review the proof boundary",
-      "am": "የማረጋገጫ ወሰንን ይመልከቱ"
-    },
-    "paths.resBody": {
-      "en": "See exactly what is verified and what stays AwaitingEvidence until signed runtime evidence publishes.",
-      "am": "ምን እንደተረጋገጠና የተፈረመ runtime ማስረጃ እስኪታተም ድረስ ምን AwaitingEvidence ሆኖ እንደሚቆይ በትክክል ይዩ።"
-    },
-    "paths.resCta": {
-      "en": "Open the proof boundary",
-      "am": "የማረጋገጫ ወሰንን ይክፈቱ"
-    },
-    "paths.partBadge": {
-      "en": "Partners",
-      "am": "አጋሮች"
-    },
-    "paths.partTitle": {
-      "en": "Explore governed integration",
-      "am": "የሚተዳደር ውህደትን ያስሱ"
-    },
-    "paths.partBody": {
-      "en": "The Govern Cloud service stack and tiers — where a hosted governed evaluation fits your systems.",
-      "am": "የGovern Cloud የአገልግሎት ድርድርና ደረጃዎች — የተስተናገደ የሚተዳደር ግምገማ ከሥርዓቶችዎ ጋር የሚገጥምበት።"
-    },
-    "paths.partCta": {
-      "en": "View the service stack",
-      "am": "የአገልግሎት ድርድርን ይዩ"
-    },
-    "paths.bldBadge": {
-      "en": "Builders",
-      "am": "ገንቢዎች"
-    },
-    "paths.bldTitle": {
-      "en": "Try the playground",
-      "am": "የሙከራ ሜዳውን ይሞክሩ"
-    },
-    "paths.bldBody": {
-      "en": "A client-only, simulated governed evaluation you can run in the browser. No account, no runtime claim.",
-      "am": "በአሳሽ ውስጥ ሊያሄዱት የሚችሉት ደንበኛ-ብቻ፣ የተመሰለ የሚተዳደር ግምገማ። መለያ የለም፣ የruntime ይገባኛል የለም።"
-    },
-    "paths.bldCta": {
-      "en": "Open the playground",
-      "am": "የሙከራ ሜዳውን ይክፈቱ"
     }
   }
 }

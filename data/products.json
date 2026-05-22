@@ -15,14 +15,14 @@
   "systems": [
     {
       "name": "Mullusi Website",
-      "repo": "mullusi/mullusi-site",
-      "href": "https://github.com/mullusi/mullusi-site",
+      "href": "https://mullusi.com",
       "category": "Website",
       "status": "deployed",
-      "summary": "Public index page, GitHub Pages deployment, domain boundary, and website registry for Mullusi.",
-      "tags": ["website", "index", "github-pages", "public-boundary"],
+      "sourceState": "private-source",
+      "summary": "Public index page, domain boundary, and website registry for Mullusi. Source remains private unless Mullusi publishes a separate release artifact.",
+      "tags": ["website", "index", "public-boundary", "private-source"],
       "am": {
-        "summary": "የሙሉሲ ይፋዊ መነሻ ገጽ፣ የGitHub Pages ስምሪት፣ የጎራ ወሰንና የድረ-ገጽ መዝገብ።"
+        "summary": "Public Mullusi website, domain boundary, and private-source deployment."
       }
     }
   ],
@@ -30,8 +30,8 @@
     {
       "name": "Mullusi Physics Engine",
       "slug": "physics",
-      "plannedRepo": "mullusi-physics-engine",
       "status": "planned",
+      "releaseBoundary": "private incubation",
       "summary": "Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans.",
       "am": {
         "title": "ፊዚክስ",
@@ -41,8 +41,8 @@
     {
       "name": "Mullusi Math Engine",
       "slug": "math",
-      "plannedRepo": "mullusi-math-engine",
       "status": "planned",
+      "releaseBoundary": "private incubation",
       "summary": "Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow.",
       "am": {
         "title": "ሒሳብ",
@@ -52,8 +52,8 @@
     {
       "name": "Mullusi Biology Engine",
       "slug": "biology",
-      "plannedRepo": "mullusi-biology-engine",
       "status": "planned",
+      "releaseBoundary": "private incubation",
       "summary": "Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning.",
       "am": {
         "title": "ባዮሎጂ",
@@ -63,8 +63,8 @@
     {
       "name": "Mullusi Chemistry Engine",
       "slug": "chemistry",
-      "plannedRepo": "mullusi-chemistry-engine",
       "status": "planned",
+      "releaseBoundary": "private incubation",
       "summary": "Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation.",
       "am": {
         "title": "ኬሚስትሪ",
@@ -74,8 +74,8 @@
     {
       "name": "Mullusi Music Engine",
       "slug": "music",
-      "plannedRepo": "mullusi-music-engine",
       "status": "planned",
+      "releaseBoundary": "private incubation",
       "summary": "Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure.",
       "am": {
         "title": "ሙዚቃ",
@@ -85,8 +85,8 @@
     {
       "name": "Mullusi Engineering Engine",
       "slug": "engineering",
-      "plannedRepo": "mullusi-engineering-engine",
       "status": "planned",
+      "releaseBoundary": "private incubation",
       "summary": "Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications across many engineering products.",
       "am": {
         "title": "ኢንጂነሪንግ",
@@ -96,8 +96,8 @@
     {
       "name": "Mullusi Unified Science Lab",
       "slug": "unified-science",
-      "plannedRepo": "mullusi-unified-science-lab",
       "status": "planned",
+      "releaseBoundary": "private incubation",
       "summary": "Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures.",
       "am": {
         "title": "የተዋሃደ ሳይንስ",

@@ -1,0 +1,26 @@
+# Purpose: Cloudflare Pages response headers for the Mullusi public website.
+# Governance scope: browser safety headers, static asset cache policy, and public route delivery.
+# Dependencies: Cloudflare Pages _headers parser.
+# Invariants: headers must not require secrets, break local static rendering, or claim runtime availability.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://mullusi.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+
+/assets/*
+  Cache-Control: public, max-age=600
+
+/data/*
+  Cache-Control: no-store
+
+/sitemap.xml
+  Cache-Control: public, max-age=300
+
+/robots.txt
+  Cache-Control: public, max-age=300
+
+/.well-known/security.txt
+  Cache-Control: public, max-age=300

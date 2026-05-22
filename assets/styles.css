@@ -5,6 +5,14 @@ Dependencies: Newsreader and Space Mono web fonts, assets/app.js canvas/runtime 
 Invariants: content remains legible above the substrate, mobile layouts do not overlap, and cards keep bounded surfaces.
 */
 
+@font-face {
+  font-family: "Mullusi Symbols";
+  src: url("fonts/noto-sans-symbols-2-math.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   --bg: #050609;
@@ -14,7 +22,7 @@ Invariants: content remains legible above the substrate, mobile layouts do not o
   --line-bright: #272d40;
   --ink: #e9eaef;
   --ink-soft: #99a0b4;
-  --ink-dim: #565c70;
+  --ink-dim: #737b92;
   --accent: #5ce6c4;
   --accent-warm: #e8b15c;
   --accent-deep: #347063;
@@ -30,6 +38,13 @@ Invariants: content remains legible above the substrate, mobile layouts do not o
   --maxw: 1180px;
   --mono: "Space Mono", ui-monospace, Menlo, Consolas, monospace;
   --serif: "Newsreader", Georgia, serif;
+  --symbols: "Mullusi Symbols", "Noto Sans Symbols 2", "Segoe UI Symbol", "Cambria Math", var(--mono);
+  --role-eyebrow-size: 11px;
+  --role-heading-size: clamp(28px, 3.2vw, 44px);
+  --role-subline-size: 14px;
+  --role-plain-size: 13px;
+  --role-card-title-size: 17px;
+  --role-card-body-size: 12px;
 }
 
 :root[data-theme="light"] {
@@ -41,7 +56,7 @@ Invariants: content remains legible above the substrate, mobile layouts do not o
   --line-bright: #b9ad98;
   --ink: #151922;
   --ink-soft: #4d5668;
-  --ink-dim: #7b7468;
+  --ink-dim: #756c5f;
   --accent: #147c6f;
   --accent-warm: #9a641b;
   --accent-deep: #75aa9b;
@@ -54,6 +69,16 @@ Invariants: content remains legible above the substrate, mobile layouts do not o
   --panel-field: rgba(255, 255, 255, 0.68);
   --hover-panel: #fffaf0;
   --top-glow: rgba(20, 124, 111, 0.1);
+}
+
+:root[data-theme="light"] .route .badge,
+:root[data-theme="light"] .service .badge,
+:root[data-theme="light"] .eng .st,
+:root[data-theme="light"] .status-pill,
+:root[data-theme="light"] .tag-pill,
+:root[data-theme="light"] .filter-button {
+  border-color: #b9ad98;
+  color: #80500f;
 }
 
 * {
@@ -132,6 +157,15 @@ code {
   font-family: var(--mono);
 }
 
+.spine .s,
+.eng-sym,
+.ix,
+.sym,
+.kernel-eq {
+  font-family: var(--symbols);
+  font-feature-settings: "kern" 1;
+}
+
 #substrate {
   position: fixed;
   inset: 0;
@@ -189,7 +223,7 @@ code {
   align-items: center;
   gap: 9px;
   color: var(--ink-dim);
-  font-size: 11px;
+  font-size: var(--role-eyebrow-size);
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
@@ -216,11 +250,11 @@ h3 {
 }
 
 h2 {
-  font-size: clamp(28px, 3.6vw, 48px);
+  font-size: var(--role-heading-size);
 }
 
 h3 {
-  font-size: 20px;
+  font-size: var(--role-card-title-size);
   line-height: 1.25;
 }
 
@@ -741,17 +775,23 @@ p {
 
 .hero .lead {
   max-width: 52ch;
-  margin-bottom: 36px;
+  margin-bottom: 16px;
   color: var(--ink-soft);
   font-size: 16px;
   line-height: 1.7;
+}
+
+.hero-plain {
+  max-width: 58ch;
+  margin-bottom: 28px;
+  color: var(--accent);
+  font-size: var(--role-plain-size);
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: auto;
 }
 
 .hero-foot {
@@ -761,6 +801,10 @@ p {
   border: 1px solid var(--line);
   background: var(--panel-soft);
   backdrop-filter: blur(6px);
+}
+
+.surface-snapshot {
+  margin-top: 22px;
 }
 
 .hero-foot div {
@@ -836,6 +880,87 @@ p {
   z-index: 2;
   padding: 96px 0;
   border-bottom: 1px solid var(--line);
+}
+
+.tier-primary {
+  padding: 112px 0;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-raise) 54%, transparent), transparent 72%);
+}
+
+.tier-secondary {
+  padding: 88px 0;
+}
+
+.tier-tertiary {
+  padding: 64px 0;
+}
+
+.start-here {
+  border-top: 1px solid var(--line);
+}
+
+.start-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.start-card {
+  display: grid;
+  gap: 10px;
+  min-height: 166px;
+  background: var(--panel-glass);
+  padding: 24px 20px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.start-card:hover {
+  background: var(--hover-panel);
+}
+
+.start-card span {
+  color: var(--accent-warm);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.start-card strong {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.start-card em {
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  font-style: normal;
+  line-height: 1.55;
+}
+
+.read-boundary {
+  margin-top: 18px;
+  border-left: 2px solid var(--accent-deep);
+  background: var(--panel-soft);
+  padding: 18px 22px;
+}
+
+.read-boundary h3 {
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.read-boundary p {
+  max-width: 82ch;
+  font-size: 12.5px;
 }
 
 .claim-boundary {
@@ -917,13 +1042,13 @@ p {
 
 .sec-head p {
   margin-top: 14px;
-  font-size: 14px;
+  font-size: var(--role-subline-size);
 }
 
 .sec-head .plain {
   margin-top: 10px;
   color: var(--accent);
-  font-size: 13px;
+  font-size: var(--role-plain-size);
 }
 
 .cards-4,
@@ -999,16 +1124,8 @@ p {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--ink-dim);
-  box-shadow: 0 0 0 0 transparent;
-}
-
-.news-pulse.is-recent {
   background: var(--accent);
-}
-
-.news-pulse.is-fresh {
-  background: var(--accent);
+  box-shadow: 0 0 0 0 var(--accent);
   animation: news-pulse 2.4s ease-out infinite;
 }
 
@@ -1107,56 +1224,6 @@ p {
 
 .news-source {
   color: var(--accent-deep);
-}
-
-.news-chip {
-  flex: none;
-  align-self: center;
-  padding: 3px 8px;
-  border: 1px solid var(--line);
-  border-radius: 2px;
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-deep);
-}
-
-.news-lead {
-  display: block;
-  padding: 24px 22px;
-  border-bottom: 1px solid var(--line);
-  background: var(--hover-panel);
-}
-
-.news-lead-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.news-lead-rank {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  color: var(--accent-deep);
-}
-
-.news-lead .news-title {
-  font-size: 23px;
-  line-height: 1.25;
-}
-
-.news-lead .news-meta {
-  margin-top: 12px;
-}
-
-@media (max-width: 560px) {
-  .news-lead .news-title {
-    font-size: 19px;
-  }
 }
 
 .news-empty {
@@ -1349,13 +1416,13 @@ p {
 
 .route h3,
 .service h3 {
-  font-size: 17px;
+  font-size: var(--role-card-title-size);
 }
 
 .route p,
 .service p {
   flex: 1;
-  font-size: 12px;
+  font-size: var(--role-card-body-size);
 }
 
 .route a.lnk,
@@ -1764,18 +1831,18 @@ p {
 }
 
 .engines {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(7, minmax(150px, 1fr));
+  overflow-x: auto;
 }
 
 .eng-sym {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: var(--accent-deep);
-  font-family: var(--serif);
   font-size: 28px;
   line-height: 1;
 }
 
-.eng-repo {
+.eng-boundary {
   display: block;
   margin-top: 14px;
   font-family: var(--mono);
@@ -1786,8 +1853,7 @@ p {
 }
 
 .eng-bridge {
-  grid-column: 1 / -1;
-  border-top: 2px solid var(--accent-deep);
+  border-left: 2px solid var(--accent-deep);
 }
 
 .eng-bridge .st,
@@ -1797,7 +1863,8 @@ p {
 
 .eng {
   background: var(--panel-glass);
-  padding: 24px 18px;
+  min-width: 150px;
+  padding: 20px 16px;
 }
 
 .eng:hover {
@@ -1817,11 +1884,6 @@ p {
 .eng h3 {
   margin-bottom: 8px;
   font-size: 17px;
-}
-
-.eng p {
-  font-size: 11.5px;
-  line-height: 1.55;
 }
 
 .pg {
@@ -2298,6 +2360,7 @@ p {
   }
 
   .cards-4,
+  .start-grid,
   .routes,
   .services,
   .pgraph,
@@ -2422,6 +2485,7 @@ p {
   }
 
   .cards-4,
+  .start-grid,
   .routes,
   .services,
   .pgraph,

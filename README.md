@@ -1,227 +1,37 @@
-# Mullusi Website
+<!--
+Purpose: identify this public repository as a deployment artifact bridge, not the Mullusi company-site source.
+Governance scope: public repo boundary, source ownership boundary, and rollback clarity.
+Dependencies: mullusi/mullusi-company-site private repository and GitHub Pages custom domain.
+Invariants: real company source remains private; this repo contains only public website artifacts.
+-->
 
-Static public website package for `mullusi.com`.
+# Mullusi Public Site Artifact
 
-This package is designed for the current `mullusi/mullusi-site` GitHub Pages flow. It does not require a build step, package manager, framework, database, or server runtime.
+This repository is a public deployment artifact for `mullusi.com`.
 
-## What is included
+It is not the source of truth for the Mullusi company website. The governed
+company-site source, build scripts, operational gates, and release records are
+maintained in the private `mullusi/mullusi-company-site` repository.
+
+## Boundary
 
 ```text
-.
-|-- index.html                         # Public landing page
-|-- mullu/index.html                   # Flagship Mullu product route
-|-- proof/index.html                   # Public proof-boundary route
-|-- playground/index.html              # Simulated (client-only) govern-evaluation demo
-|-- 404.html                           # Branded not-found route (GitHub Pages)
-|-- .nojekyll                          # Serve files as-is (lets Pages serve .well-known/)
-|-- .well-known/security.txt           # RFC 9116 disclosure contact
-|-- CNAME                              # mullusi.com custom domain
-|-- favicon.ico                        # Legacy browser favicon
-|-- robots.txt                         # Crawl policy
-|-- sitemap.xml                        # Search sitemap
-|-- site.webmanifest                   # Browser/app icon manifest
-|-- data/products.json                 # Product/repository registry
-|-- data/site.json                     # Structured public site content
-|-- data/i18n.json                     # en/am translation dictionary
-|-- assets/
-|   |-- app.js                         # Repo search/filter renderer
-|   |-- styles.css                     # Full visual system
-|   |-- mullusi-icon.svg                # Square favicon/header icon
-|   |-- mullusi-icon-32.png             # Browser PNG favicon fallback
-|   |-- mullusi-icon-180.png            # Apple touch icon
-|   |-- mullusi-icon-192.png            # Web app manifest icon
-|   |-- mullusi-icon-512.png            # Web app manifest icon
-|   |-- mullusi-icon-transparent.svg    # Transparent icon variant
-|   |-- mullusi-logo.svg                # Horizontal public logo (dark theme)
-|   |-- mullusi-logo-light.svg          # Horizontal public logo (light theme)
-|   `-- mullusi-mark.svg                # Legacy compact mark reference
-`-- scripts/
-    |-- validate-site.mjs              # Static validation gate
-    `-- verify-registry-repos.mjs      # Public GitHub repo visibility check
+mullusi.com
+  public rendered website surface
+
+mullusi/mullusi-company-site
+  private source, build, governance, and deployment records
+
+mullusi/mullusi-site
+  public artifact bridge while domain cutover is completed
 ```
 
-## Public registry contract
+No license is granted for reuse of Mullusi website source or brand assets by
+this repository. Third-party assets retain their own notices, including the
+font license under `assets/fonts/OFL.txt`.
 
-`data/products.json` is the public source of truth for deployed public-surface cards and staged roadmap records.
-
-Each public repository entry should represent a deployed public surface:
-
-```json
-{
-  "name": "Mullusi Website",
-  "repo": "mullusi/mullusi-site",
-  "href": "https://github.com/mullusi/mullusi-site",
-  "category": "Website",
-  "status": "deployed",
-  "summary": "Short visitor-facing description.",
-  "tags": ["website", "public-boundary"]
-}
-```
-
-Future products use `futureDomains` until the repository and product surface are ready:
-
-```json
-{
-  "name": "Mullusi Biology Engine",
-  "slug": "biology",
-  "plannedRepo": "mullusi-biology-engine",
-  "status": "planned",
-  "summary": "Causal biological structure engine..."
-}
-```
-
-Private repositories are intentionally excluded from `systems`. Add a repository there only when it is deployed, safe for public exposure, reachable without authentication, and supported by public-safe claims.
-
-Use `futureDomains` for planned domain engines and `privateIncubation` for public-safe descriptions of work that must remain private. Do not list private repository slugs, internal routes, credentials, deployment details, or unfinished product claims in the public registry.
-
-## Service stack contract
-
-`data/site.json` owns the public service ladder. Use `services` for hosted offers, developer packages, dashboards, inspection surfaces, validation endpoints, and enterprise deployment paths:
-
-```json
-{
-  "name": "Mullusi Govern Cloud",
-  "delivery": "hosted service",
-  "status": "primary offer",
-  "summary": "Hosted symbolic governance for constraint evaluation, causal verdicts, proof states, and append-only trace records.",
-  "proofSurface": "api.mullusi.com"
-}
-```
-
-The website renders these records into the Service Stack section. Keep npm packages as access tools and keep governed judgment, traces, proof stamps, and operational control on Mullusi service surfaces.
-
-`serviceTiers` and `apiContracts` define the first Govern Cloud commercial/API boundary. Keep tiers public-facing and keep endpoint records concise:
-
-```json
-{
-  "name": "Govern Evaluation",
-  "route": "POST /v1/govern/evaluate",
-  "host": "api.mullusi.com",
-  "status": "core v1",
-  "input": "project, action, symbols, constraints, context",
-  "output": "verdict, proof state, violations, trace reference, repair actions, proof stamp eligibility",
-  "summary": "Evaluates a proposed action or system state against Mullusi governance constraints and records a causal trace."
-}
-```
-
-`evaluationExample` renders one illustrative governed evaluation (request,
-verdict, violation, trace, repair, proof stamp) in the Govern Cloud section so
-the abstract contract is tangible. It is **not** a live endpoint: the validator
-requires its `disclaimer` to keep the `AwaitingEvidence` / "not a live
-endpoint" boundary, and requires a parallel `am` translation (matching `steps`
-length). Keep the example public-safe and illustrative only.
-
-`statusBoard` and `useCases` in `data/site.json` render the system-status
-panel and the use-case scenarios on the homepage (both `en`/`am`, gated by the
-validator). `/playground/` is a self-contained route that simulates a govern
-evaluation **entirely client-side** — it contacts no server and issues no
-proof stamp. Keep it deterministic and clearly labelled "Simulated"; it must
-not call or imply a live runtime while it stays AwaitingEvidence. `.nojekyll`
-disables Jekyll so GitHub Pages serves `.well-known/security.txt` as-is.
-
-## Internationalization (i18n) contract
-
-`data/i18n.json` is the public translation dictionary. The site ships English in
-the static HTML (the no-JS and SEO default) and swaps to the selected language
-at runtime, mirroring the theme system: the choice is stored in `localStorage`
-under `mullusi-lang`, applied via `data-i18n` / `data-i18n-attr` hooks, and a
-nav toggle flips it. A pre-paint script sets `<html lang>` early to avoid a
-flash.
-
-Contract:
-
-- `meta.languages` must include `en` and `am`; `languageNames` must name both.
-- Every entry in `strings` must provide a non-empty `en` **and** `am` value.
-- Every `data-i18n` / `data-i18n-attr` key used in `index.html` must exist in
-  `strings` (the validator fails the build otherwise — translation gaps are
-  treated like any other silent gap).
-
-Data-rendered sections (`data/site.json`, `data/products.json`) localize via an
-optional `am` object on each record (and `amSteps` for the repository handoff).
-When an `am` field is absent the renderer falls back to English, so partial
-translation degrades gracefully rather than breaking the layout.
-
-Add a language by extending `meta.languages`, `languageNames`, every `strings`
-entry, and the `am`-style record fields, then wiring a toggle option. Keep
-product names, code identifiers, routes, and state tokens (for example
-`Mullu`, `Mfidel`, `AwaitingEvidence`, `/health`) untranslated.
-
-## Deploy to GitHub Pages
-
-1. Copy this package into the root of `mullusi/mullusi-site`.
-2. Commit the files.
-3. Push to `main`.
-4. Confirm GitHub Pages is serving from the repository root.
-5. Confirm DNS points `mullusi.com` to GitHub Pages and that the `CNAME` file remains present.
-
-Commands:
-
-```bash
-git clone https://github.com/mullusi/mullusi-site.git
-cd mullusi-site
-cp -R /path/to/mullusi_website/* .
-git add .
-git commit -m "Create Mullusi public product website"
-git push origin main
-```
-
-## Local preview
-
-```bash
-python3 -m http.server 8080
-# open http://localhost:8080
-```
-
-## Validation
-
-```bash
-node --check assets/app.js
-node scripts/validate-site.mjs
-```
-
-The validation script checks required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, public-safe text, and secret-like patterns.
-
-The public homepage must keep this product boundary explicit: Mullusi is the
-company umbrella, Mullu is the flagship governed symbolic product, and live
-runtime readiness stays AwaitingEvidence until witness endpoints are published
-and validated.
-
-When registry exposure changes, also verify that listed GitHub repositories are public and reachable:
-
-```bash
-node scripts/verify-registry-repos.mjs
-```
-
-## Asset cache busting
-
-GitHub Pages serves `assets/*` with `Cache-Control: max-age=600`, so a returning
-visitor can otherwise get new `index.html` with a stale cached `assets/app.js`
-(button visible, no handler). `index.html` references `assets/app.js` and
-`assets/styles.css` with a `?v=` query; bump that token whenever either asset
-changes so the new HTML forces a fresh fetch. The JSON data files are fetched
-with `cache: "no-store"` and do not need a version token.
-
-## Update rule
-
-When a new product repository is ready for public exposure, update only `data/products.json` first. The page will render the new card automatically. Until then, keep it in private incubation language or `futureDomains`.
-
-Recommended public domain repo names:
-
-- `mullusi-math-engine`
-- `mullusi-biology-engine`
-- `mullusi-chemistry-engine`
-- `mullusi-music-engine`
-- `mullusi-engineering-engine`
-- `mullusi-unified-science-lab`
-
-## Contact routing
-
-Public website contact is currently `mullusiofficial@gmail.com`.
-
-Use `social@mullusi.com` for social media platform ownership, verification messages, and platform notices. Keep it separate from public website contact unless the site intentionally exposes a social-team address.
-
-Use `research@mullusi.com` for research conversations and `tamirat@mullusi.com` for named stewardship access.
-
-## Governance boundary
-
-The site presents public claims only. Keep launch claims separate from research claims, and keep private/internal repos out of `systems` until they are deliberately published.
+STATUS:
+  Completeness: 100%
+  Invariants verified: public artifact only, private source boundary, rollback bridge
+  Open issues: replace this bridge after Cloudflare Pages custom-domain cutover is verified
+  Next action: keep public repo minimal until `mullusi.com` serves from private-source Cloudflare Pages

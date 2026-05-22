@@ -8,7 +8,7 @@
     {
       "label": "Identity",
       "title": "Immutable public boundary",
-      "summary": "Mullusi is presented as one governed system across website, docs, repositories, sandbox, metrics, and public contact paths.",
+      "summary": "Mullusi is presented as one governed system across website, docs, release evidence, sandbox, metrics, and public contact paths.",
       "am": {
         "label": "ማንነት",
         "title": "የማይለወጥ ይፋዊ ወሰን",
@@ -38,7 +38,7 @@
     {
       "label": "Evolution",
       "title": "Expansion without redesign",
-      "summary": "New repositories and domains enter the public site only after their release boundary is verified.",
+      "summary": "New public surfaces and domains enter the public site only after their release boundary is verified.",
       "am": {
         "label": "ዝግመተ ለውጥ",
         "title": "ያለ ድጋሚ ንድፍ መስፋፋት",
@@ -136,7 +136,7 @@
       "name": "Mullu Inspect Service",
       "delivery": "hosted inspection",
       "status": "diagnostic offer",
-      "summary": "Website, API, repository, and workflow inspection that reports structural gaps, missing evidence, and unstable public claims.",
+      "summary": "Website, API, source-boundary, and workflow inspection that reports structural gaps, missing evidence, and unstable public claims.",
       "proofSurface": "sandbox.mullusi.com",
       "am": {
         "name": "የሙሉ ምርመራ አገልግሎት",
@@ -313,9 +313,9 @@
   "repositoryHandoff": {
     "label": "Lineage handoff",
     "title": "Registry state feeds release state.",
-    "summary": "A private incubation project becomes a public repository only when its proof surface, docs route, and demo boundary are attached.",
+    "summary": "A private incubation project becomes a public surface only when its proof surface, docs route, and demo boundary are attached.",
     "steps": [
-      "Repository",
+      "Surface",
       "Proof",
       "Route",
       "Release"
@@ -345,7 +345,7 @@
     {
       "step": "02",
       "title": "Attach",
-      "summary": "Connect repository, docs, demo, proof, status, and contact routes.",
+      "summary": "Connect docs, demo, proof, status, and contact routes.",
       "am": {
         "title": "አያይዝ",
         "summary": "ሪፖዚቶሪ፣ ሰነድ፣ ማሳያ፣ ማረጋገጫ፣ ሁኔታና የመገናኛ መንገዶችን ያገናኙ።"
@@ -402,19 +402,19 @@
   "statusBoard": {
     "label": "System status",
     "title": "What is live, what is not.",
-    "follow": "Endpoints are not yet live. Watch the public repository to see evidence the moment it publishes.",
-    "followHref": "https://github.com/mullusi",
-    "followLabel": "Watch the repository",
+    "follow": "Endpoints are not yet live. Request access or watch the proof boundary for signed release evidence.",
+    "followHref": "mailto:research@mullusi.com",
+    "followLabel": "Request access",
     "rows": [
-      { "component": "Website", "state": "live", "note": "Public site serving mullusi.com from the main branch." },
+      { "component": "Website", "state": "live", "note": "Public site serving mullusi.com from controlled private source." },
       { "component": "Govern API", "state": "awaiting-evidence", "note": "Endpoints publish only after signed witness evidence closes." },
       { "component": "Proof Stamps", "state": "planned", "note": "Issued once runtime conformance is reachable and verified." }
     ],
     "am": {
       "label": "የሥርዓት ሁኔታ",
       "title": "ምን ቀጥታ ነው፣ ምን አይደለም።",
-      "follow": "መዳረሻዎቹ ገና ቀጥታ አይደሉም። ማስረጃው ሲወጣ ወዲያውኑ ለማየት ይፋዊውን ሪፖዚቶሪ ይከታተሉ።",
-      "followLabel": "ሪፖዚቶሪውን ይከታተሉ",
+      "follow": "Request access or watch the proof boundary for signed release evidence.",
+      "followLabel": "Request access",
       "rows": [
         { "component": "ድረ-ገጽ", "note": "ከmain ቅርንጫፍ mullusi.com የሚያቀርብ ይፋዊ ጣቢያ።" },
         { "component": "Govern API", "note": "መዳረሻዎች የሚታተሙት የተፈረመ የምስክር ማስረጃ ከተዘጋ በኋላ ብቻ ነው።" },
