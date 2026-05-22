@@ -1,0 +1,33 @@
+# Purpose: verify Mullusi public registry source-boundary rules.
+# Governance scope: data/products.json public surface URLs, private-source state,
+# future-domain boundaries, and repo disclosure prevention.
+# Dependencies: GitHub Actions and Node.js.
+# Invariants: registry records must not expose private repository slugs or GitHub source links.
+
+name: Verify Registry Boundary
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch: {}
+  push:
+    branches: ["main"]
+    paths: ["data/products.json"]
+  pull_request:
+    branches: ["main"]
+    paths: ["data/products.json"]
+
+jobs:
+  verify-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Verify registry source boundary
+        run: node scripts/verify-registry-repos.mjs
