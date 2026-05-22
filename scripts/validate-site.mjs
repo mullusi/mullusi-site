@@ -27,6 +27,11 @@ const requiredFiles = [
   "ops/repo-release-gate.md",
   "ops/product-release-gate.md",
   "ops/ip-disclosure-gate.md",
+  "ops/MULLUSI_INFRASTRUCTURE_ROOT.md",
+  "ops/api-runtime-host-path.md",
+  "ops/api-production-readiness-gate.md",
+  "ops/recovery-inventory-template.md",
+  "ops/recovery-completion-witness.md",
   "LICENSE",
   "CNAME",
   "favicon.ico",
@@ -2166,6 +2171,26 @@ function validateOperatingGates() {
       file: "ops/ip-disclosure-gate.md",
       terms: ["Disclosure Questions", "Release Decision Record", "KeepPrivate", "PublishHighLevel", "OpenRelease", "Rollback:"],
     },
+    {
+      file: "ops/MULLUSI_INFRASTRUCTURE_ROOT.md",
+      terms: ["Authority Chain", "Post-Stabilization Public Witness", "Runtime Evidence Milestone", "HSTS Rollout", "STATUS:"],
+    },
+    {
+      file: "ops/api-runtime-host-path.md",
+      terms: ["API Runtime Host Path", "Cloudflare proxied DNS", "external managed PostgreSQL", "DNS Rule", "Rollback", "STATUS:"],
+    },
+    {
+      file: "ops/api-production-readiness-gate.md",
+      terms: ["API Production Readiness Gate", "Pre-Provision Requirements", "Pre-DNS Evidence", "DNS Activation Rule", "Post-DNS Evidence", "Rollback Rule", "STATUS:"],
+    },
+    {
+      file: "ops/recovery-inventory-template.md",
+      terms: ["Recovery Inventory Template", "Root Identity", "Account Recovery Checklist", "Emergency Access Procedure", "Rotation Cadence", "Release Block", "STATUS:"],
+    },
+    {
+      file: "ops/recovery-completion-witness.md",
+      terms: ["Recovery Completion Witness", "recovery_witness_state=", "api_provisioning_allowed=", "Public-Safe Witness Table", "Promotion Rule", "API Provisioning Block", "STATUS:"],
+    },
   ];
 
   for (const gate of gateExpectations) {
@@ -2177,6 +2202,67 @@ function validateOperatingGates() {
     }
     if (!content.includes("STATUS:")) {
       recordFailure(`operating_gate_status_missing:${gate.file}`);
+    }
+  }
+}
+
+function lineValue(content, key) {
+  const match = content.match(new RegExp(`^${key}=([^\\s]+)$`, "m"));
+  return match?.[1] ?? "";
+}
+
+function validateRuntimeGateState() {
+  const recoveryWitness = readUtf8("ops/recovery-completion-witness.md");
+  const apiGate = readUtf8("ops/api-production-readiness-gate.md");
+  const nginxTemplate = readUtf8("backend/deploy/nginx/api.mullusi.com.conf");
+  const recoveryState = lineValue(recoveryWitness, "recovery_witness_state");
+  const apiAllowed = lineValue(recoveryWitness, "api_provisioning_allowed");
+
+  if (!["AwaitingEvidence", "ReadyForProvisioning"].includes(recoveryState)) {
+    recordFailure(`recovery_witness_state_invalid:${recoveryState}`);
+  }
+  if (!["false", "true"].includes(apiAllowed)) {
+    recordFailure(`api_provisioning_allowed_invalid:${apiAllowed}`);
+  }
+  if (recoveryState === "AwaitingEvidence" && apiAllowed !== "false") {
+    recordFailure("recovery_awaiting_evidence_must_block_api_provisioning");
+  }
+  if (recoveryState === "ReadyForProvisioning" && apiAllowed !== "true") {
+    recordFailure("recovery_ready_must_allow_api_provisioning");
+  }
+  if (apiAllowed === "true" && recoveryWitness.includes("AwaitingEvidence")) {
+    recordFailure("api_provisioning_allowed_with_unconfirmed_recovery_rows");
+  }
+  if (!apiGate.includes("ops/recovery-completion-witness.md") || !apiGate.includes("ReadyForProvisioning")) {
+    recordFailure("api_readiness_gate_missing_recovery_witness_dependency");
+  }
+  if (!nginxTemplate.includes('Strict-Transport-Security "max-age=86400"')) {
+    recordFailure("api_nginx_hsts_stage_one_missing");
+  }
+  if (/includeSubDomains|preload/i.test(nginxTemplate)) {
+    recordFailure("api_nginx_hsts_premature_strict_mode");
+  }
+
+  const opsFiles = [
+    "ops/MULLUSI_INFRASTRUCTURE_ROOT.md",
+    "ops/api-runtime-host-path.md",
+    "ops/api-production-readiness-gate.md",
+    "ops/recovery-inventory-template.md",
+    "ops/recovery-completion-witness.md",
+  ];
+  const highSignalSecretPatterns = [
+    /g(?:ho|hp|hr|hs)_[A-Za-z0-9_]{20,}/,
+    /github_pat_[A-Za-z0-9_]{20,}/,
+    /-----BEGIN (?:RSA |OPENSSH |EC |)PRIVATE KEY-----/,
+    /postgres(?:ql)?:\/\/[^:\s]+:[^@\s]+@/i,
+    /[A-Za-z0-9_-]{24,}\.[A-Za-z0-9_-]{24,}\.[A-Za-z0-9_-]{24,}/,
+  ];
+  for (const opsFile of opsFiles) {
+    const content = readUtf8(opsFile);
+    for (const pattern of highSignalSecretPatterns) {
+      if (pattern.test(content)) {
+        recordFailure(`ops_secret_like_value_present:${opsFile}:${pattern}`);
+      }
     }
   }
 }
@@ -2233,6 +2319,7 @@ function runValidation() {
   validatePublicText();
   validateEmailRendering();
   validateOperatingGates();
+  validateRuntimeGateState();
 
   if (failures.length > 0) {
     console.error(failures.join("\n"));

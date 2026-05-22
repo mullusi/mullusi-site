@@ -31,7 +31,12 @@ framework, database, or server runtime.
 |   |-- public-claim-gate.md          # Public copy and claim release gate
 |   |-- repo-release-gate.md          # Repository visibility and license gate
 |   |-- product-release-gate.md       # Product surface readiness gate
-|   `-- ip-disclosure-gate.md         # Technical disclosure and IP gate
+|   |-- ip-disclosure-gate.md         # Technical disclosure and IP gate
+|   |-- MULLUSI_INFRASTRUCTURE_ROOT.md # Public-safe infrastructure inventory
+|   |-- api-runtime-host-path.md      # Provider-neutral API host path
+|   |-- api-production-readiness-gate.md # api.mullusi.com go/no-go gate
+|   |-- recovery-inventory-template.md # Private recovery inventory template
+|   `-- recovery-completion-witness.md # Recovery completion state
 |-- assets/
 |   |-- app.js                         # Repo search/filter renderer
 |   |-- styles.css                     # Full visual system
@@ -107,6 +112,16 @@ package:
   surfaces.
 - `ops/ip-disclosure-gate.md` blocks implementation disclosure until release or
   protection posture is decided.
+- `ops/MULLUSI_INFRASTRUCTURE_ROOT.md` records the public-safe root
+  infrastructure inventory and recovery-hardening gate.
+- `ops/api-runtime-host-path.md` selects the first provider-neutral
+  `api.mullusi.com` runtime host path.
+- `ops/api-production-readiness-gate.md` blocks `api.mullusi.com` DNS until
+  recovery, host, database, preflight, and rollback evidence exist.
+- `ops/recovery-inventory-template.md` defines the private recovery inventory
+  structure without storing recovery values in Git.
+- `ops/recovery-completion-witness.md` records whether recovery hardening is
+  complete enough to allow `api.mullusi.com` provisioning.
 
 The static validator requires these files so deployment cannot silently drop the
 boundary discipline.
