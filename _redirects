@@ -1,0 +1,7 @@
+# Purpose: Cloudflare Pages redirects for canonical Mullusi public routes.
+# Governance scope: host canonicalization and legacy deployment file shielding.
+# Dependencies: Cloudflare Pages _redirects parser.
+# Invariants: redirects must not require secrets, backend availability, or mutable runtime state.
+
+https://www.mullusi.com/* https://mullusi.com/:splat 301
+/CNAME / 302

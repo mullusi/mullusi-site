@@ -1,5 +1,5 @@
-# Purpose: verify Mullusi public website package before GitHub Pages deployment.
-# Governance scope: static site files, product registry, sitemap, robots policy, local links, and public text gates.
+# Purpose: verify Mullusi public website package before static host deployment.
+# Governance scope: static site files, Cloudflare Pages artifact, product registry, sitemap, robots policy, local links, and public text gates.
 # Dependencies: GitHub Actions and Node.js.
 # Invariants: pushes and pull requests fail when website validation fails.
 
@@ -32,6 +32,12 @@ jobs:
       - name: Check news refresh script syntax
         run: node --check scripts/fetch-news.mjs
 
+      - name: Check Cloudflare Pages build script syntax
+        run: node --check scripts/build-cloudflare-pages.mjs
+
+      - name: Check Cloudflare Pages build test syntax
+        run: node --check scripts/test-build-cloudflare-pages.mjs
+
       - name: Check registry boundary script syntax
         run: node --check scripts/verify-registry-repos.mjs
 
@@ -55,6 +61,9 @@ jobs:
 
       - name: Validate static website
         run: node scripts/validate-site.mjs
+
+      - name: Test Cloudflare Pages artifact boundary
+        run: node scripts/test-build-cloudflare-pages.mjs
 
       - name: Validate registry source boundary
         run: node scripts/verify-registry-repos.mjs

@@ -14,10 +14,12 @@ framework, database, or server runtime.
 |-- mullu/index.html                   # Flagship Mullu product route
 |-- proof/index.html                   # Public proof-boundary route
 |-- playground/index.html              # Simulated (client-only) govern-evaluation demo
-|-- 404.html                           # Branded not-found route (GitHub Pages)
-|-- .nojekyll                          # Serve files as-is (lets Pages serve .well-known/)
+|-- 404.html                           # Branded not-found route
+|-- _headers                           # Cloudflare Pages security and cache headers
+|-- _redirects                         # Cloudflare Pages canonical redirects
+|-- .nojekyll                          # GitHub Pages fallback for .well-known/
 |-- .well-known/security.txt           # RFC 9116 disclosure contact
-|-- CNAME                              # mullusi.com custom domain
+|-- CNAME                              # GitHub Pages fallback custom domain
 |-- favicon.ico                        # Legacy browser favicon
 |-- robots.txt                         # Crawl policy
 |-- sitemap.xml                        # Search sitemap
@@ -53,6 +55,8 @@ framework, database, or server runtime.
 |   |-- mullusi-logo-light.svg          # Horizontal public logo (light theme)
 |   `-- mullusi-mark.svg                # Legacy compact mark reference
 `-- scripts/
+    |-- build-cloudflare-pages.mjs     # Builds the public Cloudflare Pages artifact
+    |-- test-build-cloudflare-pages.mjs # Verifies artifact source-boundary rules
     |-- fetch-news.mjs                 # Deterministic Frontier Signal refresh
     |-- validate-site.mjs              # Static validation gate
     `-- verify-registry-repos.mjs      # Public registry source-boundary check
@@ -169,7 +173,8 @@ validator). `/playground/` is a self-contained route that simulates a govern
 evaluation **entirely client-side** — it contacts no server and issues no
 proof stamp. Keep it deterministic and clearly labelled "Simulated"; it must
 not call or imply a live runtime while it stays AwaitingEvidence. `.nojekyll`
-disables Jekyll so GitHub Pages serves `.well-known/security.txt` as-is.
+is retained so the GitHub Pages fallback serves `.well-known/security.txt`
+as-is.
 
 ## Internationalization (i18n) contract
 
@@ -202,11 +207,12 @@ product names, code identifiers, routes, and state tokens (for example
 
 1. Keep the source repository private unless Mullusi explicitly approves a
    public-source release.
-2. Deploy the public static output from the controlled source repository.
-3. Confirm the host is serving from the repository root or equivalent static
-   artifact.
-4. Confirm DNS points `mullusi.com` to the selected public host and that the
-   `CNAME` file remains present when the host requires it.
+2. Build the Cloudflare Pages artifact with `node scripts/build-cloudflare-pages.mjs`.
+3. Configure Cloudflare Pages to use that command and publish `dist`.
+4. Confirm DNS points `mullusi.com` and `www.mullusi.com` to the Cloudflare
+   Pages project.
+5. Keep `CNAME` only as a GitHub Pages fallback file until the fallback is
+   disabled or archived.
 
 Commands:
 
@@ -214,6 +220,8 @@ Commands:
 node --check assets/app.js
 node --check scripts/validate-site.mjs
 node --check scripts/fetch-news.mjs
+node --check scripts/build-cloudflare-pages.mjs
+node --check scripts/test-build-cloudflare-pages.mjs
 node --check scripts/verify-registry-repos.mjs
 node --check scripts/check-ops-gates.mjs
 node --check scripts/test-ops-gates.mjs
@@ -222,6 +230,7 @@ node --check scripts/test-promote-recovery-witness.mjs
 node --check scripts/check-private-recovery-inventory.mjs
 node --check scripts/test-private-recovery-inventory.mjs
 node scripts/validate-site.mjs
+node scripts/test-build-cloudflare-pages.mjs
 node scripts/verify-registry-repos.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
@@ -233,7 +242,8 @@ node scripts/test-private-recovery-inventory.mjs
 ## Local preview
 
 ```bash
-python3 -m http.server 8080
+node scripts/build-cloudflare-pages.mjs
+python3 -m http.server 8080 --directory dist
 # open http://localhost:8080
 ```
 
@@ -242,6 +252,7 @@ python3 -m http.server 8080
 ```bash
 node --check assets/app.js
 node scripts/validate-site.mjs
+node scripts/test-build-cloudflare-pages.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
 node scripts/test-promote-recovery-witness.mjs
@@ -249,7 +260,13 @@ node scripts/check-private-recovery-inventory.mjs --allow-missing
 node scripts/test-private-recovery-inventory.mjs
 ```
 
-The validation scripts check required files, local links, `CNAME`, `robots.txt`, sitemap targets, product registry contracts, homepage hierarchy, repeated-caveat regressions, symbol-font licensing and size budget, dynamic fallback behavior, public-safe text, Mfidel-safe no-combining-mark text, mojibake, secret-like patterns, recovery/API gate consistency, and staged HSTS.
+The validation scripts check required files, Cloudflare Pages `_headers` and
+`_redirects`, local links, `CNAME`, `robots.txt`, sitemap targets, product
+registry contracts, homepage hierarchy, repeated-caveat regressions,
+symbol-font licensing and size budget, dynamic fallback behavior,
+public-safe text, Mfidel-safe no-combining-mark text, mojibake,
+secret-like patterns, recovery/API gate consistency, staged HSTS, and the
+`dist` artifact source boundary.
 
 The public homepage must keep this product boundary explicit: Mullusi is the
 company umbrella, Mullu is the flagship governed symbolic product, and live
@@ -264,14 +281,14 @@ node scripts/verify-registry-repos.mjs
 
 ## Asset cache busting
 
-GitHub Pages serves `assets/*` with `Cache-Control: max-age=600`, so a returning
-visitor can otherwise get new `index.html` with a stale cached `assets/app.js`
-(button visible, no handler). `index.html` references `assets/app.js` and
-`assets/styles.css` with a `?v=` query; bump that token whenever either asset
-changes so the new HTML forces a fresh fetch. The JSON data files are fetched
-with `cache: "no-store"` and do not need a version token. Secondary routes
-currently use route-local inline CSS/JS, so this cache token applies only to the
-main shared homepage assets.
+Cloudflare Pages `_headers` sets `assets/*` to `Cache-Control: max-age=600`,
+so a returning visitor can otherwise get new `index.html` with a stale cached
+`assets/app.js` (button visible, no handler). `index.html` references
+`assets/app.js` and `assets/styles.css` with a `?v=` query; bump that token
+whenever either asset changes so the new HTML forces a fresh fetch. The JSON
+data files are fetched with `cache: "no-store"` and are also marked no-store
+by `_headers`. Secondary routes currently use route-local inline CSS/JS, so
+this cache token applies only to the main shared homepage assets.
 
 ## Update rule
 

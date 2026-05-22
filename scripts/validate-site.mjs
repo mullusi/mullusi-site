@@ -1,6 +1,6 @@
 /*
 Purpose: validate the static Mullusi public website before deployment.
-Governance scope: required files, product registry schema, sitemap, robots policy, CNAME, local links, and public-safe text.
+Governance scope: required files, product registry schema, sitemap, robots policy, deployment controls, local links, and public-safe text.
 Dependencies: Node.js standard library only.
 Invariants: validation is deterministic, dependency-free, and exits nonzero on blocking findings.
 */
@@ -34,6 +34,8 @@ const requiredFiles = [
   "ops/recovery-completion-witness.md",
   "LICENSE",
   "CNAME",
+  "_headers",
+  "_redirects",
   "favicon.ico",
   "robots.txt",
   "sitemap.xml",
@@ -56,6 +58,8 @@ const requiredFiles = [
   "data/site.json",
   "data/i18n.json",
   "scripts/fetch-news.mjs",
+  "scripts/build-cloudflare-pages.mjs",
+  "scripts/test-build-cloudflare-pages.mjs",
   "scripts/verify-registry-repos.mjs",
   "scripts/check-ops-gates.mjs",
   "scripts/test-ops-gates.mjs",
@@ -180,6 +184,36 @@ function validateCname() {
   const cname = readUtf8("CNAME").trim();
   if (cname !== "mullusi.com") {
     recordFailure(`cname_invalid:${cname}`);
+  }
+}
+
+function validateCloudflarePagesControls() {
+  const headers = readUtf8("_headers");
+  const redirects = readUtf8("_redirects");
+  const requiredHeaderTerms = [
+    "Cloudflare Pages response headers",
+    "Content-Security-Policy:",
+    "X-Content-Type-Options: nosniff",
+    "X-Frame-Options: DENY",
+    "/assets/*",
+    "Cache-Control: public, max-age=600",
+    "/data/*",
+    "Cache-Control: no-store",
+    "/.well-known/security.txt",
+  ];
+  for (const term of requiredHeaderTerms) {
+    if (!headers.includes(term)) {
+      recordFailure(`cloudflare_headers_term_missing:${term}`);
+    }
+  }
+  const requiredRedirectRules = [
+    "https://www.mullusi.com/* https://mullusi.com/:splat 301",
+    "/CNAME / 302",
+  ];
+  for (const rule of requiredRedirectRules) {
+    if (!redirects.includes(rule)) {
+      recordFailure(`cloudflare_redirect_rule_missing:${rule}`);
+    }
   }
 }
 
@@ -2412,6 +2446,7 @@ function validateHeadContract() {
 function runValidation() {
   validateRequiredFiles();
   validateCname();
+  validateCloudflarePagesControls();
   validateRobots();
   validateSitemap();
   validateLocalLinks();

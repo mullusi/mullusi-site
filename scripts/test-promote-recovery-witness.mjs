@@ -7,6 +7,7 @@ Invariants: tests do not promote the real recovery witness and do not inspect pr
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,6 +16,7 @@ const scriptsDir = path.dirname(scriptPath);
 const repoRoot = path.resolve(scriptsDir, "..");
 const promoteScript = path.join(scriptsDir, "promote-recovery-witness.mjs");
 const witnessPath = path.join(repoRoot, "ops", "recovery-completion-witness.md");
+const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-promote-test-"));
 const failures = [];
 
 const requiredFlags = [
@@ -25,6 +27,16 @@ const requiredFlags = [
   "--namecheap-transfer-lock",
   "--billing-renewal",
   "--private-inventory",
+];
+
+const privateFlagNames = [
+  "cloudflare_recovery_saved",
+  "github_recovery_saved",
+  "google_workspace_recovery_confirmed",
+  "namecheap_recovery_confirmed",
+  "namecheap_transfer_lock_confirmed",
+  "billing_renewal_path_confirmed",
+  "private_inventory_complete",
 ];
 
 function runPromote(args = []) {
@@ -46,6 +58,21 @@ function assertIncludes(value, expected, label) {
   }
 }
 
+function writePrivateInventoryFixture(fileName, value) {
+  const filePath = path.join(tempDir, fileName);
+  fs.writeFileSync(
+    filePath,
+    [
+      "# Fixture",
+      "```text",
+      ...privateFlagNames.map((flag) => `${flag}=${value}`),
+      "```",
+    ].join("\n"),
+    "utf8"
+  );
+  return filePath;
+}
+
 function testMissingConfirmationsFail() {
   const result = runPromote(["--date=2026-05-22"]);
   assertEqual(result.status, 1, "missing_confirmations_status");
@@ -62,6 +89,17 @@ function testDryRunDoesNotModifyWitness() {
   assertIncludes(result.stdout, "recovery_witness_promotable=true", "dry_run_stdout_promotable");
   assertIncludes(result.stdout, "write=false", "dry_run_stdout_write");
   assertEqual(after, before, "dry_run_no_write");
+}
+
+function testWriteRequiresReadyPrivateInventory() {
+  const blockedInventory = writePrivateInventoryFixture("blocked.md", "false");
+  const before = fs.readFileSync(witnessPath, "utf8");
+  const result = runPromote([...requiredFlags, `--inventory-path=${blockedInventory}`, "--date=2026-05-22", "--write"]);
+  const after = fs.readFileSync(witnessPath, "utf8");
+
+  assertEqual(result.status, 1, "write_blocked_inventory_status");
+  assertIncludes(result.stderr, "private_recovery_inventory_not_ready", "write_blocked_inventory_stderr");
+  assertEqual(after, before, "write_blocked_inventory_no_write");
 }
 
 function testUnsupportedFlagFails() {
@@ -81,6 +119,7 @@ function testInvalidDateFails() {
 function runTests() {
   testMissingConfirmationsFail();
   testDryRunDoesNotModifyWitness();
+  testWriteRequiresReadyPrivateInventory();
   testUnsupportedFlagFails();
   testInvalidDateFails();
 
@@ -89,6 +128,7 @@ function runTests() {
     process.exit(1);
   }
 
+  fs.rmSync(tempDir, { recursive: true, force: true });
   console.log("recovery witness promotion tests passed");
 }
 

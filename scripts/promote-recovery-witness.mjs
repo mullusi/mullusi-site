@@ -5,6 +5,7 @@ Dependencies: Node.js standard library and ops/recovery-completion-witness.md.
 Invariants: this script never accepts or writes recovery codes, passwords, API keys, database URLs, host addresses, billing details, or private storage paths.
 */
 
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -23,9 +24,11 @@ const requiredFlags = [
   "--private-inventory",
 ];
 
-const args = new Set(process.argv.slice(2).filter((arg) => !arg.startsWith("--date=")));
+const args = new Set(process.argv.slice(2).filter((arg) => !arg.startsWith("--date=") && !arg.startsWith("--inventory-path=")));
 const dateArg = process.argv.slice(2).find((arg) => arg.startsWith("--date="));
+const inventoryPathArg = process.argv.slice(2).find((arg) => arg.startsWith("--inventory-path="));
 const reviewDate = dateArg ? dateArg.slice("--date=".length) : new Date().toISOString().slice(0, 10);
+const inventoryPath = inventoryPathArg ? inventoryPathArg.slice("--inventory-path=".length) : "ops/recovery-inventory.private.md";
 const writeMode = args.has("--write");
 const helpMode = args.has("--help") || args.has("-h");
 const failures = [];
@@ -33,7 +36,7 @@ const failures = [];
 function usage() {
   return [
     "Usage:",
-    "  node scripts/promote-recovery-witness.mjs [required confirmations] [--date=YYYY-MM-DD] [--write]",
+    "  node scripts/promote-recovery-witness.mjs [required confirmations] [--date=YYYY-MM-DD] [--inventory-path=FILE] [--write]",
     "",
     "Required confirmations:",
     ...requiredFlags.map((flag) => `  ${flag}`),
@@ -55,6 +58,9 @@ function validateArgs() {
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(reviewDate)) {
     recordFailure(`invalid_review_date:${reviewDate}`);
+  }
+  if (inventoryPathArg && inventoryPath.trim().length === 0) {
+    recordFailure("inventory_path_empty");
   }
   for (const flag of requiredFlags) {
     if (!args.has(flag)) {
@@ -109,6 +115,28 @@ function promotedWitnessContent(originalContent) {
   return content;
 }
 
+function validatePrivateInventoryReady() {
+  const result = spawnSync(
+    process.execPath,
+    [
+      path.join(repoRoot, "scripts", "check-private-recovery-inventory.mjs"),
+      `--path=${inventoryPath}`,
+      "--require-ready",
+    ],
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+    }
+  );
+  if (result.status !== 0) {
+    recordFailure("private_recovery_inventory_not_ready");
+    const safeDetail = result.stderr.trim().split(/\r?\n/).filter((line) => line.startsWith("private_recovery_inventory_not_ready:"));
+    for (const line of safeDetail) {
+      recordFailure(line);
+    }
+  }
+}
+
 function runPromotion() {
   if (helpMode) {
     console.log(usage());
@@ -119,6 +147,14 @@ function runPromotion() {
   if (failures.length > 0) {
     console.error([usage(), "", ...failures].join("\n"));
     process.exit(1);
+  }
+
+  if (writeMode) {
+    validatePrivateInventoryReady();
+    if (failures.length > 0) {
+      console.error([usage(), "", ...failures].join("\n"));
+      process.exit(1);
+    }
   }
 
   const originalContent = fs.readFileSync(witnessPath, "utf8");
