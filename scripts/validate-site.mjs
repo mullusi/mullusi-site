@@ -30,6 +30,7 @@ const requiredFiles = [
   "ops/MULLUSI_INFRASTRUCTURE_ROOT.md",
   "ops/api-runtime-host-path.md",
   "ops/api-production-readiness-gate.md",
+  "ops/website-origin-witness.md",
   "ops/recovery-inventory-template.md",
   "ops/recovery-completion-witness.md",
   "LICENSE",
@@ -60,6 +61,8 @@ const requiredFiles = [
   "scripts/fetch-news.mjs",
   "scripts/build-cloudflare-pages.mjs",
   "scripts/test-build-cloudflare-pages.mjs",
+  "scripts/check-website-origin.mjs",
+  "scripts/test-check-website-origin.mjs",
   "scripts/verify-registry-repos.mjs",
   "scripts/check-ops-gates.mjs",
   "scripts/test-ops-gates.mjs",
@@ -95,6 +98,10 @@ function readBinary(relativePath) {
 
 function pathExists(relativePath) {
   return fs.existsSync(path.join(repoRoot, relativePath));
+}
+
+function relativePathExists(baseRelativePath, relativePath) {
+  return fs.existsSync(path.join(repoRoot, baseRelativePath, relativePath));
 }
 
 function recordFailure(message) {
@@ -214,6 +221,116 @@ function validateCloudflarePagesControls() {
     if (!redirects.includes(rule)) {
       recordFailure(`cloudflare_redirect_rule_missing:${rule}`);
     }
+  }
+}
+
+function validateCloudflarePagesArtifact() {
+  if (!pathExists("dist")) {
+    return;
+  }
+  const allowedTopLevelEntries = new Set([
+    ".well-known",
+    "assets",
+    "data",
+    "mullu",
+    "playground",
+    "proof",
+    "404.html",
+    "favicon.ico",
+    "index.html",
+    "robots.txt",
+    "site.webmanifest",
+    "sitemap.xml",
+    "_headers",
+    "_redirects",
+  ]);
+  const forbiddenTopLevelEntries = [
+    ".claude",
+    ".git",
+    ".github",
+    ".nojekyll",
+    "backend",
+    "docs",
+    "ops",
+    "scripts",
+    "CNAME",
+    "LICENSE",
+    "README.md",
+  ];
+  for (const entry of fs.readdirSync(path.join(repoRoot, "dist"))) {
+    if (!allowedTopLevelEntries.has(entry)) {
+      recordFailure(`cloudflare_artifact_unexpected_entry:${entry}`);
+    }
+  }
+  for (const entry of allowedTopLevelEntries) {
+    if (!relativePathExists("dist", entry)) {
+      recordFailure(`cloudflare_artifact_public_entry_missing:${entry}`);
+    }
+  }
+  for (const entry of forbiddenTopLevelEntries) {
+    if (relativePathExists("dist", entry)) {
+      recordFailure(`cloudflare_artifact_forbidden_entry_present:${entry}`);
+    }
+  }
+  const byteMatchedFiles = [
+    "index.html",
+    "mullu/index.html",
+    "proof/index.html",
+    "playground/index.html",
+    "404.html",
+    "_headers",
+    "_redirects",
+    ".well-known/security.txt",
+    "assets/app.js",
+    "assets/styles.css",
+    "data/site.json",
+    "data/products.json",
+    "robots.txt",
+    "sitemap.xml",
+    "site.webmanifest",
+  ];
+  for (const relativePath of byteMatchedFiles) {
+    const sourcePath = path.join(repoRoot, relativePath);
+    const artifactPath = path.join(repoRoot, "dist", relativePath);
+    if (!fs.existsSync(artifactPath)) {
+      recordFailure(`cloudflare_artifact_file_missing:${relativePath}`);
+      continue;
+    }
+    const source = fs.readFileSync(sourcePath);
+    const artifact = fs.readFileSync(artifactPath);
+    if (!source.equals(artifact)) {
+      recordFailure(`cloudflare_artifact_file_stale:${relativePath}`);
+    }
+  }
+}
+
+function validateWebsiteOriginWitness() {
+  const witness = readUtf8("ops/website-origin-witness.md");
+  const requiredTerms = [
+    "command=node scripts/check-website-origin.mjs --allow-pending",
+    "target=https://mullusi.com/",
+    "target=https://mullusi.com/assets/app.js",
+    "target=https://mullusi.com/data/site.json",
+    "target=https://mullusi.com/.well-known/security.txt",
+    "status=200",
+    "server=cloudflare",
+    "verdict=CloudflareOriginCandidate",
+    "proof_state=Pass",
+    "origin_headers_no_github=true",
+    "cloudflare_edge_observed=true",
+    "github_pages_origin_markers=false",
+    "runtime_api_readiness=AwaitingEvidence",
+    "accepted_targets=https://mullusi.com/*",
+    "json_output=sanitized_witness_records_only",
+    "raw_response_headers=not_recorded",
+  ];
+  for (const term of requiredTerms) {
+    if (!witness.includes(term)) {
+      recordFailure(`website_origin_witness_term_missing:${term}`);
+    }
+  }
+  if (/x-github-request-id\s*=\S+|x-fastly-request-id\s*=\S+|x-served-by\s*=\S+|account_id\s*=|billing_id\s*=|token\s*=/i.test(witness)) {
+    recordFailure("website_origin_witness_boundary_invalid");
   }
 }
 
@@ -2447,6 +2564,8 @@ function runValidation() {
   validateRequiredFiles();
   validateCname();
   validateCloudflarePagesControls();
+  validateCloudflarePagesArtifact();
+  validateWebsiteOriginWitness();
   validateRobots();
   validateSitemap();
   validateLocalLinks();

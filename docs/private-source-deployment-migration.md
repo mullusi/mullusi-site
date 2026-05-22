@@ -11,12 +11,18 @@ Observed on 2026-05-22:
 
 - `mullusi/mullusi-site` is public.
 - Cloudflare DNS and edge proxy serve `mullusi.com`.
-- Live response headers still include GitHub Pages and Fastly origin markers.
-- GitHub Pages still serves `mullusi.com` from `main` and `/`.
+- Earlier live response headers included GitHub Pages and Fastly origin
+  markers.
+- Current live response headers for `/`, `/assets/app.js`, `/data/site.json`,
+  and `/.well-known/security.txt` no longer include `x-github-request-id`,
+  `x-served-by`, or `x-fastly-request-id`.
+- GitHub Pages still has `mullusi.com` configured from `main` and `/`, so it
+  remains active as a fallback until disabled.
 - The Mullusi GitHub organization is on GitHub Free.
 - The Pages certificate is approved and HTTPS enforcement is enabled.
 - The repository contains a Cloudflare Pages artifact builder, `_headers`, and
   `_redirects` contract.
+- `ops/website-origin-witness.md` records the current origin-header witness.
 
 ## Constraint
 
@@ -66,15 +72,24 @@ node --check scripts/validate-site.mjs
 node --check scripts/verify-registry-repos.mjs
 node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/test-build-cloudflare-pages.mjs
+node --check scripts/check-website-origin.mjs
+node --check scripts/test-check-website-origin.mjs
 node scripts/validate-site.mjs
 node scripts/verify-registry-repos.mjs
 node scripts/test-build-cloudflare-pages.mjs
+node scripts/test-check-website-origin.mjs
 ```
 
 Then run:
 
 ```bash
 node scripts/build-cloudflare-pages.mjs
+```
+
+Classify the current live origin:
+
+```bash
+node scripts/check-website-origin.mjs --allow-pending
 ```
 
 The `dist` directory must contain website routes and Cloudflare Pages controls
@@ -107,7 +122,7 @@ made private, revert DNS only after confirming the prior Pages deployment is
 still published.
 
 STATUS:
-  Completeness: 90%
-  Invariants verified: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary
-  Open issues: Cloudflare Pages custom-domain activation evidence, GitHub Pages origin disablement evidence
-  Next action: activate Path A in Cloudflare Pages, verify headers, then disable GitHub Pages fallback
+  Completeness: 95%
+  Invariants verified: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary, origin headers without GitHub/Fastly markers
+  Open issues: GitHub Pages fallback/custom-domain disablement evidence, old public repository private-or-archived evidence
+  Next action: disable GitHub Pages fallback after Cloudflare Pages dashboard shows the custom domain active

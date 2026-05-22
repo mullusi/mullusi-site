@@ -37,6 +37,7 @@ framework, database, or server runtime.
 |   |-- MULLUSI_INFRASTRUCTURE_ROOT.md # Public-safe infrastructure inventory
 |   |-- api-runtime-host-path.md      # Provider-neutral API host path
 |   |-- api-production-readiness-gate.md # api.mullusi.com go/no-go gate
+|   |-- website-origin-witness.md     # Live website origin-header witness
 |   |-- recovery-inventory-template.md # Private recovery inventory template
 |   `-- recovery-completion-witness.md # Recovery completion state
 |-- assets/
@@ -57,6 +58,8 @@ framework, database, or server runtime.
 `-- scripts/
     |-- build-cloudflare-pages.mjs     # Builds the public Cloudflare Pages artifact
     |-- test-build-cloudflare-pages.mjs # Verifies artifact source-boundary rules
+    |-- check-website-origin.mjs       # Classifies live origin response headers
+    |-- test-check-website-origin.mjs  # Tests origin-header classification
     |-- fetch-news.mjs                 # Deterministic Frontier Signal refresh
     |-- validate-site.mjs              # Static validation gate
     `-- verify-registry-repos.mjs      # Public registry source-boundary check
@@ -122,6 +125,8 @@ package:
   `api.mullusi.com` runtime host path.
 - `ops/api-production-readiness-gate.md` blocks `api.mullusi.com` DNS until
   recovery, host, database, preflight, and rollback evidence exist.
+- `ops/website-origin-witness.md` records the current Cloudflare edge origin
+  header witness for the public website without changing API readiness.
 - `ops/recovery-inventory-template.md` defines the private recovery inventory
   structure without storing recovery values in Git.
 - `ops/recovery-completion-witness.md` records whether recovery hardening is
@@ -222,6 +227,8 @@ node --check scripts/validate-site.mjs
 node --check scripts/fetch-news.mjs
 node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/test-build-cloudflare-pages.mjs
+node --check scripts/check-website-origin.mjs
+node --check scripts/test-check-website-origin.mjs
 node --check scripts/verify-registry-repos.mjs
 node --check scripts/check-ops-gates.mjs
 node --check scripts/test-ops-gates.mjs
@@ -231,6 +238,7 @@ node --check scripts/check-private-recovery-inventory.mjs
 node --check scripts/test-private-recovery-inventory.mjs
 node scripts/validate-site.mjs
 node scripts/test-build-cloudflare-pages.mjs
+node scripts/test-check-website-origin.mjs
 node scripts/verify-registry-repos.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
@@ -253,6 +261,7 @@ python3 -m http.server 8080 --directory dist
 node --check assets/app.js
 node scripts/validate-site.mjs
 node scripts/test-build-cloudflare-pages.mjs
+node scripts/test-check-website-origin.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
 node scripts/test-promote-recovery-witness.mjs
@@ -266,7 +275,23 @@ registry contracts, homepage hierarchy, repeated-caveat regressions,
 symbol-font licensing and size budget, dynamic fallback behavior,
 public-safe text, Mfidel-safe no-combining-mark text, mojibake,
 secret-like patterns, recovery/API gate consistency, staged HSTS, and the
-`dist` artifact source boundary.
+`dist` artifact source boundary when the generated artifact exists locally.
+
+After Cloudflare Pages custom-domain activation, classify the live origin:
+
+```bash
+node scripts/check-website-origin.mjs
+```
+
+The origin checker only accepts `https://mullusi.com/...` targets and emits a
+sanitized witness record instead of raw response headers.
+
+During migration, use `--allow-pending` so the command records GitHub fallback
+evidence without blocking the shell:
+
+```bash
+node scripts/check-website-origin.mjs --allow-pending
+```
 
 The public homepage must keep this product boundary explicit: Mullusi is the
 company umbrella, Mullu is the flagship governed symbolic product, and live
