@@ -11,13 +11,19 @@ import { pathToFileURL } from "node:url";
 
 const defaultTargets = [
   "https://mullusi.com/",
+  "https://www.mullusi.com/",
+  "https://www.mullusi.com/proof/?gate=www-canonical",
   "https://mullusi.com/assets/app.js",
   "https://mullusi.com/data/site.json",
   "https://mullusi.com/.well-known/security.txt",
 ];
 const githubOriginHeaders = ["x-github-request-id", "x-fastly-request-id", "x-served-by"];
 const cloudflareEdgeHeaders = ["cf-ray", "cf-cache-status"];
-const allowedTargetHostnames = new Set(["mullusi.com"]);
+const allowedTargetHostnames = new Set(["mullusi.com", "www.mullusi.com"]);
+const allowedWwwTargetUrls = new Set([
+  "https://www.mullusi.com/",
+  "https://www.mullusi.com/proof/?gate=www-canonical",
+]);
 
 function normalizeHeaderValue(value) {
   if (Array.isArray(value)) {
@@ -34,6 +40,19 @@ function normalizedHeaders(headers) {
   return normalized;
 }
 
+function unsupportedOptions(args) {
+  const allowedOptions = new Set(["--allow-pending", "--json"]);
+  return args.filter((arg) => arg.startsWith("--") && !allowedOptions.has(arg));
+}
+
+function printCliFailure({ verdict, proofState, error, jsonOutput }) {
+  if (jsonOutput) {
+    console.log(JSON.stringify([{ verdict, proof_state: proofState, error }], null, 2));
+    return;
+  }
+  console.log(`verdict=${verdict}\nproof_state=${proofState}\nerror=${error}`);
+}
+
 export function validateTargetUrl(targetUrl) {
   let parsedUrl;
   try {
@@ -46,6 +65,9 @@ export function validateTargetUrl(targetUrl) {
   }
   if (!allowedTargetHostnames.has(parsedUrl.hostname)) {
     throw new Error(`target_host_invalid:${parsedUrl.hostname}`);
+  }
+  if (parsedUrl.hostname === "www.mullusi.com" && !allowedWwwTargetUrls.has(parsedUrl.toString())) {
+    throw new Error(`target_www_route_invalid:${parsedUrl.toString()}`);
   }
   return parsedUrl.toString();
 }
@@ -91,7 +113,7 @@ export function classifyHeaders(headers) {
   };
 }
 
-export function classifyResponse(response) {
+export function classifyResponse(response, targetUrl = "") {
   const headerClassification = classifyHeaders(response.headers);
   const statusCode = response.statusCode ?? 0;
   if (statusCode < 200 || statusCode >= 300) {
@@ -104,18 +126,92 @@ export function classifyResponse(response) {
       summary: `Response status ${statusCode} is outside the required 2xx publication boundary.`,
     };
   }
+  const targetHost = targetUrl ? new URL(targetUrl).hostname : "";
+  const target = targetUrl ? new URL(targetUrl) : null;
+  const final = response.finalUrl ? new URL(response.finalUrl) : null;
+  if (targetHost === "www.mullusi.com" && final?.hostname !== "mullusi.com") {
+    return {
+      verdict: "CanonicalRedirectPending",
+      proofState: "Unknown",
+      cloudflareEdge: headerClassification.cloudflareEdge,
+      githubOrigin: headerClassification.githubOrigin,
+      markers: headerClassification.markers,
+      summary: "The www host is reachable but has not redirected to the apex Mullusi host.",
+    };
+  }
+  const redirectHistory = response.redirectHistory ?? [];
+  const firstRedirect = redirectHistory[0] ?? null;
+  if (targetHost === "www.mullusi.com" && !firstRedirect) {
+    return {
+      verdict: "CanonicalRedirectHistoryMissing",
+      proofState: "Fail",
+      cloudflareEdge: headerClassification.cloudflareEdge,
+      githubOrigin: headerClassification.githubOrigin,
+      markers: headerClassification.markers,
+      summary: "The www target reached the apex host without a recorded 301 redirect witness.",
+    };
+  }
+  if (targetHost === "www.mullusi.com" && redirectHistory.length !== 1) {
+    return {
+      verdict: "CanonicalRedirectChainMismatch",
+      proofState: "Fail",
+      cloudflareEdge: headerClassification.cloudflareEdge,
+      githubOrigin: headerClassification.githubOrigin,
+      markers: headerClassification.markers,
+      summary: `The www redirect used ${redirectHistory.length} redirect hops instead of the required single 301 hop.`,
+    };
+  }
+  if (targetHost === "www.mullusi.com" && firstRedirect?.statusCode !== 301) {
+    return {
+      verdict: "CanonicalRedirectStatusMismatch",
+      proofState: "Fail",
+      cloudflareEdge: headerClassification.cloudflareEdge,
+      githubOrigin: headerClassification.githubOrigin,
+      markers: headerClassification.markers,
+      summary: `The www redirect used status ${firstRedirect?.statusCode ?? "unknown"} instead of required status 301.`,
+    };
+  }
+  const firstRedirectUrl = firstRedirect ? new URL(firstRedirect.to) : null;
+  if (targetHost === "www.mullusi.com" && target && firstRedirectUrl && (firstRedirectUrl.hostname !== "mullusi.com" || firstRedirectUrl.pathname !== target.pathname || firstRedirectUrl.search !== target.search)) {
+    return {
+      verdict: "CanonicalRedirectShapeMismatch",
+      proofState: "Fail",
+      cloudflareEdge: headerClassification.cloudflareEdge,
+      githubOrigin: headerClassification.githubOrigin,
+      markers: headerClassification.markers,
+      summary: "The www redirect did not point directly to the matching apex host path and query.",
+    };
+  }
+  if (targetHost === "www.mullusi.com" && target && final && (final.pathname !== target.pathname || final.search !== target.search)) {
+    return {
+      verdict: "CanonicalRedirectShapeMismatch",
+      proofState: "Fail",
+      cloudflareEdge: headerClassification.cloudflareEdge,
+      githubOrigin: headerClassification.githubOrigin,
+      markers: headerClassification.markers,
+      summary: "The www redirect reached the apex host but did not preserve the request path and query.",
+    };
+  }
   return headerClassification;
 }
 
-function requestHead(url, redirectBudget = 5) {
+function requestHead(url, redirectBudget = 5, redirectHistory = []) {
   return new Promise((resolve, reject) => {
     const request = https.request(url, { method: "HEAD", headers: { "User-Agent": "mullusi-origin-check/1" } }, (response) => {
       const statusCode = response.statusCode ?? 0;
       const location = normalizeHeaderValue(response.headers.location);
       if (statusCode >= 300 && statusCode < 400 && location && redirectBudget > 0) {
-        const redirectedUrl = new URL(location, url).toString();
+        const redirectedUrl = validateTargetUrl(new URL(location, url).toString());
+        const nextRedirectHistory = [
+          ...redirectHistory,
+          {
+            from: url,
+            to: redirectedUrl,
+            statusCode,
+          },
+        ];
         response.resume();
-        requestHead(redirectedUrl, redirectBudget - 1).then(resolve, reject);
+        requestHead(redirectedUrl, redirectBudget - 1, nextRedirectHistory).then(resolve, reject);
         return;
       }
       response.resume();
@@ -123,6 +219,7 @@ function requestHead(url, redirectBudget = 5) {
         finalUrl: url,
         statusCode,
         headers: response.headers,
+        redirectHistory,
       });
     });
     request.setTimeout(15_000, () => {
@@ -135,10 +232,14 @@ function requestHead(url, redirectBudget = 5) {
 
 function formatReport(targetUrl, response, classification) {
   const normalized = normalizedHeaders(response.headers);
+  const firstRedirect = response.redirectHistory?.[0] ?? null;
   const evidence = [
     `target=${targetUrl}`,
     `final_url=${response.finalUrl}`,
     `status=${response.statusCode}`,
+    `redirect_count=${response.redirectHistory?.length ?? 0}`,
+    `first_redirect_status=${firstRedirect?.statusCode ?? ""}`,
+    `first_redirect_url=${firstRedirect?.to ?? ""}`,
     `server=${normalized.server ?? ""}`,
     `cf_ray=${normalized["cf-ray"] ?? ""}`,
     `github_request=${normalized["x-github-request-id"] ?? ""}`,
@@ -156,6 +257,7 @@ function formatReport(targetUrl, response, classification) {
 
 function witnessRecord(targetUrl, response, classification) {
   const normalized = normalizedHeaders(response.headers);
+  const firstRedirect = response.redirectHistory?.[0] ?? null;
   return {
     verdict: classification.verdict,
     proof_state: classification.proofState,
@@ -163,6 +265,9 @@ function witnessRecord(targetUrl, response, classification) {
     target: targetUrl,
     final_url: response.finalUrl,
     status: response.statusCode,
+    redirect_count: response.redirectHistory?.length ?? 0,
+    first_redirect_status: firstRedirect?.statusCode ?? "",
+    first_redirect_url: firstRedirect?.to ?? "",
     server: normalized.server ?? "",
     cf_ray: normalized["cf-ray"] ?? "",
     github_request: normalized["x-github-request-id"] ?? "",
@@ -174,19 +279,26 @@ function witnessRecord(targetUrl, response, classification) {
 
 async function runCli() {
   const args = process.argv.slice(2);
-  const allowPending = args.includes("--allow-pending");
   const jsonOutput = args.includes("--json");
+  const invalidOptions = unsupportedOptions(args);
+  if (invalidOptions.length > 0) {
+    printCliFailure({
+      verdict: "UnsupportedArgument",
+      proofState: "Fail",
+      error: `unsupported_args:${invalidOptions.join(",")}`,
+      jsonOutput,
+    });
+    process.exit(1);
+    return;
+  }
+  const allowPending = args.includes("--allow-pending");
   const targets = args.filter((arg) => !arg.startsWith("--"));
   let targetUrls;
   try {
     targetUrls = (targets.length > 0 ? targets : defaultTargets).map(validateTargetUrl);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    if (jsonOutput) {
-      console.log(JSON.stringify([{ verdict: "TargetRejected", proof_state: "Fail", error: message }], null, 2));
-    } else {
-      console.log(`verdict=TargetRejected\nproof_state=Fail\nerror=${message}`);
-    }
+    printCliFailure({ verdict: "TargetRejected", proofState: "Fail", error: message, jsonOutput });
     if (!allowPending) {
       process.exit(1);
     }
@@ -197,7 +309,7 @@ async function runCli() {
   for (const targetUrl of targetUrls) {
     try {
       const response = await requestHead(targetUrl);
-      const classification = classifyResponse(response);
+      const classification = classifyResponse(response, targetUrl);
       results.push({ targetUrl, response, classification });
     } catch (error) {
       results.push({

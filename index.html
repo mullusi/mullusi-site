@@ -56,7 +56,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       }
     })();
   </script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.12" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.13" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -81,7 +81,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/app.js?v=2026.05.platform.12"></script>
+  <script defer src="assets/app.js?v=2026.05.platform.13"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -107,7 +107,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <a href="#services" data-i18n="nav.services">Services</a>
         <a href="#evidence" data-i18n="nav.evidence">Evidence</a>
         <a href="/proof/" data-i18n="nav.proof">Proof</a>
-        <a href="#sciences" data-i18n="nav.sciences">Science Engines</a>
+        <a href="#sciences" data-i18n="nav.sciences">Engines</a>
         <a href="#repos" data-i18n="nav.repos">Surfaces</a>
       </div>
       <div class="nav-cta">
@@ -122,7 +122,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </button>
         <a href="mailto:hello@mullusi.com" class="btn" data-i18n="nav.contact">Contact</a>
         <a href="https://docs.mullusi.com" class="btn btn-solid" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
-        <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+        <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle data-i18n-attr="aria-label:nav.menuOpen">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -144,7 +144,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <a href="#use-cases" data-i18n="nav.usecases">Use Cases</a>
     <a href="/playground/" data-i18n="nav.playground">Playground</a>
     <a href="/proof/" data-i18n="nav.proof">Proof</a>
-    <a href="#sciences" data-i18n="nav.sciences">Science Engines</a>
+    <a href="#sciences" data-i18n="nav.sciences">Engines</a>
     <a href="#repos" data-i18n="nav.repos">Surfaces</a>
     <a href="#news" data-i18n="nav.news">News</a>
     <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
@@ -168,14 +168,30 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <span class="latin-name" data-text="Mullu">Mullu</span>
           <span class="latin-tag">[Mullu]</span>
         </div>
-        <div class="tag" data-i18n="hero.tag">Mullusi = company + governed platform + product ecosystem.</div>
-        <h1 id="hero-title" data-i18n="hero.title">A governed symbolic platform where every product has a controlled place.</h1>
-        <p class="lead" data-i18n="hero.lead">Mullusi connects the public website, docs, dashboard, API, control plane, product services, storage, runtime infrastructure, and source delivery. The website is the public map, not the runtime, and every product moves through a release gate before it becomes public.</p>
-        <p class="plain hero-plain" data-i18n="hero.plain">In plain terms: mullusi.com shows what exists, what is live, what is research, and which gate controls each product.</p>
+        <div class="tag" data-i18n="hero.tag">Evidence before action.</div>
+        <h1 id="hero-title" data-i18n="hero.title">Mullusi governs high-risk software actions before they execute.</h1>
+        <p class="lead" data-i18n="hero.lead">Send a proposed action, evaluate it against your rules, receive a verdict, inspect the causal trace, and preserve the proof state.</p>
+        <p class="plain hero-plain" data-i18n="hero.plain">Every action checked. Every consequence re-checked. Every verdict traced.</p>
         <div class="hero-actions">
-          <a href="#platform" class="btn btn-solid" data-i18n="hero.viewPlatform">View platform map</a>
+          <a href="/playground/" class="btn btn-solid" data-i18n="hero.ctaPlayground">Try Mullu Playground</a>
           <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
+          <a href="mailto:research@mullusi.com" class="btn" data-i18n="hero.ctaPilot">Request Governed Pilot</a>
         </div>
+        <dl class="hero-proof-rail" aria-label="Public route state" data-i18n-attr="aria-label:hero.routeStateAria">
+          <div>
+            <dt data-i18n="hero.railMapLabel">Public map</dt>
+            <dd data-i18n="hero.railMapBody">mullusi.com is the company and product routing surface.</dd>
+          </div>
+          <div>
+            <dt data-i18n="hero.railMulluLabel">Mullu</dt>
+            <dd data-i18n="hero.railMulluBody">Private beta product route with proof-boundary copy.</dd>
+          </div>
+          <div>
+            <dt data-i18n="hero.railRuntimeLabel">Runtime</dt>
+            <dd data-i18n="hero.railRuntimeBody">AwaitingEvidence until signed witness endpoints publish.</dd>
+          </div>
+        </dl>
+        <p class="plain hero-doctrine-status" data-i18n="hero.doctrineStatus">Doctrine v1.2 is Verified against Mullusi architecture and AwaitingEvidence against full runtime conformance until signed witness endpoints close.</p>
       </div>
     </section>
 
@@ -216,8 +232,36 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <dl class="hero-foot surface-snapshot reveal" aria-label="Mullusi public surface snapshot" data-i18n-attr="aria-label:hero.snapshotAria">
           <div><dt class="k">Mullu</dt><dd class="l" data-i18n="hero.footMullu">Flagship product route</dd></div>
           <div><dt class="k" data-public-product-count>1</dt><dd class="l" data-i18n="hero.footRepo">Deployed public surface</dd></div>
-          <div><dt class="k live">AwaitingEvidence</dt><dd class="l" data-i18n="hero.footRuntime">Live runtime</dd></div>
+          <div><dt class="k live">AwaitingEvidence</dt><dd class="l" data-i18n="hero.footRuntime">Runtime evidence</dd></div>
         </dl>
+      </div>
+    </section>
+
+    <section class="band tier-primary oldway-section" id="oldway" aria-labelledby="oldway-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="oldway.tag">The Shift</div>
+          <h2 id="oldway-title" data-i18n="oldway.title">Old way vs Mullusi way</h2>
+          <p data-i18n="oldway.body">Mullusi does not replace model output. It governs whether output-derived actions execute, and re-governs their consequences as conditions change.</p>
+        </div>
+        <div class="oldway-grid reveal" aria-label="Old way versus Mullusi way">
+          <div class="ow-head ow-head-old" data-i18n="oldway.colOld">Old way</div>
+          <div class="ow-head ow-head-new" data-i18n="oldway.colNew">Mullusi way</div>
+          <div class="ow-old" data-i18n="oldway.r1.old">Model output drives action directly</div>
+          <div class="ow-new" data-i18n="oldway.r1.new">Model output becomes a proposal</div>
+          <div class="ow-old" data-i18n="oldway.r2.old">Prompt confidence is treated as readiness</div>
+          <div class="ow-new" data-i18n="oldway.r2.new">Action requires governed verdict</div>
+          <div class="ow-old" data-i18n="oldway.r3.old">Logs appear after execution</div>
+          <div class="ow-new" data-i18n="oldway.r3.new">Trace exists before execution</div>
+          <div class="ow-old" data-i18n="oldway.r4.old">One approval covers a whole agent run</div>
+          <div class="ow-new" data-i18n="oldway.r4.new">Consequences are re-checked as context changes</div>
+          <div class="ow-old" data-i18n="oldway.r5.old">UI summarizes without proof linkage</div>
+          <div class="ow-new" data-i18n="oldway.r5.new">Every surface field is reversible to trace</div>
+          <div class="ow-old" data-i18n="oldway.r6.old">Rollback means hiding or replacing old state</div>
+          <div class="ow-new" data-i18n="oldway.r6.new">Rollback creates superseded lineage</div>
+          <div class="ow-old" data-i18n="oldway.r7.old">Deadlines pressure evidence claims</div>
+          <div class="ow-new" data-i18n="oldway.r7.new">Evidence state cannot be mutated by pressure</div>
+        </div>
       </div>
     </section>
 
@@ -227,7 +271,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="tag" data-i18n="platform.tag">Platform Spine</div>
           <h2 id="platform-title" data-i18n="platform.title">Company, platform, products</h2>
           <p data-i18n="platform.body">Mullusi is layered: public surfaces route users, the control plane governs actions, product services execute privately, storage preserves memory, Cloudflare protects the edge, and GitHub remains the source factory.</p>
-          <p class="plain" data-i18n="platform.plain">In plain terms: the website shows the city map; the dashboard is the control room; the API is the machine road; the control plane is the government.</p>
+          <p class="plain" data-i18n="platform.plain">In plain terms: the website is the map; the dashboard is the control room; the API is the machine gateway; the control plane decides what can run.</p>
         </div>
         <div class="platform-layers reveal" data-platform-layers>
           <noscript>
@@ -549,7 +593,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
             <h2 id="governance-title" data-i18n="governance.title">Judgment kernel</h2>
             <div class="kernel-eq">Ψ(PS, SE, EFF, SG, PRR, CPM, ERL, PCE, PCB, K) → J***</div>
             <p data-i18n="governance.body">Website claims follow the same discipline as the system: observable public surface, stated boundary, reversible update, and no silent failure. That is why the public graph separates deployed surfaces, private incubation, staged domains, and operational interfaces.</p>
-            <p class="plain" data-i18n="governance.plain">In plain terms: Ψ is the judgment step. It releases a public claim only when state, effects, safety guards, proof, and lineage all hold. Anything unresolved, nothing is published.</p>
+            <p class="plain" data-i18n="governance.plain">In plain terms: Ψ is the judgment step. It releases a public claim only when state, effects, safety guards, proof, and lineage all hold. If anything is unresolved, nothing is published.</p>
           </div>
           <div>
             <div class="architect-note" id="profile">

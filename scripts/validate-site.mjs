@@ -28,9 +28,11 @@ const requiredFiles = [
   "ops/product-release-gate.md",
   "ops/ip-disclosure-gate.md",
   "ops/MULLUSI_INFRASTRUCTURE_ROOT.md",
+  "ops/mullusi-doctrine.md",
   "ops/api-runtime-host-path.md",
   "ops/api-production-readiness-gate.md",
   "ops/website-origin-witness.md",
+  "ops/www-canonical-redirect-gate.md",
   "ops/recovery-inventory-template.md",
   "ops/recovery-completion-witness.md",
   "LICENSE",
@@ -63,6 +65,8 @@ const requiredFiles = [
   "scripts/test-build-cloudflare-pages.mjs",
   "scripts/check-website-origin.mjs",
   "scripts/test-check-website-origin.mjs",
+  "scripts/check-www-canonical-redirect-gate.mjs",
+  "scripts/test-www-canonical-redirect-gate.mjs",
   "scripts/verify-registry-repos.mjs",
   "scripts/check-ops-gates.mjs",
   "scripts/test-ops-gates.mjs",
@@ -106,6 +110,13 @@ function relativePathExists(baseRelativePath, relativePath) {
 
 function recordFailure(message) {
   failures.push(message);
+}
+
+function hasExactLine(text, expectedLine) {
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .some((line) => line === expectedLine);
 }
 
 function hexToRgb(hex) {
@@ -218,7 +229,7 @@ function validateCloudflarePagesControls() {
     "/CNAME / 302",
   ];
   for (const rule of requiredRedirectRules) {
-    if (!redirects.includes(rule)) {
+    if (!hasExactLine(redirects, rule)) {
       recordFailure(`cloudflare_redirect_rule_missing:${rule}`);
     }
   }
@@ -309,20 +320,36 @@ function validateWebsiteOriginWitness() {
   const requiredTerms = [
     "command=node scripts/check-website-origin.mjs --allow-pending",
     "target=https://mullusi.com/",
+    "target=https://www.mullusi.com/",
+    "final_url=https://www.mullusi.com/",
+    "target=https://www.mullusi.com/proof/?gate=www-canonical",
+    "final_url=https://www.mullusi.com/proof/?gate=www-canonical",
+    "verdict=CanonicalRedirectPending",
+    "proof_state=Unknown",
     "target=https://mullusi.com/assets/app.js",
     "target=https://mullusi.com/data/site.json",
     "target=https://mullusi.com/.well-known/security.txt",
     "status=200",
+    "redirect_count=0",
+    "first_redirect_status=",
+    "first_redirect_url=",
     "server=cloudflare",
     "verdict=CloudflareOriginCandidate",
     "proof_state=Pass",
     "origin_headers_no_github=true",
     "cloudflare_edge_observed=true",
     "github_pages_origin_markers=false",
+    "www_canonical_redirect=AwaitingEvidence",
     "runtime_api_readiness=AwaitingEvidence",
-    "accepted_targets=https://mullusi.com/*",
+    "accepted_targets=https://mullusi.com/*, https://www.mullusi.com/",
+    "accepted_www_redirect_witnesses=https://www.mullusi.com/, https://www.mullusi.com/proof/?gate=www-canonical",
     "json_output=sanitized_witness_records_only",
     "raw_response_headers=not_recorded",
+    "redirect_boundary=stays_within_mullusi_https_hosts",
+    "www_redirect_failure_state=CanonicalRedirectPending",
+    "www_redirect_path_query_preservation=AwaitingEvidence",
+    "www_redirect_status_code=AwaitingEvidence",
+    "required_www_redirect_status=301",
   ];
   for (const term of requiredTerms) {
     if (!witness.includes(term)) {
@@ -331,6 +358,153 @@ function validateWebsiteOriginWitness() {
   }
   if (/x-github-request-id\s*=\S+|x-fastly-request-id\s*=\S+|x-served-by\s*=\S+|account_id\s*=|billing_id\s*=|token\s*=/i.test(witness)) {
     recordFailure("website_origin_witness_boundary_invalid");
+  }
+}
+
+function validatePrivateSourceMigrationDoc() {
+  const migration = readUtf8("docs/private-source-deployment-migration.md");
+  const requiredTerms = [
+    "one permanent `301` hop",
+    "ops/www-canonical-redirect-gate.md",
+    "node --check scripts/check-www-canonical-redirect-gate.mjs",
+    "node --check scripts/test-www-canonical-redirect-gate.mjs",
+    "node scripts/check-www-canonical-redirect-gate.mjs --allow-pending",
+    "node scripts/test-www-canonical-redirect-gate.mjs",
+    "node scripts/check-www-canonical-redirect-gate.mjs",
+    "www_canonical_redirect=pass",
+    "www_redirect_count=1",
+    "www_first_redirect_status=301",
+    "www_path_query_preserved=true",
+    "www one-hop 301 redirect enforcement",
+  ];
+  for (const term of requiredTerms) {
+    if (!migration.includes(term)) {
+      recordFailure(`private_source_migration_term_missing:${term}`);
+    }
+  }
+  if (/account_id\s*=|billing_id\s*=|token\s*=|dns_target\s*=/i.test(migration)) {
+    recordFailure("private_source_migration_boundary_invalid");
+  }
+}
+
+function validateWwwCanonicalRedirectGate() {
+  const gate = readUtf8("ops/www-canonical-redirect-gate.md");
+  const redirects = readUtf8("_redirects");
+  const infrastructureRoot = readUtf8("ops/MULLUSI_INFRASTRUCTURE_ROOT.md");
+  const originChecker = readUtf8("scripts/check-website-origin.mjs");
+  const wwwRedirectGate = readUtf8("scripts/check-www-canonical-redirect-gate.mjs");
+  const wwwRedirectGateTest = readUtf8("scripts/test-www-canonical-redirect-gate.mjs");
+  const requiredTerms = [
+    "https://www.mullusi.com/* https://mullusi.com/:splat 301",
+    "uncommented exact `_redirects` line",
+    "embedded copy, or partial match is not a valid source-rule witness.",
+    "Each required live witness target must appear exactly once in the witness file.",
+    "Missing or duplicated target blocks fail closed",
+    "expected_final_url=https://mullusi.com/",
+    "expected_redirect_count=1",
+    "expected_first_redirect_status=301",
+    "expected_first_redirect_url=https://mullusi.com/",
+    "request=https://www.mullusi.com/proof/?gate=www-canonical",
+    "expected_final_url=https://mullusi.com/proof/?gate=www-canonical",
+    "expected_first_redirect_url=https://mullusi.com/proof/?gate=www-canonical",
+    "expected_verdict=CloudflareOriginCandidate",
+    "observed_witness_block_count=1",
+    "observed_final_url=https://www.mullusi.com/",
+    "observed_final_url=https://www.mullusi.com/proof/?gate=www-canonical",
+    "observed_redirect_count=0",
+    "observed_first_redirect_status=",
+    "observed_first_redirect_url=",
+    "observed_verdict=CanonicalRedirectPending",
+    "observed_proof_state=Unknown",
+    "source_redirect_rule=present",
+    "live_redirect_witness=AwaitingEvidence",
+    "path_query_redirect_witness=AwaitingEvidence",
+    "permanent_redirect_status_witness=AwaitingEvidence",
+    "single_redirect_hop_witness=AwaitingEvidence",
+    "unique_witness_blocks=required",
+    "release_gate=blocked",
+    "failure_action=keep_private_source_migration_open",
+    "rule_surface=Cloudflare Pages redirect or Cloudflare zone redirect rule",
+    "match_host=www.mullusi.com",
+    "target_host=mullusi.com",
+    "status_code=301",
+    "preserve_path=true",
+    "preserve_query=true",
+    "single_redirect_hop=true",
+    "runtime_dependency=false",
+    "secret_required=false",
+    "node scripts/check-website-origin.mjs https://www.mullusi.com/ \"https://www.mullusi.com/proof/?gate=www-canonical\"",
+    "final_url=https://mullusi.com/",
+    "first_redirect_status=301",
+    "final_url=https://mullusi.com/proof/?gate=www-canonical",
+    "first_redirect_url=https://mullusi.com/proof/?gate=www-canonical",
+    "path/query preservation required",
+    "permanent 301 required",
+    "Do not close this gate from a dashboard screenshot alone.",
+  ];
+  for (const term of requiredTerms) {
+    if (!gate.includes(term)) {
+      recordFailure(`www_canonical_redirect_gate_term_missing:${term}`);
+    }
+  }
+  if (!hasExactLine(redirects, "https://www.mullusi.com/* https://mullusi.com/:splat 301")) {
+    recordFailure("www_canonical_redirect_source_rule_missing");
+  }
+  if (/account_id\s*=|billing_id\s*=|token\s*=|dns_target\s*=/i.test(gate)) {
+    recordFailure("www_canonical_redirect_gate_boundary_invalid");
+  }
+  const checkerTerms = [
+    "const allowedWwwTargetUrls = new Set([",
+    "\"https://www.mullusi.com/\"",
+    "\"https://www.mullusi.com/proof/?gate=www-canonical\"",
+    "target_www_route_invalid",
+    "UnsupportedArgument",
+    "unsupported_args",
+    "redirectHistory",
+    "CanonicalRedirectChainMismatch",
+    "CanonicalRedirectStatusMismatch",
+    "first_redirect_status",
+  ];
+  for (const term of checkerTerms) {
+    if (!originChecker.includes(term)) {
+      recordFailure(`www_canonical_redirect_checker_term_missing:${term}`);
+    }
+  }
+  const gateScriptTerms = [
+    "function witnessBlocksForTarget",
+    "witnessBlockCount",
+    "blocks.length === 1",
+    "function hasExactRedirectRule",
+    "line === rule",
+    "hasExactRedirectRule(redirects, redirectRule)",
+  ];
+  for (const term of gateScriptTerms) {
+    if (!wwwRedirectGate.includes(term)) {
+      recordFailure(`www_canonical_redirect_gate_script_term_missing:${term}`);
+    }
+  }
+  const gateTestTerms = [
+    "testDuplicateWitnessBlocksBlockClosure",
+    "testDuplicateReadyWitnessBlocksBlockClosure",
+    "testCommentedSourceRuleDoesNotSatisfyGate",
+    "testEmbeddedSourceRuleDoesNotSatisfyGate",
+  ];
+  for (const term of gateTestTerms) {
+    if (!wwwRedirectGateTest.includes(term)) {
+      recordFailure(`www_canonical_redirect_gate_test_term_missing:${term}`);
+    }
+  }
+  const infrastructureTerms = [
+    "| Canonical host | AwaitingEvidence | `www.mullusi.com` root and path/query witnesses return 200 through Cloudflare and await one-hop 301 apex redirect proof | Enforce www-to-apex redirect with path/query preservation |",
+    "| `https://www.mullusi.com` | 200 through Cloudflare; one-hop 301 canonical redirect AwaitingEvidence |",
+    "| `https://www.mullusi.com/proof/?gate=www-canonical` | 200 through Cloudflare; one-hop 301 path/query redirect preservation AwaitingEvidence |",
+    "| `www.mullusi.com` | AwaitingEvidence | Canonical one-hop 301 redirect to apex with path/query preservation | Enforce redirect before closing migration |",
+    "www redirect not claimed before one-hop 301 root and path/query witnesses",
+  ];
+  for (const term of infrastructureTerms) {
+    if (!infrastructureRoot.includes(term)) {
+      recordFailure(`www_canonical_redirect_infra_term_missing:${term}`);
+    }
   }
 }
 
@@ -2047,7 +2221,7 @@ function validateIndexDesignContract() {
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
-  const assetVersion = "2026.05.platform.12";
+  const assetVersion = "2026.05.platform.13";
 
   if (!html.includes(`assets/styles.css?v=${assetVersion}`) || !html.includes(`assets/app.js?v=${assetVersion}`)) {
     recordFailure("index_asset_version_invalid");
@@ -2566,6 +2740,8 @@ function runValidation() {
   validateCloudflarePagesControls();
   validateCloudflarePagesArtifact();
   validateWebsiteOriginWitness();
+  validatePrivateSourceMigrationDoc();
+  validateWwwCanonicalRedirectGate();
   validateRobots();
   validateSitemap();
   validateLocalLinks();

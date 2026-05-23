@@ -383,13 +383,13 @@
       "audience": "developers and researchers",
       "status": "starter",
       "priceSignal": "limited public access",
-      "summary": "Explore the SDK, CLI, sandbox examples, public docs, and small-volume hosted evaluations.",
+      "summary": "Demonstrate the verdict-trace loop: explore the SDK, CLI, sandbox examples, public docs, and small-volume hosted evaluations.",
       "am": {
         "name": "ነጻ",
         "audience": "አበልጻጊዎችና ተመራማሪዎች",
         "status": "ጀማሪ",
         "priceSignal": "የተወሰነ ይፋዊ መዳረሻ",
-        "summary": "SDK፣ CLI፣ የsandbox ምሳሌዎች፣ ይፋዊ ሰነዶችና አነስተኛ-መጠን የተስተናገዱ ግምገማዎችን ያስሱ።"
+        "summary": "የፍርድ-ዱካ ዙረትን ያሳዩ፦ SDK፣ CLI፣ የsandbox ምሳሌዎች፣ ይፋዊ ሰነዶችና አነስተኛ-መጠን የተስተናገዱ ግምገማዎችን ያስሱ።"
       }
     },
     {
@@ -397,13 +397,13 @@
       "audience": "builders and solo operators",
       "status": "paid",
       "priceSignal": "monthly usage plan",
-      "summary": "Higher hosted evaluation limits, persistent traces, project history, proof stamp access, and dashboard workspace control.",
+      "summary": "Operationalize governance into developer workflows: higher hosted evaluation limits, persistent traces, project history, proof stamp access, and dashboard workspace control.",
       "am": {
         "name": "Pro",
         "audience": "ገንቢዎችና ብቸኛ አንቀሳቃሾች",
         "status": "የሚከፈል",
         "priceSignal": "ወርሃዊ የአጠቃቀም እቅድ",
-        "summary": "ከፍተኛ የተስተናገደ ግምገማ ገደቦች፣ ቋሚ ዱካዎች፣ የፕሮጀክት ታሪክ፣ የማረጋገጫ ማህተም መዳረሻና የዳሽቦርድ ቦታ ቁጥጥር።"
+        "summary": "አስተዳደርን ወደ የአበልጻጊ የሥራ ፍሰት ያስገቡ፦ ከፍተኛ የተስተናገደ ግምገማ ገደቦች፣ ቋሚ ዱካዎች፣ የፕሮጀክት ታሪክ፣ የማረጋገጫ ማህተም መዳረሻና የዳሽቦርድ ቦታ ቁጥጥር።"
       }
     },
     {
@@ -425,13 +425,13 @@
       "audience": "regulated or private deployments",
       "status": "contract",
       "priceSignal": "custom agreement",
-      "summary": "Private cloud or customer-controlled deployment, custom governance rules, support boundary, and compliance evidence exports.",
+      "summary": "Govern high-consequence actions with full audit lineage: private cloud or customer-controlled deployment, custom governance rules, support boundary, and compliance evidence exports.",
       "am": {
         "name": "ድርጅት",
         "audience": "ቁጥጥር የሚደረግባቸው ወይም የግል ስምሪቶች",
         "status": "ውል",
         "priceSignal": "ብጁ ስምምነት",
-        "summary": "የግል ደመና ወይም በደንበኛ የሚቆጣጠር ስምሪት፣ ብጁ የአስተዳደር ደንቦች፣ የድጋፍ ወሰንና የተገዢነት ማስረጃ ወጪዎች።"
+        "summary": "ከፍተኛ-መዘዝ ያላቸውን ድርጊቶች በሙሉ የኦዲት ሐረግ ያስተዳድሩ፦ የግል ደመና ወይም በደንበኛ የሚቆጣጠር ስምሪት፣ ብጁ የአስተዳደር ደንቦች፣ የድጋፍ ወሰንና የተገዢነት ማስረጃ ወጪዎች።"
       }
     },
     {
@@ -446,6 +446,20 @@
         "status": "ውል",
         "priceSignal": "በግምገማ",
         "summary": "የሚከፈል የማረጋገጫ ግምገማ፣ የመዋቅር ምርመራ፣ የጥሰት ሪፖርት፣ የጥገና እቅድና የሙሉሲ የመፍትሄ-ማረጋገጫ ማህተም።"
+      }
+    },
+    {
+      "name": "Governed Pilot",
+      "audience": "one high-risk workflow",
+      "status": "engagement",
+      "priceSignal": "scoped pilot agreement",
+      "summary": "Apply Mullusi to one high-risk workflow with declared evidence boundaries, a governed verdict-trace loop, and a defined rollback path.",
+      "am": {
+        "name": "የሚተዳደር ሙከራ",
+        "audience": "አንድ ከፍተኛ-ስጋት የሥራ ፍሰት",
+        "status": "ተሳትፎ",
+        "priceSignal": "በወሰን የተገደበ የሙከራ ስምምነት",
+        "summary": "ሙሉሲን በአንድ ከፍተኛ-ስጋት የሥራ ፍሰት ላይ ከተገለጹ የማስረጃ ወሰኖች፣ ከሚተዳደር የፍርድ-ዱካ ዙረትና ከተወሰነ የመመለሻ መንገድ ጋር ይተግብሩ።"
       }
     }
   ],

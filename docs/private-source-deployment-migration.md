@@ -16,6 +16,10 @@ Observed on 2026-05-22:
 - Current live response headers for `/`, `/assets/app.js`, `/data/site.json`,
   and `/.well-known/security.txt` no longer include `x-github-request-id`,
   `x-served-by`, or `x-fastly-request-id`.
+- `https://www.mullusi.com/` and
+  `https://www.mullusi.com/proof/?gate=www-canonical` are reachable through
+  Cloudflare with no GitHub or Fastly markers, but currently return direct
+  `200` responses instead of redirecting to the matching apex URLs with one permanent `301` hop.
 - GitHub Pages still has `mullusi.com` configured from `main` and `/`, so it
   remains active as a fallback until disabled.
 - The Mullusi GitHub organization is on GitHub Free.
@@ -23,6 +27,7 @@ Observed on 2026-05-22:
 - The repository contains a Cloudflare Pages artifact builder, `_headers`, and
   `_redirects` contract.
 - `ops/website-origin-witness.md` records the current origin-header witness.
+- `ops/www-canonical-redirect-gate.md` records the live `www` redirect gap.
 
 ## Constraint
 
@@ -74,10 +79,14 @@ node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/test-build-cloudflare-pages.mjs
 node --check scripts/check-website-origin.mjs
 node --check scripts/test-check-website-origin.mjs
+node --check scripts/check-www-canonical-redirect-gate.mjs
+node --check scripts/test-www-canonical-redirect-gate.mjs
 node scripts/validate-site.mjs
 node scripts/verify-registry-repos.mjs
 node scripts/test-build-cloudflare-pages.mjs
 node scripts/test-check-website-origin.mjs
+node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
+node scripts/test-www-canonical-redirect-gate.mjs
 ```
 
 Then run:
@@ -90,6 +99,13 @@ Classify the current live origin:
 
 ```bash
 node scripts/check-website-origin.mjs --allow-pending
+```
+
+Before closing the migration, the canonical `www` redirect gate must pass
+without the pending override:
+
+```bash
+node scripts/check-www-canonical-redirect-gate.mjs
 ```
 
 The `dist` directory must contain website routes and Cloudflare Pages controls
@@ -108,6 +124,10 @@ https_enforced=true
 domain_verified=true
 cloudflare_pages_custom_domain=active
 origin_headers_no_github=true
+www_canonical_redirect=pass
+www_redirect_count=1
+www_first_redirect_status=301
+www_path_query_preserved=true
 public_source_links=none
 planned_repo_slugs=none
 old_public_repo_private_or_archived=true
@@ -124,5 +144,5 @@ still published.
 STATUS:
   Completeness: 95%
   Invariants verified: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary, origin headers without GitHub/Fastly markers
-  Open issues: GitHub Pages fallback/custom-domain disablement evidence, old public repository private-or-archived evidence
-  Next action: disable GitHub Pages fallback after Cloudflare Pages dashboard shows the custom domain active
+  Open issues: www one-hop 301 redirect enforcement, GitHub Pages fallback/custom-domain disablement evidence, old public repository private-or-archived evidence
+  Next action: enforce www-to-apex redirect, then disable GitHub Pages fallback after Cloudflare Pages dashboard shows the custom domain active

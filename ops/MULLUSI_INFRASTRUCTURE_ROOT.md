@@ -42,7 +42,7 @@ Namecheap registrar
 | DNS authority | Cloudflare | Zone active; Cloudflare nameservers authoritative | Post-stabilization public retest passed |
 | Website | Live | `https://mullusi.com` returns 200 through Cloudflare | None |
 | Website redirect | Live | `http://mullusi.com` redirects to HTTPS | None |
-| Canonical host | Live | `www.mullusi.com` redirects to `https://mullusi.com/` | None |
+| Canonical host | AwaitingEvidence | `www.mullusi.com` root and path/query witnesses return 200 through Cloudflare and await one-hop 301 apex redirect proof | Enforce www-to-apex redirect with path/query preservation |
 | Docs | Live | `https://docs.mullusi.com` returns 200 through Cloudflare | None |
 | Email DNS | Working | MX `smtp.google.com` priority 1; user confirmed send/receive | Retest after 24 hours |
 | SPF | Live | `v=spf1 include:_spf.google.com ~all` | None |
@@ -64,7 +64,8 @@ Last checked: 2026-05-22.
 | Check | Result |
 | --- | --- |
 | `https://mullusi.com` | 200 through Cloudflare |
-| `https://www.mullusi.com` | Redirects to `https://mullusi.com/`, then 200 |
+| `https://www.mullusi.com` | 200 through Cloudflare; one-hop 301 canonical redirect AwaitingEvidence |
+| `https://www.mullusi.com/proof/?gate=www-canonical` | 200 through Cloudflare; one-hop 301 path/query redirect preservation AwaitingEvidence |
 | `http://mullusi.com` | Redirects to `https://mullusi.com/`, then 200 |
 | `https://docs.mullusi.com` | 200 through Cloudflare |
 | MX | `smtp.google.com` priority 1 |
@@ -123,7 +124,7 @@ become governance debt.
 | Surface | State | Purpose | Exposure Rule |
 | --- | --- | --- | --- |
 | `mullusi.com` | Live | Main public website | Keep stable |
-| `www.mullusi.com` | Redirect | Canonical redirect to apex | Keep stable |
+| `www.mullusi.com` | AwaitingEvidence | Canonical one-hop 301 redirect to apex with path/query preservation | Enforce redirect before closing migration |
 | `docs.mullusi.com` | Live | Documentation surface | Keep stable |
 | `learn.mullusi.com` | Candidate | Guides, concepts, tutorials, learning capsules | Create only with content owner and route |
 | `sandbox.mullusi.com` | Deferred | Experimental demos and isolated visualizers | Must be isolated and marked experimental |
@@ -191,6 +192,6 @@ Do not enable `includeSubDomains` or preload during active surface evolution.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: no secrets stored, authority chain explicit, recovery before runtime, public surfaces require purpose and health behavior
-  Open issues: recovery code storage, transfer lock confirmation, DKIM setup, hosted runtime witness, managed PostgreSQL
-  Next action: complete private recovery inventory and promote recovery witness before host/database provisioning
+  Invariants verified: no secrets stored, authority chain explicit, recovery before runtime, public surfaces require purpose and health behavior, www redirect not claimed before one-hop 301 root and path/query witnesses
+  Open issues: www one-hop 301 redirect enforcement with path/query preservation, recovery code storage, transfer lock confirmation, DKIM setup, hosted runtime witness, managed PostgreSQL
+  Next action: enforce www-to-apex redirect, then complete private recovery inventory and promote recovery witness before host/database provisioning

@@ -55,7 +55,7 @@
       "am": "ማረጋገጫ"
     },
     "nav.sciences": {
-      "en": "Science Engines",
+      "en": "Engines",
       "am": "የሳይንስ ሞተሮች"
     },
     "nav.repos": {
@@ -77,6 +77,10 @@
     "nav.menuOpen": {
       "en": "Open menu",
       "am": "ምናሌ ክፈት"
+    },
+    "nav.menuClose": {
+      "en": "Close menu",
+      "am": "ምናሌ ዝጋ"
     },
     "lang.toggleAria": {
       "en": "Switch language",
@@ -107,20 +111,136 @@
       "am": "ወደ ጨለማ ገጽታ ቀይር"
     },
     "hero.tag": {
-      "en": "Mullusi = company + governed platform + product ecosystem.",
-      "am": "ሙሉሲ — ኩባንያው። ሙሉ — ዋናው ምርት።"
+      "en": "Evidence before action.",
+      "am": "ከድርጊት በፊት ማስረጃ።"
     },
     "hero.title": {
-      "en": "A governed symbolic platform where every product has a controlled place.",
-      "am": "እያንዳንዱን ውሳኔ ከመፈጸሙ በፊት የሚፈትሽ፣ የሚከታተልና የሚያረጋግጥ ሶፍትዌር።"
+      "en": "Mullusi governs high-risk software actions before they execute.",
+      "am": "ሙሉሲ ከፍተኛ-ስጋት ያላቸውን የሶፍትዌር ድርጊቶች ከመፈጸማቸው በፊት ያስተዳድራል።"
     },
     "hero.lead": {
-      "en": "Mullusi connects the public website, docs, dashboard, API, control plane, product services, storage, runtime infrastructure, and source delivery. The website is the public map, not the runtime, and every product moves through a release gate before it becomes public.",
-      "am": "ሙሉ የቀረበን ድርጊት ከደንቦችዎ ጋር ይገመግማል፣ ለምን እንደሆነ በትክክል ተጨማሪ-ብቻ ዱካ ይመዘግባል፣ እና ማንኛውም ነገር ከመፈጸሙ በፊት ፍርድ ይመልሳል። የሚተዳደር ምልክታዊ ምክንያትን ሊመረመርና ሊደገም ወደሚችል ሥራ ይለውጣል። ቀጥታ runtime ገና የተፈረመ ማስረጃውን እያተመ ነው፤ እስከዚያ ድረስ ይህ ጣቢያ ይፋዊ የማረጋገጫ ወሰን ነው።"
+      "en": "Send a proposed action, evaluate it against your rules, receive a verdict, inspect the causal trace, and preserve the proof state.",
+      "am": "የቀረበን ድርጊት ይላኩ፣ ከደንቦችዎ ጋር ይገምግሙት፣ ፍርድ ይቀበሉ፣ የምክንያት ዱካውን ይመርምሩ፣ እና የማረጋገጫ ሁኔታውን ይጠብቁ።"
     },
     "hero.plain": {
-      "en": "In plain terms: mullusi.com shows what exists, what is live, what is research, and which gate controls each product.",
-      "am": "በቀላል አነጋገር፦ ሙሉ ሥራው የተፈቀደ መሆኑን ይፈትሻል፣ ምክንያቱን ያብራራል፣ እና የማረጋገጫ መዝገብ ይተዋል።"
+      "en": "Every action checked. Every consequence re-checked. Every verdict traced.",
+      "am": "እያንዳንዱ ድርጊት ይፈተሻል። እያንዳንዱ ውጤት እንደገና ይፈተሻል። እያንዳንዱ ፍርድ ይከታተላል።"
+    },
+    "hero.ctaPlayground": {
+      "en": "Try Mullu Playground",
+      "am": "የሙሉ ሙከራ ሜዳ ይሞክሩ"
+    },
+    "hero.ctaPilot": {
+      "en": "Request Governed Pilot",
+      "am": "የሚተዳደር ሙከራ ይጠይቁ"
+    },
+    "hero.doctrineStatus": {
+      "en": "Doctrine v1.2 is Verified against Mullusi architecture and AwaitingEvidence against full runtime conformance until signed witness endpoints close.",
+      "am": "ዶክትሪን v1.2 ከሙሉሲ አርክቴክቸር አንጻር ተረጋግጧል፤ የተፈረሙ የምስክር መዳረሻዎች እስኪዘጉ ድረስ ከሙሉ runtime ተገዢነት አንጻር AwaitingEvidence ነው።"
+    },
+    "oldway.tag": {
+      "en": "The Shift",
+      "am": "ለውጡ"
+    },
+    "oldway.title": {
+      "en": "Old way vs Mullusi way",
+      "am": "የድሮው መንገድ vs የሙሉሲ መንገድ"
+    },
+    "oldway.body": {
+      "en": "Mullusi does not replace model output. It governs whether output-derived actions execute, and re-governs their consequences as conditions change.",
+      "am": "ሙሉሲ የሞዴል ውጤትን አይተካም። ውጤት-ተኮር ድርጊቶች ይፈጸሙ አይፈጸሙ የሚለውን ያስተዳድራል፣ ሁኔታዎች ሲቀየሩም ውጤቶቻቸውን እንደገና ያስተዳድራል።"
+    },
+    "oldway.colOld": {
+      "en": "Old way",
+      "am": "የድሮው መንገድ"
+    },
+    "oldway.colNew": {
+      "en": "Mullusi way",
+      "am": "የሙሉሲ መንገድ"
+    },
+    "oldway.r1.old": {
+      "en": "Model output drives action directly",
+      "am": "የሞዴል ውጤት ድርጊትን በቀጥታ ይመራል"
+    },
+    "oldway.r1.new": {
+      "en": "Model output becomes a proposal",
+      "am": "የሞዴል ውጤት ሐሳብ ይሆናል"
+    },
+    "oldway.r2.old": {
+      "en": "Prompt confidence is treated as readiness",
+      "am": "የprompt እርግጠኝነት እንደ ዝግጁነት ይቆጠራል"
+    },
+    "oldway.r2.new": {
+      "en": "Action requires governed verdict",
+      "am": "ድርጊት የሚተዳደር ፍርድ ይጠይቃል"
+    },
+    "oldway.r3.old": {
+      "en": "Logs appear after execution",
+      "am": "መዝገቦች ከተፈጸመ በኋላ ይታያሉ"
+    },
+    "oldway.r3.new": {
+      "en": "Trace exists before execution",
+      "am": "ዱካ ከመፈጸሙ በፊት አለ"
+    },
+    "oldway.r4.old": {
+      "en": "One approval covers a whole agent run",
+      "am": "አንድ ፈቃድ ሙሉ የagent ሩጫን ይሸፍናል"
+    },
+    "oldway.r4.new": {
+      "en": "Consequences are re-checked as context changes",
+      "am": "ሁኔታ ሲቀየር ውጤቶች እንደገና ይፈተሻሉ"
+    },
+    "oldway.r5.old": {
+      "en": "UI summarizes without proof linkage",
+      "am": "UI ያለ ማረጋገጫ ትስስር ያጠቃልላል"
+    },
+    "oldway.r5.new": {
+      "en": "Every surface field is reversible to trace",
+      "am": "እያንዳንዱ የገጽ መስክ ወደ ዱካ ሊመለስ ይችላል"
+    },
+    "oldway.r6.old": {
+      "en": "Rollback means hiding or replacing old state",
+      "am": "መመለስ ማለት የድሮ ሁኔታን መደበቅ ወይም መተካት ነው"
+    },
+    "oldway.r6.new": {
+      "en": "Rollback creates superseded lineage",
+      "am": "መመለስ የተተካ ሐረግ ይፈጥራል"
+    },
+    "oldway.r7.old": {
+      "en": "Deadlines pressure evidence claims",
+      "am": "የጊዜ ገደቦች በማስረጃ ይገባኛል ላይ ጫና ይፈጥራሉ"
+    },
+    "oldway.r7.new": {
+      "en": "Evidence state cannot be mutated by pressure",
+      "am": "የማስረጃ ሁኔታ በጫና ሊቀየር አይችልም"
+    },
+    "hero.routeStateAria": {
+      "en": "Public route state",
+      "am": "Public route state"
+    },
+    "hero.railMapLabel": {
+      "en": "Public map",
+      "am": "Public map"
+    },
+    "hero.railMapBody": {
+      "en": "mullusi.com is the company and product routing surface.",
+      "am": "mullusi.com is the company and product routing surface."
+    },
+    "hero.railMulluLabel": {
+      "en": "Mullu",
+      "am": "Mullu"
+    },
+    "hero.railMulluBody": {
+      "en": "Private beta product route with proof-boundary copy.",
+      "am": "Private beta product route with proof-boundary copy."
+    },
+    "hero.railRuntimeLabel": {
+      "en": "Runtime",
+      "am": "Runtime"
+    },
+    "hero.railRuntimeBody": {
+      "en": "AwaitingEvidence until signed witness endpoints publish.",
+      "am": "AwaitingEvidence until signed witness endpoints publish."
     },
     "hero.openMullu": {
       "en": "Open Mullu",
@@ -151,7 +271,7 @@
       "am": "Deployed public surface"
     },
     "hero.footRuntime": {
-      "en": "Live runtime",
+      "en": "Runtime evidence",
       "am": "ቀጥታ runtime"
     },
     "start.tag": {
@@ -235,7 +355,7 @@
       "am": "Mullusi is layered: public surfaces route users, the control plane governs actions, product services execute privately, storage preserves memory, Cloudflare protects the edge, and GitHub remains the source factory."
     },
     "platform.plain": {
-      "en": "In plain terms: the website shows the city map; the dashboard is the control room; the API is the machine road; the control plane is the government.",
+      "en": "In plain terms: the website is the map; the dashboard is the control room; the API is the machine gateway; the control plane decides what can run.",
       "am": "In plain terms: the website shows the city map; the dashboard is the control room; the API is the machine road; the control plane is the government."
     },
     "platform.governs": {
@@ -506,6 +626,26 @@
       "en": "No public API",
       "am": "No public API"
     },
+    "product.hiddenCount": {
+      "en": "additional records are available after this preview.",
+      "am": "additional records are available after this preview."
+    },
+    "product.fullRegistry": {
+      "en": "Showing every matching product record. Collapse the registry to return to a scan-first homepage.",
+      "am": "Showing every matching product record. Collapse the registry to return to a scan-first homepage."
+    },
+    "product.showAll": {
+      "en": "Show all",
+      "am": "Show all"
+    },
+    "product.showFewer": {
+      "en": "Show fewer records",
+      "am": "Show fewer records"
+    },
+    "product.records": {
+      "en": "records",
+      "am": "records"
+    },
     "sciences.tag": {
       "en": "Science Engines",
       "am": "የሳይንስ ሞተሮች"
@@ -567,7 +707,7 @@
       "am": "የድረ-ገጽ የይገባኛል ጥያቄዎች እንደ ሥርዓቱ ተመሳሳይ ዲሲፕሊን ይከተላሉ፦ ሊታይ የሚችል ምንጭ፣ የተገለጸ ወሰን፣ ሊቀለበስ የሚችል ዝመናና ምንም ጸጥ ያለ ውድቀት የለም። ለዚህም ነው የሪፖ ግራፉ የተሰማራውን የድረ-ገጽ ሪፖዚቶሪ፣ የግል ማብሰያን፣ የተዘጋጁ ጎራዎችንና የአሠራር በይነገጾችን የሚለየው።"
     },
     "governance.plain": {
-      "en": "In plain terms: Ψ is the judgment step. It releases a public claim only when state, effects, safety guards, proof, and lineage all hold. Anything unresolved, nothing is published.",
+      "en": "In plain terms: Ψ is the judgment step. It releases a public claim only when state, effects, safety guards, proof, and lineage all hold. If anything is unresolved, nothing is published.",
       "am": "በቀላል አነጋገር፦ Ψ የፍርድ ደረጃ ነው። ሁኔታ፣ ውጤቶች፣ የደህንነት ጥበቃዎች፣ ማረጋገጫና ሐረግ ሁሉም ሲሟሉ ብቻ ይፋዊ የይገባኛል ጥያቄ ይለቃል። ያልተፈታ ነገር ካለ ምንም አይታተምም።"
     },
     "governance.profileTag": {

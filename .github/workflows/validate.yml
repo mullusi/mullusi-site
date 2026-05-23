@@ -44,6 +44,12 @@ jobs:
       - name: Check website origin checker test syntax
         run: node --check scripts/test-check-website-origin.mjs
 
+      - name: Check www redirect gate syntax
+        run: node --check scripts/check-www-canonical-redirect-gate.mjs
+
+      - name: Check www redirect gate test syntax
+        run: node --check scripts/test-www-canonical-redirect-gate.mjs
+
       - name: Check registry boundary script syntax
         run: node --check scripts/verify-registry-repos.mjs
 
@@ -73,6 +79,12 @@ jobs:
 
       - name: Test website origin classification
         run: node scripts/test-check-website-origin.mjs
+
+      - name: Allow pending www canonical redirect gate
+        run: node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
+
+      - name: Test www canonical redirect gate
+        run: node scripts/test-www-canonical-redirect-gate.mjs
 
       - name: Validate registry source boundary
         run: node scripts/verify-registry-repos.mjs
