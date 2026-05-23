@@ -38,6 +38,7 @@ framework, database, or server runtime.
 |   |-- api-runtime-host-path.md      # Provider-neutral API host path
 |   |-- api-production-readiness-gate.md # api.mullusi.com go/no-go gate
 |   |-- website-origin-witness.md     # Live website origin-header witness
+|   |-- www-canonical-redirect-gate.md # www-to-apex redirect gate
 |   |-- recovery-inventory-template.md # Private recovery inventory template
 |   `-- recovery-completion-witness.md # Recovery completion state
 |-- assets/
@@ -60,6 +61,8 @@ framework, database, or server runtime.
     |-- test-build-cloudflare-pages.mjs # Verifies artifact source-boundary rules
     |-- check-website-origin.mjs       # Classifies live origin response headers
     |-- test-check-website-origin.mjs  # Tests origin-header classification
+    |-- check-www-canonical-redirect-gate.mjs # Evaluates www redirect closure
+    |-- test-www-canonical-redirect-gate.mjs # Tests www redirect gate logic
     |-- fetch-news.mjs                 # Deterministic Frontier Signal refresh
     |-- validate-site.mjs              # Static validation gate
     `-- verify-registry-repos.mjs      # Public registry source-boundary check
@@ -127,6 +130,10 @@ package:
   recovery, host, database, preflight, and rollback evidence exist.
 - `ops/website-origin-witness.md` records the current Cloudflare edge origin
   header witness for the public website without changing API readiness.
+- `ops/www-canonical-redirect-gate.md` keeps the `www` canonical redirect
+  open until live headers prove the host redirects to `https://mullusi.com/`
+  with one permanent `301` hop and path/query preservation; it also defines
+  the operator rule contract for Cloudflare enforcement.
 - `ops/recovery-inventory-template.md` defines the private recovery inventory
   structure without storing recovery values in Git.
 - `ops/recovery-completion-witness.md` records whether recovery hardening is
@@ -229,6 +236,8 @@ node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/test-build-cloudflare-pages.mjs
 node --check scripts/check-website-origin.mjs
 node --check scripts/test-check-website-origin.mjs
+node --check scripts/check-www-canonical-redirect-gate.mjs
+node --check scripts/test-www-canonical-redirect-gate.mjs
 node --check scripts/verify-registry-repos.mjs
 node --check scripts/check-ops-gates.mjs
 node --check scripts/test-ops-gates.mjs
@@ -239,6 +248,8 @@ node --check scripts/test-private-recovery-inventory.mjs
 node scripts/validate-site.mjs
 node scripts/test-build-cloudflare-pages.mjs
 node scripts/test-check-website-origin.mjs
+node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
+node scripts/test-www-canonical-redirect-gate.mjs
 node scripts/verify-registry-repos.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
@@ -259,9 +270,18 @@ python3 -m http.server 8080 --directory dist
 
 ```bash
 node --check assets/app.js
+node --check scripts/validate-site.mjs
+node --check scripts/build-cloudflare-pages.mjs
+node --check scripts/test-build-cloudflare-pages.mjs
+node --check scripts/check-website-origin.mjs
+node --check scripts/test-check-website-origin.mjs
+node --check scripts/check-www-canonical-redirect-gate.mjs
+node --check scripts/test-www-canonical-redirect-gate.mjs
 node scripts/validate-site.mjs
 node scripts/test-build-cloudflare-pages.mjs
 node scripts/test-check-website-origin.mjs
+node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
+node scripts/test-www-canonical-redirect-gate.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
 node scripts/test-promote-recovery-witness.mjs
@@ -283,8 +303,10 @@ After Cloudflare Pages custom-domain activation, classify the live origin:
 node scripts/check-website-origin.mjs
 ```
 
-The origin checker only accepts `https://mullusi.com/...` targets and emits a
-sanitized witness record instead of raw response headers.
+The origin checker accepts `https://mullusi.com/...` targets plus the governed
+`https://www.mullusi.com/` and
+`https://www.mullusi.com/proof/?gate=www-canonical` canonical-redirect witness
+targets, and emits a sanitized witness record instead of raw response headers.
 
 During migration, use `--allow-pending` so the command records GitHub fallback
 evidence without blocking the shell:

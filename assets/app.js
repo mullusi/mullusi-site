@@ -15,10 +15,12 @@ const state = {
   lang: "en",
   activeCategory: "All",
   activeProductStatus: "All",
+  productRegistryExpanded: false,
   query: "",
   visits: 0,
 };
 
+const productRegistryPreviewLimit = 6;
 const fallbackLanguageNames = { en: "English", am: "አማርኛ" };
 
 const qs = (selector, root = document) => root.querySelector(selector);
@@ -161,7 +163,7 @@ function applyTheme(theme, persist = true) {
   if (persist) persistTheme(normalizedTheme);
 
   const themeMeta = qs('meta[name="theme-color"]');
-  if (themeMeta) themeMeta.setAttribute("content", normalizedTheme === "light" ? "#f6f3ea" : "#050609");
+  if (themeMeta) themeMeta.setAttribute("content", normalizedTheme === "light" ? "#f7f8fb" : "#050609");
 
   qsa("[data-theme-toggle]").forEach((toggle) => {
     const nextTheme = normalizedTheme === "light" ? "dark" : "light";
@@ -1044,7 +1046,25 @@ function renderProductRegistry() {
     return;
   }
 
-  target.innerHTML = products.map((product) => `
+  const shouldLimit = !state.productRegistryExpanded && products.length > productRegistryPreviewLimit;
+  const visibleProducts = shouldLimit ? products.slice(0, productRegistryPreviewLimit) : products;
+  const hiddenCount = products.length - visibleProducts.length;
+  const registryControl = products.length > productRegistryPreviewLimit
+    ? `
+      <article class="product-registry-more">
+        <p>${escapeHtml(state.productRegistryExpanded
+          ? (i18nText("product.fullRegistry") || "Showing every matching product record. Collapse the registry to return to a scan-first homepage.")
+          : `${hiddenCount} ${i18nText("product.hiddenCount") || "additional records are available after this preview."}`)}</p>
+        <button class="btn" type="button" data-product-registry-expand aria-expanded="${state.productRegistryExpanded ? "true" : "false"}">
+          ${escapeHtml(state.productRegistryExpanded
+            ? (i18nText("product.showFewer") || "Show fewer records")
+            : `${i18nText("product.showAll") || "Show all"} ${products.length} ${i18nText("product.records") || "records"}`)}
+        </button>
+      </article>
+    `
+    : "";
+
+  target.innerHTML = `${visibleProducts.map((product) => `
     <article class="product-card">
       <div class="product-card-head">
         <span class="badge">${escapeHtml(product.classification)}</span>
@@ -1088,7 +1108,16 @@ function renderProductRegistry() {
       </dl>
       ${renderProductRouteActions(product)}
     </article>
-  `).join("");
+  `).join("")}${registryControl}`;
+
+  const expandButton = qs("[data-product-registry-expand]", target);
+  if (expandButton) {
+    expandButton.addEventListener("click", () => {
+      state.productRegistryExpanded = !state.productRegistryExpanded;
+      renderProductRegistryControls();
+      renderProductRegistry();
+    });
+  }
   revealRendered(target);
 }
 
@@ -1121,6 +1150,7 @@ function renderProductRegistryControls() {
   qsa("[data-product-status]", target).forEach((button) => {
     button.addEventListener("click", () => {
       state.activeProductStatus = button.dataset.productStatus || "All";
+      state.productRegistryExpanded = false;
       renderProductRegistryControls();
       renderProductRegistry();
     });
@@ -1336,7 +1366,12 @@ function bindMenu() {
 
   const setOpen = (open) => {
     toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    toggle.setAttribute(
+      "aria-label",
+      open
+        ? (i18nText("nav.menuClose") || "Close menu")
+        : (i18nText("nav.menuOpen") || "Open menu")
+    );
     menu.hidden = !open;
     document.documentElement.classList.toggle("menu-open", open);
   };
