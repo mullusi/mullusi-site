@@ -77,6 +77,30 @@ HTTP 200 for `https://mullusi.com/sitemap.xml` during that transient state.
 The final Search Console table readback is `Success` with five discovered
 pages.
 
+## URL Inspection Request
+
+Observed on 2026-05-24:
+
+```text
+inspected_url=https://mullusi.com/
+indexed_state_before_request=URL is not on Google
+reported_reason_before_request=Page with redirect
+last_google_crawl_before_request=2026-04-28
+crawl_allowed_before_request=Yes
+page_fetch_before_request=Successful
+indexing_allowed_before_request=Yes
+google_selected_canonical_before_request=https://www.mullusi.com/
+request_indexing_result=Indexing requested
+priority_crawl_queue=accepted
+additional_route_requests=AwaitingEvidence
+```
+
+URL Inspection showed stale Google state from before the current canonical
+redirect closure. The homepage request was accepted into Google's priority
+crawl queue. Additional route-specific requests are not recorded because the
+browser session did not produce stable readback before timeout; the sitemap
+submission already exposes all five routes to Google.
+
 ## Release Boundary
 
 ```text
@@ -93,6 +117,9 @@ stale_third_party_record_observed=true
 search_console_sitemap_submission=Pass
 search_console_sitemap_status=Success
 search_console_discovered_pages=5
+homepage_url_inspection_request=Pass
+homepage_priority_crawl_queue=accepted
+additional_url_inspection_requests=AwaitingEvidence
 ```
 
 ## Checker Boundary
