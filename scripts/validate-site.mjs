@@ -45,6 +45,7 @@ const requiredFiles = [
   "ops/api-production-readiness-gate.md",
   "ops/website-origin-witness.md",
   "ops/public-visibility-witness.md",
+  "ops/live-safety-monitor.md",
   "ops/security-header-witness.md",
   "ops/search-indexing-witness.md",
   "ops/www-canonical-redirect-gate.md",
@@ -596,6 +597,7 @@ function validatePublicVisibilityWitness() {
   const checker = readUtf8("scripts/check-public-visibility.mjs");
   const checkerTest = readUtf8("scripts/test-check-public-visibility.mjs");
   const liveSafetyWorkflow = readUtf8(".github/workflows/live-safety.yml");
+  const liveSafetyMonitor = readUtf8("ops/live-safety-monitor.md");
   const requiredTerms = [
     "command=node scripts/check-public-visibility.mjs",
     "verdict=SolvedVerified",
@@ -682,10 +684,17 @@ function validatePublicVisibilityWitness() {
   const liveSafetyWorkflowTerms = [
     "schedule:",
     "cron: \"41 7 * * *\"",
+    "Prepare live safety witness artifact",
+    "live-safety-witness/run-metadata.txt",
     "Check public visibility",
-    "node scripts/check-public-visibility.mjs",
+    "node scripts/check-public-visibility.mjs | tee live-safety-witness/public-visibility.txt",
     "Check regional public visibility",
-    "node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending",
+    "node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending | tee live-safety-witness/regional-public-visibility.txt",
+    "node scripts/check-website-origin.mjs | tee live-safety-witness/website-origin.txt",
+    "node scripts/check-live-security-headers.mjs | tee live-safety-witness/security-headers.txt",
+    "node scripts/check-search-indexing-surface.mjs | tee live-safety-witness/search-indexing-surface.txt",
+    "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+    "retention-days: 90",
   ];
   for (const term of liveSafetyWorkflowTerms) {
     if (!liveSafetyWorkflow.includes(term)) {
@@ -693,8 +702,32 @@ function validatePublicVisibilityWitness() {
     }
   }
 
+  const liveSafetyMonitorTerms = [
+    "Live Safety Monitor",
+    "workflow=.github/workflows/live-safety.yml",
+    "schedule=41 7 * * *",
+    "artifact_retention_days=90",
+    "public_visibility=node scripts/check-public-visibility.mjs",
+    "regional_public_visibility=node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending",
+    "origin_headers=node scripts/check-website-origin.mjs",
+    "security_headers=node scripts/check-live-security-headers.mjs",
+    "search_indexing_surface=node scripts/check-search-indexing-surface.mjs",
+    "raw_response_headers=not_recorded",
+    "universal_all_users_visibility=AwaitingEvidence",
+    "runtime_api_readiness=AwaitingEvidence",
+    "STATUS:",
+  ];
+  for (const term of liveSafetyMonitorTerms) {
+    if (!liveSafetyMonitor.includes(term)) {
+      recordFailure(`live_safety_monitor_term_missing:${term}`);
+    }
+  }
+
   if (/account_id\s*=|billing_id\s*=|token\s*=|dns_target\s*=/i.test(witness)) {
     recordFailure("public_visibility_witness_boundary_invalid");
+  }
+  if (/account_id\s*=|billing_id\s*=|token\s*=|dns_target\s*=|raw_response_header_value=/i.test(liveSafetyMonitor)) {
+    recordFailure("live_safety_monitor_boundary_invalid");
   }
 }
 
