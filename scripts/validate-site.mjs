@@ -2579,6 +2579,10 @@ function validateEmailRendering() {
 function validateOperatingGates() {
   const gateExpectations = [
     {
+      file: "ops/mullusi-doctrine.md",
+      terms: ["Mullusi Doctrine v1.2", "Evidence State", "AwaitingEvidence", "No claim without declared evidence state.", "release_surface", "rollback(surface_id)", "superseded_by", "PublishableWithBoundary", "STATUS:"],
+    },
+    {
       file: "ops/public-claim-gate.md",
       terms: ["Claim:", "Evidence:", "Surface:", "Risk:", "Status:", "Decision:", "Rollback:", "AwaitingEvidence"],
     },
