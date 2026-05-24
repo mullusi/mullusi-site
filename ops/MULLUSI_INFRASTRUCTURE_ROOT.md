@@ -43,6 +43,7 @@ Namecheap registrar
 | Website | Live | `https://mullusi.com` returns 200 through Cloudflare | None |
 | Website redirect | Live | `http://mullusi.com` redirects to HTTPS | None |
 | Canonical host | Live | `www.mullusi.com` root and path/query witnesses return one-hop 301 redirects to apex through Cloudflare | None |
+| Search crawl surface | Live | Local and live sitemap both expose five public routes; route checks pass with no detected noindex blockers | Search engine recrawl evidence pending |
 | Docs | Live | `https://docs.mullusi.com` returns 200 through Cloudflare | None |
 | Email DNS | Working | MX `smtp.google.com` priority 1; user confirmed send/receive | Retest after 24 hours |
 | SPF | Live | `v=spf1 include:_spf.google.com ~all` | None |
@@ -66,6 +67,7 @@ Last checked: 2026-05-24.
 | `https://mullusi.com` | 200 through Cloudflare |
 | `https://www.mullusi.com` | One-hop 301 to `https://mullusi.com/`, then 200 through Cloudflare |
 | `https://www.mullusi.com/proof/?gate=www-canonical` | One-hop 301 to `https://mullusi.com/proof/?gate=www-canonical`, then 200 through Cloudflare |
+| Search indexing surface | `node scripts/check-search-indexing-surface.mjs` returns `SolvedVerified`; live/local sitemap route count is 5 |
 | `http://mullusi.com` | Redirects to `https://mullusi.com/`, then 200 |
 | `https://docs.mullusi.com` | 200 through Cloudflare |
 | MX | `smtp.google.com` priority 1 |
@@ -185,6 +187,7 @@ Do not enable `includeSubDomains` or preload during active surface evolution.
 | Promote recovery completion witness | Permit host/database provisioning | Runtime deployment |
 | Confirm Namecheap transfer lock | Prevent unauthorized domain transfer | Long-term domain security |
 | Confirm Google Workspace DKIM | Improve mail authentication | Stronger DMARC policy |
+| Submit sitemap and request recrawl | Convert crawl-surface readiness into external search evidence | Search visibility |
 | Define private runtime owner | Clarify operational responsibility | API exposure |
 | Deploy runtime witness privately | Turn local witness into hosted evidence | API exposure |
 | Provision managed PostgreSQL | Keep durable persistence outside API host | API exposure |
