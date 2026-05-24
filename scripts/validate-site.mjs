@@ -380,6 +380,11 @@ function validatePrivateSourceMigrationDoc() {
     "www_redirect_count=1",
     "www_first_redirect_status=301",
     "www_path_query_preserved=true",
+    "old_public_repo_posture=public_governance_mirror",
+    "old_public_repo_private_or_archived=not_required",
+    "public_repo_live_dns_origin=false",
+    "github_pages_site_api=NotFound",
+    "github_pages_custom_domain_disabled=pass",
     "www one-hop 301 redirect closure",
   ];
   for (const term of requiredTerms) {
