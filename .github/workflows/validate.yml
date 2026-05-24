@@ -71,11 +71,41 @@ jobs:
       - name: Check public visibility checker test syntax
         run: node --check scripts/test-check-public-visibility.mjs
 
+      - name: Check live safety witness capture syntax
+        run: node --check scripts/capture-live-safety-witness.mjs
+
+      - name: Check live safety witness capture test syntax
+        run: node --check scripts/test-capture-live-safety-witness.mjs
+
+      - name: Check live safety witness checker syntax
+        run: node --check scripts/check-live-safety-witness.mjs
+
+      - name: Check live safety witness test syntax
+        run: node --check scripts/test-check-live-safety-witness.mjs
+
       - name: Check live security header checker syntax
         run: node --check scripts/check-live-security-headers.mjs
 
       - name: Check live security header test syntax
         run: node --check scripts/test-check-live-security-headers.mjs
+
+      - name: Check domain security checker syntax
+        run: node --check scripts/check-domain-security.mjs
+
+      - name: Check domain security test syntax
+        run: node --check scripts/test-check-domain-security.mjs
+
+      - name: Check domain hardening preflight syntax
+        run: node --check scripts/check-domain-hardening-preflight.mjs
+
+      - name: Check domain hardening preflight test syntax
+        run: node --check scripts/test-check-domain-hardening-preflight.mjs
+
+      - name: Check domain hardening preflight promotion syntax
+        run: node --check scripts/promote-domain-hardening-preflight.mjs
+
+      - name: Check domain hardening preflight promotion test syntax
+        run: node --check scripts/test-promote-domain-hardening-preflight.mjs
 
       - name: Check www redirect gate syntax
         run: node --check scripts/check-www-canonical-redirect-gate.mjs
@@ -131,8 +161,26 @@ jobs:
       - name: Test public visibility gate
         run: node scripts/test-check-public-visibility.mjs
 
+      - name: Test live safety witness capture
+        run: node scripts/test-capture-live-safety-witness.mjs
+
+      - name: Test live safety witness artifact gate
+        run: node scripts/test-check-live-safety-witness.mjs
+
       - name: Test live security header gate
         run: node scripts/test-check-live-security-headers.mjs
+
+      - name: Test domain security gate
+        run: node scripts/test-check-domain-security.mjs
+
+      - name: Test domain hardening preflight gate
+        run: node scripts/test-check-domain-hardening-preflight.mjs
+
+      - name: Confirm domain hardening preflight remains blocked
+        run: node scripts/check-domain-hardening-preflight.mjs --expect-blocked
+
+      - name: Test domain hardening preflight promotion
+        run: node scripts/test-promote-domain-hardening-preflight.mjs
 
       - name: Allow pending www canonical redirect gate
         run: node scripts/check-www-canonical-redirect-gate.mjs --allow-pending

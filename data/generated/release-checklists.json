@@ -520,7 +520,7 @@
   ],
   "meta": {
     "artifact": "data/generated/release-checklists.json",
-    "content_hash": "sha256:c5a97fd65c29017f03d37a84783a7199c42bf434754474288e289e917fcc4070",
+    "content_hash": "sha256:a3ca68523e38a1df28a1f888b0983a8d8faf01573157dbbc002e30c774c2e14e",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Release Checklists",
     "purpose": "Generated from product manifests. Do not edit by hand.",

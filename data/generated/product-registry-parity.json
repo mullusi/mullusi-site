@@ -81,11 +81,11 @@
   ],
   "meta": {
     "artifact": "data/generated/product-registry-parity.json",
-    "content_hash": "sha256:0d32ae61f263089bf88a5685883c314ebce37ba3c0eda155f378639f5f359234",
+    "content_hash": "sha256:ba7bdad34c159c23ecf20222682724ddb94233a9d18447a18e289b7003c42d23",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Product Registry Parity Witness",
     "purpose": "Generated from product manifests. Do not edit by hand.",
-    "source": "products/*/product.manifest.json + data/products.json (generated)"
+    "source": "products/*/product.manifest.json + internal compatibility projection"
   },
   "mismatches": [],
   "nonRegistryManifests": [

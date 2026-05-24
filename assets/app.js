@@ -1,7 +1,7 @@
 /*
 Purpose: render Mullusi structured public content and operate the symbolic canvas substrate.
 Governance scope: deterministic JSON rendering, safe link output, searchable public surface catalog, manifest-owned homepage product registry, and visual substrate runtime.
-Dependencies: data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, DOM canvas APIs, IntersectionObserver, and browser fetch.
+Dependencies: assets/registry/homepage-registry.js, assets/render/product-registry.js, DOM canvas APIs, IntersectionObserver, and browser fetch.
 Invariants: untrusted JSON text is escaped, non-public links are blocked, registry failures surface visibly, and reduced motion is respected.
 */
 
@@ -20,7 +20,6 @@ const state = {
   visits: 0,
 };
 
-const productRegistryPreviewLimit = 6;
 const fallbackLanguageNames = { en: "English", am: "አማርኛ" };
 
 const qs = (selector, root = document) => root.querySelector(selector);
@@ -205,23 +204,6 @@ function categorySet(products) {
   return ["All", ...Array.from(new Set(products.map((item) => item.category))).sort()];
 }
 
-function productStatusSet(products) {
-  const preferredOrder = ["All", "awaiting-evidence", "private-incubation", "planned", "restricted"];
-  const knownStatuses = new Set(products.map((item) => item.status).filter(Boolean));
-  const ordered = preferredOrder.filter((status) => status === "All" || knownStatuses.has(status));
-  const extra = Array.from(knownStatuses).filter((status) => !preferredOrder.includes(status)).sort();
-  return [...ordered, ...extra];
-}
-
-function productStatusCounts(products) {
-  const counts = new Map([["All", products.length]]);
-  products.forEach((product) => {
-    const status = product.status || "unknown";
-    counts.set(status, (counts.get(status) || 0) + 1);
-  });
-  return counts;
-}
-
 function matchesQuery(item, query) {
   if (!query) return true;
   const haystack = [
@@ -243,51 +225,6 @@ function filteredProducts() {
     const categoryOk = state.activeCategory === "All" || item.category === state.activeCategory;
     return categoryOk && matchesQuery(item, query);
   });
-}
-
-function filteredProductRegistry() {
-  const products = state.registry?.productRegistry || [];
-  if (state.activeProductStatus === "All") return products;
-  return products.filter((product) => product.status === state.activeProductStatus);
-}
-
-function productDocsHref(product) {
-  const docsPath = String(product?.docsPath || "");
-  if (!/^docs\.mullusi\.com(?:\/[a-z0-9/_-]+(?:\.html)?)?$/.test(docsPath)) return "";
-  return `https://${docsPath}`;
-}
-
-function productEvidenceHref(product) {
-  return activityHref(product?.evidencePath);
-}
-
-function safeDomToken(value) {
-  return String(value ?? "")
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "-")
-    .replace(/^-+|-+$/g, "") || "unknown";
-}
-
-function renderProductRouteActions(product) {
-  const docsHref = productDocsHref(product);
-  const evidenceHref = productEvidenceHref(product);
-  const apiPath = String(product?.apiPath || "");
-  const apiIsPublic = /^POST \/v1\//.test(apiPath) || /^GET \/v1\//.test(apiPath) || apiPath === "GET /health";
-  const apiLabel = apiPath === "no public endpoint"
-    ? (i18nText("product.noPublicApi") || "No public API")
-    : apiPath;
-
-  return `
-    <div class="product-route-actions" aria-label="${escapeAttribute(i18nText("product.routesAria") || "Product evidence routes")}">
-      ${docsHref
-        ? `<a href="${escapeAttribute(docsHref)}">${escapeHtml(i18nText("product.openDocs") || "Docs")}</a>`
-        : `<span>${escapeHtml(i18nText("product.privateDocs") || "Private docs")}</span>`}
-      ${evidenceHref
-        ? `<a href="${escapeAttribute(evidenceHref)}">${escapeHtml(i18nText("product.openProof") || "Proof boundary")}</a>`
-        : `<span>${escapeHtml(i18nText("product.noProofRoute") || "No public proof route")}</span>`}
-      <code class="${apiIsPublic ? "is-public-api" : "is-private-api"}">${escapeHtml(apiLabel)}</code>
-    </div>
-  `;
 }
 
 function revealRendered(target) {
@@ -1044,134 +981,31 @@ function renderMetrics() {
   revealRendered(target);
 }
 
+function productRegistryRendererModule() {
+  if (!window.MullusiProductRegistryRenderer) {
+    throw new Error("Product registry renderer module is unavailable.");
+  }
+  return window.MullusiProductRegistryRenderer;
+}
+
+function productRegistryRenderContext() {
+  return {
+    escapeAttribute,
+    escapeHtml,
+    i18nText,
+    qsa,
+    qs,
+    revealRendered,
+    state,
+  };
+}
+
 function renderProductRegistry() {
-  const target = qs("[data-product-registry]");
-  const products = filteredProductRegistry();
-  if (!target) return;
-
-  if (!products.length) {
-    target.innerHTML = `
-      <article class="product-card empty-card">
-        <div class="product-card-head">
-          <h3>${escapeHtml(i18nText("product.emptyTitle") || "No matching product records")}</h3>
-        </div>
-        <p>${escapeHtml(i18nText("product.emptyBody") || "Choose another product status to inspect the governed registry.")}</p>
-      </article>
-    `;
-    revealRendered(target);
-    return;
-  }
-
-  const shouldLimit = !state.productRegistryExpanded && products.length > productRegistryPreviewLimit;
-  const visibleProducts = shouldLimit ? products.slice(0, productRegistryPreviewLimit) : products;
-  const hiddenCount = products.length - visibleProducts.length;
-  const registryControl = products.length > productRegistryPreviewLimit
-    ? `
-      <article class="product-registry-more">
-        <p>${escapeHtml(state.productRegistryExpanded
-          ? (i18nText("product.fullRegistry") || "Showing every matching product record. Collapse the registry to return to a scan-first homepage.")
-          : `${hiddenCount} ${i18nText("product.hiddenCount") || "additional records are available after this preview."}`)}</p>
-        <button class="btn" type="button" data-product-registry-expand aria-expanded="${state.productRegistryExpanded ? "true" : "false"}">
-          ${escapeHtml(state.productRegistryExpanded
-            ? (i18nText("product.showFewer") || "Show fewer records")
-            : `${i18nText("product.showAll") || "Show all"} ${products.length} ${i18nText("product.records") || "records"}`)}
-        </button>
-      </article>
-    `
-    : "";
-
-  target.innerHTML = `${visibleProducts.map((product) => `
-    <article class="product-card" data-product-key="${safeDomToken(product.id || product.name)}">
-      <div class="product-card-head">
-        <span class="badge">${escapeHtml(product.classification)}</span>
-        <span class="status-pill">${escapeHtml(product.status)}</span>
-      </div>
-      <h3>${escapeHtml(product.name)}</h3>
-      <p>${escapeHtml(product.summary)}</p>
-      <dl class="product-meta">
-        <div>
-          <dt>${escapeHtml(i18nText("field.owner") || "Owner")}</dt>
-          <dd>${escapeHtml(product.owner)}</dd>
-        </div>
-        <div>
-          <dt>${escapeHtml(i18nText("field.sourceBoundary") || "Source boundary")}</dt>
-          <dd>${escapeHtml(product.sourceBoundary)}</dd>
-        </div>
-        <div>
-          <dt>${escapeHtml(i18nText("field.runtimeType") || "Runtime")}</dt>
-          <dd>${escapeHtml(product.runtimeType)}</dd>
-        </div>
-        <div>
-          <dt>${escapeHtml(i18nText("field.dataType") || "Data")}</dt>
-          <dd>${escapeHtml(product.dataType)}</dd>
-        </div>
-        <div>
-          <dt>${escapeHtml(i18nText("field.releaseGate") || "Release gate")}</dt>
-          <dd>${escapeHtml(product.releaseGate)}</dd>
-        </div>
-        <div>
-          <dt>${escapeHtml(i18nText("field.docsPath") || "Docs")}</dt>
-          <dd>${escapeHtml(product.docsPath)}</dd>
-        </div>
-        <div>
-          <dt>${escapeHtml(i18nText("field.apiPath") || "API")}</dt>
-          <dd>${escapeHtml(product.apiPath)}</dd>
-        </div>
-        <div>
-          <dt>${escapeHtml(i18nText("field.failureMode") || "Failure")}</dt>
-          <dd>${escapeHtml(product.failureMode)}</dd>
-        </div>
-      </dl>
-      ${renderProductRouteActions(product)}
-    </article>
-  `).join("")}${registryControl}`;
-
-  const expandButton = qs("[data-product-registry-expand]", target);
-  if (expandButton) {
-    expandButton.addEventListener("click", () => {
-      state.productRegistryExpanded = !state.productRegistryExpanded;
-      renderProductRegistryControls();
-      renderProductRegistry();
-    });
-  }
-  revealRendered(target);
+  productRegistryRendererModule().renderProductRegistry(productRegistryRenderContext());
 }
 
 function renderProductRegistryControls() {
-  const target = qs("[data-product-registry-controls]");
-  const products = state.registry?.productRegistry || [];
-  if (!target || !products.length) return;
-
-  const statuses = productStatusSet(products);
-  const counts = productStatusCounts(products);
-  const visibleCount = filteredProductRegistry().length;
-  const classifications = new Set(products.map((product) => product.classification)).size;
-
-  target.innerHTML = `
-    <div class="product-summary-strip" aria-label="${escapeAttribute(i18nText("product.summaryAria") || "Product registry summary")}">
-      <span><strong>${escapeHtml(String(products.length))}</strong>${escapeHtml(i18nText("product.total") || "total records")}</span>
-      <span><strong>${escapeHtml(String(visibleCount))}</strong>${escapeHtml(i18nText("product.showing") || "showing")}</span>
-      <span><strong>${escapeHtml(String(classifications))}</strong>${escapeHtml(i18nText("product.classes") || "product classes")}</span>
-    </div>
-    <div class="product-filter-row" role="group" aria-label="${escapeAttribute(i18nText("product.filterAria") || "Product status filters")}">
-      ${statuses.map((status) => `
-        <button class="filter-button product-filter-button ${status === state.activeProductStatus ? "active" : ""}" type="button" data-product-status="${escapeHtml(status)}" aria-pressed="${status === state.activeProductStatus ? "true" : "false"}">
-          <span>${escapeHtml(status)}</span>
-          <strong>${escapeHtml(String(counts.get(status) || 0))}</strong>
-        </button>
-      `).join("")}
-    </div>
-  `;
-
-  qsa("[data-product-status]", target).forEach((button) => {
-    button.addEventListener("click", () => {
-      state.activeProductStatus = button.dataset.productStatus || "All";
-      state.productRegistryExpanded = false;
-      renderProductRegistryControls();
-      renderProductRegistry();
-    });
-  });
-  revealRendered(target);
+  productRegistryRendererModule().renderProductRegistryControls(productRegistryRenderContext());
 }
 
 function renderEvaluationExample() {
@@ -1473,37 +1307,23 @@ function activityHref(value) {
   return "";
 }
 
-async function loadJsonResource(path, label) {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) throw new Error(`${label} load failed: ${response.status}`);
-  return response.json();
-}
-
-function composeHomepageRegistry(publicSurfaces, productRegistry) {
-  return {
-    principles: publicSurfaces?.principles || [],
-    systems: publicSurfaces?.systems || [],
-    futureDomains: publicSurfaces?.futureDomains || [],
-    privateIncubation: publicSurfaces?.privateIncubation || [],
-    productRegistry: productRegistry?.productRegistry || [],
-    manifestCandidates: productRegistry?.manifestCandidates || [],
-  };
+function homepageRegistryModule() {
+  if (!window.MullusiHomepageRegistry) {
+    throw new Error("Homepage registry module is unavailable.");
+  }
+  return window.MullusiHomepageRegistry;
 }
 
 async function loadRegistry() {
-  const [publicSurfaces, productRegistry] = await Promise.all([
-    loadJsonResource("data/manual/public-surfaces.json", "Public surface registry"),
-    loadJsonResource("data/generated/homepage-product-registry.json", "Homepage product registry"),
-  ]);
-  return composeHomepageRegistry(publicSurfaces, productRegistry);
+  return homepageRegistryModule().loadRegistry();
 }
 
 async function loadSiteContent() {
-  return loadJsonResource("data/site.json", "Site content");
+  return homepageRegistryModule().loadSiteContent();
 }
 
 async function loadNews() {
-  return loadJsonResource("data/news.json", "News");
+  return homepageRegistryModule().loadNews();
 }
 
 function renderSiteContent() {

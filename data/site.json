@@ -3,7 +3,7 @@
     "name": "Mullusi",
     "version": "2026.05.site-content",
     "purpose": "Structured public website content for Mullusi.",
-    "content_hash": "sha256:693fef04999601c1ffdbb42f20ec9f9da4d828fed09a76d73bc02ddfc9a132b3"
+    "content_hash": "sha256:3382acc74a24fa3b422fcf6238a055a3672844e9830a1e3d05c6c85dd5ef1e95"
   },
   "platformLayers": [
     {
@@ -1668,7 +1668,7 @@
         "body": "The registry now tracks product classification, source boundary, runtime type, data type, API path, docs path, release gate, and failure mode.",
         "status": "registry",
         "scope": "Product Registry",
-        "surface": "data/products.json",
+        "surface": "data/generated/products.json",
         "href": "#products",
         "date": "2026-05-21"
       },

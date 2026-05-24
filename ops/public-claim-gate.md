@@ -1,7 +1,7 @@
 <!--
 Purpose: define the Mullusi public-claim gate for website copy, structured data, and public routes.
 Governance scope: published claims, evidence state, public route readiness, risk classification, and witness records.
-Dependencies: data/site.json, data/products.json, proof route, deployment host, and validation scripts.
+Dependencies: data/site.json, data/generated/products.json, proof route, deployment host, and validation scripts.
 Invariants: no public claim ships without a status, evidence basis, exposure decision, and rollback path.
 -->
 
@@ -67,7 +67,7 @@ Before publication, link each accepted claim to one of:
 - A deployed public route under `mullusi.com`.
 - A public docs route under a Mullusi domain.
 - A proof-boundary entry with `AwaitingEvidence` or stronger status.
-- A structured registry record in `data/site.json` or `data/products.json`.
+- A structured registry record in `data/site.json` or `data/generated/products.json`.
 - A release record showing the claim is intentionally public.
 
 STATUS:

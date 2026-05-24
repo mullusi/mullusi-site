@@ -1,7 +1,7 @@
 <!--
 Purpose: define when a Mullusi product or domain engine may move from private incubation to public surface.
 Governance scope: product status, route readiness, demo boundary, proof state, docs, support, and rollback.
-Dependencies: data/products.json, data/site.json, proof route, docs route, public demo route, and validation scripts.
+Dependencies: data/generated/products.json, data/site.json, proof route, docs route, public demo route, and validation scripts.
 Invariants: no product is marketed as live until its evidence, route, and support boundary are present.
 -->
 

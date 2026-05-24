@@ -111,7 +111,7 @@
   ],
   "meta": {
     "artifact": "data/generated/docs-index.json",
-    "content_hash": "sha256:ad0464690046479c284d8ed175402c450f48cafeb2e042b06e1e4cf52b184e94",
+    "content_hash": "sha256:a9aebbe233f77faf07aac0134144460ab33dd37e8a4dc871b83d4bb0e1974cb3",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Docs Index",
     "purpose": "Generated from product manifests. Do not edit by hand.",
