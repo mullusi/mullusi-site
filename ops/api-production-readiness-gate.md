@@ -82,6 +82,29 @@ persistence_check state=ready detail=postgres_schema_ready
 
 If any command blocks, do not create the DNS record.
 
+The public-safe aggregate reporter for this gate is:
+
+```bash
+node scripts/check-api-production-readiness.mjs --require-ready \
+  --production-image-published \
+  --runtime-host-ready \
+  --managed-postgres-ready \
+  --schema-applied \
+  --production-secrets-stored \
+  --deploy-env-ready \
+  --release-preflight-ready \
+  --persistence-ready \
+  --host-firewall-configured \
+  --tls-certificate-ready \
+  --rollback-path-defined \
+  --private-runtime-witness-ready \
+  --dns-authority-ready
+```
+
+The reporter records only boolean evidence presence and public-safe blocker
+names. It must not print host addresses, DNS target values, database URLs,
+secret values, provider account IDs, or private recovery details.
+
 ## DNS Activation Rule
 
 Only after pre-DNS evidence passes:
