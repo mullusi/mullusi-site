@@ -39,6 +39,23 @@ This witness proves crawl-surface readiness only. It does not prove that any
 search engine has crawled, indexed, ranked, or refreshed snippets for the
 domain. Search engine recrawl remains an external evidence dependency.
 
+## Public Search Readback
+
+Observed on 2026-05-24:
+
+```text
+query=site:mullusi.com Mullusi
+first_party_result_observed=false
+stale_third_party_github_pages_record_observed=true
+direct_route_search_visibility=AwaitingEvidence
+replacement_dependency=search_engine_recrawl
+```
+
+Public search readback still shows a stale third-party record of the old GitHub
+Pages state instead of a first-party `mullusi.com` result. This is not a crawl
+surface failure because the live route, robots, sitemap, canonical, and noindex
+checks pass. It is an external search index refresh gap.
+
 ## Release Boundary
 
 ```text
@@ -50,6 +67,8 @@ local_sitemap_loc_count=5
 canonical_route_reachability=Pass
 noindex_blockers_detected=false
 search_engine_index_state=AwaitingEvidence
+first_party_search_result_observed=false
+stale_third_party_record_observed=true
 ```
 
 ## Checker Boundary

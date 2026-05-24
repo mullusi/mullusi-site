@@ -395,6 +395,13 @@ function validateSearchIndexingWitness() {
     "canonical_route_reachability=Pass",
     "noindex_blockers_detected=false",
     "search_engine_index_state=AwaitingEvidence",
+    "query=site:mullusi.com Mullusi",
+    "first_party_result_observed=false",
+    "stale_third_party_github_pages_record_observed=true",
+    "direct_route_search_visibility=AwaitingEvidence",
+    "replacement_dependency=search_engine_recrawl",
+    "first_party_search_result_observed=false",
+    "stale_third_party_record_observed=true",
     "non_2xx_route_status=GovernanceBlocked",
     "live_sitemap_missing_loc=GovernanceBlocked",
     "live_sitemap_stale_lastmod=GovernanceBlocked",
@@ -2796,7 +2803,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/search-indexing-witness.md",
-      terms: ["Search Indexing Witness", "SolvedVerified", "robots_root_allow=Pass", "live_sitemap_matches_local=Pass", "search_engine_index_state=AwaitingEvidence", "STATUS:"],
+      terms: ["Search Indexing Witness", "SolvedVerified", "Public Search Readback", "robots_root_allow=Pass", "live_sitemap_matches_local=Pass", "search_engine_index_state=AwaitingEvidence", "first_party_search_result_observed=false", "STATUS:"],
     },
     {
       file: "ops/recovery-inventory-template.md",
