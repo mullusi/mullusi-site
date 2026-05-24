@@ -22,6 +22,7 @@ const requiredArtifactFiles = [
   "domain-security.txt",
   "domain-hardening-preflight.txt",
   "search-indexing-surface.txt",
+  "deployment-integrity.txt",
 ];
 const forbiddenPublicWitnessPatterns = [
   /account_id\s*=/i,
@@ -211,6 +212,32 @@ function validateSearchIndexingSurface(findings, content) {
   }
 }
 
+function validateDeploymentIntegrity(findings, content) {
+  const fileName = "deployment-integrity.txt";
+  const solved = hasLine(content, "verdict=SolvedVerified") && hasLine(content, "proof_state=Pass");
+  const localPending = hasLine(content, "verdict=AwaitingEvidence") && hasLine(content, "proof_state=Unknown");
+  if (!solved && !localPending) {
+    findings.push("deployment_integrity_state_invalid");
+  }
+  for (const line of [
+    "live_content_hashes=Pass",
+    "finding=none",
+    "raw_response_bodies=not_recorded",
+    "raw_response_headers=not_recorded",
+  ]) {
+    requireLine(findings, fileName, content, line);
+  }
+  for (const term of [
+    "live_deployment_integrity_state=",
+    "live_status_manifest=Pass",
+    "local_status_manifest_match=",
+    "edge_html_transform=",
+    "governed_file_count=",
+  ]) {
+    requireTerm(findings, fileName, content, term);
+  }
+}
+
 export function evaluateLiveSafetyWitnessArtifact(artifactDirectory) {
   const resolvedDirectory = path.isAbsolute(artifactDirectory)
     ? artifactDirectory
@@ -247,6 +274,7 @@ export function evaluateLiveSafetyWitnessArtifact(artifactDirectory) {
     validateDomainHardeningPreflight(findings, files["domain-hardening-preflight.txt"]);
   }
   if (files["search-indexing-surface.txt"]) validateSearchIndexingSurface(findings, files["search-indexing-surface.txt"]);
+  if (files["deployment-integrity.txt"]) validateDeploymentIntegrity(findings, files["deployment-integrity.txt"]);
 
   return {
     verdict: findings.length === 0 ? "SolvedVerified" : "GovernanceBlocked",

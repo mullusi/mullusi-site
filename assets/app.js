@@ -1,7 +1,7 @@
 /*
 Purpose: render Mullusi structured public content and operate the symbolic canvas substrate.
 Governance scope: deterministic JSON rendering, safe link output, searchable public surface catalog, manifest-owned homepage product registry, and visual substrate runtime.
-Dependencies: assets/registry/homepage-registry.js, assets/render/product-registry.js, DOM canvas APIs, IntersectionObserver, and browser fetch.
+Dependencies: assets/registry/homepage-registry.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, DOM canvas APIs, IntersectionObserver, and browser fetch.
 Invariants: untrusted JSON text is escaped, non-public links are blocked, registry failures surface visibly, and reduced motion is respected.
 */
 
@@ -200,33 +200,6 @@ function normalize(value) {
   return String(value || "").toLowerCase().trim();
 }
 
-function categorySet(products) {
-  return ["All", ...Array.from(new Set(products.map((item) => item.category))).sort()];
-}
-
-function matchesQuery(item, query) {
-  if (!query) return true;
-  const haystack = [
-    item.name,
-    item.href,
-    item.sourceState,
-    item.category,
-    item.status,
-    item.summary,
-    ...(item.tags || []),
-  ].map(normalize).join(" ");
-  return haystack.includes(query);
-}
-
-function filteredProducts() {
-  const products = state.registry?.systems || [];
-  const query = normalize(state.query);
-  return products.filter((item) => {
-    const categoryOk = state.activeCategory === "All" || item.category === state.activeCategory;
-    return categoryOk && matchesQuery(item, query);
-  });
-}
-
 function revealRendered(target) {
   prepareLinks(target || document);
   const revealTarget = target?.classList?.contains("reveal") ? target : target?.closest?.(".reveal");
@@ -241,24 +214,6 @@ function proofSymbol(label, index) {
     Evolution: "H",
   };
   return symbols[label] || ["Ι", "Λ", "Σ", "H"][index % 4];
-}
-
-function titleForDomain(domain) {
-  return String(domain.name || "")
-    .replace(/^Mullusi\s+/i, "")
-    .replace(/\s+Engine$/i, "")
-    .replace(/\s+Lab$/i, "");
-}
-
-function renderSnapshot() {
-  if (!state.registry) return;
-  const products = state.registry.systems || [];
-  const futureDomains = state.registry.futureDomains || [];
-  const productTarget = qs("[data-public-product-count]");
-  const domainTarget = qs("[data-domain-count]");
-
-  if (productTarget) productTarget.textContent = String(products.length);
-  if (domainTarget) domainTarget.textContent = String(futureDomains.length);
 }
 
 function renderProofLanes() {
@@ -943,42 +898,52 @@ function renderNewsLoadError() {
   revealRendered(target);
 }
 
-function metricCell(value, labelKey, fallbackLabel) {
-  if (value === null || value === undefined || value === "") return "";
-  return `
-    <div>
-      <dt class="m-k">${escapeHtml(value)}</dt>
-      <dd class="m-l">${escapeHtml(i18nText(labelKey) || fallbackLabel)}</dd>
-    </div>
-  `;
+function publicSurfaceRegistryRendererModule() {
+  if (!window.MullusiPublicSurfaceRegistryRenderer) {
+    throw new Error("Public surface registry renderer module is unavailable.");
+  }
+  return window.MullusiPublicSurfaceRegistryRenderer;
+}
+
+function publicSurfaceRegistryRenderContext() {
+  return {
+    escapeAttribute,
+    escapeHtml,
+    i18nText,
+    localized,
+    qsa,
+    qs,
+    revealRendered,
+    state,
+  };
+}
+
+function renderSnapshot() {
+  publicSurfaceRegistryRendererModule().renderSnapshot(publicSurfaceRegistryRenderContext());
+}
+
+function renderFutureDomains() {
+  publicSurfaceRegistryRendererModule().renderFutureDomains(publicSurfaceRegistryRenderContext());
+}
+
+function renderFilters() {
+  publicSurfaceRegistryRendererModule().renderFilters(publicSurfaceRegistryRenderContext());
+}
+
+function renderStats() {
+  publicSurfaceRegistryRendererModule().renderStats(publicSurfaceRegistryRenderContext());
+}
+
+function renderRepoGrid() {
+  publicSurfaceRegistryRendererModule().renderRepoGrid(publicSurfaceRegistryRenderContext());
 }
 
 function renderMetrics() {
-  const target = qs("[data-metrics]");
-  if (!target) return;
-  if (!state.registry || !state.siteContent) return;
+  publicSurfaceRegistryRendererModule().renderMetrics(publicSurfaceRegistryRenderContext());
+}
 
-  const systems = state.registry.systems || [];
-  const futureDomains = state.registry.futureDomains || [];
-  const productRegistry = state.registry.productRegistry || [];
-  const interfaces = state.siteContent.interfaces || [];
-  const apiContracts = state.siteContent.apiContracts || [];
-  const releaseStages = state.siteContent.releaseStages || [];
-  const signalUpdated = state.news?.meta?.updated || null;
-
-  const cells = [
-    metricCell(systems.length, "metrics.deployed", "Deployed public surfaces"),
-    metricCell(productRegistry.length, "metrics.products", "Governed product records"),
-    metricCell(interfaces.length, "metrics.routes", "Governed public routes"),
-    metricCell(apiContracts.length, "metrics.contracts", "Draft v1 Govern API contracts"),
-    metricCell(releaseStages.length, "metrics.gates", "Release-gate stages"),
-    metricCell(futureDomains.length, "metrics.staged", "Staged domain engines"),
-    metricCell(signalUpdated, "metrics.signal", "Signal last refreshed"),
-  ].filter(Boolean).join("");
-
-  if (!cells) return;
-  target.innerHTML = cells;
-  revealRendered(target);
+function bindSearch() {
+  publicSurfaceRegistryRendererModule().bindSearch(publicSurfaceRegistryRenderContext());
 }
 
 function productRegistryRendererModule() {
@@ -1042,125 +1007,6 @@ function renderEvaluationExample() {
     </article>
   `;
   revealRendered(target);
-}
-
-function renderFutureDomains() {
-  const target = qs("[data-future-domains]");
-  if (!target || !state.registry) return;
-
-  const engineSlugs = ["math", "physics", "engineering", "biology", "chemistry", "music"];
-  const bridgeSlug = "unified-science";
-  const glyphs = {
-    math: "Σ",
-    physics: "Λ",
-    engineering: "Γ",
-    biology: "Ψ",
-    chemistry: "Δ",
-    music: "Φ",
-    "unified-science": "Ω",
-  };
-  const order = new Map([...engineSlugs, bridgeSlug].map((slug, index) => [slug, index]));
-  const all = state.registry.futureDomains || [];
-  const engines = all
-    .filter((domain) => engineSlugs.includes(domain.slug))
-    .sort((left, right) => (order.get(left.slug) ?? 99) - (order.get(right.slug) ?? 99));
-  const bridge = all.find((domain) => domain.slug === bridgeSlug) || null;
-
-  const stagedLabel = i18nText("status.staged") || "Staged";
-  const bridgeLabel = i18nText("sciences.bridge") || "Bridge layer";
-
-  const card = (domain, { variant, badge }) => {
-    const title = state.lang === "am" && domain.am && domain.am.title ? domain.am.title : titleForDomain(domain);
-    return `
-      <article class="eng${variant ? ` ${variant}` : ""}">
-        <span class="st" aria-hidden="true">${escapeHtml(badge)}</span>
-        <div class="eng-sym" aria-hidden="true">${escapeHtml(glyphs[domain.slug] || "·")}</div>
-        <h3>${escapeHtml(title)}</h3>
-        <span class="eng-boundary">${escapeHtml(domain.releaseBoundary || "private incubation")}</span>
-      </article>
-    `;
-  };
-
-  const html = engines.map((domain) => card(domain, { badge: stagedLabel })).join("");
-  target.innerHTML = bridge
-    ? html + card(bridge, { variant: "eng-bridge", badge: bridgeLabel })
-    : html;
-  revealRendered(target);
-}
-
-function renderFilters() {
-  const target = qs("[data-repo-filters]");
-  if (!target || !state.registry) return;
-  target.innerHTML = categorySet(state.registry.systems).map((category) => `
-    <button class="filter-button ${category === state.activeCategory ? "active" : ""}" type="button" data-category="${escapeHtml(category)}">
-      ${escapeHtml(category)}
-    </button>
-  `).join("");
-
-  qsa("[data-category]", target).forEach((button) => {
-    button.addEventListener("click", () => {
-      state.activeCategory = button.dataset.category || "All";
-      renderFilters();
-      renderRepoGrid();
-    });
-  });
-  revealRendered(target);
-}
-
-function renderStats() {
-  const target = qs("[data-repo-stats]");
-  if (!target || !state.registry) return;
-  const products = state.registry.systems || [];
-  const categories = new Set(products.map((item) => item.category)).size;
-  const productSurfaces = products.filter((item) => item.category !== "Website").length;
-  target.innerHTML = `
-    <div><div class="k">${products.length}</div><div class="l">${escapeHtml(i18nText("repo.statDeployed") || "Deployed public surfaces")}</div></div>
-    <div><div class="k">${categories}</div><div class="l">${escapeHtml(i18nText("repo.statCategories") || "Categories")}</div></div>
-    <div><div class="k">${productSurfaces}</div><div class="l">${escapeHtml(i18nText("repo.statProductRepos") || "Public product surfaces")}</div></div>
-  `;
-  revealRendered(target);
-}
-
-function renderRepoGrid() {
-  const target = qs("[data-repo-grid]");
-  if (!target) return;
-  const products = filteredProducts();
-
-  if (!products.length) {
-    target.innerHTML = `
-      <article class="repo-card empty-card">
-        <div class="repo-card-head"><h3>${escapeHtml(i18nText("repo.emptyTitle") || "No matching public surface")}</h3></div>
-        <p>${escapeHtml(i18nText("repo.emptyBody") || "Adjust the search term or category filter. Planned domain engines are listed above.")}</p>
-      </article>
-    `;
-    revealRendered(target);
-    return;
-  }
-
-  target.innerHTML = products.map((item) => `
-    <article class="repo-card">
-      <div class="repo-card-head">
-        <h3>${escapeHtml(item.name)}</h3>
-        <span class="status-pill">${escapeHtml(item.status)}</span>
-      </div>
-      <span class="repo-name">${escapeHtml(item.sourceState || "private-source")}</span>
-      <p>${escapeHtml(localized(item, "summary"))}</p>
-      <div class="tag-row">
-        ${(item.tags || []).map((tag) => `<span class="tag-pill">${escapeHtml(tag)}</span>`).join("")}
-      </div>
-      <a class="repo-link" href="${escapeAttribute(item.href)}" rel="noopener">${escapeHtml(i18nText("repo.openRepository") || "Open surface")} -&gt;</a>
-    </article>
-  `).join("");
-  revealRendered(target);
-}
-
-function bindSearch() {
-  const input = qs("[data-repo-search]");
-  if (!input) return;
-  input.addEventListener("input", (event) => {
-    state.query = event.target.value;
-    renderRepoGrid();
-  });
 }
 
 function bindHeader() {

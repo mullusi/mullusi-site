@@ -30,6 +30,7 @@ security_headers=node scripts/check-live-security-headers.mjs
 domain_security=node scripts/check-domain-security.mjs --allow-hardening-gaps
 domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --expect-blocked
 search_indexing_surface=node scripts/check-search-indexing-surface.mjs
+deployment_integrity=node scripts/check-live-deployment-integrity.mjs --allow-pending
 artifact_validator=node scripts/check-live-safety-witness.mjs live-safety-witness
 ```
 
@@ -48,6 +49,8 @@ boundary terms.
 single_run_public_edge=SolvedVerified when public visibility, origin headers, security headers, and search surface pass
 domain_security_hardening=AwaitingEvidence until CAA, DKIM, SPF enforcement, DMARC enforcement, MTA-STS, and TLS-RPT close
 domain_hardening_preflight=GovernanceBlocked until external admin evidence and mutation permissions are promoted
+deployment_integrity=SolvedVerified when live status-manifest hashes match governed live files
+deployment_integrity=AwaitingEvidence when live files match live status but local status has not caught up
 regional_visibility=SolvedVerified when external distinct-region passes meet the checker floor with no external findings
 regional_visibility=SolvedUnverified when the region floor is met but an external node is pending or failed
 longitudinal_evidence=Pass after repeated scheduled artifacts remain available for review

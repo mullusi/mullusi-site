@@ -97,6 +97,20 @@ const fixtureOutputs = {
     "live_sitemap_loc_count=13",
     "finding=none",
   ].join("\n"),
+  "deployment-integrity.txt": [
+    "verdict=SolvedVerified",
+    "proof_state=Pass",
+    "live_deployment_integrity_state=SolvedVerified",
+    "live_status_manifest=Pass",
+    "live_content_hashes=Pass",
+    "local_status_manifest_match=Pass",
+    "edge_html_transform=Pass",
+    "governed_file_count=7",
+    "finding=none",
+    "local_finding=none",
+    "raw_response_bodies=not_recorded",
+    "raw_response_headers=not_recorded",
+  ].join("\n"),
 };
 
 function createTempDirectory() {
@@ -128,7 +142,7 @@ function fixtureRunner(probe) {
 function testProbePlanHasStableBoundary() {
   const plan = liveSafetyProbePlan();
 
-  assert.equal(plan.length, 7);
+  assert.equal(plan.length, 8);
   assert.deepEqual(plan.map((probe) => probe.fileName), [
     "public-visibility.txt",
     "regional-public-visibility.txt",
@@ -137,6 +151,7 @@ function testProbePlanHasStableBoundary() {
     "domain-security.txt",
     "domain-hardening-preflight.txt",
     "search-indexing-surface.txt",
+    "deployment-integrity.txt",
   ]);
   assert.ok(plan.some((probe) => probe.args.includes("--external-check-host")));
   assert.ok(plan.every((probe) => probe.args[0].startsWith("scripts/check-")));
@@ -173,7 +188,7 @@ function testCaptureWritesAndValidatesArtifact() {
 
     assert.equal(result.validation.verdict, "SolvedVerified");
     assert.equal(result.validation.proofState, "Pass");
-    assert.equal(result.validation.artifactFileCount, 8);
+    assert.equal(result.validation.artifactFileCount, 9);
     assert.equal(fs.existsSync(path.join(tempDirectory, "security-headers.txt")), true);
     assert.match(formatted, /capture_state=SolvedVerified/);
     assert.match(formatted, /finding=none/);

@@ -57,6 +57,7 @@ function testCloudflarePagesBuildArtifact() {
       ".well-known/security.txt",
       "assets/app.js",
       "assets/registry/homepage-registry.js",
+      "assets/render/public-surface-registry.js",
       "assets/render/product-registry.js",
       "assets/styles.css",
       "assets/pages/product-shell.css",

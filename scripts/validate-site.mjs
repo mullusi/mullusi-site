@@ -67,6 +67,7 @@ const requiredFiles = [
   "site.webmanifest",
   "assets/lang-bootstrap.js",
   "assets/registry/homepage-registry.js",
+  "assets/render/public-surface-registry.js",
   "assets/render/product-registry.js",
   "assets/app.js",
   "assets/styles.css",
@@ -148,6 +149,8 @@ const requiredFiles = [
   "scripts/test-check-live-safety-witness.mjs",
   "scripts/check-live-security-headers.mjs",
   "scripts/test-check-live-security-headers.mjs",
+  "scripts/check-live-deployment-integrity.mjs",
+  "scripts/test-check-live-deployment-integrity.mjs",
   "scripts/check-domain-security.mjs",
   "scripts/test-check-domain-security.mjs",
   "scripts/check-domain-hardening-preflight.mjs",
@@ -517,6 +520,7 @@ function validateCloudflarePagesArtifact() {
     ".well-known/security.txt",
     "assets/lang-bootstrap.js",
     "assets/registry/homepage-registry.js",
+    "assets/render/public-surface-registry.js",
     "assets/render/product-registry.js",
     "assets/app.js",
     "assets/styles.css",
@@ -621,6 +625,8 @@ function validatePublicVisibilityWitness() {
   const liveSafetyArtifactCaptureTest = readUtf8("scripts/test-capture-live-safety-witness.mjs");
   const liveSafetyArtifactChecker = readUtf8("scripts/check-live-safety-witness.mjs");
   const liveSafetyArtifactTest = readUtf8("scripts/test-check-live-safety-witness.mjs");
+  const liveDeploymentIntegrityChecker = readUtf8("scripts/check-live-deployment-integrity.mjs");
+  const liveDeploymentIntegrityTest = readUtf8("scripts/test-check-live-deployment-integrity.mjs");
   const requiredTerms = [
     "command=node scripts/check-public-visibility.mjs",
     "verdict=SolvedVerified",
@@ -731,6 +737,7 @@ function validatePublicVisibilityWitness() {
     "domain_security=node scripts/check-domain-security.mjs --allow-hardening-gaps",
     "domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
     "search_indexing_surface=node scripts/check-search-indexing-surface.mjs",
+    "deployment_integrity=node scripts/check-live-deployment-integrity.mjs --allow-pending",
     "artifact_validator=node scripts/check-live-safety-witness.mjs live-safety-witness",
     "artifact_validation=node scripts/check-live-safety-witness.mjs live-safety-witness",
     "raw_response_headers=not_recorded",
@@ -758,7 +765,9 @@ function validatePublicVisibilityWitness() {
     "domain-security.txt",
     "domain-hardening-preflight.txt",
     "search-indexing-surface.txt",
+    "deployment-integrity.txt",
     "raw_response_headers=not_recorded",
+    "raw_response_bodies=not_recorded",
     "failureWitness",
     "probe_failed",
     "evaluateLiveSafetyWitnessArtifact",
@@ -793,12 +802,15 @@ function validatePublicVisibilityWitness() {
     "domain-security.txt",
     "domain-hardening-preflight.txt",
     "search-indexing-surface.txt",
+    "deployment-integrity.txt",
     "raw_response_headers=not_recorded",
     "global_all_users_claim=AwaitingEvidence",
     "artifact_boundary_invalid",
     "function validateDomainSecurity",
     "function validateDomainHardeningPreflight",
+    "function validateDeploymentIntegrity",
     "raw_dns_values=not_recorded",
+    "raw_response_bodies=not_recorded",
     "raw_secret_values=not_recorded",
   ];
   for (const term of liveSafetyArtifactCheckerTerms) {
@@ -815,11 +827,51 @@ function validatePublicVisibilityWitness() {
     "testBoundaryViolationBlocks",
     "testCliRejectsUnsupportedArgument",
     "domain-hardening-preflight.txt",
-    "artifactFileCount, 8",
+    "deployment-integrity.txt",
+    "artifactFileCount, 9",
   ];
   for (const term of liveSafetyArtifactTestTerms) {
     if (!liveSafetyArtifactTest.includes(term)) {
       recordFailure(`live_safety_artifact_test_term_missing:${term}`);
+    }
+  }
+
+  const liveDeploymentIntegrityCheckerTerms = [
+    "function evaluateDeploymentIntegrityEvidence",
+    "function publicFileContentHash",
+    "function canonicalJsonContentHash",
+    "function formatResult",
+    "status.json",
+    "live_deployment_integrity_state",
+    "live_status_manifest",
+    "live_content_hashes",
+    "local_status_manifest_match",
+    "edge_html_transform",
+    "hasKnownCloudflareHtmlTransform",
+    "raw_response_bodies=not_recorded",
+    "raw_response_headers=not_recorded",
+    "--require-local-match",
+    "--allow-pending",
+  ];
+  for (const term of liveDeploymentIntegrityCheckerTerms) {
+    if (!liveDeploymentIntegrityChecker.includes(term)) {
+      recordFailure(`live_deployment_integrity_checker_term_missing:${term}`);
+    }
+  }
+
+  const liveDeploymentIntegrityTestTerms = [
+    "testCanonicalHashesIgnoreJsonMetaContentHash",
+    "testMatchingLiveManifestPasses",
+    "testLiveContentHashMismatchBlocks",
+    "testKnownCloudflareHtmlTransformAwaitsEvidence",
+    "testLocalManifestMismatchAwaitsEvidenceOnly",
+    "testUnexpectedOrInvalidHashPathBlocks",
+    "testMissingGovernedHashBlocks",
+    "testCliRejectsUnsupportedArgumentWithoutNetwork",
+  ];
+  for (const term of liveDeploymentIntegrityTestTerms) {
+    if (!liveDeploymentIntegrityTest.includes(term)) {
+      recordFailure(`live_deployment_integrity_test_term_missing:${term}`);
     }
   }
 
@@ -1101,8 +1153,8 @@ function validateSearchIndexingWitness() {
     "command=npx.cmd --yes wrangler@latest pages deployment list --project-name mullusi-company-site",
     "deployment_result=production deployment observed",
     "deployment_project=mullusi-company-site",
-    "deployment_id=d87f755f-34ed-4bf6-ac34-efa8a1138924",
-    "deployment_source=48e6e6e",
+    "deployment_id=7c2ecfdf-9366-4ed9-94d8-5eaa00462903",
+    "deployment_source=fad0f32",
     "deployment_dirty=true",
     "trust_surface_deployment_visibility=SolvedVerified",
     "current_crawl_surface_state=SolvedVerified",
@@ -3296,15 +3348,17 @@ function validateIndexDesignContract() {
   const css = readUtf8("assets/styles.css");
   const app = readUtf8("assets/app.js");
   const homepageRegistry = readUtf8("assets/registry/homepage-registry.js");
+  const publicSurfaceRegistryRenderer = readUtf8("assets/render/public-surface-registry.js");
   const productRegistryRenderer = readUtf8("assets/render/product-registry.js");
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
-  const assetVersion = "2026.05.platform.20";
+  const assetVersion = "2026.05.platform.21";
 
   if (
     !html.includes(`assets/styles.css?v=${assetVersion}`) ||
     !html.includes(`assets/registry/homepage-registry.js?v=${assetVersion}`) ||
+    !html.includes(`assets/render/public-surface-registry.js?v=${assetVersion}`) ||
     !html.includes(`assets/render/product-registry.js?v=${assetVersion}`) ||
     !html.includes(`assets/app.js?v=${assetVersion}`)
   ) {
@@ -3312,6 +3366,12 @@ function validateIndexDesignContract() {
   }
   if (html.indexOf("assets/registry/homepage-registry.js") > html.indexOf("assets/app.js")) {
     recordFailure("homepage_registry_module_load_order_invalid");
+  }
+  if (html.indexOf("assets/render/public-surface-registry.js") > html.indexOf("assets/app.js")) {
+    recordFailure("public_surface_registry_renderer_load_order_invalid");
+  }
+  if (html.indexOf("assets/registry/homepage-registry.js") > html.indexOf("assets/render/public-surface-registry.js")) {
+    recordFailure("public_surface_registry_renderer_before_registry_loader");
   }
   if (html.indexOf("assets/render/product-registry.js") > html.indexOf("assets/app.js")) {
     recordFailure("product_registry_renderer_load_order_invalid");
@@ -3528,16 +3588,50 @@ function validateIndexDesignContract() {
     /aria-label="\$\{escapeHtml/,
     /id="\$\{escapeHtml/,
   ];
+  const dynamicRendererSource = `${app}\n${publicSurfaceRegistryRenderer}\n${productRegistryRenderer}`;
   for (const pattern of generatedAttributeEscapingRegressions) {
-    if (pattern.test(app)) {
+    if (pattern.test(dynamicRendererSource)) {
       recordFailure(`generated_attribute_uses_text_escape:${pattern}`);
     }
   }
   if (/plannedRepo/.test(app) || /plannedRepo/.test(html)) {
     recordFailure("planned_repo_public_renderer_present");
   }
-  if (!app.includes('class="eng-boundary"') || /eng-repo/.test(html) || /eng-repo/.test(app)) {
+  if (!publicSurfaceRegistryRenderer.includes('class="eng-boundary"') || /eng-repo/.test(html) || /eng-repo/.test(dynamicRendererSource)) {
     recordFailure("engine_boundary_renderer_invalid");
+  }
+  if (!app.includes("function publicSurfaceRegistryRendererModule") || !app.includes("MullusiPublicSurfaceRegistryRenderer")) {
+    recordFailure("public_surface_registry_renderer_module_missing");
+  }
+  for (const forbiddenPublicSurfaceAppTerm of [
+    "function categorySet",
+    "function matchesQuery",
+    "function filteredProducts",
+    "function titleForDomain",
+    "function metricCell",
+    "data-category",
+    "repo-card empty-card",
+    "eng-boundary",
+  ]) {
+    if (app.includes(forbiddenPublicSurfaceAppTerm)) {
+      recordFailure(`homepage_app_owns_public_surface_registry_rendering:${forbiddenPublicSurfaceAppTerm}`);
+    }
+  }
+  for (const requiredPublicRendererTerm of [
+    "MullusiPublicSurfaceRegistryRenderer",
+    "function renderFutureDomains",
+    "function renderFilters",
+    "function renderStats",
+    "function renderRepoGrid",
+    "function renderMetrics",
+    "function bindSearch",
+    "data-category",
+    "repo-card empty-card",
+    "eng-boundary",
+  ]) {
+    if (!publicSurfaceRegistryRenderer.includes(requiredPublicRendererTerm)) {
+      recordFailure(`public_surface_registry_renderer_missing:${requiredPublicRendererTerm}`);
+    }
   }
   if (/Repository Observatory|repository observatory/.test(html)) {
     recordFailure("stale_repository_observatory_label_present");

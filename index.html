@@ -2,7 +2,7 @@
 <!--
 Purpose: public Mullusi landing page with governed product, service, public-surface, and science-engine surfaces.
 Governance scope: public claims, route boundaries, public surface registry, evidence plane, and visual substrate.
-Dependencies: assets/styles.css, assets/registry/homepage-registry.js, assets/render/product-registry.js, assets/app.js, data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, Mullusi icons, and public Mullusi domains.
+Dependencies: assets/styles.css, assets/registry/homepage-registry.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, assets/app.js, data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, Mullusi icons, and public Mullusi domains.
 Invariants: no private repository claims, no silent content failure, all dynamic public records load from structured JSON.
 -->
 <html lang="en" translate="no">
@@ -34,7 +34,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <link rel="manifest" href="site.webmanifest" />
   <script src="/assets/theme-bootstrap.js"></script>
   <script src="/assets/lang-bootstrap.js"></script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.20" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.21" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -59,9 +59,10 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/registry/homepage-registry.js?v=2026.05.platform.20"></script>
-  <script defer src="assets/render/product-registry.js?v=2026.05.platform.20"></script>
-  <script defer src="assets/app.js?v=2026.05.platform.20"></script>
+  <script defer src="assets/registry/homepage-registry.js?v=2026.05.platform.21"></script>
+  <script defer src="assets/render/public-surface-registry.js?v=2026.05.platform.21"></script>
+  <script defer src="assets/render/product-registry.js?v=2026.05.platform.21"></script>
+  <script defer src="assets/app.js?v=2026.05.platform.21"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
