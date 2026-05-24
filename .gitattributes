@@ -1,0 +1,7 @@
+# Purpose: keep generated artifacts byte-stable across operating systems.
+# Governance scope: generated registry drift checks and deterministic artifact comparison.
+# Dependencies: scripts/generate-platform.mjs and Git text-attribute handling.
+# Invariants: generated artifacts are checked out with LF so byte-for-byte drift checks remain stable.
+
+data/generated/*.json text eol=lf
+data/generated/*.xml text eol=lf
