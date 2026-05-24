@@ -153,6 +153,10 @@ vite.config.ts.timestamp-*
 # Local Codex/Claude worktree snapshots
 .claude/
 
+# Local Cloudflare Wrangler cache/state
+.wrangler/
+**/.wrangler/
+
 # Private infrastructure recovery inventories
 ops/MULLUSI_INFRASTRUCTURE_ROOT.private.md
 ops/*RECOVERY*.private.md

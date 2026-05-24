@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mullusi.com/schemas/proof-boundary.schema.json",
+  "title": "Mullusi Product Proof Boundary",
+  "description": "Purpose: define claims allowed, claims blocked, witnesses, and public exposure state for one product. Governance scope: public claim gate, proof index generation, and witness closure. Invariants: no product claim may render publicly unless represented in this proof boundary.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "productId",
+    "proofState",
+    "claimsAllowed",
+    "claimsBlockedUntilVerified",
+    "witnesses"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "productId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "proofState": {
+      "type": "string",
+      "enum": ["AwaitingEvidence", "SolvedVerified", "GovernanceBlocked", "Archived"]
+    },
+    "claimsAllowed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "claimsBlockedUntilVerified": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "witnesses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "state", "evidence"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["runtime", "contract", "rollback", "privacy", "support", "status"]
+          },
+          "state": {
+            "type": "string",
+            "enum": ["AwaitingEvidence", "SolvedVerified", "GovernanceBlocked"]
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

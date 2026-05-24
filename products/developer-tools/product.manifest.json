@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "developer-tools",
+  "name": "Developer Tools",
+  "summary": "Developer-facing packages and command-line tools for connecting projects to Mullusi services.",
+  "family": "mullusi",
+  "category": "developer-tools",
+  "status": "limited-preview",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/developers/",
+    "docsRoute": "https://docs.mullusi.com/developers",
+    "dashboardRoute": "https://dashboard.mullusi.com/developers",
+    "proofRoute": "/proof/developers/",
+    "statusRoute": "/status/developers/"
+  },
+  "runtime": {
+    "service": "developer-tools-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/developers/validate",
+        "contract": "contracts/developers/validate.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "project_settings",
+      "local_validation_reports",
+      "examples",
+      "release_evidence"
+    ],
+    "privacyBoundary": "privacy/developers.policy.json",
+    "retentionPolicy": "privacy/developers.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/developers.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "install path witness",
+      "example coverage",
+      "support boundary"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 10,
+    "classification": "library/package",
+    "registryStatus": "awaiting-evidence",
+    "ownerLabel": "Development Layer",
+    "sourceBoundary": "private source registry with selected public releases later",
+    "runtimeType": "SDK, CLI, validators, and local test harnesses",
+    "dataType": "project settings, local validation reports, examples, and release evidence",
+    "releaseGate": "install path, examples, license, changelog, and support boundary",
+    "docsPath": "docs.mullusi.com/developers",
+    "apiPath": "client access to governed API routes",
+    "evidencePath": "/proof/",
+    "failureMode": "exit nonzero with explicit violation and repair hint"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

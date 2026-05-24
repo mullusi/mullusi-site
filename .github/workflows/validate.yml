@@ -11,6 +11,9 @@ on:
   pull_request:
     branches: ["main"]
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -35,6 +38,15 @@ jobs:
       - name: Check Cloudflare Pages build script syntax
         run: node --check scripts/build-cloudflare-pages.mjs
 
+      - name: Check platform generator syntax
+        run: node --check scripts/generate-platform.mjs
+
+      - name: Check manifest validator syntax
+        run: node --check scripts/validate-manifests.mjs
+
+      - name: Check runtime witness validator syntax
+        run: node --check scripts/validate-runtime-witnesses.mjs
+
       - name: Check Cloudflare Pages build test syntax
         run: node --check scripts/test-build-cloudflare-pages.mjs
 
@@ -52,6 +64,18 @@ jobs:
 
       - name: Check website origin checker test syntax
         run: node --check scripts/test-check-website-origin.mjs
+
+      - name: Check public visibility checker syntax
+        run: node --check scripts/check-public-visibility.mjs
+
+      - name: Check public visibility checker test syntax
+        run: node --check scripts/test-check-public-visibility.mjs
+
+      - name: Check live security header checker syntax
+        run: node --check scripts/check-live-security-headers.mjs
+
+      - name: Check live security header test syntax
+        run: node --check scripts/test-check-live-security-headers.mjs
 
       - name: Check www redirect gate syntax
         run: node --check scripts/check-www-canonical-redirect-gate.mjs
@@ -83,6 +107,15 @@ jobs:
       - name: Validate static website
         run: node scripts/validate-site.mjs
 
+      - name: Validate product manifests
+        run: node scripts/validate-manifests.mjs
+
+      - name: Validate runtime witnesses
+        run: node scripts/validate-runtime-witnesses.mjs
+
+      - name: Check generated platform artifacts
+        run: node scripts/generate-platform.mjs --check
+
       - name: Test Cloudflare Pages artifact boundary
         run: node scripts/test-build-cloudflare-pages.mjs
 
@@ -94,6 +127,12 @@ jobs:
 
       - name: Test website origin classification
         run: node scripts/test-check-website-origin.mjs
+
+      - name: Test public visibility gate
+        run: node scripts/test-check-public-visibility.mjs
+
+      - name: Test live security header gate
+        run: node scripts/test-check-live-security-headers.mjs
 
       - name: Allow pending www canonical redirect gate
         run: node scripts/check-www-canonical-redirect-gate.mjs --allow-pending

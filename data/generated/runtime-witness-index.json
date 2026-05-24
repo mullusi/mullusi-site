@@ -1,0 +1,510 @@
+{
+  "blockedProducts": [
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "developer-tools",
+      "productManifest": "products/developer-tools/product.manifest.json",
+      "productName": "Developer Tools",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "private-only",
+      "runtimeWitnessClosed": false,
+      "service": "developer-tools-service",
+      "status": "limited-preview"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "health-research-pipeline",
+      "productManifest": "products/health-research-pipeline/product.manifest.json",
+      "productName": "Health Research Pipeline",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "health-research-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-agents",
+      "productManifest": "products/mullu-agents/product.manifest.json",
+      "productName": "Mullu Agents",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "agent-runner-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-browse",
+      "productManifest": "products/mullu-browse/product.manifest.json",
+      "productName": "Mullu Browse",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "browse-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-chain",
+      "productManifest": "products/mullu-chain/product.manifest.json",
+      "productName": "Mullu Chain",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "chain-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-govern",
+      "productManifest": "products/mullu-govern/product.manifest.json",
+      "productName": "Mullu Govern",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "private-only",
+      "runtimeWitnessClosed": false,
+      "service": "mullusi-govern-cloud",
+      "status": "limited-preview"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-search",
+      "productManifest": "products/mullu-search/product.manifest.json",
+      "productName": "Mullu Search",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "search-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-studio-music",
+      "productManifest": "products/mullu-studio-music/product.manifest.json",
+      "productName": "Mullu Studio Music",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "music-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullusi-science-lab",
+      "productManifest": "products/mullusi-science-lab/product.manifest.json",
+      "productName": "Mullusi Science Lab",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "science-lab-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "robotics-tools",
+      "productManifest": "products/robotics-tools/product.manifest.json",
+      "productName": "Robotics Tools",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "robotics-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "virecai-video",
+      "productManifest": "products/virecai-video/product.manifest.json",
+      "productName": "VIRECAI Video",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "video-processing-service",
+      "status": "private-incubation"
+    }
+  ],
+  "closedProducts": [],
+  "meta": {
+    "artifact": "data/generated/runtime-witness-index.json",
+    "content_hash": "sha256:26638f850414f659588a20a1d45834784fa57f8274e98c782e7379cf49c42489",
+    "generator": "scripts/generate-platform.mjs",
+    "name": "Mullusi Generated Runtime Witness Index",
+    "purpose": "Generated public-safe runtime witness index. Do not edit by hand.",
+    "source": "ops/runtime-witness/registry.json + products/*/product.manifest.json"
+  },
+  "productionPreflight": {
+    "mode": "fail-closed",
+    "rule": "No production or public exposure unless runtimeWitnessClosed is true."
+  },
+  "requiredEndpoints": [
+    "/health",
+    "/gateway/witness",
+    "/runtime/conformance"
+  ],
+  "schema": "schemas/runtime-witness.schema.json",
+  "sourceRegistry": "ops/runtime-witness/registry.json",
+  "witnesses": [
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "developer-tools",
+      "productManifest": "products/developer-tools/product.manifest.json",
+      "productName": "Developer Tools",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "private-only",
+      "runtimeWitnessClosed": false,
+      "service": "developer-tools-service",
+      "status": "limited-preview"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "health-research-pipeline",
+      "productManifest": "products/health-research-pipeline/product.manifest.json",
+      "productName": "Health Research Pipeline",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "health-research-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-agents",
+      "productManifest": "products/mullu-agents/product.manifest.json",
+      "productName": "Mullu Agents",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "agent-runner-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-browse",
+      "productManifest": "products/mullu-browse/product.manifest.json",
+      "productName": "Mullu Browse",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "browse-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-chain",
+      "productManifest": "products/mullu-chain/product.manifest.json",
+      "productName": "Mullu Chain",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "chain-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-govern",
+      "productManifest": "products/mullu-govern/product.manifest.json",
+      "productName": "Mullu Govern",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "private-only",
+      "runtimeWitnessClosed": false,
+      "service": "mullusi-govern-cloud",
+      "status": "limited-preview"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-search",
+      "productManifest": "products/mullu-search/product.manifest.json",
+      "productName": "Mullu Search",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "search-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullu-studio-music",
+      "productManifest": "products/mullu-studio-music/product.manifest.json",
+      "productName": "Mullu Studio Music",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "music-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "mullusi-science-lab",
+      "productManifest": "products/mullusi-science-lab/product.manifest.json",
+      "productName": "Mullusi Science Lab",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "science-lab-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "robotics-tools",
+      "productManifest": "products/robotics-tools/product.manifest.json",
+      "productName": "Robotics Tools",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "robotics-service",
+      "status": "private-incubation"
+    },
+    {
+      "blockingReason": "Missing passing service health, gateway witness, runtime conformance, rollback, or public exposure decision.",
+      "healthEvidenceState": "not-collected",
+      "observationCount": 0,
+      "preflightDecision": "block",
+      "preflightMode": "fail-closed",
+      "productId": "virecai-video",
+      "productManifest": "products/virecai-video/product.manifest.json",
+      "productName": "VIRECAI Video",
+      "proofState": "AwaitingEvidence",
+      "publicExposureAllowed": false,
+      "requiredEndpoints": [
+        "/health",
+        "/gateway/witness",
+        "/runtime/conformance"
+      ],
+      "rollbackState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "runtimeWitnessClosed": false,
+      "service": "video-processing-service",
+      "status": "private-incubation"
+    }
+  ]
+}

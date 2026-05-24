@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "virecai-video",
+  "name": "VIRECAI Video",
+  "summary": "Symbolic video and media platform work held private until storage, rights, and witness rules close.",
+  "family": "virecai",
+  "category": "media",
+  "status": "private-incubation",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/video/",
+    "docsRoute": "https://docs.mullusi.com/video",
+    "dashboardRoute": "https://dashboard.mullusi.com/video",
+    "proofRoute": "/proof/video/",
+    "statusRoute": "/status/video/"
+  },
+  "runtime": {
+    "service": "video-processing-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/video/process",
+        "contract": "contracts/video/process.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "videos",
+      "frames",
+      "annotations",
+      "artifacts",
+      "traces",
+      "storage_references"
+    ],
+    "privacyBoundary": "privacy/video.policy.json",
+    "retentionPolicy": "privacy/video.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/video.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "media rights boundary",
+      "artifact storage witness",
+      "signed processing witness"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 5,
+    "classification": "private research product",
+    "registryStatus": "private-incubation",
+    "ownerLabel": "Media Systems",
+    "sourceBoundary": "private source registry",
+    "runtimeType": "video processing service and future studio app",
+    "dataType": "videos, frames, annotations, artifacts, traces, and storage references",
+    "releaseGate": "media policy, artifact storage boundary, and signed processing witness",
+    "docsPath": "docs.mullusi.com/video",
+    "apiPath": "POST /v1/video/process",
+    "evidencePath": "/proof/",
+    "failureMode": "quarantine artifact, preserve trace, and return AwaitingEvidence"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

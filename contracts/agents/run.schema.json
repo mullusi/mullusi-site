@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mullusi.com/contracts/agents/run.schema.json",
+  "title": "Mullu Agents POST /v1/agents/run Contract",
+  "description": "Purpose: request contract placeholder for Mullu Agents. Governance scope: control-plane admission, trace requirement, and release-gate validation. Invariants: runtime execution must remain blocked until product-specific schema details and witness checks close.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "trace_required"
+  ],
+  "properties": {
+    "trace_required": {
+      "const": true
+    }
+  }
+}

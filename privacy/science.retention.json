@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullusi-science-lab",
+  "purpose": "Declare retention state for Mullusi Science Lab data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "math_proofs",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "physics_regimes",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "chemistry_graphs",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "biology_jobs",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "simulation_artifacts",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

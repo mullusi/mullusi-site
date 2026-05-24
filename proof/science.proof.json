@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullusi-science-lab",
+  "proofState": "AwaitingEvidence",
+  "claimsAllowed": [],
+  "claimsBlockedUntilVerified": [
+    "method limit publication",
+    "reproducibility evidence",
+    "research safety boundary"
+  ],
+  "witnesses": [
+    {
+      "name": "runtime",
+      "state": "AwaitingEvidence",
+      "evidence": "science-lab-service runtime witness is not published."
+    },
+    {
+      "name": "contract",
+      "state": "AwaitingEvidence",
+      "evidence": "POST /v1/research/fold is declared but not deployed."
+    },
+    {
+      "name": "rollback",
+      "state": "AwaitingEvidence",
+      "evidence": "Mullusi Science Lab rollback path is not yet witnessed."
+    },
+    {
+      "name": "privacy",
+      "state": "AwaitingEvidence",
+      "evidence": "Mullusi Science Lab privacy and retention policies are declared in not-active state."
+    }
+  ]
+}

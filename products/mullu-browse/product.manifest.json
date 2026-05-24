@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "mullu-browse",
+  "name": "Mullu Browse",
+  "summary": "Governed browse runtime for page observation and action traces, held private until privacy, runtime witness, and rollback gates close.",
+  "family": "mullu",
+  "category": "browser-runtime",
+  "status": "private-incubation",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/browse/",
+    "docsRoute": "https://docs.mullusi.com/browse",
+    "dashboardRoute": "https://dashboard.mullusi.com/browse",
+    "proofRoute": "/proof/browse/",
+    "statusRoute": "/status/browse/"
+  },
+  "runtime": {
+    "service": "browse-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/browse/session",
+        "contract": "contracts/browse/session.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "browse_sessions",
+      "page_observations",
+      "action_traces"
+    ],
+    "privacyBoundary": "privacy/browse.policy.json",
+    "retentionPolicy": "privacy/browse.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/browse.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "production browse execution",
+      "remote page action safety",
+      "real-time browse accuracy"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": false,
+    "displayOrder": 100,
+    "classification": "public product later",
+    "registryStatus": "private-incubation",
+    "ownerLabel": "Product Services",
+    "sourceBoundary": "product manifest authority",
+    "runtimeType": "browse runtime service and future app route",
+    "dataType": "browse sessions, page observations, action traces, and runtime witness logs",
+    "releaseGate": "privacy boundary, runtime witness, rollback path, and action safety witness",
+    "docsPath": "docs.mullusi.com/browse",
+    "apiPath": "POST /v1/browse/session",
+    "evidencePath": "/proof/",
+    "failureMode": "halt unsafe action, preserve trace, and return AwaitingEvidence"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

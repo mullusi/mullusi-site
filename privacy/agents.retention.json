@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-agents",
+  "purpose": "Declare retention state for Mullu Agents data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "runs",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "tool_calls",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "constraints",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "job_state",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "audit_traces",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

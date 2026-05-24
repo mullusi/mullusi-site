@@ -1,7 +1,7 @@
 /*
 Purpose: render Mullusi structured public content and operate the symbolic canvas substrate.
-Governance scope: deterministic JSON rendering, safe link output, searchable public surface catalog, and visual substrate runtime.
-Dependencies: data/products.json, data/site.json, DOM canvas APIs, IntersectionObserver, and browser fetch.
+Governance scope: deterministic JSON rendering, safe link output, searchable public surface catalog, manifest-owned homepage product registry, and visual substrate runtime.
+Dependencies: data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, DOM canvas APIs, IntersectionObserver, and browser fetch.
 Invariants: untrusted JSON text is escaped, non-public links are blocked, registry failures surface visibly, and reduced motion is respected.
 */
 
@@ -1473,22 +1473,37 @@ function activityHref(value) {
   return "";
 }
 
-async function loadRegistry() {
-  const response = await fetch("data/products.json", { cache: "no-store" });
-  if (!response.ok) throw new Error(`Registry load failed: ${response.status}`);
+async function loadJsonResource(path, label) {
+  const response = await fetch(path, { cache: "no-store" });
+  if (!response.ok) throw new Error(`${label} load failed: ${response.status}`);
   return response.json();
+}
+
+function composeHomepageRegistry(publicSurfaces, productRegistry) {
+  return {
+    principles: publicSurfaces?.principles || [],
+    systems: publicSurfaces?.systems || [],
+    futureDomains: publicSurfaces?.futureDomains || [],
+    privateIncubation: publicSurfaces?.privateIncubation || [],
+    productRegistry: productRegistry?.productRegistry || [],
+    manifestCandidates: productRegistry?.manifestCandidates || [],
+  };
+}
+
+async function loadRegistry() {
+  const [publicSurfaces, productRegistry] = await Promise.all([
+    loadJsonResource("data/manual/public-surfaces.json", "Public surface registry"),
+    loadJsonResource("data/generated/homepage-product-registry.json", "Homepage product registry"),
+  ]);
+  return composeHomepageRegistry(publicSurfaces, productRegistry);
 }
 
 async function loadSiteContent() {
-  const response = await fetch("data/site.json", { cache: "no-store" });
-  if (!response.ok) throw new Error(`Site content load failed: ${response.status}`);
-  return response.json();
+  return loadJsonResource("data/site.json", "Site content");
 }
 
 async function loadNews() {
-  const response = await fetch("data/news.json", { cache: "no-store" });
-  if (!response.ok) throw new Error(`News load failed: ${response.status}`);
-  return response.json();
+  return loadJsonResource("data/news.json", "News");
 }
 
 function renderSiteContent() {

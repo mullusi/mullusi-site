@@ -1,0 +1,120 @@
+{
+  "entries": [
+    {
+      "apiRoutes": [
+        "POST /v1/developers/validate"
+      ],
+      "docsRoute": "https://docs.mullusi.com/developers",
+      "id": "developer-tools",
+      "name": "Developer Tools",
+      "releaseGateState": "blocked",
+      "status": "limited-preview"
+    },
+    {
+      "apiRoutes": [],
+      "docsRoute": "private",
+      "id": "health-research-pipeline",
+      "name": "Health Research Pipeline",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/agents/run"
+      ],
+      "docsRoute": "https://docs.mullusi.com/agents",
+      "id": "mullu-agents",
+      "name": "Mullu Agents",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/browse/session"
+      ],
+      "docsRoute": "https://docs.mullusi.com/browse",
+      "id": "mullu-browse",
+      "name": "Mullu Browse",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/chain/submit"
+      ],
+      "docsRoute": "https://docs.mullusi.com/chain",
+      "id": "mullu-chain",
+      "name": "Mullu Chain",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/govern/evaluate"
+      ],
+      "docsRoute": "https://docs.mullusi.com/govern",
+      "id": "mullu-govern",
+      "name": "Mullu Govern",
+      "releaseGateState": "blocked",
+      "status": "limited-preview"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/search/query"
+      ],
+      "docsRoute": "https://docs.mullusi.com/search",
+      "id": "mullu-search",
+      "name": "Mullu Search",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/music/generate"
+      ],
+      "docsRoute": "https://docs.mullusi.com/music",
+      "id": "mullu-studio-music",
+      "name": "Mullu Studio Music",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/research/fold"
+      ],
+      "docsRoute": "https://docs.mullusi.com/science",
+      "id": "mullusi-science-lab",
+      "name": "Mullusi Science Lab",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/robotics/simulate"
+      ],
+      "docsRoute": "https://docs.mullusi.com/robotics",
+      "id": "robotics-tools",
+      "name": "Robotics Tools",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    },
+    {
+      "apiRoutes": [
+        "POST /v1/video/process"
+      ],
+      "docsRoute": "https://docs.mullusi.com/video",
+      "id": "virecai-video",
+      "name": "VIRECAI Video",
+      "releaseGateState": "blocked",
+      "status": "private-incubation"
+    }
+  ],
+  "meta": {
+    "artifact": "data/generated/docs-index.json",
+    "content_hash": "sha256:9d56e6de8649e5b05e9bd79eae98b7fdf61efe3fa5d022bf6607a87e82f15fc0",
+    "generator": "scripts/generate-platform.mjs",
+    "name": "Mullusi Generated Docs Index",
+    "purpose": "Generated from product manifests. Do not edit by hand.",
+    "source": "products/*/product.manifest.json"
+  }
+}

@@ -1,0 +1,529 @@
+{
+  "checklists": [
+    {
+      "id": "developer-tools",
+      "name": "Developer Tools",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "limited-preview"
+    },
+    {
+      "id": "health-research-pipeline",
+      "name": "Health Research Pipeline",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "restricted_boundary",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    },
+    {
+      "id": "mullu-agents",
+      "name": "Mullu Agents",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    },
+    {
+      "id": "mullu-browse",
+      "name": "Mullu Browse",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    },
+    {
+      "id": "mullu-chain",
+      "name": "Mullu Chain",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    },
+    {
+      "id": "mullu-govern",
+      "name": "Mullu Govern",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "limited-preview"
+    },
+    {
+      "id": "mullu-search",
+      "name": "Mullu Search",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    },
+    {
+      "id": "mullu-studio-music",
+      "name": "Mullu Studio Music",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    },
+    {
+      "id": "mullusi-science-lab",
+      "name": "Mullusi Science Lab",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    },
+    {
+      "id": "robotics-tools",
+      "name": "Robotics Tools",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    },
+    {
+      "id": "virecai-video",
+      "name": "VIRECAI Video",
+      "promotionPath": [
+        "private-incubation",
+        "internal-alpha",
+        "limited-preview",
+        "public-beta",
+        "production"
+      ],
+      "releaseGateState": "blocked",
+      "required": [
+        {
+          "item": "route",
+          "state": "pending"
+        },
+        {
+          "item": "docs",
+          "state": "pending"
+        },
+        {
+          "item": "api_contract",
+          "state": "pending"
+        },
+        {
+          "item": "privacy",
+          "state": "pending"
+        },
+        {
+          "item": "runtime_witness",
+          "state": "pending"
+        },
+        {
+          "item": "rollback",
+          "state": "pending"
+        },
+        {
+          "item": "support",
+          "state": "pending"
+        },
+        {
+          "item": "status",
+          "state": "pending"
+        }
+      ],
+      "status": "private-incubation"
+    }
+  ],
+  "meta": {
+    "artifact": "data/generated/release-checklists.json",
+    "content_hash": "sha256:c5a97fd65c29017f03d37a84783a7199c42bf434754474288e289e917fcc4070",
+    "generator": "scripts/generate-platform.mjs",
+    "name": "Mullusi Generated Release Checklists",
+    "purpose": "Generated from product manifests. Do not edit by hand.",
+    "source": "products/*/product.manifest.json"
+  }
+}

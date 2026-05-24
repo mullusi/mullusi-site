@@ -18,6 +18,8 @@ const requiredFiles = [
   "index.html",
   "doctrine/index.html",
   "mullu/index.html",
+  "search/index.html",
+  "browse/index.html",
   "proof/index.html",
   "playground/index.html",
   "contact/index.html",
@@ -42,10 +44,14 @@ const requiredFiles = [
   "ops/api-runtime-host-path.md",
   "ops/api-production-readiness-gate.md",
   "ops/website-origin-witness.md",
+  "ops/public-visibility-witness.md",
+  "ops/security-header-witness.md",
   "ops/search-indexing-witness.md",
   "ops/www-canonical-redirect-gate.md",
   "ops/recovery-inventory-template.md",
   "ops/recovery-completion-witness.md",
+  "ops/runtime-witness/README.md",
+  "ops/runtime-witness/registry.json",
   "LICENSE",
   "CNAME",
   "_headers",
@@ -65,6 +71,7 @@ const requiredFiles = [
   "assets/pages/mullu.css",
   "assets/pages/not-found.css",
   "assets/pages/pilot.css",
+  "assets/pages/product-shell.css",
   "assets/pages/playground.js",
   "assets/pages/playground.css",
   "assets/pages/proof.js",
@@ -83,17 +90,54 @@ const requiredFiles = [
   "assets/fonts/noto-sans-symbols-2-math.woff2",
   "assets/fonts/OFL.txt",
   "data/products.json",
+  "data/manual/public-surfaces.json",
   "data/news.json",
   "data/site.json",
   "data/i18n.json",
+  "data/generated/products.json",
+  "data/generated/status.json",
+  "data/generated/proof-index.json",
+  "data/generated/api-registry.json",
+  "data/generated/homepage-cards.json",
+  "data/generated/homepage-product-registry.json",
+  "data/generated/docs-index.json",
+  "data/generated/release-checklists.json",
+  "data/generated/migration-coverage.json",
+  "data/generated/product-registry-parity.json",
+  "data/generated/public-surface-parity.json",
+  "data/generated/products-compat.json",
+  "data/generated/runtime-witness-index.json",
+  "data/generated/sitemap.xml",
+  "schemas/product-manifest.schema.json",
+  "schemas/api-route.schema.json",
+  "schemas/privacy-policy.schema.json",
+  "schemas/proof-boundary.schema.json",
+  "schemas/runtime-witness.schema.json",
+  "products/mullu-search/product.manifest.json",
+  "products/mullu-browse/product.manifest.json",
+  "contracts/search/query.schema.json",
+  "contracts/browse/session.schema.json",
+  "privacy/search.policy.json",
+  "privacy/search.retention.json",
+  "privacy/browse.policy.json",
+  "privacy/browse.retention.json",
+  "proof/search.proof.json",
+  "proof/browse.proof.json",
   "scripts/fetch-news.mjs",
   "scripts/build-cloudflare-pages.mjs",
+  "scripts/generate-platform.mjs",
+  "scripts/validate-manifests.mjs",
+  "scripts/validate-runtime-witnesses.mjs",
   "scripts/test-build-cloudflare-pages.mjs",
   "scripts/test-validate-site-doctrine-wording.mjs",
   "scripts/check-search-indexing-surface.mjs",
   "scripts/test-check-search-indexing-surface.mjs",
   "scripts/check-website-origin.mjs",
   "scripts/test-check-website-origin.mjs",
+  "scripts/check-public-visibility.mjs",
+  "scripts/test-check-public-visibility.mjs",
+  "scripts/check-live-security-headers.mjs",
+  "scripts/test-check-live-security-headers.mjs",
   "scripts/check-www-canonical-redirect-gate.mjs",
   "scripts/test-www-canonical-redirect-gate.mjs",
   "scripts/verify-registry-repos.mjs",
@@ -125,6 +169,8 @@ const publicHtmlFiles = [
   "index.html",
   "doctrine/index.html",
   "mullu/index.html",
+  "search/index.html",
+  "browse/index.html",
   "proof/index.html",
   "playground/index.html",
   "contact/index.html",
@@ -182,6 +228,25 @@ function fileContentHash(relativePath) {
 
 function pathExists(relativePath) {
   return fs.existsSync(path.join(repoRoot, relativePath));
+}
+
+function textFilesUnder(relativePath) {
+  const rootPath = path.join(repoRoot, relativePath);
+  if (!fs.existsSync(rootPath)) return [];
+  const output = [];
+  const visit = (currentPath) => {
+    for (const entry of fs.readdirSync(currentPath, { withFileTypes: true })) {
+      const entryPath = path.join(currentPath, entry.name);
+      if (entry.isDirectory()) {
+        visit(entryPath);
+        continue;
+      }
+      const repoRelativePath = path.relative(repoRoot, entryPath).replaceAll("\\", "/");
+      output.push(repoRelativePath);
+    }
+  };
+  visit(rootPath);
+  return output.sort();
 }
 
 function relativePathExists(baseRelativePath, relativePath) {
@@ -305,6 +370,10 @@ function validateCloudflarePagesControls() {
     "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
     "X-Content-Type-Options: nosniff",
     "X-Frame-Options: DENY",
+    "Cross-Origin-Opener-Policy: same-origin",
+    "Cross-Origin-Resource-Policy: same-site",
+    "X-DNS-Prefetch-Control: off",
+    "X-Permitted-Cross-Domain-Policies: none",
     "/assets/*",
     "Cache-Control: public, max-age=600",
     "/data/*",
@@ -349,12 +418,14 @@ function validateCloudflarePagesArtifact() {
     ".well-known",
     "assets",
     "data",
+    "browse",
     "contact",
     "doctrine",
     "mullu",
     "pilot",
     "playground",
     "proof",
+    "search",
     "status",
     "security",
     "privacy",
@@ -384,6 +455,9 @@ function validateCloudflarePagesArtifact() {
     "LICENSE",
     "README.md",
   ];
+  const forbiddenArtifactFiles = [
+    "data/generated/products-compat.json",
+  ];
   for (const entry of fs.readdirSync(path.join(repoRoot, "dist"))) {
     if (!allowedTopLevelEntries.has(entry)) {
       recordFailure(`cloudflare_artifact_unexpected_entry:${entry}`);
@@ -399,10 +473,17 @@ function validateCloudflarePagesArtifact() {
       recordFailure(`cloudflare_artifact_forbidden_entry_present:${entry}`);
     }
   }
+  for (const relativePath of forbiddenArtifactFiles) {
+    if (relativePathExists("dist", relativePath)) {
+      recordFailure(`cloudflare_artifact_forbidden_file_present:${relativePath}`);
+    }
+  }
   const byteMatchedFiles = [
     "index.html",
     "doctrine/index.html",
     "mullu/index.html",
+    "search/index.html",
+    "browse/index.html",
     "proof/index.html",
     "playground/index.html",
     "contact/index.html",
@@ -427,6 +508,7 @@ function validateCloudflarePagesArtifact() {
     "assets/pages/mullu.css",
     "assets/pages/not-found.css",
     "assets/pages/pilot.css",
+    "assets/pages/product-shell.css",
     "assets/pages/playground.js",
     "assets/pages/playground.css",
     "assets/pages/proof.js",
@@ -435,6 +517,9 @@ function validateCloudflarePagesArtifact() {
     "assets/pages/trust.css",
     "data/site.json",
     "data/products.json",
+    "data/manual/public-surfaces.json",
+    "data/generated/homepage-product-registry.json",
+    "data/generated/runtime-witness-index.json",
     "robots.txt",
     "sitemap.xml",
     "status.json",
@@ -503,6 +588,183 @@ function validateWebsiteOriginWitness() {
   }
   if (/x-github-request-id\s*=\S+|x-fastly-request-id\s*=\S+|x-served-by\s*=\S+|account_id\s*=|billing_id\s*=|token\s*=/i.test(witness)) {
     recordFailure("website_origin_witness_boundary_invalid");
+  }
+}
+
+function validatePublicVisibilityWitness() {
+  const witness = readUtf8("ops/public-visibility-witness.md");
+  const checker = readUtf8("scripts/check-public-visibility.mjs");
+  const checkerTest = readUtf8("scripts/test-check-public-visibility.mjs");
+  const liveSafetyWorkflow = readUtf8(".github/workflows/live-safety.yml");
+  const requiredTerms = [
+    "command=node scripts/check-public-visibility.mjs",
+    "verdict=SolvedVerified",
+    "proof_state=Pass",
+    "public_edge_visibility=SolvedVerified",
+    "external_multi_region_visibility=AwaitingEvidence",
+    "external_multi_region_visibility=SolvedVerified",
+    "global_all_users_claim=AwaitingEvidence",
+    "dns_host_count=2",
+    "dns_public_resolver_passes=6",
+    "https_route_count=2",
+    "external_regional_probe_floor=2",
+    "external_probe_count=0",
+    "external_probe_count=6",
+    "external_distinct_region_passes=0",
+    "external_distinct_region_passes=5",
+    "persistent_regional_monitoring=Pass",
+    "monitor_workflow=.github/workflows/live-safety.yml",
+    "monitor_schedule=41 7 * * *",
+    "monitor_command=node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending",
+    "finding=none",
+    "external_finding=external_probe_not_attached",
+    "target=https://mullusi.com/",
+    "target=https://www.mullusi.com/",
+    "final_url=https://mullusi.com/",
+    "status=200",
+    "redirect_count=0",
+    "redirect_count=1",
+    "first_redirect_status=301",
+    "tls_authorized=true",
+    "public_dns_resolution=Pass",
+    "https_reachability=Pass",
+    "tls_validation=Pass",
+    "www_canonical_redirect=Pass",
+    "external_regional_probe_provider=check-host.net",
+    "universal_all_users_visibility=AwaitingEvidence",
+    "runtime_api_readiness=AwaitingEvidence",
+    "STATUS:",
+  ];
+  for (const term of requiredTerms) {
+    if (!witness.includes(term)) {
+      recordFailure(`public_visibility_witness_term_missing:${term}`);
+    }
+  }
+
+  const checkerTerms = [
+    "function evaluatePublicVisibilityEvidence",
+    "function formatResult",
+    "function validateHttpsTarget",
+    "dns_public_resolver_passes_below_floor",
+    "https_final_url_mismatch",
+    "https_tls_not_authorized",
+    "externalMultiRegionVisibility",
+    "external_regional_passes_below_floor",
+    "external_probe_failed",
+    "globalAllUsersClaim",
+    "AwaitingEvidence",
+    "SolvedUnverified",
+    "SolvedVerified",
+    "GovernanceBlocked",
+  ];
+  for (const term of checkerTerms) {
+    if (!checker.includes(term)) {
+      recordFailure(`public_visibility_checker_term_missing:${term}`);
+    }
+  }
+
+  const checkerTestTerms = [
+    "testAllRequiredEvidencePassesWithGlobalBoundary",
+    "testDnsResolverFloorBlocksVisibilityClaim",
+    "testWwwRedirectMismatchBlocksVisibilityClaim",
+    "testTlsFailureBlocksVisibilityClaim",
+    "testExternalRegionalProbePassesCloseExternalVisibilityOnly",
+    "testPartialExternalRegionalProbeFailureStaysBounded",
+    "testExternalRegionalProbeFloorBlocksExternalVisibility",
+    "testHttpsTargetValidationBlocksUnsafeTargets",
+  ];
+  for (const term of checkerTestTerms) {
+    if (!checkerTest.includes(term)) {
+      recordFailure(`public_visibility_checker_test_term_missing:${term}`);
+    }
+  }
+
+  const liveSafetyWorkflowTerms = [
+    "schedule:",
+    "cron: \"41 7 * * *\"",
+    "Check public visibility",
+    "node scripts/check-public-visibility.mjs",
+    "Check regional public visibility",
+    "node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending",
+  ];
+  for (const term of liveSafetyWorkflowTerms) {
+    if (!liveSafetyWorkflow.includes(term)) {
+      recordFailure(`public_visibility_live_safety_workflow_term_missing:${term}`);
+    }
+  }
+
+  if (/account_id\s*=|billing_id\s*=|token\s*=|dns_target\s*=/i.test(witness)) {
+    recordFailure("public_visibility_witness_boundary_invalid");
+  }
+}
+
+function validateLiveSecurityHeaderGate() {
+  const witness = readUtf8("ops/security-header-witness.md");
+  const checker = readUtf8("scripts/check-live-security-headers.mjs");
+  const checkerTest = readUtf8("scripts/test-check-live-security-headers.mjs");
+  const requiredWitnessTerms = [
+    "Security Header Witness",
+    "command=node scripts/check-live-security-headers.mjs",
+    "verdict=SolvedVerified",
+    "proof_state=Pass",
+    "security_header_state=SolvedVerified",
+    "target=https://mullusi.com/",
+    "target=https://mullusi.com/security/",
+    "target=https://mullusi.com/.well-known/security.txt",
+    "header_content_security_policy=Pass",
+    "header_strict_transport_security=Pass",
+    "header_cross_origin_opener_policy=Pass",
+    "header_cross_origin_resource_policy=Pass",
+    "header_dns_prefetch_control=Pass",
+    "header_permitted_cross_domain_policies=Pass",
+    "header_permissions_policy=Pass",
+    "raw_response_headers=not_recorded",
+    "static_browser_header_policy=SolvedVerified",
+    "runtime_api_readiness=AwaitingEvidence",
+    "STATUS:",
+  ];
+  for (const term of requiredWitnessTerms) {
+    if (!witness.includes(term)) {
+      recordFailure(`live_security_header_witness_term_missing:${term}`);
+    }
+  }
+
+  const requiredCheckerTerms = [
+    "function evaluateSecurityHeaderEvidence",
+    "function formatResult",
+    "function validateTargetUrl",
+    "content-security-policy",
+    "strict-transport-security",
+    "cross-origin-opener-policy",
+    "cross-origin-resource-policy",
+    "x-dns-prefetch-control",
+    "x-permitted-cross-domain-policies",
+    "permissions-policy",
+    "raw_response_headers=not_recorded",
+  ];
+  for (const term of requiredCheckerTerms) {
+    if (!checker.includes(term)) {
+      recordFailure(`live_security_header_checker_term_missing:${term}`);
+    }
+  }
+
+  const requiredTestTerms = [
+    "testAllSecurityHeadersPass",
+    "testMissingContentSecurityPolicyBlocks",
+    "testHeaderValueMismatchBlocks",
+    "testRequiredHeaderTermMissingBlocks",
+    "testStatusAndRequestErrorsBlock",
+    "testTargetValidationBlocksUnsafeTargets",
+    "testCliRejectsUnsupportedArgumentWithoutNetwork",
+  ];
+  for (const term of requiredTestTerms) {
+    if (!checkerTest.includes(term)) {
+      recordFailure(`live_security_header_test_term_missing:${term}`);
+    }
+  }
+
+  if (/account_id\s*=|billing_id\s*=|token\s*=|dns_target\s*=|raw_response_header_value=/i.test(witness)) {
+    recordFailure("live_security_header_witness_boundary_invalid");
   }
 }
 
@@ -850,7 +1112,7 @@ function validateStatusJson() {
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(status.built_at || "")) {
     recordFailure(`status_built_at_invalid:${status.built_at}`);
   }
-  const requiredPublishedRoutes = ["/contact/", "/pilot/", "/status/", "/security/", "/privacy/", "/terms/", "/acceptable-use/", "/responsible-disclosure/"];
+  const requiredPublishedRoutes = ["/search/", "/browse/", "/contact/", "/pilot/", "/status/", "/security/", "/privacy/", "/terms/", "/acceptable-use/", "/responsible-disclosure/"];
   if (!Array.isArray(status.published_routes) || requiredPublishedRoutes.some((route) => !status.published_routes.includes(route))) {
     recordFailure("status_published_routes_missing_public_trust_routes");
   }
@@ -866,6 +1128,9 @@ function validateStatusJson() {
     "index.html": fileContentHash("index.html"),
     "data/site.json": jsonContentHashWithoutMetaHash("data/site.json"),
     "data/products.json": jsonContentHashWithoutMetaHash("data/products.json"),
+    "data/manual/public-surfaces.json": jsonContentHashWithoutMetaHash("data/manual/public-surfaces.json"),
+    "data/generated/homepage-product-registry.json": jsonContentHashWithoutMetaHash("data/generated/homepage-product-registry.json"),
+    "data/generated/runtime-witness-index.json": jsonContentHashWithoutMetaHash("data/generated/runtime-witness-index.json"),
   };
   for (const [requiredHash, expectedHash] of Object.entries(expectedHashes)) {
     if (hashes[requiredHash] !== expectedHash) {
@@ -949,6 +1214,70 @@ function validateProductionClaimBoundary() {
     for (const term of requiredTerms) {
       if (!html.includes(term)) {
         recordFailure(`production_boundary_term_missing:${htmlFile}:${term}`);
+      }
+    }
+  }
+}
+
+function validateProductRouteShellContract() {
+  const routeShells = [
+    {
+      file: "search/index.html",
+      productId: "mullu-search",
+      terms: [
+        'data-product-shell="mullu-search"',
+        '<meta name="robots" content="noindex, follow">',
+        'href="/assets/pages/product-shell.css"',
+        "private-incubation",
+        "AwaitingEvidence",
+        "release gate blocked",
+        "control plane",
+        "collection state is not active",
+        "runtime witness",
+        "This route is intentionally noindex",
+        "/proof/",
+        "/status/",
+        "/pilot/",
+        "products/mullu-search/product.manifest.json",
+        "POST /v1/search/query",
+        "search-service",
+        "production search quality",
+        "web-scale index coverage",
+        "real-time browse accuracy",
+      ],
+    },
+    {
+      file: "browse/index.html",
+      productId: "mullu-browse",
+      terms: [
+        'data-product-shell="mullu-browse"',
+        '<meta name="robots" content="noindex, follow">',
+        'href="/assets/pages/product-shell.css"',
+        "private-incubation",
+        "AwaitingEvidence",
+        "release gate blocked",
+        "control plane",
+        "collection state is not active",
+        "runtime witness",
+        "This route is intentionally noindex",
+        "/proof/",
+        "/status/",
+        "/pilot/",
+        "products/mullu-browse/product.manifest.json",
+        "POST /v1/browse/session",
+        "browse-service",
+        "production browse execution",
+        "remote page action safety",
+        "real-time browse accuracy",
+      ],
+    },
+  ];
+
+  for (const routeShell of routeShells) {
+    const html = readUtf8(routeShell.file);
+    for (const term of routeShell.terms) {
+      if (!html.includes(term)) {
+        recordFailure(`product_route_shell_term_missing:${routeShell.productId}:${term}`);
       }
     }
   }
@@ -1056,6 +1385,15 @@ function validateProductRegistry() {
   const registryContentHash = requireString(registry?.meta?.content_hash, "meta.content_hash");
   if (registry?.meta?.domain !== "mullusi.com") {
     recordFailure(`registry_domain_invalid:${registry?.meta?.domain}`);
+  }
+  if (registry?.meta?.source_boundary !== "generated-compatibility-projection") {
+    recordFailure(`registry_source_boundary_invalid:${registry?.meta?.source_boundary || ""}`);
+  }
+  const registryGeneratedFrom = Array.isArray(registry?.meta?.generated_from) ? registry.meta.generated_from : [];
+  for (const requiredSource of ["products/*/product.manifest.json", "data/manual/public-surfaces.json"]) {
+    if (!registryGeneratedFrom.includes(requiredSource)) {
+      recordFailure(`registry_generated_source_missing:${requiredSource}`);
+    }
   }
   const expectedRegistryContentHash = jsonContentHashWithoutMetaHash("data/products.json");
   if (registryContentHash !== expectedRegistryContentHash) {
@@ -1191,6 +1529,35 @@ function validateProductRegistry() {
       if (/github\.com\/|[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+/.test(publicText)) {
         recordFailure(`private_incubation_repo_reference_forbidden:${item.name}`);
       }
+    }
+  }
+
+  const manualRegistry = JSON.parse(readUtf8("data/manual/public-surfaces.json"));
+  requireString(manualRegistry?.meta?.name, "manualPublicSurfaces.meta.name");
+  requireString(manualRegistry?.meta?.domain, "manualPublicSurfaces.meta.domain");
+  const manualRegistryHash = requireString(
+    manualRegistry?.meta?.content_hash,
+    "manualPublicSurfaces.meta.content_hash",
+  );
+  const expectedManualRegistryHash = jsonContentHashWithoutMetaHash("data/manual/public-surfaces.json");
+  if (manualRegistryHash !== expectedManualRegistryHash) {
+    recordFailure(`manual_public_surfaces_hash_mismatch:${manualRegistryHash}:${expectedManualRegistryHash}`);
+  }
+  if (manualRegistry?.meta?.domain !== "mullusi.com") {
+    recordFailure(`manual_public_surfaces_domain_invalid:${manualRegistry?.meta?.domain}`);
+  }
+  if (Object.prototype.hasOwnProperty.call(manualRegistry, "productRegistry")) {
+    recordFailure("manual_public_surfaces_product_registry_forbidden");
+  }
+  for (const section of ["principles", "systems", "futureDomains", "privateIncubation"]) {
+    if (!Array.isArray(manualRegistry[section])) {
+      recordFailure(`manual_public_surfaces_section_not_array:${section}`);
+      continue;
+    }
+    const manualSection = JSON.stringify(canonicalJsonValue(manualRegistry[section]));
+    const legacySection = JSON.stringify(canonicalJsonValue(registry[section] || []));
+    if (manualSection !== legacySection) {
+      recordFailure(`manual_public_surfaces_legacy_parity_mismatch:${section}`);
     }
   }
 }
@@ -2600,7 +2967,7 @@ function validateIndexDesignContract() {
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
-  const assetVersion = "2026.05.platform.15";
+  const assetVersion = "2026.05.platform.17";
 
   if (!html.includes(`assets/styles.css?v=${assetVersion}`) || !html.includes(`assets/app.js?v=${assetVersion}`)) {
     recordFailure("index_asset_version_invalid");
@@ -2777,6 +3144,17 @@ function validateIndexDesignContract() {
   }
   if (!app.includes("function renderProductRouteActions") || !app.includes("product-route-actions")) {
     recordFailure("product_registry_route_actions_missing");
+  }
+  if (app.includes("data/generated/products-compat.json")) {
+    recordFailure("homepage_renderer_uses_products_compat_wrapper");
+  }
+  for (const requiredRegistryPath of [
+    "data/generated/homepage-product-registry.json",
+    "data/manual/public-surfaces.json",
+  ]) {
+    if (!app.includes(requiredRegistryPath)) {
+      recordFailure(`homepage_registry_source_missing:${requiredRegistryPath}`);
+    }
   }
   const generatedAttributeEscapingRegressions = [
     /href="\$\{escapeHtml/,
@@ -2988,8 +3366,19 @@ function validatePublicText() {
   const textFilePattern = /\.(?:css|html|js|json|md|mjs|svg|txt|webmanifest|xml|ya?ml)$/i;
   const filesToScan = [
     ...requiredFiles,
+    ...textFilesUnder("products"),
+    ...textFilesUnder("schemas"),
+    ...textFilesUnder("contracts"),
+    ...textFilesUnder("privacy"),
+    ...textFilesUnder("proof"),
+    ...textFilesUnder("data/manual"),
+    ...textFilesUnder("data/generated"),
     ".github/workflows/validate.yml",
-  ].filter((fileName) => pathExists(fileName) && textFilePattern.test(fileName));
+    ".github/workflows/verify-registry.yml",
+    ".github/workflows/live-safety.yml",
+  ]
+    .filter((fileName) => pathExists(fileName) && textFilePattern.test(fileName))
+    .filter((fileName, index, files) => files.indexOf(fileName) === index);
 
   for (const fileName of filesToScan) {
     const content = readUtf8(fileName);
@@ -3075,6 +3464,9 @@ function validateTrustRoutes() {
     }
   }
   const securityTxt = readUtf8(".well-known/security.txt");
+  if (!securityTxt.includes("Contact: mailto:support@mullusi.com")) {
+    recordFailure("security_txt_support_contact_missing");
+  }
   if (!securityTxt.includes("Policy: https://mullusi.com/responsible-disclosure/")) {
     recordFailure("security_txt_policy_missing");
   }
@@ -3119,12 +3511,24 @@ function validateOperatingGates() {
       terms: ["Search Indexing Witness", "SolvedVerified", "Public Search Readback", "Search Console Submission", "URL Inspection Request", "robots_root_allow=Pass", "live_sitemap_matches_local=Pass", "search_engine_index_state=SolvedVerified", "search_console_sitemap_status=Success", "homepage_url_inspection_request=Pass", "first_party_search_result_observed=true", "route_specific_mullu_visibility=SolvedVerified", "current_crawl_surface_state=SolvedVerified", "STATUS:"],
     },
     {
+      file: "ops/public-visibility-witness.md",
+      terms: ["Public Visibility Witness", "public_edge_visibility=SolvedVerified", "external_multi_region_visibility=SolvedVerified", "persistent_regional_monitoring=Pass", "global_all_users_claim=AwaitingEvidence", "public_dns_resolution=Pass", "https_reachability=Pass", "tls_validation=Pass", "www_canonical_redirect=Pass", "security_header_witness=ops/security-header-witness.md", "STATUS:"],
+    },
+    {
+      file: "ops/security-header-witness.md",
+      terms: ["Security Header Witness", "security_header_state=SolvedVerified", "static_browser_header_policy=SolvedVerified", "header_content_security_policy=Pass", "header_cross_origin_opener_policy=Pass", "raw_response_headers=not_recorded", "runtime_api_readiness=AwaitingEvidence", "STATUS:"],
+    },
+    {
       file: "ops/recovery-inventory-template.md",
       terms: ["Recovery Inventory Template", "Root Identity", "Account Recovery Checklist", "Emergency Access Procedure", "Rotation Cadence", "Release Block", "STATUS:"],
     },
     {
       file: "ops/recovery-completion-witness.md",
       terms: ["Recovery Completion Witness", "recovery_witness_state=", "api_provisioning_allowed=", "Public-Safe Witness Table", "Promotion Rule", "API Provisioning Block", "STATUS:"],
+    },
+    {
+      file: "ops/runtime-witness/README.md",
+      terms: ["Runtime Witness Registry", "fail-closed", "service health evidence", "control-plane", "runtimeWitnessClosed", "STATUS:"],
     },
   ];
 
@@ -3195,6 +3599,8 @@ function validateRuntimeGateState() {
     "ops/api-production-readiness-gate.md",
     "ops/recovery-inventory-template.md",
     "ops/recovery-completion-witness.md",
+    "ops/runtime-witness/README.md",
+    "ops/runtime-witness/registry.json",
   ];
   const highSignalSecretPatterns = [
     /g(?:ho|hp|hr|hs)_[A-Za-z0-9_]{20,}/,
@@ -3219,6 +3625,8 @@ function validateHeadContract() {
     { file: "index.html", url: "https://mullusi.com" },
     { file: "doctrine/index.html", url: "https://mullusi.com/doctrine/" },
     { file: "mullu/index.html", url: "https://mullusi.com/mullu/" },
+    { file: "search/index.html", url: "https://mullusi.com/search/" },
+    { file: "browse/index.html", url: "https://mullusi.com/browse/" },
     { file: "proof/index.html", url: "https://mullusi.com/proof/" },
     { file: "playground/index.html", url: "https://mullusi.com/playground/" },
     { file: "contact/index.html", url: "https://mullusi.com/contact/" },
@@ -3261,6 +3669,8 @@ function runValidation() {
   validateCloudflarePagesControls();
   validateCloudflarePagesArtifact();
   validateWebsiteOriginWitness();
+  validatePublicVisibilityWitness();
+  validateLiveSecurityHeaderGate();
   validateSearchIndexingWitness();
   validatePrivateSourceMigrationDoc();
   validateWwwCanonicalRedirectGate();
@@ -3272,6 +3682,7 @@ function runValidation() {
   validateInlineScriptBoundary();
   validateHeadContract();
   validateProductionClaimBoundary();
+  validateProductRouteShellContract();
   validateWebManifest();
   validateSvgAssets();
   validateProductRegistry();

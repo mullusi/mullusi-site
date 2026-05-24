@@ -13,6 +13,8 @@ framework, database, or server runtime.
 |-- index.html                         # Public landing page
 |-- doctrine/index.html                # Public Doctrine v1.2 route
 |-- mullu/index.html                   # Flagship Mullu product route
+|-- search/index.html                  # Noindex Mullu Search route shell
+|-- browse/index.html                  # Noindex Mullu Browse route shell
 |-- proof/index.html                   # Public proof-boundary route
 |-- playground/index.html              # Simulated (client-only) govern-evaluation demo
 |-- 404.html                           # Branded not-found route
@@ -26,9 +28,14 @@ framework, database, or server runtime.
 |-- sitemap.xml                        # Search sitemap
 |-- site.webmanifest                   # Browser/app icon manifest
 |-- data/products.json                 # Product and public-surface registry
+|-- data/manual/                       # Manual non-product public-surface sources
+|-- data/generated/                    # Generated product manifest witnesses
 |-- data/news.json                     # Cached Frontier Signal feed
 |-- data/site.json                     # Structured public site content
 |-- data/i18n.json                     # en/am translation dictionary
+|-- products/                          # Product manifest authority records
+|-- schemas/                           # Manifest and boundary schemas
+|-- contracts/                         # Product API contract schemas
 |-- docs/private-source-deployment-migration.md # Source-private hosting runbook
 |-- ops/
 |   |-- public-claim-gate.md          # Public copy and claim release gate
@@ -39,10 +46,13 @@ framework, database, or server runtime.
 |   |-- api-runtime-host-path.md      # Provider-neutral API host path
 |   |-- api-production-readiness-gate.md # api.mullusi.com go/no-go gate
 |   |-- website-origin-witness.md     # Live website origin-header witness
+|   |-- public-visibility-witness.md  # Public DNS and HTTPS visibility witness
+|   |-- security-header-witness.md    # Live browser-control header witness
 |   |-- search-indexing-witness.md    # Live crawl-surface and sitemap witness
 |   |-- www-canonical-redirect-gate.md # www-to-apex redirect gate
 |   |-- recovery-inventory-template.md # Private recovery inventory template
-|   `-- recovery-completion-witness.md # Recovery completion state
+|   |-- recovery-completion-witness.md # Recovery completion state
+|   `-- runtime-witness/               # Product runtime witness registry
 |-- assets/
 |   |-- app.js                         # Repo search/filter renderer
 |   |-- styles.css                     # Full visual system
@@ -60,12 +70,18 @@ framework, database, or server runtime.
 |   `-- mullusi-mark.svg                # Legacy compact mark reference
 `-- scripts/
     |-- build-cloudflare-pages.mjs     # Builds the public Cloudflare Pages artifact
+    |-- generate-platform.mjs          # Generates product manifest artifacts
+    |-- validate-manifests.mjs         # Validates product manifest authority
     |-- test-build-cloudflare-pages.mjs # Verifies artifact source-boundary rules
     |-- test-validate-site-doctrine-wording.mjs # Tests Doctrine wording gate coverage
     |-- check-search-indexing-surface.mjs # Compares local sitemap to live crawl surfaces
     |-- test-check-search-indexing-surface.mjs # Tests search-surface gate behavior
     |-- check-website-origin.mjs       # Classifies live origin response headers
     |-- test-check-website-origin.mjs  # Tests origin-header classification
+    |-- check-public-visibility.mjs    # Checks public DNS, HTTPS, TLS, and www routing
+    |-- test-check-public-visibility.mjs # Tests visibility gate behavior
+    |-- check-live-security-headers.mjs # Checks live browser-control response headers
+    |-- test-check-live-security-headers.mjs # Tests live security-header gate behavior
     |-- check-www-canonical-redirect-gate.mjs # Evaluates www redirect closure
     |-- test-www-canonical-redirect-gate.mjs # Tests www redirect gate logic
     |-- fetch-news.mjs                 # Deterministic Frontier Signal refresh
@@ -75,10 +91,13 @@ framework, database, or server runtime.
 
 ## Public Registry Contract
 
-`data/products.json` is the public source of truth for deployed public-surface
-cards and staged roadmap records. It must not disclose private repository
-slugs, internal routes, credentials, deployment details, or unfinished product
-claims.
+The homepage loads product rows from
+`data/generated/homepage-product-registry.json` and non-product public lists
+from `data/manual/public-surfaces.json`. `data/products.json` is the generated
+legacy-compatible public projection so older consumers keep a stable URL while
+the source of truth stays manifest/manual-owned. Neither file may disclose
+private repository slugs, internal routes, credentials, deployment details, or
+unfinished product claims.
 
 Each public surface entry should represent a deployed, visitor-safe surface:
 
@@ -114,6 +133,106 @@ authentication, and supported by public-safe claims.
 Use `futureDomains` for planned domain engines and `privateIncubation` for
 public-safe descriptions of work that must remain private.
 
+## Product Manifest Authority
+
+New product families should start in `products/<product-id>/product.manifest.json`.
+The manifest owns the product identity, routes, API contracts, data classes,
+privacy boundary, proof boundary, runtime service, release gates, homepage
+presentation fields, and generation flags. Generated files under
+`data/generated/` are derived witnesses and must not be edited by hand.
+
+Current manifest coverage:
+
+```text
+data/generated/migration-coverage.json records all current product-registry
+entries as covered by product manifests. Mullu Browse is an additional
+private-incubation manifest candidate.
+```
+
+The manifest generator emits:
+
+```text
+data/products.json
+data/generated/products.json
+data/generated/status.json
+data/generated/proof-index.json
+data/generated/api-registry.json
+data/generated/homepage-cards.json
+data/generated/homepage-product-registry.json
+data/generated/docs-index.json
+data/generated/release-checklists.json
+data/generated/migration-coverage.json
+data/generated/product-registry-parity.json
+data/generated/public-surface-parity.json
+data/generated/products-compat.json
+data/generated/runtime-witness-index.json
+data/generated/sitemap.xml
+```
+
+Private-incubation products may appear in generated blocked records, but they do
+not enter generated public homepage cards or generated sitemap candidates until
+their release state permits public exposure.
+`search/index.html` and `browse/index.html` are noindex route shells for
+manifest, API, privacy, proof, and release-gate visibility only. They do not
+claim endpoint readiness, production quality, live browsing, or public product
+availability, and they do not enter the sitemap while the manifests remain
+private-incubation.
+`data/generated/homepage-product-registry.json` is the product-card source for
+the homepage. `data/generated/products-compat.json` preserves the previous
+combined registry shape as generated internal compatibility output, but it is
+not included in the Cloudflare Pages artifact.
+`data/products.json` preserves the old public registry shape as generated
+compatibility output. `data/generated/product-registry-parity.json` records
+legacy-field parity for product rows, and
+`data/generated/public-surface-parity.json` records parity between
+`data/manual/public-surfaces.json` and the generated compatibility projection.
+The homepage no longer reads the temporary combined compatibility wrapper.
+
+## Runtime Witness Authority
+
+Runtime witness state is now explicit:
+
+```text
+ops/runtime-witness/registry.json
+schemas/runtime-witness.schema.json
+data/generated/runtime-witness-index.json
+```
+
+Every product with `runtimeWitnessRequired: true` must have one witness row that
+matches its manifest id, manifest path, and runtime service. The witness row
+records control-plane requirement, service health evidence state, required
+health endpoints, production preflight decision, public exposure decision,
+rollback state, and lineage.
+
+Promotion rule:
+
+```text
+No public-beta, production, endpoint-readiness, or runtime-quality claim unless:
+proofState = SolvedVerified
+health.evidenceState = pass
+preflight.decision = allow
+publicExposure.allowed = true
+rollback.state = Ready
+required endpoints = /health, /gateway/witness, /runtime/conformance
+```
+
+All current product witnesses are intentionally `AwaitingEvidence`, so the
+generated runtime witness index keeps public exposure blocked until signed
+service health observations are collected.
+
+Commands:
+
+```bash
+node scripts/validate-manifests.mjs
+node scripts/validate-runtime-witnesses.mjs
+node scripts/generate-platform.mjs
+node scripts/generate-platform.mjs --check
+```
+
+The CI drift gate runs `node scripts/generate-platform.mjs --check`. If a
+manifest change modifies generated output, commit the regenerated artifacts in
+the same change.
+
 ## Operating Gates
 
 The `ops/` directory is the public-boundary control plane for this website
@@ -135,6 +254,12 @@ package:
   recovery, host, database, preflight, and rollback evidence exist.
 - `ops/website-origin-witness.md` records the current Cloudflare edge origin
   header witness for the public website without changing API readiness.
+- `ops/public-visibility-witness.md` records public DNS resolver, HTTPS, TLS,
+  `www` canonical route evidence, and optional external regional probes while
+  keeping the universal all-user claim `AwaitingEvidence`.
+- `ops/security-header-witness.md` records the live browser-control header
+  witness for CSP, HSTS, cross-origin boundaries, frame blocking, nosniff,
+  referrer policy, permissions policy, and legacy cross-domain policy blocking.
 - `ops/search-indexing-witness.md` records the live robots, sitemap, route,
   canonical, and noindex crawl-surface witness without claiming search engine
   indexing state.
@@ -213,7 +338,7 @@ Contract:
   `strings` (the validator fails the build otherwise — translation gaps are
   treated like any other silent gap).
 
-Data-rendered sections (`data/site.json`, `data/products.json`) localize via an
+Data-rendered sections (`data/site.json`, `data/manual/public-surfaces.json`, `data/generated/homepage-product-registry.json`) localize via an
 optional `am` object on each record (and `amSteps` for the repository handoff).
 When an `am` field is absent the renderer falls back to English, so partial
 translation degrades gracefully rather than breaking the layout.
@@ -243,12 +368,18 @@ node --check assets/app.js
 node --check scripts/validate-site.mjs
 node --check scripts/fetch-news.mjs
 node --check scripts/build-cloudflare-pages.mjs
+node --check scripts/generate-platform.mjs
+node --check scripts/validate-manifests.mjs
 node --check scripts/test-build-cloudflare-pages.mjs
 node --check scripts/test-validate-site-doctrine-wording.mjs
 node --check scripts/check-search-indexing-surface.mjs
 node --check scripts/test-check-search-indexing-surface.mjs
 node --check scripts/check-website-origin.mjs
 node --check scripts/test-check-website-origin.mjs
+node --check scripts/check-public-visibility.mjs
+node --check scripts/test-check-public-visibility.mjs
+node --check scripts/check-live-security-headers.mjs
+node --check scripts/test-check-live-security-headers.mjs
 node --check scripts/check-www-canonical-redirect-gate.mjs
 node --check scripts/test-www-canonical-redirect-gate.mjs
 node --check scripts/verify-registry-repos.mjs
@@ -259,10 +390,14 @@ node --check scripts/test-promote-recovery-witness.mjs
 node --check scripts/check-private-recovery-inventory.mjs
 node --check scripts/test-private-recovery-inventory.mjs
 node scripts/validate-site.mjs
+node scripts/validate-manifests.mjs
+node scripts/generate-platform.mjs --check
 node scripts/test-build-cloudflare-pages.mjs
 node scripts/test-validate-site-doctrine-wording.mjs
 node scripts/test-check-search-indexing-surface.mjs
 node scripts/test-check-website-origin.mjs
+node scripts/test-check-public-visibility.mjs
+node scripts/test-check-live-security-headers.mjs
 node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
 node scripts/test-www-canonical-redirect-gate.mjs
 node scripts/verify-registry-repos.mjs
@@ -287,19 +422,29 @@ python3 -m http.server 8080 --directory dist
 node --check assets/app.js
 node --check scripts/validate-site.mjs
 node --check scripts/build-cloudflare-pages.mjs
+node --check scripts/generate-platform.mjs
+node --check scripts/validate-manifests.mjs
 node --check scripts/test-build-cloudflare-pages.mjs
 node --check scripts/test-validate-site-doctrine-wording.mjs
 node --check scripts/check-search-indexing-surface.mjs
 node --check scripts/test-check-search-indexing-surface.mjs
 node --check scripts/check-website-origin.mjs
 node --check scripts/test-check-website-origin.mjs
+node --check scripts/check-public-visibility.mjs
+node --check scripts/test-check-public-visibility.mjs
+node --check scripts/check-live-security-headers.mjs
+node --check scripts/test-check-live-security-headers.mjs
 node --check scripts/check-www-canonical-redirect-gate.mjs
 node --check scripts/test-www-canonical-redirect-gate.mjs
 node scripts/validate-site.mjs
+node scripts/validate-manifests.mjs
+node scripts/generate-platform.mjs --check
 node scripts/test-build-cloudflare-pages.mjs
 node scripts/test-validate-site-doctrine-wording.mjs
 node scripts/test-check-search-indexing-surface.mjs
 node scripts/test-check-website-origin.mjs
+node scripts/test-check-public-visibility.mjs
+node scripts/test-check-live-security-headers.mjs
 node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
 node scripts/test-www-canonical-redirect-gate.mjs
 node scripts/check-ops-gates.mjs
@@ -311,8 +456,8 @@ node scripts/test-private-recovery-inventory.mjs
 
 The validation scripts check required files, Cloudflare Pages `_headers` and
 `_redirects`, local links, `CNAME`, `robots.txt`, sitemap targets, product
-registry contracts, homepage hierarchy, doctrine publication contract, live search-surface gate coverage, repeated-caveat regressions,
-symbol-font licensing and size budget, dynamic fallback behavior,
+registry contracts, homepage hierarchy, doctrine publication contract, public visibility gate coverage, live security-header gate coverage, live search-surface gate coverage, repeated-caveat regressions,
+product manifest authority, generated-artifact drift, symbol-font licensing and size budget, dynamic fallback behavior,
 public-safe text, Mfidel-safe no-combining-mark text, mojibake,
 secret-like patterns, recovery/API gate consistency, staged HSTS, and the
 `dist` artifact source boundary when the generated artifact exists locally.
@@ -334,6 +479,34 @@ evidence without blocking the shell:
 ```bash
 node scripts/check-website-origin.mjs --allow-pending
 ```
+
+To answer whether the website is publicly reachable at the edge, check public
+DNS, HTTPS, TLS, and canonical routing:
+
+```bash
+node scripts/check-public-visibility.mjs
+```
+
+The visibility checker can close the bounded `public_edge_visibility` claim. It
+keeps `global_all_users_claim=AwaitingEvidence` because finite probes cannot
+prove every network path. To attach a public external regional sample without
+making it mandatory in CI:
+
+```bash
+node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending
+```
+
+After security-header changes, verify that the live edge is serving the browser
+control policy:
+
+```bash
+node scripts/check-live-security-headers.mjs
+```
+
+The checker validates the public root, `/security/`, and `security.txt` routes
+for CSP, HSTS, frame blocking, cross-origin boundaries, nosniff, referrer
+policy, permissions policy, and legacy cross-domain policy blocking without
+recording raw header values.
 
 After deploying sitemap or route changes, compare the local sitemap contract
 against the live crawl surface:
@@ -371,9 +544,14 @@ this cache token applies only to the main shared homepage assets.
 
 ## Update rule
 
-When a new product surface is ready for public exposure, update only
-`data/products.json` first. The page will render the new card automatically.
-Until then, keep it in private incubation language or `futureDomains`.
+When a new product surface is ready for public exposure, start with
+`products/<product-id>/product.manifest.json`, add the required contract,
+privacy, retention, and proof boundary files, then run
+`node scripts/generate-platform.mjs`. During the compatibility phase, set
+`presentation.compatibilityRegistry` in the manifest when it should appear in
+the current homepage registry contract; do not edit `data/products.json` by
+hand. Until then, keep it as a blocked manifest candidate or add public-safe
+non-product roadmap language to `data/manual/public-surfaces.json`.
 
 Internal naming candidates must stay out of public data until a public-source
 release is intentionally approved.
@@ -390,7 +568,9 @@ Public website contact is currently `hello@mullusi.com`.
 
 Use `social@mullusi.com` for social media platform ownership, verification messages, and platform notices. Keep it separate from public website contact unless the site intentionally exposes a social-team address.
 
-Use `research@mullusi.com` for research conversations and `tamirat@mullusi.com` for named stewardship access.
+Use `support@mullusi.com` for responsible security disclosure intake and
+public-access issues. Use `research@mullusi.com` for research conversations and
+`tamirat@mullusi.com` for named stewardship access.
 
 ## Governance boundary
 

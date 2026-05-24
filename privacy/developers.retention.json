@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "developer-tools",
+  "purpose": "Declare retention state for Developer Tools data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "project_settings",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "local_validation_reports",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "examples",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "release_evidence",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

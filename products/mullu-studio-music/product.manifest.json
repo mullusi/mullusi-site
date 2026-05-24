@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "mullu-studio-music",
+  "name": "Mullu Studio Music",
+  "summary": "Creative product family for rhythm, harmony, composition logic, and audio structure.",
+  "family": "mullu",
+  "category": "creative",
+  "status": "private-incubation",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/music/",
+    "docsRoute": "https://docs.mullusi.com/music",
+    "dashboardRoute": "https://dashboard.mullusi.com/music",
+    "proofRoute": "/proof/music/",
+    "statusRoute": "/status/music/"
+  },
+  "runtime": {
+    "service": "music-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/music/generate",
+        "contract": "contracts/music/generate.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "composition_structures",
+      "audio_artifacts",
+      "project_records",
+      "export_logs"
+    ],
+    "privacyBoundary": "privacy/music.policy.json",
+    "retentionPolicy": "privacy/music.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/music.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "rights boundary",
+      "export policy closure",
+      "reproducible audio witness"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 6,
+    "classification": "sandbox demo",
+    "registryStatus": "planned",
+    "ownerLabel": "Creative Systems",
+    "sourceBoundary": "private source registry",
+    "runtimeType": "creative product app and audio service",
+    "dataType": "composition structures, audio artifacts, project records, and export logs",
+    "releaseGate": "rights boundary, export policy, and reproducible audio witness",
+    "docsPath": "docs.mullusi.com/music",
+    "apiPath": "POST /v1/music/generate",
+    "evidencePath": "/proof/",
+    "failureMode": "block export until rights and trace requirements are satisfied"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

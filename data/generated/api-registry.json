@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "artifact": "data/generated/api-registry.json",
+    "content_hash": "sha256:1c08f723240aa3b053dd54c583518a298de9d33e1640164968501479536dc80c",
+    "generator": "scripts/generate-platform.mjs",
+    "name": "Mullusi Generated API Registry",
+    "purpose": "Generated from product manifests. Do not edit by hand.",
+    "source": "products/*/product.manifest.json"
+  },
+  "noPublicEndpointProducts": [
+    {
+      "productId": "health-research-pipeline",
+      "productName": "Health Research Pipeline",
+      "releaseGateState": "blocked",
+      "service": "health-research-service"
+    }
+  ],
+  "routes": [
+    {
+      "contract": "contracts/agents/run.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/agents/run",
+      "preflightDecision": "block",
+      "productId": "mullu-agents",
+      "productName": "Mullu Agents",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "agent-runner-service"
+    },
+    {
+      "contract": "contracts/browse/session.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/browse/session",
+      "preflightDecision": "block",
+      "productId": "mullu-browse",
+      "productName": "Mullu Browse",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "browse-service"
+    },
+    {
+      "contract": "contracts/chain/submit.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/chain/submit",
+      "preflightDecision": "block",
+      "productId": "mullu-chain",
+      "productName": "Mullu Chain",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "chain-service"
+    },
+    {
+      "contract": "contracts/developers/validate.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/developers/validate",
+      "preflightDecision": "block",
+      "productId": "developer-tools",
+      "productName": "Developer Tools",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "developer-tools-service"
+    },
+    {
+      "contract": "contracts/govern/evaluate.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/govern/evaluate",
+      "preflightDecision": "block",
+      "productId": "mullu-govern",
+      "productName": "Mullu Govern",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "mullusi-govern-cloud"
+    },
+    {
+      "contract": "contracts/music/generate.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/music/generate",
+      "preflightDecision": "block",
+      "productId": "mullu-studio-music",
+      "productName": "Mullu Studio Music",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "music-service"
+    },
+    {
+      "contract": "contracts/research/fold.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/research/fold",
+      "preflightDecision": "block",
+      "productId": "mullusi-science-lab",
+      "productName": "Mullusi Science Lab",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "science-lab-service"
+    },
+    {
+      "contract": "contracts/robotics/simulate.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/robotics/simulate",
+      "preflightDecision": "block",
+      "productId": "robotics-tools",
+      "productName": "Robotics Tools",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "robotics-service"
+    },
+    {
+      "contract": "contracts/search/query.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/search/query",
+      "preflightDecision": "block",
+      "productId": "mullu-search",
+      "productName": "Mullu Search",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "search-service"
+    },
+    {
+      "contract": "contracts/video/process.schema.json",
+      "controlPlaneRequired": true,
+      "method": "POST",
+      "path": "/v1/video/process",
+      "preflightDecision": "block",
+      "productId": "virecai-video",
+      "productName": "VIRECAI Video",
+      "releaseGateState": "blocked",
+      "runtimeWitnessRequired": true,
+      "runtimeWitnessState": "AwaitingEvidence",
+      "service": "video-processing-service"
+    }
+  ]
+}

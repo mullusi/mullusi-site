@@ -18,8 +18,11 @@ const opsFiles = [
   "ops/MULLUSI_INFRASTRUCTURE_ROOT.md",
   "ops/api-runtime-host-path.md",
   "ops/api-production-readiness-gate.md",
+  "ops/public-visibility-witness.md",
   "ops/recovery-inventory-template.md",
   "ops/recovery-completion-witness.md",
+  "ops/runtime-witness/README.md",
+  "ops/runtime-witness/registry.json",
 ];
 
 function readUtf8(relativePath) {

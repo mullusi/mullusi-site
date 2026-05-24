@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mullusi.com/contracts/search/query.schema.json",
+  "title": "Mullu Search Query Contract",
+  "description": "Purpose: request contract for a governed search query proposal. Governance scope: query text, index scope, constraints, and trace requirement. Invariants: search execution must enter through the control plane and return traceable result state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["query", "scope", "constraints", "trace_required"],
+  "properties": {
+    "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["public-web", "private-workspace", "symbolic-index"]
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "trace_required": {
+      "const": true
+    }
+  }
+}

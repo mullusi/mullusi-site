@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mullusi.com/contracts/robotics/simulate.schema.json",
+  "title": "Robotics Tools POST /v1/robotics/simulate Contract",
+  "description": "Purpose: request contract placeholder for Robotics Tools. Governance scope: control-plane admission, trace requirement, and release-gate validation. Invariants: runtime execution must remain blocked until product-specific schema details and witness checks close.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "trace_required"
+  ],
+  "properties": {
+    "trace_required": {
+      "const": true
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-browse",
+  "proofState": "AwaitingEvidence",
+  "claimsAllowed": [],
+  "claimsBlockedUntilVerified": [
+    "production browse execution",
+    "remote page action safety",
+    "real-time browse accuracy"
+  ],
+  "witnesses": [
+    {
+      "name": "runtime",
+      "state": "AwaitingEvidence",
+      "evidence": "browse-service runtime witness is not published."
+    },
+    {
+      "name": "contract",
+      "state": "AwaitingEvidence",
+      "evidence": "POST /v1/browse/session is declared but not deployed."
+    },
+    {
+      "name": "rollback",
+      "state": "AwaitingEvidence",
+      "evidence": "Browse rollback path is not yet witnessed."
+    },
+    {
+      "name": "privacy",
+      "state": "AwaitingEvidence",
+      "evidence": "Browse privacy and retention policies are declared in not-active state."
+    }
+  ]
+}

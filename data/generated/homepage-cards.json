@@ -1,0 +1,112 @@
+{
+  "blockedCandidates": [
+    {
+      "href": "/developers/",
+      "id": "developer-tools",
+      "proofRoute": "/proof/developers/",
+      "publicExposureAllowed": false,
+      "status": "limited-preview",
+      "summary": "Developer-facing packages and command-line tools for connecting projects to Mullusi services.",
+      "title": "Developer Tools"
+    },
+    {
+      "href": "/health-research/",
+      "id": "health-research-pipeline",
+      "proofRoute": "/proof/health-research/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Restricted research tooling that stays private unless safety, privacy, and authority requirements close.",
+      "title": "Health Research Pipeline"
+    },
+    {
+      "href": "/agents/",
+      "id": "mullu-agents",
+      "proofRoute": "/proof/agents/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Governed agentic service where every tool action must pass the control plane before execution.",
+      "title": "Mullu Agents"
+    },
+    {
+      "href": "/browse/",
+      "id": "mullu-browse",
+      "proofRoute": "/proof/browse/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Governed browse runtime for page observation and action traces, held private until privacy, runtime witness, and rollback gates close.",
+      "title": "Mullu Browse"
+    },
+    {
+      "href": "/chain/",
+      "id": "mullu-chain",
+      "proofRoute": "/proof/chain/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Planned blockchain service for governed state transitions and proof-carrying records.",
+      "title": "Mullu Chain"
+    },
+    {
+      "href": "/mullu/",
+      "id": "mullu-govern",
+      "proofRoute": "/proof/govern/",
+      "publicExposureAllowed": false,
+      "status": "limited-preview",
+      "summary": "Flagship governed evaluation product for checking actions, recording traces, and issuing proof-backed verdicts.",
+      "title": "Mullu Govern"
+    },
+    {
+      "href": "/search/",
+      "id": "mullu-search",
+      "proofRoute": "/proof/search/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Search product family for governed retrieval over public, private, and symbolic indexes.",
+      "title": "Mullu Search"
+    },
+    {
+      "href": "/music/",
+      "id": "mullu-studio-music",
+      "proofRoute": "/proof/music/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Creative product family for rhythm, harmony, composition logic, and audio structure.",
+      "title": "Mullu Studio Music"
+    },
+    {
+      "href": "/science/",
+      "id": "mullusi-science-lab",
+      "proofRoute": "/proof/science/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Cross-domain research layer for math, physics, chemistry, biology, and protein-folding workflows.",
+      "title": "Mullusi Science Lab"
+    },
+    {
+      "href": "/robotics/",
+      "id": "robotics-tools",
+      "proofRoute": "/proof/robotics/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Engineering tooling for governed robotics simulation, runtime checks, and operator-controlled actions.",
+      "title": "Robotics Tools"
+    },
+    {
+      "href": "/video/",
+      "id": "virecai-video",
+      "proofRoute": "/proof/video/",
+      "publicExposureAllowed": false,
+      "status": "private-incubation",
+      "summary": "Symbolic video and media platform work held private until storage, rights, and witness rules close.",
+      "title": "VIRECAI Video"
+    }
+  ],
+  "cards": [],
+  "meta": {
+    "artifact": "data/generated/homepage-cards.json",
+    "content_hash": "sha256:721628e270931381d5acb134ddb1fe611683f2827f13aace0f52db9b19488e25",
+    "generator": "scripts/generate-platform.mjs",
+    "name": "Mullusi Generated Homepage Cards",
+    "purpose": "Generated from product manifests. Do not edit by hand.",
+    "source": "products/*/product.manifest.json"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-chain",
+  "purpose": "Declare retention state for Mullu Chain data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "blocks",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "transactions",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "proofs",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "governance_records",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "node_logs",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "virecai-video",
+  "purpose": "Declare retention state for VIRECAI Video data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "videos",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "frames",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "annotations",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "artifacts",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "traces",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "storage_references",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

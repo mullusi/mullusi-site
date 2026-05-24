@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "health-research-pipeline",
+  "purpose": "Declare retention state for Health Research Pipeline data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "restricted_research_inputs",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "derived_artifacts",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "access_records",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "audit_traces",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

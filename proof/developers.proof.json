@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "developer-tools",
+  "proofState": "AwaitingEvidence",
+  "claimsAllowed": [],
+  "claimsBlockedUntilVerified": [
+    "install path witness",
+    "example coverage",
+    "support boundary"
+  ],
+  "witnesses": [
+    {
+      "name": "runtime",
+      "state": "AwaitingEvidence",
+      "evidence": "developer-tools-service runtime witness is not published."
+    },
+    {
+      "name": "contract",
+      "state": "AwaitingEvidence",
+      "evidence": "POST /v1/developers/validate is declared but not deployed."
+    },
+    {
+      "name": "rollback",
+      "state": "AwaitingEvidence",
+      "evidence": "Developer Tools rollback path is not yet witnessed."
+    },
+    {
+      "name": "privacy",
+      "state": "AwaitingEvidence",
+      "evidence": "Developer Tools privacy and retention policies are declared in not-active state."
+    }
+  ]
+}

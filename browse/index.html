@@ -1,0 +1,146 @@
+<!doctype html>
+<!--
+Purpose: public-safe Mullu Browse route shell for private-incubation browse-runtime work.
+Governance scope: OCE, RAG, CDCV, CQTE, UWMA, SRCA, PRS; no runtime, action-safety, or availability overclaim.
+Dependencies: products/mullu-browse/product.manifest.json, contracts/browse/session.schema.json, privacy/browse.policy.json, proof/browse.proof.json, and /proof/.
+Invariants: route is noindex, static, fail-closed, and exposes only boundary copy until runtime witness and release gate close.
+-->
+<html class="no-js" lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#070806">
+  <meta name="robots" content="noindex, follow">
+  <title>Mullu Browse - Governed Browse Runtime Gate</title>
+  <meta name="description" content="Private-incubation Mullu Browse route shell for governed page observation, action traces, privacy boundary, proof boundary, and runtime witness gate.">
+  <link rel="canonical" href="https://mullusi.com/browse/">
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:site_name" content="Mullusi">
+  <meta property="og:title" content="Mullu Browse - Governed Browse Runtime Gate">
+  <meta property="og:description" content="Mullu Browse is a private-incubation product route shell. Public claims stay blocked until runtime witness and release gates close.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mullusi.com/browse/">
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <script src="/assets/theme-bootstrap.js"></script>
+  <link rel="stylesheet" href="/assets/pages/product-shell.css">
+</head>
+<body data-product-shell="mullu-browse">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav aria-label="Primary">
+    <div class="nav-inner">
+      <a class="brand" href="/">Mullusi</a>
+      <div class="nav-links">
+        <a href="/mullu/">Mullu</a>
+        <a href="/proof/">Proof</a>
+        <a href="/status/">Status</a>
+        <a href="/search/">Search</a>
+        <a href="https://docs.mullusi.com/browse" target="_blank" rel="noopener noreferrer">Docs</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="shell-hero">
+    <div>
+      <div class="eyebrow">Product route shell</div>
+      <h1>Mullu Browse</h1>
+      <p class="lede">Governed browse runtime for page observation and action traces. This route exposes the manifest boundary, API contract, privacy boundary, proof boundary, and release gate; remote page actions remain blocked until runtime witness closes.</p>
+      <div class="state-row" aria-label="Mullu Browse route state">
+        <span class="state-token warn">private-incubation</span>
+        <span class="state-token">AwaitingEvidence</span>
+        <span class="state-token blocked">release gate blocked</span>
+      </div>
+      <div class="actions">
+        <a class="button primary" href="/pilot/">Request pilot access</a>
+        <a class="button" href="/proof/">Review proof boundary</a>
+        <a class="button" href="/status/">Check public status</a>
+      </div>
+    </div>
+    <img class="brand-icon" src="/assets/mullusi-icon.svg" alt="" aria-hidden="true">
+  </header>
+
+  <main id="main" tabindex="-1">
+    <noscript>
+      <section class="noscript-boundary" aria-labelledby="browse-noscript-title">
+        <h2 id="browse-noscript-title">JavaScript is optional on this route.</h2>
+        <p>Mullu Browse route copy, release gate state, proof links, and public-safe contract names remain visible without JavaScript.</p>
+      </section>
+    </noscript>
+
+    <section id="gate" class="shell-band">
+      <div class="split">
+        <div>
+          <div class="eyebrow">Release gate</div>
+          <h2>Action execution is blocked by design.</h2>
+          <p>The browse product manifest exists, but production browse execution, remote page action safety, and real-time browse accuracy claims remain blocked until signed witnesses close.</p>
+        </div>
+        <dl class="gate-ledger" aria-label="Mullu Browse gate ledger">
+          <div class="ledger-row">
+            <dt>Manifest</dt>
+            <dd><code>products/mullu-browse/product.manifest.json</code></dd>
+          </div>
+          <div class="ledger-row">
+            <dt>API contract</dt>
+            <dd><code>POST /v1/browse/session</code> through the control plane.</dd>
+          </div>
+          <div class="ledger-row">
+            <dt>Data boundary</dt>
+            <dd><code>browse_sessions</code>, <code>page_observations</code>, and <code>action_traces</code>; collection state is not active.</dd>
+          </div>
+          <div class="ledger-row">
+            <dt>Runtime witness</dt>
+            <dd><code>browse-service</code> remains <code>AwaitingEvidence</code>.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="contract" class="shell-band">
+      <div class="eyebrow">Public contract</div>
+      <h2>What this shell may say.</h2>
+      <div class="allowed-grid">
+        <article class="allowed-item">
+          <h3>Allowed</h3>
+          <p>Route reservation, product identity, planned API shape, privacy boundary, proof boundary, and release gate state.</p>
+        </article>
+        <article class="allowed-item">
+          <h3>Blocked</h3>
+          <p>Live browsing, remote page actions, page-state accuracy, production availability, and endpoint readiness claims.</p>
+        </article>
+        <article class="allowed-item">
+          <h3>Failure mode</h3>
+          <p>Halt unsafe action, preserve trace, and return AwaitingEvidence when evidence, authority, or policy is incomplete.</p>
+        </article>
+      </div>
+      <ul class="blocked-list" aria-label="Blocked Mullu Browse claims">
+        <li>production browse execution</li>
+        <li>remote page action safety</li>
+        <li>real-time browse accuracy</li>
+      </ul>
+    </section>
+
+    <section id="orchestration" class="shell-band">
+      <div class="eyebrow">Orchestration path</div>
+      <h2>Promotion must follow the platform spine.</h2>
+      <div class="flow" aria-label="Mullu Browse promotion path">
+        <article class="flow-step"><h3>Manifest</h3><p>Product identity, surfaces, privacy, proof, and API contract stay manifest-owned.</p></article>
+        <article class="flow-step"><h3>Generation</h3><p>Registry, status, docs, proof index, and release checklist are generated from the manifest.</p></article>
+        <article class="flow-step"><h3>Witness</h3><p>Runtime, contract, rollback, and privacy witnesses must close before public product claims expand.</p></article>
+        <article class="flow-step"><h3>Exposure</h3><p>Homepage, sitemap, and endpoint claims remain blocked until the release gate reaches public-beta or production.</p></article>
+      </div>
+      <p class="route-note">This route is intentionally noindex while Mullu Browse remains private-incubation.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div>Mullu Browse route state: private-incubation</div>
+    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+  </footer>
+</body>
+</html>

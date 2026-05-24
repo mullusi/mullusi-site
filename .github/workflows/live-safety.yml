@@ -1,0 +1,45 @@
+# Purpose: verify Mullusi live public website safety witnesses on a schedule.
+# Governance scope: DNS, HTTPS, canonical routing, origin markers, sitemap parity, and reserved runtime boundary.
+# Dependencies: GitHub Actions, Node.js, public DNS resolvers, and the live Cloudflare edge.
+# Invariants: scheduled probes require no secrets and do not mutate public infrastructure.
+
+name: Live Safety Probes
+
+on:
+  schedule:
+    - cron: "41 7 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-safety-probes
+  cancel-in-progress: false
+
+jobs:
+  live-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Check public visibility
+        run: node scripts/check-public-visibility.mjs
+
+      - name: Check regional public visibility
+        run: node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending
+
+      - name: Check website origin headers
+        run: node scripts/check-website-origin.mjs
+
+      - name: Check live security headers
+        run: node scripts/check-live-security-headers.mjs
+
+      - name: Check live search indexing surface
+        run: node scripts/check-search-indexing-surface.mjs

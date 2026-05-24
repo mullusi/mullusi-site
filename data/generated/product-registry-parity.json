@@ -1,0 +1,99 @@
+{
+  "comparedFields": [
+    "id",
+    "name",
+    "classification",
+    "status",
+    "owner",
+    "sourceBoundary",
+    "runtimeType",
+    "dataType",
+    "releaseGate",
+    "docsPath",
+    "apiPath",
+    "evidencePath",
+    "failureMode",
+    "summary"
+  ],
+  "generatedLegacyRegistryCount": 10,
+  "manifestPresentationCount": 10,
+  "matchedProducts": [
+    {
+      "displayOrder": 1,
+      "id": "mullu-govern",
+      "manifestPath": "products/mullu-govern/product.manifest.json",
+      "name": "Mullu Govern"
+    },
+    {
+      "displayOrder": 2,
+      "id": "mullu-search",
+      "manifestPath": "products/mullu-search/product.manifest.json",
+      "name": "Mullu Search"
+    },
+    {
+      "displayOrder": 3,
+      "id": "mullu-agents",
+      "manifestPath": "products/mullu-agents/product.manifest.json",
+      "name": "Mullu Agents"
+    },
+    {
+      "displayOrder": 4,
+      "id": "mullu-chain",
+      "manifestPath": "products/mullu-chain/product.manifest.json",
+      "name": "Mullu Chain"
+    },
+    {
+      "displayOrder": 5,
+      "id": "virecai-video",
+      "manifestPath": "products/virecai-video/product.manifest.json",
+      "name": "VIRECAI Video"
+    },
+    {
+      "displayOrder": 6,
+      "id": "mullu-studio-music",
+      "manifestPath": "products/mullu-studio-music/product.manifest.json",
+      "name": "Mullu Studio Music"
+    },
+    {
+      "displayOrder": 7,
+      "id": "mullusi-science-lab",
+      "manifestPath": "products/mullusi-science-lab/product.manifest.json",
+      "name": "Mullusi Science Lab"
+    },
+    {
+      "displayOrder": 8,
+      "id": "health-research-pipeline",
+      "manifestPath": "products/health-research-pipeline/product.manifest.json",
+      "name": "Health Research Pipeline"
+    },
+    {
+      "displayOrder": 9,
+      "id": "robotics-tools",
+      "manifestPath": "products/robotics-tools/product.manifest.json",
+      "name": "Robotics Tools"
+    },
+    {
+      "displayOrder": 10,
+      "id": "developer-tools",
+      "manifestPath": "products/developer-tools/product.manifest.json",
+      "name": "Developer Tools"
+    }
+  ],
+  "meta": {
+    "artifact": "data/generated/product-registry-parity.json",
+    "content_hash": "sha256:0d32ae61f263089bf88a5685883c314ebce37ba3c0eda155f378639f5f359234",
+    "generator": "scripts/generate-platform.mjs",
+    "name": "Mullusi Generated Product Registry Parity Witness",
+    "purpose": "Generated from product manifests. Do not edit by hand.",
+    "source": "products/*/product.manifest.json + data/products.json (generated)"
+  },
+  "mismatches": [],
+  "nonRegistryManifests": [
+    {
+      "id": "mullu-browse",
+      "manifestPath": "products/mullu-browse/product.manifest.json",
+      "name": "Mullu Browse"
+    }
+  ],
+  "parityState": "matched"
+}

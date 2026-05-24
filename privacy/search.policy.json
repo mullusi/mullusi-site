@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-search",
+  "purpose": "Declare the initial privacy boundary for governed search query, index, and result trace data.",
+  "dataClasses": ["query_logs", "indexes", "result_traces"],
+  "userBoundary": "No production user search data may be collected until public-beta privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/search.retention.json",
+  "collectionState": "not-active"
+}

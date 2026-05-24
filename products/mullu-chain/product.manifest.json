@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "mullu-chain",
+  "name": "Mullu Chain",
+  "summary": "Planned blockchain service for governed state transitions and proof-carrying records.",
+  "family": "mullu",
+  "category": "protocol",
+  "status": "private-incubation",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/chain/",
+    "docsRoute": "https://docs.mullusi.com/chain",
+    "dashboardRoute": "https://dashboard.mullusi.com/chain",
+    "proofRoute": "/proof/chain/",
+    "statusRoute": "/status/chain/"
+  },
+  "runtime": {
+    "service": "chain-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/chain/submit",
+        "contract": "contracts/chain/submit.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "blocks",
+      "transactions",
+      "proofs",
+      "governance_records",
+      "node_logs"
+    ],
+    "privacyBoundary": "privacy/chain.policy.json",
+    "retentionPolicy": "privacy/chain.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/chain.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "testnet readiness",
+      "economic policy closure",
+      "protocol rollback witness"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 4,
+    "classification": "API service",
+    "registryStatus": "planned",
+    "ownerLabel": "Product Services",
+    "sourceBoundary": "private source registry",
+    "runtimeType": "chain service and node service",
+    "dataType": "blocks, transactions, proofs, governance records, and node logs",
+    "releaseGate": "protocol spec, testnet boundary, economic policy, and rollback record",
+    "docsPath": "docs.mullusi.com/chain",
+    "apiPath": "POST /v1/chain/submit",
+    "evidencePath": "/proof/",
+    "failureMode": "reject invalid transition and preserve rejected delta"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

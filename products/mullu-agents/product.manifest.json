@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "mullu-agents",
+  "name": "Mullu Agents",
+  "summary": "Governed agentic service where every tool action must pass the control plane before execution.",
+  "family": "mullu",
+  "category": "agent-runtime",
+  "status": "private-incubation",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/agents/",
+    "docsRoute": "https://docs.mullusi.com/agents",
+    "dashboardRoute": "https://dashboard.mullusi.com/agents",
+    "proofRoute": "/proof/agents/",
+    "statusRoute": "/status/agents/"
+  },
+  "runtime": {
+    "service": "agent-runner-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/agents/run",
+        "contract": "contracts/agents/run.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "runs",
+      "tool_calls",
+      "constraints",
+      "job_state",
+      "audit_traces"
+    ],
+    "privacyBoundary": "privacy/agents.policy.json",
+    "retentionPolicy": "privacy/agents.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/agents.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "production tool execution",
+      "rollback-safe agent runs",
+      "operator policy witness"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 3,
+    "classification": "API service",
+    "registryStatus": "private-incubation",
+    "ownerLabel": "Control Plane",
+    "sourceBoundary": "private source registry",
+    "runtimeType": "agent runner service",
+    "dataType": "runs, tool calls, constraints, job state, and audit trace",
+    "releaseGate": "permission model, tool policy, rollback path, and execution witness",
+    "docsPath": "docs.mullusi.com/agents",
+    "apiPath": "POST /v1/agents/run",
+    "evidencePath": "/proof/",
+    "failureMode": "halt unsafe action, snapshot trace, and request operator repair"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

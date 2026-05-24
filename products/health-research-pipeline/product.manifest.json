@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "health-research-pipeline",
+  "name": "Health Research Pipeline",
+  "summary": "Restricted research tooling that stays private unless safety, privacy, and authority requirements close.",
+  "family": "mullusi",
+  "category": "restricted-research",
+  "status": "private-incubation",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/health-research/",
+    "docsRoute": "private",
+    "dashboardRoute": "https://dashboard.mullusi.com/health-research",
+    "proofRoute": "/proof/health-research/",
+    "statusRoute": "/status/health-research/"
+  },
+  "runtime": {
+    "service": "health-research-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "none",
+    "routes": []
+  },
+  "data": {
+    "classes": [
+      "restricted_research_inputs",
+      "derived_artifacts",
+      "access_records",
+      "audit_traces"
+    ],
+    "privacyBoundary": "privacy/health-research.policy.json",
+    "retentionPolicy": "privacy/health-research.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/health-research.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "restricted-data policy",
+      "human review",
+      "legal review",
+      "evidence export boundary"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 8,
+    "classification": "private research product",
+    "registryStatus": "restricted",
+    "ownerLabel": "Research Systems",
+    "sourceBoundary": "private source registry",
+    "runtimeType": "restricted research tooling",
+    "dataType": "classified research inputs, derived artifacts, access records, and audit trace",
+    "releaseGate": "restricted-data policy, human review, legal review, and evidence export boundary",
+    "docsPath": "private docs only",
+    "apiPath": "no public endpoint",
+    "evidencePath": "/proof/",
+    "failureMode": "safe halt and require governance escalation"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "restricted_boundary",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

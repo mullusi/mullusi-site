@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-govern",
+  "proofState": "AwaitingEvidence",
+  "claimsAllowed": [],
+  "claimsBlockedUntilVerified": [
+    "production runtime witness closure",
+    "public proof stamp issuance",
+    "dashboard operator readiness"
+  ],
+  "witnesses": [
+    {
+      "name": "runtime",
+      "state": "AwaitingEvidence",
+      "evidence": "mullusi-govern-cloud runtime witness is not published."
+    },
+    {
+      "name": "contract",
+      "state": "AwaitingEvidence",
+      "evidence": "POST /v1/govern/evaluate is declared but not deployed."
+    },
+    {
+      "name": "rollback",
+      "state": "AwaitingEvidence",
+      "evidence": "Mullu Govern rollback path is not yet witnessed."
+    },
+    {
+      "name": "privacy",
+      "state": "AwaitingEvidence",
+      "evidence": "Mullu Govern privacy and retention policies are declared in not-active state."
+    }
+  ]
+}

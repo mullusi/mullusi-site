@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-browse",
+  "purpose": "Declare retention state for governed browse data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "browse_sessions",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "page_observations",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "action_traces",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

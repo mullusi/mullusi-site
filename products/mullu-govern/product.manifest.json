@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "mullu-govern",
+  "name": "Mullu Govern",
+  "summary": "Flagship governed evaluation product for checking actions, recording traces, and issuing proof-backed verdicts.",
+  "family": "mullu",
+  "category": "governance",
+  "status": "limited-preview",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/mullu/",
+    "docsRoute": "https://docs.mullusi.com/govern",
+    "dashboardRoute": "https://dashboard.mullusi.com/govern",
+    "proofRoute": "/proof/govern/",
+    "statusRoute": "/status/govern/"
+  },
+  "runtime": {
+    "service": "mullusi-govern-cloud",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/govern/evaluate",
+        "contract": "contracts/govern/evaluate.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "policy_records",
+      "evaluations",
+      "traces",
+      "proof_stamps",
+      "audit_events"
+    ],
+    "privacyBoundary": "privacy/govern.policy.json",
+    "retentionPolicy": "privacy/govern.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/govern.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "production runtime witness closure",
+      "public proof stamp issuance",
+      "dashboard operator readiness"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 1,
+    "classification": "public product",
+    "registryStatus": "awaiting-evidence",
+    "ownerLabel": "Control Plane",
+    "sourceBoundary": "private source registry",
+    "runtimeType": "hosted API and dashboard module",
+    "dataType": "policy records, evaluations, traces, proof stamps, and audit events",
+    "releaseGate": "runtime witness endpoints and public proof boundary",
+    "docsPath": "docs.mullusi.com/govern",
+    "apiPath": "POST /v1/govern/evaluate",
+    "evidencePath": "/proof/",
+    "failureMode": "fail closed, record violation, return repair action"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}
