@@ -56,6 +56,27 @@ Pages state instead of a first-party `mullusi.com` result. This is not a crawl
 surface failure because the live route, robots, sitemap, canonical, and noindex
 checks pass. It is an external search index refresh gap.
 
+## Search Console Submission
+
+Observed on 2026-05-24:
+
+```text
+property=sc-domain:mullusi.com
+active_google_account=mullusi Official
+submitted_sitemap=https://mullusi.com/sitemap.xml
+submission_result=accepted
+last_read=2026-05-24
+sitemap_status=Success
+discovered_pages=5
+discovered_videos=0
+```
+
+Search Console accepted and read the sitemap after an initial transient
+`Couldn't fetch` table state. Independent public fetch checks still returned
+HTTP 200 for `https://mullusi.com/sitemap.xml` during that transient state.
+The final Search Console table readback is `Success` with five discovered
+pages.
+
 ## Release Boundary
 
 ```text
@@ -69,6 +90,9 @@ noindex_blockers_detected=false
 search_engine_index_state=AwaitingEvidence
 first_party_search_result_observed=false
 stale_third_party_record_observed=true
+search_console_sitemap_submission=Pass
+search_console_sitemap_status=Success
+search_console_discovered_pages=5
 ```
 
 ## Checker Boundary
