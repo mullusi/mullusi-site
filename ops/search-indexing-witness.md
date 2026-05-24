@@ -39,6 +39,40 @@ This witness proves crawl-surface readiness only. It does not prove that any
 search engine has crawled, indexed, ranked, or refreshed snippets for the
 domain. Search engine recrawl remains an external evidence dependency.
 
+## Current Main Crawl Surface
+
+Observed on 2026-05-24 after the trust-surface route expansion reached `main`:
+
+```text
+command=node scripts/check-search-indexing-surface.mjs
+verdict=GovernanceBlocked
+proof_state=Fail
+local_sitemap_loc_count=13
+live_sitemap_loc_count=5
+finding=live_sitemap_lastmod_stale:https://mullusi.com/playground/:local=2026-05-24:live=2026-05-16
+finding=live_sitemap_loc_missing:https://mullusi.com/contact/
+finding=live_sitemap_loc_missing:https://mullusi.com/pilot/
+finding=live_sitemap_loc_missing:https://mullusi.com/status/
+finding=live_sitemap_loc_missing:https://mullusi.com/security/
+finding=live_sitemap_loc_missing:https://mullusi.com/privacy/
+finding=live_sitemap_loc_missing:https://mullusi.com/terms/
+finding=live_sitemap_loc_missing:https://mullusi.com/acceptable-use/
+finding=live_sitemap_loc_missing:https://mullusi.com/responsible-disclosure/
+finding=live_route_status_invalid:https://mullusi.com/contact/:404
+finding=live_route_status_invalid:https://mullusi.com/pilot/:404
+finding=live_route_status_invalid:https://mullusi.com/status/:404
+finding=live_route_status_invalid:https://mullusi.com/security/:404
+finding=live_route_status_invalid:https://mullusi.com/privacy/:404
+finding=live_route_status_invalid:https://mullusi.com/terms/:404
+finding=live_route_status_invalid:https://mullusi.com/acceptable-use/:404
+finding=live_route_status_invalid:https://mullusi.com/responsible-disclosure/:404
+```
+
+The current repository sitemap declares thirteen routes. Production still
+serves the earlier five-route sitemap and returns 404 for the newly declared
+trust routes. That drift is a deployment-readback gap, not a `/mullu/` indexing
+gap.
+
 ## Public Search Readback
 
 Observed on 2026-05-24:
@@ -51,17 +85,21 @@ first_party_result_title=MULLUSI — Symbolic Intelligence
 query=site:mullusi.com Mullu
 mullu_query_first_party_result_observed=true
 mullu_query_first_party_result_url=https://www.mullusi.com
-route_specific_mullu_result_observed=false
-route_specific_mullu_visibility=AwaitingEvidence
+query=site:mullusi.com/mullu/ Mullu
+route_specific_mullu_result_observed=true
+route_specific_mullu_result_url=https://mullusi.com/mullu/
+route_specific_mullu_result_title=Mullu, by Mullusi - Governed Symbolic Intelligence
+route_specific_mullu_visibility=SolvedVerified
 stale_third_party_github_pages_record_observed=superseded
 ```
 
 Public Google readback now shows a first-party `mullusi.com` result for both
 `site:mullusi.com Mullusi` and `site:mullusi.com Mullu`. The visible result is
 the canonical homepage title, `MULLUSI — Symbolic Intelligence`, at
-`https://www.mullusi.com`. Route-specific readback for
-`site:mullusi.com/mullu Mullu` remains AwaitingEvidence because it did not
-produce a direct `/mullu/` result during this readback pass.
+`https://www.mullusi.com`. Route-specific readback for the canonical
+trailing-slash query, `site:mullusi.com/mullu/ Mullu`, now returns
+`https://mullusi.com/mullu/` with the title `Mullu, by Mullusi - Governed
+Symbolic Intelligence`.
 
 ## Search Console Submission
 
@@ -123,7 +161,12 @@ first_party_search_result_observed=true
 first_party_search_result_url=https://www.mullusi.com
 stale_third_party_record_observed=superseded
 mullu_query_first_party_result_observed=true
-route_specific_mullu_visibility=AwaitingEvidence
+route_specific_mullu_visibility=SolvedVerified
+current_crawl_surface_state=GovernanceBlocked
+current_live_sitemap_matches_local=Fail
+current_local_sitemap_loc_count=13
+current_live_sitemap_loc_count=5
+trust_surface_deployment_visibility=AwaitingEvidence
 search_console_sitemap_submission=Pass
 search_console_sitemap_status=Success
 search_console_discovered_pages=5
@@ -148,7 +191,7 @@ raw_response_headers=not_recorded
 ```
 
 STATUS:
-  Completeness: 100%
-  Invariants verified: robots root allow, sitemap reference, live/local sitemap parity, canonical route reachability, no detected noindex blocker, first-party Google readback
-  Open issues: route-specific /mullu/ public result readback
-  Next action: monitor route-specific public result readback and update only after direct verification
+  Completeness: 92%
+  Invariants verified: historical five-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback
+  Open issues: current main trust-surface routes not yet visible on production
+  Next action: wait for production deployment readback, then rerun search indexing surface check and update the current crawl surface state
