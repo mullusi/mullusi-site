@@ -59,6 +59,11 @@ const probeDefinitions = [
     fileName: "search-indexing-surface.txt",
     args: ["scripts/check-search-indexing-surface.mjs"],
   },
+  {
+    name: "deployment_integrity",
+    fileName: "deployment-integrity.txt",
+    args: ["scripts/check-live-deployment-integrity.mjs", "--allow-pending"],
+  },
 ];
 
 function normalizedOutput(content) {
@@ -91,6 +96,7 @@ export function buildRunMetadataContent({ env = process.env, now = new Date() } 
     `run_attempt=${env.GITHUB_RUN_ATTEMPT || "1"}`,
     `commit=${env.GITHUB_SHA || "local"}`,
     `observed_at=${isoSecondTimestamp(now)}`,
+    "raw_response_bodies=not_recorded",
     "raw_response_headers=not_recorded",
   ].join("\n") + "\n";
 }
@@ -110,6 +116,7 @@ function failureWitness(probe, result) {
     `probe=${probe.name}`,
     `artifact_file=${probe.fileName}`,
     `error=probe_failed:${status}`,
+    "raw_response_bodies=not_recorded",
     "raw_response_headers=not_recorded",
   ].join("\n") + "\n";
 }

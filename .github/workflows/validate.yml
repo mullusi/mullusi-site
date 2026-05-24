@@ -89,6 +89,12 @@ jobs:
       - name: Check live security header test syntax
         run: node --check scripts/test-check-live-security-headers.mjs
 
+      - name: Check live deployment integrity checker syntax
+        run: node --check scripts/check-live-deployment-integrity.mjs
+
+      - name: Check live deployment integrity test syntax
+        run: node --check scripts/test-check-live-deployment-integrity.mjs
+
       - name: Check domain security checker syntax
         run: node --check scripts/check-domain-security.mjs
 
@@ -169,6 +175,9 @@ jobs:
 
       - name: Test live security header gate
         run: node scripts/test-check-live-security-headers.mjs
+
+      - name: Test live deployment integrity gate
+        run: node scripts/test-check-live-deployment-integrity.mjs
 
       - name: Test domain security gate
         run: node scripts/test-check-domain-security.mjs

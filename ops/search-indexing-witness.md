@@ -82,8 +82,8 @@ Cloudflare Pages artifact was deployed:
 command=npx.cmd --yes wrangler@latest pages deployment list --project-name mullusi-company-site
 deployment_result=production deployment observed
 deployment_project=mullusi-company-site
-deployment_id=d87f755f-34ed-4bf6-ac34-efa8a1138924
-deployment_source=48e6e6e
+deployment_id=d029563d-95a9-4c84-b2ba-d8f149706373
+deployment_source=9a7f36a
 deployment_dirty=true
 command=node scripts/check-search-indexing-surface.mjs
 verdict=SolvedVerified

@@ -3227,6 +3227,16 @@ html.menu-open body {
     line-height: 1.55;
   }
 
+  .hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+    max-width: 230px;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
   .hero-plain {
     display: none;
   }
@@ -3303,6 +3313,17 @@ html.menu-open body {
 
   .handoff-chain {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .diagram {
+    overflow-x: visible;
+  }
+
+  .diagram-svg,
+  .diagram-caption,
+  .diagram-legend {
+    min-width: 0;
+    width: 100%;
   }
 
   .hero-wordmark {

@@ -93,6 +93,8 @@ framework, database, or server runtime.
     |-- test-check-live-safety-witness.mjs # Tests live-safety artifact validation
     |-- check-live-security-headers.mjs # Checks live browser-control response headers
     |-- test-check-live-security-headers.mjs # Tests live security-header gate behavior
+    |-- check-live-deployment-integrity.mjs # Checks live status-manifest file integrity
+    |-- test-check-live-deployment-integrity.mjs # Tests deployment integrity behavior
     |-- check-domain-security.mjs     # Checks DNSSEC, CAA, SPF, DMARC, DKIM, MTA-STS, and TLS-RPT
     |-- test-check-domain-security.mjs # Tests domain-security gate behavior
     |-- check-domain-hardening-preflight.mjs # Blocks unsafe DNS/email mutations
@@ -423,6 +425,8 @@ node --check scripts/check-live-safety-witness.mjs
 node --check scripts/test-check-live-safety-witness.mjs
 node --check scripts/check-live-security-headers.mjs
 node --check scripts/test-check-live-security-headers.mjs
+node --check scripts/check-live-deployment-integrity.mjs
+node --check scripts/test-check-live-deployment-integrity.mjs
 node --check scripts/check-domain-security.mjs
 node --check scripts/test-check-domain-security.mjs
 node --check scripts/check-domain-hardening-preflight.mjs
@@ -449,6 +453,7 @@ node scripts/test-check-public-visibility.mjs
 node scripts/test-capture-live-safety-witness.mjs
 node scripts/test-check-live-safety-witness.mjs
 node scripts/test-check-live-security-headers.mjs
+node scripts/test-check-live-deployment-integrity.mjs
 node scripts/test-check-domain-security.mjs
 node scripts/test-check-domain-hardening-preflight.mjs
 node scripts/check-domain-hardening-preflight.mjs --expect-blocked
@@ -493,6 +498,8 @@ node --check scripts/check-live-safety-witness.mjs
 node --check scripts/test-check-live-safety-witness.mjs
 node --check scripts/check-live-security-headers.mjs
 node --check scripts/test-check-live-security-headers.mjs
+node --check scripts/check-live-deployment-integrity.mjs
+node --check scripts/test-check-live-deployment-integrity.mjs
 node --check scripts/check-domain-security.mjs
 node --check scripts/test-check-domain-security.mjs
 node --check scripts/check-domain-hardening-preflight.mjs
@@ -512,6 +519,7 @@ node scripts/test-check-public-visibility.mjs
 node scripts/test-capture-live-safety-witness.mjs
 node scripts/test-check-live-safety-witness.mjs
 node scripts/test-check-live-security-headers.mjs
+node scripts/test-check-live-deployment-integrity.mjs
 node scripts/test-check-domain-security.mjs
 node scripts/test-check-domain-hardening-preflight.mjs
 node scripts/check-domain-hardening-preflight.mjs --expect-blocked
@@ -576,6 +584,17 @@ node scripts/capture-live-safety-witness.mjs live-safety-witness
 The capture command writes public-safe probe files, validates them with
 `scripts/check-live-safety-witness.mjs`, and exits nonzero if any required
 witness is missing, malformed, or outside the public boundary.
+
+To verify that the live edge files match the live status manifest:
+
+```bash
+node scripts/check-live-deployment-integrity.mjs --allow-pending
+```
+
+This records `AwaitingEvidence` if the live files are internally consistent but
+the local `status.json` manifest differs from the live deployment or a known
+edge HTML transform is observed. Use `--require-local-match` only after the
+current worktree is expected to be deployed.
 
 After security-header changes, verify that the live edge is serving the browser
 control policy:
@@ -653,6 +672,8 @@ Cloudflare Pages `_headers` sets `assets/*` to `Cache-Control: max-age=600`,
 so a returning visitor can otherwise get new `index.html` with a stale cached
 `assets/app.js` (button visible, no handler). `index.html` references
 `assets/app.js`, `assets/registry/homepage-registry.js`,
+`assets/render/site-content.js`,
+`assets/render/public-surface-registry.js`,
 `assets/render/product-registry.js`, and `assets/styles.css` with a `?v=`
 query; bump that token whenever one of those assets changes so the new HTML
 forces a fresh fetch. The JSON data files are fetched with `cache: "no-store"`

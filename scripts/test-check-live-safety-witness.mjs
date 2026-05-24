@@ -105,6 +105,20 @@ function createFixture(files = {}) {
       "live_sitemap_loc_count=13",
       "finding=none",
     ].join("\n"),
+    "deployment-integrity.txt": [
+      "verdict=SolvedVerified",
+      "proof_state=Pass",
+      "live_deployment_integrity_state=SolvedVerified",
+      "live_status_manifest=Pass",
+      "live_content_hashes=Pass",
+      "local_status_manifest_match=Pass",
+      "edge_html_transform=Pass",
+      "governed_file_count=7",
+      "finding=none",
+      "local_finding=none",
+      "raw_response_bodies=not_recorded",
+      "raw_response_headers=not_recorded",
+    ].join("\n"),
     ...files,
   };
   for (const [fileName, content] of Object.entries(defaultFiles)) {
@@ -128,7 +142,7 @@ function testPassingArtifactValidates() {
   assert.equal(result.verdict, "SolvedVerified");
   assert.equal(result.proofState, "Pass");
   assert.equal(result.liveSafetyWitnessState, "SolvedVerified");
-  assert.equal(result.artifactFileCount, 8);
+  assert.equal(result.artifactFileCount, 9);
   assert.match(formatted, /finding=none/);
 }
 
@@ -137,7 +151,7 @@ function testExternalProviderErrorIsAllowedForRegionalProbe() {
     "regional-public-visibility.txt": [
       "verdict=AwaitingEvidence",
       "proof_state=Unknown",
-      "error=request_timeout:https://check-host.net/check-http",
+      "error=request_timeout:https://api.globalping.io/v1/measurements",
     ].join("\n"),
   });
   const result = evaluateLiveSafetyWitnessArtifact(fixtureDirectory);

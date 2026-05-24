@@ -150,6 +150,8 @@ const requiredFiles = [
   "scripts/test-check-live-safety-witness.mjs",
   "scripts/check-live-security-headers.mjs",
   "scripts/test-check-live-security-headers.mjs",
+  "scripts/check-live-deployment-integrity.mjs",
+  "scripts/test-check-live-deployment-integrity.mjs",
   "scripts/check-domain-security.mjs",
   "scripts/test-check-domain-security.mjs",
   "scripts/check-domain-hardening-preflight.mjs",
@@ -625,6 +627,8 @@ function validatePublicVisibilityWitness() {
   const liveSafetyArtifactCaptureTest = readUtf8("scripts/test-capture-live-safety-witness.mjs");
   const liveSafetyArtifactChecker = readUtf8("scripts/check-live-safety-witness.mjs");
   const liveSafetyArtifactTest = readUtf8("scripts/test-check-live-safety-witness.mjs");
+  const liveDeploymentIntegrityChecker = readUtf8("scripts/check-live-deployment-integrity.mjs");
+  const liveDeploymentIntegrityTest = readUtf8("scripts/test-check-live-deployment-integrity.mjs");
   const requiredTerms = [
     "command=node scripts/check-public-visibility.mjs",
     "verdict=SolvedVerified",
@@ -747,7 +751,9 @@ function validatePublicVisibilityWitness() {
     "domain_security=node scripts/check-domain-security.mjs --allow-hardening-gaps",
     "domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
     "search_indexing_surface=node scripts/check-search-indexing-surface.mjs",
+    "deployment_integrity=node scripts/check-live-deployment-integrity.mjs --allow-pending",
     "artifact_validator=node scripts/check-live-safety-witness.mjs live-safety-witness",
+    "raw_response_bodies=not_recorded",
     "raw_response_headers=not_recorded",
     "external_probe_provider_error",
     "external_probe_error",
@@ -776,8 +782,10 @@ function validatePublicVisibilityWitness() {
     "domain-security.txt",
     "domain-hardening-preflight.txt",
     "search-indexing-surface.txt",
+    "deployment-integrity.txt",
     "--external-globalping",
     "--allow-pending",
+    "raw_response_bodies=not_recorded",
     "raw_response_headers=not_recorded",
     "failureWitness",
     "probe_failed",
@@ -814,11 +822,14 @@ function validatePublicVisibilityWitness() {
     "domain-security.txt",
     "domain-hardening-preflight.txt",
     "search-indexing-surface.txt",
+    "deployment-integrity.txt",
+    "raw_response_bodies=not_recorded",
     "raw_response_headers=not_recorded",
     "global_all_users_claim=AwaitingEvidence",
     "artifact_boundary_invalid",
     "function validateDomainSecurity",
     "function validateDomainHardeningPreflight",
+    "function validateDeploymentIntegrity",
     "raw_dns_values=not_recorded",
     "raw_secret_values=not_recorded",
   ];
@@ -836,11 +847,51 @@ function validatePublicVisibilityWitness() {
     "testBoundaryViolationBlocks",
     "testCliRejectsUnsupportedArgument",
     "domain-hardening-preflight.txt",
-    "artifactFileCount, 8",
+    "deployment-integrity.txt",
+    "artifactFileCount, 9",
   ];
   for (const term of liveSafetyArtifactTestTerms) {
     if (!liveSafetyArtifactTest.includes(term)) {
       recordFailure(`live_safety_artifact_test_term_missing:${term}`);
+    }
+  }
+
+  const liveDeploymentIntegrityCheckerTerms = [
+    "function evaluateDeploymentIntegrityEvidence",
+    "function publicFileContentHash",
+    "function canonicalJsonContentHash",
+    "function formatResult",
+    "status.json",
+    "live_deployment_integrity_state",
+    "live_status_manifest",
+    "live_content_hashes",
+    "local_status_manifest_match",
+    "edge_html_transform",
+    "hasKnownCloudflareHtmlTransform",
+    "raw_response_bodies=not_recorded",
+    "raw_response_headers=not_recorded",
+    "--require-local-match",
+    "--allow-pending",
+  ];
+  for (const term of liveDeploymentIntegrityCheckerTerms) {
+    if (!liveDeploymentIntegrityChecker.includes(term)) {
+      recordFailure(`live_deployment_integrity_checker_term_missing:${term}`);
+    }
+  }
+
+  const liveDeploymentIntegrityTestTerms = [
+    "testCanonicalHashesIgnoreJsonMetaContentHash",
+    "testMatchingLiveManifestPasses",
+    "testLiveContentHashMismatchBlocks",
+    "testKnownCloudflareHtmlTransformAwaitsEvidence",
+    "testLocalManifestMismatchAwaitsEvidenceOnly",
+    "testUnexpectedOrInvalidHashPathBlocks",
+    "testMissingGovernedHashBlocks",
+    "testCliRejectsUnsupportedArgumentWithoutNetwork",
+  ];
+  for (const term of liveDeploymentIntegrityTestTerms) {
+    if (!liveDeploymentIntegrityTest.includes(term)) {
+      recordFailure(`live_deployment_integrity_test_term_missing:${term}`);
     }
   }
 
@@ -1122,8 +1173,8 @@ function validateSearchIndexingWitness() {
     "command=npx.cmd --yes wrangler@latest pages deployment list --project-name mullusi-company-site",
     "deployment_result=production deployment observed",
     "deployment_project=mullusi-company-site",
-    "deployment_id=d87f755f-34ed-4bf6-ac34-efa8a1138924",
-    "deployment_source=48e6e6e",
+    "deployment_id=d029563d-95a9-4c84-b2ba-d8f149706373",
+    "deployment_source=9a7f36a",
     "deployment_dirty=true",
     "trust_surface_deployment_visibility=SolvedVerified",
     "current_crawl_surface_state=SolvedVerified",
@@ -1780,7 +1831,7 @@ function validateProductRegistry() {
     if (!/^\/[a-z0-9-]+\/$/.test(publicRoute)) {
       recordFailure(`generated_product_public_route_invalid:${name}:${publicRoute}`);
     }
-    if (!/^https:\/\/docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsRoute) && docsRoute !== "private") {
+    if (!/^https:\/\/docs\.mullusi\.com(?:\/[a-z0-9/_-]+(?:\.html)?)?$/.test(docsRoute) && docsRoute !== "private") {
       recordFailure(`generated_product_docs_route_invalid:${name}:${docsRoute}`);
     }
     if (!/^\/proof\/[a-z0-9-]+\/$/.test(proofRoute)) {
@@ -1808,19 +1859,7 @@ function validateProductRegistry() {
       recordFailure(`generated_product_runtime_closed_without_public_exposure:${name}`);
     }
     if (Object.prototype.hasOwnProperty.call(product, "repo") || Object.prototype.hasOwnProperty.call(product, "plannedRepo")) {
-      recordFailure(`product_repo_field_forbidden:${name}`);
-    }
-    if (/github\.com\//i.test(sourceBoundary)) {
-      recordFailure(`product_source_boundary_public_repo_forbidden:${name}`);
-    }
-    if (!/^docs\.mullusi\.com(?:\/[a-z0-9/_-]+(?:\.html)?)?$/.test(docsPath) && docsPath !== "private docs only") {
-      recordFailure(`product_docs_path_invalid:${name}:${docsPath}`);
-    }
-    if (!/^(GET|POST) \/v1\/[a-z0-9_{}\/-]+$/.test(apiPath) && apiPath !== "client access to governed API routes" && apiPath !== "no public endpoint") {
-      recordFailure(`product_api_path_invalid:${name}:${apiPath}`);
-    }
-    if (!/^\/proof\/$/.test(evidencePath) && evidencePath !== "#evidence") {
-      recordFailure(`product_evidence_path_invalid:${name}:${evidencePath}`);
+      recordFailure(`generated_product_repo_field_forbidden:${name}`);
     }
     if (seenProductNames.has(name)) {
       recordFailure(`generated_product_name_duplicate:${name}`);
@@ -1833,6 +1872,81 @@ function validateProductRegistry() {
     }
     seenProductIds.add(id);
     seenProductNames.add(name);
+  }
+
+  const homepageRegistry = JSON.parse(readUtf8("data/generated/homepage-product-registry.json"));
+  requireString(homepageRegistry?.meta?.name, "homepageProductRegistry.meta.name");
+  const homepageRegistryArtifact = requireString(
+    homepageRegistry?.meta?.artifact,
+    "homepageProductRegistry.meta.artifact",
+  );
+  const homepageRegistryContentHash = requireString(
+    homepageRegistry?.meta?.content_hash,
+    "homepageProductRegistry.meta.content_hash",
+  );
+  if (homepageRegistryArtifact !== "data/generated/homepage-product-registry.json") {
+    recordFailure(`homepage_product_registry_artifact_invalid:${homepageRegistryArtifact}`);
+  }
+  const expectedHomepageRegistryContentHash = jsonContentHashWithoutMetaHash(
+    "data/generated/homepage-product-registry.json",
+  );
+  if (homepageRegistryContentHash !== expectedHomepageRegistryContentHash) {
+    recordFailure(`homepage_product_registry_content_hash_mismatch:${homepageRegistryContentHash}:${expectedHomepageRegistryContentHash}`);
+  }
+  if (!Array.isArray(homepageRegistry.productRegistry)) {
+    recordFailure("homepage_product_registry_not_array");
+  } else {
+    const seenHomepageProductIds = new Set();
+    const seenHomepageProductNames = new Set();
+    for (const [index, product] of homepageRegistry.productRegistry.entries()) {
+      const label = `homepageProductRegistry.productRegistry.${index}`;
+      const id = requireString(product.id, `${label}.id`);
+      const name = requireString(product.name, `${label}.name`);
+      const classification = requireString(product.classification, `${label}.classification`);
+      const status = requireString(product.status, `${label}.status`);
+      requireString(product.owner, `${label}.owner`);
+      const sourceBoundary = requireString(product.sourceBoundary, `${label}.sourceBoundary`);
+      requireString(product.runtimeType, `${label}.runtimeType`);
+      requireString(product.dataType, `${label}.dataType`);
+      requireString(product.releaseGate, `${label}.releaseGate`);
+      const docsPath = requireString(product.docsPath, `${label}.docsPath`);
+      const apiPath = requireString(product.apiPath, `${label}.apiPath`);
+      const evidencePath = requireString(product.evidencePath, `${label}.evidencePath`);
+      requireString(product.failureMode, `${label}.failureMode`);
+      requireString(product.summary, `${label}.summary`);
+      if (!allowedProductClassifications.has(classification)) {
+        recordFailure(`product_classification_invalid:${name}:${classification}`);
+      }
+      if (!allowedProductStatuses.has(status)) {
+        recordFailure(`product_status_invalid:${name}:${status}`);
+      }
+      if (Object.prototype.hasOwnProperty.call(product, "repo") || Object.prototype.hasOwnProperty.call(product, "plannedRepo")) {
+        recordFailure(`product_repo_field_forbidden:${name}`);
+      }
+      if (/github\.com\//i.test(sourceBoundary)) {
+        recordFailure(`product_source_boundary_public_repo_forbidden:${name}`);
+      }
+      if (!/^docs\.mullusi\.com(?:\/[a-z0-9/_-]+(?:\.html)?)?$/.test(docsPath) && docsPath !== "private docs only") {
+        recordFailure(`product_docs_path_invalid:${name}:${docsPath}`);
+      }
+      if (!/^(GET|POST) \/v1\/[a-z0-9_{}\/-]+$/.test(apiPath) && apiPath !== "client access to governed API routes" && apiPath !== "no public endpoint") {
+        recordFailure(`product_api_path_invalid:${name}:${apiPath}`);
+      }
+      if (!/^\/proof\/$/.test(evidencePath) && evidencePath !== "#evidence") {
+        recordFailure(`product_evidence_path_invalid:${name}:${evidencePath}`);
+      }
+      if (seenHomepageProductNames.has(name)) {
+        recordFailure(`product_name_duplicate:${name}`);
+      }
+      if (!/^[a-z0-9][a-z0-9-]{2,63}$/.test(id)) {
+        recordFailure(`product_id_invalid:${name}:${id}`);
+      }
+      if (seenHomepageProductIds.has(id)) {
+        recordFailure(`product_id_duplicate:${id}`);
+      }
+      seenHomepageProductIds.add(id);
+      seenHomepageProductNames.add(name);
+    }
   }
 
   const manualRegistry = JSON.parse(readUtf8("data/manual/public-surfaces.json"));
@@ -3532,6 +3646,82 @@ function validateIndexDesignContract() {
   if (/renderFutureDomains[\s\S]*localized\(domain, "summary"\)/.test(app)) {
     recordFailure("science_engine_cards_not_compressed");
   }
+  if (!app.includes("function siteContentRendererModule") || !app.includes("MullusiSiteContentRenderer")) {
+    recordFailure("site_content_renderer_module_missing");
+  }
+  for (const forbiddenSiteContentAppTerm of [
+    "function proofSymbol",
+    "function interfaceHref",
+    "function diagramArrowDefs",
+    "function diagramNode",
+    "function svgFrame",
+    "platform-layer-head",
+    "request-flow-card",
+    "platform-build-card",
+    "status-closure-gates",
+  ]) {
+    if (app.includes(forbiddenSiteContentAppTerm)) {
+      recordFailure(`homepage_app_owns_site_content_rendering:${forbiddenSiteContentAppTerm}`);
+    }
+  }
+  for (const requiredSiteContentRendererTerm of [
+    "MullusiSiteContentRenderer",
+    "function renderPlatformLayers",
+    "function renderRequestFlow",
+    "function renderPlatformBuildSequence",
+    "function renderProductQuestions",
+    "function renderProofLanes",
+    "function renderInterfaceLinks",
+    "function renderServices",
+    "function renderServiceTiers",
+    "function renderApiContracts",
+    "function renderEvaluationExample",
+    "function renderStatusBoard",
+    "function renderFlowDiagram",
+    "function renderBoundaryMap",
+    "function renderReleaseMachine",
+    "platform-layer-head",
+    "request-flow-card",
+    "platform-build-card",
+    "status-closure-gates",
+  ]) {
+    if (!siteContentRenderer.includes(requiredSiteContentRendererTerm)) {
+      recordFailure(`site_content_renderer_missing:${requiredSiteContentRendererTerm}`);
+    }
+  }
+  if (!app.includes("function publicSurfaceRegistryRendererModule") || !app.includes("MullusiPublicSurfaceRegistryRenderer")) {
+    recordFailure("public_surface_registry_renderer_module_missing");
+  }
+  for (const forbiddenPublicSurfaceAppTerm of [
+    "function categorySet",
+    "function matchesQuery",
+    "function filteredProducts",
+    "function titleForDomain",
+    "function metricCell",
+    "data-category",
+    "repo-card empty-card",
+    "eng-boundary",
+  ]) {
+    if (app.includes(forbiddenPublicSurfaceAppTerm)) {
+      recordFailure(`homepage_app_owns_public_surface_registry_rendering:${forbiddenPublicSurfaceAppTerm}`);
+    }
+  }
+  for (const requiredPublicRendererTerm of [
+    "MullusiPublicSurfaceRegistryRenderer",
+    "function renderFutureDomains",
+    "function renderFilters",
+    "function renderStats",
+    "function renderRepoGrid",
+    "function renderMetrics",
+    "function bindSearch",
+    "data-category",
+    "repo-card empty-card",
+    "eng-boundary",
+  ]) {
+    if (!publicSurfaceRegistryRenderer.includes(requiredPublicRendererTerm)) {
+      recordFailure(`public_surface_registry_renderer_missing:${requiredPublicRendererTerm}`);
+    }
+  }
   if (!app.includes("function renderProductRegistryControls") || !app.includes("MullusiProductRegistryRenderer")) {
     recordFailure("product_registry_controls_missing");
   }
@@ -3577,15 +3767,16 @@ function validateIndexDesignContract() {
     /aria-label="\$\{escapeHtml/,
     /id="\$\{escapeHtml/,
   ];
+  const dynamicRendererSource = `${app}\n${siteContentRenderer}\n${publicSurfaceRegistryRenderer}\n${productRegistryRenderer}`;
   for (const pattern of generatedAttributeEscapingRegressions) {
-    if (pattern.test(app)) {
+    if (pattern.test(dynamicRendererSource)) {
       recordFailure(`generated_attribute_uses_text_escape:${pattern}`);
     }
   }
   if (/plannedRepo/.test(app) || /plannedRepo/.test(html)) {
     recordFailure("planned_repo_public_renderer_present");
   }
-  if (!app.includes('class="eng-boundary"') || /eng-repo/.test(html) || /eng-repo/.test(app)) {
+  if (!publicSurfaceRegistryRenderer.includes('class="eng-boundary"') || /eng-repo/.test(html) || /eng-repo/.test(dynamicRendererSource)) {
     recordFailure("engine_boundary_renderer_invalid");
   }
   if (/Repository Observatory|repository observatory/.test(html)) {
