@@ -179,6 +179,32 @@ function testExternalRegionalProbeFloorBlocksExternalVisibility() {
   assert.ok(result.externalFindings.includes("external_probe_failed:ir1.node.check-host.net:ir:Connect timeout"));
 }
 
+function testExternalProviderErrorKeepsBaseVisibilityBounded() {
+  const evidence = passingEvidence();
+  evidence.externalProbeProvider = {
+    provider: "check-host.net",
+    providerApi: "https://check-host.net/about/api?lang=en",
+    targetUrl: "https://mullusi.com/",
+    requestId: "",
+    permanentLink: "",
+    maxNodes: 6,
+    error: "json_status_invalid:429",
+  };
+  evidence.externalProbeError = "json_status_invalid:429";
+  const result = evaluatePublicVisibilityEvidence(evidence);
+  const formatted = formatResult(result, evidence);
+
+  assert.equal(result.verdict, "SolvedVerified");
+  assert.equal(result.proofState, "Pass");
+  assert.equal(result.publicEdgeVisibility, "SolvedVerified");
+  assert.equal(result.externalMultiRegionVisibility, "AwaitingEvidence");
+  assert.equal(result.globalAllUsersClaim, "AwaitingEvidence");
+  assert.equal(result.externalProbeCount, 0);
+  assert.ok(result.externalFindings.includes("external_probe_provider_error:json_status_invalid:429"));
+  assert.match(formatted, /external_probe_provider=check-host\.net/);
+  assert.match(formatted, /external_probe_error=json_status_invalid:429/);
+}
+
 function testHttpsTargetValidationBlocksUnsafeTargets() {
   const validTarget = validateHttpsTarget("https://mullusi.com/status/");
 
@@ -208,6 +234,16 @@ function testCliRejectsInvalidExternalNodeLimitWithoutNetwork() {
   assert.match(result.stdout, /error=check_host_max_nodes_invalid:bad/);
 }
 
+function testCliRejectsExternalProviderConflictWithoutNetwork() {
+  const result = runVisibilityCli(["--external-check-host", "--external-globalping"]);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stderr, "");
+  assert.match(result.stdout, /verdict=GovernanceBlocked/);
+  assert.match(result.stdout, /proof_state=Fail/);
+  assert.match(result.stdout, /error=external_provider_conflict:choose_one_provider/);
+}
+
 testAllRequiredEvidencePassesWithGlobalBoundary();
 testDnsResolverFloorBlocksVisibilityClaim();
 testWwwRedirectMismatchBlocksVisibilityClaim();
@@ -215,7 +251,9 @@ testTlsFailureBlocksVisibilityClaim();
 testExternalRegionalProbePassesCloseExternalVisibilityOnly();
 testPartialExternalRegionalProbeFailureStaysBounded();
 testExternalRegionalProbeFloorBlocksExternalVisibility();
+testExternalProviderErrorKeepsBaseVisibilityBounded();
 testHttpsTargetValidationBlocksUnsafeTargets();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testCliRejectsInvalidExternalNodeLimitWithoutNetwork();
+testCliRejectsExternalProviderConflictWithoutNetwork();
 console.log("public visibility gate tests passed");
