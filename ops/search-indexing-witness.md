@@ -45,16 +45,23 @@ Observed on 2026-05-24:
 
 ```text
 query=site:mullusi.com Mullusi
-first_party_result_observed=false
-stale_third_party_github_pages_record_observed=true
-direct_route_search_visibility=AwaitingEvidence
-replacement_dependency=search_engine_recrawl
+first_party_result_observed=true
+first_party_result_url=https://www.mullusi.com
+first_party_result_title=MULLUSI — Symbolic Intelligence
+query=site:mullusi.com Mullu
+mullu_query_first_party_result_observed=true
+mullu_query_first_party_result_url=https://www.mullusi.com
+route_specific_mullu_result_observed=false
+route_specific_mullu_visibility=AwaitingEvidence
+stale_third_party_github_pages_record_observed=superseded
 ```
 
-Public search readback still shows a stale third-party record of the old GitHub
-Pages state instead of a first-party `mullusi.com` result. This is not a crawl
-surface failure because the live route, robots, sitemap, canonical, and noindex
-checks pass. It is an external search index refresh gap.
+Public Google readback now shows a first-party `mullusi.com` result for both
+`site:mullusi.com Mullusi` and `site:mullusi.com Mullu`. The visible result is
+the canonical homepage title, `MULLUSI — Symbolic Intelligence`, at
+`https://www.mullusi.com`. Route-specific readback for
+`site:mullusi.com/mullu Mullu` remains AwaitingEvidence because it did not
+produce a direct `/mullu/` result during this readback pass.
 
 ## Search Console Submission
 
@@ -111,9 +118,12 @@ live_sitemap_loc_count=5
 local_sitemap_loc_count=5
 canonical_route_reachability=Pass
 noindex_blockers_detected=false
-search_engine_index_state=AwaitingEvidence
-first_party_search_result_observed=false
-stale_third_party_record_observed=true
+search_engine_index_state=SolvedVerified
+first_party_search_result_observed=true
+first_party_search_result_url=https://www.mullusi.com
+stale_third_party_record_observed=superseded
+mullu_query_first_party_result_observed=true
+route_specific_mullu_visibility=AwaitingEvidence
 search_console_sitemap_submission=Pass
 search_console_sitemap_status=Success
 search_console_discovered_pages=5
@@ -139,6 +149,6 @@ raw_response_headers=not_recorded
 
 STATUS:
   Completeness: 100%
-  Invariants verified: robots root allow, sitemap reference, live/local sitemap parity, canonical route reachability, no detected noindex blocker
-  Open issues: search engine recrawl and indexing evidence
-  Next action: submit sitemap and request recrawl through Search Console, then record external indexing evidence only after direct readback
+  Invariants verified: robots root allow, sitemap reference, live/local sitemap parity, canonical route reachability, no detected noindex blocker, first-party Google readback
+  Open issues: route-specific /mullu/ public result readback
+  Next action: monitor route-specific public result readback and update only after direct verification
