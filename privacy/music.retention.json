@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-studio-music",
+  "purpose": "Declare retention state for Mullu Studio Music data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "composition_structures",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "audio_artifacts",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "project_records",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "export_logs",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

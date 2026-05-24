@@ -1,0 +1,159 @@
+{
+  "meta": {
+    "name": "Mullusi Manual Public Surface Registry",
+    "domain": "mullusi.com",
+    "version": "2026.05.public-site",
+    "description": "Manual source for non-product homepage registry lists. Product rows are manifest-owned.",
+    "source_boundary": "manual-public-surface-registry",
+    "content_hash": "sha256:87666563d5fa0cd5a6b215ad7b78a47ffb9976748adc735e20571a4da786a503"
+  },
+  "principles": [
+    "Symbols are atomic.",
+    "Meaning is relational.",
+    "Traversal is governed.",
+    "Judgment is earned.",
+    "Every effect must carry lineage."
+  ],
+  "systems": [
+    {
+      "name": "Mullusi Website",
+      "href": "https://mullusi.com",
+      "category": "Website",
+      "status": "deployed",
+      "sourceState": "private-source",
+      "summary": "Public index page, domain boundary, and website registry for Mullusi. Source remains private unless Mullusi publishes a separate release artifact.",
+      "tags": [
+        "website",
+        "index",
+        "public-boundary",
+        "private-source"
+      ],
+      "am": {
+        "summary": "Public Mullusi website, domain boundary, and private-source deployment."
+      }
+    }
+  ],
+  "futureDomains": [
+    {
+      "name": "Mullusi Physics Engine",
+      "slug": "physics",
+      "status": "planned",
+      "releaseBoundary": "private incubation",
+      "summary": "Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans.",
+      "am": {
+        "title": "ፊዚክስ",
+        "summary": "ለregimes፣ axioms፣ bridges፣ ክፍት ችግሮችና solver execution plans የታቀደ ምልክታዊ ምክንያታዊ የፊዚክስ ሞተር።"
+      }
+    },
+    {
+      "name": "Mullusi Math Engine",
+      "slug": "math",
+      "status": "planned",
+      "releaseBoundary": "private incubation",
+      "summary": "Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow.",
+      "am": {
+        "title": "ሒሳብ",
+        "summary": "ለማረጋገጫዎች፣ ለአልጀብራ መዋቅሮች፣ ለcategory-theoretic ካርታዎች፣ ለoptimization እና ለtheorem workflow የታቀደ ምልክታዊ የሒሳብ ሞተር።"
+      }
+    },
+    {
+      "name": "Mullusi Biology Engine",
+      "slug": "biology",
+      "status": "planned",
+      "releaseBoundary": "private incubation",
+      "summary": "Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning.",
+      "am": {
+        "title": "ባዮሎጂ",
+        "summary": "ለDNA/protein ሐረግ፣ ለphenotype ገደቦች፣ ለsystems biology እና ለexperiment planning የታቀደ ምክንያታዊ የባዮሎጂ መዋቅር ሞተር።"
+      }
+    },
+    {
+      "name": "Mullusi Chemistry Engine",
+      "slug": "chemistry",
+      "status": "planned",
+      "releaseBoundary": "private incubation",
+      "summary": "Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation.",
+      "am": {
+        "title": "ኬሚስትሪ",
+        "summary": "ለreaction graphs፣ ለmolecular constraints፣ ለregime bridges እና ለlab-safe hypothesis generation የታቀደ ምልክታዊ የኬሚስትሪ ሽፋን።"
+      }
+    },
+    {
+      "name": "Mullusi Music Engine",
+      "slug": "music",
+      "status": "planned",
+      "releaseBoundary": "private incubation",
+      "summary": "Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure.",
+      "am": {
+        "title": "ሙዚቃ",
+        "summary": "ለrhythm፣ harmony፣ scale systems፣ cultural motifs፣ composition logic እና audio structure የታቀደ ምልክታዊ የሙዚቃ ምክንያት ሞተር።"
+      }
+    },
+    {
+      "name": "Mullusi Engineering Engine",
+      "slug": "engineering",
+      "status": "planned",
+      "releaseBoundary": "private incubation",
+      "summary": "Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications across many engineering products.",
+      "am": {
+        "title": "ኢንጂነሪንግ",
+        "summary": "ለdesign constraints፣ systems modeling፣ tolerance እና safety analysis፣ simulation bridges እና በብዙ የኢንጂነሪንግ ምርቶች ላይ ሊረጋገጡ የሚችሉ build specifications የታቀደ ምልክታዊ የኢንጂነሪንግ ሞተር።"
+      }
+    },
+    {
+      "name": "Mullusi Unified Science Lab",
+      "slug": "unified-science",
+      "status": "planned",
+      "releaseBoundary": "private incubation",
+      "summary": "Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures.",
+      "am": {
+        "title": "የተዋሃደ ሳይንስ",
+        "summary": "math, physics, biology, chemistry እና music በሚተዳደሩ ምክንያታዊ መዋቅሮች የሚያገናኝ የታቀደ ተሻጋሪ-ጎራ ሽፋን።"
+      }
+    }
+  ],
+  "privateIncubation": [
+    {
+      "name": "Foundation and core kernels",
+      "visibility": "private",
+      "summary": "Symbolic foundation, execution kernels, semantics, causality, proof principles, and Mfidel grounding stay private until they have stable public contracts.",
+      "publishGate": "Public only after README, license, examples, test evidence, release scope, and product-readiness boundary are complete."
+    },
+    {
+      "name": "Governance runtime and control plane",
+      "visibility": "private",
+      "summary": "Operational routing, approvals, traces, budgets, deployments, and dashboard state remain private until contracts are stable.",
+      "publishGate": "Public only after documented API contracts, test evidence, deployment boundary, and secret scan pass."
+    },
+    {
+      "name": "SDK and developer package work",
+      "visibility": "private",
+      "summary": "Client packages stay private until install, auth, examples, versioning, and support boundaries are ready.",
+      "publishGate": "Public only after reproducible install, examples, license, changelog, and hosted-service dependency statement."
+    },
+    {
+      "name": "Science and research engines",
+      "visibility": "private",
+      "summary": "Physics, biology, chemistry, music, fold, and traversal engines stay private while claims remain exploratory.",
+      "publishGate": "Public only as frozen research snapshots, demos, or papers with explicit limits and no product-readiness claim."
+    },
+    {
+      "name": "Inspection, search, capsule, and interface surfaces",
+      "visibility": "private",
+      "summary": "User-facing tools stay private until they have coherent workflows, public-safe copy, and clear support boundaries.",
+      "publishGate": "Public only after demo route, README, privacy boundary, and rollback path are present."
+    },
+    {
+      "name": "Language kernels and machine-layer experiments",
+      "visibility": "private",
+      "summary": "Compiler, token, machine-language, and causal-chain experiments stay private until the semantics are bounded and documented.",
+      "publishGate": "Public only after spec, examples, failure modes, and compatibility commitments are written."
+    },
+    {
+      "name": "Token, fold, traversal, and reasoning experiments",
+      "visibility": "private",
+      "summary": "Deep symbolic experiments stay private while the research boundary, data limits, and demonstration path are not yet release-safe.",
+      "publishGate": "Public only after frozen snapshot, reproducible examples, documented limits, and explicit non-product status are present."
+    }
+  ]
+}

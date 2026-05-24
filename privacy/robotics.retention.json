@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "robotics-tools",
+  "purpose": "Declare retention state for Robotics Tools data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "robot_tasks",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "constraints",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "telemetry",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "simulation_records",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "safety_traces",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

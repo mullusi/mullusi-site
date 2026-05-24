@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullusi-science-lab",
+  "purpose": "Declare the privacy boundary for Mullusi Science Lab before public product exposure.",
+  "dataClasses": [
+    "math_proofs",
+    "physics_regimes",
+    "chemistry_graphs",
+    "biology_jobs",
+    "simulation_artifacts"
+  ],
+  "userBoundary": "No production Mullusi Science Lab data may be collected until privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/science.retention.json",
+  "collectionState": "not-active"
+}

@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "artifact": "data/generated/proof-index.json",
+    "content_hash": "sha256:499c1052475c05e6007c2a3224dcb408a6dfdd8a8a6fde254d061a13c49efa2f",
+    "generator": "scripts/generate-platform.mjs",
+    "name": "Mullusi Generated Proof Index",
+    "purpose": "Generated from product manifests. Do not edit by hand.",
+    "source": "products/*/product.manifest.json"
+  },
+  "products": [
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "install path witness",
+        "example coverage",
+        "support boundary"
+      ],
+      "id": "developer-tools",
+      "name": "Developer Tools",
+      "proofBoundary": "proof/developers.proof.json",
+      "proofRoute": "/proof/developers/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "restricted-data policy",
+        "human review",
+        "legal review",
+        "evidence export boundary"
+      ],
+      "id": "health-research-pipeline",
+      "name": "Health Research Pipeline",
+      "proofBoundary": "proof/health-research.proof.json",
+      "proofRoute": "/proof/health-research/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "production tool execution",
+        "rollback-safe agent runs",
+        "operator policy witness"
+      ],
+      "id": "mullu-agents",
+      "name": "Mullu Agents",
+      "proofBoundary": "proof/agents.proof.json",
+      "proofRoute": "/proof/agents/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "production browse execution",
+        "remote page action safety",
+        "real-time browse accuracy"
+      ],
+      "id": "mullu-browse",
+      "name": "Mullu Browse",
+      "proofBoundary": "proof/browse.proof.json",
+      "proofRoute": "/proof/browse/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "testnet readiness",
+        "economic policy closure",
+        "protocol rollback witness"
+      ],
+      "id": "mullu-chain",
+      "name": "Mullu Chain",
+      "proofBoundary": "proof/chain.proof.json",
+      "proofRoute": "/proof/chain/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "production runtime witness closure",
+        "public proof stamp issuance",
+        "dashboard operator readiness"
+      ],
+      "id": "mullu-govern",
+      "name": "Mullu Govern",
+      "proofBoundary": "proof/govern.proof.json",
+      "proofRoute": "/proof/govern/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "production search quality",
+        "web-scale index coverage",
+        "real-time browse accuracy"
+      ],
+      "id": "mullu-search",
+      "name": "Mullu Search",
+      "proofBoundary": "proof/search.proof.json",
+      "proofRoute": "/proof/search/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "rights boundary",
+        "export policy closure",
+        "reproducible audio witness"
+      ],
+      "id": "mullu-studio-music",
+      "name": "Mullu Studio Music",
+      "proofBoundary": "proof/music.proof.json",
+      "proofRoute": "/proof/music/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "method limit publication",
+        "reproducibility evidence",
+        "research safety boundary"
+      ],
+      "id": "mullusi-science-lab",
+      "name": "Mullusi Science Lab",
+      "proofBoundary": "proof/science.proof.json",
+      "proofRoute": "/proof/science/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "physical safety floor",
+        "simulator witness",
+        "operator approval path"
+      ],
+      "id": "robotics-tools",
+      "name": "Robotics Tools",
+      "proofBoundary": "proof/robotics.proof.json",
+      "proofRoute": "/proof/robotics/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    },
+    {
+      "claimsAllowed": [],
+      "claimsBlockedUntilVerified": [
+        "media rights boundary",
+        "artifact storage witness",
+        "signed processing witness"
+      ],
+      "id": "virecai-video",
+      "name": "VIRECAI Video",
+      "proofBoundary": "proof/video.proof.json",
+      "proofRoute": "/proof/video/",
+      "proofState": "AwaitingEvidence",
+      "witnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ]
+    }
+  ]
+}

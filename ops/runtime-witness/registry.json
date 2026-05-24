@@ -1,0 +1,380 @@
+{
+  "schemaVersion": "1.0.0",
+  "authority": "mullusi-runtime-witness-authority",
+  "witnesses": [
+    {
+      "productId": "developer-tools",
+      "productManifest": "products/developer-tools/product.manifest.json",
+      "service": "developer-tools-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "private-only",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Limited-preview service remains blocked from production exposure until service health evidence and rollback witness close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "health-research-pipeline",
+      "productManifest": "products/health-research-pipeline/product.manifest.json",
+      "service": "health-research-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Private-incubation service cannot collect data or publish runtime claims until privacy, health, and rollback evidence close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "mullu-agents",
+      "productManifest": "products/mullu-agents/product.manifest.json",
+      "service": "agent-runner-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Agent execution remains blocked until runtime, contract, rollback, and privacy witnesses close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "mullu-browse",
+      "productManifest": "products/mullu-browse/product.manifest.json",
+      "service": "browse-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Browse actions remain blocked until service health, action safety, privacy, and rollback witnesses close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "mullu-chain",
+      "productManifest": "products/mullu-chain/product.manifest.json",
+      "service": "chain-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Chain submission remains blocked until append-only runtime, privacy, rollback, and proof witnesses close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "mullu-govern",
+      "productManifest": "products/mullu-govern/product.manifest.json",
+      "service": "mullusi-govern-cloud",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "private-only",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Govern runtime remains limited-preview until signed gateway, health, conformance, and rollback evidence close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "mullu-search",
+      "productManifest": "products/mullu-search/product.manifest.json",
+      "service": "search-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Search remains blocked until service health, retrieval quality, privacy, and rollback witnesses close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "mullusi-science-lab",
+      "productManifest": "products/mullusi-science-lab/product.manifest.json",
+      "service": "science-lab-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Science lab execution remains blocked until simulation, privacy, rollback, and service health witnesses close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "mullu-studio-music",
+      "productManifest": "products/mullu-studio-music/product.manifest.json",
+      "service": "music-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Music generation remains blocked until runtime, licensing, privacy, and rollback witnesses close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "robotics-tools",
+      "productManifest": "products/robotics-tools/product.manifest.json",
+      "service": "robotics-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Robotics simulation remains blocked until safety, runtime health, privacy, and rollback witnesses close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "productId": "virecai-video",
+      "productManifest": "products/virecai-video/product.manifest.json",
+      "service": "video-processing-service",
+      "proofState": "AwaitingEvidence",
+      "runtimeState": "not-deployed",
+      "controlPlane": {
+        "required": true,
+        "bypassAllowed": false
+      },
+      "health": {
+        "evidenceState": "not-collected",
+        "requiredEndpoints": ["/health", "/gateway/witness", "/runtime/conformance"],
+        "observations": []
+      },
+      "preflight": {
+        "mode": "fail-closed",
+        "decision": "block",
+        "reason": "Runtime witness endpoints are not published."
+      },
+      "publicExposure": {
+        "allowed": false,
+        "state": "blocked",
+        "reason": "Video processing remains blocked until runtime health, privacy, rollback, and proof witnesses close."
+      },
+      "rollback": {
+        "state": "AwaitingEvidence",
+        "path": "ops/api-production-readiness-gate.md"
+      },
+      "lineage": {
+        "source": "ops/runtime-witness/registry.json",
+        "updatedAt": "2026-05-24T00:00:00Z"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-chain",
+  "purpose": "Declare the privacy boundary for Mullu Chain before public product exposure.",
+  "dataClasses": [
+    "blocks",
+    "transactions",
+    "proofs",
+    "governance_records",
+    "node_logs"
+  ],
+  "userBoundary": "No production Mullu Chain data may be collected until privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/chain.retention.json",
+  "collectionState": "not-active"
+}

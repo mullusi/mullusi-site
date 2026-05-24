@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-browse",
+  "purpose": "Declare the initial privacy boundary for governed browse session, page observation, and action trace data.",
+  "dataClasses": ["browse_sessions", "page_observations", "action_traces"],
+  "userBoundary": "No production browse session data may be collected until public-beta privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/browse.retention.json",
+  "collectionState": "not-active"
+}

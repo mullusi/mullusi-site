@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-search",
+  "proofState": "AwaitingEvidence",
+  "claimsAllowed": [],
+  "claimsBlockedUntilVerified": [
+    "production search quality",
+    "web-scale index coverage",
+    "real-time browse accuracy"
+  ],
+  "witnesses": [
+    {
+      "name": "runtime",
+      "state": "AwaitingEvidence",
+      "evidence": "search-service runtime witness is not published."
+    },
+    {
+      "name": "contract",
+      "state": "AwaitingEvidence",
+      "evidence": "POST /v1/search/query is declared but not deployed."
+    },
+    {
+      "name": "rollback",
+      "state": "AwaitingEvidence",
+      "evidence": "Search rollback path is not yet witnessed."
+    },
+    {
+      "name": "privacy",
+      "state": "AwaitingEvidence",
+      "evidence": "Search privacy and retention policies are declared in not-active state."
+    }
+  ]
+}

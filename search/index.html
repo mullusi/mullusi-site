@@ -1,0 +1,146 @@
+<!doctype html>
+<!--
+Purpose: public-safe Mullu Search route shell for private-incubation retrieval work.
+Governance scope: OCE, RAG, CDCV, CQTE, UWMA, SRCA, PRS; no runtime, quality, or coverage overclaim.
+Dependencies: products/mullu-search/product.manifest.json, contracts/search/query.schema.json, privacy/search.policy.json, proof/search.proof.json, and /proof/.
+Invariants: route is noindex, static, fail-closed, and exposes only boundary copy until runtime witness and release gate close.
+-->
+<html class="no-js" lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#070806">
+  <meta name="robots" content="noindex, follow">
+  <title>Mullu Search - Governed Retrieval Gate</title>
+  <meta name="description" content="Private-incubation Mullu Search route shell for governed retrieval contracts, privacy boundary, proof boundary, and runtime witness gate.">
+  <link rel="canonical" href="https://mullusi.com/search/">
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:site_name" content="Mullusi">
+  <meta property="og:title" content="Mullu Search - Governed Retrieval Gate">
+  <meta property="og:description" content="Mullu Search is a private-incubation product route shell. Public claims stay blocked until runtime witness and release gates close.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mullusi.com/search/">
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <script src="/assets/theme-bootstrap.js"></script>
+  <link rel="stylesheet" href="/assets/pages/product-shell.css">
+</head>
+<body data-product-shell="mullu-search">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav aria-label="Primary">
+    <div class="nav-inner">
+      <a class="brand" href="/">Mullusi</a>
+      <div class="nav-links">
+        <a href="/mullu/">Mullu</a>
+        <a href="/proof/">Proof</a>
+        <a href="/status/">Status</a>
+        <a href="/browse/">Browse</a>
+        <a href="https://docs.mullusi.com/search" target="_blank" rel="noopener noreferrer">Docs</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="shell-hero">
+    <div>
+      <div class="eyebrow">Product route shell</div>
+      <h1>Mullu Search</h1>
+      <p class="lede">Governed retrieval over public, private, and symbolic indexes. This route exposes the manifest boundary, API contract, privacy boundary, proof boundary, and release gate; live query execution remains blocked until runtime witness closes.</p>
+      <div class="state-row" aria-label="Mullu Search route state">
+        <span class="state-token warn">private-incubation</span>
+        <span class="state-token">AwaitingEvidence</span>
+        <span class="state-token blocked">release gate blocked</span>
+      </div>
+      <div class="actions">
+        <a class="button primary" href="/pilot/">Request pilot access</a>
+        <a class="button" href="/proof/">Review proof boundary</a>
+        <a class="button" href="/status/">Check public status</a>
+      </div>
+    </div>
+    <img class="brand-icon" src="/assets/mullusi-icon.svg" alt="" aria-hidden="true">
+  </header>
+
+  <main id="main" tabindex="-1">
+    <noscript>
+      <section class="noscript-boundary" aria-labelledby="search-noscript-title">
+        <h2 id="search-noscript-title">JavaScript is optional on this route.</h2>
+        <p>Mullu Search route copy, release gate state, proof links, and public-safe contract names remain visible without JavaScript.</p>
+      </section>
+    </noscript>
+
+    <section id="gate" class="shell-band">
+      <div class="split">
+        <div>
+          <div class="eyebrow">Release gate</div>
+          <h2>Public exposure is blocked by design.</h2>
+          <p>The search product manifest exists, but production search quality, web-scale index coverage, and real-time browse accuracy claims remain blocked until signed witnesses close.</p>
+        </div>
+        <dl class="gate-ledger" aria-label="Mullu Search gate ledger">
+          <div class="ledger-row">
+            <dt>Manifest</dt>
+            <dd><code>products/mullu-search/product.manifest.json</code></dd>
+          </div>
+          <div class="ledger-row">
+            <dt>API contract</dt>
+            <dd><code>POST /v1/search/query</code> through the control plane.</dd>
+          </div>
+          <div class="ledger-row">
+            <dt>Data boundary</dt>
+            <dd><code>query_logs</code>, <code>indexes</code>, and <code>result_traces</code>; collection state is not active.</dd>
+          </div>
+          <div class="ledger-row">
+            <dt>Runtime witness</dt>
+            <dd><code>search-service</code> remains <code>AwaitingEvidence</code>.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="contract" class="shell-band">
+      <div class="eyebrow">Public contract</div>
+      <h2>What this shell may say.</h2>
+      <div class="allowed-grid">
+        <article class="allowed-item">
+          <h3>Allowed</h3>
+          <p>Route reservation, product identity, planned API shape, privacy boundary, proof boundary, and release gate state.</p>
+        </article>
+        <article class="allowed-item">
+          <h3>Blocked</h3>
+          <p>Live ranking quality, index coverage, query freshness, production availability, and endpoint readiness claims.</p>
+        </article>
+        <article class="allowed-item">
+          <h3>Failure mode</h3>
+          <p>Return no result with trace instead of unsafe ranking when evidence, authority, or data boundary is incomplete.</p>
+        </article>
+      </div>
+      <ul class="blocked-list" aria-label="Blocked Mullu Search claims">
+        <li>production search quality</li>
+        <li>web-scale index coverage</li>
+        <li>real-time browse accuracy</li>
+      </ul>
+    </section>
+
+    <section id="orchestration" class="shell-band">
+      <div class="eyebrow">Orchestration path</div>
+      <h2>Promotion must follow the platform spine.</h2>
+      <div class="flow" aria-label="Mullu Search promotion path">
+        <article class="flow-step"><h3>Manifest</h3><p>Product identity, surfaces, privacy, proof, and API contract stay manifest-owned.</p></article>
+        <article class="flow-step"><h3>Generation</h3><p>Registry, status, docs, proof index, and release checklist are generated from the manifest.</p></article>
+        <article class="flow-step"><h3>Witness</h3><p>Runtime, contract, rollback, and privacy witnesses must close before public product claims expand.</p></article>
+        <article class="flow-step"><h3>Exposure</h3><p>Homepage, sitemap, and endpoint claims remain blocked until the release gate reaches public-beta or production.</p></article>
+      </div>
+      <p class="route-note">This route is intentionally noindex while Mullu Search remains private-incubation.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div>Mullu Search route state: private-incubation</div>
+    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+  </footer>
+</body>
+</html>

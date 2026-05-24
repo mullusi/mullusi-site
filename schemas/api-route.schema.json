@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mullusi.com/schemas/api-route.schema.json",
+  "title": "Mullusi API Route Manifest",
+  "description": "Purpose: define one route contract referenced by a product manifest. Governance scope: method, path, and request/response schema boundary. Invariants: route ownership is unique across product manifests and every route is backed by a local contract file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["method", "path", "contract"],
+  "properties": {
+    "method": {
+      "type": "string",
+      "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^/v[0-9]+/[a-z0-9/_{}-]+$"
+    },
+    "contract": {
+      "type": "string",
+      "pattern": "^contracts/[a-z0-9/_-]+\\.schema\\.json$"
+    }
+  }
+}

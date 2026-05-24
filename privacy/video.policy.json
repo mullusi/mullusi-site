@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "virecai-video",
+  "purpose": "Declare the privacy boundary for VIRECAI Video before public product exposure.",
+  "dataClasses": [
+    "videos",
+    "frames",
+    "annotations",
+    "artifacts",
+    "traces",
+    "storage_references"
+  ],
+  "userBoundary": "No production VIRECAI Video data may be collected until privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/video.retention.json",
+  "collectionState": "not-active"
+}

@@ -17,6 +17,9 @@ on:
     branches: ["main"]
     paths: ["data/products.json"]
 
+permissions:
+  contents: read
+
 jobs:
   verify-registry:
     runs-on: ubuntu-latest

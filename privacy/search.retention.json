@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-search",
+  "purpose": "Declare retention state for governed search data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "query_logs",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "indexes",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "result_traces",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

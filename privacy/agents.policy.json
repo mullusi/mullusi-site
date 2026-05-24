@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-agents",
+  "purpose": "Declare the privacy boundary for Mullu Agents before public product exposure.",
+  "dataClasses": [
+    "runs",
+    "tool_calls",
+    "constraints",
+    "job_state",
+    "audit_traces"
+  ],
+  "userBoundary": "No production Mullu Agents data may be collected until privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/agents.retention.json",
+  "collectionState": "not-active"
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "robotics-tools",
+  "purpose": "Declare the privacy boundary for Robotics Tools before public product exposure.",
+  "dataClasses": [
+    "robot_tasks",
+    "constraints",
+    "telemetry",
+    "simulation_records",
+    "safety_traces"
+  ],
+  "userBoundary": "No production Robotics Tools data may be collected until privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/robotics.retention.json",
+  "collectionState": "not-active"
+}

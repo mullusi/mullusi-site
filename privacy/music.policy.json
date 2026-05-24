@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-studio-music",
+  "purpose": "Declare the privacy boundary for Mullu Studio Music before public product exposure.",
+  "dataClasses": [
+    "composition_structures",
+    "audio_artifacts",
+    "project_records",
+    "export_logs"
+  ],
+  "userBoundary": "No production Mullu Studio Music data may be collected until privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/music.retention.json",
+  "collectionState": "not-active"
+}

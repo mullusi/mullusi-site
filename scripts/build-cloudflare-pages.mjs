@@ -19,6 +19,8 @@ const publicEntries = [
   "index.html",
   "doctrine",
   "mullu",
+  "search",
+  "browse",
   "proof",
   "playground",
   "contact",
@@ -56,6 +58,10 @@ const forbiddenOutputEntries = [
   "README.md",
 ];
 
+const excludedPublicEntries = new Set([
+  "data/generated/products-compat.json",
+]);
+
 function assertPathInside(parentPath, childPath, label) {
   const relativePath = path.relative(parentPath, childPath);
   if (relativePath === "" || relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
@@ -81,6 +87,10 @@ function assertOutputDirectorySafe(outputDirectory) {
 }
 
 function assertSourceEntrySafe(sourcePath, relativePath) {
+  const normalizedRelativePath = relativePath.split(path.sep).join("/");
+  if (excludedPublicEntries.has(normalizedRelativePath)) {
+    return;
+  }
   const sourceStat = fs.lstatSync(sourcePath);
   if (sourceStat.isSymbolicLink()) {
     throw new Error(`symbolic_link_forbidden:${relativePath}`);
@@ -106,6 +116,10 @@ function copyPublicEntry(relativePath, outputDirectory) {
   fs.cpSync(sourcePath, destinationPath, {
     dereference: false,
     errorOnExist: false,
+    filter: (source) => {
+      const sourceRelativePath = path.relative(repoRoot, source).split(path.sep).join("/");
+      return !excludedPublicEntries.has(sourceRelativePath);
+    },
     force: true,
     recursive: true,
   });
@@ -136,6 +150,7 @@ export function buildCloudflarePages(options = {}) {
   return {
     outputDirectory,
     publicEntries: [...publicEntries],
+    excludedPublicEntries: [...excludedPublicEntries],
     forbiddenOutputEntries: [...forbiddenOutputEntries],
   };
 }

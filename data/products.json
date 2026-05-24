@@ -1,10 +1,94 @@
 {
+  "futureDomains": [
+    {
+      "am": {
+        "summary": "ለregimes፣ axioms፣ bridges፣ ክፍት ችግሮችና solver execution plans የታቀደ ምልክታዊ ምክንያታዊ የፊዚክስ ሞተር።",
+        "title": "ፊዚክስ"
+      },
+      "name": "Mullusi Physics Engine",
+      "releaseBoundary": "private incubation",
+      "slug": "physics",
+      "status": "planned",
+      "summary": "Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans."
+    },
+    {
+      "am": {
+        "summary": "ለማረጋገጫዎች፣ ለአልጀብራ መዋቅሮች፣ ለcategory-theoretic ካርታዎች፣ ለoptimization እና ለtheorem workflow የታቀደ ምልክታዊ የሒሳብ ሞተር።",
+        "title": "ሒሳብ"
+      },
+      "name": "Mullusi Math Engine",
+      "releaseBoundary": "private incubation",
+      "slug": "math",
+      "status": "planned",
+      "summary": "Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow."
+    },
+    {
+      "am": {
+        "summary": "ለDNA/protein ሐረግ፣ ለphenotype ገደቦች፣ ለsystems biology እና ለexperiment planning የታቀደ ምክንያታዊ የባዮሎጂ መዋቅር ሞተር።",
+        "title": "ባዮሎጂ"
+      },
+      "name": "Mullusi Biology Engine",
+      "releaseBoundary": "private incubation",
+      "slug": "biology",
+      "status": "planned",
+      "summary": "Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning."
+    },
+    {
+      "am": {
+        "summary": "ለreaction graphs፣ ለmolecular constraints፣ ለregime bridges እና ለlab-safe hypothesis generation የታቀደ ምልክታዊ የኬሚስትሪ ሽፋን።",
+        "title": "ኬሚስትሪ"
+      },
+      "name": "Mullusi Chemistry Engine",
+      "releaseBoundary": "private incubation",
+      "slug": "chemistry",
+      "status": "planned",
+      "summary": "Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation."
+    },
+    {
+      "am": {
+        "summary": "ለrhythm፣ harmony፣ scale systems፣ cultural motifs፣ composition logic እና audio structure የታቀደ ምልክታዊ የሙዚቃ ምክንያት ሞተር።",
+        "title": "ሙዚቃ"
+      },
+      "name": "Mullusi Music Engine",
+      "releaseBoundary": "private incubation",
+      "slug": "music",
+      "status": "planned",
+      "summary": "Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure."
+    },
+    {
+      "am": {
+        "summary": "ለdesign constraints፣ systems modeling፣ tolerance እና safety analysis፣ simulation bridges እና በብዙ የኢንጂነሪንግ ምርቶች ላይ ሊረጋገጡ የሚችሉ build specifications የታቀደ ምልክታዊ የኢንጂነሪንግ ሞተር።",
+        "title": "ኢንጂነሪንግ"
+      },
+      "name": "Mullusi Engineering Engine",
+      "releaseBoundary": "private incubation",
+      "slug": "engineering",
+      "status": "planned",
+      "summary": "Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications across many engineering products."
+    },
+    {
+      "am": {
+        "summary": "math, physics, biology, chemistry እና music በሚተዳደሩ ምክንያታዊ መዋቅሮች የሚያገናኝ የታቀደ ተሻጋሪ-ጎራ ሽፋን።",
+        "title": "የተዋሃደ ሳይንስ"
+      },
+      "name": "Mullusi Unified Science Lab",
+      "releaseBoundary": "private incubation",
+      "slug": "unified-science",
+      "status": "planned",
+      "summary": "Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures."
+    }
+  ],
   "meta": {
-    "name": "Mullusi",
+    "content_hash": "sha256:640b9bdd072c073b8ec8b44d5ab277fef8445f2d99de6e9434398ab1a5098eb8",
+    "description": "Generated public deployment and roadmap registry for Mullusi.",
     "domain": "mullusi.com",
-    "version": "2026.05.public-site",
-    "description": "Public deployment and roadmap registry for Mullusi Symbolic Intelligence.",
-    "content_hash": "sha256:12453ef82f274609fc33a026f378ffb5b6a50541a735de706aa3fc3b63869a78"
+    "generated_from": [
+      "products/*/product.manifest.json",
+      "data/manual/public-surfaces.json"
+    ],
+    "name": "Mullusi",
+    "source_boundary": "generated-compatibility-projection",
+    "version": "2026.05.public-site"
   },
   "principles": [
     "Symbols are atomic.",
@@ -13,308 +97,229 @@
     "Judgment is earned.",
     "Every effect must carry lineage."
   ],
+  "privateIncubation": [
+    {
+      "name": "Foundation and core kernels",
+      "publishGate": "Public only after README, license, examples, test evidence, release scope, and product-readiness boundary are complete.",
+      "summary": "Symbolic foundation, execution kernels, semantics, causality, proof principles, and Mfidel grounding stay private until they have stable public contracts.",
+      "visibility": "private"
+    },
+    {
+      "name": "Governance runtime and control plane",
+      "publishGate": "Public only after documented API contracts, test evidence, deployment boundary, and secret scan pass.",
+      "summary": "Operational routing, approvals, traces, budgets, deployments, and dashboard state remain private until contracts are stable.",
+      "visibility": "private"
+    },
+    {
+      "name": "SDK and developer package work",
+      "publishGate": "Public only after reproducible install, examples, license, changelog, and hosted-service dependency statement.",
+      "summary": "Client packages stay private until install, auth, examples, versioning, and support boundaries are ready.",
+      "visibility": "private"
+    },
+    {
+      "name": "Science and research engines",
+      "publishGate": "Public only as frozen research snapshots, demos, or papers with explicit limits and no product-readiness claim.",
+      "summary": "Physics, biology, chemistry, music, fold, and traversal engines stay private while claims remain exploratory.",
+      "visibility": "private"
+    },
+    {
+      "name": "Inspection, search, capsule, and interface surfaces",
+      "publishGate": "Public only after demo route, README, privacy boundary, and rollback path are present.",
+      "summary": "User-facing tools stay private until they have coherent workflows, public-safe copy, and clear support boundaries.",
+      "visibility": "private"
+    },
+    {
+      "name": "Language kernels and machine-layer experiments",
+      "publishGate": "Public only after spec, examples, failure modes, and compatibility commitments are written.",
+      "summary": "Compiler, token, machine-language, and causal-chain experiments stay private until the semantics are bounded and documented.",
+      "visibility": "private"
+    },
+    {
+      "name": "Token, fold, traversal, and reasoning experiments",
+      "publishGate": "Public only after frozen snapshot, reproducible examples, documented limits, and explicit non-product status are present.",
+      "summary": "Deep symbolic experiments stay private while the research boundary, data limits, and demonstration path are not yet release-safe.",
+      "visibility": "private"
+    }
+  ],
   "productRegistry": [
     {
-      "id": "mullu-govern",
-      "name": "Mullu Govern",
-      "classification": "public product",
-      "status": "awaiting-evidence",
-      "owner": "Control Plane",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "hosted API and dashboard module",
-      "dataType": "policy records, evaluations, traces, proof stamps, and audit events",
-      "releaseGate": "runtime witness endpoints and public proof boundary",
-      "docsPath": "docs.mullusi.com/govern",
       "apiPath": "POST /v1/govern/evaluate",
+      "classification": "public product",
+      "dataType": "policy records, evaluations, traces, proof stamps, and audit events",
+      "docsPath": "docs.mullusi.com/govern",
       "evidencePath": "/proof/",
       "failureMode": "fail closed, record violation, return repair action",
+      "id": "mullu-govern",
+      "name": "Mullu Govern",
+      "owner": "Control Plane",
+      "releaseGate": "runtime witness endpoints and public proof boundary",
+      "runtimeType": "hosted API and dashboard module",
+      "sourceBoundary": "private source registry",
+      "status": "awaiting-evidence",
       "summary": "Flagship governed evaluation product for checking actions, recording traces, and issuing proof-backed verdicts."
     },
     {
-      "id": "mullu-search",
-      "name": "Mullu Search",
-      "classification": "public product later",
-      "status": "private-incubation",
-      "owner": "Product Services",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "search service and future app route",
-      "dataType": "web index, document index, symbolic index, query logs, and result traces",
-      "releaseGate": "public route, privacy boundary, index policy, and result quality witness",
-      "docsPath": "docs.mullusi.com/search",
       "apiPath": "POST /v1/search/query",
+      "classification": "public product later",
+      "dataType": "web index, document index, symbolic index, query logs, and result traces",
+      "docsPath": "docs.mullusi.com/search",
       "evidencePath": "/proof/",
       "failureMode": "return no result with trace instead of unsafe ranking",
+      "id": "mullu-search",
+      "name": "Mullu Search",
+      "owner": "Product Services",
+      "releaseGate": "public route, privacy boundary, index policy, and result quality witness",
+      "runtimeType": "search service and future app route",
+      "sourceBoundary": "private source registry",
+      "status": "private-incubation",
       "summary": "Search product family for governed retrieval over public, private, and symbolic indexes."
     },
     {
-      "id": "mullu-agents",
-      "name": "Mullu Agents",
-      "classification": "API service",
-      "status": "private-incubation",
-      "owner": "Control Plane",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "agent runner service",
-      "dataType": "runs, tool calls, constraints, job state, and audit trace",
-      "releaseGate": "permission model, tool policy, rollback path, and execution witness",
-      "docsPath": "docs.mullusi.com/agents",
       "apiPath": "POST /v1/agents/run",
+      "classification": "API service",
+      "dataType": "runs, tool calls, constraints, job state, and audit trace",
+      "docsPath": "docs.mullusi.com/agents",
       "evidencePath": "/proof/",
       "failureMode": "halt unsafe action, snapshot trace, and request operator repair",
+      "id": "mullu-agents",
+      "name": "Mullu Agents",
+      "owner": "Control Plane",
+      "releaseGate": "permission model, tool policy, rollback path, and execution witness",
+      "runtimeType": "agent runner service",
+      "sourceBoundary": "private source registry",
+      "status": "private-incubation",
       "summary": "Governed agentic service where every tool action must pass the control plane before execution."
     },
     {
-      "id": "mullu-chain",
-      "name": "Mullu Chain",
-      "classification": "API service",
-      "status": "planned",
-      "owner": "Product Services",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "chain service and node service",
-      "dataType": "blocks, transactions, proofs, governance records, and node logs",
-      "releaseGate": "protocol spec, testnet boundary, economic policy, and rollback record",
-      "docsPath": "docs.mullusi.com/chain",
       "apiPath": "POST /v1/chain/submit",
+      "classification": "API service",
+      "dataType": "blocks, transactions, proofs, governance records, and node logs",
+      "docsPath": "docs.mullusi.com/chain",
       "evidencePath": "/proof/",
       "failureMode": "reject invalid transition and preserve rejected delta",
+      "id": "mullu-chain",
+      "name": "Mullu Chain",
+      "owner": "Product Services",
+      "releaseGate": "protocol spec, testnet boundary, economic policy, and rollback record",
+      "runtimeType": "chain service and node service",
+      "sourceBoundary": "private source registry",
+      "status": "planned",
       "summary": "Planned blockchain service for governed state transitions and proof-carrying records."
     },
     {
-      "id": "virecai-video",
-      "name": "VIRECAI Video",
-      "classification": "private research product",
-      "status": "private-incubation",
-      "owner": "Media Systems",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "video processing service and future studio app",
-      "dataType": "videos, frames, annotations, artifacts, traces, and storage references",
-      "releaseGate": "media policy, artifact storage boundary, and signed processing witness",
-      "docsPath": "docs.mullusi.com/video",
       "apiPath": "POST /v1/video/process",
+      "classification": "private research product",
+      "dataType": "videos, frames, annotations, artifacts, traces, and storage references",
+      "docsPath": "docs.mullusi.com/video",
       "evidencePath": "/proof/",
       "failureMode": "quarantine artifact, preserve trace, and return AwaitingEvidence",
+      "id": "virecai-video",
+      "name": "VIRECAI Video",
+      "owner": "Media Systems",
+      "releaseGate": "media policy, artifact storage boundary, and signed processing witness",
+      "runtimeType": "video processing service and future studio app",
+      "sourceBoundary": "private source registry",
+      "status": "private-incubation",
       "summary": "Symbolic video and media platform work held private until storage, rights, and witness rules close."
     },
     {
-      "id": "mullu-studio-music",
-      "name": "Mullu Studio Music",
-      "classification": "sandbox demo",
-      "status": "planned",
-      "owner": "Creative Systems",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "creative product app and audio service",
-      "dataType": "composition structures, audio artifacts, project records, and export logs",
-      "releaseGate": "rights boundary, export policy, and reproducible audio witness",
-      "docsPath": "docs.mullusi.com/music",
       "apiPath": "POST /v1/music/generate",
+      "classification": "sandbox demo",
+      "dataType": "composition structures, audio artifacts, project records, and export logs",
+      "docsPath": "docs.mullusi.com/music",
       "evidencePath": "/proof/",
       "failureMode": "block export until rights and trace requirements are satisfied",
+      "id": "mullu-studio-music",
+      "name": "Mullu Studio Music",
+      "owner": "Creative Systems",
+      "releaseGate": "rights boundary, export policy, and reproducible audio witness",
+      "runtimeType": "creative product app and audio service",
+      "sourceBoundary": "private source registry",
+      "status": "planned",
       "summary": "Creative product family for rhythm, harmony, composition logic, and audio structure."
     },
     {
-      "id": "mullusi-science-lab",
-      "name": "Mullusi Science Lab",
-      "classification": "private research product",
-      "status": "private-incubation",
-      "owner": "Research Systems",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "research services and dashboard modules",
-      "dataType": "math proofs, physics regimes, chemistry graphs, biology jobs, and simulation artifacts",
-      "releaseGate": "method limits, safety policy, reproducibility evidence, and public specification",
-      "docsPath": "docs.mullusi.com/science",
       "apiPath": "POST /v1/research/fold",
+      "classification": "private research product",
+      "dataType": "math proofs, physics regimes, chemistry graphs, biology jobs, and simulation artifacts",
+      "docsPath": "docs.mullusi.com/science",
       "evidencePath": "/proof/",
       "failureMode": "mark AwaitingEvidence and preserve inputs, limits, and trace",
+      "id": "mullusi-science-lab",
+      "name": "Mullusi Science Lab",
+      "owner": "Research Systems",
+      "releaseGate": "method limits, safety policy, reproducibility evidence, and public specification",
+      "runtimeType": "research services and dashboard modules",
+      "sourceBoundary": "private source registry",
+      "status": "private-incubation",
       "summary": "Cross-domain research layer for math, physics, chemistry, biology, and protein-folding workflows."
     },
     {
-      "id": "health-research-pipeline",
-      "name": "Health Research Pipeline",
-      "classification": "private research product",
-      "status": "restricted",
-      "owner": "Research Systems",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "restricted research tooling",
-      "dataType": "classified research inputs, derived artifacts, access records, and audit trace",
-      "releaseGate": "restricted-data policy, human review, legal review, and evidence export boundary",
-      "docsPath": "private docs only",
       "apiPath": "no public endpoint",
+      "classification": "private research product",
+      "dataType": "classified research inputs, derived artifacts, access records, and audit trace",
+      "docsPath": "private docs only",
       "evidencePath": "/proof/",
       "failureMode": "safe halt and require governance escalation",
+      "id": "health-research-pipeline",
+      "name": "Health Research Pipeline",
+      "owner": "Research Systems",
+      "releaseGate": "restricted-data policy, human review, legal review, and evidence export boundary",
+      "runtimeType": "restricted research tooling",
+      "sourceBoundary": "private source registry",
+      "status": "restricted",
       "summary": "Restricted research tooling that stays private unless safety, privacy, and authority requirements close."
     },
     {
-      "id": "robotics-tools",
-      "name": "Robotics Tools",
-      "classification": "internal tool",
-      "status": "planned",
-      "owner": "Engineering Systems",
-      "sourceBoundary": "private source registry",
-      "runtimeType": "engineering runtime tools",
-      "dataType": "robot tasks, constraints, telemetry, simulation records, and safety traces",
-      "releaseGate": "physical safety floor, simulator witness, operator approval, and rollback plan",
-      "docsPath": "docs.mullusi.com/robotics",
       "apiPath": "POST /v1/robotics/simulate",
+      "classification": "internal tool",
+      "dataType": "robot tasks, constraints, telemetry, simulation records, and safety traces",
+      "docsPath": "docs.mullusi.com/robotics",
       "evidencePath": "/proof/",
       "failureMode": "fallback to safety floor and block physical action",
+      "id": "robotics-tools",
+      "name": "Robotics Tools",
+      "owner": "Engineering Systems",
+      "releaseGate": "physical safety floor, simulator witness, operator approval, and rollback plan",
+      "runtimeType": "engineering runtime tools",
+      "sourceBoundary": "private source registry",
+      "status": "planned",
       "summary": "Engineering tooling for governed robotics simulation, runtime checks, and operator-controlled actions."
     },
     {
-      "id": "developer-tools",
-      "name": "Developer Tools",
-      "classification": "library/package",
-      "status": "awaiting-evidence",
-      "owner": "Development Layer",
-      "sourceBoundary": "private source registry with selected public releases later",
-      "runtimeType": "SDK, CLI, validators, and local test harnesses",
-      "dataType": "project settings, local validation reports, examples, and release evidence",
-      "releaseGate": "install path, examples, license, changelog, and support boundary",
-      "docsPath": "docs.mullusi.com/developers",
       "apiPath": "client access to governed API routes",
+      "classification": "library/package",
+      "dataType": "project settings, local validation reports, examples, and release evidence",
+      "docsPath": "docs.mullusi.com/developers",
       "evidencePath": "/proof/",
       "failureMode": "exit nonzero with explicit violation and repair hint",
+      "id": "developer-tools",
+      "name": "Developer Tools",
+      "owner": "Development Layer",
+      "releaseGate": "install path, examples, license, changelog, and support boundary",
+      "runtimeType": "SDK, CLI, validators, and local test harnesses",
+      "sourceBoundary": "private source registry with selected public releases later",
+      "status": "awaiting-evidence",
       "summary": "Developer-facing packages and command-line tools for connecting projects to Mullusi services."
     }
   ],
   "systems": [
     {
-      "name": "Mullusi Website",
-      "href": "https://mullusi.com",
+      "am": {
+        "summary": "Public Mullusi website, domain boundary, and private-source deployment."
+      },
       "category": "Website",
-      "status": "deployed",
+      "href": "https://mullusi.com",
+      "name": "Mullusi Website",
       "sourceState": "private-source",
+      "status": "deployed",
       "summary": "Public index page, domain boundary, and website registry for Mullusi. Source remains private unless Mullusi publishes a separate release artifact.",
       "tags": [
         "website",
         "index",
         "public-boundary",
         "private-source"
-      ],
-      "am": {
-        "summary": "Public Mullusi website, domain boundary, and private-source deployment."
-      }
-    }
-  ],
-  "futureDomains": [
-    {
-      "name": "Mullusi Physics Engine",
-      "slug": "physics",
-      "status": "planned",
-      "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans.",
-      "am": {
-        "title": "ፊዚክስ",
-        "summary": "ለregimes፣ axioms፣ bridges፣ ክፍት ችግሮችና solver execution plans የታቀደ ምልክታዊ ምክንያታዊ የፊዚክስ ሞተር።"
-      }
-    },
-    {
-      "name": "Mullusi Math Engine",
-      "slug": "math",
-      "status": "planned",
-      "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow.",
-      "am": {
-        "title": "ሒሳብ",
-        "summary": "ለማረጋገጫዎች፣ ለአልጀብራ መዋቅሮች፣ ለcategory-theoretic ካርታዎች፣ ለoptimization እና ለtheorem workflow የታቀደ ምልክታዊ የሒሳብ ሞተር።"
-      }
-    },
-    {
-      "name": "Mullusi Biology Engine",
-      "slug": "biology",
-      "status": "planned",
-      "releaseBoundary": "private incubation",
-      "summary": "Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning.",
-      "am": {
-        "title": "ባዮሎጂ",
-        "summary": "ለDNA/protein ሐረግ፣ ለphenotype ገደቦች፣ ለsystems biology እና ለexperiment planning የታቀደ ምክንያታዊ የባዮሎጂ መዋቅር ሞተር።"
-      }
-    },
-    {
-      "name": "Mullusi Chemistry Engine",
-      "slug": "chemistry",
-      "status": "planned",
-      "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation.",
-      "am": {
-        "title": "ኬሚስትሪ",
-        "summary": "ለreaction graphs፣ ለmolecular constraints፣ ለregime bridges እና ለlab-safe hypothesis generation የታቀደ ምልክታዊ የኬሚስትሪ ሽፋን።"
-      }
-    },
-    {
-      "name": "Mullusi Music Engine",
-      "slug": "music",
-      "status": "planned",
-      "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure.",
-      "am": {
-        "title": "ሙዚቃ",
-        "summary": "ለrhythm፣ harmony፣ scale systems፣ cultural motifs፣ composition logic እና audio structure የታቀደ ምልክታዊ የሙዚቃ ምክንያት ሞተር።"
-      }
-    },
-    {
-      "name": "Mullusi Engineering Engine",
-      "slug": "engineering",
-      "status": "planned",
-      "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications across many engineering products.",
-      "am": {
-        "title": "ኢንጂነሪንግ",
-        "summary": "ለdesign constraints፣ systems modeling፣ tolerance እና safety analysis፣ simulation bridges እና በብዙ የኢንጂነሪንግ ምርቶች ላይ ሊረጋገጡ የሚችሉ build specifications የታቀደ ምልክታዊ የኢንጂነሪንግ ሞተር።"
-      }
-    },
-    {
-      "name": "Mullusi Unified Science Lab",
-      "slug": "unified-science",
-      "status": "planned",
-      "releaseBoundary": "private incubation",
-      "summary": "Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures.",
-      "am": {
-        "title": "የተዋሃደ ሳይንስ",
-        "summary": "math, physics, biology, chemistry እና music በሚተዳደሩ ምክንያታዊ መዋቅሮች የሚያገናኝ የታቀደ ተሻጋሪ-ጎራ ሽፋን።"
-      }
-    }
-  ],
-  "privateIncubation": [
-    {
-      "name": "Foundation and core kernels",
-      "visibility": "private",
-      "summary": "Symbolic foundation, execution kernels, semantics, causality, proof principles, and Mfidel grounding stay private until they have stable public contracts.",
-      "publishGate": "Public only after README, license, examples, test evidence, release scope, and product-readiness boundary are complete."
-    },
-    {
-      "name": "Governance runtime and control plane",
-      "visibility": "private",
-      "summary": "Operational routing, approvals, traces, budgets, deployments, and dashboard state remain private until contracts are stable.",
-      "publishGate": "Public only after documented API contracts, test evidence, deployment boundary, and secret scan pass."
-    },
-    {
-      "name": "SDK and developer package work",
-      "visibility": "private",
-      "summary": "Client packages stay private until install, auth, examples, versioning, and support boundaries are ready.",
-      "publishGate": "Public only after reproducible install, examples, license, changelog, and hosted-service dependency statement."
-    },
-    {
-      "name": "Science and research engines",
-      "visibility": "private",
-      "summary": "Physics, biology, chemistry, music, fold, and traversal engines stay private while claims remain exploratory.",
-      "publishGate": "Public only as frozen research snapshots, demos, or papers with explicit limits and no product-readiness claim."
-    },
-    {
-      "name": "Inspection, search, capsule, and interface surfaces",
-      "visibility": "private",
-      "summary": "User-facing tools stay private until they have coherent workflows, public-safe copy, and clear support boundaries.",
-      "publishGate": "Public only after demo route, README, privacy boundary, and rollback path are present."
-    },
-    {
-      "name": "Language kernels and machine-layer experiments",
-      "visibility": "private",
-      "summary": "Compiler, token, machine-language, and causal-chain experiments stay private until the semantics are bounded and documented.",
-      "publishGate": "Public only after spec, examples, failure modes, and compatibility commitments are written."
-    },
-    {
-      "name": "Token, fold, traversal, and reasoning experiments",
-      "visibility": "private",
-      "summary": "Deep symbolic experiments stay private while the research boundary, data limits, and demonstration path are not yet release-safe.",
-      "publishGate": "Public only after frozen snapshot, reproducible examples, documented limits, and explicit non-product status are present."
+      ]
     }
   ]
 }

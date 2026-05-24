@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mullusi.com/schemas/runtime-witness.schema.json",
+  "title": "Mullusi Runtime Witness Registry",
+  "description": "Purpose: bind product manifests to explicit runtime witness state, service health evidence, preflight decision, and public exposure outcome. Governance scope: runtime witness, control-plane bypass prevention, service health evidence, production preflight, and fail-closed promotion. Invariants: missing, unknown, or non-passing runtime evidence blocks production and public exposure.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "authority", "witnesses"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "authority": {
+      "const": "mullusi-runtime-witness-authority"
+    },
+    "witnesses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "productId",
+          "productManifest",
+          "service",
+          "proofState",
+          "runtimeState",
+          "controlPlane",
+          "health",
+          "preflight",
+          "publicExposure",
+          "rollback",
+          "lineage"
+        ],
+        "properties": {
+          "productId": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "productManifest": {
+            "type": "string",
+            "pattern": "^products/[a-z0-9-]+/product\\.manifest\\.json$"
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "proofState": {
+            "type": "string",
+            "enum": ["SolvedVerified", "SolvedUnverified", "AwaitingEvidence", "SafeHalt", "GovernanceBlocked", "BudgetExhausted", "ImpossibleProved", "ModelInvalidated"]
+          },
+          "runtimeState": {
+            "type": "string",
+            "enum": ["not-deployed", "private-only", "public-witness-ready", "production-ready", "blocked"]
+          },
+          "controlPlane": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["required", "bypassAllowed"],
+            "properties": {
+              "required": {
+                "const": true
+              },
+              "bypassAllowed": {
+                "const": false
+              }
+            }
+          },
+          "health": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["evidenceState", "requiredEndpoints", "observations"],
+            "properties": {
+              "evidenceState": {
+                "type": "string",
+                "enum": ["not-collected", "pass", "fail"]
+              },
+              "requiredEndpoints": {
+                "type": "array",
+                "minItems": 3,
+                "items": {
+                  "type": "string",
+                  "enum": ["/health", "/gateway/witness", "/runtime/conformance"]
+                },
+                "uniqueItems": true
+              },
+              "observations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["endpoint", "state", "observedAt", "evidence"],
+                  "properties": {
+                    "endpoint": {
+                      "type": "string",
+                      "enum": ["/health", "/gateway/witness", "/runtime/conformance"]
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": ["Pass", "Fail", "AwaitingEvidence"]
+                    },
+                    "observedAt": {
+                      "type": ["string", "null"]
+                    },
+                    "evidence": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "preflight": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["mode", "decision", "reason"],
+            "properties": {
+              "mode": {
+                "const": "fail-closed"
+              },
+              "decision": {
+                "type": "string",
+                "enum": ["block", "allow"]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "publicExposure": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["allowed", "state", "reason"],
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "state": {
+                "type": "string",
+                "enum": ["blocked", "allowed"]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "rollback": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["state", "path"],
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": ["AwaitingEvidence", "Ready"]
+              },
+              "path": {
+                "type": "string",
+                "pattern": "^ops/[a-z0-9/_-]+\\.md$"
+              }
+            }
+          },
+          "lineage": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "updatedAt"],
+            "properties": {
+              "source": {
+                "const": "ops/runtime-witness/registry.json"
+              },
+              "updatedAt": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+              }
+            }
+          }
+        }
+      },
+      "uniqueItems": true
+    }
+  }
+}

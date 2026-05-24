@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "health-research-pipeline",
+  "purpose": "Declare the privacy boundary for Health Research Pipeline before public product exposure.",
+  "dataClasses": [
+    "restricted_research_inputs",
+    "derived_artifacts",
+    "access_records",
+    "audit_traces"
+  ],
+  "userBoundary": "No production Health Research Pipeline data may be collected until privacy, support, and runtime witness gates close.",
+  "retentionPolicy": "privacy/health-research.retention.json",
+  "collectionState": "not-active"
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "productId": "mullu-govern",
+  "purpose": "Declare retention state for Mullu Govern data classes before public exposure.",
+  "retention": [
+    {
+      "dataClass": "policy_records",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "evaluations",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "traces",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "proof_stamps",
+      "state": "not-active",
+      "maximumDays": 0
+    },
+    {
+      "dataClass": "audit_events",
+      "state": "not-active",
+      "maximumDays": 0
+    }
+  ]
+}

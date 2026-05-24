@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mullusi.com/contracts/browse/session.schema.json",
+  "title": "Mullu Browse Session Contract",
+  "description": "Purpose: request contract for a governed browse session proposal. Governance scope: target URL, action intent, constraints, and trace requirement. Invariants: browse execution must enter through the control plane and preserve action trace state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["target_url", "intent", "constraints", "trace_required"],
+  "properties": {
+    "target_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "trace_required": {
+      "const": true
+    }
+  }
+}

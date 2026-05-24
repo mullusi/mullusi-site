@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "mullu-search",
+  "name": "Mullu Search",
+  "summary": "Search product family for governed retrieval over public, private, and symbolic indexes.",
+  "family": "mullu",
+  "category": "retrieval",
+  "status": "private-incubation",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/search/",
+    "docsRoute": "https://docs.mullusi.com/search",
+    "dashboardRoute": "https://dashboard.mullusi.com/search",
+    "proofRoute": "/proof/search/",
+    "statusRoute": "/status/search/"
+  },
+  "runtime": {
+    "service": "search-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/search/query",
+        "contract": "contracts/search/query.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "query_logs",
+      "indexes",
+      "result_traces"
+    ],
+    "privacyBoundary": "privacy/search.policy.json",
+    "retentionPolicy": "privacy/search.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/search.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "production search quality",
+      "web-scale index coverage",
+      "real-time browse accuracy"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 2,
+    "classification": "public product later",
+    "registryStatus": "private-incubation",
+    "ownerLabel": "Product Services",
+    "sourceBoundary": "private source registry",
+    "runtimeType": "search service and future app route",
+    "dataType": "web index, document index, symbolic index, query logs, and result traces",
+    "releaseGate": "public route, privacy boundary, index policy, and result quality witness",
+    "docsPath": "docs.mullusi.com/search",
+    "apiPath": "POST /v1/search/query",
+    "evidencePath": "/proof/",
+    "failureMode": "return no result with trace instead of unsafe ranking"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

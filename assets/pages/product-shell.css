@@ -1,0 +1,401 @@
+/*
+Purpose: shared route-shell styles for private-incubation product routes.
+Governance scope: public-safe product boundaries, release gates, proof links, and no live-runtime claims.
+Dependencies: search/index.html, browse/index.html, Mullusi static icons, and theme-bootstrap.js.
+Invariants: route shells remain static, noindex, no data collection, and readable without JavaScript.
+*/
+
+:root {
+  color-scheme: dark;
+  --bg: #070806;
+  --panel: #10130f;
+  --panel-strong: #151914;
+  --line: #2d3529;
+  --text: #f1efe5;
+  --muted: #aab09f;
+  --gold: #e4b65c;
+  --green: #86e3b4;
+  --blue: #9bb7ff;
+  --red: #ff9a9a;
+  --nav-bg: rgba(7, 8, 6, 0.92);
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --serif: Georgia, "Times New Roman", serif;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f3e9;
+  --panel: #fffcf4;
+  --panel-strong: #f0eadc;
+  --line: #d4cab8;
+  --text: #191b15;
+  --muted: #5f604f;
+  --gold: #8a6819;
+  --green: #207a57;
+  --blue: #415fb2;
+  --red: #a53c45;
+  --nav-bg: rgba(246, 243, 233, 0.92);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.65 var(--mono);
+}
+
+a {
+  color: inherit;
+}
+
+code {
+  color: var(--green);
+  overflow-wrap: anywhere;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  padding: 10px 14px;
+  background: var(--gold);
+  color: #111006;
+  text-decoration: none;
+  transform: translateY(-220%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  border-bottom: 1px solid var(--line);
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+}
+
+.nav-inner,
+.shell-hero,
+main,
+footer {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.nav-inner {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  color: var(--gold);
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.nav-links,
+.actions,
+.state-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.nav-links {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.nav-links a {
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: var(--gold);
+}
+
+.shell-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 36px;
+  align-items: center;
+  padding: 78px 0 56px;
+}
+
+.brand-icon {
+  width: 160px;
+  height: 160px;
+  justify-self: end;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 22px;
+}
+
+.eyebrow {
+  color: var(--green);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+h1 {
+  max-width: 12ch;
+  margin-top: 14px;
+  font-size: 5rem;
+}
+
+h2 {
+  font-size: 2.6rem;
+}
+
+h3 {
+  font-size: 1.22rem;
+}
+
+p {
+  color: var(--muted);
+}
+
+.lede {
+  max-width: 76ch;
+  margin: 20px 0 0;
+  font-size: 1.08rem;
+}
+
+.state-row {
+  margin-top: 22px;
+}
+
+.state-token {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  color: var(--green);
+  padding: 5px 10px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.state-token.warn {
+  color: var(--gold);
+}
+
+.state-token.blocked {
+  color: var(--red);
+}
+
+.actions {
+  margin-top: 24px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 8px 14px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.button.primary {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #111006;
+  font-weight: 700;
+}
+
+.button:hover {
+  border-color: var(--gold);
+}
+
+.shell-band {
+  padding: 54px 0;
+  border-top: 1px solid var(--line);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 26px;
+  align-items: start;
+}
+
+.gate-ledger,
+.allowed-grid,
+.flow {
+  display: grid;
+  gap: 12px;
+}
+
+.gate-ledger {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ledger-row,
+.allowed-item,
+.flow-step,
+.noscript-boundary {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 18px;
+}
+
+.ledger-row dt {
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.ledger-row dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.allowed-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.allowed-item h3,
+.flow-step h3 {
+  color: var(--gold);
+}
+
+.blocked-list {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.blocked-list li {
+  border-left: 2px solid var(--red);
+  color: var(--muted);
+  padding: 8px 0 8px 12px;
+}
+
+.flow {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 24px;
+  counter-reset: flow;
+}
+
+.flow-step {
+  min-height: 172px;
+}
+
+.flow-step::before {
+  counter-increment: flow;
+  content: counter(flow, decimal-leading-zero);
+  display: block;
+  color: var(--blue);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.route-note {
+  border: 1px solid var(--gold);
+  background: var(--panel-strong);
+  color: var(--muted);
+  margin-top: 18px;
+  padding: 16px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  padding: 34px 0 48px;
+  font-size: 13px;
+}
+
+#main:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .skip-link {
+    transition: none;
+  }
+}
+
+@media (max-width: 880px) {
+  .shell-hero,
+  .split,
+  .gate-ledger,
+  .allowed-grid,
+  .flow {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-icon {
+    justify-self: start;
+    width: 118px;
+    height: 118px;
+  }
+
+  h1 {
+    font-size: 3.4rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .nav-inner,
+  footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nav-inner {
+    padding: 14px 0;
+  }
+
+  .shell-hero {
+    padding-top: 42px;
+  }
+}

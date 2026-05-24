@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "mullusi-science-lab",
+  "name": "Mullusi Science Lab",
+  "summary": "Cross-domain research layer for math, physics, chemistry, biology, and protein-folding workflows.",
+  "family": "mullusi",
+  "category": "research",
+  "status": "private-incubation",
+  "ownership": {
+    "owner": "mullusi",
+    "supportEmail": "support@mullusi.com"
+  },
+  "surfaces": {
+    "publicRoute": "/science/",
+    "docsRoute": "https://docs.mullusi.com/science",
+    "dashboardRoute": "https://dashboard.mullusi.com/science",
+    "proofRoute": "/proof/science/",
+    "statusRoute": "/status/science/"
+  },
+  "runtime": {
+    "service": "science-lab-service",
+    "controlPlaneRequired": true,
+    "runtimeWitnessRequired": true,
+    "productionPreflight": "fail-closed"
+  },
+  "api": {
+    "exposure": "planned",
+    "routes": [
+      {
+        "method": "POST",
+        "path": "/v1/research/fold",
+        "contract": "contracts/research/fold.schema.json"
+      }
+    ]
+  },
+  "data": {
+    "classes": [
+      "math_proofs",
+      "physics_regimes",
+      "chemistry_graphs",
+      "biology_jobs",
+      "simulation_artifacts"
+    ],
+    "privacyBoundary": "privacy/science.policy.json",
+    "retentionPolicy": "privacy/science.retention.json"
+  },
+  "proof": {
+    "boundary": "proof/science.proof.json",
+    "claimsAllowed": [],
+    "claimsBlockedUntilVerified": [
+      "method limit publication",
+      "reproducibility evidence",
+      "research safety boundary"
+    ],
+    "witnesses": [
+      "runtime",
+      "contract",
+      "rollback",
+      "privacy"
+    ]
+  },
+  "presentation": {
+    "compatibilityRegistry": true,
+    "displayOrder": 7,
+    "classification": "private research product",
+    "registryStatus": "private-incubation",
+    "ownerLabel": "Research Systems",
+    "sourceBoundary": "private source registry",
+    "runtimeType": "research services and dashboard modules",
+    "dataType": "math proofs, physics regimes, chemistry graphs, biology jobs, and simulation artifacts",
+    "releaseGate": "method limits, safety policy, reproducibility evidence, and public specification",
+    "docsPath": "docs.mullusi.com/science",
+    "apiPath": "POST /v1/research/fold",
+    "evidencePath": "/proof/",
+    "failureMode": "mark AwaitingEvidence and preserve inputs, limits, and trace"
+  },
+  "releaseGate": {
+    "required": [
+      "route",
+      "docs",
+      "api_contract",
+      "privacy",
+      "runtime_witness",
+      "rollback",
+      "support",
+      "status"
+    ],
+    "promotionPath": [
+      "private-incubation",
+      "internal-alpha",
+      "limited-preview",
+      "public-beta",
+      "production"
+    ]
+  },
+  "generation": {
+    "emitProductsJson": true,
+    "emitStatusJson": true,
+    "emitSitemap": true,
+    "emitHomepageCard": true,
+    "emitDocsIndex": true,
+    "emitProofIndex": true
+  }
+}

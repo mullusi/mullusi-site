@@ -1,0 +1,83 @@
+{
+  "coveredProducts": [
+    {
+      "id": "mullu-govern",
+      "manifestPath": "products/mullu-govern/product.manifest.json",
+      "name": "Mullu Govern",
+      "registryStatus": "awaiting-evidence"
+    },
+    {
+      "id": "mullu-search",
+      "manifestPath": "products/mullu-search/product.manifest.json",
+      "name": "Mullu Search",
+      "registryStatus": "private-incubation"
+    },
+    {
+      "id": "mullu-agents",
+      "manifestPath": "products/mullu-agents/product.manifest.json",
+      "name": "Mullu Agents",
+      "registryStatus": "private-incubation"
+    },
+    {
+      "id": "mullu-chain",
+      "manifestPath": "products/mullu-chain/product.manifest.json",
+      "name": "Mullu Chain",
+      "registryStatus": "planned"
+    },
+    {
+      "id": "virecai-video",
+      "manifestPath": "products/virecai-video/product.manifest.json",
+      "name": "VIRECAI Video",
+      "registryStatus": "private-incubation"
+    },
+    {
+      "id": "mullu-studio-music",
+      "manifestPath": "products/mullu-studio-music/product.manifest.json",
+      "name": "Mullu Studio Music",
+      "registryStatus": "planned"
+    },
+    {
+      "id": "mullusi-science-lab",
+      "manifestPath": "products/mullusi-science-lab/product.manifest.json",
+      "name": "Mullusi Science Lab",
+      "registryStatus": "private-incubation"
+    },
+    {
+      "id": "health-research-pipeline",
+      "manifestPath": "products/health-research-pipeline/product.manifest.json",
+      "name": "Health Research Pipeline",
+      "registryStatus": "restricted"
+    },
+    {
+      "id": "robotics-tools",
+      "manifestPath": "products/robotics-tools/product.manifest.json",
+      "name": "Robotics Tools",
+      "registryStatus": "planned"
+    },
+    {
+      "id": "developer-tools",
+      "manifestPath": "products/developer-tools/product.manifest.json",
+      "name": "Developer Tools",
+      "registryStatus": "awaiting-evidence"
+    }
+  ],
+  "extraManifests": [
+    {
+      "id": "mullu-browse",
+      "name": "Mullu Browse",
+      "status": "private-incubation"
+    }
+  ],
+  "manifestCount": 11,
+  "meta": {
+    "artifact": "data/generated/migration-coverage.json",
+    "content_hash": "sha256:7d345138dac3833e78bd9a559a84611061515adb968dcce7bd37ed82c598734f",
+    "generator": "scripts/generate-platform.mjs",
+    "name": "Mullusi Generated Registry Migration Coverage",
+    "purpose": "Generated from product manifests. Do not edit by hand.",
+    "source": "products/*/product.manifest.json"
+  },
+  "migrationState": "generated",
+  "missingProducts": [],
+  "registryProductCount": 10
+}

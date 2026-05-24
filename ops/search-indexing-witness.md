@@ -79,9 +79,11 @@ Observed on 2026-05-24 after the private production source was synced and the
 Cloudflare Pages artifact was deployed:
 
 ```text
-command=npx.cmd wrangler pages deploy dist --project-name mullusi-company-site --branch main --commit-dirty=true
-deployment_result=complete
+command=npx.cmd --yes wrangler@latest pages deployment list --project-name mullusi-company-site
+deployment_result=production deployment observed
 deployment_project=mullusi-company-site
+deployment_id=4739ec09-d94a-43a2-aa06-a14a8d79d446
+deployment_source=f5f5252
 command=node scripts/check-search-indexing-surface.mjs
 verdict=SolvedVerified
 proof_state=Pass
@@ -140,6 +142,38 @@ trailing-slash query, `site:mullusi.com/mullu/ Mullu`, now returns
 `https://mullusi.com/mullu/` with the title `Mullu, by Mullusi - Governed
 Symbolic Intelligence`.
 
+## Public Route Coverage Readback
+
+Observed on 2026-05-24 after the sitemap was resubmitted in Search Console:
+
+```text
+source=Chrome-backed Google Search readback
+checked_at=2026-05-24T18:36:03Z
+query_set=exact sitemap-route site queries
+google_challenge_observed=false
+indexed_route_signals=2
+indexed_route_signal_total=13
+indexed_route=https://mullusi.com/
+indexed_route=https://mullusi.com/mullu/
+awaiting_google_route_signal=https://mullusi.com/doctrine/
+awaiting_google_route_signal=https://mullusi.com/proof/
+awaiting_google_route_signal=https://mullusi.com/playground/
+awaiting_google_route_signal=https://mullusi.com/contact/
+awaiting_google_route_signal=https://mullusi.com/pilot/
+awaiting_google_route_signal=https://mullusi.com/status/
+awaiting_google_route_signal=https://mullusi.com/security/
+awaiting_google_route_signal=https://mullusi.com/privacy/
+awaiting_google_route_signal=https://mullusi.com/terms/
+awaiting_google_route_signal=https://mullusi.com/acceptable-use/
+awaiting_google_route_signal=https://mullusi.com/responsible-disclosure/
+route_coverage_state=AwaitingEvidence
+```
+
+Google Search readback currently confirms indexed signals for the homepage and
+`/mullu/`. Exact-route queries for the remaining eleven sitemap routes returned
+no public result in the observed readback session. This is an external recrawl
+gap only; the live sitemap and public route responses remain verified.
+
 ## Search Console Submission
 
 Observed on 2026-05-24:
@@ -160,6 +194,24 @@ Search Console accepted and read the sitemap after an initial transient
 HTTP 200 for `https://mullusi.com/sitemap.xml` during that transient state.
 The final Search Console table readback is `Success` with five discovered
 pages.
+
+## Search Console Resubmission
+
+Observed on 2026-05-24 after the thirteen-route production deployment was
+verified:
+
+```text
+submitted_sitemap=https://mullusi.com/sitemap.xml
+submission_result=Sitemap submitted successfully
+post_submit_sitemap_status=Success
+post_submit_discovered_pages=5
+post_submit_discovered_videos=0
+search_console_expanded_route_count_state=AwaitingEvidence
+```
+
+Search Console accepted the fresh sitemap signal. The table remained at five
+discovered pages immediately after resubmission, so expanded route discovery is
+still pending Google processing.
 
 ## URL Inspection Request
 
@@ -183,7 +235,7 @@ URL Inspection showed stale Google state from before the current canonical
 redirect closure. The homepage request was accepted into Google's priority
 crawl queue. Additional route-specific requests are not recorded because the
 browser session did not produce stable readback before timeout; the sitemap
-submission already exposes all five routes to Google.
+submission already exposes all currently declared routes to Google.
 
 ## Release Boundary
 
@@ -212,6 +264,10 @@ search_console_discovered_pages=5
 homepage_url_inspection_request=Pass
 homepage_priority_crawl_queue=accepted
 additional_url_inspection_requests=AwaitingEvidence
+google_indexed_route_signals=2/13
+google_indexed_routes=https://mullusi.com/,https://mullusi.com/mullu/
+google_unindexed_route_signals=11/13
+google_expanded_route_recrawl=AwaitingEvidence
 ```
 
 ## Checker Boundary
@@ -231,6 +287,6 @@ raw_response_headers=not_recorded
 
 STATUS:
   Completeness: 98%
-  Invariants verified: historical five-route crawl parity, current thirteen-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback
-  Open issues: Search Console expanded-sitemap readback after deployment
-  Next action: monitor Search Console and public results for expanded trust-route recrawl
+  Invariants verified: historical five-route crawl parity, current thirteen-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback, Google route coverage readback
+  Open issues: Search Console discovered-page count remains 5; eleven expanded routes still await public Google route-specific readback
+  Next action: monitor Search Console and public results for expanded route recrawl
