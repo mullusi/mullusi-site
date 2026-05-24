@@ -6,6 +6,7 @@ Invariants: validation is deterministic, dependency-free, and exits nonzero on b
 */
 
 import fs from "node:fs";
+import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -19,6 +20,14 @@ const requiredFiles = [
   "mullu/index.html",
   "proof/index.html",
   "playground/index.html",
+  "contact/index.html",
+  "pilot/index.html",
+  "status/index.html",
+  "security/index.html",
+  "privacy/index.html",
+  "terms/index.html",
+  "acceptable-use/index.html",
+  "responsible-disclosure/index.html",
   "404.html",
   ".nojekyll",
   ".well-known/security.txt",
@@ -44,9 +53,24 @@ const requiredFiles = [
   "favicon.ico",
   "robots.txt",
   "sitemap.xml",
+  "status.json",
   "site.webmanifest",
+  "assets/lang-bootstrap.js",
   "assets/app.js",
   "assets/styles.css",
+  "assets/theme-bootstrap.js",
+  "assets/pages/contact.css",
+  "assets/pages/doctrine.css",
+  "assets/pages/mullu.js",
+  "assets/pages/mullu.css",
+  "assets/pages/not-found.css",
+  "assets/pages/pilot.css",
+  "assets/pages/playground.js",
+  "assets/pages/playground.css",
+  "assets/pages/proof.js",
+  "assets/pages/proof.css",
+  "assets/pages/status.css",
+  "assets/pages/trust.css",
   "assets/mullusi-icon.svg",
   "assets/mullusi-icon-32.png",
   "assets/mullusi-icon-180.png",
@@ -97,12 +121,63 @@ const allowedProductClassifications = new Set([
   "library/package",
 ]);
 
+const publicHtmlFiles = [
+  "index.html",
+  "doctrine/index.html",
+  "mullu/index.html",
+  "proof/index.html",
+  "playground/index.html",
+  "contact/index.html",
+  "pilot/index.html",
+  "status/index.html",
+  "security/index.html",
+  "privacy/index.html",
+  "terms/index.html",
+  "acceptable-use/index.html",
+  "responsible-disclosure/index.html",
+  "404.html",
+];
+
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
 }
 
 function readBinary(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath));
+}
+
+function sha256Hex(content) {
+  return crypto.createHash("sha256").update(content).digest("hex");
+}
+
+function canonicalText(content) {
+  return content.replace(/\r\n/g, "\n");
+}
+
+function canonicalJsonValue(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => canonicalJsonValue(item));
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, canonicalJsonValue(value[key])]),
+    );
+  }
+  return value;
+}
+
+function jsonContentHashWithoutMetaHash(relativePath) {
+  const parsed = JSON.parse(readUtf8(relativePath));
+  if (parsed?.meta && typeof parsed.meta === "object") {
+    delete parsed.meta.content_hash;
+  }
+  return `sha256:${sha256Hex(JSON.stringify(canonicalJsonValue(parsed)))}`;
+}
+
+function fileContentHash(relativePath) {
+  return `sha256:${sha256Hex(canonicalText(readUtf8(relativePath)))}`;
 }
 
 function pathExists(relativePath) {
@@ -122,6 +197,17 @@ function hasExactLine(text, expectedLine) {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .some((line) => line === expectedLine);
+}
+
+function inlineScriptHashes() {
+  const hashes = new Set();
+  for (const htmlFile of publicHtmlFiles) {
+    const html = readUtf8(htmlFile);
+    for (const match of html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)) {
+      hashes.add(`sha256-${crypto.createHash("sha256").update(canonicalText(match[1])).digest("base64")}`);
+    }
+  }
+  return hashes;
 }
 
 function hexToRgb(hex) {
@@ -216,6 +302,7 @@ function validateCloudflarePagesControls() {
   const requiredHeaderTerms = [
     "Cloudflare Pages response headers",
     "Content-Security-Policy:",
+    "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
     "X-Content-Type-Options: nosniff",
     "X-Frame-Options: DENY",
     "/assets/*",
@@ -227,6 +314,20 @@ function validateCloudflarePagesControls() {
   for (const term of requiredHeaderTerms) {
     if (!headers.includes(term)) {
       recordFailure(`cloudflare_headers_term_missing:${term}`);
+    }
+  }
+  const cspLine = headers.split(/\r?\n/).find((line) => line.trim().startsWith("Content-Security-Policy:")) || "";
+  const scriptDirective = cspLine.split(";").find((part) => part.trim().startsWith("script-src")) || "";
+  if (scriptDirective.includes("'unsafe-inline'")) {
+    recordFailure("cloudflare_script_csp_allows_unsafe_inline");
+  }
+  const styleDirective = cspLine.split(";").find((part) => part.trim().startsWith("style-src")) || "";
+  if (styleDirective.includes("'unsafe-inline'")) {
+    recordFailure("cloudflare_style_csp_allows_unsafe_inline");
+  }
+  for (const hash of inlineScriptHashes()) {
+    if (!scriptDirective.includes(`'${hash}'`)) {
+      recordFailure(`cloudflare_script_hash_missing:${hash}`);
     }
   }
   const requiredRedirectRules = [
@@ -248,16 +349,25 @@ function validateCloudflarePagesArtifact() {
     ".well-known",
     "assets",
     "data",
+    "contact",
     "doctrine",
     "mullu",
+    "pilot",
     "playground",
     "proof",
+    "status",
+    "security",
+    "privacy",
+    "terms",
+    "acceptable-use",
+    "responsible-disclosure",
     "404.html",
     "favicon.ico",
     "index.html",
     "robots.txt",
     "site.webmanifest",
     "sitemap.xml",
+    "status.json",
     "_headers",
     "_redirects",
   ]);
@@ -295,16 +405,39 @@ function validateCloudflarePagesArtifact() {
     "mullu/index.html",
     "proof/index.html",
     "playground/index.html",
+    "contact/index.html",
+    "pilot/index.html",
+    "status/index.html",
+    "security/index.html",
+    "privacy/index.html",
+    "terms/index.html",
+    "acceptable-use/index.html",
+    "responsible-disclosure/index.html",
     "404.html",
     "_headers",
     "_redirects",
     ".well-known/security.txt",
+    "assets/lang-bootstrap.js",
     "assets/app.js",
     "assets/styles.css",
+    "assets/theme-bootstrap.js",
+    "assets/pages/contact.css",
+    "assets/pages/doctrine.css",
+    "assets/pages/mullu.js",
+    "assets/pages/mullu.css",
+    "assets/pages/not-found.css",
+    "assets/pages/pilot.css",
+    "assets/pages/playground.js",
+    "assets/pages/playground.css",
+    "assets/pages/proof.js",
+    "assets/pages/proof.css",
+    "assets/pages/status.css",
+    "assets/pages/trust.css",
     "data/site.json",
     "data/products.json",
     "robots.txt",
     "sitemap.xml",
+    "status.json",
     "site.webmanifest",
   ];
   for (const relativePath of byteMatchedFiles) {
@@ -670,8 +803,49 @@ function validateSitemap() {
   }
 }
 
+function validateStatusJson() {
+  const status = JSON.parse(readUtf8("status.json"));
+  const site = requireString(status.site, "status.site");
+  const publicState = requireString(status.public_state, "status.public_state");
+  const canonicalContract = requireString(status.canonical_contract, "status.canonical_contract");
+  if (site !== "mullusi.com") {
+    recordFailure(`status_site_invalid:${site}`);
+  }
+  if (publicState !== "Published") {
+    recordFailure(`status_public_state_invalid:${publicState}`);
+  }
+  if (canonicalContract !== "POST /v1/govern/evaluate") {
+    recordFailure(`status_canonical_contract_invalid:${canonicalContract}`);
+  }
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(status.built_at || "")) {
+    recordFailure(`status_built_at_invalid:${status.built_at}`);
+  }
+  const requiredPublishedRoutes = ["/contact/", "/pilot/", "/status/", "/security/", "/privacy/", "/terms/", "/acceptable-use/", "/responsible-disclosure/"];
+  if (!Array.isArray(status.published_routes) || requiredPublishedRoutes.some((route) => !status.published_routes.includes(route))) {
+    recordFailure("status_published_routes_missing_public_trust_routes");
+  }
+  const reservedSurfaces = Array.isArray(status.reserved_surfaces) ? status.reserved_surfaces : [];
+  const reservedNames = new Set(reservedSurfaces.map((surface) => surface.surface));
+  for (const requiredSurface of ["api.mullusi.com", "dashboard.mullusi.com", "sandbox.mullusi.com", "metrics.mullusi.com", "learn.mullusi.com"]) {
+    if (!reservedNames.has(requiredSurface)) {
+      recordFailure(`status_reserved_surface_missing:${requiredSurface}`);
+    }
+  }
+  const hashes = status.content_hashes || {};
+  const expectedHashes = {
+    "index.html": fileContentHash("index.html"),
+    "data/site.json": jsonContentHashWithoutMetaHash("data/site.json"),
+    "data/products.json": jsonContentHashWithoutMetaHash("data/products.json"),
+  };
+  for (const [requiredHash, expectedHash] of Object.entries(expectedHashes)) {
+    if (hashes[requiredHash] !== expectedHash) {
+      recordFailure(`status_content_hash_invalid:${requiredHash}:${hashes[requiredHash] || ""}:${expectedHash}`);
+    }
+  }
+}
+
 function validateLocalLinks() {
-  for (const htmlFile of ["index.html", "doctrine/index.html", "mullu/index.html", "proof/index.html", "playground/index.html", "404.html"]) {
+  for (const htmlFile of publicHtmlFiles) {
     const ids = idsForHtmlFile(htmlFile);
     const html = readUtf8(htmlFile);
     for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
@@ -698,6 +872,29 @@ function validateLocalLinks() {
     const target = path.normalize(path.join("assets", url.split(/[?#]/)[0])).replaceAll("\\", "/");
     if (!pathExists(target)) {
       recordFailure(`css_asset_missing:assets/styles.css->${url}`);
+    }
+  }
+}
+
+function validateInlineStyleBoundary() {
+  for (const htmlFile of publicHtmlFiles) {
+    const html = readUtf8(htmlFile);
+    if (/<style\b/i.test(html)) {
+      recordFailure(`inline_style_tag_present:${htmlFile}`);
+    }
+    if (/\sstyle\s*=/i.test(html)) {
+      recordFailure(`inline_style_attribute_present:${htmlFile}`);
+    }
+  }
+}
+
+function validateInlineScriptBoundary() {
+  for (const htmlFile of publicHtmlFiles) {
+    const html = readUtf8(htmlFile);
+    for (const match of html.matchAll(/<script(?![^>]*\bsrc=)([^>]*)>/gi)) {
+      if (!/\btype=["']application\/ld\+json["']/i.test(match[1])) {
+        recordFailure(`inline_executable_script_present:${htmlFile}`);
+      }
     }
   }
 }
@@ -826,8 +1023,13 @@ function validateProductRegistry() {
   const registry = JSON.parse(readUtf8("data/products.json"));
   requireString(registry?.meta?.name, "meta.name");
   requireString(registry?.meta?.domain, "meta.domain");
+  const registryContentHash = requireString(registry?.meta?.content_hash, "meta.content_hash");
   if (registry?.meta?.domain !== "mullusi.com") {
     recordFailure(`registry_domain_invalid:${registry?.meta?.domain}`);
+  }
+  const expectedRegistryContentHash = jsonContentHashWithoutMetaHash("data/products.json");
+  if (registryContentHash !== expectedRegistryContentHash) {
+    recordFailure(`registry_content_hash_mismatch:${registryContentHash}:${expectedRegistryContentHash}`);
   }
   if (!Array.isArray(registry.systems)) {
     recordFailure("registry_systems_not_array");
@@ -842,9 +1044,11 @@ function validateProductRegistry() {
     return;
   }
 
+  const seenProductIds = new Set();
   const seenProductNames = new Set();
   for (const [index, product] of registry.productRegistry.entries()) {
     const label = `productRegistry.${index}`;
+    const id = requireString(product.id, `${label}.id`);
     const name = requireString(product.name, `${label}.name`);
     const classification = requireString(product.classification, `${label}.classification`);
     const status = requireString(product.status, `${label}.status`);
@@ -882,6 +1086,13 @@ function validateProductRegistry() {
     if (seenProductNames.has(name)) {
       recordFailure(`product_name_duplicate:${name}`);
     }
+    if (!/^[a-z0-9][a-z0-9-]{2,63}$/.test(id)) {
+      recordFailure(`product_id_invalid:${name}:${id}`);
+    }
+    if (seenProductIds.has(id)) {
+      recordFailure(`product_id_duplicate:${id}`);
+    }
+    seenProductIds.add(id);
     seenProductNames.add(name);
   }
 
@@ -1015,6 +1226,11 @@ function validateSiteContent() {
   requireString(content?.meta?.name, "site.meta.name");
   requireString(content?.meta?.version, "site.meta.version");
   requireString(content?.meta?.purpose, "site.meta.purpose");
+  const siteContentHash = requireString(content?.meta?.content_hash, "site.meta.content_hash");
+  const expectedSiteContentHash = jsonContentHashWithoutMetaHash("data/site.json");
+  if (siteContentHash !== expectedSiteContentHash) {
+    recordFailure(`site_content_hash_mismatch:${siteContentHash}:${expectedSiteContentHash}`);
+  }
   const expectedPlatformBuildOrder = [
     "Public website",
     "Docs route",
@@ -1116,12 +1332,15 @@ function validateSiteContent() {
     for (const [index, item] of content.interfaces.entries()) {
       const label = `site.interfaces.${index}`;
       const name = requireString(item.name, `${label}.name`);
-      const href = requireString(item.href, `${label}.href`);
+      const href = typeof item.href === "string" ? item.href : "";
       requireString(item.summary, `${label}.summary`);
       if (!allowedInterfaceStatuses.has(item.status)) {
         recordFailure(`site_interface_status_invalid:${name}:${item.status}`);
       }
-      if (!/^https:\/\/[a-z0-9.-]+\.mullusi\.com$/.test(href) && href !== "https://mullusi.com") {
+      if (item.status === "reserved" && href !== "") {
+        recordFailure(`site_interface_reserved_href_present:${name}:${href}`);
+      }
+      if (item.status !== "reserved" && !/^https:\/\/[a-z0-9.-]+\.mullusi\.com$/.test(href) && href !== "https://mullusi.com") {
         recordFailure(`site_interface_href_invalid:${name}:${href}`);
       }
     }
@@ -1197,7 +1416,7 @@ function validateSiteContent() {
     requireString(statusBoard.follow, "site.statusBoard.follow");
     const followHref = requireString(statusBoard.followHref, "site.statusBoard.followHref");
     requireString(statusBoard.followLabel, "site.statusBoard.followLabel");
-    if (!/^(https:\/\/|mailto:)/.test(followHref)) {
+    if (!/^(https:\/\/|mailto:|\/[A-Za-z0-9/_-]*\/?$)/.test(followHref)) {
       recordFailure(`site_status_board_follow_href_invalid:${followHref}`);
     }
     if (!Array.isArray(statusBoard.rows) || statusBoard.rows.length < 3) {
@@ -2351,7 +2570,7 @@ function validateIndexDesignContract() {
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
-  const assetVersion = "2026.05.platform.14";
+  const assetVersion = "2026.05.platform.15";
 
   if (!html.includes(`assets/styles.css?v=${assetVersion}`) || !html.includes(`assets/app.js?v=${assetVersion}`)) {
     recordFailure("index_asset_version_invalid");
@@ -2551,7 +2770,7 @@ function validateIndexDesignContract() {
 }
 
 function validateProofPageContract() {
-  const html = readUtf8("proof/index.html");
+  const html = `${readUtf8("proof/index.html")}\n${readUtf8("assets/pages/proof.js")}`;
   const requiredProofTerms = [
     'id="products"',
     "Product evidence lanes",
@@ -2669,6 +2888,7 @@ function validateDoctrineWordingContract() {
       file: "index.html",
       terms: [
         "Mullusi governs high-risk symbolic intelligence and software actions before they execute.",
+        "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
         "Every material consequence re-checked.",
         "re-governs material consequences when context, authority, risk, or dependency state changes.",
         'href="/doctrine/"',
@@ -2687,8 +2907,8 @@ function validateDoctrineWordingContract() {
       file: "ops/mullusi-doctrine.md",
       terms: [
         "No material consequence without re-governance when context, authority, risk, or dependency state changes.",
-        "Verified against Mullusi architecture and public philosophy.",
-        "AwaitingEvidence against runtime conformance until signed witness endpoints close.",
+        "Self-attested against Mullusi architecture and public philosophy.",
+        "AwaitingEvidence on independent runtime witness until signed endpoints close.",
         "threat_model_minimum",
       ],
     },
@@ -2766,7 +2986,7 @@ function validatePublicText() {
 }
 
 function validateEmailRendering() {
-  const htmlFiles = ["index.html", "doctrine/index.html", "mullu/index.html", "proof/index.html", "playground/index.html", "404.html"];
+  const htmlFiles = publicHtmlFiles;
   const emailPattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
   for (const fileName of htmlFiles) {
     const html = readUtf8(fileName);
@@ -2796,6 +3016,37 @@ function validateEmailRendering() {
       }
       recordFailure(`email_visible_without_mailto:${fileName}:${email}`);
     }
+  }
+}
+
+function validateTrustRoutes() {
+  const trustRoutes = [
+    ["/security/", "Security"],
+    ["/privacy/", "Privacy"],
+    ["/terms/", "Terms"],
+    ["/acceptable-use/", "Acceptable Use"],
+    ["/responsible-disclosure/", "Responsible Disclosure"],
+  ];
+  const index = readUtf8("index.html");
+  for (const [route, label] of trustRoutes) {
+    if (!index.includes(`href="${route}"`)) {
+      recordFailure(`index_trust_footer_link_missing:${route}`);
+    }
+    const routeFile = `${route.slice(1)}index.html`;
+    const html = readUtf8(routeFile);
+    if (!html.includes(label)) {
+      recordFailure(`trust_route_label_missing:${routeFile}:${label}`);
+    }
+    if (!html.includes('href="/assets/pages/trust.css"')) {
+      recordFailure(`trust_route_css_missing:${routeFile}`);
+    }
+    if (!html.includes("Public") && !html.includes("public")) {
+      recordFailure(`trust_route_public_boundary_missing:${routeFile}`);
+    }
+  }
+  const securityTxt = readUtf8(".well-known/security.txt");
+  if (!securityTxt.includes("Policy: https://mullusi.com/responsible-disclosure/")) {
+    recordFailure("security_txt_policy_missing");
   }
 }
 
@@ -2940,6 +3191,14 @@ function validateHeadContract() {
     { file: "mullu/index.html", url: "https://mullusi.com/mullu/" },
     { file: "proof/index.html", url: "https://mullusi.com/proof/" },
     { file: "playground/index.html", url: "https://mullusi.com/playground/" },
+    { file: "contact/index.html", url: "https://mullusi.com/contact/" },
+    { file: "pilot/index.html", url: "https://mullusi.com/pilot/" },
+    { file: "status/index.html", url: "https://mullusi.com/status/" },
+    { file: "security/index.html", url: "https://mullusi.com/security/" },
+    { file: "privacy/index.html", url: "https://mullusi.com/privacy/" },
+    { file: "terms/index.html", url: "https://mullusi.com/terms/" },
+    { file: "acceptable-use/index.html", url: "https://mullusi.com/acceptable-use/" },
+    { file: "responsible-disclosure/index.html", url: "https://mullusi.com/responsible-disclosure/" },
   ];
   for (const { file, url } of routes) {
     const html = readUtf8(file);
@@ -2977,7 +3236,10 @@ function runValidation() {
   validateWwwCanonicalRedirectGate();
   validateRobots();
   validateSitemap();
+  validateStatusJson();
   validateLocalLinks();
+  validateInlineStyleBoundary();
+  validateInlineScriptBoundary();
   validateHeadContract();
   validateProductionClaimBoundary();
   validateWebManifest();
@@ -2992,6 +3254,7 @@ function runValidation() {
   validateDoctrineWordingContract();
   validatePublicText();
   validateEmailRendering();
+  validateTrustRoutes();
   validateOperatingGates();
   validateRuntimeGateState();
 

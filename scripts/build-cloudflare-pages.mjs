@@ -21,6 +21,14 @@ const publicEntries = [
   "mullu",
   "proof",
   "playground",
+  "contact",
+  "pilot",
+  "status",
+  "security",
+  "privacy",
+  "terms",
+  "acceptable-use",
+  "responsible-disclosure",
   "404.html",
   "_headers",
   "_redirects",
@@ -30,6 +38,7 @@ const publicEntries = [
   "favicon.ico",
   "robots.txt",
   "sitemap.xml",
+  "status.json",
   "site.webmanifest",
 ];
 

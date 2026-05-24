@@ -261,6 +261,13 @@ function productEvidenceHref(product) {
   return activityHref(product?.evidencePath);
 }
 
+function safeDomToken(value) {
+  return String(value ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "unknown";
+}
+
 function renderProductRouteActions(product) {
   const docsHref = productDocsHref(product);
   const evidenceHref = productEvidenceHref(product);
@@ -333,6 +340,13 @@ function renderProofLanes() {
   revealRendered(target);
 }
 
+function interfaceHref(item) {
+  const href = String(item?.href || "").trim();
+  if (href === "https://docs.mullusi.com" || href === "https://mullusi.com") return href;
+  if (/^\/[A-Za-z0-9/_-]*\/?$/.test(href)) return href;
+  return "";
+}
+
 function renderInterfaceLinks() {
   const target = qs("[data-interface-links]");
   const interfaces = state.siteContent?.interfaces || [];
@@ -343,7 +357,9 @@ function renderInterfaceLinks() {
       <span class="badge">${escapeHtml(localized(item, "status"))}</span>
       <h3>${escapeHtml(localized(item, "name"))}</h3>
       <p>${escapeHtml(localized(item, "summary"))}</p>
-      <a class="lnk" href="${escapeAttribute(item.href)}" rel="noopener">${escapeHtml(i18nText("interfaces.openLink") || "Open")} ${escapeHtml(localized(item, "name"))} -&gt;</a>
+      ${interfaceHref(item)
+        ? `<a class="lnk" href="${escapeAttribute(interfaceHref(item))}" rel="noopener">${escapeHtml(i18nText("interfaces.openLink") || "Open")} ${escapeHtml(localized(item, "name"))} -&gt;</a>`
+        : `<span class="reserved-route">${escapeHtml(localized(item, "reservedReason") || "Reserved - AwaitingEvidence")}</span>`}
     </article>
   `).join("");
   revealRendered(target);
@@ -712,7 +728,7 @@ function renderStatusBoard() {
   if (!target || !board || rows.length === 0) return;
 
   const amRows = board.am && Array.isArray(board.am.rows) ? board.am.rows : [];
-  const followHref = /^(https:\/\/|mailto:)/.test(board.followHref || "") ? board.followHref : null;
+  const followHref = activityHref(board.followHref) || (/^(https:\/\/|mailto:)/.test(board.followHref || "") ? board.followHref : null);
 
   target.innerHTML = `
     <div class="status-head">
@@ -1017,7 +1033,7 @@ function renderMetrics() {
     metricCell(systems.length, "metrics.deployed", "Deployed public surfaces"),
     metricCell(productRegistry.length, "metrics.products", "Governed product records"),
     metricCell(interfaces.length, "metrics.routes", "Governed public routes"),
-    metricCell(apiContracts.length, "metrics.contracts", "Govern API contracts v1"),
+    metricCell(apiContracts.length, "metrics.contracts", "Draft v1 Govern API contracts"),
     metricCell(releaseStages.length, "metrics.gates", "Release-gate stages"),
     metricCell(futureDomains.length, "metrics.staged", "Staged domain engines"),
     metricCell(signalUpdated, "metrics.signal", "Signal last refreshed"),
@@ -1065,7 +1081,7 @@ function renderProductRegistry() {
     : "";
 
   target.innerHTML = `${visibleProducts.map((product) => `
-    <article class="product-card">
+    <article class="product-card" data-product-key="${safeDomToken(product.id || product.name)}">
       <div class="product-card-head">
         <span class="badge">${escapeHtml(product.classification)}</span>
         <span class="status-pill">${escapeHtml(product.status)}</span>
@@ -1438,7 +1454,14 @@ function escapeHtml(value) {
 
 function escapeAttribute(value) {
   const text = String(value ?? "");
-  if (!/^https:\/\//.test(text) && !/^mailto:/.test(text)) return "#";
+  if (
+    !/^https:\/\//.test(text) &&
+    !/^mailto:/.test(text) &&
+    !/^\/[A-Za-z0-9/_-]*\/?$/.test(text) &&
+    !/^#[A-Za-z][A-Za-z0-9_-]*$/.test(text)
+  ) {
+    return "#";
+  }
   return escapeHtml(text);
 }
 

@@ -1,0 +1,84 @@
+<!doctype html>
+<!--
+Purpose: public status route for Mullusi live, draft, reserved, and AwaitingEvidence surfaces.
+Governance scope: route state visibility, reserved surface disclosure, runtime witness boundary, and status.json discovery.
+Dependencies: status.json, Mullusi static assets, and public proof-boundary route.
+Invariants: reserved surfaces are not linked as live endpoints, runtime claims remain AwaitingEvidence, and status language matches the proof boundary.
+-->
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#070806">
+  <title>Mullusi Status - Public Surface State</title>
+  <meta name="description" content="Public Mullusi surface status for published routes, reserved subdomains, draft API contract, and AwaitingEvidence runtime witnesses.">
+  <link rel="canonical" href="https://mullusi.com/status/">
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:site_name" content="Mullusi">
+  <meta property="og:title" content="Mullusi Status - Public Surface State">
+  <meta property="og:description" content="Published, draft, reserved, and AwaitingEvidence states for Mullusi public surfaces.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mullusi.com/status/">
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <link rel="stylesheet" href="/assets/pages/status.css">
+</head>
+<body>
+  <nav aria-label="Primary">
+    <a class="brand" href="/">Mullusi</a>
+    <div class="nav-links">
+      <a href="/contact/">Contact</a>
+      <a href="/pilot/">Pilot</a>
+      <a href="/mullu/">Mullu</a>
+      <a href="/proof/">Proof</a>
+      <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Docs</a>
+    </div>
+  </nav>
+  <main id="main" tabindex="-1">
+    <div class="eyebrow">Public status</div>
+    <h1>What is live.</h1>
+    <p class="lede">Published routes are linked. Reserved subdomains are named without sending visitors to DNS failure. Runtime proof remains AwaitingEvidence until signed witness endpoints close.</p>
+    <div class="actions">
+      <a class="button" href="/status.json">Open status.json</a>
+      <a class="button" href="/proof/">Review proof boundary</a>
+      <a class="button" href="/contact/">Contact Mullusi</a>
+    </div>
+
+    <section class="status-grid" aria-label="Surface status cards">
+      <article class="status-card"><span class="state">Published</span><h2>mullusi.com</h2><p>Homepage, public map, product registry, and proof-boundary routing surface.</p></article>
+      <article class="status-card"><span class="state">Published</span><h2>/mullu/</h2><p>Flagship product route with private beta and runtime evidence boundary.</p></article>
+      <article class="status-card"><span class="state">Published</span><h2>/playground/</h2><p>Static browser simulator. It contacts no server and issues no proof stamp.</p></article>
+      <article class="status-card"><span class="state">Published</span><h2>/proof/</h2><p>Public proof boundary for website, product, runtime, and proof-stamp claims.</p></article>
+      <article class="status-card"><span class="state">Published</span><h2>/contact/ and /pilot/</h2><p>Reliable local conversion routes with visible mailbox fallback.</p></article>
+      <article class="status-card"><span class="state">Published</span><h2>Trust routes</h2><p>Security, privacy, terms, acceptable use, and responsible disclosure routes are published.</p></article>
+      <article class="status-card"><span class="state draft">Draft</span><h2>Draft v1 API</h2><p><code>POST /v1/govern/evaluate</code> is the canonical draft contract.</p></article>
+    </section>
+
+    <section class="witness" aria-labelledby="reserved-title">
+      <h2 id="reserved-title">Reserved subdomains</h2>
+      <table>
+        <thead>
+          <tr><th>Surface</th><th>Public state</th><th>Boundary</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>api.mullusi.com</code></td><td>AwaitingEvidence</td><td>Reserved for runtime gateway after health, gateway witness, and conformance close.</td></tr>
+          <tr><td><code>dashboard.mullusi.com</code></td><td>Reserved</td><td>Reserved for authenticated control room.</td></tr>
+          <tr><td><code>sandbox.mullusi.com</code></td><td>Reserved</td><td>Reserved for governed demos beyond the static playground.</td></tr>
+          <tr><td><code>metrics.mullusi.com</code></td><td>Reserved</td><td>Reserved for runtime metrics, audits, graphs, and release witnesses.</td></tr>
+          <tr><td><code>learn.mullusi.com</code></td><td>Reserved</td><td>Reserved for learning paths after docs expansion.</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <footer>
+    <div>Status route state: Published</div>
+    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+  </footer>
+</body>
+</html>

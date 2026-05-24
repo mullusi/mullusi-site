@@ -139,8 +139,8 @@
       "am": "የሚተዳደር ሙከራ ይጠይቁ"
     },
     "hero.doctrineStatus": {
-      "en": "Doctrine v1.2 is Verified against Mullusi architecture and AwaitingEvidence against runtime conformance until signed witness endpoints close.",
-      "am": "ዶክትሪን v1.2 ከሙሉሲ አርክቴክቸር አንጻር ተረጋግጧል፤ የተፈረሙ የምስክር መዳረሻዎች እስኪዘጉ ድረስ ከruntime ተገዢነት አንጻር AwaitingEvidence ነው።"
+      "en": "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
+      "am": "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close."
     },
     "oldway.tag": {
       "en": "The Shift",
@@ -1039,8 +1039,8 @@
       "am": "የሚተዳደሩ ይፋዊ መንገዶች"
     },
     "metrics.contracts": {
-      "en": "Govern API contracts v1",
-      "am": "የGovern API ውሎች v1"
+      "en": "Draft v1 Govern API contracts",
+      "am": "Draft v1 Govern API contracts"
     },
     "metrics.gates": {
       "en": "Release-gate stages",

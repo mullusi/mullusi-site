@@ -10,13 +10,13 @@ Invariants: the doctrine carries its own evidence boundary; no clause is publish
 ## Evidence State
 
 ```text
-Verified against Mullusi architecture and public philosophy.
-AwaitingEvidence against runtime conformance until signed witness endpoints close.
+Self-attested against Mullusi architecture and public philosophy.
+AwaitingEvidence on independent runtime witness until signed endpoints close.
 ```
 
 The doctrine is itself a claim and carries its own evidence boundary. It is
 Verified against the architecture and the published philosophy, and
-AwaitingEvidence against runtime conformance until `/health`,
+AwaitingEvidence on independent runtime witness until `/health`,
 `/gateway/witness`, and `/runtime/conformance` publish signed witness evidence.
 
 ## Invariants
@@ -198,7 +198,7 @@ Rollback never erases a prior claim. It preserves lineage through
 
 ```text
 Mullusi Doctrine v1.2
-Status: Verified against architecture; AwaitingEvidence against runtime conformance.
+Status: Self-attested against architecture; AwaitingEvidence on independent runtime witness.
 Judgment: PublishableWithBoundary
 ```
 

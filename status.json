@@ -1,0 +1,55 @@
+{
+  "site": "mullusi.com",
+  "version": "2026.05.public-site",
+  "built_at": "2026-05-24T00:00:00Z",
+  "witness": "AwaitingEvidence",
+  "public_state": "Published",
+  "canonical_contract": "POST /v1/govern/evaluate",
+  "published_routes": [
+    "/",
+    "/mullu/",
+    "/doctrine/",
+    "/proof/",
+    "/playground/",
+    "/contact/",
+    "/pilot/",
+    "/status/",
+    "/security/",
+    "/privacy/",
+    "/terms/",
+    "/acceptable-use/",
+    "/responsible-disclosure/"
+  ],
+  "reserved_surfaces": [
+    {
+      "surface": "api.mullusi.com",
+      "state": "AwaitingEvidence",
+      "boundary": "Reserved until signed runtime witness endpoints close."
+    },
+    {
+      "surface": "dashboard.mullusi.com",
+      "state": "Reserved",
+      "boundary": "Reserved for authenticated operator control."
+    },
+    {
+      "surface": "sandbox.mullusi.com",
+      "state": "Reserved",
+      "boundary": "Reserved for governed demonstrations beyond the static playground."
+    },
+    {
+      "surface": "metrics.mullusi.com",
+      "state": "Reserved",
+      "boundary": "Reserved for runtime metrics, audits, graphs, and release witnesses."
+    },
+    {
+      "surface": "learn.mullusi.com",
+      "state": "Reserved",
+      "boundary": "Reserved for learning paths after docs expansion."
+    }
+  ],
+  "content_hashes": {
+    "index.html": "sha256:b7660c2eb28025b306b782cdf7205da6d8e7308c7366ec74604873a09ffb3ecf",
+    "data/site.json": "sha256:693fef04999601c1ffdbb42f20ec9f9da4d828fed09a76d73bc02ddfc9a132b3",
+    "data/products.json": "sha256:12453ef82f274609fc33a026f378ffb5b6a50541a735de706aa3fc3b63869a78"
+  }
+}
