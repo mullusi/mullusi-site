@@ -1,0 +1,97 @@
+<!doctype html>
+<!--
+Purpose: public Mullusi privacy boundary for static website visitors and contact routes.
+Governance scope: visitor data, local browser storage, mailbox contact, static JSON, and third-party dependency disclosure.
+Dependencies: Mullusi static assets, /contact/, /status/, and Cloudflare Pages delivery.
+Invariants: no tracking claim beyond the implemented static site boundary; runtime product privacy remains AwaitingEvidence.
+-->
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#070806">
+  <title>Mullusi Privacy - Static Site Boundary</title>
+  <meta name="description" content="Privacy boundary for Mullusi public website routes, local browser storage, contact mailboxes, and static public JSON.">
+  <link rel="canonical" href="https://mullusi.com/privacy/">
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:site_name" content="Mullusi">
+  <meta property="og:title" content="Mullusi Privacy - Static Site Boundary">
+  <meta property="og:description" content="Static public website privacy boundary for Mullusi visitor routes and contact paths.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mullusi.com/privacy/">
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <link rel="stylesheet" href="/assets/pages/trust.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav aria-label="Primary">
+    <a class="brand" href="/">Mullusi</a>
+    <div class="nav-links">
+      <a href="/security/">Security</a>
+      <a href="/status/">Status</a>
+      <a href="/contact/">Contact</a>
+      <a href="/proof/">Proof</a>
+    </div>
+  </nav>
+  <main id="main" tabindex="-1">
+    <div class="eyebrow">Privacy boundary</div>
+    <h1>Privacy.</h1>
+    <p class="lede">Mullusi.com is a static public website. It publishes product, proof, status, and contact information. It does not claim a live account system, backend intake store, or runtime product data processor on the public site.</p>
+
+    <section class="policy-grid" aria-label="Privacy commitments">
+      <article class="policy-card">
+        <h2>Local storage</h2>
+        <p>The homepage may store theme, language, and local visit count values in your browser. These values are local to your device and are not site-wide analytics.</p>
+      </article>
+      <article class="policy-card">
+        <h2>Contact</h2>
+        <p>Mail links open your email client. The message is handled through the mailbox you choose, such as <a href="mailto:hello@mullusi.com">hello@mullusi.com</a>, <a href="mailto:research@mullusi.com">research@mullusi.com</a>, or <a href="mailto:support@mullusi.com">support@mullusi.com</a>.</p>
+      </article>
+      <article class="policy-card">
+        <h2>Public data</h2>
+        <p>The site serves static public JSON for products, status, proof boundary, news, and localized display text. These files do not contain private customer records.</p>
+      </article>
+      <article class="policy-card">
+        <h2>Runtime products</h2>
+        <p>Runtime governance services are not represented as live public data processors here. Their privacy terms require separate publication before runtime evidence closes.</p>
+      </article>
+    </section>
+
+    <section class="panel" aria-labelledby="privacy-table-title">
+      <h2 id="privacy-table-title">Data classes</h2>
+      <table>
+        <thead>
+          <tr><th>Class</th><th>Where it lives</th><th>Boundary</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Theme and language preference</td><td>Your browser</td><td>Used only to render the public site.</td></tr>
+          <tr><td>Local visit count</td><td>Your browser</td><td>Local display value, not transmitted as analytics by this site code.</td></tr>
+          <tr><td>Email content</td><td>Your email provider and Mullusi mailbox</td><td>Only sent when you choose a mail link and send a message.</td></tr>
+          <tr><td>Static route logs</td><td>Hosting and network infrastructure</td><td>Infrastructure delivery may produce request logs outside this static repository.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="notice" aria-label="Contact boundary">
+      <strong>Privacy contact:</strong>
+      Use <a href="mailto:support@mullusi.com?subject=Mullusi%20privacy%20question">support@mullusi.com</a> for privacy questions about this public website.
+    </section>
+  </main>
+  <footer>
+    <div class="footer-links">
+      <a href="/security/">Security</a>
+      <a href="/terms/">Terms</a>
+      <a href="/acceptable-use/">Acceptable Use</a>
+      <a href="/responsible-disclosure/">Responsible Disclosure</a>
+    </div>
+    <div>Privacy route state: Published. Runtime product privacy: AwaitingEvidence.</div>
+  </footer>
+</body>
+</html>

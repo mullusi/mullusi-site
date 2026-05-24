@@ -1,0 +1,98 @@
+<!doctype html>
+<!--
+Purpose: public Mullusi responsible-disclosure route for suspected security issues.
+Governance scope: vulnerability intake, safe testing boundary, reserved-surface prohibition, and disclosure coordination.
+Dependencies: Mullusi static assets, /.well-known/security.txt, /security/, and support mailbox.
+Invariants: disclosure guidance permits only non-destructive testing and does not authorize reserved runtime access.
+-->
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#070806">
+  <title>Mullusi Responsible Disclosure - Security Reporting</title>
+  <meta name="description" content="Responsible disclosure route for suspected Mullusi public website security issues and safe reporting boundaries.">
+  <link rel="canonical" href="https://mullusi.com/responsible-disclosure/">
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:site_name" content="Mullusi">
+  <meta property="og:title" content="Mullusi Responsible Disclosure - Security Reporting">
+  <meta property="og:description" content="Safe reporting route for suspected Mullusi public website security issues.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mullusi.com/responsible-disclosure/">
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <link rel="stylesheet" href="/assets/pages/trust.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav aria-label="Primary">
+    <a class="brand" href="/">Mullusi</a>
+    <div class="nav-links">
+      <a href="/security/">Security</a>
+      <a href="/status/">Status</a>
+      <a href="/terms/">Terms</a>
+      <a href="/contact/">Contact</a>
+    </div>
+  </nav>
+  <main id="main" tabindex="-1">
+    <div class="eyebrow">Responsible disclosure</div>
+    <h1>Report security issues.</h1>
+    <p class="lede">Report suspected vulnerabilities in the public Mullusi website through a non-destructive disclosure path. This page does not authorize testing reserved runtime, dashboard, sandbox, metrics, or private operator surfaces.</p>
+    <div class="actions">
+      <a class="button primary" href="mailto:support@mullusi.com?subject=Mullusi%20responsible%20disclosure">support@mullusi.com</a>
+      <a class="button" href="/.well-known/security.txt">security.txt</a>
+      <a class="button" href="/security/">Security boundary</a>
+    </div>
+
+    <section class="policy-grid" aria-label="Disclosure rules">
+      <article class="policy-card">
+        <h2>In scope</h2>
+        <p>Public static routes on <code>mullusi.com</code>, public asset delivery, public JSON files, public contact links, sitemap, robots, and security headers.</p>
+      </article>
+      <article class="policy-card">
+        <h2>Out of scope</h2>
+        <p>Reserved subdomains, private repositories, mailboxes you do not own, third-party infrastructure, social engineering, denial of service, or destructive data access.</p>
+      </article>
+      <article class="policy-card">
+        <h2>Report contents</h2>
+        <p>Include affected route, reproduction steps, observed impact, browser details if relevant, and whether any data was viewed or changed.</p>
+      </article>
+      <article class="policy-card">
+        <h2>Coordination</h2>
+        <p>Allow time for triage and repair before public disclosure. Mullusi may request clarification, proof of impact, or a safer reproduction path.</p>
+      </article>
+    </section>
+
+    <section class="panel" aria-labelledby="safe-title">
+      <h2 id="safe-title">Safe testing requirements</h2>
+      <ol>
+        <li>Use only your own browser session and your own data.</li>
+        <li>Stop immediately if testing exposes non-public data, credentials, or infrastructure details.</li>
+        <li>Do not run volume, stress, destructive, persistence, or bypass testing.</li>
+        <li>Do not access or attempt to access reserved subdomains as live production targets.</li>
+        <li>Do not disclose the issue publicly before a coordinated repair window is agreed.</li>
+      </ol>
+    </section>
+
+    <section class="notice" aria-label="Bounty boundary">
+      <strong>Bounty boundary:</strong>
+      No public bounty program is promised by this page. The route exists to receive and coordinate responsible reports.
+    </section>
+  </main>
+  <footer>
+    <div class="footer-links">
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <a href="/acceptable-use/">Acceptable Use</a>
+      <a href="/security/">Security</a>
+    </div>
+    <div>Responsible disclosure route state: Published. Reserved runtime testing: not authorized.</div>
+  </footer>
+</body>
+</html>

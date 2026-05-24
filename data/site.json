@@ -2,7 +2,8 @@
   "meta": {
     "name": "Mullusi",
     "version": "2026.05.site-content",
-    "purpose": "Structured public website content for Mullusi."
+    "purpose": "Structured public website content for Mullusi.",
+    "content_hash": "sha256:693fef04999601c1ffdbb42f20ec9f9da4d828fed09a76d73bc02ddfc9a132b3"
   },
   "platformLayers": [
     {
@@ -10,7 +11,12 @@
       "role": "public map",
       "boundary": "identity, trust, roadmap, product discovery, documentation entry, and proof boundary",
       "governs": "What can the public see?",
-      "components": ["mullusi.com", "docs.mullusi.com", "learn.mullusi.com", "status.mullusi.com later"],
+      "components": [
+        "mullusi.com",
+        "docs.mullusi.com",
+        "learn.mullusi.com",
+        "status.mullusi.com later"
+      ],
       "am": {
         "name": "Public Surface",
         "role": "public map",
@@ -23,7 +29,11 @@
       "role": "human control room",
       "boundary": "dashboard workspaces, sandbox demos, product apps, and private operator views",
       "governs": "Who acts through a workspace?",
-      "components": ["dashboard.mullusi.com", "sandbox.mullusi.com", "product apps"],
+      "components": [
+        "dashboard.mullusi.com",
+        "sandbox.mullusi.com",
+        "product apps"
+      ],
       "am": {
         "name": "User Surface",
         "role": "human control room",
@@ -36,7 +46,12 @@
       "role": "machine gateway",
       "boundary": "versioned endpoints, job access, artifact access, and governed service contracts",
       "governs": "Which machine requests are admitted?",
-      "components": ["api.mullusi.com", "GET /health", "POST /v1/govern/evaluate", "GET /v1/jobs/{id}"],
+      "components": [
+        "api.mullusi.com",
+        "GET /health",
+        "POST /v1/govern/evaluate",
+        "GET /v1/jobs/{id}"
+      ],
       "am": {
         "name": "API Surface",
         "role": "machine gateway",
@@ -49,7 +64,13 @@
       "role": "governance brain",
       "boundary": "auth, organizations, roles, entitlements, policy, audit, service registry, and job registry",
       "governs": "Who is allowed and what policy applies?",
-      "components": ["auth", "users and organizations", "product registry", "governance evaluator", "audit logs"],
+      "components": [
+        "auth",
+        "users and organizations",
+        "product registry",
+        "governance evaluator",
+        "audit logs"
+      ],
       "am": {
         "name": "Control Plane",
         "role": "governance brain",
@@ -62,7 +83,13 @@
       "role": "private execution layer",
       "boundary": "search, agents, chain, video, music, science, robotics, and developer services",
       "governs": "Which private service executes?",
-      "components": ["search-index-service", "agent-runner-service", "video-processing-service", "math-proof-service", "analytics-service"],
+      "components": [
+        "search-index-service",
+        "agent-runner-service",
+        "video-processing-service",
+        "math-proof-service",
+        "analytics-service"
+      ],
       "am": {
         "name": "Product Services",
         "role": "private execution layer",
@@ -75,7 +102,14 @@
       "role": "memory and artifact layer",
       "boundary": "structured records, object artifacts, indexes, audit events, logs, and backups",
       "governs": "What state, artifact, or trace is preserved?",
-      "components": ["Postgres", "object storage", "indexes", "artifact storage", "append-only audit storage", "backups"],
+      "components": [
+        "Postgres",
+        "object storage",
+        "indexes",
+        "artifact storage",
+        "append-only audit storage",
+        "backups"
+      ],
       "am": {
         "name": "Data Layer",
         "role": "memory and artifact layer",
@@ -88,7 +122,14 @@
       "role": "traffic, compute, and operations",
       "boundary": "DNS, HTTPS, security, CDN, workers, queues, compute nodes, and monitoring",
       "governs": "Where do traffic, compute, and recovery live?",
-      "components": ["Cloudflare", "backend host", "workers", "job queues", "compute nodes", "monitoring"],
+      "components": [
+        "Cloudflare",
+        "backend host",
+        "workers",
+        "job queues",
+        "compute nodes",
+        "monitoring"
+      ],
       "am": {
         "name": "Runtime Infrastructure",
         "role": "traffic, compute, and operations",
@@ -101,7 +142,14 @@
       "role": "source factory",
       "boundary": "private source, selected public releases, CI/CD, tests, release gates, and documentation",
       "governs": "Where source, tests, and release evidence originate?",
-      "components": ["GitHub org", "private source", "CI/CD", "tests", "release gates", "documentation"],
+      "components": [
+        "GitHub org",
+        "private source",
+        "CI/CD",
+        "tests",
+        "release gates",
+        "documentation"
+      ],
       "am": {
         "name": "Development Layer",
         "role": "source factory",
@@ -265,9 +313,10 @@
     },
     {
       "name": "Sandbox",
-      "href": "https://sandbox.mullusi.com",
-      "summary": "Experimental surface for governed demonstrations and prototypes.",
-      "status": "experimental",
+      "href": "",
+      "summary": "Experimental surface reserved for governed demonstrations and prototypes.",
+      "status": "reserved",
+      "reservedReason": "Reserved - not yet provisioned.",
       "am": {
         "name": "Sandbox",
         "status": "ሙከራዊ",
@@ -276,9 +325,10 @@
     },
     {
       "name": "API",
-      "href": "https://api.mullusi.com",
+      "href": "",
       "summary": "Public gateway reserved for service contracts and machine-facing endpoints.",
       "status": "reserved",
+      "reservedReason": "Reserved - not yet provisioned.",
       "am": {
         "name": "API",
         "status": "የተያዘ",
@@ -287,9 +337,10 @@
     },
     {
       "name": "Metrics",
-      "href": "https://metrics.mullusi.com",
+      "href": "",
       "summary": "Evidence plane reserved for runtime metrics, audits, graphs, and release witnesses.",
       "status": "reserved",
+      "reservedReason": "Reserved - not yet provisioned.",
       "am": {
         "name": "Metrics",
         "status": "የተያዘ",
@@ -468,7 +519,7 @@
       "name": "Govern Evaluation",
       "route": "POST /v1/govern/evaluate",
       "host": "api.mullusi.com",
-      "status": "core v1",
+      "status": "draft v1",
       "input": "project, action, symbols, constraints, context",
       "output": "verdict, proof state, violations, trace reference, repair actions, storage state, proof stamp eligibility",
       "summary": "Evaluates a proposed action or system state against Mullusi governance constraints and records a causal trace.",
@@ -484,7 +535,7 @@
       "name": "Trace Retrieval",
       "route": "GET /v1/evaluations/{evaluation_id}/trace",
       "host": "api.mullusi.com",
-      "status": "core v1",
+      "status": "draft v1",
       "input": "evaluation reference and authorized project context",
       "output": "ordered phase deltas, blocked phase, judgments, and append-only lineage records",
       "summary": "Returns the evidence path behind a verdict so users can inspect cause, constraint, and repair state.",
@@ -500,7 +551,7 @@
       "name": "Proof Stamp Verification",
       "route": "GET /v1/proof-stamps/{stamp_id}",
       "host": "api.mullusi.com",
-      "status": "core v1",
+      "status": "draft v1",
       "input": "proof stamp reference",
       "output": "stamp hash, signature state, verification state, evaluation reference, and persisted stamp envelope",
       "summary": "Verifies that a proof stamp belongs to a recorded evaluation and has not drifted from its stored lineage.",
@@ -616,11 +667,26 @@
     "verdict": "BLOCK",
     "summary": "An ordinary pipeline would run the action and report failure afterward. A governed evaluation refuses the unsafe transition before execution and emits a verifiable record of why.",
     "steps": [
-      { "k": "Verdict", "v": "BLOCK — an unsafe transition was detected before any effect ran." },
-      { "k": "Violation", "v": "Causality constraint Λ unsatisfied: an effect was declared without lineage." },
-      { "k": "Trace", "v": "Append-only record of every phase, constraint, and judgment that produced the verdict." },
-      { "k": "Repair", "v": "Attach the missing lineage record, then re-evaluate the same action." },
-      { "k": "Proof stamp", "v": "Pending — issued only when the evaluation closes against signed runtime evidence." }
+      {
+        "k": "Verdict",
+        "v": "BLOCK — an unsafe transition was detected before any effect ran."
+      },
+      {
+        "k": "Violation",
+        "v": "Causality constraint Λ unsatisfied: an effect was declared without lineage."
+      },
+      {
+        "k": "Trace",
+        "v": "Append-only record of every phase, constraint, and judgment that produced the verdict."
+      },
+      {
+        "k": "Repair",
+        "v": "Attach the missing lineage record, then re-evaluate the same action."
+      },
+      {
+        "k": "Proof stamp",
+        "v": "Pending — issued only when the evaluation closes against signed runtime evidence."
+      }
     ],
     "am": {
       "label": "የተሰራ ምሳሌ",
@@ -628,24 +694,56 @@
       "disclaimer": "ለማሳያ ብቻ። ቀጥታ መዳረሻ አይደለም። የምስክር መዳረሻዎች የተፈረመ ማስረጃ እስኪያትሙ ድረስ runtime AwaitingEvidence ሆኖ ይቆያል።",
       "summary": "ተራ pipeline ድርጊቱን አሂዶ ከዚያ ውድቀቱን ይዘግባል። የሚተዳደር ግምገማ ግን ደህንነቱ ያልተጠበቀ ሽግግርን ከመፈጸሙ በፊት ይከለክላል፤ ለምን እንደሆነ ሊረጋገጥ የሚችል መዝገብም ያወጣል።",
       "steps": [
-        { "k": "ፍርድ", "v": "BLOCK — ማንኛውም ውጤት ከመፈጸሙ በፊት ደህንነቱ ያልተጠበቀ ሽግግር ተገኝቷል።" },
-        { "k": "ጥሰት", "v": "የምክንያታዊነት ገደብ Λ አልተሟላም፦ ውጤት ያለ ሐረግ ተገልጿል።" },
-        { "k": "ዱካ", "v": "ፍርዱን ያስገኘውን እያንዳንዱን ደረጃ፣ ገደብና ፍርድ የያዘ ተጨማሪ-ብቻ መዝገብ።" },
-        { "k": "ጥገና", "v": "የጎደለውን የሐረግ መዝገብ ያያይዙ፣ ከዚያ ተመሳሳዩን ድርጊት እንደገና ይገምግሙ።" },
-        { "k": "የማረጋገጫ ማህተም", "v": "በመጠባበቅ ላይ — ግምገማው በተፈረመ runtime ማስረጃ ላይ ሲዘጋ ብቻ ይሰጣል።" }
+        {
+          "k": "ፍርድ",
+          "v": "BLOCK — ማንኛውም ውጤት ከመፈጸሙ በፊት ደህንነቱ ያልተጠበቀ ሽግግር ተገኝቷል።"
+        },
+        {
+          "k": "ጥሰት",
+          "v": "የምክንያታዊነት ገደብ Λ አልተሟላም፦ ውጤት ያለ ሐረግ ተገልጿል።"
+        },
+        {
+          "k": "ዱካ",
+          "v": "ፍርዱን ያስገኘውን እያንዳንዱን ደረጃ፣ ገደብና ፍርድ የያዘ ተጨማሪ-ብቻ መዝገብ።"
+        },
+        {
+          "k": "ጥገና",
+          "v": "የጎደለውን የሐረግ መዝገብ ያያይዙ፣ ከዚያ ተመሳሳዩን ድርጊት እንደገና ይገምግሙ።"
+        },
+        {
+          "k": "የማረጋገጫ ማህተም",
+          "v": "በመጠባበቅ ላይ — ግምገማው በተፈረመ runtime ማስረጃ ላይ ሲዘጋ ብቻ ይሰጣል።"
+        }
       ]
     }
   },
   "statusBoard": {
     "label": "System status",
     "title": "What is live, what is not.",
-    "follow": "Endpoints are not yet live. Request access or watch the proof boundary for signed release evidence.",
-    "followHref": "mailto:research@mullusi.com",
-    "followLabel": "Request access",
+    "follow": "Endpoints are not yet live. Request access through the governed pilot route or watch the proof boundary for signed release evidence.",
+    "followHref": "/pilot/",
+    "followLabel": "Request pilot",
     "rows": [
-      { "component": "Website", "state": "live", "note": "Public site serving mullusi.com from controlled private source." },
-      { "component": "Govern API", "state": "awaiting-evidence", "note": "Endpoints publish only after signed witness evidence closes." },
-      { "component": "Proof Stamps", "state": "planned", "note": "Issued once runtime conformance is reachable and verified." }
+      {
+        "component": "Website",
+        "state": "live",
+        "note": "Public site serving mullusi.com from controlled private source."
+      },
+      {
+        "component": "Govern API",
+        "state": "awaiting-evidence",
+        "note": "Endpoints publish only after signed witness evidence closes."
+      },
+      {
+        "component": "Proof Stamps",
+        "state": "planned",
+        "note": "Issued once runtime conformance is reachable and verified."
+      },
+      {
+        "component": "Reserved subdomains",
+        "state": "planned",
+        "note": "API, dashboard, sandbox, metrics, and learn remain reserved until their DNS and witness pages are provisioned."
+      }
     ],
     "witnessChecks": [
       {
@@ -907,9 +1005,18 @@
       "follow": "Request access or watch the proof boundary for signed release evidence.",
       "followLabel": "Request access",
       "rows": [
-        { "component": "ድረ-ገጽ", "note": "ከmain ቅርንጫፍ mullusi.com የሚያቀርብ ይፋዊ ጣቢያ።" },
-        { "component": "Govern API", "note": "መዳረሻዎች የሚታተሙት የተፈረመ የምስክር ማስረጃ ከተዘጋ በኋላ ብቻ ነው።" },
-        { "component": "የማረጋገጫ ማህተሞች", "note": "runtime conformance ሲደረስና ሲረጋገጥ ይሰጣል።" }
+        {
+          "component": "ድረ-ገጽ",
+          "note": "ከmain ቅርንጫፍ mullusi.com የሚያቀርብ ይፋዊ ጣቢያ።"
+        },
+        {
+          "component": "Govern API",
+          "note": "መዳረሻዎች የሚታተሙት የተፈረመ የምስክር ማስረጃ ከተዘጋ በኋላ ብቻ ነው።"
+        },
+        {
+          "component": "የማረጋገጫ ማህተሞች",
+          "note": "runtime conformance ሲደረስና ሲረጋገጥ ይሰጣል።"
+        }
       ]
     }
   },
@@ -1305,7 +1412,10 @@
       "title": "Revocation is private, append-only, and operator-authenticated.",
       "status": "private operator",
       "summary": "Public verifier state can become Revoked only through operator-authenticated routes that preserve the original proof stamp lineage. The website never exposes revocation as a public action.",
-      "requiredHeaders": ["X-Mullusi-Key", "X-Mullusi-Operator-Key"],
+      "requiredHeaders": [
+        "X-Mullusi-Key",
+        "X-Mullusi-Operator-Key"
+      ],
       "routes": [
         {
           "name": "Append revocation",
@@ -1506,17 +1616,35 @@
     "label": "Use Cases",
     "title": "Where a governed evaluation earns its keep.",
     "items": [
-      { "title": "Audit trail for an autonomous agent", "body": "Record every decision, constraint check, and tool call as an immutable, append-only trace you can replay later." },
-      { "title": "Compliance gate for a financial workflow", "body": "Prove a transaction satisfied every internal policy before it executes — not after it fails." },
-      { "title": "Reproducibility proof for a research result", "body": "Capture the exact symbols, constraints, and lineage so a result can be re-verified independently." }
+      {
+        "title": "Audit trail for an autonomous agent",
+        "body": "Record every decision, constraint check, and tool call as an immutable, append-only trace you can replay later."
+      },
+      {
+        "title": "Compliance gate for a financial workflow",
+        "body": "Prove a transaction satisfied every internal policy before it executes — not after it fails."
+      },
+      {
+        "title": "Reproducibility proof for a research result",
+        "body": "Capture the exact symbols, constraints, and lineage so a result can be re-verified independently."
+      }
     ],
     "am": {
       "label": "የአጠቃቀም ሁኔታዎች",
       "title": "የሚተዳደር ግምገማ ዋጋውን የሚያስገኝበት።",
       "items": [
-        { "title": "ለራስ-ገዝ ወኪል የኦዲት ዱካ", "body": "እያንዳንዱን ውሳኔ፣ የገደብ ፍተሻና የመሣሪያ ጥሪ ወደፊት ሊደገም የሚችል የማይለወጥ ተጨማሪ-ብቻ ዱካ አድርጎ ይመዝግቡ።" },
-        { "title": "ለፋይናንስ workflow የተገዢነት በር", "body": "ግብይት ከመፈጸሙ በፊት እያንዳንዱን ውስጣዊ ፖሊሲ ማሟላቱን ያረጋግጡ — ከከሸፈ በኋላ ሳይሆን።" },
-        { "title": "ለምርምር ውጤት የድግግሞሽ ማረጋገጫ", "body": "ውጤቱ ራሱን ችሎ እንደገና እንዲረጋገጥ ትክክለኛዎቹን ምልክቶች፣ ገደቦችና ሐረግ ይያዙ።" }
+        {
+          "title": "ለራስ-ገዝ ወኪል የኦዲት ዱካ",
+          "body": "እያንዳንዱን ውሳኔ፣ የገደብ ፍተሻና የመሣሪያ ጥሪ ወደፊት ሊደገም የሚችል የማይለወጥ ተጨማሪ-ብቻ ዱካ አድርጎ ይመዝግቡ።"
+        },
+        {
+          "title": "ለፋይናንስ workflow የተገዢነት በር",
+          "body": "ግብይት ከመፈጸሙ በፊት እያንዳንዱን ውስጣዊ ፖሊሲ ማሟላቱን ያረጋግጡ — ከከሸፈ በኋላ ሳይሆን።"
+        },
+        {
+          "title": "ለምርምር ውጤት የድግግሞሽ ማረጋገጫ",
+          "body": "ውጤቱ ራሱን ችሎ እንደገና እንዲረጋገጥ ትክክለኛዎቹን ምልክቶች፣ ገደቦችና ሐረግ ይያዙ።"
+        }
       ]
     }
   },

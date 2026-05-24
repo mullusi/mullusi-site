@@ -61,6 +61,7 @@ function testPublicSurfacesCarryHardenedDoctrineTerms() {
       "index.html",
       [
         "Mullusi governs high-risk symbolic intelligence and software actions before they execute.",
+        "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
         "Every material consequence re-checked.",
         "re-governs material consequences when context, authority, risk, or dependency state changes.",
         'href="/doctrine/"',
@@ -80,8 +81,8 @@ function testPublicSurfacesCarryHardenedDoctrineTerms() {
     [
       "ops/mullusi-doctrine.md",
       [
-        "Verified against Mullusi architecture and public philosophy.",
-        "AwaitingEvidence against runtime conformance until signed witness endpoints close.",
+        "Self-attested against Mullusi architecture and public philosophy.",
+        "AwaitingEvidence on independent runtime witness until signed endpoints close.",
         "No material consequence without re-governance when context, authority, risk, or dependency state changes.",
         "threat_model_minimum",
         "rollback(surface_id)",

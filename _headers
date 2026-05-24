@@ -4,7 +4,8 @@
 # Invariants: headers must not require secrets, break local static rendering, or claim runtime availability.
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://mullusi.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-3QYabzdJDybnSoM0XEGQkvX6PIQBb3083ok9i3L9HIk='; style-src 'self'; img-src 'self' data: https://mullusi.com; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   Referrer-Policy: strict-origin-when-cross-origin
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -21,6 +22,9 @@
 
 /robots.txt
   Cache-Control: public, max-age=300
+
+/status.json
+  Cache-Control: no-store
 
 /.well-known/security.txt
   Cache-Control: public, max-age=300

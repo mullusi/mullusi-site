@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+Purpose: reliable public contact route for Mullusi visitor, research, support, and pilot requests.
+Governance scope: conversion routing, visible email fallback, intake boundary, and no-JavaScript reachability.
+Dependencies: Mullusi static assets and public mailbox addresses.
+Invariants: contact options remain visible without JavaScript, no form claims backend storage, and every visible email has a matching mailto link.
+-->
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#070806">
+  <title>Mullusi Contact - Governed Intake</title>
+  <meta name="description" content="Reliable Mullusi contact route for pilots, research, support, and public-surface questions.">
+  <link rel="canonical" href="https://mullusi.com/contact/">
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:site_name" content="Mullusi">
+  <meta property="og:title" content="Mullusi Contact - Governed Intake">
+  <meta property="og:description" content="Visible contact routes for Mullusi pilot, research, support, and public-surface questions.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mullusi.com/contact/">
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <link rel="stylesheet" href="/assets/pages/contact.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav aria-label="Primary">
+    <a class="brand" href="/">Mullusi</a>
+    <div class="nav-links">
+      <a href="/mullu/">Mullu</a>
+      <a href="/pilot/">Pilot</a>
+      <a href="/proof/">Proof</a>
+      <a href="/status/">Status</a>
+      <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Docs</a>
+    </div>
+  </nav>
+  <main id="main" tabindex="-1">
+    <div class="eyebrow">Governed contact route</div>
+    <h1>Contact Mullusi.</h1>
+    <p class="lede">Use the mailbox that matches the request. This page is static, works without JavaScript, and does not claim backend intake storage.</p>
+
+    <section class="grid" aria-label="Contact mailboxes">
+      <article class="card">
+        <h2>Pilot</h2>
+        <p>For governed evaluation pilots, deployment gates, agent action checks, and proof-state workflows.</p>
+        <a class="button primary" href="mailto:hello@mullusi.com?subject=Mullusi%20governed%20pilot%20request">hello@mullusi.com</a>
+      </article>
+      <article class="card">
+        <h2>Research</h2>
+        <p>For doctrine, proof boundary, Mfidel, symbolic governance, and research collaboration questions.</p>
+        <a class="button" href="mailto:research@mullusi.com?subject=Mullusi%20research%20contact">research@mullusi.com</a>
+      </article>
+      <article class="card">
+        <h2>Support</h2>
+        <p>For website route defects, reserved-surface evidence, disclosure routing, and public-access issues.</p>
+        <a class="button" href="mailto:support@mullusi.com?subject=Mullusi%20support%20request">support@mullusi.com</a>
+      </article>
+    </section>
+
+    <section class="intake" aria-labelledby="intake-title">
+      <h2 id="intake-title">Structured intake fields</h2>
+      <p>Include these fields in the email so the request can be evaluated without hidden assumptions.</p>
+      <ol>
+        <li>Organization or individual identity.</li>
+        <li>Target workflow or action class.</li>
+        <li>Authority boundary and approval owner.</li>
+        <li>Data class and external side effects.</li>
+        <li>Expected request volume and retention need.</li>
+        <li>Failure mode that must be blocked first.</li>
+      </ol>
+    </section>
+  </main>
+  <footer>
+    <div>Contact route state: Published</div>
+    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+  </footer>
+</body>
+</html>

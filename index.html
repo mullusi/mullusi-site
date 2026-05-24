@@ -32,31 +32,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <link rel="icon" href="assets/mullusi-icon-32.png" type="image/png" sizes="32x32" />
   <link rel="apple-touch-icon" href="assets/mullusi-icon-180.png" sizes="180x180" />
   <link rel="manifest" href="site.webmanifest" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <script>
-    (() => {
-      const storedTheme = localStorage.getItem("mullusi-theme");
-      const systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-      document.documentElement.dataset.theme = storedTheme || (systemLight ? "light" : "dark");
-    })();
-  </script>
-  <script>
-    (() => {
-      try {
-        const stored = localStorage.getItem("mullusi-lang");
-        const navLang = (navigator.language || "").toLowerCase();
-        const lang = stored || (navLang.indexOf("am") === 0 ? "am" : "en");
-        document.documentElement.lang = lang;
-        document.documentElement.dataset.lang = lang;
-      } catch (error) {
-        document.documentElement.lang = "en";
-        document.documentElement.dataset.lang = "en";
-      }
-    })();
-  </script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.14" />
+  <script src="/assets/theme-bootstrap.js"></script>
+  <script src="/assets/lang-bootstrap.js"></script>
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.15" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -81,7 +59,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/app.js?v=2026.05.platform.14"></script>
+  <script defer src="assets/app.js?v=2026.05.platform.15"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -121,7 +99,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <span class="theme-toggle-mode" data-i18n="theme.mode">Mode</span>
           <span data-theme-label>Light</span>
         </button>
-        <a href="mailto:hello@mullusi.com" class="btn" data-i18n="nav.contact">Contact</a>
+        <a href="/contact/" class="btn" data-i18n="nav.contact">Contact</a>
         <a href="https://docs.mullusi.com" class="btn btn-solid" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
         <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle data-i18n-attr="aria-label:nav.menuOpen">
           <span></span><span></span><span></span>
@@ -150,7 +128,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <a href="#repos" data-i18n="nav.repos">Surfaces</a>
     <a href="#news" data-i18n="nav.news">News</a>
     <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
-    <a href="mailto:hello@mullusi.com" data-i18n="nav.contact">Contact</a>
+    <a href="/contact/" data-i18n="nav.contact">Contact</a>
   </div>
 
   <main id="main">
@@ -165,10 +143,10 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="s" data-n="04">Γ</div><span class="arr">→</span>
           <div class="s" data-n="05">H</div>
         </div>
-        <div class="hero-wordmark" aria-label="[ሙሉ] [Mullu]">
-          <span class="fidel-name" lang="am">[ሙሉ]</span>
+        <div class="hero-wordmark" aria-label="ሙሉ Mullu">
+          <span class="fidel-name" lang="am">ሙሉ</span>
           <span class="latin-name" data-text="Mullu">Mullu</span>
-          <span class="latin-tag">[Mullu]</span>
+          <span class="latin-tag">Mullu</span>
         </div>
         <div class="tag" data-i18n="hero.tag">Evidence before action.</div>
         <h1 id="hero-title" data-i18n="hero.title">Mullusi governs high-risk symbolic intelligence and software actions before they execute.</h1>
@@ -177,7 +155,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="hero-actions">
           <a href="/playground/" class="btn btn-solid" data-i18n="hero.ctaPlayground">Try Mullu Playground</a>
           <a href="/proof/" class="btn" data-i18n="hero.reviewProof">See Proof Boundaries</a>
-          <a href="mailto:research@mullusi.com" class="btn" data-i18n="hero.ctaPilot">Request Governed Pilot</a>
+          <a href="/pilot/" class="btn" data-i18n="hero.ctaPilot">Request Governed Pilot</a>
         </div>
         <dl class="hero-proof-rail" aria-label="Public route state" data-i18n-attr="aria-label:hero.routeStateAria">
           <div>
@@ -193,7 +171,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
             <dd data-i18n="hero.railRuntimeBody">AwaitingEvidence until signed witness endpoints publish.</dd>
           </div>
         </dl>
-        <p class="plain hero-doctrine-status" data-i18n="hero.doctrineStatus">Doctrine v1.2 is Verified against Mullusi architecture and AwaitingEvidence against runtime conformance until signed witness endpoints close.</p>
+        <p class="plain hero-doctrine-status" data-i18n="hero.doctrineStatus">Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.</p>
       </div>
     </section>
 
@@ -227,7 +205,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <dl class="metrics-band reveal" data-metrics aria-label="Mullusi public surface metrics" data-i18n-attr="aria-label:metrics.bandAria">
           <noscript>
             <div><dt class="m-k">1</dt><dd class="m-l">Deployed public surfaces</dd></div>
-            <div><dt class="m-k">v1</dt><dd class="m-l">Govern API contract</dd></div>
+            <div><dt class="m-k">Draft v1</dt><dd class="m-l">Govern API contract</dd></div>
             <div><dt class="m-k">AwaitingEvidence</dt><dd class="m-l">Runtime witness state</dd></div>
           </noscript>
         </dl>
@@ -452,9 +430,9 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="routes reveal" data-interface-links>
           <article class="route"><span class="badge">Public route</span><h3>Docs</h3><p>Reference material, architecture notes, and public learning paths.</p><a class="lnk" href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Open Docs →</a></article>
-          <article class="route"><span class="badge">Experimental</span><h3>Sandbox</h3><p>Experimental surface for governed demonstrations and prototypes.</p><a class="lnk" href="https://sandbox.mullusi.com" target="_blank" rel="noopener noreferrer">Open Sandbox →</a></article>
-          <article class="route"><span class="badge">Reserved</span><h3>API</h3><p>Public gateway reserved for service contracts and machine-facing endpoints.</p><a class="lnk" href="https://api.mullusi.com" target="_blank" rel="noopener noreferrer">Open API →</a></article>
-          <article class="route"><span class="badge">Reserved</span><h3>Metrics</h3><p>Evidence plane reserved for runtime metrics, audits, graphs, and release witnesses.</p><a class="lnk" href="https://metrics.mullusi.com" target="_blank" rel="noopener noreferrer">Open Metrics →</a></article>
+          <article class="route"><span class="badge">Reserved</span><h3>Sandbox</h3><p>Experimental surface reserved for governed demonstrations and prototypes.</p><span class="reserved-route">Reserved - AwaitingEvidence</span></article>
+          <article class="route"><span class="badge">Reserved</span><h3>API</h3><p>Public gateway reserved for service contracts and machine-facing endpoints.</p><span class="reserved-route">Reserved - AwaitingEvidence</span></article>
+          <article class="route"><span class="badge">Reserved</span><h3>Metrics</h3><p>Evidence plane reserved for runtime metrics, audits, graphs, and release witnesses.</p><span class="reserved-route">Reserved - AwaitingEvidence</span></article>
         </div>
       </div>
     </section>
@@ -540,14 +518,14 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
 
         <div class="hero-foot repo-stats reveal" data-repo-stats>
-          <div><div class="k">0</div><div class="l">Deployed public surfaces</div></div>
-          <div><div class="k">0</div><div class="l">Categories</div></div>
+          <div><div class="k">1</div><div class="l">Deployed public surfaces</div></div>
+          <div><div class="k">1</div><div class="l">Categories</div></div>
           <div><div class="k">0</div><div class="l">Public product surfaces</div></div>
         </div>
 
         <div class="repo-grid reveal" data-repo-grid>
           <noscript>
-            <p>Enable JavaScript to view the searchable deployment registry. The public registry is available in <code>data/products.json</code>.</p>
+            <p>Enable JavaScript to view the searchable deployment registry. Current no-JavaScript count: 1 deployed public surface from <code>data/products.json</code>.</p>
           </noscript>
         </div>
 
@@ -600,7 +578,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div>
             <div class="architect-note" id="profile">
               <figure class="architect-photo">
-                <img src="assets/tamirat-profile.jpg" alt="Tamirat Wubie at a laptop" width="1280" height="1707" loading="lazy" decoding="async" />
+                <img src="assets/tamirat-profile.jpg" alt="Tamirat Lulie Wubie at a laptop" width="1280" height="1707" loading="lazy" decoding="async" />
               </figure>
               <div class="architect-copy">
                 <div class="tag" data-i18n="governance.profileTag">Architect Note</div>
@@ -646,7 +624,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="cta-actions">
           <a href="#platform" class="btn btn-solid" data-i18n="hero.viewPlatform">View platform map</a>
           <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
-          <a href="mailto:research@mullusi.com" class="btn" data-i18n="cta.contactResearch">Contact research</a>
+          <a href="/contact/" class="btn" data-i18n="cta.contactResearch">Contact research</a>
         </div>
       </div>
     </section>
@@ -666,22 +644,30 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="col">
             <h3 data-i18n="footer.surfaces">Surfaces</h3>
             <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
-            <a href="https://learn.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.learn">Learn</a>
+            <a href="/status/" data-i18n="footer.learn">Status</a>
             <a href="/doctrine/" data-i18n="nav.doctrine">Doctrine</a>
-            <a href="https://dashboard.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.dashboard">Dashboard</a>
+            <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
           </div>
           <div class="col">
             <h3 data-i18n="footer.system">System</h3>
             <a href="/playground/" data-i18n="nav.playground">Playground</a>
-            <a href="https://api.mullusi.com" target="_blank" rel="noopener noreferrer">API</a>
-            <a href="https://metrics.mullusi.com" target="_blank" rel="noopener noreferrer">Metrics</a>
-            <a href="https://sandbox.mullusi.com" target="_blank" rel="noopener noreferrer">Sandbox</a>
+            <a href="/proof/" data-i18n="nav.proof">Proof</a>
+            <a href="/pilot/" data-i18n="hero.ctaPilot">Request Governed Pilot</a>
+            <span class="reserved-link">API / Metrics / Sandbox - reserved</span>
           </div>
           <div class="col">
             <h3 data-i18n="footer.contact">Contact</h3>
-            <a href="mailto:hello@mullusi.com" data-i18n="nav.contact">Contact</a>
+            <a href="/contact/" data-i18n="nav.contact">Contact</a>
             <a href="mailto:hello@mullusi.com">hello@mullusi.com</a>
             <a href="mailto:research@mullusi.com">research@mullusi.com</a>
+          </div>
+          <div class="col">
+            <h3>Trust</h3>
+            <a href="/security/">Security</a>
+            <a href="/privacy/">Privacy</a>
+            <a href="/terms/">Terms</a>
+            <a href="/acceptable-use/">Acceptable Use</a>
+            <a href="/responsible-disclosure/">Responsible Disclosure</a>
           </div>
         </div>
       </div>
