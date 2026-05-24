@@ -17,6 +17,7 @@ const defaultOutputDirectory = path.join(repoRoot, "dist");
 
 const publicEntries = [
   "index.html",
+  "doctrine",
   "mullu",
   "proof",
   "playground",

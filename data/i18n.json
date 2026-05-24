@@ -54,6 +54,10 @@
       "en": "Proof",
       "am": "ማረጋገጫ"
     },
+    "nav.doctrine": {
+      "en": "Doctrine",
+      "am": "Doctrine"
+    },
     "nav.sciences": {
       "en": "Engines",
       "am": "የሳይንስ ሞተሮች"
@@ -115,16 +119,16 @@
       "am": "ከድርጊት በፊት ማስረጃ።"
     },
     "hero.title": {
-      "en": "Mullusi governs high-risk software actions before they execute.",
-      "am": "ሙሉሲ ከፍተኛ-ስጋት ያላቸውን የሶፍትዌር ድርጊቶች ከመፈጸማቸው በፊት ያስተዳድራል።"
+      "en": "Mullusi governs high-risk symbolic intelligence and software actions before they execute.",
+      "am": "ሙሉሲ ከፍተኛ-ስጋት ያላቸውን የምልክታዊ ብልህነት እና የሶፍትዌር ድርጊቶች ከመፈጸማቸው በፊት ያስተዳድራል።"
     },
     "hero.lead": {
       "en": "Send a proposed action, evaluate it against your rules, receive a verdict, inspect the causal trace, and preserve the proof state.",
       "am": "የቀረበን ድርጊት ይላኩ፣ ከደንቦችዎ ጋር ይገምግሙት፣ ፍርድ ይቀበሉ፣ የምክንያት ዱካውን ይመርምሩ፣ እና የማረጋገጫ ሁኔታውን ይጠብቁ።"
     },
     "hero.plain": {
-      "en": "Every action checked. Every consequence re-checked. Every verdict traced.",
-      "am": "እያንዳንዱ ድርጊት ይፈተሻል። እያንዳንዱ ውጤት እንደገና ይፈተሻል። እያንዳንዱ ፍርድ ይከታተላል።"
+      "en": "Every action checked. Every material consequence re-checked. Every verdict traced.",
+      "am": "እያንዳንዱ ድርጊት ይፈተሻል። ቁሳዊ ውጤት እንደገና ይፈተሻል። እያንዳንዱ ፍርድ ይከታተላል።"
     },
     "hero.ctaPlayground": {
       "en": "Try Mullu Playground",
@@ -135,8 +139,8 @@
       "am": "የሚተዳደር ሙከራ ይጠይቁ"
     },
     "hero.doctrineStatus": {
-      "en": "Doctrine v1.2 is Verified against Mullusi architecture and AwaitingEvidence against full runtime conformance until signed witness endpoints close.",
-      "am": "ዶክትሪን v1.2 ከሙሉሲ አርክቴክቸር አንጻር ተረጋግጧል፤ የተፈረሙ የምስክር መዳረሻዎች እስኪዘጉ ድረስ ከሙሉ runtime ተገዢነት አንጻር AwaitingEvidence ነው።"
+      "en": "Doctrine v1.2 is Verified against Mullusi architecture and AwaitingEvidence against runtime conformance until signed witness endpoints close.",
+      "am": "ዶክትሪን v1.2 ከሙሉሲ አርክቴክቸር አንጻር ተረጋግጧል፤ የተፈረሙ የምስክር መዳረሻዎች እስኪዘጉ ድረስ ከruntime ተገዢነት አንጻር AwaitingEvidence ነው።"
     },
     "oldway.tag": {
       "en": "The Shift",
@@ -147,8 +151,8 @@
       "am": "የድሮው መንገድ vs የሙሉሲ መንገድ"
     },
     "oldway.body": {
-      "en": "Mullusi does not replace model output. It governs whether output-derived actions execute, and re-governs their consequences as conditions change.",
-      "am": "ሙሉሲ የሞዴል ውጤትን አይተካም። ውጤት-ተኮር ድርጊቶች ይፈጸሙ አይፈጸሙ የሚለውን ያስተዳድራል፣ ሁኔታዎች ሲቀየሩም ውጤቶቻቸውን እንደገና ያስተዳድራል።"
+      "en": "Mullusi does not replace model output. It governs whether output-derived actions execute, and re-governs material consequences when context, authority, risk, or dependency state changes.",
+      "am": "ሙሉሲ የሞዴል ውጤትን አይተካም። ውጤት-ተኮር ድርጊቶች ይፈጸሙ አይፈጸሙ የሚለውን ያስተዳድራል፤ አውድ፣ ሥልጣን፣ ስጋት ወይም የጥገኛ ሁኔታ ሲቀየር ቁሳዊ ውጤቶችን እንደገና ያስተዳድራል።"
     },
     "oldway.colOld": {
       "en": "Old way",
@@ -187,8 +191,8 @@
       "am": "አንድ ፈቃድ ሙሉ የagent ሩጫን ይሸፍናል"
     },
     "oldway.r4.new": {
-      "en": "Consequences are re-checked as context changes",
-      "am": "ሁኔታ ሲቀየር ውጤቶች እንደገና ይፈተሻሉ"
+      "en": "Material consequences are re-checked as context changes",
+      "am": "ሁኔታ ሲቀየር ቁሳዊ ውጤቶች እንደገና ይፈተሻሉ"
     },
     "oldway.r5.old": {
       "en": "UI summarizes without proof linkage",
@@ -247,7 +251,7 @@
       "am": "View platform map"
     },
     "hero.reviewProof": {
-      "en": "Review proof boundary",
+      "en": "See Proof Boundaries",
       "am": "የማረጋገጫ ወሰንን ይመልከቱ"
     },
     "hero.viewGraph": {

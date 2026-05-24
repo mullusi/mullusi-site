@@ -11,6 +11,7 @@ framework, database, or server runtime.
 ```text
 .
 |-- index.html                         # Public landing page
+|-- doctrine/index.html                # Public Doctrine v1.2 route
 |-- mullu/index.html                   # Flagship Mullu product route
 |-- proof/index.html                   # Public proof-boundary route
 |-- playground/index.html              # Simulated (client-only) govern-evaluation demo
@@ -59,6 +60,9 @@ framework, database, or server runtime.
 `-- scripts/
     |-- build-cloudflare-pages.mjs     # Builds the public Cloudflare Pages artifact
     |-- test-build-cloudflare-pages.mjs # Verifies artifact source-boundary rules
+    |-- test-validate-site-doctrine-wording.mjs # Tests Doctrine wording gate coverage
+    |-- check-search-indexing-surface.mjs # Compares local sitemap to live crawl surfaces
+    |-- test-check-search-indexing-surface.mjs # Tests search-surface gate behavior
     |-- check-website-origin.mjs       # Classifies live origin response headers
     |-- test-check-website-origin.mjs  # Tests origin-header classification
     |-- check-www-canonical-redirect-gate.mjs # Evaluates www redirect closure
@@ -236,6 +240,9 @@ node --check scripts/validate-site.mjs
 node --check scripts/fetch-news.mjs
 node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/test-build-cloudflare-pages.mjs
+node --check scripts/test-validate-site-doctrine-wording.mjs
+node --check scripts/check-search-indexing-surface.mjs
+node --check scripts/test-check-search-indexing-surface.mjs
 node --check scripts/check-website-origin.mjs
 node --check scripts/test-check-website-origin.mjs
 node --check scripts/check-www-canonical-redirect-gate.mjs
@@ -249,6 +256,8 @@ node --check scripts/check-private-recovery-inventory.mjs
 node --check scripts/test-private-recovery-inventory.mjs
 node scripts/validate-site.mjs
 node scripts/test-build-cloudflare-pages.mjs
+node scripts/test-validate-site-doctrine-wording.mjs
+node scripts/test-check-search-indexing-surface.mjs
 node scripts/test-check-website-origin.mjs
 node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
 node scripts/test-www-canonical-redirect-gate.mjs
@@ -275,12 +284,17 @@ node --check assets/app.js
 node --check scripts/validate-site.mjs
 node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/test-build-cloudflare-pages.mjs
+node --check scripts/test-validate-site-doctrine-wording.mjs
+node --check scripts/check-search-indexing-surface.mjs
+node --check scripts/test-check-search-indexing-surface.mjs
 node --check scripts/check-website-origin.mjs
 node --check scripts/test-check-website-origin.mjs
 node --check scripts/check-www-canonical-redirect-gate.mjs
 node --check scripts/test-www-canonical-redirect-gate.mjs
 node scripts/validate-site.mjs
 node scripts/test-build-cloudflare-pages.mjs
+node scripts/test-validate-site-doctrine-wording.mjs
+node scripts/test-check-search-indexing-surface.mjs
 node scripts/test-check-website-origin.mjs
 node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
 node scripts/test-www-canonical-redirect-gate.mjs
@@ -293,7 +307,7 @@ node scripts/test-private-recovery-inventory.mjs
 
 The validation scripts check required files, Cloudflare Pages `_headers` and
 `_redirects`, local links, `CNAME`, `robots.txt`, sitemap targets, product
-registry contracts, homepage hierarchy, repeated-caveat regressions,
+registry contracts, homepage hierarchy, doctrine publication contract, live search-surface gate coverage, repeated-caveat regressions,
 symbol-font licensing and size budget, dynamic fallback behavior,
 public-safe text, Mfidel-safe no-combining-mark text, mojibake,
 secret-like patterns, recovery/API gate consistency, staged HSTS, and the
@@ -316,6 +330,18 @@ evidence without blocking the shell:
 ```bash
 node scripts/check-website-origin.mjs --allow-pending
 ```
+
+After deploying sitemap or route changes, compare the local sitemap contract
+against the live crawl surface:
+
+```bash
+node scripts/check-search-indexing-surface.mjs
+```
+
+Use `--allow-pending` only while recording a known propagation or cache gap. A
+blocking result means the live edge is missing a local sitemap URL, serving a
+non-2xx route, exposing a stale live sitemap entry, or returning a noindex
+signal.
 
 The public homepage must keep this product boundary explicit: Mullusi is the
 company umbrella, Mullu is the flagship governed symbolic product, and live

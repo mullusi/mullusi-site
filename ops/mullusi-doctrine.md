@@ -11,7 +11,7 @@ Invariants: the doctrine carries its own evidence boundary; no clause is publish
 
 ```text
 Verified against Mullusi architecture and public philosophy.
-AwaitingEvidence against full runtime conformance until signed witness endpoints close.
+AwaitingEvidence against runtime conformance until signed witness endpoints close.
 ```
 
 The doctrine is itself a claim and carries its own evidence boundary. It is
@@ -24,7 +24,7 @@ AwaitingEvidence against runtime conformance until `/health`,
 ```text
 1.  No claim without declared evidence state.
 2.  No action without governance.
-3.  No consequence without re-governance.
+3.  No material consequence without re-governance when context, authority, risk, or dependency state changes.
 4.  No verdict without trace.
 5.  No user-visible simplification that cannot be reversed to its full trace.
 6.  No proof without boundary.
@@ -42,10 +42,10 @@ AwaitingEvidence against runtime conformance until `/health`,
 ### North Star
 
 ```text
-Mullusi builds governed intelligence for consequential action.
+Mullusi builds governed symbolic intelligence for consequential action.
 Every proposed action is checked against authority, constraints, evidence,
-and causal trace before it executes - and every consequence can be re-checked
-as conditions change.
+and causal trace before it executes - and every material consequence can be
+re-checked when context, authority, risk, or dependency state changes.
 ```
 
 ### Internal Invariant
@@ -53,7 +53,7 @@ as conditions change.
 ```text
 No claim without evidence.
 No action without governance.
-No consequence without re-governance.
+No material consequence without re-governance.
 No proof without trace.
 No trace without boundary.
 ```
@@ -67,13 +67,13 @@ Evidence before action.
 ### Operational Expansion
 
 ```text
-Every action checked. Every consequence re-checked. Every verdict traced.
+Every action checked. Every material consequence re-checked. Every verdict traced.
 ```
 
 The operational expansion handles autonomous loops, partial actions, and
-condition drift. A single pre-execution check is not sufficient for
-long-running agents: later consequences require re-governance, not just one
-atomic check.
+condition drift without claiming universal re-check of every non-material
+effect. A single pre-execution check is not sufficient for long-running agents:
+later material consequences require re-governance, not just one atomic check.
 
 ## Old Way vs Mullusi Way
 
@@ -82,13 +82,14 @@ atomic check.
 | Model output drives action directly          | Model output becomes a proposal                |
 | Prompt confidence is treated as readiness    | Action requires governed verdict               |
 | Logs appear after execution                  | Trace exists before execution                  |
-| One approval covers a whole agent run        | Consequences are re-checked as context changes |
+| One approval covers a whole agent run        | Material consequences are re-checked as context changes |
 | UI summarizes without proof linkage          | Every surface field is reversible to trace     |
 | Rollback means hiding or replacing old state | Rollback creates superseded lineage            |
 | Deadlines pressure evidence claims           | Evidence state cannot be mutated by pressure   |
 
 Mullusi does not replace model output. It governs whether output-derived
-actions execute, and re-governs their consequences as conditions change.
+actions execute, and re-governs material consequences when context, authority,
+risk, or dependency state changes.
 
 ## Service-Tier Language
 
@@ -100,7 +101,7 @@ Governed Pilot applies Mullusi to one high-risk workflow with declared evidence 
 ```
 
 Tier language must not import a statistical-learning frame. The deterministic
-symbolic positioning means a tier never "teaches the model"; it exposes more of
+symbolic positioning means a tier never claims model training; it exposes more of
 the governed verdict-trace-proof loop.
 
 ## Release Surface
@@ -108,16 +109,75 @@ the governed verdict-trace-proof loop.
 ```text
 release_surface := {
   surface_id,
+  version,
+  owner,
   claim,
   evidence_state,
-  proof_boundary,
+  proof_boundary_ref,
+  authority_ref,
+  promotion_source,
   snapshot_ref,
+  witness_ref,
+  threat_model_ref,
+  consequence_scope,
+  re_governance_triggers,
   supersedes,
   superseded_by,
-  witness_ref,
   rollback_policy,
-  public_notice_required
+  public_notice_required,
+  created_at
 }
+```
+
+## Publication Gate
+
+```text
+publish(surface):
+  require evidence_state
+  require proof_boundary_ref
+  require authority_ref
+  require snapshot_ref
+
+  if evidence_state == "VerifiedRuntime":
+    require signed witness_ref
+
+  if surface is public:
+    require threat_model_ref
+    require rollback_policy
+    require public_notice_required decision
+
+  if surface supersedes another public claim:
+    require supersedes
+    require superseded_by update on old surface
+    require public notice when claim meaning changes
+
+  return PublishableWithBoundary or GovernanceBlocked(reason)
+```
+
+## Re-Governance Triggers
+
+```text
+material_consequence_requires_re_governance when:
+  context changes
+  authority changes
+  risk class changes
+  dependency state changes
+  timeout expires
+  downstream consumer relies on the claim
+```
+
+## Minimum Threat Model
+
+```text
+threat_model_minimum := [
+  evidence_state_inflation,
+  protected_surface_promotion,
+  stale_claim_reuse,
+  missing_superseded_by_lineage,
+  unsigned_witness_substitution,
+  deadline_pressure_override,
+  rollback_erasure
+]
 ```
 
 ## Rollback Rule

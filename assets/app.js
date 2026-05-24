@@ -637,7 +637,7 @@ function renderFlowDiagram() {
 function renderBoundaryMap() {
   const target = qs("[data-boundary-map]");
   if (!target) return;
-  const routes = ["Mullu", "Proof", "Playground"];
+  const routes = ["Mullu", "Proof", "Doctrine", "Playground"];
   const w = 196;
   const h = 60;
   const gap = 30;

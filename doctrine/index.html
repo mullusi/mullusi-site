@@ -1,0 +1,601 @@
+<!doctype html>
+<!--
+Purpose: public Mullusi Doctrine v1.2 surface with declared evidence state, release schema, and proof-boundary appendix.
+Governance scope: public doctrine claims, evidence-state boundary, release-surface promotion, rollback lineage, and threat-model minimums.
+Dependencies: proof route, playground route, Mullusi public domains, and ops/mullusi-doctrine.md as the source governance record.
+Invariants: no runtime-conformance claim is published as verified without signed witness endpoints; rollback preserves prior claims.
+-->
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#070806">
+  <title>Mullusi Doctrine v1.2</title>
+  <meta name="description" content="Mullusi Doctrine v1.2 with declared evidence state, publication gate, release-surface schema, rollback lineage, and proof-boundary appendix.">
+  <link rel="canonical" href="https://mullusi.com/doctrine/">
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:site_name" content="Mullusi">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Mullusi Doctrine v1.2">
+  <meta property="og:description" content="Evidence-bound public doctrine for governed symbolic intelligence and software action.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mullusi.com/doctrine/">
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Mullusi">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
+  <meta name="twitter:image:alt" content="Mullusi">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070806;
+      --panel: #10120d;
+      --line: #283124;
+      --text: #ece7d8;
+      --muted: #aaa38f;
+      --gold: #d6ad48;
+      --green: #54c99a;
+      --red: #ff7b72;
+      --nav-bg: rgba(7, 8, 6, 0.88);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f4f1e6;
+      --panel: #fbf8ee;
+      --line: #d6cdb5;
+      --text: #1b1d15;
+      --muted: #5d5847;
+      --gold: #8a6914;
+      --green: #1f7d56;
+      --red: #b3262c;
+      --nav-bg: rgba(244, 241, 230, 0.86);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      line-height: 1.65;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 5;
+      padding: 10px 16px;
+      background: var(--gold);
+      color: #121006;
+      font-size: 13px;
+      text-decoration: none;
+      transform: translateY(-200%);
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      border-bottom: 1px solid rgba(214, 173, 72, 0.18);
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-inner,
+    header,
+    main,
+    footer {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav-inner {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    header {
+      min-height: 66vh;
+      display: grid;
+      align-content: center;
+      gap: 26px;
+      padding: 96px 0 56px;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.08;
+    }
+
+    h1 {
+      max-width: 960px;
+      font-size: clamp(42px, 8vw, 96px);
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: clamp(28px, 5vw, 52px);
+      letter-spacing: 0;
+    }
+
+    h3 {
+      color: var(--gold);
+      font-size: 18px;
+    }
+
+    p {
+      max-width: 78ch;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .lede {
+      max-width: 840px;
+      font-size: 18px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .button.primary {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: #121006;
+      font-weight: 700;
+    }
+
+    section {
+      padding: 64px 0;
+      border-top: 1px solid rgba(214, 173, 72, 0.16);
+    }
+
+    .status-grid,
+    .doctrine-grid,
+    .proof-grid,
+    .threat-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .status-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .doctrine-grid,
+    .threat-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .proof-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .box {
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .box span {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--green);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .box p,
+    .box li {
+      font-size: 13px;
+    }
+
+    ol,
+    ul {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding-left: 22px;
+      color: var(--muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 13px 14px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--green);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    td {
+      color: var(--muted);
+    }
+
+    code,
+    pre {
+      color: var(--green);
+      font-family: inherit;
+    }
+
+    pre {
+      max-width: 100%;
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .warning {
+      color: var(--red);
+    }
+
+    footer {
+      padding: 44px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 0;
+      }
+
+      .status-grid,
+      .doctrine-grid,
+      .proof-grid,
+      .threat-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <script>
+    (() => {
+      try {
+        const stored = localStorage.getItem("mullusi-theme");
+        const systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        document.documentElement.dataset.theme = stored || (systemLight ? "light" : "dark");
+      } catch (error) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a class="brand" href="/">Mullusi</a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/mullu/">Mullu</a>
+        <a href="/proof/">Proof</a>
+        <a href="/playground/">Playground</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div class="eyebrow">Doctrine v1.2</div>
+    <h1>Evidence before action.</h1>
+    <p class="lede">
+      Mullusi governs high-risk symbolic intelligence and software actions before
+      they execute. Every public claim must carry a declared evidence state,
+      proof boundary, release lineage, and rollback path.
+    </p>
+    <div class="actions">
+      <a class="button primary" href="/proof/">See Proof Boundaries</a>
+      <a class="button" href="/playground/">Try Mullu Playground</a>
+      <a class="button" href="mailto:research@mullusi.com">Request Governed Pilot</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="evidence-state" aria-labelledby="evidence-state-title">
+      <div class="eyebrow">Evidence State</div>
+      <h2 id="evidence-state-title">PublishableWithBoundary</h2>
+      <div class="status-grid">
+        <article class="box">
+          <span>Architecture</span>
+          <h3>Verified</h3>
+          <p>The doctrine matches the Mullusi public architecture, platform map, and governance philosophy.</p>
+        </article>
+        <article class="box">
+          <span>Runtime</span>
+          <h3>AwaitingEvidence</h3>
+          <p>Runtime conformance stays pending until signed witness endpoints close.</p>
+        </article>
+        <article class="box">
+          <span>Release</span>
+          <h3>Reversible</h3>
+          <p>Every public release requires snapshot reference, superseded lineage, and rollback policy.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="doctrine" aria-labelledby="doctrine-title">
+      <div class="eyebrow">Invariants</div>
+      <h2 id="doctrine-title">Mullusi Doctrine v1.2</h2>
+      <div class="doctrine-grid">
+        <article class="box">
+          <span>Claim and proof</span>
+          <ol>
+            <li>No claim without declared evidence state.</li>
+            <li>No proof without boundary.</li>
+            <li>No verdict without trace.</li>
+            <li>No user-visible simplification that cannot be reversed to its full trace.</li>
+          </ol>
+        </article>
+        <article class="box">
+          <span>Action and consequence</span>
+          <ol>
+            <li>No action without governance.</li>
+            <li>No material consequence without re-governance when context, authority, risk, or dependency state changes.</li>
+            <li>No speed, deadline, demo, sales pressure, or investor pressure may mutate evidence state.</li>
+          </ol>
+        </article>
+        <article class="box">
+          <span>Boundary and release</span>
+          <ol>
+            <li>No boundary transition without governance, witness, and lineage.</li>
+            <li>No protected internal surface may be made public without governed promotion.</li>
+            <li>No release without reversible judgment, snapshot reference, and superseded-by lineage.</li>
+          </ol>
+        </article>
+        <article class="box">
+          <span>Governance surface</span>
+          <ol>
+            <li>No complexity exposed unless it increases user value.</li>
+            <li>The governance layer is itself a hardened, threat-modeled surface.</li>
+            <li>This doctrine is itself versioned, evidence-bound, and reversible.</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <section id="proof-boundaries" aria-labelledby="proof-boundaries-title">
+      <div class="eyebrow">Proof Boundaries Appendix</div>
+      <h2 id="proof-boundaries-title">What the public site proves</h2>
+      <div class="proof-grid">
+        <article class="box">
+          <span>Verified</span>
+          <h3>Public surface</h3>
+          <p>mullusi.com is the company and product routing surface.</p>
+        </article>
+        <article class="box">
+          <span>Verified</span>
+          <h3>Doctrine posture</h3>
+          <p>Doctrine v1.2 is evidence-bound and reversible.</p>
+        </article>
+        <article class="box">
+          <span>AwaitingEvidence</span>
+          <h3>Runtime conformance</h3>
+          <p><code>/health</code>, <code>/gateway/witness</code>, and <code>/runtime/conformance</code> must publish signed witness evidence.</p>
+        </article>
+        <article class="box">
+          <span>Private</span>
+          <h3>Protected internals</h3>
+          <p>Private source, operator routes, and recovery records remain outside the public surface.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="release-surface" aria-labelledby="release-surface-title">
+      <div class="eyebrow">Release Surface</div>
+      <h2 id="release-surface-title">Publication contract</h2>
+      <pre><code>release_surface := {
+  surface_id,
+  version,
+  owner,
+  claim,
+  evidence_state,
+  proof_boundary_ref,
+  authority_ref,
+  promotion_source,
+  snapshot_ref,
+  witness_ref,
+  threat_model_ref,
+  consequence_scope,
+  re_governance_triggers,
+  supersedes,
+  superseded_by,
+  rollback_policy,
+  public_notice_required,
+  created_at
+}</code></pre>
+      <pre><code>publish(surface):
+  require evidence_state
+  require proof_boundary_ref
+  require authority_ref
+  require snapshot_ref
+
+  if evidence_state == "VerifiedRuntime":
+    require signed witness_ref
+
+  if surface is public:
+    require threat_model_ref
+    require rollback_policy
+    require public_notice_required decision
+
+  if surface supersedes another public claim:
+    require supersedes
+    require superseded_by update on old surface
+    require public notice when claim meaning changes
+
+  return PublishableWithBoundary or GovernanceBlocked(reason)</code></pre>
+    </section>
+
+    <section id="re-governance" aria-labelledby="re-governance-title">
+      <div class="eyebrow">Material Consequence</div>
+      <h2 id="re-governance-title">Re-governance triggers</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Trigger</th>
+            <th>Why it matters</th>
+            <th>Required posture</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Context change</td>
+            <td>Prior verdict may no longer bind the active situation.</td>
+            <td>Re-check before material consequence.</td>
+          </tr>
+          <tr>
+            <td>Authority change</td>
+            <td>Actor, permission, or policy authority may have shifted.</td>
+            <td>Block until authority is re-established.</td>
+          </tr>
+          <tr>
+            <td>Risk class change</td>
+            <td>Low-risk proposal can become high-consequence during execution.</td>
+            <td>Escalate evidence state and proof boundary.</td>
+          </tr>
+          <tr>
+            <td>Dependency change</td>
+            <td>External service, data source, or route may drift.</td>
+            <td>Re-evaluate against current dependency state.</td>
+          </tr>
+          <tr>
+            <td>Timeout</td>
+            <td>Evidence can expire before execution finishes.</td>
+            <td>Require fresh snapshot and witness reference.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="threat-model" aria-labelledby="threat-model-title">
+      <div class="eyebrow">Threat Model</div>
+      <h2 id="threat-model-title">Minimum public-surface threats</h2>
+      <div class="threat-grid">
+        <article class="box"><span>Threat</span><p>Evidence state inflation</p></article>
+        <article class="box"><span>Threat</span><p>Protected surface promotion</p></article>
+        <article class="box"><span>Threat</span><p>Stale claim reuse</p></article>
+        <article class="box"><span>Threat</span><p>Missing superseded_by lineage</p></article>
+        <article class="box"><span>Threat</span><p>Unsigned witness substitution</p></article>
+        <article class="box"><span>Threat</span><p>Deadline pressure override</p></article>
+        <article class="box"><span>Threat</span><p>Rollback erasure</p></article>
+        <article class="box"><span>Response</span><p class="warning">Fail closed when evidence, authority, or lineage is missing.</p></article>
+      </div>
+    </section>
+
+    <section id="rollback" aria-labelledby="rollback-title">
+      <div class="eyebrow">Rollback</div>
+      <h2 id="rollback-title">Lineage-preserving rollback</h2>
+      <pre><code>rollback(surface_id):
+  old_surface.superseded_by := new_surface.surface_id
+  preserve old claim
+  mark old evidence_state as superseded / deprecated / rejected
+  publish notice if public claim changed
+  notify dependent consumers if they relied on the old claim</code></pre>
+    </section>
+
+    <section id="status" aria-labelledby="status-title">
+      <div class="eyebrow">Status</div>
+      <h2 id="status-title">Resolution trace</h2>
+      <pre><code>STATUS:
+  Completeness: 96%
+  Invariants verified: evidence boundary, material consequence trigger, public/private boundary, reversible release, rollback lineage, threat model minimum
+  Open issues: runtime witness endpoints remain AwaitingEvidence
+  Next action: close signed runtime witness endpoints before any VerifiedRuntime claim</code></pre>
+    </section>
+  </main>
+
+  <footer>
+    Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.
+  </footer>
+</body>
+</html>

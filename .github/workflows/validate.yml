@@ -38,6 +38,15 @@ jobs:
       - name: Check Cloudflare Pages build test syntax
         run: node --check scripts/test-build-cloudflare-pages.mjs
 
+      - name: Check Doctrine wording test syntax
+        run: node --check scripts/test-validate-site-doctrine-wording.mjs
+
+      - name: Check search indexing surface checker syntax
+        run: node --check scripts/check-search-indexing-surface.mjs
+
+      - name: Check search indexing surface test syntax
+        run: node --check scripts/test-check-search-indexing-surface.mjs
+
       - name: Check website origin checker syntax
         run: node --check scripts/check-website-origin.mjs
 
@@ -76,6 +85,12 @@ jobs:
 
       - name: Test Cloudflare Pages artifact boundary
         run: node scripts/test-build-cloudflare-pages.mjs
+
+      - name: Test Doctrine wording gate
+        run: node scripts/test-validate-site-doctrine-wording.mjs
+
+      - name: Test search indexing surface gate
+        run: node scripts/test-check-search-indexing-surface.mjs
 
       - name: Test website origin classification
         run: node scripts/test-check-website-origin.mjs
