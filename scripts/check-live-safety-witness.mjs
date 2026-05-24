@@ -216,8 +216,18 @@ function validateDeploymentIntegrity(findings, content) {
   const fileName = "deployment-integrity.txt";
   const solved = hasLine(content, "verdict=SolvedVerified") && hasLine(content, "proof_state=Pass");
   const localPending = hasLine(content, "verdict=AwaitingEvidence") && hasLine(content, "proof_state=Unknown");
+  const evidenceError = localPending && /^error=/m.test(content);
   if (!solved && !localPending) {
     findings.push("deployment_integrity_state_invalid");
+  }
+  if (evidenceError) {
+    for (const line of [
+      "raw_response_bodies=not_recorded",
+      "raw_response_headers=not_recorded",
+    ]) {
+      requireLine(findings, fileName, content, line);
+    }
+    return;
   }
   for (const line of [
     "live_content_hashes=Pass",
