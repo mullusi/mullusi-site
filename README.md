@@ -223,8 +223,10 @@ product names, code identifiers, routes, and state tokens (for example
 3. Configure Cloudflare Pages to use that command and publish `dist`.
 4. Confirm DNS points `mullusi.com` and `www.mullusi.com` to the Cloudflare
    Pages project.
-5. Keep `CNAME` only as a GitHub Pages fallback file until the fallback is
-   disabled or archived.
+5. Keep this repository as a public governance mirror only; production source
+   changes belong in `mullusi-company-site`.
+6. Treat `CNAME` as a historical bridge marker unless GitHub Pages is
+   explicitly re-enabled through a new release gate.
 
 Commands:
 

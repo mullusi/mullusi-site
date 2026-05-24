@@ -15,7 +15,8 @@ aligned with the release intent.
 
 ```text
 A. KeepPublic
-   Intentional public docs, demos, SDKs, specs, or research snapshots.
+   Intentional public docs, demos, SDKs, specs, research snapshots, or
+   governed public evidence mirrors that are not production source.
 
 B. ArchivePublic
    Historical public material that should no longer receive strategic work.
@@ -66,6 +67,6 @@ notice unless a specific file states otherwise.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: private by default, deliberate release, license intent, rollback path
+  Invariants verified: private by default, deliberate release, license intent, rollback path, public governance mirror exception bounded
   Open issues: external repository visibility changes still require account-level action
-  Next action: classify each public repository before adding strategic work
+  Next action: keep public mirrors evidence-only and classify each new public repository before adding strategic work

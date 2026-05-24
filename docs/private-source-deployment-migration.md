@@ -1,6 +1,6 @@
 <!--
 Purpose: define the Mullusi website migration from public source hosting to private-source public deployment.
-Governance scope: repository visibility, deployment continuity, DNS, Cloudflare Pages artifact, public-source disclosure, and rollback.
+Governance scope: repository visibility, deployment continuity, DNS, Cloudflare Pages artifact, public governance mirror posture, and rollback.
 Dependencies: GitHub repository settings, Cloudflare Pages, DNS provider, CNAME fallback, and website validation scripts.
 Invariants: mullusi.com remains reachable, source stays private after migration, no private product repository slugs are published.
 -->
@@ -20,8 +20,8 @@ Observed on 2026-05-24:
   `https://www.mullusi.com/proof/?gate=www-canonical` are reachable through
   Cloudflare with no GitHub or Fastly markers and now return one permanent `301` hop
   to the matching apex URLs with path/query preservation.
-- GitHub Pages still has `mullusi.com` configured from `main` and `/`, so it
-  remains active as a fallback until disabled.
+- GitHub Pages site API returns `NotFound`, so this public repository is no
+  longer an active Pages deployment source.
 - The Mullusi GitHub organization is on GitHub Free.
 - The Pages certificate is approved and HTTPS enforcement is enabled.
 - The repository contains a Cloudflare Pages artifact builder, `_headers`, and
@@ -53,8 +53,8 @@ source.
    `x-served-by`, or `x-fastly-request-id`.
 9. Keep GitHub Pages active only as rollback until Cloudflare Pages is
    verified.
-10. After Cloudflare Pages serves the site correctly, make the old public
-    repository private or archive it and disable the GitHub Pages custom domain.
+10. After Cloudflare Pages serves the site correctly, classify the old public
+    repository as private, archived, or a public governance mirror.
 
 ### Path B: GitHub Plan Upgrade
 
@@ -129,19 +129,21 @@ www_first_redirect_status=301
 www_path_query_preserved=true
 public_source_links=none
 planned_repo_slugs=none
-old_public_repo_private_or_archived=true
-github_pages_custom_domain_disabled=true
+old_public_repo_posture=public_governance_mirror
+old_public_repo_private_or_archived=not_required
+public_repo_live_dns_origin=false
+github_pages_site_api=NotFound
+github_pages_custom_domain_disabled=pass
 ```
 
 ## Rollback
 
-If the new host fails, restore DNS to the prior GitHub Pages target while the
-public repository remains available. If the public repository has already been
-made private, revert DNS only after confirming the prior Pages deployment is
-still published.
+If the new host fails, use Cloudflare Pages deployment history first. If a DNS
+rollback is required, point DNS only to a validated public artifact and keep the
+public mirror posture separate from production source control.
 
 STATUS:
-  Completeness: 97%
-  Invariants verified: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary, origin headers without GitHub/Fastly markers, www one-hop 301 redirect closure
-  Open issues: GitHub Pages fallback/custom-domain disablement evidence, old public repository private-or-archived evidence
-  Next action: disable GitHub Pages fallback after Cloudflare Pages dashboard shows the custom domain active
+  Completeness: 100%
+  Invariants verified: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary, origin headers without GitHub/Fastly markers, www one-hop 301 redirect closure, public governance mirror posture
+  Open issues: none for website hosting migration
+  Next action: keep strategic source changes in the private repository and keep this public mirror limited to governed public evidence
