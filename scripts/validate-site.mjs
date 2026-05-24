@@ -1489,7 +1489,7 @@ function validateProductRegistry() {
     if (/github\.com\//i.test(sourceBoundary)) {
       recordFailure(`product_source_boundary_public_repo_forbidden:${name}`);
     }
-    if (!/^docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsPath) && docsPath !== "private docs only") {
+    if (!/^docs\.mullusi\.com(?:\/[a-z0-9/_-]+(?:\.html)?)?$/.test(docsPath) && docsPath !== "private docs only") {
       recordFailure(`product_docs_path_invalid:${name}:${docsPath}`);
     }
     if (!/^(GET|POST) \/v1\/[a-z0-9_{}\/-]+$/.test(apiPath) && apiPath !== "client access to governed API routes" && apiPath !== "no public endpoint") {

@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/browse/",
-    "docsRoute": "https://docs.mullusi.com/browse",
+    "docsRoute": "private",
     "dashboardRoute": "https://dashboard.mullusi.com/browse",
     "proofRoute": "/proof/browse/",
     "statusRoute": "/status/browse/"
@@ -67,7 +67,7 @@
     "runtimeType": "browse runtime service and future app route",
     "dataType": "browse sessions, page observations, action traces, and runtime witness logs",
     "releaseGate": "privacy boundary, runtime witness, rollback path, and action safety witness",
-    "docsPath": "docs.mullusi.com/browse",
+    "docsPath": "private docs only",
     "apiPath": "POST /v1/browse/session",
     "evidencePath": "/proof/",
     "failureMode": "halt unsafe action, preserve trace, and return AwaitingEvidence"

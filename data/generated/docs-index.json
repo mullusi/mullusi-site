@@ -4,7 +4,7 @@
       "apiRoutes": [
         "POST /v1/developers/validate"
       ],
-      "docsRoute": "https://docs.mullusi.com/developers",
+      "docsRoute": "https://docs.mullusi.com/docs/api.html",
       "id": "developer-tools",
       "name": "Developer Tools",
       "releaseGateState": "blocked",
@@ -22,7 +22,7 @@
       "apiRoutes": [
         "POST /v1/agents/run"
       ],
-      "docsRoute": "https://docs.mullusi.com/agents",
+      "docsRoute": "private",
       "id": "mullu-agents",
       "name": "Mullu Agents",
       "releaseGateState": "blocked",
@@ -32,7 +32,7 @@
       "apiRoutes": [
         "POST /v1/browse/session"
       ],
-      "docsRoute": "https://docs.mullusi.com/browse",
+      "docsRoute": "private",
       "id": "mullu-browse",
       "name": "Mullu Browse",
       "releaseGateState": "blocked",
@@ -42,7 +42,7 @@
       "apiRoutes": [
         "POST /v1/chain/submit"
       ],
-      "docsRoute": "https://docs.mullusi.com/chain",
+      "docsRoute": "private",
       "id": "mullu-chain",
       "name": "Mullu Chain",
       "releaseGateState": "blocked",
@@ -52,7 +52,7 @@
       "apiRoutes": [
         "POST /v1/govern/evaluate"
       ],
-      "docsRoute": "https://docs.mullusi.com/govern",
+      "docsRoute": "https://docs.mullusi.com/docs/governance.html",
       "id": "mullu-govern",
       "name": "Mullu Govern",
       "releaseGateState": "blocked",
@@ -62,7 +62,7 @@
       "apiRoutes": [
         "POST /v1/search/query"
       ],
-      "docsRoute": "https://docs.mullusi.com/search",
+      "docsRoute": "https://docs.mullusi.com/docs/search.html",
       "id": "mullu-search",
       "name": "Mullu Search",
       "releaseGateState": "blocked",
@@ -72,7 +72,7 @@
       "apiRoutes": [
         "POST /v1/music/generate"
       ],
-      "docsRoute": "https://docs.mullusi.com/music",
+      "docsRoute": "private",
       "id": "mullu-studio-music",
       "name": "Mullu Studio Music",
       "releaseGateState": "blocked",
@@ -82,7 +82,7 @@
       "apiRoutes": [
         "POST /v1/research/fold"
       ],
-      "docsRoute": "https://docs.mullusi.com/science",
+      "docsRoute": "private",
       "id": "mullusi-science-lab",
       "name": "Mullusi Science Lab",
       "releaseGateState": "blocked",
@@ -92,7 +92,7 @@
       "apiRoutes": [
         "POST /v1/robotics/simulate"
       ],
-      "docsRoute": "https://docs.mullusi.com/robotics",
+      "docsRoute": "private",
       "id": "robotics-tools",
       "name": "Robotics Tools",
       "releaseGateState": "blocked",
@@ -102,7 +102,7 @@
       "apiRoutes": [
         "POST /v1/video/process"
       ],
-      "docsRoute": "https://docs.mullusi.com/video",
+      "docsRoute": "private",
       "id": "virecai-video",
       "name": "VIRECAI Video",
       "releaseGateState": "blocked",
@@ -111,7 +111,7 @@
   ],
   "meta": {
     "artifact": "data/generated/docs-index.json",
-    "content_hash": "sha256:9d56e6de8649e5b05e9bd79eae98b7fdf61efe3fa5d022bf6607a87e82f15fc0",
+    "content_hash": "sha256:ad0464690046479c284d8ed175402c450f48cafeb2e042b06e1e4cf52b184e94",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Docs Index",
     "purpose": "Generated from product manifests. Do not edit by hand.",

@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/mullu/",
-    "docsRoute": "https://docs.mullusi.com/govern",
+    "docsRoute": "https://docs.mullusi.com/docs/governance.html",
     "dashboardRoute": "https://dashboard.mullusi.com/govern",
     "proofRoute": "/proof/govern/",
     "statusRoute": "/status/govern/"
@@ -69,7 +69,7 @@
     "runtimeType": "hosted API and dashboard module",
     "dataType": "policy records, evaluations, traces, proof stamps, and audit events",
     "releaseGate": "runtime witness endpoints and public proof boundary",
-    "docsPath": "docs.mullusi.com/govern",
+    "docsPath": "docs.mullusi.com/docs/governance.html",
     "apiPath": "POST /v1/govern/evaluate",
     "evidencePath": "/proof/",
     "failureMode": "fail closed, record violation, return repair action"

@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/agents/",
-    "docsRoute": "https://docs.mullusi.com/agents",
+    "docsRoute": "private",
     "dashboardRoute": "https://dashboard.mullusi.com/agents",
     "proofRoute": "/proof/agents/",
     "statusRoute": "/status/agents/"
@@ -69,7 +69,7 @@
     "runtimeType": "agent runner service",
     "dataType": "runs, tool calls, constraints, job state, and audit trace",
     "releaseGate": "permission model, tool policy, rollback path, and execution witness",
-    "docsPath": "docs.mullusi.com/agents",
+    "docsPath": "private docs only",
     "apiPath": "POST /v1/agents/run",
     "evidencePath": "/proof/",
     "failureMode": "halt unsafe action, snapshot trace, and request operator repair"

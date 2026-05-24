@@ -253,7 +253,7 @@ function filteredProductRegistry() {
 
 function productDocsHref(product) {
   const docsPath = String(product?.docsPath || "");
-  if (!/^docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsPath)) return "";
+  if (!/^docs\.mullusi\.com(?:\/[a-z0-9/_-]+(?:\.html)?)?$/.test(docsPath)) return "";
   return `https://${docsPath}`;
 }
 

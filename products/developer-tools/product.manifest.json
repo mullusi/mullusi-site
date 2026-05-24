@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/developers/",
-    "docsRoute": "https://docs.mullusi.com/developers",
+    "docsRoute": "https://docs.mullusi.com/docs/api.html",
     "dashboardRoute": "https://dashboard.mullusi.com/developers",
     "proofRoute": "/proof/developers/",
     "statusRoute": "/status/developers/"
@@ -68,7 +68,7 @@
     "runtimeType": "SDK, CLI, validators, and local test harnesses",
     "dataType": "project settings, local validation reports, examples, and release evidence",
     "releaseGate": "install path, examples, license, changelog, and support boundary",
-    "docsPath": "docs.mullusi.com/developers",
+    "docsPath": "docs.mullusi.com/docs/api.html",
     "apiPath": "client access to governed API routes",
     "evidencePath": "/proof/",
     "failureMode": "exit nonzero with explicit violation and repair hint"

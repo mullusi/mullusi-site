@@ -91,7 +91,7 @@
         },
         "docsRoute": {
           "type": "string",
-          "pattern": "^(https://docs\\.mullusi\\.com/[a-z0-9/_-]+|private)$"
+          "pattern": "^(https://docs\\.mullusi\\.com/[a-z0-9/_-]+(?:\\.html)?|private)$"
         },
         "dashboardRoute": {
           "type": "string",
@@ -283,7 +283,7 @@
         },
         "docsPath": {
           "type": "string",
-          "pattern": "^(docs\\.mullusi\\.com(?:/[a-z0-9-]+)?|private docs only)$"
+          "pattern": "^(docs\\.mullusi\\.com(?:/[a-z0-9/_-]+(?:\\.html)?)?|private docs only)$"
         },
         "apiPath": {
           "anyOf": [

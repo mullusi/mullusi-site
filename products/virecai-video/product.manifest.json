@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/video/",
-    "docsRoute": "https://docs.mullusi.com/video",
+    "docsRoute": "private",
     "dashboardRoute": "https://dashboard.mullusi.com/video",
     "proofRoute": "/proof/video/",
     "statusRoute": "/status/video/"
@@ -70,7 +70,7 @@
     "runtimeType": "video processing service and future studio app",
     "dataType": "videos, frames, annotations, artifacts, traces, and storage references",
     "releaseGate": "media policy, artifact storage boundary, and signed processing witness",
-    "docsPath": "docs.mullusi.com/video",
+    "docsPath": "private docs only",
     "apiPath": "POST /v1/video/process",
     "evidencePath": "/proof/",
     "failureMode": "quarantine artifact, preserve trace, and return AwaitingEvidence"
