@@ -31,6 +31,7 @@ function testCloudflarePagesBuildArtifact() {
 
     assert.equal(result.outputDirectory, outputDirectory);
     assert.ok(result.publicEntries.length >= 10);
+    assert.ok(result.excludedPublicEntries.includes("data/products.json"));
     assert.ok(result.excludedPublicEntries.includes("data/generated/products-compat.json"));
     assert.ok(result.forbiddenOutputEntries.includes("backend"));
 
@@ -55,13 +56,18 @@ function testCloudflarePagesBuildArtifact() {
       "_redirects",
       ".well-known/security.txt",
       "assets/app.js",
+      "assets/registry/homepage-registry.js",
+      "assets/render/site-content.js",
+      "assets/render/public-surface-registry.js",
+      "assets/render/product-registry.js",
       "assets/styles.css",
       "assets/pages/product-shell.css",
       "assets/pages/trust.css",
       "data/site.json",
-      "data/products.json",
       "data/manual/public-surfaces.json",
+      "data/generated/products.json",
       "data/generated/homepage-product-registry.json",
+      "data/generated/claim-registry.json",
       "data/generated/runtime-witness-index.json",
       "robots.txt",
       "sitemap.xml",
@@ -81,6 +87,7 @@ function testCloudflarePagesBuildArtifact() {
       "CNAME",
       "README.md",
       "LICENSE",
+      "data/products.json",
       "data/generated/products-compat.json",
     ]) {
       assertAbsent(outputDirectory, forbiddenPath);

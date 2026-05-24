@@ -1,7 +1,7 @@
 {
   "meta": {
     "artifact": "data/generated/api-registry.json",
-    "content_hash": "sha256:1c08f723240aa3b053dd54c583518a298de9d33e1640164968501479536dc80c",
+    "content_hash": "sha256:f6908f97de8d5409f3c8c10d702b14ccfdd0e95dc4bf48fb2424b8afd2e114fd",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated API Registry",
     "purpose": "Generated from product manifests. Do not edit by hand.",

@@ -1,8 +1,8 @@
 /*
-Purpose: verify Mullusi public registry source-boundary rules.
+Purpose: verify Mullusi generated compatibility registry source-boundary rules.
 Governance scope: public surface URLs, private-source state, future-domain boundaries, and repo disclosure prevention.
 Dependencies: Node.js standard library only.
-Invariants: public registry records must not expose private repository slugs or GitHub source links.
+Invariants: compatibility registry records must not expose private repository slugs or GitHub source links.
 */
 
 import fs from "node:fs";
@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
-const registryPath = path.join(repoRoot, "data", "products.json");
+const registryPath = path.join(repoRoot, "data", "generated", "products-compat.json");
 const failures = [];
 
 function recordFailure(message) {

@@ -2,7 +2,7 @@
 <!--
 Purpose: public Mullusi landing page with governed product, service, public-surface, and science-engine surfaces.
 Governance scope: public claims, route boundaries, public surface registry, evidence plane, and visual substrate.
-Dependencies: assets/styles.css, assets/app.js, data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, Mullusi icons, and public Mullusi domains.
+Dependencies: assets/styles.css, assets/registry/homepage-registry.js, assets/render/site-content.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, assets/app.js, data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, Mullusi icons, and public Mullusi domains.
 Invariants: no private repository claims, no silent content failure, all dynamic public records load from structured JSON.
 -->
 <html lang="en" translate="no">
@@ -34,7 +34,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <link rel="manifest" href="site.webmanifest" />
   <script src="/assets/theme-bootstrap.js"></script>
   <script src="/assets/lang-bootstrap.js"></script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.17" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.22" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -59,7 +59,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/app.js?v=2026.05.platform.17"></script>
+  <script defer src="assets/registry/homepage-registry.js?v=2026.05.platform.22"></script>
+  <script defer src="assets/render/site-content.js?v=2026.05.platform.22"></script>
+  <script defer src="assets/render/public-surface-registry.js?v=2026.05.platform.22"></script>
+  <script defer src="assets/render/product-registry.js?v=2026.05.platform.22"></script>
+  <script defer src="assets/app.js?v=2026.05.platform.22"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -136,6 +140,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
 
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap">
+        <div class="hero-stage">
         <div class="spine" aria-hidden="true">
           <div class="s" data-n="01">Ι</div><span class="arr">→</span>
           <div class="s" data-n="02">Λ</div><span class="arr">→</span>
@@ -148,9 +153,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <span class="latin-name" data-text="Mullu">Mullu</span>
           <span class="latin-tag">Mullu</span>
         </div>
+        </div>
+        <div class="hero-copy">
         <div class="tag" data-i18n="hero.tag">Evidence before action.</div>
         <h1 id="hero-title" data-i18n="hero.title">Mullusi governs high-risk symbolic intelligence and software actions before they execute.</h1>
-        <p class="lead" data-i18n="hero.lead">Send a proposed action, evaluate it against your rules, receive a verdict, inspect the causal trace, and preserve the proof state.</p>
+        <p class="lead" data-i18n="hero.lead">Submit an action, receive a governed verdict, inspect the causal trace, and keep the proof state.</p>
         <p class="plain hero-plain" data-i18n="hero.plain">Every action checked. Every material consequence re-checked. Every verdict traced.</p>
         <div class="hero-actions">
           <a href="/playground/" class="btn btn-solid" data-i18n="hero.ctaPlayground">Try Mullu Playground</a>
@@ -172,6 +179,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           </div>
         </dl>
         <p class="plain hero-doctrine-status" data-i18n="hero.doctrineStatus">Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.</p>
+        </div>
       </div>
     </section>
 
@@ -222,7 +230,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="sec-head reveal">
           <div class="tag" data-i18n="oldway.tag">The Shift</div>
           <h2 id="oldway-title" data-i18n="oldway.title">Old way vs Mullusi way</h2>
-          <p data-i18n="oldway.body">Mullusi does not replace model output. It governs whether output-derived actions execute, and re-governs material consequences when context, authority, risk, or dependency state changes.</p>
+          <p data-i18n="oldway.body">Mullusi governs high-risk symbolic intelligence and software actions before they execute. It does not replace model output; it governs whether output-derived actions execute, and re-governs material consequences when context, authority, risk, or dependency state changes.</p>
         </div>
         <div class="oldway-grid reveal" aria-label="Old way versus Mullusi way">
           <div class="ow-head ow-head-old" data-i18n="oldway.colOld">Old way</div>
@@ -470,7 +478,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="product-registry-controls reveal" data-product-registry-controls>
           <noscript>
-            <p>Product registry filters load from <code>data/products.json</code>.</p>
+            <p>Product registry filters load from <code>data/generated/homepage-product-registry.json</code>.</p>
           </noscript>
         </div>
         <div class="product-registry reveal" data-product-registry>
@@ -525,7 +533,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
 
         <div class="repo-grid reveal" data-repo-grid>
           <noscript>
-            <p>Enable JavaScript to view the searchable deployment registry. Current no-JavaScript count: 1 deployed public surface from <code>data/products.json</code>.</p>
+            <p>Enable JavaScript to view the searchable deployment registry. Current no-JavaScript count: 1 deployed public surface from <code>data/generated/homepage-product-registry.json</code>.</p>
           </noscript>
         </div>
 

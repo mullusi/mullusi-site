@@ -103,7 +103,7 @@
   "cards": [],
   "meta": {
     "artifact": "data/generated/homepage-cards.json",
-    "content_hash": "sha256:721628e270931381d5acb134ddb1fe611683f2827f13aace0f52db9b19488e25",
+    "content_hash": "sha256:07aaf750c06424c430e438a09ec12b26c00bcd2d1d500f7895a5881f926d6e92",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Homepage Cards",
     "purpose": "Generated from product manifests. Do not edit by hand.",

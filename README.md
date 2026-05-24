@@ -27,7 +27,6 @@ framework, database, or server runtime.
 |-- robots.txt                         # Crawl policy
 |-- sitemap.xml                        # Search sitemap
 |-- site.webmanifest                   # Browser/app icon manifest
-|-- data/products.json                 # Product and public-surface registry
 |-- data/manual/                       # Manual non-product public-surface sources
 |-- data/generated/                    # Generated product manifest witnesses
 |-- data/news.json                     # Cached Frontier Signal feed
@@ -47,7 +46,11 @@ framework, database, or server runtime.
 |   |-- api-production-readiness-gate.md # api.mullusi.com go/no-go gate
 |   |-- website-origin-witness.md     # Live website origin-header witness
 |   |-- public-visibility-witness.md  # Public DNS and HTTPS visibility witness
+|   |-- live-safety-monitor.md        # Scheduled live probe artifact contract
 |   |-- security-header-witness.md    # Live browser-control header witness
+|   |-- domain-security-witness.md    # DNS, CAA, and mail-auth hardening witness
+|   |-- domain-security-hardening-runbook.md # Bounded DNS/email hardening order
+|   |-- domain-security-preflight.md  # DNS/email mutation permission gate
 |   |-- search-indexing-witness.md    # Live crawl-surface and sitemap witness
 |   |-- www-canonical-redirect-gate.md # www-to-apex redirect gate
 |   |-- recovery-inventory-template.md # Private recovery inventory template
@@ -55,6 +58,10 @@ framework, database, or server runtime.
 |   `-- runtime-witness/               # Product runtime witness registry
 |-- assets/
 |   |-- app.js                         # Repo search/filter renderer
+|   |-- registry/
+|   |   `-- homepage-registry.js        # Homepage registry loading and composition
+|   |-- render/
+|   |   `-- product-registry.js         # Homepage product cards and controls renderer
 |   |-- styles.css                     # Full visual system
 |   |-- fonts/
 |   |   |-- noto-sans-symbols-2-math.woff2 # Scoped symbol font for Greek/math glyphs
@@ -80,8 +87,20 @@ framework, database, or server runtime.
     |-- test-check-website-origin.mjs  # Tests origin-header classification
     |-- check-public-visibility.mjs    # Checks public DNS, HTTPS, TLS, and www routing
     |-- test-check-public-visibility.mjs # Tests visibility gate behavior
+    |-- capture-live-safety-witness.mjs # Captures scheduled witness artifacts
+    |-- test-capture-live-safety-witness.mjs # Tests live-safety capture behavior
+    |-- check-live-safety-witness.mjs  # Validates scheduled witness artifacts
+    |-- test-check-live-safety-witness.mjs # Tests live-safety artifact validation
     |-- check-live-security-headers.mjs # Checks live browser-control response headers
     |-- test-check-live-security-headers.mjs # Tests live security-header gate behavior
+    |-- check-live-deployment-integrity.mjs # Checks live status-manifest file integrity
+    |-- test-check-live-deployment-integrity.mjs # Tests deployment integrity behavior
+    |-- check-domain-security.mjs     # Checks DNSSEC, CAA, SPF, DMARC, DKIM, MTA-STS, and TLS-RPT
+    |-- test-check-domain-security.mjs # Tests domain-security gate behavior
+    |-- check-domain-hardening-preflight.mjs # Blocks unsafe DNS/email mutations
+    |-- test-check-domain-hardening-preflight.mjs # Tests hardening preflight behavior
+    |-- promote-domain-hardening-preflight.mjs # Promotes public-safe preflight evidence
+    |-- test-promote-domain-hardening-preflight.mjs # Tests preflight promotion behavior
     |-- check-www-canonical-redirect-gate.mjs # Evaluates www redirect closure
     |-- test-www-canonical-redirect-gate.mjs # Tests www redirect gate logic
     |-- fetch-news.mjs                 # Deterministic Frontier Signal refresh
@@ -92,10 +111,10 @@ framework, database, or server runtime.
 ## Public Registry Contract
 
 The homepage loads product rows from
-`data/generated/homepage-product-registry.json` and non-product public lists
-from `data/manual/public-surfaces.json`. `data/products.json` is the generated
-legacy-compatible public projection so older consumers keep a stable URL while
-the source of truth stays manifest/manual-owned. Neither file may disclose
+`data/generated/homepage-product-registry.json`, the proof page loads product
+evidence from `data/generated/products.json`, and non-product public lists come
+from `data/manual/public-surfaces.json`. The legacy combined registry is no
+longer part of the public deployment artifact. Public JSON must not disclose
 private repository slugs, internal routes, credentials, deployment details, or
 unfinished product claims.
 
@@ -152,10 +171,10 @@ private-incubation manifest candidate.
 The manifest generator emits:
 
 ```text
-data/products.json
 data/generated/products.json
 data/generated/status.json
 data/generated/proof-index.json
+data/generated/claim-registry.json
 data/generated/api-registry.json
 data/generated/homepage-cards.json
 data/generated/homepage-product-registry.json
@@ -181,12 +200,12 @@ private-incubation.
 the homepage. `data/generated/products-compat.json` preserves the previous
 combined registry shape as generated internal compatibility output, but it is
 not included in the Cloudflare Pages artifact.
-`data/products.json` preserves the old public registry shape as generated
-compatibility output. `data/generated/product-registry-parity.json` records
-legacy-field parity for product rows, and
+`data/generated/product-registry-parity.json` records legacy-field parity for
+product rows, and
 `data/generated/public-surface-parity.json` records parity between
 `data/manual/public-surfaces.json` and the generated compatibility projection.
-The homepage no longer reads the temporary combined compatibility wrapper.
+The homepage and proof page no longer read the temporary combined compatibility
+wrapper.
 
 ## Runtime Witness Authority
 
@@ -219,6 +238,20 @@ required endpoints = /health, /gateway/witness, /runtime/conformance
 All current product witnesses are intentionally `AwaitingEvidence`, so the
 generated runtime witness index keeps public exposure blocked until signed
 service health observations are collected.
+
+## Claim Registry Authority
+
+Product claims are now bound by stable claim IDs:
+
+```text
+proof/*.proof.json
+data/generated/claim-registry.json
+```
+
+Every allowed or blocked proof claim must appear in `claimBindings` with its
+`claimId`, required witnesses, proof state, and render decision. The generated
+claim registry blocks public rendering unless the claim is allowed, the proof
+state is `SolvedVerified`, and the runtime witness is closed.
 
 Commands:
 
@@ -257,9 +290,17 @@ package:
 - `ops/public-visibility-witness.md` records public DNS resolver, HTTPS, TLS,
   `www` canonical route evidence, and optional external regional probes while
   keeping the universal all-user claim `AwaitingEvidence`.
+- `ops/live-safety-monitor.md` defines the scheduled live-safety probe set and
+  uploaded artifact retention boundary for longitudinal evidence.
 - `ops/security-header-witness.md` records the live browser-control header
   witness for CSP, HSTS, cross-origin boundaries, frame blocking, nosniff,
   referrer policy, permissions policy, and legacy cross-domain policy blocking.
+- `ops/domain-security-witness.md` records DNSSEC, CAA, Google Workspace MX,
+  SPF, DMARC, known Google DKIM selector, MTA-STS, and TLS-RPT evidence.
+- `ops/domain-security-hardening-runbook.md` defines the bounded order for CAA,
+  DKIM, SPF hard-fail, DMARC enforcement, MTA-STS, and TLS-RPT changes.
+- `ops/domain-security-preflight.md` records whether mutation permissions are
+  allowed. It must remain blocked until admin-console evidence is confirmed.
 - `ops/search-indexing-witness.md` records the live robots, sitemap, route,
   canonical, and noindex crawl-surface witness without claiming search engine
   indexing state.
@@ -378,8 +419,20 @@ node --check scripts/check-website-origin.mjs
 node --check scripts/test-check-website-origin.mjs
 node --check scripts/check-public-visibility.mjs
 node --check scripts/test-check-public-visibility.mjs
+node --check scripts/capture-live-safety-witness.mjs
+node --check scripts/test-capture-live-safety-witness.mjs
+node --check scripts/check-live-safety-witness.mjs
+node --check scripts/test-check-live-safety-witness.mjs
 node --check scripts/check-live-security-headers.mjs
 node --check scripts/test-check-live-security-headers.mjs
+node --check scripts/check-live-deployment-integrity.mjs
+node --check scripts/test-check-live-deployment-integrity.mjs
+node --check scripts/check-domain-security.mjs
+node --check scripts/test-check-domain-security.mjs
+node --check scripts/check-domain-hardening-preflight.mjs
+node --check scripts/test-check-domain-hardening-preflight.mjs
+node --check scripts/promote-domain-hardening-preflight.mjs
+node --check scripts/test-promote-domain-hardening-preflight.mjs
 node --check scripts/check-www-canonical-redirect-gate.mjs
 node --check scripts/test-www-canonical-redirect-gate.mjs
 node --check scripts/verify-registry-repos.mjs
@@ -397,7 +450,14 @@ node scripts/test-validate-site-doctrine-wording.mjs
 node scripts/test-check-search-indexing-surface.mjs
 node scripts/test-check-website-origin.mjs
 node scripts/test-check-public-visibility.mjs
+node scripts/test-capture-live-safety-witness.mjs
+node scripts/test-check-live-safety-witness.mjs
 node scripts/test-check-live-security-headers.mjs
+node scripts/test-check-live-deployment-integrity.mjs
+node scripts/test-check-domain-security.mjs
+node scripts/test-check-domain-hardening-preflight.mjs
+node scripts/check-domain-hardening-preflight.mjs --expect-blocked
+node scripts/test-promote-domain-hardening-preflight.mjs
 node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
 node scripts/test-www-canonical-redirect-gate.mjs
 node scripts/verify-registry-repos.mjs
@@ -432,8 +492,20 @@ node --check scripts/check-website-origin.mjs
 node --check scripts/test-check-website-origin.mjs
 node --check scripts/check-public-visibility.mjs
 node --check scripts/test-check-public-visibility.mjs
+node --check scripts/capture-live-safety-witness.mjs
+node --check scripts/test-capture-live-safety-witness.mjs
+node --check scripts/check-live-safety-witness.mjs
+node --check scripts/test-check-live-safety-witness.mjs
 node --check scripts/check-live-security-headers.mjs
 node --check scripts/test-check-live-security-headers.mjs
+node --check scripts/check-live-deployment-integrity.mjs
+node --check scripts/test-check-live-deployment-integrity.mjs
+node --check scripts/check-domain-security.mjs
+node --check scripts/test-check-domain-security.mjs
+node --check scripts/check-domain-hardening-preflight.mjs
+node --check scripts/test-check-domain-hardening-preflight.mjs
+node --check scripts/promote-domain-hardening-preflight.mjs
+node --check scripts/test-promote-domain-hardening-preflight.mjs
 node --check scripts/check-www-canonical-redirect-gate.mjs
 node --check scripts/test-www-canonical-redirect-gate.mjs
 node scripts/validate-site.mjs
@@ -444,7 +516,14 @@ node scripts/test-validate-site-doctrine-wording.mjs
 node scripts/test-check-search-indexing-surface.mjs
 node scripts/test-check-website-origin.mjs
 node scripts/test-check-public-visibility.mjs
+node scripts/test-capture-live-safety-witness.mjs
+node scripts/test-check-live-safety-witness.mjs
 node scripts/test-check-live-security-headers.mjs
+node scripts/test-check-live-deployment-integrity.mjs
+node scripts/test-check-domain-security.mjs
+node scripts/test-check-domain-hardening-preflight.mjs
+node scripts/check-domain-hardening-preflight.mjs --expect-blocked
+node scripts/test-promote-domain-hardening-preflight.mjs
 node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
 node scripts/test-www-canonical-redirect-gate.mjs
 node scripts/check-ops-gates.mjs
@@ -493,8 +572,29 @@ prove every network path. To attach a public external regional sample without
 making it mandatory in CI:
 
 ```bash
-node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending
+node scripts/check-public-visibility.mjs --external-globalping --allow-pending
 ```
+
+To capture the full scheduled live-safety artifact locally or in CI:
+
+```bash
+node scripts/capture-live-safety-witness.mjs live-safety-witness
+```
+
+The capture command writes public-safe probe files, validates them with
+`scripts/check-live-safety-witness.mjs`, and exits nonzero if any required
+witness is missing, malformed, or outside the public boundary.
+
+To verify that the live edge files match the live status manifest:
+
+```bash
+node scripts/check-live-deployment-integrity.mjs --allow-pending
+```
+
+This records `AwaitingEvidence` if the live files are internally consistent but
+the local `status.json` manifest differs from the live deployment or a known
+edge HTML transform is observed. Use `--require-local-match` only after the
+current worktree is expected to be deployed.
 
 After security-header changes, verify that the live edge is serving the browser
 control policy:
@@ -507,6 +607,41 @@ The checker validates the public root, `/security/`, and `security.txt` routes
 for CSP, HSTS, frame blocking, cross-origin boundaries, nosniff, referrer
 policy, permissions policy, and legacy cross-domain policy blocking without
 recording raw header values.
+
+To check domain-level certificate and email hardening:
+
+```bash
+node scripts/check-domain-security.mjs --allow-hardening-gaps
+```
+
+The domain-security checker records DNSSEC, CAA, Google Workspace MX, SPF,
+DMARC, known Google DKIM selector, MTA-STS, and TLS-RPT evidence. Run without
+`--allow-hardening-gaps` only after the DNS hardening items in
+`ops/domain-security-witness.md` are expected to close. Use
+`ops/domain-security-hardening-runbook.md` as the execution order; do not add
+CAA, SPF hard-fail, or DMARC enforcement records before its preconditions pass.
+Before mutating DNS, the mutation gate must pass:
+
+```bash
+node scripts/check-domain-hardening-preflight.mjs --require-ready
+```
+
+Current expected state is blocked:
+
+```bash
+node scripts/check-domain-hardening-preflight.mjs --expect-blocked
+```
+
+After admin evidence is confirmed, promote only public-safe preflight flags.
+The command is dry-run by default and derives mutation permissions:
+
+```bash
+node scripts/promote-domain-hardening-preflight.mjs --active-cloudflare-ca-set --cloudflare-ca-source --dns-write-authority
+```
+
+Add `--write` only when the dry-run output is expected. Do not pass DNS target
+values, DKIM keys, provider account identifiers, report payloads, credentials,
+or mailbox secrets to the promotion script.
 
 After deploying sitemap or route changes, compare the local sitemap contract
 against the live crawl surface:
@@ -536,11 +671,15 @@ node scripts/verify-registry-repos.mjs
 Cloudflare Pages `_headers` sets `assets/*` to `Cache-Control: max-age=600`,
 so a returning visitor can otherwise get new `index.html` with a stale cached
 `assets/app.js` (button visible, no handler). `index.html` references
-`assets/app.js` and `assets/styles.css` with a `?v=` query; bump that token
-whenever either asset changes so the new HTML forces a fresh fetch. The JSON
-data files are fetched with `cache: "no-store"` and are also marked no-store
-by `_headers`. Secondary routes currently use route-local inline CSS/JS, so
-this cache token applies only to the main shared homepage assets.
+`assets/app.js`, `assets/registry/homepage-registry.js`,
+`assets/render/site-content.js`,
+`assets/render/public-surface-registry.js`,
+`assets/render/product-registry.js`, and `assets/styles.css` with a `?v=`
+query; bump that token whenever one of those assets changes so the new HTML
+forces a fresh fetch. The JSON data files are fetched with `cache: "no-store"`
+and are also marked no-store by `_headers`. Secondary routes currently use
+route-local inline CSS/JS, so this cache token applies only to the main shared
+homepage assets.
 
 ## Update rule
 
@@ -549,8 +688,8 @@ When a new product surface is ready for public exposure, start with
 privacy, retention, and proof boundary files, then run
 `node scripts/generate-platform.mjs`. During the compatibility phase, set
 `presentation.compatibilityRegistry` in the manifest when it should appear in
-the current homepage registry contract; do not edit `data/products.json` by
-hand. Until then, keep it as a blocked manifest candidate or add public-safe
+the current homepage registry contract; do not edit generated registry outputs
+by hand. Until then, keep it as a blocked manifest candidate or add public-safe
 non-product roadmap language to `data/manual/public-surfaces.json`.
 
 Internal naming candidates must stay out of public data until a public-source

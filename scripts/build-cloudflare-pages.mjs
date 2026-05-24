@@ -59,6 +59,7 @@ const forbiddenOutputEntries = [
 ];
 
 const excludedPublicEntries = new Set([
+  "data/products.json",
   "data/generated/products-compat.json",
 ]);
 

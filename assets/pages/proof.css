@@ -401,6 +401,57 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       color: var(--gold);
     }
 
+    .claim-registry {
+      display: grid;
+      gap: 14px;
+    }
+
+    .claim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-height: 620px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .claim-card {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 15px;
+    }
+
+    .claim-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .claim-card code {
+      color: var(--green);
+      font-size: 11px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .claim-card h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .claim-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
     .proof-empty {
       border: 1px solid var(--line);
       background: var(--panel);
@@ -1266,6 +1317,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       .grid,
       .proof-summary,
       .product-proof-grid,
+      .claim-grid,
       .runtime-status-grid,
       .runtime-check-grid,
       .runtime-closure-grid,

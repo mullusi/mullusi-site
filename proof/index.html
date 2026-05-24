@@ -38,6 +38,7 @@
         <a href="/mullu/">Mullu</a>
         <a href="#claims">Claims</a>
         <a href="#products">Products</a>
+        <a href="#claim-registry">Claim IDs</a>
         <a href="#runtime">Runtime</a>
         <a href="#stamp">Stamp</a>
         <a href="/doctrine/">Doctrine</a>
@@ -98,7 +99,20 @@
       </p>
       <div class="proof-registry" data-product-evidence>
         <noscript>
-          <div class="proof-empty">Enable JavaScript to view product evidence lanes generated from <code>data/products.json</code>.</div>
+          <div class="proof-empty">Enable JavaScript to view product evidence lanes generated from <code>data/generated/products.json</code>.</div>
+        </noscript>
+      </div>
+    </section>
+
+    <section id="claim-registry" aria-labelledby="claim-registry-title">
+      <h2 id="claim-registry-title">Claim registry.</h2>
+      <p class="evidence-note">
+        Claim records are generated from product proof boundaries. Each claim has a stable ID,
+        required witnesses, proof state, runtime witness state, and public render decision.
+      </p>
+      <div class="claim-registry" data-claim-registry>
+        <noscript>
+          <div class="proof-empty">Enable JavaScript to view claim records generated from <code>data/generated/claim-registry.json</code>.</div>
         </noscript>
       </div>
     </section>

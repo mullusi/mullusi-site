@@ -14,7 +14,7 @@
   ],
   "meta": {
     "artifact": "data/generated/homepage-product-registry.json",
-    "content_hash": "sha256:b80cd1992f220358b0af8425f702d49277a218d0f035ed707758485db39882dd",
+    "content_hash": "sha256:394c98de14412415fa39411df2241bdaa147613502cb4ce44dd8c5d357202d36",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Homepage Product Registry",
     "purpose": "Generated homepage product registry from product manifests. Do not edit by hand.",
