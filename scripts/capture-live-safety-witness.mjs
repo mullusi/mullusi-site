@@ -108,6 +108,17 @@ export function runProbeCommand(probe) {
   });
 }
 
+function runProbeWithRetries(probe, runner, maxAttempts = 2) {
+  let result = { status: 1, stdout: "", stderr: "" };
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    result = runner(probe);
+    if (result.status === 0) {
+      return { result, attemptCount: attempt };
+    }
+  }
+  return { result, attemptCount: maxAttempts };
+}
+
 function failureWitness(probe, result) {
   const status = Number.isInteger(result.status) ? result.status : "unknown";
   return [
@@ -137,7 +148,7 @@ export function captureLiveSafetyWitnessArtifact({
 
   const probeResults = [];
   for (const probe of liveSafetyProbePlan()) {
-    const result = runner(probe);
+    const { result, attemptCount } = runProbeWithRetries(probe, runner);
     const status = Number.isInteger(result.status) ? result.status : 1;
     const output = status === 0 ? normalizedOutput(result.stdout || "") : failureWitness(probe, result);
     fs.writeFileSync(path.join(resolvedDirectory, probe.fileName), output, "utf8");
@@ -145,6 +156,7 @@ export function captureLiveSafetyWitnessArtifact({
       name: probe.name,
       fileName: probe.fileName,
       status,
+      attemptCount,
     });
   }
 

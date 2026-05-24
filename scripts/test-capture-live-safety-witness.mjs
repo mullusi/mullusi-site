@@ -230,6 +230,33 @@ function testFailedProbeIsCapturedWithoutLeakingStderr() {
   }
 }
 
+function testTransientProbeFailureRetriesBeforeCapture() {
+  const tempDirectory = createTempDirectory();
+  try {
+    const attempts = new Map();
+    const result = captureLiveSafetyWitnessArtifact({
+      artifactDirectory: tempDirectory,
+      now: new Date("2026-05-24T12:00:00Z"),
+      runner: (probe) => {
+        const attempt = (attempts.get(probe.name) || 0) + 1;
+        attempts.set(probe.name, attempt);
+        if (probe.name === "website_origin" && attempt === 1) {
+          return { status: 1, stdout: "", stderr: "request_timeout" };
+        }
+        return fixtureRunner(probe);
+      },
+    });
+    const websiteOriginFile = fs.readFileSync(path.join(tempDirectory, "website-origin.txt"), "utf8");
+
+    assert.equal(result.validation.verdict, "SolvedVerified");
+    assert.equal(result.validation.proofState, "Pass");
+    assert.match(websiteOriginFile, /^verdict=CloudflareOriginCandidate$/m);
+    assert.equal(result.probeResults.find((probe) => probe.name === "website_origin")?.attemptCount, 2);
+  } finally {
+    removeTempDirectory(tempDirectory);
+  }
+}
+
 function testCliRejectsUnsupportedFlagsWithoutNetwork() {
   const result = runCaptureCli(["--unexpected"]);
 
@@ -243,6 +270,7 @@ testProbePlanHasStableBoundary();
 testMetadataUsesEnvAndSecondPrecisionTimestamp();
 testCaptureWritesAndValidatesArtifact();
 testFailedProbeIsCapturedWithoutLeakingStderr();
+testTransientProbeFailureRetriesBeforeCapture();
 testCliRejectsUnsupportedFlagsWithoutNetwork();
 
 console.log("live safety witness capture tests passed");
