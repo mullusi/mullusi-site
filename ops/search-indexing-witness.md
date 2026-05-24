@@ -79,9 +79,11 @@ Observed on 2026-05-24 after the private production source was synced and the
 Cloudflare Pages artifact was deployed:
 
 ```text
-command=npx.cmd wrangler pages deploy dist --project-name mullusi-company-site --branch main --commit-dirty=true
-deployment_result=complete
+command=npx.cmd --yes wrangler@latest pages deployment list --project-name mullusi-company-site
+deployment_result=production deployment observed
 deployment_project=mullusi-company-site
+deployment_id=4739ec09-d94a-43a2-aa06-a14a8d79d446
+deployment_source=f5f5252
 command=node scripts/check-search-indexing-surface.mjs
 verdict=SolvedVerified
 proof_state=Pass
