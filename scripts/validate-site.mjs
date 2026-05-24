@@ -150,6 +150,10 @@ function sha256Hex(content) {
   return crypto.createHash("sha256").update(content).digest("hex");
 }
 
+function canonicalText(content) {
+  return content.replace(/\r\n/g, "\n");
+}
+
 function canonicalJsonValue(value) {
   if (Array.isArray(value)) {
     return value.map((item) => canonicalJsonValue(item));
@@ -173,7 +177,7 @@ function jsonContentHashWithoutMetaHash(relativePath) {
 }
 
 function fileContentHash(relativePath) {
-  return `sha256:${sha256Hex(readBinary(relativePath))}`;
+  return `sha256:${sha256Hex(canonicalText(readUtf8(relativePath)))}`;
 }
 
 function pathExists(relativePath) {
@@ -200,7 +204,7 @@ function inlineScriptHashes() {
   for (const htmlFile of publicHtmlFiles) {
     const html = readUtf8(htmlFile);
     for (const match of html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)) {
-      hashes.add(`sha256-${crypto.createHash("sha256").update(match[1]).digest("base64")}`);
+      hashes.add(`sha256-${crypto.createHash("sha256").update(canonicalText(match[1])).digest("base64")}`);
     }
   }
   return hashes;
