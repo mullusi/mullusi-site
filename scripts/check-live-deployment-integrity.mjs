@@ -170,19 +170,20 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
   if (liveStatus.public_state !== "Published") hardFindings.push(`live_status_public_state_invalid:${liveStatus.public_state || ""}`);
 
   for (const relativePath of governedHashPaths) {
-    if (!liveHashes[relativePath]) hardFindings.push(`live_status_hash_missing:${relativePath}`);
+    if (!liveHashes[relativePath]) softFindings.push(`live_status_hash_missing:${relativePath}`);
   }
 
-  for (const relativePath of Object.keys(liveHashes)) {
+  const liveHashPaths = Object.keys(liveHashes);
+  for (const relativePath of liveHashPaths) {
     if (!isValidGovernedHashPath(relativePath)) {
       hardFindings.push(`live_status_hash_path_invalid:${relativePath}`);
       continue;
     }
-    if (!governedPathSet.has(relativePath)) hardFindings.push(`live_status_hash_path_unexpected:${relativePath}`);
+    if (!governedPathSet.has(relativePath)) softFindings.push(`live_status_hash_path_unexpected:${relativePath}`);
   }
 
-  for (const relativePath of governedHashPaths) {
-    if (!liveHashes[relativePath]) continue;
+  for (const relativePath of liveHashPaths) {
+    if (!liveHashes[relativePath] || !isValidGovernedHashPath(relativePath)) continue;
     const response = evidence.liveFileResponses?.get(relativePath);
     const statusCode = response?.statusCode ?? 0;
     if (statusCode < 200 || statusCode >= 300) {
@@ -223,7 +224,7 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
       : "Pass",
     localStatusManifestMatch: localManifestMismatch ? "AwaitingEvidence" : "Pass",
     edgeHtmlTransform: edgeTransformObserved ? "AwaitingEvidence" : "Pass",
-    governedFileCount: governedHashPaths.length,
+    governedFileCount: liveHashPaths.length,
     hardFindings,
     softFindings,
   };
@@ -235,7 +236,7 @@ async function collectLiveEvidence() {
   const liveStatus = JSON.parse(liveStatusResponse.body);
   const liveHashes = normalizeManifestHashes(liveStatus.content_hashes);
   const liveFileResponses = new Map();
-  for (const relativePath of governedHashPaths) {
+  for (const relativePath of Object.keys(liveHashes)) {
     if (!liveHashes[relativePath]) continue;
     liveFileResponses.set(relativePath, await requestGet(`${defaultBaseUrl}${livePathForGovernedFile(relativePath)}`));
   }

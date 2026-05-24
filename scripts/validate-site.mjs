@@ -886,7 +886,8 @@ function validatePublicVisibilityWitness() {
     "testKnownCloudflareHtmlTransformAwaitsEvidence",
     "testLocalManifestMismatchAwaitsEvidenceOnly",
     "testUnexpectedOrInvalidHashPathBlocks",
-    "testMissingGovernedHashBlocks",
+    "testUnexpectedLiveHashPathAwaitsEvidence",
+    "testMissingGovernedHashAwaitsEvidence",
     "testCliRejectsUnsupportedArgumentWithoutNetwork",
   ];
   for (const term of liveDeploymentIntegrityTestTerms) {

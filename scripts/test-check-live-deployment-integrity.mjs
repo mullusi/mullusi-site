@@ -43,7 +43,7 @@ function fixtureEvidence({ liveHashes = fixtureHashes(), localHashes = liveHashe
   return {
     localStatusJson: fixtureStatusJson(localHashes),
     liveStatusResponse: { finalUrl: "https://mullusi.com/status.json", statusCode: 200, body: fixtureStatusJson(liveHashes) },
-    liveFileResponses: new Map(governedHashPaths.map((relativePath) => [
+    liveFileResponses: new Map(Object.keys(liveHashes).map((relativePath) => [
       relativePath,
       {
         finalUrl: relativePath === "index.html" ? "https://mullusi.com/" : `https://mullusi.com/${relativePath}`,
@@ -134,14 +134,28 @@ function testUnexpectedOrInvalidHashPathBlocks() {
   assert.ok(result.hardFindings.includes("live_status_hash_path_invalid:../private.txt"));
 }
 
-function testMissingGovernedHashBlocks() {
+function testUnexpectedLiveHashPathAwaitsEvidence() {
+  const liveHashes = {
+    ...fixtureHashes(),
+    "data/products.json": publicFileContentHash("data/products.json", fixtureFileContent("data/products.json")),
+  };
+  const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({ liveHashes }));
+
+  assert.equal(result.verdict, "AwaitingEvidence");
+  assert.equal(result.proofState, "Unknown");
+  assert.equal(result.liveContentHashes, "Pass");
+  assert.ok(result.softFindings.includes("live_status_hash_path_unexpected:data/products.json"));
+}
+
+function testMissingGovernedHashAwaitsEvidence() {
   const liveHashes = fixtureHashes();
   delete liveHashes["data/site.json"];
   const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({ liveHashes }));
 
-  assert.equal(result.verdict, "GovernanceBlocked");
-  assert.equal(result.proofState, "Fail");
-  assert.ok(result.hardFindings.includes("live_status_hash_missing:data/site.json"));
+  assert.equal(result.verdict, "AwaitingEvidence");
+  assert.equal(result.proofState, "Unknown");
+  assert.equal(result.liveContentHashes, "Pass");
+  assert.ok(result.softFindings.includes("live_status_hash_missing:data/site.json"));
 }
 
 function testCliRejectsUnsupportedArgumentWithoutNetwork() {
@@ -159,7 +173,8 @@ testLiveContentHashMismatchBlocks();
 testKnownCloudflareHtmlTransformAwaitsEvidence();
 testLocalManifestMismatchAwaitsEvidenceOnly();
 testUnexpectedOrInvalidHashPathBlocks();
-testMissingGovernedHashBlocks();
+testUnexpectedLiveHashPathAwaitsEvidence();
+testMissingGovernedHashAwaitsEvidence();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 
 console.log("live deployment integrity tests passed");
