@@ -2221,7 +2221,7 @@ function validateIndexDesignContract() {
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
-  const assetVersion = "2026.05.platform.13";
+  const assetVersion = "2026.05.platform.14";
 
   if (!html.includes(`assets/styles.css?v=${assetVersion}`) || !html.includes(`assets/app.js?v=${assetVersion}`)) {
     recordFailure("index_asset_version_invalid");
