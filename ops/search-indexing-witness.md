@@ -18,7 +18,7 @@ live_sitemap_loc_count=5
 finding=none
 ```
 
-## Route Set
+## Historical Route Set
 
 ```text
 https://mullusi.com/
@@ -72,6 +72,45 @@ The current repository sitemap declares thirteen routes. Production still
 serves the earlier five-route sitemap and returns 404 for the newly declared
 trust routes. That drift is a deployment-readback gap, not a `/mullu/` indexing
 gap.
+
+## Production Deployment Closure
+
+Observed on 2026-05-24 after the private production source was synced and the
+Cloudflare Pages artifact was deployed:
+
+```text
+command=npx.cmd wrangler pages deploy dist --project-name mullusi-company-site --branch main --commit-dirty=true
+deployment_result=complete
+deployment_project=mullusi-company-site
+command=node scripts/check-search-indexing-surface.mjs
+verdict=SolvedVerified
+proof_state=Pass
+local_sitemap_loc_count=13
+live_sitemap_loc_count=13
+finding=none
+trust_surface_deployment_visibility=SolvedVerified
+```
+
+Current production now serves the thirteen-route sitemap and the newly declared
+trust routes return public 2xx responses. The deployment-readback gap is closed.
+
+## Current Route Set
+
+```text
+https://mullusi.com/
+https://mullusi.com/mullu/
+https://mullusi.com/doctrine/
+https://mullusi.com/proof/
+https://mullusi.com/playground/
+https://mullusi.com/contact/
+https://mullusi.com/pilot/
+https://mullusi.com/status/
+https://mullusi.com/security/
+https://mullusi.com/privacy/
+https://mullusi.com/terms/
+https://mullusi.com/acceptable-use/
+https://mullusi.com/responsible-disclosure/
+```
 
 ## Public Search Readback
 
@@ -162,11 +201,11 @@ first_party_search_result_url=https://www.mullusi.com
 stale_third_party_record_observed=superseded
 mullu_query_first_party_result_observed=true
 route_specific_mullu_visibility=SolvedVerified
-current_crawl_surface_state=GovernanceBlocked
-current_live_sitemap_matches_local=Fail
+current_crawl_surface_state=SolvedVerified
+current_live_sitemap_matches_local=Pass
 current_local_sitemap_loc_count=13
-current_live_sitemap_loc_count=5
-trust_surface_deployment_visibility=AwaitingEvidence
+current_live_sitemap_loc_count=13
+trust_surface_deployment_visibility=SolvedVerified
 search_console_sitemap_submission=Pass
 search_console_sitemap_status=Success
 search_console_discovered_pages=5
@@ -191,7 +230,7 @@ raw_response_headers=not_recorded
 ```
 
 STATUS:
-  Completeness: 92%
-  Invariants verified: historical five-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback
-  Open issues: current main trust-surface routes not yet visible on production
-  Next action: wait for production deployment readback, then rerun search indexing surface check and update the current crawl surface state
+  Completeness: 98%
+  Invariants verified: historical five-route crawl parity, current thirteen-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback
+  Open issues: Search Console expanded-sitemap readback after deployment
+  Next action: monitor Search Console and public results for expanded trust-route recrawl
