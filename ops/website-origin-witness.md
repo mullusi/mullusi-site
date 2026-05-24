@@ -7,10 +7,10 @@ Invariants: no secret values, account IDs, DNS target records, raw response head
 
 # Website Origin Witness
 
-Observed on 2026-05-22:
+Observed on 2026-05-24:
 
 ```text
-command=node scripts/check-website-origin.mjs --allow-pending
+command=node scripts/check-website-origin.mjs
 target=https://mullusi.com/
 final_url=https://mullusi.com/
 status=200
@@ -27,34 +27,34 @@ via=
 summary=No GitHub Pages origin markers were found in the response headers.
 
 target=https://www.mullusi.com/
-final_url=https://www.mullusi.com/
+final_url=https://mullusi.com/
 status=200
-redirect_count=0
-first_redirect_status=
-first_redirect_url=
+redirect_count=1
+first_redirect_status=301
+first_redirect_url=https://mullusi.com/
 server=cloudflare
-verdict=CanonicalRedirectPending
-proof_state=Unknown
+verdict=CloudflareOriginCandidate
+proof_state=Pass
 github_request=
 fastly_request=
 served_by=
 via=
-summary=The www host is reachable but has not redirected to the apex Mullusi host.
+summary=No GitHub Pages origin markers were found in the response headers.
 
 target=https://www.mullusi.com/proof/?gate=www-canonical
-final_url=https://www.mullusi.com/proof/?gate=www-canonical
+final_url=https://mullusi.com/proof/?gate=www-canonical
 status=200
-redirect_count=0
-first_redirect_status=
-first_redirect_url=
+redirect_count=1
+first_redirect_status=301
+first_redirect_url=https://mullusi.com/proof/?gate=www-canonical
 server=cloudflare
-verdict=CanonicalRedirectPending
-proof_state=Unknown
+verdict=CloudflareOriginCandidate
+proof_state=Pass
 github_request=
 fastly_request=
 served_by=
 via=
-summary=The www host is reachable but has not redirected to the apex Mullusi host.
+summary=No GitHub Pages origin markers were found in the response headers.
 
 target=https://mullusi.com/assets/app.js
 final_url=https://mullusi.com/assets/app.js
@@ -108,9 +108,9 @@ The public website route, `www` host, primary script asset, structured data
 route, and security contact route are currently served through Cloudflare edge
 headers with HTTP 200 responses and without visible GitHub Pages or Fastly
 origin markers. The apex origin header evidence is closed. The `www` canonical
-redirect is still pending because both the root host and a path/query witness
-return direct 200 responses instead of redirecting to the matching
-`https://mullusi.com/` apex URL.
+redirect is also closed because both the root host and a path/query witness
+return one permanent 301 hop to the matching `https://mullusi.com/` apex URL
+while preserving the request path and query.
 
 ## Release Boundary
 
@@ -118,7 +118,10 @@ return direct 200 responses instead of redirecting to the matching
 origin_headers_no_github=true
 cloudflare_edge_observed=true
 github_pages_origin_markers=false
-www_canonical_redirect=AwaitingEvidence
+www_canonical_redirect=SolvedVerified
+www_redirect_count=1
+www_first_redirect_status=301
+www_path_query_preserved=true
 runtime_api_readiness=AwaitingEvidence
 ```
 
@@ -135,14 +138,14 @@ rejected_targets=http://*, https://external-host/*
 json_output=sanitized_witness_records_only
 raw_response_headers=not_recorded
 redirect_boundary=stays_within_mullusi_https_hosts
-www_redirect_failure_state=CanonicalRedirectPending
-www_redirect_path_query_preservation=AwaitingEvidence
-www_redirect_status_code=AwaitingEvidence
+www_redirect_failure_state=none
+www_redirect_path_query_preservation=Pass
+www_redirect_status_code=301
 required_www_redirect_status=301
 ```
 
 STATUS:
   Completeness: 100%
-  Invariants verified: Cloudflare edge observed, GitHub origin markers absent, runtime API boundary unchanged
-  Open issues: www canonical redirect enforcement, Cloudflare Pages project configuration readback, old public repository visibility decision
-  Next action: enforce www to apex redirect, preserve this witness during private-source migration, and keep API readiness gated separately
+  Invariants verified: Cloudflare edge observed, GitHub origin markers absent, one-hop www-to-apex 301 verified, path/query preservation verified, runtime API boundary unchanged
+  Open issues: Cloudflare Pages project configuration readback, old public repository visibility decision
+  Next action: preserve this witness during private-source migration and keep API readiness gated separately

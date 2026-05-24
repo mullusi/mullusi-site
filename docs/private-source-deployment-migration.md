@@ -7,7 +7,7 @@ Invariants: mullusi.com remains reachable, source stays private after migration,
 
 # Private-Source Deployment Migration
 
-Observed on 2026-05-22:
+Observed on 2026-05-24:
 
 - `mullusi/mullusi-site` is public.
 - Cloudflare DNS and edge proxy serve `mullusi.com`.
@@ -18,8 +18,8 @@ Observed on 2026-05-22:
   `x-served-by`, or `x-fastly-request-id`.
 - `https://www.mullusi.com/` and
   `https://www.mullusi.com/proof/?gate=www-canonical` are reachable through
-  Cloudflare with no GitHub or Fastly markers, but currently return direct
-  `200` responses instead of redirecting to the matching apex URLs with one permanent `301` hop.
+  Cloudflare with no GitHub or Fastly markers and now return one permanent `301` hop
+  to the matching apex URLs with path/query preservation.
 - GitHub Pages still has `mullusi.com` configured from `main` and `/`, so it
   remains active as a fallback until disabled.
 - The Mullusi GitHub organization is on GitHub Free.
@@ -27,7 +27,7 @@ Observed on 2026-05-22:
 - The repository contains a Cloudflare Pages artifact builder, `_headers`, and
   `_redirects` contract.
 - `ops/website-origin-witness.md` records the current origin-header witness.
-- `ops/www-canonical-redirect-gate.md` records the live `www` redirect gap.
+- `ops/www-canonical-redirect-gate.md` records the live `www` redirect closure.
 
 ## Constraint
 
@@ -85,7 +85,7 @@ node scripts/validate-site.mjs
 node scripts/verify-registry-repos.mjs
 node scripts/test-build-cloudflare-pages.mjs
 node scripts/test-check-website-origin.mjs
-node scripts/check-www-canonical-redirect-gate.mjs --allow-pending
+node scripts/check-www-canonical-redirect-gate.mjs
 node scripts/test-www-canonical-redirect-gate.mjs
 ```
 
@@ -98,11 +98,10 @@ node scripts/build-cloudflare-pages.mjs
 Classify the current live origin:
 
 ```bash
-node scripts/check-website-origin.mjs --allow-pending
+node scripts/check-website-origin.mjs
 ```
 
-Before closing the migration, the canonical `www` redirect gate must pass
-without the pending override:
+The canonical `www` redirect gate must pass without the pending override:
 
 ```bash
 node scripts/check-www-canonical-redirect-gate.mjs
@@ -142,7 +141,7 @@ made private, revert DNS only after confirming the prior Pages deployment is
 still published.
 
 STATUS:
-  Completeness: 95%
-  Invariants verified: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary, origin headers without GitHub/Fastly markers
-  Open issues: www one-hop 301 redirect enforcement, GitHub Pages fallback/custom-domain disablement evidence, old public repository private-or-archived evidence
-  Next action: enforce www-to-apex redirect, then disable GitHub Pages fallback after Cloudflare Pages dashboard shows the custom domain active
+  Completeness: 97%
+  Invariants verified: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary, origin headers without GitHub/Fastly markers, www one-hop 301 redirect closure
+  Open issues: GitHub Pages fallback/custom-domain disablement evidence, old public repository private-or-archived evidence
+  Next action: disable GitHub Pages fallback after Cloudflare Pages dashboard shows the custom domain active

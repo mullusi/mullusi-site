@@ -1,7 +1,7 @@
 <!--
 Purpose: define the www-to-apex canonical redirect gate for mullusi.com.
-Governance scope: public host canonicalization, Cloudflare Pages routing, redirect witness, and migration closure.
-Dependencies: _redirects, scripts/check-website-origin.mjs, Cloudflare Pages custom domains, and public HTTPS headers.
+Governance scope: public host canonicalization, Cloudflare Pages routing, redirect witness, Worker-route enforcement, and migration closure.
+Dependencies: _redirects, scripts/check-website-origin.mjs, Cloudflare Pages custom domains, Cloudflare Worker route, and public HTTPS headers.
 Invariants: no provider account IDs, DNS target values, tokens, or private deployment identifiers are stored here.
 -->
 
@@ -46,39 +46,39 @@ Current witness:
 ```text
 request=https://www.mullusi.com/
 observed_witness_block_count=1
-observed_final_url=https://www.mullusi.com/
+observed_final_url=https://mullusi.com/
 observed_status=200
-observed_redirect_count=0
-observed_first_redirect_status=
-observed_first_redirect_url=
-observed_verdict=CanonicalRedirectPending
-observed_proof_state=Unknown
+observed_redirect_count=1
+observed_first_redirect_status=301
+observed_first_redirect_url=https://mullusi.com/
+observed_verdict=CloudflareOriginCandidate
+observed_proof_state=Pass
 request=https://www.mullusi.com/proof/?gate=www-canonical
 observed_witness_block_count=1
-observed_final_url=https://www.mullusi.com/proof/?gate=www-canonical
+observed_final_url=https://mullusi.com/proof/?gate=www-canonical
 observed_status=200
-observed_redirect_count=0
-observed_first_redirect_status=
-observed_first_redirect_url=
-observed_verdict=CanonicalRedirectPending
-observed_proof_state=Unknown
+observed_redirect_count=1
+observed_first_redirect_status=301
+observed_first_redirect_url=https://mullusi.com/proof/?gate=www-canonical
+observed_verdict=CloudflareOriginCandidate
+observed_proof_state=Pass
 ```
 
 ## Gate Decision
 
 ```text
 source_redirect_rule=present
-live_redirect_witness=AwaitingEvidence
-path_query_redirect_witness=AwaitingEvidence
-permanent_redirect_status_witness=AwaitingEvidence
-single_redirect_hop_witness=AwaitingEvidence
-unique_witness_blocks=required
-release_gate=blocked
-failure_action=keep_private_source_migration_open
+live_redirect_witness=Pass
+path_query_redirect_witness=Pass
+permanent_redirect_status_witness=Pass
+single_redirect_hop_witness=Pass
+unique_witness_blocks=Pass
+release_gate=ready
+failure_action=none
 ```
 
-The `www` host is public and served through Cloudflare, but it is not yet a
-canonical redirect witness. The migration must remain open until
+The `www` host is public, served through Cloudflare, and now has a canonical
+redirect witness. The migration gate is closed because
 `scripts/check-website-origin.mjs` reports `https://www.mullusi.com/` with
 `final_url=https://mullusi.com/`, `first_redirect_status=301`, and
 `first_redirect_url=https://mullusi.com/`; reports
@@ -89,7 +89,7 @@ query preserved on the apex host with `first_redirect_status=301`; and returns
 ## Operator Rule Contract
 
 ```text
-rule_surface=Cloudflare Pages redirect or Cloudflare zone redirect rule
+rule_surface=Cloudflare Pages redirect, Cloudflare zone redirect rule, or versioned Cloudflare Worker route
 match_host=www.mullusi.com
 target_host=mullusi.com
 scheme=https
@@ -133,6 +133,6 @@ must be a command output captured from the public HTTPS route after propagation.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: source redirect rule declared, unique witness blocks required, live redirect gap recorded, permanent 301 required, path/query preservation required, operator closure contract declared, runtime API boundary unchanged
-  Open issues: Cloudflare Pages or zone-level rule must enforce www-to-apex redirect
-  Next action: enforce the redirect, rerun the origin checker, and update ops/website-origin-witness.md
+  Invariants verified: source redirect rule declared, unique witness blocks required, live redirect witness verified, permanent 301 verified, path/query preservation verified, operator closure contract declared, runtime API boundary unchanged
+  Open issues: none for www canonical redirect
+  Next action: keep the redirect under versioned source control and monitor runtime API gates separately
