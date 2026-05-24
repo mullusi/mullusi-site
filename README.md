@@ -39,6 +39,7 @@ framework, database, or server runtime.
 |   |-- api-runtime-host-path.md      # Provider-neutral API host path
 |   |-- api-production-readiness-gate.md # api.mullusi.com go/no-go gate
 |   |-- website-origin-witness.md     # Live website origin-header witness
+|   |-- search-indexing-witness.md    # Live crawl-surface and sitemap witness
 |   |-- www-canonical-redirect-gate.md # www-to-apex redirect gate
 |   |-- recovery-inventory-template.md # Private recovery inventory template
 |   `-- recovery-completion-witness.md # Recovery completion state
@@ -134,6 +135,9 @@ package:
   recovery, host, database, preflight, and rollback evidence exist.
 - `ops/website-origin-witness.md` records the current Cloudflare edge origin
   header witness for the public website without changing API readiness.
+- `ops/search-indexing-witness.md` records the live robots, sitemap, route,
+  canonical, and noindex crawl-surface witness without claiming search engine
+  indexing state.
 - `ops/www-canonical-redirect-gate.md` keeps the `www` canonical redirect
   open until live headers prove the host redirects to `https://mullusi.com/`
   with one permanent `301` hop and path/query preservation; it also defines

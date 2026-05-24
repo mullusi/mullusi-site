@@ -33,6 +33,7 @@ const requiredFiles = [
   "ops/api-runtime-host-path.md",
   "ops/api-production-readiness-gate.md",
   "ops/website-origin-witness.md",
+  "ops/search-indexing-witness.md",
   "ops/www-canonical-redirect-gate.md",
   "ops/recovery-inventory-template.md",
   "ops/recovery-completion-witness.md",
@@ -369,6 +370,79 @@ function validateWebsiteOriginWitness() {
   }
   if (/x-github-request-id\s*=\S+|x-fastly-request-id\s*=\S+|x-served-by\s*=\S+|account_id\s*=|billing_id\s*=|token\s*=/i.test(witness)) {
     recordFailure("website_origin_witness_boundary_invalid");
+  }
+}
+
+function validateSearchIndexingWitness() {
+  const witness = readUtf8("ops/search-indexing-witness.md");
+  const checker = readUtf8("scripts/check-search-indexing-surface.mjs");
+  const checkerTest = readUtf8("scripts/test-check-search-indexing-surface.mjs");
+  const requiredTerms = [
+    "command=node scripts/check-search-indexing-surface.mjs",
+    "verdict=SolvedVerified",
+    "proof_state=Pass",
+    "local_sitemap_loc_count=5",
+    "live_sitemap_loc_count=5",
+    "finding=none",
+    "https://mullusi.com/",
+    "https://mullusi.com/mullu/",
+    "https://mullusi.com/doctrine/",
+    "https://mullusi.com/proof/",
+    "https://mullusi.com/playground/",
+    "robots_root_allow=Pass",
+    "robots_sitemap_reference=Pass",
+    "live_sitemap_matches_local=Pass",
+    "canonical_route_reachability=Pass",
+    "noindex_blockers_detected=false",
+    "search_engine_index_state=AwaitingEvidence",
+    "non_2xx_route_status=GovernanceBlocked",
+    "live_sitemap_missing_loc=GovernanceBlocked",
+    "live_sitemap_stale_lastmod=GovernanceBlocked",
+    "live_sitemap_untracked_loc=GovernanceBlocked",
+    "route_noindex_signal=GovernanceBlocked",
+    "route_canonical_mismatch=GovernanceBlocked",
+    "external_search_console_state=not_recorded",
+    "raw_response_headers=not_recorded",
+    "STATUS:",
+  ];
+  for (const term of requiredTerms) {
+    if (!witness.includes(term)) {
+      recordFailure(`search_indexing_witness_term_missing:${term}`);
+    }
+  }
+
+  const checkerTerms = [
+    "function evaluateRobotsResponse",
+    "function evaluateRouteResponse",
+    "function evaluateSearchIndexingEvidence",
+    "live_sitemap_loc_missing",
+    "live_sitemap_lastmod_stale",
+    "live_route_status_invalid",
+    "live_route_meta_noindex",
+    "live_route_canonical_mismatch",
+    "SolvedVerified",
+    "GovernanceBlocked",
+  ];
+  for (const term of checkerTerms) {
+    if (!checker.includes(term)) {
+      recordFailure(`search_indexing_checker_term_missing:${term}`);
+    }
+  }
+
+  const checkerTestTerms = [
+    "testSitemapComparisonDetectsDrift",
+    "testRobotsEvaluationKeepsSearchAccessExplicit",
+    "testRouteEvaluationDetectsCanonicalAndIndexingBlockers",
+    "testEvidenceEvaluationProducesBlockingVerdict",
+  ];
+  for (const term of checkerTestTerms) {
+    if (!checkerTest.includes(term)) {
+      recordFailure(`search_indexing_checker_test_term_missing:${term}`);
+    }
+  }
+
+  if (/account_id\s*=|billing_id\s*=|token\s*=|search_console_property\s*=|crawler_log\s*=/i.test(witness)) {
+    recordFailure("search_indexing_witness_boundary_invalid");
   }
 }
 
@@ -2721,6 +2795,10 @@ function validateOperatingGates() {
       terms: ["API Production Readiness Gate", "Pre-Provision Requirements", "Pre-DNS Evidence", "DNS Activation Rule", "Post-DNS Evidence", "Rollback Rule", "STATUS:"],
     },
     {
+      file: "ops/search-indexing-witness.md",
+      terms: ["Search Indexing Witness", "SolvedVerified", "robots_root_allow=Pass", "live_sitemap_matches_local=Pass", "search_engine_index_state=AwaitingEvidence", "STATUS:"],
+    },
+    {
       file: "ops/recovery-inventory-template.md",
       terms: ["Recovery Inventory Template", "Root Identity", "Account Recovery Checklist", "Emergency Access Procedure", "Rotation Cadence", "Release Block", "STATUS:"],
     },
@@ -2855,6 +2933,7 @@ function runValidation() {
   validateCloudflarePagesControls();
   validateCloudflarePagesArtifact();
   validateWebsiteOriginWitness();
+  validateSearchIndexingWitness();
   validatePrivateSourceMigrationDoc();
   validateWwwCanonicalRedirectGate();
   validateRobots();
