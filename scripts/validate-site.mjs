@@ -15,6 +15,7 @@ const failures = [];
 
 const requiredFiles = [
   "index.html",
+  "doctrine/index.html",
   "mullu/index.html",
   "proof/index.html",
   "playground/index.html",
@@ -63,6 +64,9 @@ const requiredFiles = [
   "scripts/fetch-news.mjs",
   "scripts/build-cloudflare-pages.mjs",
   "scripts/test-build-cloudflare-pages.mjs",
+  "scripts/test-validate-site-doctrine-wording.mjs",
+  "scripts/check-search-indexing-surface.mjs",
+  "scripts/test-check-search-indexing-surface.mjs",
   "scripts/check-website-origin.mjs",
   "scripts/test-check-website-origin.mjs",
   "scripts/check-www-canonical-redirect-gate.mjs",
@@ -243,6 +247,7 @@ function validateCloudflarePagesArtifact() {
     ".well-known",
     "assets",
     "data",
+    "doctrine",
     "mullu",
     "playground",
     "proof",
@@ -285,6 +290,7 @@ function validateCloudflarePagesArtifact() {
   }
   const byteMatchedFiles = [
     "index.html",
+    "doctrine/index.html",
     "mullu/index.html",
     "proof/index.html",
     "playground/index.html",
@@ -552,7 +558,7 @@ function validateSitemap() {
 }
 
 function validateLocalLinks() {
-  for (const htmlFile of ["index.html", "mullu/index.html", "proof/index.html", "playground/index.html", "404.html"]) {
+  for (const htmlFile of ["index.html", "doctrine/index.html", "mullu/index.html", "proof/index.html", "playground/index.html", "404.html"]) {
     const ids = idsForHtmlFile(htmlFile);
     const html = readUtf8(htmlFile);
     for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
@@ -2510,6 +2516,99 @@ function validateProofPageContract() {
   }
 }
 
+function validateDoctrinePageContract() {
+  const html = readUtf8("doctrine/index.html");
+  const requiredDoctrineTerms = [
+    "Mullusi Doctrine v1.2",
+    "Evidence State",
+    "PublishableWithBoundary",
+    "AwaitingEvidence",
+    "Proof Boundaries Appendix",
+    "release_surface",
+    "publish(surface)",
+    "rollback(surface_id)",
+    "superseded_by",
+    "Material Consequence",
+    "Threat Model",
+    "VerifiedRuntime",
+    "/proof/",
+    "/health",
+    "/gateway/witness",
+    "/runtime/conformance",
+  ];
+
+  for (const term of requiredDoctrineTerms) {
+    if (!html.includes(term)) {
+      recordFailure(`doctrine_page_contract_missing:${term}`);
+    }
+  }
+}
+
+function validateDoctrineWordingContract() {
+  const sourceSurfaces = [
+    "index.html",
+    "doctrine/index.html",
+    "data/i18n.json",
+    "ops/mullusi-doctrine.md",
+  ];
+  const requiredSurfaceTerms = [
+    {
+      file: "index.html",
+      terms: [
+        "Mullusi governs high-risk symbolic intelligence and software actions before they execute.",
+        "Every material consequence re-checked.",
+        "re-governs material consequences when context, authority, risk, or dependency state changes.",
+        'href="/doctrine/"',
+      ],
+    },
+    {
+      file: "doctrine/index.html",
+      terms: [
+        "No material consequence without re-governance when context, authority, risk, or dependency state changes.",
+        "threat_model_ref",
+        "public_notice_required",
+        "return PublishableWithBoundary or GovernanceBlocked(reason)",
+      ],
+    },
+    {
+      file: "ops/mullusi-doctrine.md",
+      terms: [
+        "No material consequence without re-governance when context, authority, risk, or dependency state changes.",
+        "Verified against Mullusi architecture and public philosophy.",
+        "AwaitingEvidence against runtime conformance until signed witness endpoints close.",
+        "threat_model_minimum",
+      ],
+    },
+  ];
+  const forbiddenPublicPhrases = [
+    "Every consequence re-checked.",
+    "Every consequence can be re-checked",
+    "full runtime conformance",
+    "high-risk software actions before they execute.",
+    "governed intelligence for consequential action",
+    "teaches the model",
+    "Free teaches the model",
+  ];
+
+  for (const { file, terms } of requiredSurfaceTerms) {
+    const content = readUtf8(file);
+    for (const term of terms) {
+      if (!content.includes(term)) {
+        recordFailure(`doctrine_wording_required_term_missing:${file}:${term}`);
+      }
+    }
+  }
+
+  for (const file of sourceSurfaces) {
+    const content = readUtf8(file);
+    for (const phrase of forbiddenPublicPhrases) {
+      if (content.includes(phrase)) {
+        recordFailure(`doctrine_wording_forbidden_phrase:${file}:${phrase}`);
+      }
+    }
+  }
+}
+
 function validatePublicText() {
   const blockedPatterns = [
     new RegExp("\\b" + "artificial\\s+" + "intelligence\\b", "i"),
@@ -2554,7 +2653,7 @@ function validatePublicText() {
 }
 
 function validateEmailRendering() {
-  const htmlFiles = ["index.html", "mullu/index.html", "proof/index.html", "playground/index.html", "404.html"];
+  const htmlFiles = ["index.html", "doctrine/index.html", "mullu/index.html", "proof/index.html", "playground/index.html", "404.html"];
   const emailPattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
   for (const fileName of htmlFiles) {
     const html = readUtf8(fileName);
@@ -2720,6 +2819,7 @@ function validateHeadContract() {
   const ogImage = "https://mullusi.com/assets/mullusi-icon-512.png";
   const routes = [
     { file: "index.html", url: "https://mullusi.com" },
+    { file: "doctrine/index.html", url: "https://mullusi.com/doctrine/" },
     { file: "mullu/index.html", url: "https://mullusi.com/mullu/" },
     { file: "proof/index.html", url: "https://mullusi.com/proof/" },
     { file: "playground/index.html", url: "https://mullusi.com/playground/" },
@@ -2770,6 +2870,8 @@ function runValidation() {
   validateI18n();
   validateIndexDesignContract();
   validateProofPageContract();
+  validateDoctrinePageContract();
+  validateDoctrineWordingContract();
   validatePublicText();
   validateEmailRendering();
   validateOperatingGates();

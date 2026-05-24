@@ -35,6 +35,7 @@ function testCloudflarePagesBuildArtifact() {
 
     for (const requiredPath of [
       "index.html",
+      "doctrine/index.html",
       "mullu/index.html",
       "proof/index.html",
       "playground/index.html",
