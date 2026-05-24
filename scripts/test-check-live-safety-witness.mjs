@@ -161,6 +161,23 @@ function testExternalProviderErrorIsAllowedForRegionalProbe() {
   assert.deepEqual(result.findings, []);
 }
 
+function testDeploymentIntegrityEvidenceErrorIsAllowed() {
+  const fixtureDirectory = createFixture({
+    "deployment-integrity.txt": [
+      "verdict=AwaitingEvidence",
+      "proof_state=Unknown",
+      "error=request_timeout:https://mullusi.com/status.json",
+      "raw_response_bodies=not_recorded",
+      "raw_response_headers=not_recorded",
+    ].join("\n"),
+  });
+  const result = evaluateLiveSafetyWitnessArtifact(fixtureDirectory);
+
+  assert.equal(result.verdict, "SolvedVerified");
+  assert.equal(result.proofState, "Pass");
+  assert.deepEqual(result.findings, []);
+}
+
 function testMissingArtifactFileBlocks() {
   const fixtureDirectory = createFixture();
   fs.unlinkSync(path.join(fixtureDirectory, "security-headers.txt"));
@@ -221,6 +238,7 @@ function testCliRejectsUnsupportedArgument() {
 
 testPassingArtifactValidates();
 testExternalProviderErrorIsAllowedForRegionalProbe();
+testDeploymentIntegrityEvidenceErrorIsAllowed();
 testMissingArtifactFileBlocks();
 testFailedProbeBlocks();
 testBoundaryViolationBlocks();

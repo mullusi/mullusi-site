@@ -787,6 +787,7 @@ function validatePublicVisibilityWitness() {
     "--allow-pending",
     "raw_response_bodies=not_recorded",
     "raw_response_headers=not_recorded",
+    "runProbeWithRetries",
     "failureWitness",
     "probe_failed",
     "evaluateLiveSafetyWitnessArtifact",
@@ -802,6 +803,7 @@ function validatePublicVisibilityWitness() {
     "testMetadataUsesEnvAndSecondPrecisionTimestamp",
     "testCaptureWritesAndValidatesArtifact",
     "testFailedProbeIsCapturedWithoutLeakingStderr",
+    "testTransientProbeFailureRetriesBeforeCapture",
     "testCliRejectsUnsupportedFlagsWithoutNetwork",
     "--external-globalping",
   ];
@@ -842,6 +844,7 @@ function validatePublicVisibilityWitness() {
   const liveSafetyArtifactTestTerms = [
     "testPassingArtifactValidates",
     "testExternalProviderErrorIsAllowedForRegionalProbe",
+    "testDeploymentIntegrityEvidenceErrorIsAllowed",
     "testMissingArtifactFileBlocks",
     "testFailedProbeBlocks",
     "testBoundaryViolationBlocks",
