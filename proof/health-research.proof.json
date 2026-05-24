@@ -30,5 +30,59 @@
       "state": "AwaitingEvidence",
       "evidence": "Health Research Pipeline privacy and retention policies are declared in not-active state."
     }
+  ],
+  "claimBindings": [
+    {
+      "claimId": "health-research-pipeline.blocked.evidence-export-boundary",
+      "claimText": "evidence export boundary",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "health-research-pipeline.blocked.human-review",
+      "claimText": "human review",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "health-research-pipeline.blocked.legal-review",
+      "claimText": "legal review",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "health-research-pipeline.blocked.restricted-data-policy",
+      "claimText": "restricted-data policy",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    }
   ]
 }

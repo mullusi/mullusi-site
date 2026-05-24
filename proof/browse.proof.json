@@ -29,5 +29,46 @@
       "state": "AwaitingEvidence",
       "evidence": "Browse privacy and retention policies are declared in not-active state."
     }
+  ],
+  "claimBindings": [
+    {
+      "claimId": "mullu-browse.blocked.production-browse-execution",
+      "claimText": "production browse execution",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "mullu-browse.blocked.real-time-browse-accuracy",
+      "claimText": "real-time browse accuracy",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "mullu-browse.blocked.remote-page-action-safety",
+      "claimText": "remote page action safety",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    }
   ]
 }

@@ -50,11 +50,12 @@
     }
   ],
   "content_hashes": {
-    "index.html": "sha256:f10d29deec9300329732e58b20765573805c49c08c89dc8508d6de28f04fa401",
-    "data/site.json": "sha256:693fef04999601c1ffdbb42f20ec9f9da4d828fed09a76d73bc02ddfc9a132b3",
-    "data/products.json": "sha256:640b9bdd072c073b8ec8b44d5ab277fef8445f2d99de6e9434398ab1a5098eb8",
+    "index.html": "sha256:0212cd41d527d826c08ee27d900cbbd907da48c4c7ace35d8dadeb38b2018084",
+    "data/site.json": "sha256:3382acc74a24fa3b422fcf6238a055a3672844e9830a1e3d05c6c85dd5ef1e95",
+    "data/generated/products.json": "sha256:49068f39c77d48d1d5469c46180ce91180791ec6b0c6f0317169ddd25da52527",
     "data/manual/public-surfaces.json": "sha256:87666563d5fa0cd5a6b215ad7b78a47ffb9976748adc735e20571a4da786a503",
     "data/generated/homepage-product-registry.json": "sha256:fd3b3d53c0e6c1a69226233fc4a7b424b7de8dec4dfdaf48b49b40a0d16153e7",
+    "data/generated/claim-registry.json": "sha256:90210d27761651e208b994368f19eac5b1e1b69034f72ae759aa7622ec5953ec",
     "data/generated/runtime-witness-index.json": "sha256:6a75cc8551a70b552b38b7795328a6abdf8f96846653b14155c09c853b026588"
   }
 }

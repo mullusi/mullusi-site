@@ -11,6 +11,7 @@
     "proofState",
     "claimsAllowed",
     "claimsBlockedUntilVerified",
+    "claimBindings",
     "witnesses"
   ],
   "properties": {
@@ -24,7 +25,16 @@
     },
     "proofState": {
       "type": "string",
-      "enum": ["AwaitingEvidence", "SolvedVerified", "GovernanceBlocked", "Archived"]
+      "enum": [
+        "SolvedVerified",
+        "SolvedUnverified",
+        "AwaitingEvidence",
+        "SafeHalt",
+        "GovernanceBlocked",
+        "BudgetExhausted",
+        "ImpossibleProved",
+        "ModelInvalidated"
+      ]
     },
     "claimsAllowed": {
       "type": "array",
@@ -38,6 +48,60 @@
       "items": {
         "type": "string",
         "minLength": 1
+      }
+    },
+    "claimBindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claimId",
+          "claimText",
+          "state",
+          "requiredWitnesses",
+          "renderDecision",
+          "proofState"
+        ],
+        "properties": {
+          "claimId": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.(allowed|blocked)\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "claimText": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": ["allowed", "blocked"]
+          },
+          "requiredWitnesses": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": ["runtime", "contract", "rollback", "privacy", "support", "status"]
+            }
+          },
+          "renderDecision": {
+            "type": "string",
+            "enum": ["render", "block"]
+          },
+          "proofState": {
+            "type": "string",
+            "enum": [
+              "SolvedVerified",
+              "SolvedUnverified",
+              "AwaitingEvidence",
+              "SafeHalt",
+              "GovernanceBlocked",
+              "BudgetExhausted",
+              "ImpossibleProved",
+              "ModelInvalidated"
+            ]
+          }
+        }
       }
     },
     "witnesses": {

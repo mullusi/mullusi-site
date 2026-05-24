@@ -71,7 +71,7 @@
   "manifestCount": 11,
   "meta": {
     "artifact": "data/generated/migration-coverage.json",
-    "content_hash": "sha256:7d345138dac3833e78bd9a559a84611061515adb968dcce7bd37ed82c598734f",
+    "content_hash": "sha256:f29d3826a08ef67fa4af4b43b46eefa19d8bf5a551a8f0e3f5033487336cad7a",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Registry Migration Coverage",
     "purpose": "Generated from product manifests. Do not edit by hand.",

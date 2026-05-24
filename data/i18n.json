@@ -123,7 +123,7 @@
       "am": "ሙሉሲ ከፍተኛ-ስጋት ያላቸውን የምልክታዊ ብልህነት እና የሶፍትዌር ድርጊቶች ከመፈጸማቸው በፊት ያስተዳድራል።"
     },
     "hero.lead": {
-      "en": "Send a proposed action, evaluate it against your rules, receive a verdict, inspect the causal trace, and preserve the proof state.",
+      "en": "Submit an action, receive a governed verdict, inspect the causal trace, and keep the proof state.",
       "am": "የቀረበን ድርጊት ይላኩ፣ ከደንቦችዎ ጋር ይገምግሙት፣ ፍርድ ይቀበሉ፣ የምክንያት ዱካውን ይመርምሩ፣ እና የማረጋገጫ ሁኔታውን ይጠብቁ።"
     },
     "hero.plain": {

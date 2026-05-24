@@ -29,5 +29,46 @@
       "state": "AwaitingEvidence",
       "evidence": "Mullu Agents privacy and retention policies are declared in not-active state."
     }
+  ],
+  "claimBindings": [
+    {
+      "claimId": "mullu-agents.blocked.operator-policy-witness",
+      "claimText": "operator policy witness",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "mullu-agents.blocked.production-tool-execution",
+      "claimText": "production tool execution",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "mullu-agents.blocked.rollback-safe-agent-runs",
+      "claimText": "rollback-safe agent runs",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    }
   ]
 }

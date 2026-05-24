@@ -1,7 +1,7 @@
 /*
 Purpose: render the Mullusi proof boundary from governed public JSON records.
 Governance scope: proof-state display, product evidence lanes, runtime witness board, and public proof stamp artifact.
-Dependencies: data/products.json, data/site.json, localStorage, and data-theme-toggle markup.
+Dependencies: data/generated/products.json, data/generated/claim-registry.json, data/site.json, localStorage, and data-theme-toggle markup.
 Invariants: all fetched records render with escaped text or bounded links, failures surface explicit AwaitingEvidence copy.
 */
 
@@ -46,17 +46,61 @@ Invariants: all fetched records render with escaped text or bounded links, failu
         "private-incubation": "Private incubation",
         planned: "Planned",
         restricted: "Restricted",
+        allowed: "Allowed",
+        blocked: "Blocked",
+        block: "Block",
+        render: "Render",
+        "limited-preview": "Limited preview",
+        "internal-alpha": "Internal alpha",
+        "public-beta": "Public beta",
+        production: "Production",
+        archived: "Archived",
       }[status] || status || "Unknown");
 
       const docsHref = (docsPath) => /^docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsPath || "")
         ? `https://${docsPath}`
+        : /^https:\/\/docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsPath || "")
+          ? docsPath
+          : "";
+
+      const evidenceHref = (path) => /^\/proof\/(?:[a-z0-9-]+\/)?$/.test(path || "")
+        ? path
         : "";
 
-      const evidenceHref = (path) => path === "/proof/" || path === "#evidence" ? path : "";
-
-      const apiLabel = (apiPath) => apiPath === "no public endpoint" ? "No public API" : (apiPath || "No public API");
+      const apiLabel = (product) => {
+        if (Array.isArray(product.apiRoutes) && product.apiRoutes.length > 0) {
+          return product.apiRoutes.join(", ");
+        }
+        if (typeof product.apiPath === "string" && product.apiPath.trim()) return product.apiPath;
+        if (product.apiExposure === "none") return "No public API";
+        return "No public API";
+      };
 
       const safeFollowHref = (href) => /^(https:\/\/|mailto:|\/[A-Za-z0-9/_-]*\/?$)/.test(href || "") ? href : "";
+
+      const normalizePublicProduct = (product) => ({
+        ...product,
+        apiRoutes: Array.isArray(product.apiRoutes)
+          ? product.apiRoutes
+          : (product.apiPath ? [product.apiPath] : []),
+        category: product.category || product.classification || product.runtimeType || "public registry",
+        docsRoute: product.docsRoute || product.docsPath || "",
+        owner: product.owner || "Mullusi",
+        proofRoute: product.proofRoute || product.evidencePath || "",
+        releaseGateState: product.releaseGateState || product.releaseGate || "blocked",
+        runtimeState: product.runtimeState || product.status || "AwaitingEvidence",
+        status: product.status || product.manifestStatus || "awaiting-evidence",
+      });
+
+      const productEvidenceRows = (registry) => {
+        if (Array.isArray(registry.products) && registry.products.length > 0) {
+          return registry.products.map(normalizePublicProduct);
+        }
+        if (Array.isArray(registry.productRegistry) && registry.productRegistry.length > 0) {
+          return registry.productRegistry.map(normalizePublicProduct);
+        }
+        return [];
+      };
 
       const summaryCell = (value, label) => `
         <div>
@@ -66,8 +110,8 @@ Invariants: all fetched records render with escaped text or bounded links, failu
       `;
 
       const productCard = (product) => {
-        const docs = docsHref(product.docsPath);
-        const proof = evidenceHref(product.evidencePath);
+        const docs = docsHref(product.docsRoute);
+        const proof = evidenceHref(product.proofRoute);
         return `
           <article class="product-proof-card">
             <div class="product-proof-head">
@@ -76,10 +120,10 @@ Invariants: all fetched records render with escaped text or bounded links, failu
             </div>
             <p>${escapeHtml(product.summary)}</p>
             <dl class="proof-meta">
-              <div><dt>Class</dt><dd>${escapeHtml(product.classification)}</dd></div>
+              <div><dt>Category</dt><dd>${escapeHtml(product.category)}</dd></div>
               <div><dt>Owner</dt><dd>${escapeHtml(product.owner)}</dd></div>
-              <div><dt>Gate</dt><dd>${escapeHtml(product.releaseGate)}</dd></div>
-              <div><dt>API</dt><dd>${escapeHtml(apiLabel(product.apiPath))}</dd></div>
+              <div><dt>Gate</dt><dd>${escapeHtml(product.releaseGateState)}</dd></div>
+              <div><dt>API</dt><dd>${escapeHtml(apiLabel(product))}</dd></div>
             </dl>
             <div class="proof-actions">
               ${docs ? `<a href='${escapeHtml(docs)}'>Docs</a>` : "<span>Private docs</span>"}
@@ -93,21 +137,21 @@ Invariants: all fetched records render with escaped text or bounded links, failu
         const target = document.querySelector("[data-product-evidence]");
         if (!target) return;
         try {
-          const response = await fetch("../data/products.json", { cache: "no-store" });
+          const response = await fetch("../data/generated/products.json", { cache: "no-store" });
           if (!response.ok) throw new Error(`Product registry load failed: ${response.status}`);
           const registry = await response.json();
-          const products = Array.isArray(registry.productRegistry) ? registry.productRegistry : [];
+          const products = productEvidenceRows(registry);
           if (!products.length) throw new Error("Product registry is empty");
 
-          const awaiting = products.filter((product) => product.status === "awaiting-evidence").length;
-          const restricted = products.filter((product) => product.status === "restricted").length;
-          const proofLinked = products.filter((product) => evidenceHref(product.evidencePath)).length;
-          const docsLinked = products.filter((product) => docsHref(product.docsPath)).length;
+          const awaiting = products.filter((product) => product.runtimeState === "AwaitingEvidence").length;
+          const blocked = products.filter((product) => product.publicExposureAllowed !== true).length;
+          const proofLinked = products.filter((product) => evidenceHref(product.proofRoute)).length;
+          const docsLinked = products.filter((product) => docsHref(product.docsRoute)).length;
           target.innerHTML = `
             <dl class="proof-summary" aria-label="Product evidence registry summary">
               ${summaryCell(products.length, "product records")}
               ${summaryCell(awaiting, "awaiting evidence")}
-              ${summaryCell(restricted, "restricted")}
+              ${summaryCell(blocked, "blocked public")}
               ${summaryCell(`${proofLinked}/${docsLinked}`, "proof/docs linked")}
             </dl>
             <div class="product-proof-grid">
@@ -117,7 +161,57 @@ Invariants: all fetched records render with escaped text or bounded links, failu
         } catch (error) {
           target.innerHTML = `
             <div class="proof-empty">
-              Product evidence lanes are unavailable. Confirm <code>data/products.json</code> is deployed with the proof page.
+              Product evidence lanes are unavailable. Confirm <code>data/generated/products.json</code> is deployed with the proof page.
+            </div>
+          `;
+        }
+      };
+
+      const claimCard = (claim) => `
+        <article class="claim-card">
+          <div class="claim-card-head">
+            <code>${escapeHtml(claim.claimId)}</code>
+            <span class="status-pill">${escapeHtml(statusLabel(claim.claimState))}</span>
+          </div>
+          <h3>${escapeHtml(claim.claimText)}</h3>
+          <dl class="proof-meta">
+            <div><dt>Product</dt><dd>${escapeHtml(claim.productName)}</dd></div>
+            <div><dt>Proof</dt><dd>${escapeHtml(claim.proofState)}</dd></div>
+            <div><dt>Runtime</dt><dd>${escapeHtml(claim.runtimeWitnessClosed ? "closed" : "blocked")}</dd></div>
+            <div><dt>Render</dt><dd>${escapeHtml(statusLabel(claim.renderDecision))}</dd></div>
+          </dl>
+          <p>${escapeHtml(claim.blockingReason)}</p>
+        </article>
+      `;
+
+      const renderClaimRegistry = async () => {
+        const target = document.querySelector("[data-claim-registry]");
+        if (!target) return;
+        try {
+          const response = await fetch("../data/generated/claim-registry.json", { cache: "no-store" });
+          if (!response.ok) throw new Error(`Claim registry load failed: ${response.status}`);
+          const registry = await response.json();
+          const claims = Array.isArray(registry.claims) ? registry.claims : [];
+          if (!claims.length) throw new Error("Claim registry is empty");
+
+          const blocked = claims.filter((claim) => claim.publicRenderAllowed !== true).length;
+          const renderable = claims.filter((claim) => claim.publicRenderAllowed === true).length;
+          const closedRuntime = claims.filter((claim) => claim.runtimeWitnessClosed === true).length;
+          target.innerHTML = `
+            <dl class="proof-summary" aria-label="Claim registry summary">
+              ${summaryCell(claims.length, "bound claims")}
+              ${summaryCell(blocked, "blocked claims")}
+              ${summaryCell(renderable, "renderable claims")}
+              ${summaryCell(closedRuntime, "runtime closed")}
+            </dl>
+            <div class="claim-grid">
+              ${claims.map(claimCard).join("")}
+            </div>
+          `;
+        } catch (error) {
+          target.innerHTML = `
+            <div class="proof-empty">
+              Claim registry is unavailable. Confirm <code>data/generated/claim-registry.json</code> is deployed with the proof page.
             </div>
           `;
         }
@@ -590,6 +684,7 @@ Invariants: all fetched records render with escaped text or bounded links, failu
       };
 
       renderProductEvidenceLanes();
+      renderClaimRegistry();
       renderRuntimeWitnessBoard();
       renderProofStampArtifact();
     })();

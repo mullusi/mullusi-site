@@ -1,7 +1,7 @@
 {
   "meta": {
     "artifact": "data/generated/proof-index.json",
-    "content_hash": "sha256:499c1052475c05e6007c2a3224dcb408a6dfdd8a8a6fde254d061a13c49efa2f",
+    "content_hash": "sha256:5c8a6118397f298d165948c36018c4c8caa4e2fffda08d4a1b1ee8ac53d90f6e",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Proof Index",
     "purpose": "Generated from product manifests. Do not edit by hand.",
@@ -9,6 +9,48 @@
   },
   "products": [
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "developer-tools.blocked.example-coverage",
+          "claimText": "example coverage",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "developer-tools.blocked.install-path-witness",
+          "claimText": "install path witness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "developer-tools.blocked.support-boundary",
+          "claimText": "support boundary",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "install path witness",
@@ -28,6 +70,61 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "health-research-pipeline.blocked.evidence-export-boundary",
+          "claimText": "evidence export boundary",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "health-research-pipeline.blocked.human-review",
+          "claimText": "human review",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "health-research-pipeline.blocked.legal-review",
+          "claimText": "legal review",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "health-research-pipeline.blocked.restricted-data-policy",
+          "claimText": "restricted-data policy",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "restricted-data policy",
@@ -48,6 +145,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "mullu-agents.blocked.operator-policy-witness",
+          "claimText": "operator policy witness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-agents.blocked.production-tool-execution",
+          "claimText": "production tool execution",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-agents.blocked.rollback-safe-agent-runs",
+          "claimText": "rollback-safe agent runs",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "production tool execution",
@@ -67,6 +206,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "mullu-browse.blocked.production-browse-execution",
+          "claimText": "production browse execution",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-browse.blocked.real-time-browse-accuracy",
+          "claimText": "real-time browse accuracy",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-browse.blocked.remote-page-action-safety",
+          "claimText": "remote page action safety",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "production browse execution",
@@ -86,6 +267,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "mullu-chain.blocked.economic-policy-closure",
+          "claimText": "economic policy closure",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-chain.blocked.protocol-rollback-witness",
+          "claimText": "protocol rollback witness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-chain.blocked.testnet-readiness",
+          "claimText": "testnet readiness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "testnet readiness",
@@ -105,6 +328,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "mullu-govern.blocked.dashboard-operator-readiness",
+          "claimText": "dashboard operator readiness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-govern.blocked.production-runtime-witness-closure",
+          "claimText": "production runtime witness closure",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-govern.blocked.public-proof-stamp-issuance",
+          "claimText": "public proof stamp issuance",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "production runtime witness closure",
@@ -124,6 +389,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "mullu-search.blocked.production-search-quality",
+          "claimText": "production search quality",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-search.blocked.real-time-browse-accuracy",
+          "claimText": "real-time browse accuracy",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-search.blocked.web-scale-index-coverage",
+          "claimText": "web-scale index coverage",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "production search quality",
@@ -143,6 +450,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "mullu-studio-music.blocked.export-policy-closure",
+          "claimText": "export policy closure",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-studio-music.blocked.reproducible-audio-witness",
+          "claimText": "reproducible audio witness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullu-studio-music.blocked.rights-boundary",
+          "claimText": "rights boundary",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "rights boundary",
@@ -162,6 +511,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "mullusi-science-lab.blocked.method-limit-publication",
+          "claimText": "method limit publication",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullusi-science-lab.blocked.reproducibility-evidence",
+          "claimText": "reproducibility evidence",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "mullusi-science-lab.blocked.research-safety-boundary",
+          "claimText": "research safety boundary",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "method limit publication",
@@ -181,6 +572,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "robotics-tools.blocked.operator-approval-path",
+          "claimText": "operator approval path",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "robotics-tools.blocked.physical-safety-floor",
+          "claimText": "physical safety floor",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "robotics-tools.blocked.simulator-witness",
+          "claimText": "simulator witness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "physical safety floor",
@@ -200,6 +633,48 @@
       ]
     },
     {
+      "boundaryProofState": "AwaitingEvidence",
+      "claimBindings": [
+        {
+          "claimId": "virecai-video.blocked.artifact-storage-witness",
+          "claimText": "artifact storage witness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "virecai-video.blocked.media-rights-boundary",
+          "claimText": "media rights boundary",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        },
+        {
+          "claimId": "virecai-video.blocked.signed-processing-witness",
+          "claimText": "signed processing witness",
+          "proofState": "AwaitingEvidence",
+          "renderDecision": "block",
+          "requiredWitnesses": [
+            "runtime",
+            "contract",
+            "rollback",
+            "privacy"
+          ],
+          "state": "blocked"
+        }
+      ],
       "claimsAllowed": [],
       "claimsBlockedUntilVerified": [
         "media rights boundary",

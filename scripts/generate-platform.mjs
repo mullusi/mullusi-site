@@ -90,6 +90,8 @@ const requiredGateItems = new Set([
 const apiRequiredGateItems = new Set(["api_contract"]);
 const noPublicEndpointGateItems = new Set(["restricted_boundary"]);
 const requiredProofWitnesses = new Set(["runtime", "contract", "rollback", "privacy"]);
+const allowedClaimStates = new Set(["allowed", "blocked"]);
+const allowedClaimRenderDecisions = new Set(["render", "block"]);
 const expectedPromotionPath = [
   "private-incubation",
   "internal-alpha",
@@ -99,10 +101,10 @@ const expectedPromotionPath = [
 ];
 
 const generatedArtifacts = {
-  legacyProducts: "data/products.json",
   products: "data/generated/products.json",
   status: "data/generated/status.json",
   proofIndex: "data/generated/proof-index.json",
+  claimRegistry: "data/generated/claim-registry.json",
   apiRegistry: "data/generated/api-registry.json",
   homepageCards: "data/generated/homepage-cards.json",
   homepageProductRegistry: "data/generated/homepage-product-registry.json",
@@ -281,11 +283,94 @@ function validateRetentionBoundary(manifest, failures) {
   }
 }
 
+function validateClaimBindings(manifest, proof, witnessNames, failures) {
+  const claimBindings = requireArray(failures, proof.claimBindings, `${manifest.id}.proof.claimBindings`);
+  const proofClaimsAllowed = Array.isArray(proof.claimsAllowed) ? proof.claimsAllowed : [];
+  const proofClaimsBlocked = Array.isArray(proof.claimsBlockedUntilVerified) ? proof.claimsBlockedUntilVerified : [];
+  const expectedRows = expectedClaimBindings(manifest.id, proof, manifest.proof.witnesses);
+  const expectedIds = new Set(expectedRows.map((row) => row.claimId));
+  const seenIds = new Set();
+
+  if (claimBindings.length !== expectedRows.length) {
+    failures.push(`proof_claim_binding_count_mismatch:${manifest.id}:${claimBindings.length}:${expectedRows.length}`);
+  }
+
+  claimBindings.forEach((binding, index) => {
+    const label = `${manifest.id}.proof.claimBindings.${index}`;
+    if (!isPlainObject(binding)) {
+      failures.push(`proof_claim_binding_object_required:${manifest.id}:${index}`);
+      return;
+    }
+    const claimId = requireString(failures, binding.claimId, `${label}.claimId`);
+    const claimText = requireString(failures, binding.claimText, `${label}.claimText`);
+    const state = requireString(failures, binding.state, `${label}.state`);
+    const requiredWitnesses = requireArray(failures, binding.requiredWitnesses, `${label}.requiredWitnesses`);
+    const renderDecision = requireString(failures, binding.renderDecision, `${label}.renderDecision`);
+    const proofState = requireString(failures, binding.proofState, `${label}.proofState`);
+
+    if (seenIds.has(claimId)) {
+      failures.push(`proof_claim_binding_duplicate:${manifest.id}:${claimId}`);
+    }
+    seenIds.add(claimId);
+    if (!expectedIds.has(claimId)) {
+      failures.push(`proof_claim_binding_unexpected:${manifest.id}:${claimId}`);
+    }
+    if (!allowedClaimStates.has(state)) {
+      failures.push(`proof_claim_state_invalid:${manifest.id}:${claimId}:${state}`);
+    }
+    if (!allowedClaimRenderDecisions.has(renderDecision)) {
+      failures.push(`proof_claim_render_decision_invalid:${manifest.id}:${claimId}:${renderDecision}`);
+    }
+    if (!allowedProofStates.has(proofState)) {
+      failures.push(`proof_claim_proof_state_invalid:${manifest.id}:${claimId}:${proofState}`);
+    }
+    if (proofState !== proof.proofState) {
+      failures.push(`proof_claim_state_drift:${manifest.id}:${claimId}:${proofState}:${proof.proofState}`);
+    }
+    if (claimId !== claimBindingId(manifest.id, state, claimText)) {
+      failures.push(`proof_claim_binding_id_invalid:${manifest.id}:${claimId}`);
+    }
+    if (state === "allowed" && !proofClaimsAllowed.includes(claimText)) {
+      failures.push(`proof_claim_allowed_text_missing:${manifest.id}:${claimId}`);
+    }
+    if (state === "blocked" && !proofClaimsBlocked.includes(claimText)) {
+      failures.push(`proof_claim_blocked_text_missing:${manifest.id}:${claimId}`);
+    }
+    if (!sameSet(requiredWitnesses, manifest.proof.witnesses)) {
+      failures.push(`proof_claim_required_witnesses_mismatch:${manifest.id}:${claimId}`);
+    }
+    if (!hasAllItems(requiredWitnesses, requiredProofWitnesses)) {
+      failures.push(`proof_claim_required_witness_missing:${manifest.id}:${claimId}`);
+    }
+    if (!requiredWitnesses.every((witness) => witnessNames.includes(witness))) {
+      failures.push(`proof_claim_required_witness_not_declared:${manifest.id}:${claimId}`);
+    }
+    if (state === "blocked" && renderDecision !== "block") {
+      failures.push(`proof_claim_blocked_must_not_render:${manifest.id}:${claimId}`);
+    }
+    if (state === "allowed" && proof.proofState !== "SolvedVerified" && renderDecision !== "block") {
+      failures.push(`proof_claim_allowed_without_closed_proof:${manifest.id}:${claimId}`);
+    }
+    if (state === "allowed" && proof.proofState === "SolvedVerified" && renderDecision !== "render") {
+      failures.push(`proof_claim_allowed_render_decision_invalid:${manifest.id}:${claimId}`);
+    }
+  });
+
+  for (const expectedId of expectedIds) {
+    if (!seenIds.has(expectedId)) {
+      failures.push(`proof_claim_binding_missing:${manifest.id}:${expectedId}`);
+    }
+  }
+}
+
 function validateProofBoundary(manifest, failures) {
   const proof = validateJsonObjectFile(manifest.proof.boundary, `${manifest.id}.proof`, failures);
   if (!proof) return;
   if (proof.productId !== manifest.id) {
     failures.push(`proof_product_mismatch:${manifest.id}:${proof.productId || ""}`);
+  }
+  if (!allowedProofStates.has(requireString(failures, proof.proofState, `${manifest.id}.proof.proofState`))) {
+    failures.push(`proof_state_invalid:${manifest.id}:${proof.proofState || ""}`);
   }
   if (manifest.status === "private-incubation" && proof.proofState !== "AwaitingEvidence") {
     failures.push(`proof_private_incubation_state_invalid:${manifest.id}:${proof.proofState || ""}`);
@@ -308,6 +393,7 @@ function validateProofBoundary(manifest, failures) {
   if (!hasAllItems(witnessNames, requiredProofWitnesses)) {
     failures.push(`proof_witness_missing:${manifest.id}`);
   }
+  validateClaimBindings(manifest, proof, witnessNames, failures);
 }
 
 function validatePresentation(manifest, failures) {
@@ -479,6 +565,41 @@ function sameSet(left, right) {
     left.length === right.length &&
     left.every((item) => right.includes(item))
   );
+}
+
+function slugifyClaim(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "claim";
+}
+
+function claimBindingId(productId, state, claimText) {
+  return `${productId}.${state}.${slugifyClaim(claimText)}`;
+}
+
+function expectedClaimBindings(productId, proof, witnessNames) {
+  const claimsAllowed = Array.isArray(proof.claimsAllowed) ? proof.claimsAllowed : [];
+  const claimsBlocked = Array.isArray(proof.claimsBlockedUntilVerified) ? proof.claimsBlockedUntilVerified : [];
+  const rows = [
+    ...claimsAllowed.map((claimText) => ({
+      claimId: claimBindingId(productId, "allowed", claimText),
+      claimText,
+      state: "allowed",
+      requiredWitnesses: witnessNames,
+      renderDecision: proof.proofState === "SolvedVerified" ? "render" : "block",
+      proofState: proof.proofState,
+    })),
+    ...claimsBlocked.map((claimText) => ({
+      claimId: claimBindingId(productId, "blocked", claimText),
+      claimText,
+      state: "blocked",
+      requiredWitnesses: witnessNames,
+      renderDecision: "block",
+      proofState: proof.proofState,
+    })),
+  ];
+  return rows.sort((left, right) => left.claimId.localeCompare(right.claimId));
 }
 
 function readRuntimeWitnessRegistry() {
@@ -1008,7 +1129,7 @@ function contentHash(value) {
   if (isPlainObject(withoutHash.meta)) {
     delete withoutHash.meta.content_hash;
   }
-  return `sha256:${crypto.createHash("sha256").update(stableStringify(withoutHash)).digest("hex")}`;
+  return `sha256:${crypto.createHash("sha256").update(JSON.stringify(canonicalize(withoutHash))).digest("hex")}`;
 }
 
 function sourceContentHash(value) {
@@ -1037,7 +1158,7 @@ function withGeneratedMeta(
     },
     ...body,
   };
-  value.meta.content_hash = contentHash(value);
+  value.meta.content_hash = sourceContentHash(value);
   return value;
 }
 
@@ -1233,7 +1354,7 @@ function buildPublicSurfaceParityReport(manifests) {
 
   return {
     manualSource: manualPublicSurfacesPath,
-    legacySource: "data/products.json (generated)",
+    legacySource: "internal compatibility projection",
     sections: publicSurfaceParitySections,
     matchedSections,
     mismatches,
@@ -1261,12 +1382,6 @@ function buildLegacyProductsBody(manifests) {
     futureDomains: publicSurfaces.futureDomains || [],
     privateIncubation: publicSurfaces.privateIncubation || [],
   };
-}
-
-function buildLegacyProductsArtifact(manifests) {
-  const legacyProducts = buildLegacyProductsBody(manifests);
-  legacyProducts.meta.content_hash = sourceContentHash(legacyProducts);
-  return legacyProducts;
 }
 
 function buildProductsArtifact(manifests, witnessMap = new Map()) {
@@ -1313,20 +1428,89 @@ function buildStatusArtifact(manifests, witnessMap = new Map()) {
 
 function buildProofIndexArtifact(manifests, witnessMap = new Map()) {
   const products = manifests
-    .map(({ manifest }) => ({
-      id: manifest.id,
-      name: manifest.name,
-      proofState: runtimeWitnessProofState(manifest, witnessMap),
-      proofRoute: manifest.surfaces.proofRoute,
-      proofBoundary: manifest.proof.boundary,
-      claimsAllowed: manifest.proof.claimsAllowed,
-      claimsBlockedUntilVerified: manifest.proof.claimsBlockedUntilVerified,
-      witnesses: manifest.proof.witnesses,
-    }))
+    .map(({ manifest }) => {
+      const proof = readJson(manifest.proof.boundary);
+      return {
+        id: manifest.id,
+        name: manifest.name,
+        proofState: runtimeWitnessProofState(manifest, witnessMap),
+        boundaryProofState: proof.proofState,
+        proofRoute: manifest.surfaces.proofRoute,
+        proofBoundary: manifest.proof.boundary,
+        claimsAllowed: manifest.proof.claimsAllowed,
+        claimsBlockedUntilVerified: manifest.proof.claimsBlockedUntilVerified,
+        claimBindings: Array.isArray(proof.claimBindings) ? proof.claimBindings : [],
+        witnesses: manifest.proof.witnesses,
+      };
+    })
     .sort((left, right) => left.id.localeCompare(right.id));
   return withGeneratedMeta("Mullusi Generated Proof Index", generatedArtifacts.proofIndex, {
     products,
   });
+}
+
+function claimRegistryBlockingReason(row) {
+  const reasons = [];
+  if (row.claimState !== "allowed") reasons.push("claim_state_blocked");
+  if (row.renderDecision !== "render") reasons.push("render_decision_block");
+  if (row.proofState !== "SolvedVerified") reasons.push("proof_state_not_closed");
+  if (!row.runtimeWitnessClosed) reasons.push("runtime_witness_not_closed");
+  return reasons.length > 0 ? reasons.join(",") : "none";
+}
+
+function buildClaimRegistryArtifact(manifests, witnessMap = new Map()) {
+  const claims = manifests
+    .flatMap(({ manifest, relativePath }) => {
+      const proof = readJson(manifest.proof.boundary);
+      const runtimeWitness = runtimeWitnessDecision(manifest, witnessMap);
+      const claimBindings = Array.isArray(proof.claimBindings) ? proof.claimBindings : [];
+      return claimBindings.map((binding) => {
+        const runtimeWitnessClosedState = runtimeWitness.runtimeWitnessClosed;
+        const row = {
+          claimId: binding.claimId,
+          productId: manifest.id,
+          productName: manifest.name,
+          productManifest: relativePath,
+          productStatus: manifest.status,
+          proofBoundary: manifest.proof.boundary,
+          proofRoute: manifest.surfaces.proofRoute,
+          claimText: binding.claimText,
+          claimState: binding.state,
+          proofState: proof.proofState,
+          runtimeWitnessProofState: runtimeWitness.proofState,
+          runtimeWitnessClosed: runtimeWitnessClosedState,
+          requiredWitnesses: binding.requiredWitnesses,
+          renderDecision: binding.renderDecision,
+          publicRenderAllowed:
+            binding.state === "allowed" &&
+            binding.renderDecision === "render" &&
+            proof.proofState === "SolvedVerified" &&
+            runtimeWitnessClosedState,
+        };
+        return {
+          ...row,
+          blockingReason: claimRegistryBlockingReason(row),
+        };
+      });
+    })
+    .sort((left, right) => left.claimId.localeCompare(right.claimId));
+
+  return withGeneratedMeta(
+    "Mullusi Generated Claim Registry",
+    generatedArtifacts.claimRegistry,
+    {
+      invariants: {
+        noPublicClaimWithoutProofBoundary: true,
+        noPublicClaimWithoutClosedProofState: true,
+        noPublicClaimWithoutClosedRuntimeWitness: true,
+      },
+      claims,
+      blockedClaims: claims.filter((claim) => !claim.publicRenderAllowed),
+      renderableClaims: claims.filter((claim) => claim.publicRenderAllowed),
+    },
+    `products/*/product.manifest.json + proof/*.proof.json + ${runtimeWitnessRegistryPath}`,
+    "Generated public claim registry. Do not edit by hand.",
+  );
 }
 
 function buildApiRegistryArtifact(manifests, witnessMap = new Map()) {
@@ -1489,19 +1673,19 @@ function buildMigrationCoverageArtifact(manifests) {
 function buildProductRegistryParityArtifact(manifests) {
   return withGeneratedMeta("Mullusi Generated Product Registry Parity Witness", generatedArtifacts.productRegistryParity, {
     ...buildProductRegistryParityReport(manifests),
-  }, "products/*/product.manifest.json + data/products.json (generated)");
+  }, "products/*/product.manifest.json + internal compatibility projection");
 }
 
 function buildPublicSurfaceParityArtifact(manifests) {
   return withGeneratedMeta("Mullusi Generated Public Surface Parity Witness", generatedArtifacts.publicSurfaceParity, {
     ...buildPublicSurfaceParityReport(manifests),
-  }, `${manualPublicSurfacesPath} + data/products.json (generated)`, "Generated from manual public-surface registry and generated compatibility projection. Do not edit by hand.");
+  }, `${manualPublicSurfacesPath} + internal compatibility projection`, "Generated from manual public-surface registry and generated compatibility projection. Do not edit by hand.");
 }
 
-function buildProductsCompatibilityArtifact(manifests, witnessMap = new Map()) {
+function buildProductsCompatibilityBody(manifests, witnessMap = new Map()) {
   const publicSurfaces = readManualPublicSurfaceRegistry();
   const homepageProducts = buildHomepageProductRegistryBody(manifests, witnessMap);
-  return withGeneratedMeta("Mullusi Generated Products Compatibility Registry", generatedArtifacts.productsCompatibility, {
+  return {
     compatibility: {
       target: "assets/app.js current product registry renderer",
       sourceBoundary: "manifest presentation projection plus manual public-surface registry",
@@ -1513,7 +1697,17 @@ function buildProductsCompatibilityArtifact(manifests, witnessMap = new Map()) {
     futureDomains: publicSurfaces.futureDomains || [],
     privateIncubation: publicSurfaces.privateIncubation || [],
     manifestCandidates: homepageProducts.manifestCandidates,
-  }, `products/*/product.manifest.json + ${manualPublicSurfacesPath}`, "Generated from product manifests and manual public-surface registry. Do not edit by hand.");
+  };
+}
+
+function buildProductsCompatibilityArtifact(manifests, witnessMap = new Map()) {
+  return withGeneratedMeta(
+    "Mullusi Generated Products Compatibility Registry",
+    generatedArtifacts.productsCompatibility,
+    buildProductsCompatibilityBody(manifests, witnessMap),
+    `products/*/product.manifest.json + ${manualPublicSurfacesPath}`,
+    "Generated from product manifests and manual public-surface registry. Do not edit by hand.",
+  );
 }
 
 function buildRuntimeWitnessIndexArtifact(manifests, witnessMap = new Map()) {
@@ -1585,11 +1779,12 @@ function buildSitemapArtifact(manifests) {
 
 export function buildGeneratedArtifacts(manifests) {
   const runtimeWitnessMap = buildRuntimeWitnessMap(readRuntimeWitnessRegistry());
+  const productsCompatibilityArtifact = stableStringify(buildProductsCompatibilityArtifact(manifests, runtimeWitnessMap));
   return new Map([
-    [generatedArtifacts.legacyProducts, stableStringify(buildLegacyProductsArtifact(manifests))],
     [generatedArtifacts.products, stableStringify(buildProductsArtifact(manifests, runtimeWitnessMap))],
     [generatedArtifacts.status, stableStringify(buildStatusArtifact(manifests, runtimeWitnessMap))],
     [generatedArtifacts.proofIndex, stableStringify(buildProofIndexArtifact(manifests, runtimeWitnessMap))],
+    [generatedArtifacts.claimRegistry, stableStringify(buildClaimRegistryArtifact(manifests, runtimeWitnessMap))],
     [generatedArtifacts.apiRegistry, stableStringify(buildApiRegistryArtifact(manifests, runtimeWitnessMap))],
     [generatedArtifacts.homepageCards, stableStringify(buildHomepageCardsArtifact(manifests))],
     [generatedArtifacts.homepageProductRegistry, stableStringify(buildHomepageProductRegistryArtifact(manifests, runtimeWitnessMap))],
@@ -1598,7 +1793,7 @@ export function buildGeneratedArtifacts(manifests) {
     [generatedArtifacts.migrationCoverage, stableStringify(buildMigrationCoverageArtifact(manifests))],
     [generatedArtifacts.productRegistryParity, stableStringify(buildProductRegistryParityArtifact(manifests))],
     [generatedArtifacts.publicSurfaceParity, stableStringify(buildPublicSurfaceParityArtifact(manifests))],
-    [generatedArtifacts.productsCompatibility, stableStringify(buildProductsCompatibilityArtifact(manifests, runtimeWitnessMap))],
+    [generatedArtifacts.productsCompatibility, productsCompatibilityArtifact],
     [generatedArtifacts.runtimeWitnessIndex, stableStringify(buildRuntimeWitnessIndexArtifact(manifests, runtimeWitnessMap))],
     [generatedArtifacts.sitemap, buildSitemapArtifact(manifests)],
   ]);

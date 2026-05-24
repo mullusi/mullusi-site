@@ -246,7 +246,7 @@
   "closedProducts": [],
   "meta": {
     "artifact": "data/generated/runtime-witness-index.json",
-    "content_hash": "sha256:26638f850414f659588a20a1d45834784fa57f8274e98c782e7379cf49c42489",
+    "content_hash": "sha256:6a75cc8551a70b552b38b7795328a6abdf8f96846653b14155c09c853b026588",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Runtime Witness Index",
     "purpose": "Generated public-safe runtime witness index. Do not edit by hand.",

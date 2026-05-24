@@ -29,5 +29,46 @@
       "state": "AwaitingEvidence",
       "evidence": "Mullusi Science Lab privacy and retention policies are declared in not-active state."
     }
+  ],
+  "claimBindings": [
+    {
+      "claimId": "mullusi-science-lab.blocked.method-limit-publication",
+      "claimText": "method limit publication",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "mullusi-science-lab.blocked.reproducibility-evidence",
+      "claimText": "reproducibility evidence",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "mullusi-science-lab.blocked.research-safety-boundary",
+      "claimText": "research safety boundary",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    }
   ]
 }

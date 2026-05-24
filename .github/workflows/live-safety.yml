@@ -1,5 +1,5 @@
 # Purpose: verify Mullusi live public website safety witnesses on a schedule.
-# Governance scope: DNS, HTTPS, canonical routing, origin markers, sitemap parity, and reserved runtime boundary.
+# Governance scope: DNS, HTTPS, canonical routing, origin markers, sitemap parity, domain hardening, and reserved runtime boundary.
 # Dependencies: GitHub Actions, Node.js, public DNS resolvers, and the live Cloudflare edge.
 # Invariants: scheduled probes require no secrets and do not mutate public infrastructure.
 
@@ -29,42 +29,8 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Prepare live safety witness artifact
-        run: |
-          mkdir -p live-safety-witness
-          {
-            echo "workflow=live-safety-probes"
-            echo "run_id=${GITHUB_RUN_ID}"
-            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
-            echo "commit=${GITHUB_SHA}"
-            date -u +"observed_at=%Y-%m-%dT%H:%M:%SZ"
-            echo "raw_response_headers=not_recorded"
-          } > live-safety-witness/run-metadata.txt
-
-      - name: Check public visibility
-        run: |
-          set -o pipefail
-          node scripts/check-public-visibility.mjs | tee live-safety-witness/public-visibility.txt
-
-      - name: Check regional public visibility
-        run: |
-          set -o pipefail
-          node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending | tee live-safety-witness/regional-public-visibility.txt
-
-      - name: Check website origin headers
-        run: |
-          set -o pipefail
-          node scripts/check-website-origin.mjs | tee live-safety-witness/website-origin.txt
-
-      - name: Check live security headers
-        run: |
-          set -o pipefail
-          node scripts/check-live-security-headers.mjs | tee live-safety-witness/security-headers.txt
-
-      - name: Check live search indexing surface
-        run: |
-          set -o pipefail
-          node scripts/check-search-indexing-surface.mjs | tee live-safety-witness/search-indexing-surface.txt
+      - name: Capture and validate live safety witness artifact
+        run: node scripts/capture-live-safety-witness.mjs live-safety-witness
 
       - name: Upload live safety witness artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

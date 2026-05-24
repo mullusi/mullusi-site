@@ -1,7 +1,7 @@
 {
   "meta": {
     "artifact": "data/generated/status.json",
-    "content_hash": "sha256:cefa7224ce7021ba9af4f84debabb958c01c84ebb491b934c23a84139c7e3f39",
+    "content_hash": "sha256:73feb191f244126f3677bc3242f757c089ccdf7fed698fa22396b171a2772b72",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Product Status",
     "purpose": "Generated from product manifests. Do not edit by hand.",

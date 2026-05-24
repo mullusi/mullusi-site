@@ -98,7 +98,7 @@
   ],
   "meta": {
     "artifact": "data/generated/products-compat.json",
-    "content_hash": "sha256:3464a450221a5043bb3b503e985d108ae9bb57002324c4e7c9cf31ac8b9b81c7",
+    "content_hash": "sha256:4127b5a8a27a5cdb387d1db6418999411c5621efb1a1e873edee994404c7f789",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Products Compatibility Registry",
     "purpose": "Generated from product manifests and manual public-surface registry. Do not edit by hand.",

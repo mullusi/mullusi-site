@@ -29,5 +29,46 @@
       "state": "AwaitingEvidence",
       "evidence": "Robotics Tools privacy and retention policies are declared in not-active state."
     }
+  ],
+  "claimBindings": [
+    {
+      "claimId": "robotics-tools.blocked.operator-approval-path",
+      "claimText": "operator approval path",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "robotics-tools.blocked.physical-safety-floor",
+      "claimText": "physical safety floor",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    },
+    {
+      "claimId": "robotics-tools.blocked.simulator-witness",
+      "claimText": "simulator witness",
+      "state": "blocked",
+      "requiredWitnesses": [
+        "runtime",
+        "contract",
+        "rollback",
+        "privacy"
+      ],
+      "renderDecision": "block",
+      "proofState": "AwaitingEvidence"
+    }
   ]
 }
