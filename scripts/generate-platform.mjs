@@ -201,7 +201,7 @@ function validateRoute(value, label, failures) {
 }
 
 function validateDocsRoute(value, label, failures) {
-  if (!/^(https:\/\/docs\.mullusi\.com\/[a-z0-9/_-]+|private)$/.test(value)) {
+  if (!/^(https:\/\/docs\.mullusi\.com\/[a-z0-9/_-]+(?:\.html)?|private)$/.test(value)) {
     failures.push(`docs_route_invalid:${label}:${value}`);
   }
 }
@@ -338,8 +338,14 @@ function validatePresentation(manifest, failures) {
   requireString(failures, presentation.dataType, `${manifest.id}.presentation.dataType`);
   requireString(failures, presentation.releaseGate, `${manifest.id}.presentation.releaseGate`);
   const docsPath = requireString(failures, presentation.docsPath, `${manifest.id}.presentation.docsPath`);
-  if (!/^docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsPath) && docsPath !== "private docs only") {
+  if (!/^docs\.mullusi\.com(?:\/[a-z0-9/_-]+(?:\.html)?)?$/.test(docsPath) && docsPath !== "private docs only") {
     failures.push(`presentation_docs_path_invalid:${manifest.id}:${docsPath}`);
+  }
+  if (manifest.surfaces.docsRoute === "private" && docsPath !== "private docs only") {
+    failures.push(`presentation_docs_private_mismatch:${manifest.id}:${docsPath}`);
+  }
+  if (manifest.surfaces.docsRoute !== "private" && docsPath !== manifest.surfaces.docsRoute.replace(/^https:\/\//, "")) {
+    failures.push(`presentation_docs_route_mismatch:${manifest.id}:${docsPath}:${manifest.surfaces.docsRoute}`);
   }
   const apiPath = requireString(failures, presentation.apiPath, `${manifest.id}.presentation.apiPath`);
   if (

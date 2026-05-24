@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/science/",
-    "docsRoute": "https://docs.mullusi.com/science",
+    "docsRoute": "private",
     "dashboardRoute": "https://dashboard.mullusi.com/science",
     "proofRoute": "/proof/science/",
     "statusRoute": "/status/science/"
@@ -69,7 +69,7 @@
     "runtimeType": "research services and dashboard modules",
     "dataType": "math proofs, physics regimes, chemistry graphs, biology jobs, and simulation artifacts",
     "releaseGate": "method limits, safety policy, reproducibility evidence, and public specification",
-    "docsPath": "docs.mullusi.com/science",
+    "docsPath": "private docs only",
     "apiPath": "POST /v1/research/fold",
     "evidencePath": "/proof/",
     "failureMode": "mark AwaitingEvidence and preserve inputs, limits, and trace"

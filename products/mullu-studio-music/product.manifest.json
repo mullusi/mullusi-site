@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/music/",
-    "docsRoute": "https://docs.mullusi.com/music",
+    "docsRoute": "private",
     "dashboardRoute": "https://dashboard.mullusi.com/music",
     "proofRoute": "/proof/music/",
     "statusRoute": "/status/music/"
@@ -68,7 +68,7 @@
     "runtimeType": "creative product app and audio service",
     "dataType": "composition structures, audio artifacts, project records, and export logs",
     "releaseGate": "rights boundary, export policy, and reproducible audio witness",
-    "docsPath": "docs.mullusi.com/music",
+    "docsPath": "private docs only",
     "apiPath": "POST /v1/music/generate",
     "evidencePath": "/proof/",
     "failureMode": "block export until rights and trace requirements are satisfied"

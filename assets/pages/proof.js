@@ -48,7 +48,7 @@ Invariants: all fetched records render with escaped text or bounded links, failu
         restricted: "Restricted",
       }[status] || status || "Unknown");
 
-      const docsHref = (docsPath) => /^docs\.mullusi\.com(?:\/[a-z0-9-]+)?$/.test(docsPath || "")
+      const docsHref = (docsPath) => /^docs\.mullusi\.com(?:\/[a-z0-9/_-]+(?:\.html)?)?$/.test(docsPath || "")
         ? `https://${docsPath}`
         : "";
 

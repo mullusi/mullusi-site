@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/robotics/",
-    "docsRoute": "https://docs.mullusi.com/robotics",
+    "docsRoute": "private",
     "dashboardRoute": "https://dashboard.mullusi.com/robotics",
     "proofRoute": "/proof/robotics/",
     "statusRoute": "/status/robotics/"
@@ -69,7 +69,7 @@
     "runtimeType": "engineering runtime tools",
     "dataType": "robot tasks, constraints, telemetry, simulation records, and safety traces",
     "releaseGate": "physical safety floor, simulator witness, operator approval, and rollback plan",
-    "docsPath": "docs.mullusi.com/robotics",
+    "docsPath": "private docs only",
     "apiPath": "POST /v1/robotics/simulate",
     "evidencePath": "/proof/",
     "failureMode": "fallback to safety floor and block physical action"

@@ -14,7 +14,7 @@
         "examples",
         "release_evidence"
       ],
-      "docsRoute": "https://docs.mullusi.com/developers",
+      "docsRoute": "https://docs.mullusi.com/docs/api.html",
       "family": "mullusi",
       "id": "developer-tools",
       "name": "Developer Tools",
@@ -115,7 +115,7 @@
         "job_state",
         "audit_traces"
       ],
-      "docsRoute": "https://docs.mullusi.com/agents",
+      "docsRoute": "private",
       "family": "mullu",
       "id": "mullu-agents",
       "name": "Mullu Agents",
@@ -165,7 +165,7 @@
         "page_observations",
         "action_traces"
       ],
-      "docsRoute": "https://docs.mullusi.com/browse",
+      "docsRoute": "private",
       "family": "mullu",
       "id": "mullu-browse",
       "name": "Mullu Browse",
@@ -217,7 +217,7 @@
         "governance_records",
         "node_logs"
       ],
-      "docsRoute": "https://docs.mullusi.com/chain",
+      "docsRoute": "private",
       "family": "mullu",
       "id": "mullu-chain",
       "name": "Mullu Chain",
@@ -269,7 +269,7 @@
         "proof_stamps",
         "audit_events"
       ],
-      "docsRoute": "https://docs.mullusi.com/govern",
+      "docsRoute": "https://docs.mullusi.com/docs/governance.html",
       "family": "mullu",
       "id": "mullu-govern",
       "name": "Mullu Govern",
@@ -319,7 +319,7 @@
         "indexes",
         "result_traces"
       ],
-      "docsRoute": "https://docs.mullusi.com/search",
+      "docsRoute": "https://docs.mullusi.com/docs/search.html",
       "family": "mullu",
       "id": "mullu-search",
       "name": "Mullu Search",
@@ -370,7 +370,7 @@
         "project_records",
         "export_logs"
       ],
-      "docsRoute": "https://docs.mullusi.com/music",
+      "docsRoute": "private",
       "family": "mullu",
       "id": "mullu-studio-music",
       "name": "Mullu Studio Music",
@@ -422,7 +422,7 @@
         "biology_jobs",
         "simulation_artifacts"
       ],
-      "docsRoute": "https://docs.mullusi.com/science",
+      "docsRoute": "private",
       "family": "mullusi",
       "id": "mullusi-science-lab",
       "name": "Mullusi Science Lab",
@@ -474,7 +474,7 @@
         "simulation_records",
         "safety_traces"
       ],
-      "docsRoute": "https://docs.mullusi.com/robotics",
+      "docsRoute": "private",
       "family": "mullusi",
       "id": "robotics-tools",
       "name": "Robotics Tools",
@@ -527,7 +527,7 @@
         "traces",
         "storage_references"
       ],
-      "docsRoute": "https://docs.mullusi.com/video",
+      "docsRoute": "private",
       "family": "virecai",
       "id": "virecai-video",
       "name": "VIRECAI Video",
@@ -567,7 +567,7 @@
   ],
   "meta": {
     "artifact": "data/generated/products.json",
-    "content_hash": "sha256:6a88cde1aa9374f14dba01e101bf3f2bd97235a6c8a52353c7ff0650daf6b02c",
+    "content_hash": "sha256:66f28e4d202c28ddd3188ebc91206989501cafaec36cda1e51d1a2d2f7b9eb4d",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Product Registry",
     "purpose": "Generated from product manifests. Do not edit by hand.",
@@ -588,7 +588,7 @@
         "examples",
         "release_evidence"
       ],
-      "docsRoute": "https://docs.mullusi.com/developers",
+      "docsRoute": "https://docs.mullusi.com/docs/api.html",
       "family": "mullusi",
       "id": "developer-tools",
       "name": "Developer Tools",
@@ -689,7 +689,7 @@
         "job_state",
         "audit_traces"
       ],
-      "docsRoute": "https://docs.mullusi.com/agents",
+      "docsRoute": "private",
       "family": "mullu",
       "id": "mullu-agents",
       "name": "Mullu Agents",
@@ -739,7 +739,7 @@
         "page_observations",
         "action_traces"
       ],
-      "docsRoute": "https://docs.mullusi.com/browse",
+      "docsRoute": "private",
       "family": "mullu",
       "id": "mullu-browse",
       "name": "Mullu Browse",
@@ -791,7 +791,7 @@
         "governance_records",
         "node_logs"
       ],
-      "docsRoute": "https://docs.mullusi.com/chain",
+      "docsRoute": "private",
       "family": "mullu",
       "id": "mullu-chain",
       "name": "Mullu Chain",
@@ -843,7 +843,7 @@
         "proof_stamps",
         "audit_events"
       ],
-      "docsRoute": "https://docs.mullusi.com/govern",
+      "docsRoute": "https://docs.mullusi.com/docs/governance.html",
       "family": "mullu",
       "id": "mullu-govern",
       "name": "Mullu Govern",
@@ -893,7 +893,7 @@
         "indexes",
         "result_traces"
       ],
-      "docsRoute": "https://docs.mullusi.com/search",
+      "docsRoute": "https://docs.mullusi.com/docs/search.html",
       "family": "mullu",
       "id": "mullu-search",
       "name": "Mullu Search",
@@ -944,7 +944,7 @@
         "project_records",
         "export_logs"
       ],
-      "docsRoute": "https://docs.mullusi.com/music",
+      "docsRoute": "private",
       "family": "mullu",
       "id": "mullu-studio-music",
       "name": "Mullu Studio Music",
@@ -996,7 +996,7 @@
         "biology_jobs",
         "simulation_artifacts"
       ],
-      "docsRoute": "https://docs.mullusi.com/science",
+      "docsRoute": "private",
       "family": "mullusi",
       "id": "mullusi-science-lab",
       "name": "Mullusi Science Lab",
@@ -1048,7 +1048,7 @@
         "simulation_records",
         "safety_traces"
       ],
-      "docsRoute": "https://docs.mullusi.com/robotics",
+      "docsRoute": "private",
       "family": "mullusi",
       "id": "robotics-tools",
       "name": "Robotics Tools",
@@ -1101,7 +1101,7 @@
         "traces",
         "storage_references"
       ],
-      "docsRoute": "https://docs.mullusi.com/video",
+      "docsRoute": "private",
       "family": "virecai",
       "id": "virecai-video",
       "name": "VIRECAI Video",

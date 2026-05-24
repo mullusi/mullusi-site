@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/search/",
-    "docsRoute": "https://docs.mullusi.com/search",
+    "docsRoute": "https://docs.mullusi.com/docs/search.html",
     "dashboardRoute": "https://dashboard.mullusi.com/search",
     "proofRoute": "/proof/search/",
     "statusRoute": "/status/search/"
@@ -67,7 +67,7 @@
     "runtimeType": "search service and future app route",
     "dataType": "web index, document index, symbolic index, query logs, and result traces",
     "releaseGate": "public route, privacy boundary, index policy, and result quality witness",
-    "docsPath": "docs.mullusi.com/search",
+    "docsPath": "docs.mullusi.com/docs/search.html",
     "apiPath": "POST /v1/search/query",
     "evidencePath": "/proof/",
     "failureMode": "return no result with trace instead of unsafe ranking"

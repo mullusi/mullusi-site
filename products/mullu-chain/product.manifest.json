@@ -12,7 +12,7 @@
   },
   "surfaces": {
     "publicRoute": "/chain/",
-    "docsRoute": "https://docs.mullusi.com/chain",
+    "docsRoute": "private",
     "dashboardRoute": "https://dashboard.mullusi.com/chain",
     "proofRoute": "/proof/chain/",
     "statusRoute": "/status/chain/"
@@ -69,7 +69,7 @@
     "runtimeType": "chain service and node service",
     "dataType": "blocks, transactions, proofs, governance records, and node logs",
     "releaseGate": "protocol spec, testnet boundary, economic policy, and rollback record",
-    "docsPath": "docs.mullusi.com/chain",
+    "docsPath": "private docs only",
     "apiPath": "POST /v1/chain/submit",
     "evidencePath": "/proof/",
     "failureMode": "reject invalid transition and preserve rejected delta"
