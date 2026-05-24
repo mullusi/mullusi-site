@@ -1,7 +1,7 @@
 /*
 Purpose: evaluate bounded public visibility for Mullusi website domains.
 Governance scope: public DNS resolution, HTTPS reachability, canonical redirect behavior, TLS validation, and global-claim boundary.
-Dependencies: Node.js standard library DNS and HTTPS clients.
+Dependencies: Node.js standard library DNS and HTTPS clients, Check-Host API, and Globalping API.
 Invariants: checks are public-safe, deterministic after evidence collection, and do not close universal all-user visibility from finite probes.
 Test contract: run node scripts/test-check-public-visibility.mjs.
 */
@@ -17,6 +17,9 @@ const checkHostPollDelayMs = 2_000;
 const checkHostPollAttempts = 5;
 const externalRegionalProbeFloor = 2;
 const checkHostApiBaseUrl = "https://check-host.net";
+const globalpingApiBaseUrl = "https://api.globalping.io";
+const globalpingPollDelayMs = 2_000;
+const globalpingPollAttempts = 6;
 const allowedHttpsHostnames = new Set(["mullusi.com", "www.mullusi.com"]);
 const defaultDnsHosts = ["mullusi.com", "www.mullusi.com"];
 const defaultRoutes = [
@@ -38,6 +41,20 @@ const publicDnsResolvers = [
   { name: "google", servers: ["8.8.8.8", "8.8.4.4"], publicResolver: true },
   { name: "quad9", servers: ["9.9.9.9", "149.112.112.112"], publicResolver: true },
   { name: "system", servers: [], publicResolver: false },
+];
+const checkHostProviderReference = {
+  provider: "check-host.net",
+  providerApi: "https://check-host.net/about/api?lang=en",
+  targetUrl: "https://mullusi.com/",
+};
+const globalpingProviderReference = {
+  provider: "globalping.io",
+  providerApi: "https://globalping.io/docs/api.globalping.io",
+  targetUrl: "https://mullusi.com/",
+};
+const globalpingLocations = [
+  { magic: "Europe", limit: 1 },
+  { magic: "North America", limit: 1 },
 ];
 
 function normalizedHeaderValue(value) {
@@ -61,9 +78,14 @@ function withTimeout(promise, label, timeoutMs) {
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId));
 }
 
-function requestJson(targetUrl, timeoutMs = checkHostTimeoutMs) {
+function requestJson(targetUrl, { method = "GET", body = null, timeoutMs = checkHostTimeoutMs } = {}) {
   return new Promise((resolve, reject) => {
-    const request = https.request(targetUrl, { method: "GET", headers: { Accept: "application/json", "User-Agent": "mullusi-public-visibility-check/1" } }, (response) => {
+    const headers = { Accept: "application/json", "User-Agent": "mullusi-public-visibility-check/1" };
+    if (body !== null) {
+      headers["Content-Type"] = "application/json";
+      headers["Content-Length"] = Buffer.byteLength(body);
+    }
+    const request = https.request(targetUrl, { method, headers }, (response) => {
       const chunks = [];
       response.on("data", (chunk) => {
         chunks.push(chunk);
@@ -85,6 +107,9 @@ function requestJson(targetUrl, timeoutMs = checkHostTimeoutMs) {
       request.destroy(new Error(`request_timeout:${targetUrl}`));
     });
     request.on("error", reject);
+    if (body !== null) {
+      request.write(body);
+    }
     request.end();
   });
 }
@@ -263,8 +288,8 @@ export async function collectCheckHostEvidence({ targetUrl = "https://mullusi.co
   }
 
   return {
-    provider: "check-host.net",
-    providerApi: "https://check-host.net/about/api?lang=en",
+    provider: checkHostProviderReference.provider,
+    providerApi: checkHostProviderReference.providerApi,
     targetUrl: safeTargetUrl,
     requestId: startResponse.request_id,
     permanentLink: startResponse.permanent_link ?? "",
@@ -272,7 +297,7 @@ export async function collectCheckHostEvidence({ targetUrl = "https://mullusi.co
     records: Object.entries(startResponse.nodes ?? {}).map(([nodeName, location]) => {
       const parsed = parseCheckHostResult(resultResponse[nodeName]);
       return {
-        provider: "check-host.net",
+        provider: checkHostProviderReference.provider,
         node: nodeName,
         countryCode: location?.[0] ?? "",
         country: location?.[1] ?? "",
@@ -285,7 +310,85 @@ export async function collectCheckHostEvidence({ targetUrl = "https://mullusi.co
   };
 }
 
-async function collectLiveEvidence({ includeCheckHost = false, checkHostMaxNodes = 6 } = {}) {
+function globalpingRequestBody(safeTargetUrl) {
+  const parsedUrl = new URL(safeTargetUrl);
+  const requestPath = `${parsedUrl.pathname || "/"}${parsedUrl.search}`;
+  return JSON.stringify({
+    type: "http",
+    target: parsedUrl.hostname,
+    locations: globalpingLocations,
+    measurementOptions: {
+      protocol: "HTTPS",
+      port: 443,
+      request: {
+        method: "GET",
+        path: requestPath,
+        headers: {
+          "User-Agent": "mullusi-public-visibility-check/1",
+        },
+      },
+    },
+  });
+}
+
+function parseGlobalpingResult(entry, index) {
+  const probe = entry?.probe ?? {};
+  const result = entry?.result ?? {};
+  const statusCode = String(result.statusCode ?? "");
+  const tlsAuthorized = result.tls?.authorized !== false;
+  const passed = result.status === "finished" && /^2\d\d$/.test(statusCode) && tlsAuthorized;
+  const elapsedMs = Number(result.timings?.total);
+  return {
+    provider: globalpingProviderReference.provider,
+    node: `globalping:${probe.country ?? "unknown"}:${probe.city ?? index}`,
+    countryCode: String(probe.country ?? "").toLowerCase(),
+    country: probe.country ?? "",
+    city: probe.city ?? "",
+    nodeIp: "",
+    asn: probe.asn === undefined || probe.asn === null ? "" : `AS${probe.asn}`,
+    passed,
+    pending: result.status === "in-progress",
+    elapsedSeconds: Number.isFinite(elapsedMs) ? String(elapsedMs / 1000) : "",
+    message: result.statusCodeName ?? result.status ?? "",
+    statusCode,
+    resolvedIp: result.resolvedAddress ?? "",
+    error: passed ? "" : result.rawOutput ?? result.error ?? result.status ?? "globalping_probe_failed",
+  };
+}
+
+export async function collectGlobalpingEvidence({ targetUrl = "https://mullusi.com/" } = {}) {
+  const safeTargetUrl = validateHttpsTarget(targetUrl);
+  const startResponse = await requestJson(`${globalpingApiBaseUrl}/v1/measurements`, {
+    method: "POST",
+    body: globalpingRequestBody(safeTargetUrl),
+  });
+  if (!startResponse?.id) {
+    throw new Error(`globalping_start_failed:${JSON.stringify(startResponse)}`);
+  }
+
+  let resultResponse = {};
+  for (let attempt = 0; attempt < globalpingPollAttempts; attempt += 1) {
+    if (attempt > 0) {
+      await delay(globalpingPollDelayMs);
+    }
+    resultResponse = await requestJson(`${globalpingApiBaseUrl}/v1/measurements/${encodeURIComponent(startResponse.id)}`);
+    if (resultResponse.status && resultResponse.status !== "in-progress") {
+      break;
+    }
+  }
+
+  return {
+    provider: globalpingProviderReference.provider,
+    providerApi: globalpingProviderReference.providerApi,
+    targetUrl: safeTargetUrl,
+    requestId: startResponse.id,
+    permanentLink: `https://globalping.io?measurement=${encodeURIComponent(startResponse.id)}`,
+    maxNodes: startResponse.probesCount ?? globalpingLocations.length,
+    records: (resultResponse.results ?? []).map((entry, index) => parseGlobalpingResult(entry, index)),
+  };
+}
+
+async function collectLiveEvidence({ includeCheckHost = false, includeGlobalping = false, checkHostMaxNodes = 6 } = {}) {
   const dnsRecords = [];
   for (const host of defaultDnsHosts) {
     for (const resolverConfig of publicDnsResolvers) {
@@ -312,9 +415,38 @@ async function collectLiveEvidence({ includeCheckHost = false, checkHostMaxNodes
 
   let externalProbeProvider = null;
   let externalProbeRecords = [];
+  let externalProbeError = "";
   if (includeCheckHost) {
-    externalProbeProvider = await collectCheckHostEvidence({ maxNodes: checkHostMaxNodes });
-    externalProbeRecords = externalProbeProvider.records;
+    try {
+      externalProbeProvider = await collectCheckHostEvidence({ maxNodes: checkHostMaxNodes });
+      externalProbeRecords = externalProbeProvider.records;
+    } catch (error) {
+      externalProbeError = error instanceof Error ? error.message : String(error);
+      externalProbeProvider = {
+        ...checkHostProviderReference,
+        requestId: "",
+        permanentLink: "",
+        maxNodes: checkHostMaxNodes,
+        error: externalProbeError,
+      };
+    }
+  }
+  if (includeGlobalping) {
+    try {
+      externalProbeProvider = await collectGlobalpingEvidence();
+      externalProbeRecords = externalProbeProvider.records;
+      externalProbeError = "";
+    } catch (error) {
+      externalProbeError = error instanceof Error ? error.message : String(error);
+      externalProbeProvider = {
+        ...globalpingProviderReference,
+        requestId: "",
+        permanentLink: "",
+        maxNodes: globalpingLocations.length,
+        error: externalProbeError,
+      };
+      externalProbeRecords = [];
+    }
   }
 
   return {
@@ -325,6 +457,7 @@ async function collectLiveEvidence({ includeCheckHost = false, checkHostMaxNodes
     externalRegionalProbeFloor,
     externalProbeProvider,
     externalProbeRecords,
+    externalProbeError,
   };
 }
 
@@ -334,6 +467,7 @@ export function evaluatePublicVisibilityEvidence(evidence) {
   const dnsRecords = evidence.dnsRecords ?? [];
   const routeRecords = evidence.routeRecords ?? [];
   const externalProbeRecords = evidence.externalProbeRecords ?? evidence.externalMultiRegionEvidence ?? [];
+  const externalProbeError = evidence.externalProbeError ?? evidence.externalProbeProvider?.error ?? "";
   const dnsHosts = evidence.dnsHosts ?? defaultDnsHosts;
   const minPublicDnsResolverPasses = evidence.minPublicDnsResolverPasses ?? 2;
   const regionalProbeFloor = evidence.externalRegionalProbeFloor ?? externalRegionalProbeFloor;
@@ -380,7 +514,9 @@ export function evaluatePublicVisibilityEvidence(evidence) {
   const publicResolverPasses = dnsRecords.filter((record) => record.publicResolver && record.error === "" && record.a.length > 0).length;
   const externalPassRecords = externalProbeRecords.filter((record) => record.passed);
   const externalPassRegions = new Set(externalPassRecords.map((record) => record.countryCode || record.country || record.node));
-  if (externalProbeRecords.length === 0) {
+  if (externalProbeRecords.length === 0 && externalProbeError) {
+    externalFindings.push(`external_probe_provider_error:${externalProbeError}`);
+  } else if (externalProbeRecords.length === 0) {
     externalFindings.push("external_probe_not_attached");
   } else {
     if (externalPassRegions.size < regionalProbeFloor) {
@@ -411,6 +547,7 @@ export function evaluatePublicVisibilityEvidence(evidence) {
     externalRegionalProbeFloor: regionalProbeFloor,
     externalProbeCount: externalProbeRecords.length,
     externalDistinctRegionPasses: externalPassRegions.size,
+    externalProbeError,
     findings,
     externalFindings,
   };
@@ -456,6 +593,7 @@ export function formatResult(result, evidence) {
     `external_probe_request_id=${provider.requestId}`,
     `external_probe_permanent_link=${provider.permanentLink}`,
     `external_probe_max_nodes=${provider.maxNodes}`,
+    `external_probe_error=${provider.error ?? ""}`,
   ] : [
     "external_probe_provider=",
     "external_probe_api=",
@@ -463,6 +601,7 @@ export function formatResult(result, evidence) {
     "external_probe_request_id=",
     "external_probe_permanent_link=",
     "external_probe_max_nodes=",
+    "external_probe_error=",
   ];
   const externalProbeLines = (evidence.externalProbeRecords ?? []).flatMap((record) => [
     `external_node=${record.node}`,
@@ -500,7 +639,7 @@ export function formatResult(result, evidence) {
 }
 
 function unsupportedOptions(args) {
-  const allowedOptions = new Set(["--allow-pending", "--json", "--external-check-host"]);
+  const allowedOptions = new Set(["--allow-pending", "--json", "--external-check-host", "--external-globalping"]);
   return args.filter((arg) => arg.startsWith("--") && !allowedOptions.has(arg) && !arg.startsWith("--check-host-max-nodes="));
 }
 
@@ -509,11 +648,22 @@ async function runCli() {
   const allowPending = args.includes("--allow-pending");
   const jsonOutput = args.includes("--json");
   const includeCheckHost = args.includes("--external-check-host");
+  const includeGlobalping = args.includes("--external-globalping");
   const checkHostMaxNodesArg = args.find((arg) => arg.startsWith("--check-host-max-nodes="))?.split("=")?.[1] ?? "6";
   const checkHostMaxNodes = Number.parseInt(checkHostMaxNodesArg, 10);
   const invalidOptions = unsupportedOptions(args);
   if (invalidOptions.length > 0) {
     const error = `unsupported_args:${invalidOptions.join(",")}`;
+    if (jsonOutput) {
+      console.log(JSON.stringify({ verdict: "GovernanceBlocked", proof_state: "Fail", error }, null, 2));
+    } else {
+      console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=${error}`);
+    }
+    process.exit(1);
+    return;
+  }
+  if (includeCheckHost && includeGlobalping) {
+    const error = "external_provider_conflict:choose_one_provider";
     if (jsonOutput) {
       console.log(JSON.stringify({ verdict: "GovernanceBlocked", proof_state: "Fail", error }, null, 2));
     } else {
@@ -534,7 +684,7 @@ async function runCli() {
   }
 
   try {
-    const evidence = await collectLiveEvidence({ includeCheckHost, checkHostMaxNodes });
+    const evidence = await collectLiveEvidence({ includeCheckHost, includeGlobalping, checkHostMaxNodes });
     const result = evaluatePublicVisibilityEvidence(evidence);
     if (jsonOutput) {
       console.log(JSON.stringify({
@@ -549,6 +699,7 @@ async function runCli() {
         external_regional_probe_floor: result.externalRegionalProbeFloor,
         external_probe_count: result.externalProbeCount,
         external_distinct_region_passes: result.externalDistinctRegionPasses,
+        external_probe_error: result.externalProbeError,
         findings: result.findings,
         external_findings: result.externalFindings,
       }, null, 2));

@@ -19,7 +19,7 @@ global_all_users_claim=AwaitingEvidence
 persistent_regional_monitoring=Pass
 monitor_workflow=.github/workflows/live-safety.yml
 monitor_schedule=41 7 * * *
-monitor_command=node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending
+monitor_command=node scripts/check-public-visibility.mjs --external-globalping --allow-pending
 dns_host_count=2
 dns_public_resolver_passes=6
 https_route_count=2
@@ -102,52 +102,34 @@ external_probe_target=
 external_probe_request_id=
 external_probe_permanent_link=
 external_probe_max_nodes=
+external_probe_error=
 ```
 
-Optional external regional probe observed on 2026-05-24 after the security-header deployment:
+Scheduled external regional probe observed on 2026-05-24 after the Globalping monitor switch:
 
 ```text
-command=node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending
-external_probe_provider=check-host.net
-external_probe_api=https://check-host.net/about/api?lang=en
+command=node scripts/check-public-visibility.mjs --external-globalping --allow-pending
+external_probe_provider=globalping.io
+external_probe_api=https://globalping.io/docs/api.globalping.io
 external_probe_target=https://mullusi.com/
-external_probe_request_id=4064f24ak5e0
-external_probe_permanent_link=https://check-host.net/check-report/4064f24ak5e0
+external_probe_request_id=2CXty1Uxi2Kccoh6300020SAC
+external_probe_permanent_link=https://globalping.io?measurement=2CXty1Uxi2Kccoh6300020SAC
+external_probe_error=
 external_multi_region_visibility=SolvedVerified
 external_regional_probe_floor=2
-external_probe_count=6
-external_distinct_region_passes=5
+external_probe_count=2
+external_distinct_region_passes=2
 persistent_regional_monitoring=Pass
 monitor_workflow=.github/workflows/live-safety.yml
 external_finding=none
-external_node=br2.node.check-host.net
-external_country=Brazil
-external_city=Sao Paulo
+external_node=globalping:DE:Falkenstein
+external_country=DE
+external_city=Falkenstein
 external_passed=true
 external_status=200
-external_node=ch2.node.check-host.net
-external_country=Switzerland
-external_city=Zurich
-external_passed=true
-external_status=200
-external_node=sg1.node.check-host.net
-external_country=Singapore
-external_city=Singapore
-external_passed=true
-external_status=200
-external_node=ua1.node.check-host.net
-external_country=Ukraine
-external_city=Khmelnytskyi
-external_passed=true
-external_status=200
-external_node=us1.node.check-host.net
-external_country=USA
-external_city=Los Angeles
-external_passed=true
-external_status=200
-external_node=us4.node.check-host.net
-external_country=USA
-external_city=Miami
+external_node=globalping:US:Buffalo
+external_country=US
+external_city=Buffalo
 external_passed=true
 external_status=200
 ```
@@ -158,8 +140,8 @@ The public edge visibility claim is closed for the bounded witness: `mullusi.com
 and `www.mullusi.com` resolve through public DNS resolvers, return HTTPS 200,
 validate TLS, and route `www` to the apex host with one permanent 301 redirect.
 
-The optional external probe observed six successful public checks across five
-distinct countries through Check-Host. This closes the bounded
+The scheduled external probe observed two successful public checks across two
+distinct regions through Globalping. This closes the bounded
 `external_multi_region_visibility` witness without turning a finite sample into
 a universal claim.
 
@@ -175,8 +157,8 @@ https_reachability=Pass
 tls_validation=Pass
 www_canonical_redirect=Pass
 external_multi_region_visibility=SolvedVerified
-external_regional_probe_provider=check-host.net
-external_distinct_region_passes=5
+external_regional_probe_provider=globalping.io
+external_distinct_region_passes=2
 external_probe_failures=none
 persistent_regional_monitoring=Pass
 monitor_workflow=.github/workflows/live-safety.yml
@@ -197,7 +179,7 @@ runtime readiness.
 
 ```bash
 node scripts/check-public-visibility.mjs
-node scripts/check-public-visibility.mjs --external-check-host --check-host-max-nodes=6 --allow-pending
+node scripts/check-public-visibility.mjs --external-globalping --allow-pending
 ```
 
 Use `--allow-pending` only when recording a propagation, DNS resolver, external
