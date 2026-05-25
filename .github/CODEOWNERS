@@ -1,0 +1,11 @@
+# Purpose: enforce review ownership for private website governance and deployment evidence.
+# Invariant: evidence, deployment, and public-boundary changes require release, ops, and security review.
+
+* @mullusi/release @mullusi/ops
+
+/.github/ @mullusi/release @mullusi/security
+/scripts/ @mullusi/release @mullusi/security
+/public/ @mullusi/release
+/assets/ @mullusi/release
+/README.md @mullusi/release @mullusi/ops
+/REPO_BOUNDARY.md @mullusi/release @mullusi/security
