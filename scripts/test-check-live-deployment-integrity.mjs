@@ -152,6 +152,21 @@ function testCloudflareTransformWithContentDriftBlocks() {
   assert.ok(result.hardFindings.includes("live_content_hash_mismatch:index.html"));
 }
 
+function testCloudflareTransformWithContentDriftBlocks() {
+  const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({
+    fileOverrides: {
+      "index.html": '<!doctype html>\n<title>Changed</title>\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v1"></script>',
+    },
+  }));
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.liveContentHashes, "Fail");
+  assert.equal(result.edgeHtmlTransform, "Fail");
+  assert.ok(result.hardFindings.includes("live_html_edge_transform_unverified:index.html"));
+  assert.ok(result.hardFindings.includes("live_content_hash_mismatch:index.html"));
+}
+
 function testRouteSentinelDriftBlocks() {
   const evidence = fixtureEvidence();
   evidence.routeSentinelResponses.set("browse_docs_route", {
