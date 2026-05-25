@@ -674,7 +674,8 @@ so a returning visitor can otherwise get new `index.html` with a stale cached
 `assets/app.js`, `assets/registry/homepage-registry.js`,
 `assets/render/site-content.js`,
 `assets/render/public-surface-registry.js`,
-`assets/render/product-registry.js`, and `assets/styles.css` with a `?v=`
+`assets/render/product-registry.js`,
+`assets/render/news-activity.js`, and `assets/styles.css` with a `?v=`
 query; bump that token whenever one of those assets changes so the new HTML
 forces a fresh fetch. The JSON data files are fetched with `cache: "no-store"`
 and are also marked no-store by `_headers`. Secondary routes currently use

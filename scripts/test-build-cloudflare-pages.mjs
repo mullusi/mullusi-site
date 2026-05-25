@@ -60,6 +60,7 @@ function testCloudflarePagesBuildArtifact() {
       "assets/render/site-content.js",
       "assets/render/public-surface-registry.js",
       "assets/render/product-registry.js",
+      "assets/render/news-activity.js",
       "assets/styles.css",
       "assets/pages/product-shell.css",
       "assets/pages/trust.css",

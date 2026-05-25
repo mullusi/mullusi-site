@@ -1,7 +1,7 @@
 /*
 Purpose: render Mullusi structured public content and operate the symbolic canvas substrate.
 Governance scope: deterministic JSON rendering, safe link output, searchable public surface catalog, manifest-owned homepage product registry, and visual substrate runtime.
-Dependencies: assets/registry/homepage-registry.js, assets/render/site-content.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, DOM canvas APIs, IntersectionObserver, and browser fetch.
+Dependencies: assets/registry/homepage-registry.js, assets/render/site-content.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, assets/render/news-activity.js, DOM canvas APIs, IntersectionObserver, and browser fetch.
 Invariants: untrusted JSON text is escaped, non-public links are blocked, registry failures surface visibly, and reduced motion is respected.
 */
 
@@ -287,55 +287,26 @@ function renderStatusBoard() {
 }
 
 function renderUseCases() {
-  const target = qs("[data-use-cases]");
-  const useCases = state.siteContent?.useCases;
-  const items = Array.isArray(useCases?.items) ? useCases.items : [];
-  if (!target || items.length === 0) return;
-
-  const amItems = useCases.am && Array.isArray(useCases.am.items) ? useCases.am.items : [];
-  target.innerHTML = items.map((item, index) => {
-    const amItem = amItems[index] || {};
-    const title = state.lang === "am" && amItem.title ? amItem.title : item.title;
-    const body = state.lang === "am" && amItem.body ? amItem.body : item.body;
-    return `
-      <article class="usecase">
-        <span class="usecase-n">${String(index + 1).padStart(2, "0")}</span>
-        <h3>${escapeHtml(title)}</h3>
-        <p>${escapeHtml(body)}</p>
-      </article>
-    `;
-  }).join("");
-  revealRendered(target);
+  siteContentRendererModule().renderUseCases(siteContentRenderContext());
 }
 
-function newsMeta(item) {
-  const parts = [];
-  if (item.source) {
-    parts.push(`<span class="news-source">${escapeHtml(item.source)}</span>`);
+function newsActivityRendererModule() {
+  if (!window.MullusiNewsActivityRenderer) {
+    throw new Error("News activity renderer module is unavailable.");
   }
-  if (Number.isFinite(item.points) && item.points > 0) {
-    parts.push(`<span>${item.points} ${escapeHtml(i18nText("news.points") || "points")}</span>`);
-  }
-  if (item.date) parts.push(`<span>${escapeHtml(item.date)}</span>`);
-  return parts.join('<span class="news-dot" aria-hidden="true">&middot;</span>');
+  return window.MullusiNewsActivityRenderer;
 }
 
-function newsCaption() {
-  const meta = state.news?.meta || {};
-  const bits = [];
-  if (meta.updated) {
-    bits.push(`${escapeHtml(i18nText("news.updated") || "Updated")} ${escapeHtml(meta.updated)}`);
-  }
-  if (meta.source) {
-    bits.push(`${escapeHtml(i18nText("news.via") || "via")} ${escapeHtml(meta.source)}`);
-  }
-  if (!bits.length) return "";
-  return `
-    <p class="news-cap">
-      <span class="news-pulse" aria-hidden="true"></span>
-      ${bits.join('<span class="news-dot" aria-hidden="true">&middot;</span>')}
-    </p>
-  `;
+function newsActivityRenderContext() {
+  return {
+    escapeAttribute,
+    escapeHtml,
+    i18nText,
+    localized,
+    qs,
+    revealRendered,
+    state,
+  };
 }
 
 function bumpVisits() {
@@ -351,151 +322,19 @@ function bumpVisits() {
 }
 
 function renderVisitMeter() {
-  const target = qs("[data-visit-meter]");
-  if (!target) return;
-  const parts = [];
-  if (state.visits > 0) {
-    parts.push(`${escapeHtml(i18nText("footer.localVisits") || "Local visits")} ${state.visits}`);
-  }
-  const version = state.siteContent?.meta?.version;
-  if (version) parts.push(`v${escapeHtml(version)}`);
-  const signal = state.news?.meta?.updated;
-  if (signal) parts.push(`${escapeHtml(i18nText("footer.signal") || "Signal")} ${escapeHtml(signal)}`);
-  target.innerHTML = parts.join(" &middot; ");
+  newsActivityRendererModule().renderVisitMeter(newsActivityRenderContext());
 }
 
 function renderNews() {
-  const target = qs("[data-news]");
-  const items = Array.isArray(state.news?.items) ? state.news.items : [];
-  if (!target) return;
-
-  if (!items.length) {
-    target.innerHTML = `
-      <div class="news-empty">
-        <h3>${escapeHtml(i18nText("news.emptyTitle") || "Signal is refreshing")}</h3>
-        <p>${escapeHtml(i18nText("news.emptyBody") || "The daily research and systems digest will appear here after the next scheduled refresh.")}</p>
-      </div>
-    `;
-    revealRendered(target);
-    return;
-  }
-
-  const rows = items.map((item, index) => `
-    <li class="news-item">
-      <span class="news-rank" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
-      <a class="news-headline" href="${escapeAttribute(item.url)}" rel="noopener">
-        <span class="news-title">${escapeHtml(item.title)}</span>
-        <span class="news-arrow" aria-hidden="true">-&gt;</span>
-      </a>
-      <p class="news-meta">${newsMeta(item)}</p>
-    </li>
-  `).join("");
-
-  target.innerHTML = `${newsCaption()}<ol class="news-list">${rows}</ol>`;
-  revealRendered(target);
-}
-
-function activityMeta(item) {
-  const parts = [];
-  if (item.status) parts.push(`<span class="news-source">${escapeHtml(item.status)}</span>`);
-  if (item.scope) parts.push(`<span>${escapeHtml(item.scope)}</span>`);
-  if (item.surface) parts.push(`<span>${escapeHtml(item.surface)}</span>`);
-  if (item.date) parts.push(`<span>${escapeHtml(item.date)}</span>`);
-  return parts.join('<span class="news-dot" aria-hidden="true">&middot;</span>');
-}
-
-function activityCaption(activity) {
-  const bits = [];
-  if (activity.updated) {
-    bits.push(`${escapeHtml(i18nText("activity.updated") || "Updated")} ${escapeHtml(activity.updated)}`);
-  }
-  if (activity.label) {
-    bits.push(escapeHtml(localized(activity, "label")));
-  }
-  if (!bits.length) return "";
-  return `
-    <p class="news-cap activity-cap">
-      <span class="news-pulse" aria-hidden="true"></span>
-      ${bits.join('<span class="news-dot" aria-hidden="true">&middot;</span>')}
-    </p>
-  `;
-}
-
-function activityStatusSummary(items) {
-  const counts = new Map();
-  items.forEach((item) => {
-    const key = item.status || "activity";
-    counts.set(key, (counts.get(key) || 0) + 1);
-  });
-  if (!counts.size) return "";
-  const chips = Array.from(counts.entries()).map(([status, count]) => `
-    <span>
-      <strong>${escapeHtml(String(count))}</strong>
-      ${escapeHtml(status)}
-    </span>
-  `).join("");
-  return `<div class="activity-summary" aria-label="Mullu activity status summary">${chips}</div>`;
+  newsActivityRendererModule().renderNews(newsActivityRenderContext());
 }
 
 function renderMulluActivity() {
-  const target = qs("[data-mullu-activity]");
-  const activity = state.siteContent?.mulluActivity;
-  const items = Array.isArray(activity?.items) ? activity.items : [];
-  if (!target || !activity) return;
-
-  if (!items.length) {
-    target.innerHTML = `
-      <div class="news-empty">
-        <h3>${escapeHtml(i18nText("activity.emptyTitle") || "Mullu activity is being recorded")}</h3>
-        <p>${escapeHtml(i18nText("activity.emptyBody") || "Product updates and platform activity will appear here after the next governed release note.")}</p>
-      </div>
-    `;
-    revealRendered(target);
-    return;
-  }
-
-  const rows = items.map((item, index) => {
-    const href = activityHref(item.href);
-    const headline = href
-      ? `<a class="news-headline activity-headline" href="${escapeAttribute(href)}">
-          <span class="news-title">${escapeHtml(item.title)}</span>
-          <span class="news-arrow" aria-hidden="true">-&gt;</span>
-        </a>`
-      : `<div class="news-headline activity-headline">
-          <span class="news-title">${escapeHtml(item.title)}</span>
-        </div>`;
-    return `
-      <li class="news-item activity-item">
-        <span class="news-rank" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
-        ${headline}
-        <p class="news-meta">${activityMeta(item)}</p>
-        <p class="activity-body">${escapeHtml(item.body)}</p>
-      </li>
-    `;
-  }).join("");
-
-  target.innerHTML = `
-    ${activityCaption(activity)}
-    <div class="activity-intro">
-      <h3>${escapeHtml(localized(activity, "title"))}</h3>
-      <p>${escapeHtml(localized(activity, "summary"))}</p>
-    </div>
-    ${activityStatusSummary(items)}
-    <ol class="news-list activity-list">${rows}</ol>
-  `;
-  revealRendered(target);
+  newsActivityRendererModule().renderMulluActivity(newsActivityRenderContext());
 }
 
 function renderNewsLoadError() {
-  const target = qs("[data-news]");
-  if (!target) return;
-  target.innerHTML = `
-    <div class="news-empty error-card">
-      <h3>${escapeHtml(i18nText("news.errorTitle") || "Frontier signal unavailable")}</h3>
-      <p>${escapeHtml(i18nText("news.errorBody") || "The static news registry did not load. Confirm the registry is deployed beside this page.")}</p>
-    </div>
-  `;
-  revealRendered(target);
+  newsActivityRendererModule().renderNewsLoadError(newsActivityRenderContext());
 }
 
 function publicSurfaceRegistryRendererModule() {
@@ -710,11 +549,7 @@ function escapeAttribute(value) {
 }
 
 function activityHref(value) {
-  const text = String(value ?? "").trim();
-  if (/^#[A-Za-z][A-Za-z0-9_-]*$/.test(text)) return text;
-  if (/^\/[A-Za-z0-9/_-]*\/?$/.test(text)) return text;
-  if (/^https:\/\/(?:[a-z0-9.-]+\.)?mullusi\.com(?:\/.*)?$/i.test(text)) return text;
-  return "";
+  return newsActivityRendererModule().activityHref(value);
 }
 
 function homepageRegistryModule() {

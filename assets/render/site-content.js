@@ -241,6 +241,29 @@ Invariants: site-content text is escaped, public links are bounded, SVG IDs are 
     revealRendered(target);
   }
 
+  function renderUseCases(context) {
+    const { escapeHtml, qs, revealRendered, state } = context;
+    const target = qs("[data-use-cases]");
+    const useCases = state.siteContent?.useCases;
+    const items = Array.isArray(useCases?.items) ? useCases.items : [];
+    if (!target || items.length === 0) return;
+
+    const amItems = useCases.am && Array.isArray(useCases.am.items) ? useCases.am.items : [];
+    target.innerHTML = items.map((item, index) => {
+      const amItem = amItems[index] || {};
+      const title = state.lang === "am" && amItem.title ? amItem.title : item.title;
+      const body = state.lang === "am" && amItem.body ? amItem.body : item.body;
+      return `
+        <article class="usecase">
+          <span class="usecase-n">${String(index + 1).padStart(2, "0")}</span>
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(body)}</p>
+        </article>
+      `;
+    }).join("");
+    revealRendered(target);
+  }
+
   function renderPlatformLayers(context) {
     const { escapeHtml, i18nText, localized, qs, revealRendered, state } = context;
     const target = qs("[data-platform-layers]");
@@ -570,5 +593,6 @@ Invariants: site-content text is escaped, public links are bounded, SVG IDs are 
     renderServiceTiers,
     renderServices,
     renderStatusBoard,
+    renderUseCases,
   });
 })();
