@@ -120,20 +120,22 @@ function testLiveContentHashMismatchBlocks() {
   assert.ok(result.hardFindings.includes("live_content_hash_mismatch:index.html"));
 }
 
-function testKnownCloudflareHtmlTransformNormalizes() {
+function testKnownCloudflareHtmlTransformIsAcceptedBoundary() {
   const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({
     fileOverrides: {
       "index.html": '<!doctype html>\n<title>Mullusi</title>\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v1"></script>',
     },
   }));
 
-  assert.equal(result.verdict, "SolvedVerified");
+  assert.equal(result.verdict, "SolvedUnverified");
   assert.equal(result.proofState, "Pass");
   assert.equal(result.liveContentHashes, "Pass");
-  assert.equal(result.edgeHtmlTransform, "Pass");
+  assert.equal(result.edgeHtmlTransform, "AcceptedBoundary");
   assert.equal(result.localStatusManifestMatch, "Pass");
+  assert.equal(result.routeSentinels, "Pass");
   assert.deepEqual(result.hardFindings, []);
   assert.deepEqual(result.softFindings, []);
+  assert.ok(result.acceptedFindings.includes("live_html_edge_transform_observed:index.html"));
 }
 
 function testRouteSentinelDriftBlocks() {
@@ -207,7 +209,7 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
 testCanonicalHashesIgnoreJsonMetaContentHash();
 testMatchingLiveManifestPasses();
 testLiveContentHashMismatchBlocks();
-testKnownCloudflareHtmlTransformNormalizes();
+testKnownCloudflareHtmlTransformIsAcceptedBoundary();
 testRouteSentinelDriftBlocks();
 testLocalManifestMismatchAwaitsEvidenceOnly();
 testUnexpectedOrInvalidHashPathBlocks();

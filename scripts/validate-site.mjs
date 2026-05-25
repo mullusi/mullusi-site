@@ -43,6 +43,7 @@ const requiredFiles = [
   "ops/mullusi-doctrine.md",
   "ops/api-runtime-host-path.md",
   "ops/api-production-readiness-gate.md",
+  "ops/api-exposure-witness.md",
   "ops/website-origin-witness.md",
   "ops/public-visibility-witness.md",
   "ops/live-safety-monitor.md",
@@ -66,6 +67,10 @@ const requiredFiles = [
   "status.json",
   "site.webmanifest",
   "assets/lang-bootstrap.js",
+  "assets/runtime/page-runtime.js",
+  "assets/runtime/preference-runtime.js",
+  "assets/runtime/substrate-runtime.js",
+  "assets/runtime/homepage-controller.js",
   "assets/registry/homepage-registry.js",
   "assets/render/site-content.js",
   "assets/render/public-surface-registry.js",
@@ -168,6 +173,8 @@ const requiredFiles = [
   "scripts/test-promote-recovery-witness.mjs",
   "scripts/check-private-recovery-inventory.mjs",
   "scripts/test-private-recovery-inventory.mjs",
+  "scripts/check-api-exposure-gate.mjs",
+  "scripts/test-check-api-exposure-gate.mjs",
 ];
 
 const allowedSystemStatuses = new Set(["active", "public", "live demo", "research", "deployed"]);
@@ -204,6 +211,8 @@ const publicHtmlFiles = [
   "responsible-disclosure/index.html",
   "404.html",
 ];
+
+const publicCssFiles = requiredFiles.filter((file) => file.endsWith(".css"));
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
@@ -522,6 +531,10 @@ function validateCloudflarePagesArtifact() {
     ".well-known/security.txt",
     "assets/lang-bootstrap.js",
     "assets/registry/homepage-registry.js",
+    "assets/runtime/page-runtime.js",
+    "assets/runtime/preference-runtime.js",
+    "assets/runtime/substrate-runtime.js",
+    "assets/runtime/homepage-controller.js",
     "assets/render/site-content.js",
     "assets/render/public-surface-registry.js",
     "assets/render/product-registry.js",
@@ -726,6 +739,12 @@ function validatePublicVisibilityWitness() {
     "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24",
     "Capture and validate live safety witness artifact",
     "node scripts/capture-live-safety-witness.mjs live-safety-witness",
+    "Classify deployment integrity",
+    "Deployment integrity accepted boundary",
+    "Classify domain security",
+    "Domain security AwaitingEvidence",
+    "Classify domain hardening preflight",
+    "Domain hardening preflight blocked",
     "Classify regional visibility",
     "external_probe_error",
     "Regional visibility AwaitingEvidence",
@@ -760,6 +779,9 @@ function validatePublicVisibilityWitness() {
     "external_probe_provider_error",
     "external_probe_error",
     "warning_annotation plus artifact evidence",
+    "deployment_integrity_annotation=notice",
+    "domain_security_annotation=warning",
+    "domain_hardening_preflight_annotation=notice",
     "universal_all_users_visibility=AwaitingEvidence",
     "domain_security_hardening=AwaitingEvidence",
     "runtime_api_readiness=AwaitingEvidence",
@@ -878,6 +900,9 @@ function validatePublicVisibilityWitness() {
     "route_sentinel_count",
     "browse_docs_route",
     "search_docs_route",
+    "acceptedFindings",
+    "accepted_finding=",
+    "AcceptedBoundary",
     "raw_response_bodies=not_recorded",
     "raw_response_headers=not_recorded",
     "--require-local-match",
@@ -893,7 +918,7 @@ function validatePublicVisibilityWitness() {
     "testCanonicalHashesIgnoreJsonMetaContentHash",
     "testMatchingLiveManifestPasses",
     "testLiveContentHashMismatchBlocks",
-    "testKnownCloudflareHtmlTransformNormalizes",
+    "testKnownCloudflareHtmlTransformIsAcceptedBoundary",
     "testRouteSentinelDriftBlocks",
     "testLocalManifestMismatchAwaitsEvidenceOnly",
     "testUnexpectedOrInvalidHashPathBlocks",
@@ -1244,7 +1269,8 @@ function validateSearchIndexingWitness() {
     "discovered_videos=0",
     "search_console_sitemap_submission=Pass",
     "search_console_sitemap_status=Success",
-    "search_console_discovered_pages=5",
+    "search_console_discovered_pages=13",
+    "search_console_expanded_route_count_state=SolvedVerified",
     "inspected_url=https://mullusi.com/",
     "indexed_state_before_request=URL is not on Google",
     "reported_reason_before_request=Page with redirect",
@@ -1591,6 +1617,27 @@ function validateInlineScriptBoundary() {
       if (!/\btype=["']application\/ld\+json["']/i.test(match[1])) {
         recordFailure(`inline_executable_script_present:${htmlFile}`);
       }
+    }
+  }
+}
+
+function validateCssTypographyContract() {
+  const viewportFontPattern = /font-size\s*:\s*clamp\([^;]*(?:vw|vh|vmin|vmax|dvw|dvh|svw|svh|lvw|lvh)[^;]*;/i;
+  const negativeLetterSpacingPattern = /letter-spacing\s*:\s*-\s*[\d.]+(?:em|rem|px|%|ch)?/i;
+  const retiredPalettePattern = /#(?:f4f1e6|fbf8ee|f6f3e9|fffcf4|f0eadc|d6cdb5|d4cab8|070806|10120d|10130f|11130f|11140f|0d100b|283124|272d22|293124|2d3529|ece7d8|f1efe5|aaa38f|a9b09f|aab29f|aab09f|8a6914|d6ad48|e4b65c|121006|07100b|111006|f2f3ec|f2f4ed)\b/i;
+  for (const cssFile of publicCssFiles) {
+    const css = readUtf8(cssFile);
+    const viewportFont = css.match(viewportFontPattern);
+    if (viewportFont) {
+      recordFailure(`css_viewport_scaled_font:${cssFile}:${viewportFont[0].trim()}`);
+    }
+    const negativeLetterSpacing = css.match(negativeLetterSpacingPattern);
+    if (negativeLetterSpacing) {
+      recordFailure(`css_negative_letter_spacing:${cssFile}:${negativeLetterSpacing[0].trim()}`);
+    }
+    const retiredPalette = css.match(retiredPalettePattern);
+    if (retiredPalette) {
+      recordFailure(`css_retired_palette_token:${cssFile}:${retiredPalette[0]}`);
     }
   }
 }
@@ -3454,6 +3501,10 @@ function validateIndexDesignContract() {
   const html = readUtf8("index.html");
   const css = readUtf8("assets/styles.css");
   const app = readUtf8("assets/app.js");
+  const pageRuntime = readUtf8("assets/runtime/page-runtime.js");
+  const preferenceRuntime = readUtf8("assets/runtime/preference-runtime.js");
+  const substrateRuntime = readUtf8("assets/runtime/substrate-runtime.js");
+  const homepageController = readUtf8("assets/runtime/homepage-controller.js");
   const homepageRegistry = readUtf8("assets/registry/homepage-registry.js");
   const siteContentRenderer = readUtf8("assets/render/site-content.js");
   const publicSurfaceRegistryRenderer = readUtf8("assets/render/public-surface-registry.js");
@@ -3462,10 +3513,14 @@ function validateIndexDesignContract() {
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
-  const assetVersion = "2026.05.platform.23";
+  const assetVersion = "2026.05.platform.27";
 
   if (
     !html.includes(`assets/styles.css?v=${assetVersion}`) ||
+    !html.includes(`assets/runtime/page-runtime.js?v=${assetVersion}`) ||
+    !html.includes(`assets/runtime/preference-runtime.js?v=${assetVersion}`) ||
+    !html.includes(`assets/runtime/substrate-runtime.js?v=${assetVersion}`) ||
+    !html.includes(`assets/runtime/homepage-controller.js?v=${assetVersion}`) ||
     !html.includes(`assets/registry/homepage-registry.js?v=${assetVersion}`) ||
     !html.includes(`assets/render/site-content.js?v=${assetVersion}`) ||
     !html.includes(`assets/render/public-surface-registry.js?v=${assetVersion}`) ||
@@ -3477,6 +3532,39 @@ function validateIndexDesignContract() {
   }
   if (html.indexOf("assets/registry/homepage-registry.js") > html.indexOf("assets/app.js")) {
     recordFailure("homepage_registry_module_load_order_invalid");
+  }
+  if (html.indexOf("assets/runtime/page-runtime.js") > html.indexOf("assets/app.js")) {
+    recordFailure("page_runtime_module_load_order_invalid");
+  }
+  if (html.indexOf("assets/runtime/page-runtime.js") > html.indexOf("assets/registry/homepage-registry.js")) {
+    recordFailure("homepage_registry_before_page_runtime");
+  }
+  if (html.indexOf("assets/runtime/preference-runtime.js") > html.indexOf("assets/app.js")) {
+    recordFailure("preference_runtime_module_load_order_invalid");
+  }
+  if (html.indexOf("assets/runtime/page-runtime.js") > html.indexOf("assets/runtime/preference-runtime.js")) {
+    recordFailure("preference_runtime_before_page_runtime");
+  }
+  if (html.indexOf("assets/runtime/preference-runtime.js") > html.indexOf("assets/registry/homepage-registry.js")) {
+    recordFailure("homepage_registry_before_preference_runtime");
+  }
+  if (html.indexOf("assets/runtime/substrate-runtime.js") > html.indexOf("assets/app.js")) {
+    recordFailure("substrate_runtime_module_load_order_invalid");
+  }
+  if (html.indexOf("assets/runtime/preference-runtime.js") > html.indexOf("assets/runtime/substrate-runtime.js")) {
+    recordFailure("substrate_runtime_before_preference_runtime");
+  }
+  if (html.indexOf("assets/runtime/substrate-runtime.js") > html.indexOf("assets/registry/homepage-registry.js")) {
+    recordFailure("homepage_registry_before_substrate_runtime");
+  }
+  if (html.indexOf("assets/runtime/homepage-controller.js") > html.indexOf("assets/app.js")) {
+    recordFailure("homepage_controller_module_load_order_invalid");
+  }
+  if (html.indexOf("assets/runtime/substrate-runtime.js") > html.indexOf("assets/runtime/homepage-controller.js")) {
+    recordFailure("homepage_controller_before_substrate_runtime");
+  }
+  if (html.indexOf("assets/runtime/homepage-controller.js") > html.indexOf("assets/registry/homepage-registry.js")) {
+    recordFailure("homepage_registry_before_homepage_controller");
   }
   if (html.indexOf("assets/render/site-content.js") > html.indexOf("assets/app.js")) {
     recordFailure("site_content_renderer_load_order_invalid");
@@ -3636,16 +3724,175 @@ function validateIndexDesignContract() {
       recordFailure(`symbol_font_size_budget_exceeded:${fontContent.length}`);
     }
   }
-  if (!app.includes("function promoteNoscriptFallbacks") || !app.includes("function renderNewsLoadError")) {
+  if (!homepageController.includes("promoteNoscriptFallbacks") || !pageRuntime.includes("function promoteNoscriptFallbacks") || !app.includes("function renderNewsLoadError")) {
     recordFailure("dynamic_failure_renderer_missing");
+  }
+  if (!app.includes("function pageRuntimeModule") || !app.includes("MullusiPageRuntime")) {
+    recordFailure("page_runtime_module_missing");
+  }
+  for (const forbiddenPageRuntimeAppTerm of [
+    "function prepareLinks",
+    "function escapeHtml",
+    "function escapeAttribute",
+    "function captureFallbackContent",
+    "function promoteNoscriptFallbacks",
+    "function restoreFallbackContent",
+    "new IntersectionObserver",
+    "target.replaceChildren(template.content.cloneNode(true))",
+  ]) {
+    if (app.includes(forbiddenPageRuntimeAppTerm)) {
+      recordFailure(`homepage_app_owns_page_runtime:${forbiddenPageRuntimeAppTerm}`);
+    }
+  }
+  for (const requiredPageRuntimeTerm of [
+    "MullusiPageRuntime",
+    "function prepareLinks",
+    "function revealRendered",
+    "function bindHeader",
+    "function bindLinkNavigation",
+    "function bindMenu",
+    "function bindReveal",
+    "function escapeHtml",
+    "function escapeAttribute",
+    "function captureFallbackContent",
+    "function promoteNoscriptFallbacks",
+    "function restoreFallbackContent",
+  ]) {
+    if (!pageRuntime.includes(requiredPageRuntimeTerm)) {
+      recordFailure(`page_runtime_missing:${requiredPageRuntimeTerm}`);
+    }
+  }
+  if (!app.includes("function preferenceRuntimeModule") || !app.includes("MullusiPreferenceRuntime")) {
+    recordFailure("preference_runtime_module_missing");
+  }
+  for (const forbiddenPreferenceAppTerm of [
+    "const fallbackLanguageNames",
+    "const themeStorageKey",
+    "const langStorageKey",
+    "function normalizeLang",
+    "function storedLang",
+    "function preferredLang",
+    "function persistLang",
+    "function languageName",
+    "function applyLang",
+    "function bindLangToggle",
+    "function loadI18n",
+    "function storedTheme",
+    "function preferredTheme",
+    "function persistTheme",
+    "function applyTheme",
+    "function bindThemeToggle",
+    "\"mullusi-theme\"",
+    "\"mullusi-lang\"",
+    "data-theme-toggle",
+    "data-lang-toggle",
+    "meta[name=\"theme-color\"]",
+  ]) {
+    if (app.includes(forbiddenPreferenceAppTerm)) {
+      recordFailure(`homepage_app_owns_preference_runtime:${forbiddenPreferenceAppTerm}`);
+    }
+  }
+  for (const requiredPreferenceRuntimeTerm of [
+    "MullusiPreferenceRuntime",
+    "function normalizeLang",
+    "function preferredLang",
+    "function preferredTheme",
+    "function i18nText",
+    "function languageName",
+    "function localized",
+    "function applyTheme",
+    "function applyLang",
+    "function bindThemeToggle",
+    "function bindLangToggle",
+    "function loadI18n",
+    "\"mullusi-theme\"",
+    "\"mullusi-lang\"",
+    "data-theme-toggle",
+    "data-lang-toggle",
+    "meta[name=\"theme-color\"]",
+  ]) {
+    if (!preferenceRuntime.includes(requiredPreferenceRuntimeTerm)) {
+      recordFailure(`preference_runtime_missing:${requiredPreferenceRuntimeTerm}`);
+    }
+  }
+  if (!app.includes("function substrateRuntimeModule") || !app.includes("MullusiSubstrateRuntime")) {
+    recordFailure("substrate_runtime_module_missing");
+  }
+  for (const forbiddenSubstrateAppTerm of [
+    "function initSubstrate",
+    "const fidels =",
+    "const zones =",
+    "requestAnimationFrame(drawFrame)",
+    "window.addEventListener(\"mullusi-theme-change\"",
+  ]) {
+    if (app.includes(forbiddenSubstrateAppTerm)) {
+      recordFailure(`homepage_app_owns_substrate_runtime:${forbiddenSubstrateAppTerm}`);
+    }
+  }
+  for (const requiredSubstrateRuntimeTerm of [
+    "MullusiSubstrateRuntime",
+    "function initSubstrate",
+    "const fidels =",
+    "const zones =",
+    "function applySubstrateTheme",
+    "function drawStatic",
+    "function drawFrame",
+    "window.addEventListener(\"mullusi-theme-change\"",
+  ]) {
+    if (!substrateRuntime.includes(requiredSubstrateRuntimeTerm)) {
+      recordFailure(`substrate_runtime_missing:${requiredSubstrateRuntimeTerm}`);
+    }
+  }
+  if (!app.includes("function homepageControllerModule") || !app.includes("MullusiHomepageController")) {
+    recordFailure("homepage_controller_module_missing");
+  }
+  for (const forbiddenHomepageControllerAppTerm of [
+    "async function initContent",
+    "function renderSiteContent",
+    "function renderRegistryContent",
+    "function bumpVisits",
+    "window.addEventListener(\"mullusi-lang-change\"",
+    "state.visits =",
+    "state.siteContent = await",
+    "state.news = await",
+    "state.registry = await",
+    "repo-card error-card",
+    "Product registry unavailable",
+  ]) {
+    if (app.includes(forbiddenHomepageControllerAppTerm)) {
+      recordFailure(`homepage_app_owns_lifecycle_controller:${forbiddenHomepageControllerAppTerm}`);
+    }
+  }
+  for (const requiredHomepageControllerTerm of [
+    "MullusiHomepageController",
+    "function bumpVisits",
+    "function renderSiteContent",
+    "function renderRegistryContent",
+    "async function initContent",
+    "function renderRegistryLoadError",
+    "window.addEventListener(\"mullusi-lang-change\"",
+    "state.visits = bumpVisits",
+    "state.siteContent = await",
+    "state.news = await",
+    "state.registry = await",
+    "repo-card error-card",
+    "Product registry unavailable",
+  ]) {
+    if (!homepageController.includes(requiredHomepageControllerTerm)) {
+      recordFailure(`homepage_controller_missing:${requiredHomepageControllerTerm}`);
+    }
   }
   if (!app.includes("function newsActivityRendererModule") || !app.includes("MullusiNewsActivityRenderer")) {
     recordFailure("news_activity_renderer_module_missing");
   }
-  if (!app.includes("function captureFallbackContent") || !app.includes("function restoreFallbackContent")) {
+  if (!homepageController.includes("captureFallbackContent") || !homepageController.includes("restoreFallbackContent") || !pageRuntime.includes("function captureFallbackContent") || !pageRuntime.includes("function restoreFallbackContent")) {
     recordFailure("static_child_fallback_renderer_missing");
   }
-  if (app.indexOf("applyLang(preferredLang(), false)") > app.indexOf("const registryFallbacks = captureFallbackContent")) {
+  const languageApplicationIndex = homepageController.indexOf("preferenceRuntime.applyLang(preferenceRuntime.preferredLang(), preferenceContext, false)");
+  if (languageApplicationIndex === -1) {
+    recordFailure("language_runtime_application_missing");
+  }
+  if (languageApplicationIndex > homepageController.indexOf("const registryFallbacks = pageRuntime.captureFallbackContent")) {
     recordFailure("fallback_capture_before_language_application");
   }
   const staticFallbackTargets = [
@@ -3662,7 +3909,7 @@ function validateIndexDesignContract() {
     "[data-mullu-activity]",
   ];
   for (const selector of staticFallbackTargets) {
-    if (!app.includes(`"${selector}"`)) {
+    if (!homepageController.includes(`"${selector}"`)) {
       recordFailure(`static_child_fallback_target_missing:${selector}`);
     }
   }
@@ -3824,7 +4071,7 @@ function validateIndexDesignContract() {
     /aria-label="\$\{escapeHtml/,
     /id="\$\{escapeHtml/,
   ];
-  const dynamicRendererSource = `${app}\n${siteContentRenderer}\n${publicSurfaceRegistryRenderer}\n${productRegistryRenderer}\n${newsActivityRenderer}`;
+  const dynamicRendererSource = `${app}\n${pageRuntime}\n${preferenceRuntime}\n${substrateRuntime}\n${homepageController}\n${siteContentRenderer}\n${publicSurfaceRegistryRenderer}\n${productRegistryRenderer}\n${newsActivityRenderer}`;
   for (const pattern of generatedAttributeEscapingRegressions) {
     if (pattern.test(dynamicRendererSource)) {
       recordFailure(`generated_attribute_uses_text_escape:${pattern}`);
@@ -4182,6 +4429,10 @@ function validateOperatingGates() {
       terms: ["API Production Readiness Gate", "Pre-Provision Requirements", "Pre-DNS Evidence", "DNS Activation Rule", "Post-DNS Evidence", "Rollback Rule", "STATUS:"],
     },
     {
+      file: "ops/api-exposure-witness.md",
+      terms: ["API Exposure Witness", "api_exposure_state=GovernanceBlocked", "api_dns_publication_allowed=false", "recovery_witness_state=AwaitingEvidence", "api_provisioning_allowed=false", "node scripts/check-api-exposure-gate.mjs --expect-blocked", "STATUS:"],
+    },
+    {
       file: "ops/search-indexing-witness.md",
       terms: ["Search Indexing Witness", "SolvedVerified", "Public Search Readback", "Search Console Submission", "URL Inspection Request", "robots_root_allow=Pass", "live_sitemap_matches_local=Pass", "search_engine_index_state=SolvedVerified", "search_console_sitemap_status=Success", "homepage_url_inspection_request=Pass", "first_party_search_result_observed=true", "route_specific_mullu_visibility=SolvedVerified", "current_crawl_surface_state=SolvedVerified", "STATUS:"],
     },
@@ -4244,10 +4495,15 @@ function lineValue(content, key) {
 function validateRuntimeGateState() {
   const recoveryWitness = readUtf8("ops/recovery-completion-witness.md");
   const apiGate = readUtf8("ops/api-production-readiness-gate.md");
+  const apiExposureWitness = readUtf8("ops/api-exposure-witness.md");
+  const apiExposureChecker = readUtf8("scripts/check-api-exposure-gate.mjs");
+  const apiExposureCheckerTest = readUtf8("scripts/test-check-api-exposure-gate.mjs");
   const runtimeHostPath = readUtf8("ops/api-runtime-host-path.md");
   const infrastructureRoot = readUtf8("ops/MULLUSI_INFRASTRUCTURE_ROOT.md");
   const recoveryState = lineValue(recoveryWitness, "recovery_witness_state");
   const apiAllowed = lineValue(recoveryWitness, "api_provisioning_allowed");
+  const exposureRecoveryState = lineValue(apiExposureWitness, "recovery_witness_state");
+  const exposureProvisioningAllowed = lineValue(apiExposureWitness, "api_provisioning_allowed");
 
   if (!["AwaitingEvidence", "ReadyForProvisioning"].includes(recoveryState)) {
     recordFailure(`recovery_witness_state_invalid:${recoveryState}`);
@@ -4266,6 +4522,40 @@ function validateRuntimeGateState() {
   }
   if (!apiGate.includes("ops/recovery-completion-witness.md") || !apiGate.includes("ReadyForProvisioning")) {
     recordFailure("api_readiness_gate_missing_recovery_witness_dependency");
+  }
+  if (exposureRecoveryState !== recoveryState) {
+    recordFailure("api_exposure_recovery_state_mismatch");
+  }
+  if (exposureProvisioningAllowed !== apiAllowed) {
+    recordFailure("api_exposure_provisioning_flag_mismatch");
+  }
+  for (const term of [
+    "function evaluateApiExposureEvidence",
+    "api_exposure_blocked_until_recovery_ready",
+    "api_dns_present_while_blocked",
+    "api_dns_present_before_post_dns_witness",
+    "configuredSolvedVerified",
+    "raw_host_values=not_recorded",
+    "private_recovery_values=not_read",
+    "--expect-blocked",
+    "--require-ready",
+  ]) {
+    if (!apiExposureChecker.includes(term)) {
+      recordFailure(`api_exposure_checker_term_missing:${term}`);
+    }
+  }
+  for (const term of [
+    "testBlockedFixtureIsExpectedState",
+    "testReadyFixturePassesBeforeDnsPublication",
+    "testReadyFixtureWithDnsPresentAwaitsPostDnsWitness",
+    "testSolvedVerifiedFixtureWithDnsProbePasses",
+    "testDnsPresentWhileBlockedFailsClosed",
+    "testCurrentCliDefaultsBlockedPublicSafely",
+    "testCurrentCliRequireReadyFailsClosed",
+  ]) {
+    if (!apiExposureCheckerTest.includes(term)) {
+      recordFailure(`api_exposure_checker_test_term_missing:${term}`);
+    }
   }
   if (pathExists("backend/deploy/nginx/api.mullusi.com.conf")) {
     const nginxTemplate = readUtf8("backend/deploy/nginx/api.mullusi.com.conf");
@@ -4288,6 +4578,7 @@ function validateRuntimeGateState() {
     "ops/MULLUSI_INFRASTRUCTURE_ROOT.md",
     "ops/api-runtime-host-path.md",
     "ops/api-production-readiness-gate.md",
+    "ops/api-exposure-witness.md",
     "ops/recovery-inventory-template.md",
     "ops/recovery-completion-witness.md",
     "ops/runtime-witness/README.md",
@@ -4372,6 +4663,7 @@ function runValidation() {
   validateLocalLinks();
   validateInlineStyleBoundary();
   validateInlineScriptBoundary();
+  validateCssTypographyContract();
   validateHeadContract();
   validateProductionClaimBoundary();
   validateProductRouteShellContract();

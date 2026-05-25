@@ -67,6 +67,33 @@ function requireLine(findings, fileName, content, line) {
   }
 }
 
+function witnessBlocksForTarget(content, targetUrl) {
+  return content
+    .split(/\r?\n\s*\r?\n/)
+    .filter((block) => block.split(/\r?\n/).some((line) => line.trim() === `target=${targetUrl}`));
+}
+
+function lineValue(block, key) {
+  const match = block.match(new RegExp(`^${key}=([^\\n]*)`, "m"));
+  return match?.[1]?.trim() ?? "";
+}
+
+function requireSingleWitnessBlock(findings, fileName, content, targetUrl) {
+  const blocks = witnessBlocksForTarget(content, targetUrl);
+  if (blocks.length !== 1) {
+    findings.push(`artifact_witness_block_count_invalid:${fileName}:${targetUrl}:${blocks.length}`);
+    return "";
+  }
+  return blocks[0];
+}
+
+function requireWitnessValue(findings, fileName, block, targetUrl, key, expectedValue) {
+  const value = lineValue(block, key);
+  if (value !== expectedValue) {
+    findings.push(`artifact_witness_value_invalid:${fileName}:${targetUrl}:${key}:${value || "<empty>"}`);
+  }
+}
+
 function validateBoundary(findings, fileName, content) {
   for (const pattern of forbiddenPublicWitnessPatterns) {
     if (pattern.test(content)) {
@@ -127,6 +154,7 @@ function validateWebsiteOrigin(findings, content) {
     "proof_state=Pass",
     "target=https://mullusi.com/",
     "target=https://www.mullusi.com/",
+    "target=https://www.mullusi.com/proof/?gate=www-canonical",
     "target=https://mullusi.com/.well-known/security.txt",
     "github_request=",
     "fastly_request=",
@@ -134,6 +162,27 @@ function validateWebsiteOrigin(findings, content) {
     "via=",
   ]) {
     requireTerm(findings, fileName, content, term);
+  }
+  const rootWwwBlock = requireSingleWitnessBlock(findings, fileName, content, "https://www.mullusi.com/");
+  if (rootWwwBlock) {
+    requireWitnessValue(findings, fileName, rootWwwBlock, "https://www.mullusi.com/", "final_url", "https://mullusi.com/");
+    requireWitnessValue(findings, fileName, rootWwwBlock, "https://www.mullusi.com/", "redirect_count", "1");
+    requireWitnessValue(findings, fileName, rootWwwBlock, "https://www.mullusi.com/", "first_redirect_status", "301");
+    requireWitnessValue(findings, fileName, rootWwwBlock, "https://www.mullusi.com/", "first_redirect_url", "https://mullusi.com/");
+    requireWitnessValue(findings, fileName, rootWwwBlock, "https://www.mullusi.com/", "verdict", "CloudflareOriginCandidate");
+    requireWitnessValue(findings, fileName, rootWwwBlock, "https://www.mullusi.com/", "proof_state", "Pass");
+  }
+  const pathQueryBlock = requireSingleWitnessBlock(findings, fileName, content, "https://www.mullusi.com/proof/?gate=www-canonical");
+  if (pathQueryBlock) {
+    requireWitnessValue(findings, fileName, pathQueryBlock, "https://www.mullusi.com/proof/?gate=www-canonical", "final_url", "https://mullusi.com/proof/?gate=www-canonical");
+    requireWitnessValue(findings, fileName, pathQueryBlock, "https://www.mullusi.com/proof/?gate=www-canonical", "redirect_count", "1");
+    requireWitnessValue(findings, fileName, pathQueryBlock, "https://www.mullusi.com/proof/?gate=www-canonical", "first_redirect_status", "301");
+    requireWitnessValue(findings, fileName, pathQueryBlock, "https://www.mullusi.com/proof/?gate=www-canonical", "first_redirect_url", "https://mullusi.com/proof/?gate=www-canonical");
+    requireWitnessValue(findings, fileName, pathQueryBlock, "https://www.mullusi.com/proof/?gate=www-canonical", "verdict", "CloudflareOriginCandidate");
+    requireWitnessValue(findings, fileName, pathQueryBlock, "https://www.mullusi.com/proof/?gate=www-canonical", "proof_state", "Pass");
+  }
+  if (/verdict=CanonicalRedirectPending|proof_state=Unknown/.test(content)) {
+    findings.push("artifact_website_origin_redirect_pending");
   }
 }
 
@@ -215,9 +264,10 @@ function validateSearchIndexingSurface(findings, content) {
 function validateDeploymentIntegrity(findings, content) {
   const fileName = "deployment-integrity.txt";
   const solved = hasLine(content, "verdict=SolvedVerified") && hasLine(content, "proof_state=Pass");
+  const solvedUnverified = hasLine(content, "verdict=SolvedUnverified") && hasLine(content, "proof_state=Pass");
   const localPending = hasLine(content, "verdict=AwaitingEvidence") && hasLine(content, "proof_state=Unknown");
   const evidenceError = localPending && /^error=/m.test(content);
-  if (!solved && !localPending) {
+  if (!solved && !solvedUnverified && !localPending) {
     findings.push("deployment_integrity_state_invalid");
   }
   if (evidenceError) {

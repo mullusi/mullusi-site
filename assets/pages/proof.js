@@ -13,7 +13,7 @@ Invariants: all fetched records render with escaped text or bounded links, failu
       const meta = document.querySelector('meta[name="theme-color"]');
       const sync = (theme) => {
         root.dataset.theme = theme;
-        if (meta) meta.setAttribute("content", theme === "light" ? "#f4f1e6" : "#070806");
+        if (meta) meta.setAttribute("content", theme === "light" ? "#f7f8fb" : "#050609");
         if (toggle) toggle.setAttribute("aria-pressed", String(theme === "light"));
         if (label) label.textContent = theme === "light" ? "Dark" : "Light";
       };

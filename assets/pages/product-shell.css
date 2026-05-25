@@ -7,34 +7,34 @@ Invariants: route shells remain static, noindex, no data collection, and readabl
 
 :root {
   color-scheme: dark;
-  --bg: #070806;
-  --panel: #10130f;
-  --panel-strong: #151914;
-  --line: #2d3529;
-  --text: #f1efe5;
-  --muted: #aab09f;
-  --gold: #e4b65c;
-  --green: #86e3b4;
+  --bg: #050609;
+  --panel: #0d1018;
+  --panel-strong: #111521;
+  --line: #272d40;
+  --text: #e9eaef;
+  --muted: #99a0b4;
+  --gold: #5ce6c4;
+  --green: #e8b15c;
   --blue: #9bb7ff;
-  --red: #ff9a9a;
-  --nav-bg: rgba(7, 8, 6, 0.92);
+  --red: #ff6f91;
+  --nav-bg: rgba(5, 6, 9, 0.92);
   --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   --serif: Georgia, "Times New Roman", serif;
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f6f3e9;
-  --panel: #fffcf4;
-  --panel-strong: #f0eadc;
-  --line: #d4cab8;
-  --text: #191b15;
-  --muted: #5f604f;
-  --gold: #8a6819;
-  --green: #207a57;
+  --bg: #f7f8fb;
+  --panel: #ffffff;
+  --panel-strong: #edf2f7;
+  --line: #d8e0ea;
+  --text: #111827;
+  --muted: #455366;
+  --gold: #0f766e;
+  --green: #b45309;
   --blue: #415fb2;
-  --red: #a53c45;
-  --nav-bg: rgba(246, 243, 233, 0.92);
+  --red: #aa2449;
+  --nav-bg: rgba(247, 248, 251, 0.92);
 }
 
 * {
@@ -68,7 +68,7 @@ code {
   z-index: 5;
   padding: 10px 14px;
   background: var(--gold);
-  color: #111006;
+  color: #050609;
   text-decoration: none;
   transform: translateY(-220%);
   transition: transform 0.2s ease;
@@ -234,7 +234,7 @@ p {
 .button.primary {
   border-color: var(--gold);
   background: var(--gold);
-  color: #111006;
+  color: #050609;
   font-weight: 700;
 }
 

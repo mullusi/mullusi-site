@@ -7,30 +7,30 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
 :root {
       color-scheme: dark;
-      --bg: #070806;
-      --panel: #10120d;
-      --line: #283124;
-      --text: #ece7d8;
-      --muted: #aaa38f;
-      --gold: #d6ad48;
-      --green: #54c99a;
-      --violet: #9283ff;
-      --nav-bg: rgba(7, 8, 6, 0.88);
-      --panel-tint: rgba(16, 18, 13, 0.72);
+      --bg: #050609;
+      --panel: #0d1018;
+      --line: #272d40;
+      --text: #e9eaef;
+      --muted: #99a0b4;
+      --gold: #5ce6c4;
+      --green: #e8b15c;
+      --violet: #9aa8ff;
+      --nav-bg: rgba(5, 6, 9, 0.88);
+      --panel-tint: rgba(13, 16, 24, 0.72);
     }
 
     :root[data-theme="light"] {
       color-scheme: light;
-      --bg: #f4f1e6;
-      --panel: #fbf8ee;
-      --line: #d6cdb5;
-      --text: #1b1d15;
-      --muted: #5d5847;
-      --gold: #8a6914;
-      --green: #1f7d56;
-      --violet: #5446c0;
-      --nav-bg: rgba(244, 241, 230, 0.86);
-      --panel-tint: rgba(251, 248, 238, 0.78);
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --line: #d8e0ea;
+      --text: #111827;
+      --muted: #455366;
+      --gold: #0f766e;
+      --green: #b45309;
+      --violet: #4f46e5;
+      --nav-bg: rgba(247, 248, 251, 0.86);
+      --panel-tint: rgba(255, 255, 255, 0.78);
     }
 
     * { box-sizing: border-box; }
@@ -51,7 +51,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       z-index: 5;
       padding: 10px 16px;
       background: var(--gold);
-      color: #121006;
+      color: #050609;
       font-size: 13px;
       text-decoration: none;
       transform: translateY(-200%);
@@ -167,7 +167,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     h1 {
       max-width: 940px;
       margin: 0;
-      font-size: clamp(48px, 10vw, 124px);
+      font-size: 96px;
       line-height: 0.92;
       letter-spacing: 0;
     }
@@ -175,7 +175,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     .law {
       max-width: 740px;
       color: var(--gold);
-      font-size: clamp(20px, 4vw, 42px);
+      font-size: 34px;
       line-height: 1.18;
     }
 
@@ -206,7 +206,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     .button.primary {
       border-color: var(--gold);
       background: var(--gold);
-      color: #121006;
+      color: #050609;
       font-weight: 700;
     }
 
@@ -217,7 +217,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
     h2 {
       margin: 0 0 24px;
-      font-size: clamp(28px, 5vw, 56px);
+      font-size: 44px;
       line-height: 1.05;
       letter-spacing: 0;
     }
@@ -344,10 +344,15 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
         padding: 72px 0 18px;
       }
 
-      h1 { font-size: clamp(42px, 12vw, 64px); }
+      h1 { font-size: 54px; }
+
+      h2 {
+        font-size: 30px;
+        line-height: 1.08;
+      }
 
       .law {
-        font-size: clamp(17px, 4.5vw, 22px);
+        font-size: 19px;
         line-height: 1.12;
       }
 

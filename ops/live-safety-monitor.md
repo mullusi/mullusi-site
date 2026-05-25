@@ -49,13 +49,24 @@ The artifact validator runs before upload and fails closed when required
 public-safe witness files are missing, malformed, or contain forbidden private
 boundary terms.
 
+## Workflow Annotations
+
+```text
+deployment_integrity_annotation=notice when SolvedVerified or SolvedUnverified with edge_html_transform=AcceptedBoundary
+deployment_integrity_annotation=warning when AwaitingEvidence or GovernanceBlocked
+domain_security_annotation=warning while domain_security_state=AwaitingEvidence
+domain_hardening_preflight_annotation=notice while domain_hardening_preflight=GovernanceBlocked by external admin-evidence requirements
+regional_visibility_annotation=warning when external_multi_region_visibility remains AwaitingEvidence
+```
+
 ## Evidence Rule
 
 ```text
 single_run_public_edge=SolvedVerified when public visibility, origin headers, security headers, and search surface pass
 domain_security_hardening=AwaitingEvidence until CAA, DKIM, SPF enforcement, DMARC enforcement, MTA-STS, and TLS-RPT close
 domain_hardening_preflight=GovernanceBlocked until external admin evidence and mutation permissions are promoted
-deployment_integrity=SolvedVerified when live status-manifest hashes match governed live files
+deployment_integrity=SolvedVerified when live status-manifest hashes match governed live files and route sentinels pass
+deployment_integrity=SolvedUnverified when live files match live status after canonical Cloudflare edge transforms, route sentinels pass, and edge_html_transform=AcceptedBoundary
 deployment_integrity=AwaitingEvidence when live files match live status but local status has not caught up
 regional_visibility=SolvedVerified when external distinct-region passes meet the checker floor with no external findings
 regional_visibility=SolvedUnverified when the region floor is met but an external node is pending or failed

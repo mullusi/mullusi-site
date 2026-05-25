@@ -175,6 +175,35 @@ Google Search readback currently confirms indexed signals for the homepage and
 no public result in the observed readback session. This is an external recrawl
 gap only; the live sitemap and public route responses remain verified.
 
+Observed again on 2026-05-25:
+
+```text
+source=Chrome-backed Google Search readback
+checked_at=2026-05-25T18:08:35Z
+query_set=exact sitemap-route site queries
+google_challenge_observed=false
+indexed_route_signals=2
+indexed_route_signal_total=13
+indexed_route=https://mullusi.com/
+indexed_route=https://mullusi.com/mullu/
+awaiting_google_route_signal=https://mullusi.com/doctrine/
+awaiting_google_route_signal=https://mullusi.com/proof/
+awaiting_google_route_signal=https://mullusi.com/playground/
+awaiting_google_route_signal=https://mullusi.com/contact/
+awaiting_google_route_signal=https://mullusi.com/pilot/
+awaiting_google_route_signal=https://mullusi.com/status/
+awaiting_google_route_signal=https://mullusi.com/security/
+awaiting_google_route_signal=https://mullusi.com/privacy/
+awaiting_google_route_signal=https://mullusi.com/terms/
+awaiting_google_route_signal=https://mullusi.com/acceptable-use/
+awaiting_google_route_signal=https://mullusi.com/responsible-disclosure/
+route_coverage_state=AwaitingEvidence
+```
+
+The public route-specific Google result set did not advance on the May 25
+readback. The homepage and `/mullu/` remain visible; the remaining eleven routes
+still await public Google result evidence.
+
 ## Search Console Submission
 
 Observed on 2026-05-24:
@@ -213,6 +242,24 @@ search_console_expanded_route_count_state=AwaitingEvidence
 Search Console accepted the fresh sitemap signal. The table remained at five
 discovered pages immediately after resubmission, so expanded route discovery is
 still pending Google processing.
+
+## Search Console Discovery Closure
+
+Observed on 2026-05-25:
+
+```text
+property=https://mullusi.com/
+submitted_sitemap=https://mullusi.com/sitemap.xml
+last_read=2026-05-24
+sitemap_status=Success
+discovered_pages=13
+discovered_videos=0
+search_console_expanded_route_count_state=SolvedVerified
+```
+
+Search Console now reports all thirteen sitemap routes as discovered. This
+closes the expanded-sitemap readback gap. Public Google route-specific result
+coverage remains separate and is still `2/13`.
 
 ## URL Inspection Request
 
@@ -261,7 +308,8 @@ current_live_sitemap_loc_count=13
 trust_surface_deployment_visibility=SolvedVerified
 search_console_sitemap_submission=Pass
 search_console_sitemap_status=Success
-search_console_discovered_pages=5
+search_console_discovered_pages=13
+search_console_expanded_route_count_state=SolvedVerified
 homepage_url_inspection_request=Pass
 homepage_priority_crawl_queue=accepted
 additional_url_inspection_requests=AwaitingEvidence
@@ -287,7 +335,7 @@ raw_response_headers=not_recorded
 ```
 
 STATUS:
-  Completeness: 98%
-  Invariants verified: historical five-route crawl parity, current thirteen-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback, Google route coverage readback
-  Open issues: Search Console discovered-page count remains 5; eleven expanded routes still await public Google route-specific readback
-  Next action: monitor Search Console and public results for expanded route recrawl
+  Completeness: 99%
+  Invariants verified: historical five-route crawl parity, current thirteen-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback, Google route coverage readback, Search Console thirteen-route discovery
+  Open issues: eleven expanded routes still await public Google route-specific readback
+  Next action: monitor public Google results for expanded route recrawl

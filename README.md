@@ -44,6 +44,7 @@ framework, database, or server runtime.
 |   |-- MULLUSI_INFRASTRUCTURE_ROOT.md # Public-safe infrastructure inventory
 |   |-- api-runtime-host-path.md      # Provider-neutral API host path
 |   |-- api-production-readiness-gate.md # api.mullusi.com go/no-go gate
+|   |-- api-exposure-witness.md       # Public-safe API DNS exposure gate
 |   |-- website-origin-witness.md     # Live website origin-header witness
 |   |-- public-visibility-witness.md  # Public DNS and HTTPS visibility witness
 |   |-- live-safety-monitor.md        # Scheduled live probe artifact contract
@@ -57,7 +58,12 @@ framework, database, or server runtime.
 |   |-- recovery-completion-witness.md # Recovery completion state
 |   `-- runtime-witness/               # Product runtime witness registry
 |-- assets/
-|   |-- app.js                         # Repo search/filter renderer
+|   |-- app.js                         # Homepage runtime orchestrator
+|   |-- runtime/
+|   |   |-- page-runtime.js             # DOM, fallback, link, and reveal helpers
+|   |   |-- preference-runtime.js       # Language, theme, and i18n helpers
+|   |   |-- substrate-runtime.js        # Canvas substrate renderer
+|   |   `-- homepage-controller.js      # Homepage load and render lifecycle
 |   |-- registry/
 |   |   `-- homepage-registry.js        # Homepage registry loading and composition
 |   |-- render/
@@ -103,6 +109,8 @@ framework, database, or server runtime.
     |-- test-promote-domain-hardening-preflight.mjs # Tests preflight promotion behavior
     |-- check-www-canonical-redirect-gate.mjs # Evaluates www redirect closure
     |-- test-www-canonical-redirect-gate.mjs # Tests www redirect gate logic
+    |-- check-api-exposure-gate.mjs    # Blocks api.mullusi.com DNS exposure until recovery permits
+    |-- test-check-api-exposure-gate.mjs # Tests API exposure gate behavior
     |-- fetch-news.mjs                 # Deterministic Frontier Signal refresh
     |-- validate-site.mjs              # Static validation gate
     `-- verify-registry-repos.mjs      # Public registry source-boundary check
@@ -406,6 +414,9 @@ Commands:
 
 ```bash
 node --check assets/app.js
+node --check assets/runtime/page-runtime.js
+node --check assets/runtime/preference-runtime.js
+node --check assets/runtime/substrate-runtime.js
 node --check scripts/validate-site.mjs
 node --check scripts/fetch-news.mjs
 node --check scripts/build-cloudflare-pages.mjs
@@ -480,6 +491,9 @@ python3 -m http.server 8080 --directory dist
 
 ```bash
 node --check assets/app.js
+node --check assets/runtime/page-runtime.js
+node --check assets/runtime/preference-runtime.js
+node --check assets/runtime/substrate-runtime.js
 node --check scripts/validate-site.mjs
 node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/generate-platform.mjs
@@ -591,10 +605,14 @@ To verify that the live edge files match the live status manifest:
 node scripts/check-live-deployment-integrity.mjs --allow-pending
 ```
 
-This records `AwaitingEvidence` if the live files are internally consistent but
-the local `status.json` manifest differs from the live deployment or a known
-edge HTML transform is observed. Use `--require-local-match` only after the
-current worktree is expected to be deployed.
+This records `SolvedVerified` when the live files match the live
+`status.json` manifest and the local manifest is current. It records
+`SolvedUnverified` with `edge_html_transform=AcceptedBoundary` when the only
+variance is a known Cloudflare root HTML transform while live governed files
+still match the live manifest. It records `AwaitingEvidence` if the live files
+are internally consistent but the local `status.json` manifest has not caught
+up. Use `--require-local-match` only after the current worktree is expected to
+be deployed.
 
 After security-header changes, verify that the live edge is serving the browser
 control policy:
@@ -672,6 +690,10 @@ Cloudflare Pages `_headers` sets `assets/*` to `Cache-Control: max-age=600`,
 so a returning visitor can otherwise get new `index.html` with a stale cached
 `assets/app.js` (button visible, no handler). `index.html` references
 `assets/app.js`, `assets/registry/homepage-registry.js`,
+`assets/runtime/page-runtime.js`,
+`assets/runtime/preference-runtime.js`,
+`assets/runtime/substrate-runtime.js`,
+`assets/runtime/homepage-controller.js`,
 `assets/render/site-content.js`,
 `assets/render/public-surface-registry.js`,
 `assets/render/product-registry.js`,
