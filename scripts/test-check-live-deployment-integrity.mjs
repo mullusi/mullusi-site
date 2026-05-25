@@ -120,22 +120,36 @@ function testLiveContentHashMismatchBlocks() {
   assert.ok(result.hardFindings.includes("live_content_hash_mismatch:index.html"));
 }
 
-function testKnownCloudflareHtmlTransformIsAcceptedBoundary() {
+function testKnownCloudflareHtmlTransformNormalizes() {
   const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({
     fileOverrides: {
       "index.html": '<!doctype html>\n<title>Mullusi</title>\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v1"></script>',
     },
   }));
 
-  assert.equal(result.verdict, "SolvedUnverified");
+  assert.equal(result.verdict, "SolvedVerified");
   assert.equal(result.proofState, "Pass");
   assert.equal(result.liveContentHashes, "Pass");
-  assert.equal(result.edgeHtmlTransform, "AcceptedBoundary");
+  assert.equal(result.edgeHtmlTransform, "Pass");
   assert.equal(result.localStatusManifestMatch, "Pass");
   assert.equal(result.routeSentinels, "Pass");
   assert.deepEqual(result.hardFindings, []);
   assert.deepEqual(result.softFindings, []);
-  assert.ok(result.acceptedFindings.includes("live_html_edge_transform_observed:index.html"));
+}
+
+function testCloudflareTransformWithContentDriftBlocks() {
+  const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({
+    fileOverrides: {
+      "index.html": '<!doctype html>\n<title>Changed</title>\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v1"></script>',
+    },
+  }));
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.liveContentHashes, "Fail");
+  assert.equal(result.edgeHtmlTransform, "Fail");
+  assert.ok(result.hardFindings.includes("live_html_edge_transform_unverified:index.html"));
+  assert.ok(result.hardFindings.includes("live_content_hash_mismatch:index.html"));
 }
 
 function testRouteSentinelDriftBlocks() {
@@ -209,7 +223,8 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
 testCanonicalHashesIgnoreJsonMetaContentHash();
 testMatchingLiveManifestPasses();
 testLiveContentHashMismatchBlocks();
-testKnownCloudflareHtmlTransformIsAcceptedBoundary();
+testKnownCloudflareHtmlTransformNormalizes();
+testCloudflareTransformWithContentDriftBlocks();
 testRouteSentinelDriftBlocks();
 testLocalManifestMismatchAwaitsEvidenceOnly();
 testUnexpectedOrInvalidHashPathBlocks();
