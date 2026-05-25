@@ -58,12 +58,13 @@ framework, database, or server runtime.
 |   |-- recovery-completion-witness.md # Recovery completion state
 |   `-- runtime-witness/               # Product runtime witness registry
 |-- assets/
-|   |-- app.js                         # Homepage runtime orchestrator
+|   |-- app.js                         # Homepage boot entry
 |   |-- runtime/
 |   |   |-- page-runtime.js             # DOM, fallback, link, and reveal helpers
 |   |   |-- preference-runtime.js       # Language, theme, and i18n helpers
 |   |   |-- substrate-runtime.js        # Canvas substrate renderer
-|   |   `-- homepage-controller.js      # Homepage load and render lifecycle
+|   |   |-- homepage-controller.js      # Homepage load and render lifecycle
+|   |   `-- homepage-context.js         # Runtime state and renderer adapter composition
 |   |-- registry/
 |   |   `-- homepage-registry.js        # Homepage registry loading and composition
 |   |-- render/
@@ -419,6 +420,8 @@ node --check assets/app.js
 node --check assets/runtime/page-runtime.js
 node --check assets/runtime/preference-runtime.js
 node --check assets/runtime/substrate-runtime.js
+node --check assets/runtime/homepage-controller.js
+node --check assets/runtime/homepage-context.js
 node --check scripts/validate-site.mjs
 node --check scripts/fetch-news.mjs
 node --check scripts/build-cloudflare-pages.mjs
@@ -500,6 +503,8 @@ node --check assets/app.js
 node --check assets/runtime/page-runtime.js
 node --check assets/runtime/preference-runtime.js
 node --check assets/runtime/substrate-runtime.js
+node --check assets/runtime/homepage-controller.js
+node --check assets/runtime/homepage-context.js
 node --check scripts/validate-site.mjs
 node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/generate-platform.mjs
@@ -704,6 +709,7 @@ so a returning visitor can otherwise get new `index.html` with a stale cached
 `assets/runtime/preference-runtime.js`,
 `assets/runtime/substrate-runtime.js`,
 `assets/runtime/homepage-controller.js`,
+`assets/runtime/homepage-context.js`,
 `assets/render/site-content.js`,
 `assets/render/public-surface-registry.js`,
 `assets/render/product-registry.js`,

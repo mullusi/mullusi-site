@@ -60,6 +60,7 @@ function testCloudflarePagesBuildArtifact() {
       "assets/runtime/preference-runtime.js",
       "assets/runtime/substrate-runtime.js",
       "assets/runtime/homepage-controller.js",
+      "assets/runtime/homepage-context.js",
       "assets/registry/homepage-registry.js",
       "assets/render/site-content.js",
       "assets/render/public-surface-registry.js",

@@ -71,6 +71,7 @@ const requiredFiles = [
   "assets/runtime/preference-runtime.js",
   "assets/runtime/substrate-runtime.js",
   "assets/runtime/homepage-controller.js",
+  "assets/runtime/homepage-context.js",
   "assets/registry/homepage-registry.js",
   "assets/render/site-content.js",
   "assets/render/public-surface-registry.js",
@@ -535,6 +536,7 @@ function validateCloudflarePagesArtifact() {
     "assets/runtime/preference-runtime.js",
     "assets/runtime/substrate-runtime.js",
     "assets/runtime/homepage-controller.js",
+    "assets/runtime/homepage-context.js",
     "assets/render/site-content.js",
     "assets/render/public-surface-registry.js",
     "assets/render/product-registry.js",
@@ -3503,6 +3505,7 @@ function validateIndexDesignContract() {
   const preferenceRuntime = readUtf8("assets/runtime/preference-runtime.js");
   const substrateRuntime = readUtf8("assets/runtime/substrate-runtime.js");
   const homepageController = readUtf8("assets/runtime/homepage-controller.js");
+  const homepageContext = readUtf8("assets/runtime/homepage-context.js");
   const homepageRegistry = readUtf8("assets/registry/homepage-registry.js");
   const siteContentRenderer = readUtf8("assets/render/site-content.js");
   const publicSurfaceRegistryRenderer = readUtf8("assets/render/public-surface-registry.js");
@@ -3511,7 +3514,7 @@ function validateIndexDesignContract() {
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
-  const assetVersion = "2026.05.platform.27";
+  const assetVersion = "2026.05.platform.28";
 
   if (
     !html.includes(`assets/styles.css?v=${assetVersion}`) ||
@@ -3524,6 +3527,7 @@ function validateIndexDesignContract() {
     !html.includes(`assets/render/public-surface-registry.js?v=${assetVersion}`) ||
     !html.includes(`assets/render/product-registry.js?v=${assetVersion}`) ||
     !html.includes(`assets/render/news-activity.js?v=${assetVersion}`) ||
+    !html.includes(`assets/runtime/homepage-context.js?v=${assetVersion}`) ||
     !html.includes(`assets/app.js?v=${assetVersion}`)
   ) {
     recordFailure("index_asset_version_invalid");
@@ -3564,6 +3568,15 @@ function validateIndexDesignContract() {
   if (html.indexOf("assets/runtime/homepage-controller.js") > html.indexOf("assets/registry/homepage-registry.js")) {
     recordFailure("homepage_registry_before_homepage_controller");
   }
+  if (html.indexOf("assets/runtime/homepage-context.js") > html.indexOf("assets/app.js")) {
+    recordFailure("homepage_context_module_load_order_invalid");
+  }
+  if (html.indexOf("assets/render/news-activity.js") > html.indexOf("assets/runtime/homepage-context.js")) {
+    recordFailure("homepage_context_before_renderer_modules");
+  }
+  if (html.indexOf("assets/runtime/homepage-context.js") < html.indexOf("assets/runtime/homepage-controller.js")) {
+    recordFailure("homepage_context_before_homepage_controller");
+  }
   if (html.indexOf("assets/render/site-content.js") > html.indexOf("assets/app.js")) {
     recordFailure("site_content_renderer_load_order_invalid");
   }
@@ -3584,6 +3597,24 @@ function validateIndexDesignContract() {
   }
   if (html.indexOf("assets/render/product-registry.js") > html.indexOf("assets/render/news-activity.js")) {
     recordFailure("news_activity_renderer_before_product_renderer");
+  }
+  if (html.indexOf("assets/render/news-activity.js") > html.indexOf("assets/runtime/homepage-context.js")) {
+    recordFailure("homepage_context_before_news_activity_renderer");
+  }
+  for (const requiredHomepageContextPredecessor of [
+    "assets/runtime/page-runtime.js",
+    "assets/runtime/preference-runtime.js",
+    "assets/runtime/substrate-runtime.js",
+    "assets/runtime/homepage-controller.js",
+    "assets/registry/homepage-registry.js",
+    "assets/render/site-content.js",
+    "assets/render/public-surface-registry.js",
+    "assets/render/product-registry.js",
+    "assets/render/news-activity.js",
+  ]) {
+    if (html.indexOf(requiredHomepageContextPredecessor) > html.indexOf("assets/runtime/homepage-context.js")) {
+      recordFailure(`homepage_context_dependency_load_order_invalid:${requiredHomepageContextPredecessor}`);
+    }
   }
 
   const h2Labels = [...html.matchAll(/<h2[^>]*>(.*?)<\/h2>/gs)]
@@ -3722,10 +3753,10 @@ function validateIndexDesignContract() {
       recordFailure(`symbol_font_size_budget_exceeded:${fontContent.length}`);
     }
   }
-  if (!homepageController.includes("promoteNoscriptFallbacks") || !pageRuntime.includes("function promoteNoscriptFallbacks") || !app.includes("function renderNewsLoadError")) {
+  if (!homepageController.includes("promoteNoscriptFallbacks") || !pageRuntime.includes("function promoteNoscriptFallbacks") || !homepageContext.includes("function renderNewsLoadError")) {
     recordFailure("dynamic_failure_renderer_missing");
   }
-  if (!app.includes("function pageRuntimeModule") || !app.includes("MullusiPageRuntime")) {
+  if (!homepageContext.includes("const pageRuntime") || !homepageContext.includes("MullusiPageRuntime")) {
     recordFailure("page_runtime_module_missing");
   }
   for (const forbiddenPageRuntimeAppTerm of [
@@ -3760,7 +3791,7 @@ function validateIndexDesignContract() {
       recordFailure(`page_runtime_missing:${requiredPageRuntimeTerm}`);
     }
   }
-  if (!app.includes("function preferenceRuntimeModule") || !app.includes("MullusiPreferenceRuntime")) {
+  if (!homepageContext.includes("const preferenceRuntime") || !homepageContext.includes("MullusiPreferenceRuntime")) {
     recordFailure("preference_runtime_module_missing");
   }
   for (const forbiddenPreferenceAppTerm of [
@@ -3813,7 +3844,35 @@ function validateIndexDesignContract() {
       recordFailure(`preference_runtime_missing:${requiredPreferenceRuntimeTerm}`);
     }
   }
-  if (!app.includes("function substrateRuntimeModule") || !app.includes("MullusiSubstrateRuntime")) {
+  if (!app.includes("MullusiHomepageContext.createHomepageRuntime") || !app.includes("homepageRuntime.homepageController.initContent")) {
+    recordFailure("homepage_app_boot_missing");
+  }
+  for (const requiredHomepageContextTerm of [
+    "window.MullusiHomepageContext",
+    "function createState",
+    "function createHomepageRuntime",
+    "function requireModule",
+    "function controllerContext",
+    "Object.freeze",
+  ]) {
+    if (!homepageContext.includes(requiredHomepageContextTerm)) {
+      recordFailure(`homepage_context_missing:${requiredHomepageContextTerm}`);
+    }
+  }
+  for (const forbiddenAppBootTerm of [
+    "function ",
+    "const state =",
+    "MullusiProductRegistryRenderer",
+    "MullusiPublicSurfaceRegistryRenderer",
+    "MullusiSiteContentRenderer",
+    "MullusiNewsActivityRenderer",
+    "MullusiHomepageRegistry",
+  ]) {
+    if (app.includes(forbiddenAppBootTerm)) {
+      recordFailure(`homepage_app_not_boot_only:${forbiddenAppBootTerm}`);
+    }
+  }
+  if (!homepageContext.includes("const substrateRuntime") || !homepageContext.includes("MullusiSubstrateRuntime")) {
     recordFailure("substrate_runtime_module_missing");
   }
   for (const forbiddenSubstrateAppTerm of [
@@ -3841,7 +3900,7 @@ function validateIndexDesignContract() {
       recordFailure(`substrate_runtime_missing:${requiredSubstrateRuntimeTerm}`);
     }
   }
-  if (!app.includes("function homepageControllerModule") || !app.includes("MullusiHomepageController")) {
+  if (!homepageContext.includes("const homepageController") || !homepageContext.includes("MullusiHomepageController")) {
     recordFailure("homepage_controller_module_missing");
   }
   for (const forbiddenHomepageControllerAppTerm of [
@@ -3880,7 +3939,7 @@ function validateIndexDesignContract() {
       recordFailure(`homepage_controller_missing:${requiredHomepageControllerTerm}`);
     }
   }
-  if (!app.includes("function newsActivityRendererModule") || !app.includes("MullusiNewsActivityRenderer")) {
+  if (!homepageContext.includes("function newsActivityRendererModule") || !homepageContext.includes("MullusiNewsActivityRenderer")) {
     recordFailure("news_activity_renderer_module_missing");
   }
   if (!homepageController.includes("captureFallbackContent") || !homepageController.includes("restoreFallbackContent") || !pageRuntime.includes("function captureFallbackContent") || !pageRuntime.includes("function restoreFallbackContent")) {
@@ -3911,10 +3970,10 @@ function validateIndexDesignContract() {
       recordFailure(`static_child_fallback_target_missing:${selector}`);
     }
   }
-  if (/renderFutureDomains[\s\S]*localized\(domain, "summary"\)/.test(app)) {
+  if (/renderFutureDomains[\s\S]*localized\(domain, "summary"\)/.test(app) || /renderFutureDomains[\s\S]*localized\(domain, "summary"\)/.test(homepageContext)) {
     recordFailure("science_engine_cards_not_compressed");
   }
-  if (!app.includes("function siteContentRendererModule") || !app.includes("MullusiSiteContentRenderer")) {
+  if (!homepageContext.includes("function siteContentRendererModule") || !homepageContext.includes("MullusiSiteContentRenderer")) {
     recordFailure("site_content_renderer_module_missing");
   }
   for (const forbiddenSiteContentAppTerm of [
@@ -3991,7 +4050,7 @@ function validateIndexDesignContract() {
       recordFailure(`news_activity_renderer_missing:${requiredNewsActivityRendererTerm}`);
     }
   }
-  if (!app.includes("function publicSurfaceRegistryRendererModule") || !app.includes("MullusiPublicSurfaceRegistryRenderer")) {
+  if (!homepageContext.includes("function publicSurfaceRegistryRendererModule") || !homepageContext.includes("MullusiPublicSurfaceRegistryRenderer")) {
     recordFailure("public_surface_registry_renderer_module_missing");
   }
   for (const forbiddenPublicSurfaceAppTerm of [
@@ -4024,7 +4083,7 @@ function validateIndexDesignContract() {
       recordFailure(`public_surface_registry_renderer_missing:${requiredPublicRendererTerm}`);
     }
   }
-  if (!app.includes("function renderProductRegistryControls") || !app.includes("MullusiProductRegistryRenderer")) {
+  if (!homepageContext.includes("function renderProductRegistryControls") || !homepageContext.includes("MullusiProductRegistryRenderer")) {
     recordFailure("product_registry_controls_missing");
   }
   if (app.includes("function renderProductRouteActions") || app.includes("product-route-actions")) {
@@ -4045,10 +4104,10 @@ function validateIndexDesignContract() {
   if (app.includes("data/generated/products-compat.json")) {
     recordFailure("homepage_renderer_uses_products_compat_wrapper");
   }
-  if (app.includes("data/generated/homepage-product-registry.json") || app.includes("data/manual/public-surfaces.json")) {
+  if (app.includes("data/generated/homepage-product-registry.json") || app.includes("data/manual/public-surfaces.json") || homepageContext.includes("data/generated/homepage-product-registry.json") || homepageContext.includes("data/manual/public-surfaces.json")) {
     recordFailure("homepage_renderer_owns_registry_paths");
   }
-  if (!app.includes("function homepageRegistryModule") || !app.includes("MullusiHomepageRegistry")) {
+  if (!homepageContext.includes("function homepageRegistryModule") || !homepageContext.includes("MullusiHomepageRegistry")) {
     recordFailure("homepage_renderer_registry_module_missing");
   }
   for (const requiredRegistryPath of [
@@ -4069,7 +4128,7 @@ function validateIndexDesignContract() {
     /aria-label="\$\{escapeHtml/,
     /id="\$\{escapeHtml/,
   ];
-  const dynamicRendererSource = `${app}\n${pageRuntime}\n${preferenceRuntime}\n${substrateRuntime}\n${homepageController}\n${siteContentRenderer}\n${publicSurfaceRegistryRenderer}\n${productRegistryRenderer}\n${newsActivityRenderer}`;
+  const dynamicRendererSource = `${app}\n${pageRuntime}\n${preferenceRuntime}\n${substrateRuntime}\n${homepageController}\n${homepageContext}\n${siteContentRenderer}\n${publicSurfaceRegistryRenderer}\n${productRegistryRenderer}\n${newsActivityRenderer}`;
   for (const pattern of generatedAttributeEscapingRegressions) {
     if (pattern.test(dynamicRendererSource)) {
       recordFailure(`generated_attribute_uses_text_escape:${pattern}`);
