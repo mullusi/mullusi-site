@@ -915,7 +915,7 @@ function validatePublicVisibilityWitness() {
     "testCanonicalHashesIgnoreJsonMetaContentHash",
     "testMatchingLiveManifestPasses",
     "testLiveContentHashMismatchBlocks",
-    "testKnownCloudflareHtmlTransformNormalizes",
+    "testKnownCloudflareHtmlTransformIsAcceptedBoundary",
     "testCloudflareTransformWithContentDriftBlocks",
     "testRouteSentinelDriftBlocks",
     "testLocalManifestMismatchAwaitsEvidenceOnly",

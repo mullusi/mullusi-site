@@ -238,7 +238,7 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
 testCanonicalHashesIgnoreJsonMetaContentHash();
 testMatchingLiveManifestPasses();
 testLiveContentHashMismatchBlocks();
-testKnownCloudflareHtmlTransformNormalizes();
+testKnownCloudflareHtmlTransformIsAcceptedBoundary();
 testCloudflareTransformWithContentDriftBlocks();
 testRouteSentinelDriftBlocks();
 testLocalManifestMismatchAwaitsEvidenceOnly();
