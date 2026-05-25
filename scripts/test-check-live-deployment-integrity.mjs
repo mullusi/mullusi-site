@@ -51,6 +51,24 @@ function fixtureEvidence({ liveHashes = fixtureHashes(), localHashes = liveHashe
         body: fileOverrides[relativePath] ?? fixtureFileContent(relativePath),
       },
     ])),
+    routeSentinelResponses: new Map([
+      [
+        "browse_docs_route",
+        {
+          finalUrl: "https://mullusi.com/browse/",
+          statusCode: 200,
+          body: '<a href="https://docs.mullusi.com/">Docs</a>',
+        },
+      ],
+      [
+        "search_docs_route",
+        {
+          finalUrl: "https://mullusi.com/search/",
+          statusCode: 200,
+          body: '<a href="https://docs.mullusi.com/docs/search.html">Search docs</a>',
+        },
+      ],
+    ]),
   };
 }
 
@@ -61,9 +79,16 @@ function runChecker(args) {
 function testCanonicalHashesIgnoreJsonMetaContentHash() {
   const jsonWithHashA = JSON.stringify({ meta: { content_hash: "sha256:a" }, value: ["x"] });
   const jsonWithHashB = JSON.stringify({ meta: { content_hash: "sha256:b" }, value: ["x"] });
+  const htmlWithCloudflareEmail =
+    '<a href="/cdn-cgi/l/email-protection#e48c8188888ba48991888891978dca878b89"><span class="__cf_email__" data-cfemail="f49c9198989bb49981989881879dda979b99">[email&#160;protected]</span></a><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>';
+  const htmlWithPlainEmail = '<a href="mailto:hello@mullusi.com">hello@mullusi.com</a>';
+  const htmlWithBeacon = '<title>Mullusi</title><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v1"></script>';
 
   assert.equal(canonicalJsonContentHash(jsonWithHashA), canonicalJsonContentHash(jsonWithHashB));
   assert.equal(canonicalTextContentHash("a\r\nb\r\n"), canonicalTextContentHash("a\nb\n"));
+  assert.equal(canonicalTextContentHash(htmlWithCloudflareEmail), canonicalTextContentHash(htmlWithPlainEmail));
+  assert.equal(canonicalTextContentHash(htmlWithBeacon), canonicalTextContentHash("<title>Mullusi</title>"));
+  assert.throws(() => canonicalTextContentHash('<a href="/cdn-cgi/l/email-protection#zz">[email protected]</a>'), /cloudflare_email_obfuscation_unhandled/);
   assert.match(canonicalJsonContentHash(jsonWithHashA), /^sha256:[a-f0-9]{64}$/);
 }
 
@@ -76,8 +101,11 @@ function testMatchingLiveManifestPasses() {
   assert.equal(result.liveContentHashes, "Pass");
   assert.equal(result.localStatusManifestMatch, "Pass");
   assert.equal(result.edgeHtmlTransform, "Pass");
+  assert.equal(result.routeSentinels, "Pass");
+  assert.equal(result.routeSentinelCount, 2);
   assert.equal(result.hardFindings.length, 0);
   assert.match(formatted, /^finding=none$/m);
+  assert.match(formatted, /^route_sentinel=browse_docs_route:Pass:200$/m);
   assert.match(formatted, /^raw_response_bodies=not_recorded$/m);
 }
 
@@ -92,26 +120,35 @@ function testLiveContentHashMismatchBlocks() {
   assert.ok(result.hardFindings.includes("live_content_hash_mismatch:index.html"));
 }
 
-function testKnownCloudflareHtmlTransformAwaitsEvidence() {
+function testKnownCloudflareHtmlTransformNormalizes() {
   const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({
     fileOverrides: {
-      "index.html": [
-        "<!doctype html>",
-        "<title>Mullusi</title>",
-        '<a href="/cdn-cgi/l/email-protection#abc">[email protected]</a>',
-        '<script src="https://static.cloudflareinsights.com/beacon.min.js"></script>',
-        "",
-      ].join("\n"),
+      "index.html": '<!doctype html>\n<title>Mullusi</title>\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v1"></script>',
     },
   }));
 
-  assert.equal(result.verdict, "AwaitingEvidence");
-  assert.equal(result.proofState, "Unknown");
+  assert.equal(result.verdict, "SolvedVerified");
+  assert.equal(result.proofState, "Pass");
   assert.equal(result.liveContentHashes, "Pass");
-  assert.equal(result.edgeHtmlTransform, "AwaitingEvidence");
+  assert.equal(result.edgeHtmlTransform, "Pass");
   assert.equal(result.localStatusManifestMatch, "Pass");
   assert.deepEqual(result.hardFindings, []);
-  assert.ok(result.softFindings.includes("live_html_edge_transform_observed:index.html"));
+  assert.deepEqual(result.softFindings, []);
+}
+
+function testRouteSentinelDriftBlocks() {
+  const evidence = fixtureEvidence();
+  evidence.routeSentinelResponses.set("browse_docs_route", {
+    finalUrl: "https://mullusi.com/browse/",
+    statusCode: 200,
+    body: '<a href="https://docs.mullusi.com/browse">Dead docs route</a>',
+  });
+  const result = evaluateDeploymentIntegrityEvidence(evidence);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.routeSentinels, "Fail");
+  assert.ok(result.hardFindings.includes("route_sentinel_forbidden_term_present:browse_docs_route:https://docs.mullusi.com/browse"));
 }
 
 function testLocalManifestMismatchAwaitsEvidenceOnly() {
@@ -170,7 +207,8 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
 testCanonicalHashesIgnoreJsonMetaContentHash();
 testMatchingLiveManifestPasses();
 testLiveContentHashMismatchBlocks();
-testKnownCloudflareHtmlTransformAwaitsEvidence();
+testKnownCloudflareHtmlTransformNormalizes();
+testRouteSentinelDriftBlocks();
 testLocalManifestMismatchAwaitsEvidenceOnly();
 testUnexpectedOrInvalidHashPathBlocks();
 testUnexpectedLiveHashPathAwaitsEvidence();
