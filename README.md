@@ -293,6 +293,8 @@ package:
   `api.mullusi.com` runtime host path.
 - `ops/api-production-readiness-gate.md` blocks `api.mullusi.com` DNS until
   recovery, host, database, preflight, and rollback evidence exist.
+- `ops/api-exposure-witness.md` records the public-safe API exposure state and
+  separates pre-DNS `ReadyForDns` from post-DNS `SolvedVerified` evidence.
 - `ops/website-origin-witness.md` records the current Cloudflare edge origin
   header witness for the public website without changing API readiness.
 - `ops/public-visibility-witness.md` records public DNS resolver, HTTPS, TLS,
@@ -453,6 +455,8 @@ node --check scripts/promote-recovery-witness.mjs
 node --check scripts/test-promote-recovery-witness.mjs
 node --check scripts/check-private-recovery-inventory.mjs
 node --check scripts/test-private-recovery-inventory.mjs
+node --check scripts/check-api-exposure-gate.mjs
+node --check scripts/test-check-api-exposure-gate.mjs
 node scripts/validate-site.mjs
 node scripts/validate-manifests.mjs
 node scripts/generate-platform.mjs --check
@@ -477,6 +481,8 @@ node scripts/test-ops-gates.mjs
 node scripts/test-promote-recovery-witness.mjs
 node scripts/check-private-recovery-inventory.mjs --allow-missing
 node scripts/test-private-recovery-inventory.mjs
+node scripts/check-api-exposure-gate.mjs --expect-blocked
+node scripts/test-check-api-exposure-gate.mjs
 ```
 
 ## Local preview
@@ -522,6 +528,8 @@ node --check scripts/promote-domain-hardening-preflight.mjs
 node --check scripts/test-promote-domain-hardening-preflight.mjs
 node --check scripts/check-www-canonical-redirect-gate.mjs
 node --check scripts/test-www-canonical-redirect-gate.mjs
+node --check scripts/check-api-exposure-gate.mjs
+node --check scripts/test-check-api-exposure-gate.mjs
 node scripts/validate-site.mjs
 node scripts/validate-manifests.mjs
 node scripts/generate-platform.mjs --check
@@ -545,6 +553,8 @@ node scripts/test-ops-gates.mjs
 node scripts/test-promote-recovery-witness.mjs
 node scripts/check-private-recovery-inventory.mjs --allow-missing
 node scripts/test-private-recovery-inventory.mjs
+node scripts/check-api-exposure-gate.mjs --expect-blocked
+node scripts/test-check-api-exposure-gate.mjs
 ```
 
 The validation scripts check required files, Cloudflare Pages `_headers` and

@@ -28,6 +28,11 @@ The exposure state remains blocked while root recovery evidence is incomplete.
 This file does not replace the private recovery inventory; it only records the
 public-safe decision boundary.
 
+`ReadyForDns` is a pre-DNS state. It means publication is allowed after all
+private evidence passes, even if the public `api` record is still absent.
+`SolvedVerified` is a post-DNS state. It requires the public runtime witness to
+be reachable and recorded after DNS activation.
+
 ## Exposure States
 
 | State | Meaning | Public DNS Rule |
