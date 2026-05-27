@@ -125,6 +125,8 @@ framework, database, or server runtime.
     |-- test-www-canonical-redirect-gate.mjs # Tests www redirect gate logic
     |-- check-api-exposure-gate.mjs    # Blocks api.mullusi.com DNS exposure until recovery permits
     |-- test-check-api-exposure-gate.mjs # Tests API exposure gate behavior
+    |-- check-api-production-readiness.mjs # Reports api.mullusi.com readiness before DNS activation
+    |-- test-check-api-production-readiness.mjs # Tests API production readiness behavior
     |-- fetch-news.mjs                 # Deterministic Frontier Signal refresh
     |-- validate-architecture-boundaries.mjs # Fast structural boundary gate
     |-- test-validate-architecture-boundaries.mjs # Tests architecture boundary behavior
@@ -448,7 +450,7 @@ Commands:
 node scripts/validate-checkpoint.mjs
 node scripts/validate-checkpoint.mjs --backend
 # optional aliases: npm run checkpoint, npm run checkpoint:backend, npm run scaffold:product, npm run test:scaffold-product
-# optional gates: npm run validate:api-exposure, npm run test:api-exposure, npm run validate:domain-hardening, npm run test:domain-hardening, npm run validate:security-txt, npm run test:security-txt, npm run validate:private-recovery, npm run test:private-recovery, npm run validate:ops, npm run test:ops
+# optional gates: npm run validate:api-exposure, npm run test:api-exposure, npm run validate:api-production, npm run test:api-production, npm run validate:domain-hardening, npm run test:domain-hardening, npm run validate:security-txt, npm run test:security-txt, npm run validate:private-recovery, npm run test:private-recovery, npm run validate:ops, npm run test:ops
 # PowerShell fallback: npm.cmd run checkpoint
 node --check assets/app.js
 node --check assets/runtime/page-runtime.js
@@ -510,6 +512,8 @@ node --check scripts/check-ops-gates.mjs
 node --check scripts/test-ops-gates.mjs
 node --check scripts/check-api-exposure-gate.mjs
 node --check scripts/test-check-api-exposure-gate.mjs
+node --check scripts/check-api-production-readiness.mjs
+node --check scripts/test-check-api-production-readiness.mjs
 node --check scripts/check-private-recovery-inventory.mjs
 node --check scripts/test-private-recovery-inventory.mjs
 node --check scripts/promote-recovery-witness.mjs
@@ -544,11 +548,14 @@ node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
 node scripts/check-api-exposure-gate.mjs
 node scripts/test-check-api-exposure-gate.mjs
+node scripts/check-api-production-readiness.mjs
+node scripts/test-check-api-production-readiness.mjs
 node scripts/check-private-recovery-inventory.mjs --allow-missing
 node scripts/test-private-recovery-inventory.mjs
 node scripts/test-promote-recovery-witness.mjs
 node scripts/check-api-exposure-gate.mjs --expect-blocked
 node scripts/test-check-api-exposure-gate.mjs
+node scripts/check-api-production-readiness.mjs --expect-blocked
 ```
 
 ## Local preview
@@ -562,15 +569,15 @@ python3 -m http.server 8080 --directory dist
 ## Validation
 
 GitHub CI runs the same unified checkpoint used locally, plus explicit
-stage-lock checks for API exposure, domain hardening, and private recovery
-inventory boundaries. Do not re-expand the workflow into a separate manual gate
-list; update `scripts/validate-checkpoint.mjs` instead.
+stage-lock checks for API exposure, API production readiness, domain hardening,
+and private recovery inventory boundaries. Do not re-expand the workflow into a
+separate manual gate list; update `scripts/validate-checkpoint.mjs` instead.
 
 ```bash
 node scripts/validate-checkpoint.mjs
 node scripts/validate-checkpoint.mjs --backend
 # optional aliases: npm run checkpoint, npm run checkpoint:backend, npm run scaffold:product, npm run test:scaffold-product
-# optional gates: npm run validate:api-exposure, npm run test:api-exposure, npm run validate:domain-hardening, npm run test:domain-hardening, npm run validate:private-recovery, npm run test:private-recovery, npm run validate:ops, npm run test:ops
+# optional gates: npm run validate:api-exposure, npm run test:api-exposure, npm run validate:api-production, npm run test:api-production, npm run validate:domain-hardening, npm run test:domain-hardening, npm run validate:private-recovery, npm run test:private-recovery, npm run validate:ops, npm run test:ops
 # PowerShell fallback: npm.cmd run checkpoint
 node --check assets/app.js
 node --check assets/runtime/page-runtime.js
@@ -628,6 +635,8 @@ node --check scripts/check-www-canonical-redirect-gate.mjs
 node --check scripts/test-www-canonical-redirect-gate.mjs
 node --check scripts/check-api-exposure-gate.mjs
 node --check scripts/test-check-api-exposure-gate.mjs
+node --check scripts/check-api-production-readiness.mjs
+node --check scripts/test-check-api-production-readiness.mjs
 node scripts/validate-architecture-boundaries.mjs
 node scripts/test-validate-architecture-boundaries.mjs
 node scripts/test-validate-checkpoint.mjs
@@ -659,6 +668,9 @@ node scripts/check-private-recovery-inventory.mjs --allow-missing
 node scripts/test-private-recovery-inventory.mjs
 node scripts/check-api-exposure-gate.mjs --expect-blocked
 node scripts/test-check-api-exposure-gate.mjs
+node scripts/check-api-production-readiness.mjs
+node scripts/test-check-api-production-readiness.mjs
+node scripts/check-api-production-readiness.mjs --expect-blocked
 ```
 
 The validation scripts check required files, Cloudflare Pages `_headers` and

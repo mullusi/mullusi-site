@@ -38,5 +38,8 @@ jobs:
       - name: Confirm API exposure remains blocked
         run: node scripts/check-api-exposure-gate.mjs --expect-blocked
 
+      - name: Confirm API production readiness remains blocked
+        run: node scripts/check-api-production-readiness.mjs --expect-blocked
+
       - name: Allow missing private recovery inventory in CI
         run: node scripts/check-private-recovery-inventory.mjs --allow-missing
