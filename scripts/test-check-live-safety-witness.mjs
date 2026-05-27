@@ -53,8 +53,54 @@ function createFixture(files = {}) {
       "verdict=CloudflareOriginCandidate",
       "proof_state=Pass",
       "target=https://mullusi.com/",
+      "final_url=https://mullusi.com/",
+      "status=200",
+      "redirect_count=0",
+      "first_redirect_status=",
+      "first_redirect_url=",
+      "server=cloudflare",
+      "github_request=",
+      "fastly_request=",
+      "served_by=",
+      "via=",
+      "",
       "target=https://www.mullusi.com/",
+      "final_url=https://mullusi.com/",
+      "status=200",
+      "redirect_count=1",
+      "first_redirect_status=301",
+      "first_redirect_url=https://mullusi.com/",
+      "server=cloudflare",
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
+      "github_request=",
+      "fastly_request=",
+      "served_by=",
+      "via=",
+      "",
+      "target=https://www.mullusi.com/proof/?gate=www-canonical",
+      "final_url=https://mullusi.com/proof/?gate=www-canonical",
+      "status=200",
+      "redirect_count=1",
+      "first_redirect_status=301",
+      "first_redirect_url=https://mullusi.com/proof/?gate=www-canonical",
+      "server=cloudflare",
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
+      "github_request=",
+      "fastly_request=",
+      "served_by=",
+      "via=",
+      "",
       "target=https://mullusi.com/.well-known/security.txt",
+      "final_url=https://mullusi.com/.well-known/security.txt",
+      "status=200",
+      "redirect_count=0",
+      "first_redirect_status=",
+      "first_redirect_url=",
+      "server=cloudflare",
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
       "github_request=",
       "fastly_request=",
       "served_by=",
@@ -116,6 +162,7 @@ function createFixture(files = {}) {
       "governed_file_count=7",
       "finding=none",
       "local_finding=none",
+      "accepted_finding=none",
       "raw_response_bodies=not_recorded",
       "raw_response_headers=not_recorded",
     ].join("\n"),
@@ -213,6 +260,7 @@ function testBoundaryViolationBlocks() {
       "proof_state=Pass",
       "target=https://mullusi.com/",
       "target=https://www.mullusi.com/",
+      "target=https://www.mullusi.com/proof/?gate=www-canonical",
       "target=https://mullusi.com/.well-known/security.txt",
       "github_request=",
       "fastly_request=",
@@ -226,6 +274,72 @@ function testBoundaryViolationBlocks() {
   assert.equal(result.verdict, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.ok(result.findings.some((finding) => finding.startsWith("artifact_boundary_invalid:website-origin.txt")));
+}
+
+function testWebsiteOriginMissingPathQueryRedirectBlocks() {
+  const fixtureDirectory = createFixture({
+    "website-origin.txt": [
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
+      "target=https://mullusi.com/",
+      "target=https://www.mullusi.com/",
+      "final_url=https://mullusi.com/",
+      "status=200",
+      "redirect_count=1",
+      "first_redirect_status=301",
+      "first_redirect_url=https://mullusi.com/",
+      "target=https://mullusi.com/.well-known/security.txt",
+      "github_request=",
+      "fastly_request=",
+      "served_by=",
+      "via=",
+    ].join("\n"),
+  });
+  const result = evaluateLiveSafetyWitnessArtifact(fixtureDirectory);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.ok(result.findings.includes("artifact_term_missing:website-origin.txt:target=https://www.mullusi.com/proof/?gate=www-canonical"));
+  assert.ok(result.findings.includes("artifact_witness_block_count_invalid:website-origin.txt:https://www.mullusi.com/proof/?gate=www-canonical:0"));
+}
+
+function testWebsiteOriginPendingWwwRedirectBlocks() {
+  const fixtureDirectory = createFixture({
+    "website-origin.txt": [
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
+      "target=https://mullusi.com/",
+      "target=https://www.mullusi.com/",
+      "final_url=https://www.mullusi.com/",
+      "status=200",
+      "redirect_count=0",
+      "first_redirect_status=",
+      "first_redirect_url=",
+      "verdict=CanonicalRedirectPending",
+      "proof_state=Unknown",
+      "",
+      "target=https://www.mullusi.com/proof/?gate=www-canonical",
+      "final_url=https://mullusi.com/proof/?gate=www-canonical",
+      "status=200",
+      "redirect_count=1",
+      "first_redirect_status=301",
+      "first_redirect_url=https://mullusi.com/proof/?gate=www-canonical",
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
+      "target=https://mullusi.com/.well-known/security.txt",
+      "github_request=",
+      "fastly_request=",
+      "served_by=",
+      "via=",
+    ].join("\n"),
+  });
+  const result = evaluateLiveSafetyWitnessArtifact(fixtureDirectory);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.ok(result.findings.includes("artifact_witness_value_invalid:website-origin.txt:https://www.mullusi.com/:final_url:https://www.mullusi.com/"));
+  assert.ok(result.findings.includes("artifact_witness_value_invalid:website-origin.txt:https://www.mullusi.com/:redirect_count:0"));
+  assert.ok(result.findings.includes("artifact_website_origin_redirect_pending"));
 }
 
 function testCliRejectsUnsupportedArgument() {
@@ -242,5 +356,7 @@ testDeploymentIntegrityEvidenceErrorIsAllowed();
 testMissingArtifactFileBlocks();
 testFailedProbeBlocks();
 testBoundaryViolationBlocks();
+testWebsiteOriginMissingPathQueryRedirectBlocks();
+testWebsiteOriginPendingWwwRedirectBlocks();
 testCliRejectsUnsupportedArgument();
 console.log("live safety witness artifact tests passed");

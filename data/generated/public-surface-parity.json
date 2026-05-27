@@ -1,5 +1,4 @@
 {
-  "legacySource": "internal compatibility projection",
   "manualSource": "data/manual/public-surfaces.json",
   "matchedSections": [
     {
@@ -21,11 +20,11 @@
   ],
   "meta": {
     "artifact": "data/generated/public-surface-parity.json",
-    "content_hash": "sha256:ab7a787a974b8ed31279f130aa2faebf0aec9764c4ad81a31a6171c50e3ad824",
+    "content_hash": "sha256:fb9b60864b0593b16ad71a842ce61c89a32833f0154a280f1ca57a72174e74d2",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Public Surface Parity Witness",
-    "purpose": "Generated from manual public-surface registry and generated compatibility projection. Do not edit by hand.",
-    "source": "data/manual/public-surfaces.json + internal compatibility projection"
+    "purpose": "Generated from manual public-surface registry. Do not edit by hand.",
+    "source": "data/manual/public-surfaces.json"
   },
   "mismatches": [],
   "parityState": "matched",
@@ -34,5 +33,6 @@
     "systems",
     "futureDomains",
     "privateIncubation"
-  ]
+  ],
+  "sourceBoundary": "manual-public-surface-registry"
 }

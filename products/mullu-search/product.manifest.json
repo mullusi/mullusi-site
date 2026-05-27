@@ -58,7 +58,7 @@
     ]
   },
   "presentation": {
-    "compatibilityRegistry": true,
+    "homepageRegistry": true,
     "displayOrder": 2,
     "classification": "public product later",
     "registryStatus": "private-incubation",

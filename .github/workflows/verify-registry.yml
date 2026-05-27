@@ -1,6 +1,6 @@
 # Purpose: verify Mullusi public registry source-boundary rules.
-# Governance scope: data/products.json public surface URLs, private-source state,
-# future-domain boundaries, and repo disclosure prevention.
+# Governance scope: manual public surfaces, manifest-generated homepage products,
+# private-source state, future-domain boundaries, and repo disclosure prevention.
 # Dependencies: GitHub Actions and Node.js.
 # Invariants: registry records must not expose private repository slugs or GitHub source links.
 
@@ -12,10 +12,20 @@ on:
   workflow_dispatch: {}
   push:
     branches: ["main"]
-    paths: ["data/products.json"]
+    paths:
+      - "data/manual/public-surfaces.json"
+      - "data/generated/homepage-product-registry.json"
+      - "products/**/product.manifest.json"
+      - "scripts/verify-registry-repos.mjs"
+      - ".github/workflows/verify-registry.yml"
   pull_request:
     branches: ["main"]
-    paths: ["data/products.json"]
+    paths:
+      - "data/manual/public-surfaces.json"
+      - "data/generated/homepage-product-registry.json"
+      - "products/**/product.manifest.json"
+      - "scripts/verify-registry-repos.mjs"
+      - ".github/workflows/verify-registry.yml"
 
 permissions:
   contents: read

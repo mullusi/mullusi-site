@@ -105,15 +105,15 @@ external_probe_max_nodes=
 external_probe_error=
 ```
 
-Scheduled external regional probe observed on 2026-05-24 after the Globalping monitor switch:
+Scheduled external regional probe observed on 2026-05-25 after the Globalping monitor switch:
 
 ```text
 command=node scripts/check-public-visibility.mjs --external-globalping --allow-pending
 external_probe_provider=globalping.io
 external_probe_api=https://globalping.io/docs/api.globalping.io
 external_probe_target=https://mullusi.com/
-external_probe_request_id=2CXty1Uxi2Kccoh6300020SAC
-external_probe_permanent_link=https://globalping.io?measurement=2CXty1Uxi2Kccoh6300020SAC
+external_probe_request_id=2u8atPXdEl1b2TZwC00020SV5
+external_probe_permanent_link=https://globalping.io?measurement=2u8atPXdEl1b2TZwC00020SV5
 external_probe_error=
 external_multi_region_visibility=SolvedVerified
 external_regional_probe_floor=2
@@ -122,9 +122,9 @@ external_distinct_region_passes=2
 persistent_regional_monitoring=Pass
 monitor_workflow=.github/workflows/live-safety.yml
 external_finding=none
-external_node=globalping:DE:Falkenstein
-external_country=DE
-external_city=Falkenstein
+external_node=globalping:FI:Helsinki
+external_country=FI
+external_city=Helsinki
 external_passed=true
 external_status=200
 external_node=globalping:US:Buffalo

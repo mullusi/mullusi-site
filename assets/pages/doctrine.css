@@ -7,28 +7,28 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
 :root {
       color-scheme: dark;
-      --bg: #070806;
-      --panel: #10120d;
-      --line: #283124;
-      --text: #ece7d8;
-      --muted: #aaa38f;
-      --gold: #d6ad48;
-      --green: #54c99a;
-      --red: #ff7b72;
-      --nav-bg: rgba(7, 8, 6, 0.88);
+      --bg: #050609;
+      --panel: #0d1018;
+      --line: #272d40;
+      --text: #e9eaef;
+      --muted: #99a0b4;
+      --gold: #5ce6c4;
+      --green: #e8b15c;
+      --red: #ff6f91;
+      --nav-bg: rgba(5, 6, 9, 0.88);
     }
 
     :root[data-theme="light"] {
       color-scheme: light;
-      --bg: #f4f1e6;
-      --panel: #fbf8ee;
-      --line: #d6cdb5;
-      --text: #1b1d15;
-      --muted: #5d5847;
-      --gold: #8a6914;
-      --green: #1f7d56;
-      --red: #b3262c;
-      --nav-bg: rgba(244, 241, 230, 0.86);
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --line: #d8e0ea;
+      --text: #111827;
+      --muted: #455366;
+      --gold: #0f766e;
+      --green: #b45309;
+      --red: #aa2449;
+      --nav-bg: rgba(247, 248, 251, 0.86);
     }
 
     * { box-sizing: border-box; }
@@ -50,7 +50,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       z-index: 5;
       padding: 10px 16px;
       background: var(--gold);
-      color: #121006;
+      color: #050609;
       font-size: 13px;
       text-decoration: none;
       transform: translateY(-200%);
@@ -137,13 +137,13 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
     h1 {
       max-width: 960px;
-      font-size: clamp(42px, 8vw, 96px);
+      font-size: 76px;
       letter-spacing: 0;
     }
 
     h2 {
       margin-bottom: 20px;
-      font-size: clamp(28px, 5vw, 52px);
+      font-size: 40px;
       letter-spacing: 0;
     }
 
@@ -183,7 +183,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     .button.primary {
       border-color: var(--gold);
       background: var(--gold);
-      color: #121006;
+      color: #050609;
       font-weight: 700;
     }
 
@@ -309,5 +309,13 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       .proof-grid,
       .threat-grid {
         grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 48px;
+      }
+
+      h2 {
+        font-size: 32px;
       }
     }

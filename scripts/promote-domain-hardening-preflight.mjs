@@ -12,7 +12,6 @@ import { fileURLToPath } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
-const preflightPath = path.join(repoRoot, "ops", "domain-security-preflight.md");
 
 const confirmationFlags = [
   {
@@ -85,9 +84,11 @@ const permissionRules = [
 ];
 
 const rawArgs = process.argv.slice(2);
-const args = new Set(rawArgs.filter((arg) => !arg.startsWith("--date=")));
+const args = new Set(rawArgs.filter((arg) => !arg.startsWith("--date=") && !arg.startsWith("--path=")));
 const dateArg = rawArgs.find((arg) => arg.startsWith("--date="));
+const pathArg = rawArgs.find((arg) => arg.startsWith("--path="));
 const reviewDate = dateArg ? dateArg.slice("--date=".length) : new Date().toISOString().slice(0, 10);
+const preflightPath = path.resolve(repoRoot, pathArg ? pathArg.slice("--path=".length) : "ops/domain-security-preflight.md");
 const writeMode = args.has("--write");
 const helpMode = args.has("--help") || args.has("-h");
 const failures = [];
@@ -96,7 +97,7 @@ const hasEvidencePromotion = confirmationFlags.some((item) => args.has(item.flag
 function usage() {
   return [
     "Usage:",
-    "  node scripts/promote-domain-hardening-preflight.mjs [confirmation flags] [--date=YYYY-MM-DD] [--write]",
+    "  node scripts/promote-domain-hardening-preflight.mjs [confirmation flags] [--date=YYYY-MM-DD] [--path=FILE] [--write]",
     "",
     "Confirmation flags:",
     ...confirmationFlags.map((item) => `  ${item.flag}  ${item.description}`),
@@ -192,6 +193,7 @@ function runPreflightCheck(mode) {
   return spawnSync(process.execPath, [
     path.join(repoRoot, "scripts", "check-domain-hardening-preflight.mjs"),
     mode,
+    `--path=${preflightPath}`,
   ], {
     cwd: repoRoot,
     encoding: "utf8",

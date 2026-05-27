@@ -1,0 +1,33 @@
+{
+  "name": "mullusi-website",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Mullusi public website validation and platform registry tooling.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build:cloudflare": "node scripts/build-cloudflare-pages.mjs",
+    "checkpoint": "node scripts/validate-checkpoint.mjs",
+    "checkpoint:backend": "node scripts/validate-checkpoint.mjs --backend",
+    "generate:check": "node scripts/generate-platform.mjs --check",
+    "generate:platform": "node scripts/generate-platform.mjs",
+    "scaffold:product": "node scripts/scaffold-product.mjs",
+    "test:api-exposure": "node scripts/test-check-api-exposure-gate.mjs",
+    "test:architecture": "node scripts/test-validate-architecture-boundaries.mjs",
+    "test:checkpoint": "node scripts/test-validate-checkpoint.mjs",
+    "test:domain-hardening": "node scripts/test-check-domain-hardening-preflight.mjs",
+    "test:ops": "node scripts/test-ops-gates.mjs",
+    "test:private-recovery": "node scripts/test-private-recovery-inventory.mjs",
+    "test:scaffold-product": "node scripts/test-scaffold-product.mjs",
+    "validate": "node scripts/validate-checkpoint.mjs",
+    "validate:api-exposure": "node scripts/check-api-exposure-gate.mjs",
+    "validate:architecture": "node scripts/validate-architecture-boundaries.mjs",
+    "validate:domain-hardening": "node scripts/check-domain-hardening-preflight.mjs",
+    "validate:manifests": "node scripts/validate-manifests.mjs",
+    "validate:ops": "node scripts/check-ops-gates.mjs",
+    "validate:private-recovery": "node scripts/check-private-recovery-inventory.mjs --allow-missing",
+    "validate:runtime": "node scripts/validate-runtime-witnesses.mjs",
+    "validate:site": "node scripts/validate-site.mjs"
+  }
+}

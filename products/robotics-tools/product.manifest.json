@@ -60,7 +60,7 @@
     ]
   },
   "presentation": {
-    "compatibilityRegistry": true,
+    "homepageRegistry": true,
     "displayOrder": 9,
     "classification": "internal tool",
     "registryStatus": "planned",

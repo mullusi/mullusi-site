@@ -60,7 +60,7 @@
     ]
   },
   "presentation": {
-    "compatibilityRegistry": true,
+    "homepageRegistry": true,
     "displayOrder": 4,
     "classification": "API service",
     "registryStatus": "planned",

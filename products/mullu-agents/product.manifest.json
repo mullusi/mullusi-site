@@ -60,7 +60,7 @@
     ]
   },
   "presentation": {
-    "compatibilityRegistry": true,
+    "homepageRegistry": true,
     "displayOrder": 3,
     "classification": "API service",
     "registryStatus": "private-incubation",

@@ -2,7 +2,7 @@
 <!--
 Purpose: public Mullusi landing page with governed product, service, public-surface, and science-engine surfaces.
 Governance scope: public claims, route boundaries, public surface registry, evidence plane, and visual substrate.
-Dependencies: assets/styles.css, assets/registry/homepage-registry.js, assets/render/site-content.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, assets/app.js, data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, Mullusi icons, and public Mullusi domains.
+Dependencies: assets/styles.css, assets/runtime/page-runtime.js, assets/runtime/preference-runtime.js, assets/runtime/substrate-runtime.js, assets/runtime/homepage-lifecycle-plan.js, assets/runtime/homepage-controller.js, assets/registry/homepage-registry.js, assets/render/site-content.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, assets/render/news-activity.js, assets/runtime/homepage-context.js, assets/app.js, data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, Mullusi icons, and public Mullusi domains.
 Invariants: no private repository claims, no silent content failure, all dynamic public records load from structured JSON.
 -->
 <html lang="en" translate="no">
@@ -13,13 +13,13 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <meta name="theme-color" content="#050609" />
   <title>Mullusi - governed platform and product ecosystem</title>
   <meta name="description" content="Mullusi is a company, governed platform, and product ecosystem. The website is the public map for products, routes, evidence, and release gates." />
-  <link rel="canonical" href="https://mullusi.com" />
+  <link rel="canonical" href="https://mullusi.com/" />
   <meta property="og:site_name" content="Mullusi" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Mullusi - governed platform and product ecosystem" />
   <meta property="og:description" content="Company, control plane, product services, public surfaces, evidence, and release gates in one governed map." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://mullusi.com" />
+  <meta property="og:url" content="https://mullusi.com/" />
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
   <meta property="og:image:width" content="512" />
   <meta property="og:image:height" content="512" />
@@ -34,7 +34,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <link rel="manifest" href="site.webmanifest" />
   <script src="/assets/theme-bootstrap.js"></script>
   <script src="/assets/lang-bootstrap.js"></script>
-  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.22" />
+  <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.29" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -59,11 +59,18 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       ]
     }
   </script>
-  <script defer src="assets/registry/homepage-registry.js?v=2026.05.platform.22"></script>
-  <script defer src="assets/render/site-content.js?v=2026.05.platform.22"></script>
-  <script defer src="assets/render/public-surface-registry.js?v=2026.05.platform.22"></script>
-  <script defer src="assets/render/product-registry.js?v=2026.05.platform.22"></script>
-  <script defer src="assets/app.js?v=2026.05.platform.22"></script>
+  <script defer src="assets/runtime/page-runtime.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/runtime/preference-runtime.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/runtime/substrate-runtime.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/runtime/homepage-lifecycle-plan.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/runtime/homepage-controller.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/registry/homepage-registry.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/render/site-content.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/render/public-surface-registry.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/render/product-registry.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/render/news-activity.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/runtime/homepage-context.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/app.js?v=2026.05.platform.29"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">

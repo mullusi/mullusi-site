@@ -209,6 +209,7 @@ function parseJsonBody(body, label, hardFindings) {
 export function evaluateDeploymentIntegrityEvidence(evidence) {
   const hardFindings = [];
   const softFindings = [];
+  const acceptedFindings = [];
   const liveStatusCode = evidence.liveStatusResponse?.statusCode ?? 0;
   const liveStatusBody = evidence.liveStatusResponse?.body ?? "";
   if (liveStatusCode < 200 || liveStatusCode >= 300) {
@@ -249,16 +250,24 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
     if (response.finalUrl && response.finalUrl !== expectedFinalUrl) {
       hardFindings.push(`live_file_final_url_mismatch:${relativePath}`);
     }
+    const responseBody = response.body ?? "";
+    const edgeTransformFinding = `live_html_edge_transform_observed:${relativePath}`;
+    const edgeTransformUnverifiedFinding = `live_html_edge_transform_unverified:${relativePath}`;
+    const edgeTransformSeen = relativePath === "index.html" && hasKnownCloudflareHtmlTransform(responseBody);
     try {
-      const actualHash = publicFileContentHash(relativePath, response.body ?? "");
+      const actualHash = publicFileContentHash(relativePath, responseBody);
       if (actualHash !== liveHashes[relativePath]) {
-        if (relativePath === "index.html" && hasKnownCloudflareHtmlTransform(response.body ?? "")) {
-          softFindings.push(`live_html_edge_transform_observed:${relativePath}`);
-        } else {
-          hardFindings.push(`live_content_hash_mismatch:${relativePath}`);
+        if (edgeTransformSeen && !hardFindings.includes(edgeTransformUnverifiedFinding)) {
+          hardFindings.push(edgeTransformUnverifiedFinding);
         }
+        hardFindings.push(`live_content_hash_mismatch:${relativePath}`);
+      } else if (edgeTransformSeen && !acceptedFindings.includes(edgeTransformFinding)) {
+        acceptedFindings.push(edgeTransformFinding);
       }
     } catch {
+      if (edgeTransformSeen && !hardFindings.includes(edgeTransformUnverifiedFinding)) {
+        hardFindings.push(edgeTransformUnverifiedFinding);
+      }
       hardFindings.push(`live_content_hash_unreadable:${relativePath}`);
     }
   }
@@ -299,24 +308,26 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
 
   const hasHardFindings = hardFindings.length > 0;
   const hasSoftFindings = softFindings.length > 0;
+  const hasUnverifiedEdgeTransform = hardFindings.some((finding) => finding.startsWith("live_html_edge_transform_unverified:"));
+  const hasAcceptedFindings = acceptedFindings.length > 0;
   const localManifestMismatch = softFindings.includes("local_status_manifest_mismatch");
-  const edgeTransformObserved = softFindings.some((finding) => finding.startsWith("live_html_edge_transform_observed:"));
   return {
-    verdict: hasHardFindings ? "GovernanceBlocked" : hasSoftFindings ? "AwaitingEvidence" : "SolvedVerified",
+    verdict: hasHardFindings ? "GovernanceBlocked" : hasSoftFindings ? "AwaitingEvidence" : hasAcceptedFindings ? "SolvedUnverified" : "SolvedVerified",
     proofState: hasHardFindings ? "Fail" : hasSoftFindings ? "Unknown" : "Pass",
-    liveDeploymentIntegrityState: hasHardFindings ? "GovernanceBlocked" : hasSoftFindings ? "AwaitingEvidence" : "SolvedVerified",
+    liveDeploymentIntegrityState: hasHardFindings ? "GovernanceBlocked" : hasSoftFindings ? "AwaitingEvidence" : hasAcceptedFindings ? "SolvedUnverified" : "SolvedVerified",
     liveStatusManifest: hasHardFindings ? "Fail" : "Pass",
     liveContentHashes: hardFindings.some((finding) => finding.startsWith("live_content_hash_") || finding.startsWith("live_file_"))
       ? "Fail"
       : "Pass",
     localStatusManifestMatch: localManifestMismatch ? "AwaitingEvidence" : "Pass",
-    edgeHtmlTransform: edgeTransformObserved ? "AwaitingEvidence" : "Pass",
+    edgeHtmlTransform: hasUnverifiedEdgeTransform ? "Fail" : hasAcceptedFindings ? "AcceptedBoundary" : "Pass",
     routeSentinels: routeSentinelResults.every((record) => record.passed) ? "Pass" : "Fail",
     governedFileCount: liveHashPaths.length,
     routeSentinelCount: routeSentinelResults.length,
     routeSentinelResults,
     hardFindings,
     softFindings,
+    acceptedFindings,
   };
 }
 
@@ -338,12 +349,19 @@ async function collectLiveEvidence() {
 }
 
 export function formatResult(result) {
-  const findingLines = result.hardFindings.length > 0
-    ? result.hardFindings.map((finding) => `finding=${finding}`)
+  const hardFindings = Array.isArray(result.hardFindings) ? result.hardFindings : [];
+  const softFindings = Array.isArray(result.softFindings) ? result.softFindings : [];
+  const acceptedFindings = Array.isArray(result.acceptedFindings) ? result.acceptedFindings : [];
+  const routeSentinelResults = Array.isArray(result.routeSentinelResults) ? result.routeSentinelResults : [];
+  const findingLines = hardFindings.length > 0
+    ? hardFindings.map((finding) => `finding=${finding}`)
     : ["finding=none"];
-  const localFindingLines = result.softFindings.length > 0
-    ? result.softFindings.map((finding) => `local_finding=${finding}`)
+  const localFindingLines = softFindings.length > 0
+    ? softFindings.map((finding) => `local_finding=${finding}`)
     : ["local_finding=none"];
+  const acceptedFindingLines = acceptedFindings.length > 0
+    ? acceptedFindings.map((finding) => `accepted_finding=${finding}`)
+    : ["accepted_finding=none"];
   return [
     `verdict=${result.verdict}`,
     `proof_state=${result.proofState}`,
@@ -355,9 +373,10 @@ export function formatResult(result) {
     `route_sentinels=${result.routeSentinels}`,
     `governed_file_count=${result.governedFileCount}`,
     `route_sentinel_count=${result.routeSentinelCount}`,
-    ...result.routeSentinelResults.map((record) => `route_sentinel=${record.id}:${record.passed ? "Pass" : "Fail"}:${record.statusCode}`),
+    ...routeSentinelResults.map((record) => `route_sentinel=${record.id}:${record.passed ? "Pass" : "Fail"}:${record.statusCode}`),
     ...findingLines,
     ...localFindingLines,
+    ...acceptedFindingLines,
     "raw_response_bodies=not_recorded",
     "raw_response_headers=not_recorded",
   ].join("\n");

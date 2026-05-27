@@ -1,6 +1,6 @@
 /*
 Purpose: render Mullusi public-surface registry views from governed registry and site-content state.
-Governance scope: public surface filters, public surface cards, staged domain cards, metrics, and snapshot counters.
+Governance scope: public surface filters, public surface cards, staged domain cards, registry error surfaces, metrics, and snapshot counters.
 Dependencies: assets/app.js context helpers, data/manual/public-surfaces.json records, generated homepage product registry records, and browser DOM APIs.
 Invariants: registry text is escaped, external links are bounded by upstream registry validation, filtering is explicit, and no registry data is fetched here.
 */
@@ -210,6 +210,19 @@ Invariants: registry text is escaped, external links are bounded by upstream reg
     revealRendered(target);
   }
 
+  function renderRegistryLoadError(context) {
+    const { escapeHtml, i18nText, qs, revealRendered } = context;
+    const target = qs("[data-repo-grid]");
+    if (!target) return;
+    target.innerHTML = `
+      <article class="repo-card error-card">
+        <div class="repo-card-head"><h3>${escapeHtml(i18nText("repo.errorTitle") || "Product registry unavailable")}</h3></div>
+        <p>${escapeHtml(i18nText("repo.errorBody") || "The static product registry did not load. Confirm the registry is deployed beside this page.")}</p>
+      </article>
+    `;
+    revealRendered(target);
+  }
+
   function bindSearch(context) {
     const { qs, state } = context;
     const input = qs("[data-repo-search]");
@@ -225,6 +238,7 @@ Invariants: registry text is escaped, external links are bounded by upstream reg
     filteredProducts,
     renderFilters,
     renderFutureDomains,
+    renderRegistryLoadError,
     renderMetrics,
     renderRepoGrid,
     renderSnapshot,

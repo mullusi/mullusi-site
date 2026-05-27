@@ -7,12 +7,12 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
 :root {
       color-scheme: dark;
-      --bg: #070806;
-      --panel: #11130f;
-      --line: #272d22;
-      --ink: #f2f3ec;
-      --muted: #a9b09f;
-      --accent: #8ff0c0;
+      --bg: #050609;
+      --panel: #0d1018;
+      --line: #272d40;
+      --ink: #e9eaef;
+      --muted: #99a0b4;
+      --accent: #5ce6c4;
       --warm: #e8b15c;
       --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
       --serif: Georgia, "Times New Roman", serif;
@@ -32,7 +32,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       left: 1rem;
       transform: translateY(-200%);
       background: var(--accent);
-      color: #07100b;
+      color: #050609;
       padding: 0.75rem 1rem;
       z-index: 10;
     }
@@ -80,9 +80,9 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     h1 {
       max-width: 12ch;
       margin-top: 16px;
-      font-size: clamp(46px, 8vw, 92px);
+      font-size: 72px;
     }
-    h2 { font-size: clamp(28px, 4vw, 44px); }
+    h2 { font-size: 36px; }
     h3 { font-size: 20px; }
     p { color: var(--muted); }
     .lede {
@@ -116,7 +116,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
     .button.primary {
       background: var(--accent);
-      color: #07100b;
+      color: #050609;
       font-weight: 700;
     }
     .intake {
@@ -148,4 +148,6 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       nav, footer { align-items: flex-start; flex-direction: column; }
       .grid, .intake ol { grid-template-columns: 1fr; }
       main { padding-top: 22px; }
+      h1 { font-size: 44px; }
+      h2 { font-size: 30px; }
     }

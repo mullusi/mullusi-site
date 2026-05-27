@@ -7,12 +7,12 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
 :root {
       color-scheme: dark;
-      --bg: #070806;
-      --panel: #11140f;
-      --line: #293124;
-      --ink: #f2f4ed;
-      --muted: #aab29f;
-      --accent: #8ff0c0;
+      --bg: #050609;
+      --panel: #0d1018;
+      --line: #272d40;
+      --ink: #e9eaef;
+      --muted: #99a0b4;
+      --accent: #5ce6c4;
       --warm: #e8b15c;
       --danger: #ff8aa8;
       --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -69,9 +69,9 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     h1 {
       max-width: 12ch;
       margin-top: 16px;
-      font-size: clamp(46px, 8vw, 92px);
+      font-size: 72px;
     }
-    h2 { font-size: clamp(28px, 4vw, 42px); }
+    h2 { font-size: 36px; }
     p { color: var(--muted); }
     .lede {
       max-width: 74ch;
@@ -160,5 +160,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     @media (max-width: 700px) {
       nav, footer { align-items: flex-start; flex-direction: column; }
       main { padding-top: 22px; }
+      h1 { font-size: 44px; }
+      h2 { font-size: 30px; }
       .witness table { display: block; overflow-x: auto; }
     }

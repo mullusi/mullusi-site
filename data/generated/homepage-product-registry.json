@@ -1,7 +1,7 @@
 {
   "manifestCandidates": [
     {
-      "compatibilityRegistry": false,
+      "homepageRegistry": false,
       "id": "mullu-browse",
       "manifestPath": "products/mullu-browse/product.manifest.json",
       "name": "Mullu Browse",
@@ -14,7 +14,7 @@
   ],
   "meta": {
     "artifact": "data/generated/homepage-product-registry.json",
-    "content_hash": "sha256:394c98de14412415fa39411df2241bdaa147613502cb4ce44dd8c5d357202d36",
+    "content_hash": "sha256:45f7c64ef020d9d44098929aba1e945164b8c0166bc5a049bb8b155ea5a698ba",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Homepage Product Registry",
     "purpose": "Generated homepage product registry from product manifests. Do not edit by hand.",

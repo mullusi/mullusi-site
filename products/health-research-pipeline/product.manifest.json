@@ -54,7 +54,7 @@
     ]
   },
   "presentation": {
-    "compatibilityRegistry": true,
+    "homepageRegistry": true,
     "displayOrder": 8,
     "classification": "private research product",
     "registryStatus": "restricted",

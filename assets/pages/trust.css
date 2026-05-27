@@ -7,13 +7,13 @@ Invariants: no secrets, no runtime proof claims, no JavaScript dependency, no in
 
 :root {
   color-scheme: dark;
-  --bg: #070806;
-  --panel: #11130f;
-  --panel-soft: #151913;
-  --line: #283022;
-  --ink: #f2f3ec;
-  --muted: #a9b09f;
-  --accent: #8ff0c0;
+  --bg: #050609;
+  --panel: #0d1018;
+  --panel-soft: #111521;
+  --line: #272d40;
+  --ink: #e9eaef;
+  --muted: #99a0b4;
+  --accent: #5ce6c4;
   --warm: #e8b15c;
   --warn: #f0d28f;
   --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -29,7 +29,7 @@ body {
   margin: 0;
   background:
     radial-gradient(circle at 12% 0%, rgba(143, 240, 192, 0.12), transparent 32%),
-    linear-gradient(180deg, #070806 0%, #0d100b 100%);
+    linear-gradient(180deg, #050609 0%, #0d1018 100%);
   color: var(--ink);
   font: 15px/1.65 var(--mono);
 }
@@ -45,7 +45,7 @@ a {
   z-index: 10;
   transform: translateY(-200%);
   background: var(--accent);
-  color: #07100b;
+  color: #050609;
   padding: 0.75rem 1rem;
 }
 
@@ -118,11 +118,11 @@ h3 {
 h1 {
   max-width: 13ch;
   margin-top: 16px;
-  font-size: clamp(44px, 8vw, 90px);
+  font-size: 72px;
 }
 
 h2 {
-  font-size: clamp(26px, 4vw, 42px);
+  font-size: 36px;
 }
 
 h3 {
@@ -171,7 +171,7 @@ code {
 
 .button.primary {
   background: var(--accent);
-  color: #07100b;
+  color: #050609;
   font-weight: 700;
 }
 
@@ -273,5 +273,13 @@ footer {
 
   main {
     padding-top: 22px;
+  }
+
+  h1 {
+    font-size: 44px;
+  }
+
+  h2 {
+    font-size: 30px;
   }
 }

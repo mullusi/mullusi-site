@@ -40,7 +40,7 @@ Invariants: content remains legible above the substrate, mobile layouts do not o
   --serif: Georgia, "Times New Roman", serif;
   --symbols: "Mullusi Symbols", "Noto Sans Symbols 2", "Segoe UI Symbol", "Cambria Math", var(--mono);
   --role-eyebrow-size: 11px;
-  --role-heading-size: clamp(28px, 3.2vw, 44px);
+  --role-heading-size: 40px;
   --role-subline-size: 14px;
   --role-plain-size: 13px;
   --role-card-title-size: 17px;
@@ -248,7 +248,7 @@ h3 {
   color: var(--ink);
   font-family: var(--serif);
   font-weight: 400;
-  letter-spacing: -0.012em;
+  letter-spacing: 0;
   line-height: 1.12;
 }
 
@@ -662,7 +662,7 @@ html.menu-open body {
   background: var(--panel-soft);
   color: var(--accent);
   font-family: var(--serif);
-  font-size: clamp(28px, 3.2vw, 52px);
+  font-size: 42px;
   line-height: 1;
   padding: 8px 14px 10px;
   box-shadow: 10px 10px 0 rgba(92, 230, 196, 0.08);
@@ -673,7 +673,7 @@ html.menu-open body {
   align-self: end;
   color: transparent;
   font-family: var(--mono);
-  font-size: clamp(124px, 18vw, 286px);
+  font-size: 144px;
   font-weight: 700;
   line-height: 0.74;
   background:
@@ -715,7 +715,7 @@ html.menu-open body {
   border: 1px solid rgba(232, 177, 92, 0.34);
   background: var(--panel-soft);
   color: var(--accent-warm);
-  font-size: clamp(13px, 1.2vw, 18px);
+  font-size: 16px;
   line-height: 1;
   padding: 7px 10px;
   text-transform: uppercase;
@@ -783,7 +783,7 @@ html.menu-open body {
 .hero h1 {
   max-width: 24ch;
   margin: 16px 0 22px;
-  font-size: clamp(30px, 4vw, 54px);
+  font-size: 46px;
   letter-spacing: 0;
   line-height: 1.08;
 }
@@ -913,13 +913,13 @@ html.menu-open body {
   }
 
   .hero-wordmark .latin-name {
-    font-size: clamp(108px, 14vw, 220px);
+    font-size: 190px;
   }
 
   .hero h1 {
     max-width: 22ch;
     margin: 10px 0 16px;
-    font-size: clamp(36px, 3.2vw, 50px);
+    font-size: 44px;
   }
 
   .hero .lead {
@@ -1884,7 +1884,7 @@ html.menu-open body {
 }
 
 .platform-build-copy h3 {
-  font-size: clamp(20px, 2.4vw, 31px);
+  font-size: 26px;
 }
 
 .platform-build-copy p {
@@ -3217,7 +3217,7 @@ html.menu-open body {
   .hero h1 {
     max-width: 100%;
     margin: 12px 0 16px;
-    font-size: clamp(31px, 8.8vw, 40px);
+    font-size: 34px;
     line-height: 1.05;
   }
 
@@ -3335,12 +3335,12 @@ html.menu-open body {
   }
 
   .hero-wordmark .fidel-name {
-    font-size: clamp(22px, 8vw, 34px);
+    font-size: 28px;
     padding: 7px 10px 8px;
   }
 
   .hero-wordmark .latin-name {
-    font-size: clamp(58px, 16vw, 84px);
+    font-size: 72px;
   }
 
   .hero-wordmark .latin-tag {

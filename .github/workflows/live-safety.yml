@@ -35,6 +35,35 @@ jobs:
       - name: Capture and validate live safety witness artifact
         run: node scripts/capture-live-safety-witness.mjs live-safety-witness
 
+      - name: Classify deployment integrity
+        run: |
+          deployment_summary="$(grep -E '^(verdict|proof_state|live_deployment_integrity_state|local_status_manifest_match|edge_html_transform|accepted_finding|finding|local_finding|error)=' live-safety-witness/deployment-integrity.txt | tr '\n' ' ')"
+          if grep -q "^live_deployment_integrity_state=SolvedVerified$" live-safety-witness/deployment-integrity.txt; then
+            echo "::notice title=Deployment integrity::${deployment_summary}"
+          elif grep -q "^live_deployment_integrity_state=SolvedUnverified$" live-safety-witness/deployment-integrity.txt && grep -q "^edge_html_transform=AcceptedBoundary$" live-safety-witness/deployment-integrity.txt; then
+            echo "::notice title=Deployment integrity accepted boundary::${deployment_summary}"
+          else
+            echo "::warning title=Deployment integrity AwaitingEvidence::${deployment_summary}"
+          fi
+
+      - name: Classify domain security
+        run: |
+          domain_summary="$(grep -E '^(verdict|proof_state|domain_security_state|caa_policy|spf_enforcement|dmarc_enforcement|known_google_dkim_selector|mta_sts|tls_rpt|finding)=' live-safety-witness/domain-security.txt | tr '\n' ' ')"
+          if grep -q "^domain_security_state=SolvedVerified$" live-safety-witness/domain-security.txt; then
+            echo "::notice title=Domain security::${domain_summary}"
+          else
+            echo "::warning title=Domain security AwaitingEvidence::${domain_summary}"
+          fi
+
+      - name: Classify domain hardening preflight
+        run: |
+          preflight_summary="$(grep -E '^(verdict|proof_state|domain_hardening_preflight|manual_caa_allowed|dkim_publication_allowed|spf_hardfail_allowed|dmarc_enforcement_allowed|mta_sts_enforce_allowed|tls_rpt_publication_allowed|finding)=' live-safety-witness/domain-hardening-preflight.txt | tr '\n' ' ')"
+          if grep -q "^domain_hardening_preflight=SolvedVerified$" live-safety-witness/domain-hardening-preflight.txt; then
+            echo "::notice title=Domain hardening preflight::${preflight_summary}"
+          else
+            echo "::notice title=Domain hardening preflight blocked::${preflight_summary}"
+          fi
+
       - name: Classify regional visibility
         run: |
           regional_summary="$(grep -E '^(verdict|proof_state|external_multi_region_visibility|external_finding|external_probe_error|error)=' live-safety-witness/regional-public-visibility.txt | tr '\n' ' ')"
