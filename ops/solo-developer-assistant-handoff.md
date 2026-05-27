@@ -70,6 +70,8 @@ npm run checkpoint
 npm run checkpoint:backend
 npm run validate:api-exposure
 npm run test:api-exposure
+npm run validate:api-production
+npm run test:api-production
 npm run validate:domain-hardening
 npm run test:domain-hardening
 npm run validate:security-txt
@@ -118,6 +120,8 @@ node --check scripts/check-ops-gates.mjs
 node --check scripts/test-ops-gates.mjs
 node --check scripts/check-api-exposure-gate.mjs
 node --check scripts/test-check-api-exposure-gate.mjs
+node --check scripts/check-api-production-readiness.mjs
+node --check scripts/test-check-api-production-readiness.mjs
 node --check scripts/check-domain-hardening-preflight.mjs
 node --check scripts/test-check-domain-hardening-preflight.mjs
 node --check scripts/check-private-recovery-inventory.mjs
@@ -135,6 +139,9 @@ node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
 node scripts/check-api-exposure-gate.mjs
 node scripts/test-check-api-exposure-gate.mjs
+node scripts/check-api-production-readiness.mjs
+node scripts/test-check-api-production-readiness.mjs
+node scripts/check-api-production-readiness.mjs --expect-blocked
 node scripts/check-domain-hardening-preflight.mjs
 node scripts/test-check-domain-hardening-preflight.mjs
 node scripts/check-private-recovery-inventory.mjs --allow-missing
@@ -170,6 +177,6 @@ Next:
 
 STATUS:
   Completeness: 100%
-  Invariants verified: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed API exposure gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
+  Invariants verified: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
   Open issues: recovery evidence remains blocked by design until private inventory and live evidence close
   Next action: keep this file updated when new public surfaces or validation gates are added

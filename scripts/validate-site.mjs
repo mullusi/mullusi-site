@@ -189,6 +189,8 @@ const requiredFiles = [
   "scripts/test-private-recovery-inventory.mjs",
   "scripts/check-api-exposure-gate.mjs",
   "scripts/test-check-api-exposure-gate.mjs",
+  "scripts/check-api-production-readiness.mjs",
+  "scripts/test-check-api-production-readiness.mjs",
 ];
 
 const allowedSystemStatuses = new Set(["active", "public", "live demo", "research", "deployed"]);
@@ -4708,6 +4710,8 @@ function validateRuntimeGateState() {
   const apiExposureWitness = readUtf8("ops/api-exposure-witness.md");
   const apiExposureChecker = readUtf8("scripts/check-api-exposure-gate.mjs");
   const apiExposureCheckerTest = readUtf8("scripts/test-check-api-exposure-gate.mjs");
+  const apiProductionChecker = readUtf8("scripts/check-api-production-readiness.mjs");
+  const apiProductionCheckerTest = readUtf8("scripts/test-check-api-production-readiness.mjs");
   const runtimeHostPath = readUtf8("ops/api-runtime-host-path.md");
   const infrastructureRoot = readUtf8("ops/MULLUSI_INFRASTRUCTURE_ROOT.md");
   const recoveryState = lineValue(recoveryWitness, "recovery_witness_state");
@@ -4765,6 +4769,34 @@ function validateRuntimeGateState() {
   ]) {
     if (!apiExposureCheckerTest.includes(term)) {
       recordFailure(`api_exposure_checker_test_term_missing:${term}`);
+    }
+  }
+  for (const term of [
+    "function evaluateApiProductionReadinessEvidence",
+    "recovery_witness_not_ready",
+    "manual_evidence_missing",
+    "runtime_witness_registry_has_no_closed_products",
+    "secret_values=not_recorded",
+    "private_recovery_values=not_read",
+    "--expect-blocked",
+    "--require-ready",
+  ]) {
+    if (!apiProductionChecker.includes(term)) {
+      recordFailure(`api_production_readiness_checker_term_missing:${term}`);
+    }
+  }
+  for (const term of [
+    "testReadyFixtureAllowsDns",
+    "testMissingManualEvidenceAwaitsEvidence",
+    "testRecoveryBlockDominatesReadiness",
+    "testBlockedRuntimeWitnessAwaitsEvidenceAfterRecovery",
+    "testSecretLikeValueBlocksContract",
+    "testCurrentCliDefaultsBlockedPublicSafely",
+    "testCurrentCliRequireReadyFailsClosed",
+    "testCurrentCliRejectsUnsupportedArgs",
+  ]) {
+    if (!apiProductionCheckerTest.includes(term)) {
+      recordFailure(`api_production_readiness_test_term_missing:${term}`);
     }
   }
   if (pathExists("backend/deploy/nginx/api.mullusi.com.conf")) {

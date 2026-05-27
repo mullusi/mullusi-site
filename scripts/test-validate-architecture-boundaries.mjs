@@ -47,6 +47,7 @@ function createFixture() {
       "run: node scripts/validate-checkpoint.mjs",
       "run: node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
       "run: node scripts/check-api-exposure-gate.mjs --expect-blocked",
+      "run: node scripts/check-api-production-readiness.mjs --expect-blocked",
       "run: node scripts/check-private-recovery-inventory.mjs --allow-missing",
     ].join("\n"),
   );
@@ -64,6 +65,7 @@ function createFixture() {
         "generate:platform": "node scripts/generate-platform.mjs",
         "scaffold:product": "node scripts/scaffold-product.mjs",
         "test:api-exposure": "node scripts/test-check-api-exposure-gate.mjs",
+        "test:api-production": "node scripts/test-check-api-production-readiness.mjs",
         "test:architecture": "node scripts/test-validate-architecture-boundaries.mjs",
         "test:checkpoint": "node scripts/test-validate-checkpoint.mjs",
         "test:domain-hardening": "node scripts/test-check-domain-hardening-preflight.mjs",
@@ -72,6 +74,7 @@ function createFixture() {
         "test:scaffold-product": "node scripts/test-scaffold-product.mjs",
         validate: "node scripts/validate-checkpoint.mjs",
         "validate:api-exposure": "node scripts/check-api-exposure-gate.mjs",
+        "validate:api-production": "node scripts/check-api-production-readiness.mjs",
         "validate:architecture": "node scripts/validate-architecture-boundaries.mjs",
         "validate:domain-hardening": "node scripts/check-domain-hardening-preflight.mjs",
         "validate:manifests": "node scripts/validate-manifests.mjs",
