@@ -19,6 +19,7 @@ const requiredArtifactFiles = [
   "regional-public-visibility.txt",
   "website-origin.txt",
   "security-headers.txt",
+  "security-txt.txt",
   "domain-security.txt",
   "domain-hardening-preflight.txt",
   "search-indexing-surface.txt",
@@ -206,6 +207,31 @@ function validateSecurityHeaders(findings, content) {
   }
 }
 
+function validateSecurityTxt(findings, content) {
+  const fileName = "security-txt.txt";
+  for (const line of [
+    "verdict=SolvedVerified",
+    "proof_state=Pass",
+    "security_txt_state=SolvedVerified",
+    "finding=none",
+    "raw_secret_values=not_read",
+  ]) {
+    requireLine(findings, fileName, content, line);
+  }
+  for (const term of [
+    "expires_at=",
+    "expires_days_remaining=",
+    "minimum_validity_days=30",
+    "maximum_validity_days=366",
+    "contact_count=2",
+    "policy_count=1",
+    "canonical_count=1",
+    "preferred_language_count=2",
+  ]) {
+    requireTerm(findings, fileName, content, term);
+  }
+}
+
 function validateDomainSecurity(findings, content) {
   const fileName = "domain-security.txt";
   const solved = hasLine(content, "verdict=SolvedVerified") && hasLine(content, "proof_state=Pass");
@@ -329,6 +355,7 @@ export function evaluateLiveSafetyWitnessArtifact(artifactDirectory) {
   if (files["regional-public-visibility.txt"]) validateRegionalPublicVisibility(findings, files["regional-public-visibility.txt"]);
   if (files["website-origin.txt"]) validateWebsiteOrigin(findings, files["website-origin.txt"]);
   if (files["security-headers.txt"]) validateSecurityHeaders(findings, files["security-headers.txt"]);
+  if (files["security-txt.txt"]) validateSecurityTxt(findings, files["security-txt.txt"]);
   if (files["domain-security.txt"]) validateDomainSecurity(findings, files["domain-security.txt"]);
   if (files["domain-hardening-preflight.txt"]) {
     validateDomainHardeningPreflight(findings, files["domain-hardening-preflight.txt"]);

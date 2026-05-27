@@ -14,7 +14,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       --muted: #99a0b4;
       --gold: #5ce6c4;
       --green: #e8b15c;
-      --violet: #9aa8ff;
+      --violet: #7dd3fc;
       --red: #ff6f91;
       --nav-bg: rgba(5, 6, 9, 0.88);
     }
@@ -28,14 +28,19 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       --muted: #455366;
       --gold: #0f766e;
       --green: #b45309;
-      --violet: #4f46e5;
+      --violet: #2563eb;
       --red: #aa2449;
       --nav-bg: rgba(247, 248, 251, 0.86);
     }
 
     * { box-sizing: border-box; }
+    html {
+      overflow-x: hidden;
+    }
+
     body {
       margin: 0;
+      overflow-x: hidden;
       background: var(--bg);
       color: var(--text);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
@@ -86,7 +91,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       left: 0;
       right: 0;
       z-index: 2;
-      border-bottom: 1px solid rgba(214, 173, 72, 0.18);
+      border-bottom: 1px solid rgba(92, 230, 196, 0.16);
       background: var(--nav-bg);
       backdrop-filter: blur(12px);
     }
@@ -125,7 +130,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       gap: 8px;
       min-height: 36px;
       padding: 0 12px;
-      border: 1px solid rgba(214, 173, 72, 0.3);
+      border: 1px solid rgba(92, 230, 196, 0.28);
       background: transparent;
       color: var(--muted);
       font: inherit;
@@ -204,7 +209,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
     section {
       padding: 64px 0;
-      border-top: 1px solid rgba(214, 173, 72, 0.16);
+      border-top: 1px solid rgba(92, 230, 196, 0.14);
     }
 
     h2 {
@@ -1347,4 +1352,75 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       footer { flex-direction: column; }
       h1 { font-size: 48px; }
       h2 { font-size: 32px; }
+    }
+
+    @media (max-width: 640px), (max-height: 620px) {
+      header,
+      main,
+      footer {
+        width: min(calc(100% - 24px), 1120px);
+      }
+
+      .nav-inner {
+        width: min(calc(100% - 24px), 1120px);
+        gap: 12px;
+      }
+
+      .brand {
+        letter-spacing: 0.14em;
+      }
+
+      header {
+        min-height: auto;
+        gap: 18px;
+        padding: 84px 0 42px;
+      }
+
+      h1 {
+        font-size: 40px;
+        line-height: 1.02;
+        overflow-wrap: anywhere;
+      }
+
+      h2 {
+        font-size: 28px;
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+      }
+
+      .lede {
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+
+      .button {
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+        padding: 0 10px;
+        font-size: 12px;
+        text-align: center;
+        white-space: normal;
+      }
+
+      .product-proof-head,
+      .proof-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .status-pill,
+      .proof-actions a,
+      .proof-actions span {
+        justify-content: center;
+        width: 100%;
+        white-space: normal;
+      }
     }

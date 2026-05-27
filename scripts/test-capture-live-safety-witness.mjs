@@ -108,6 +108,22 @@ const fixtureOutputs = {
     "header_permissions_policy=Pass",
     "raw_response_headers=not_recorded",
   ].join("\n"),
+  "security-txt.txt": [
+    "verdict=SolvedVerified",
+    "proof_state=Pass",
+    "security_txt_state=SolvedVerified",
+    "observed_at=2026-05-27",
+    "expires_at=2027-05-16T00:00:00.000Z",
+    "expires_days_remaining=354",
+    "minimum_validity_days=30",
+    "maximum_validity_days=366",
+    "contact_count=2",
+    "policy_count=1",
+    "canonical_count=1",
+    "preferred_language_count=2",
+    "finding=none",
+    "raw_secret_values=not_read",
+  ].join("\n"),
   "domain-security.txt": [
     "verdict=AwaitingEvidence",
     "proof_state=Unknown",
@@ -189,12 +205,13 @@ function fixtureRunner(probe) {
 function testProbePlanHasStableBoundary() {
   const plan = liveSafetyProbePlan();
 
-  assert.equal(plan.length, 8);
+  assert.equal(plan.length, 9);
   assert.deepEqual(plan.map((probe) => probe.fileName), [
     "public-visibility.txt",
     "regional-public-visibility.txt",
     "website-origin.txt",
     "security-headers.txt",
+    "security-txt.txt",
     "domain-security.txt",
     "domain-hardening-preflight.txt",
     "search-indexing-surface.txt",
@@ -236,8 +253,9 @@ function testCaptureWritesAndValidatesArtifact() {
 
     assert.equal(result.validation.verdict, "SolvedVerified");
     assert.equal(result.validation.proofState, "Pass");
-    assert.equal(result.validation.artifactFileCount, 9);
+    assert.equal(result.validation.artifactFileCount, 10);
     assert.equal(fs.existsSync(path.join(tempDirectory, "security-headers.txt")), true);
+    assert.equal(fs.existsSync(path.join(tempDirectory, "security-txt.txt")), true);
     assert.match(formatted, /capture_state=SolvedVerified/);
     assert.match(formatted, /finding=none/);
   } finally {

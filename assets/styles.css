@@ -3181,21 +3181,49 @@ html.menu-open body {
     padding-inline: 20px;
   }
 
+  .site-nav .wrap {
+    padding-inline: 12px;
+  }
+
   .nav-in {
     min-height: 60px;
-    gap: 10px;
+    gap: 8px;
   }
 
   .nav-cta .btn {
     display: none;
   }
 
+  .nav-logo {
+    width: min(128px, 34vw);
+  }
+
+  .nav-cta {
+    gap: 6px;
+  }
+
   .theme-toggle {
+    min-width: 38px;
     padding-inline: 10px;
   }
 
   .theme-toggle [data-theme-label] {
     display: none;
+  }
+
+  .lang-toggle {
+    width: 38px;
+    padding-inline: 0;
+  }
+
+  .lang-toggle [data-lang-label] {
+    display: none;
+  }
+
+  .lang-toggle::after {
+    content: "AM";
+    font-size: 11px;
+    letter-spacing: 0;
   }
 
   .menu-toggle {
@@ -3219,6 +3247,7 @@ html.menu-open body {
     margin: 12px 0 16px;
     font-size: 34px;
     line-height: 1.05;
+    overflow-wrap: anywhere;
   }
 
   .hero .lead {
@@ -3230,7 +3259,7 @@ html.menu-open body {
   .hero-actions {
     align-items: stretch;
     flex-direction: column;
-    max-width: 230px;
+    width: min(100%, 230px);
   }
 
   .hero-actions .btn {

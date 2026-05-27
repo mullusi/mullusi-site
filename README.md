@@ -109,6 +109,8 @@ framework, database, or server runtime.
     |-- test-capture-live-safety-witness.mjs # Tests live-safety capture behavior
     |-- check-live-safety-witness.mjs  # Validates scheduled witness artifacts
     |-- test-check-live-safety-witness.mjs # Tests live-safety artifact validation
+    |-- check-security-txt.mjs         # Checks disclosure contact metadata expiry
+    |-- test-check-security-txt.mjs    # Tests security.txt metadata gate behavior
     |-- check-live-security-headers.mjs # Checks live browser-control response headers
     |-- test-check-live-security-headers.mjs # Tests live security-header gate behavior
     |-- check-live-deployment-integrity.mjs # Checks live status-manifest file integrity
@@ -446,7 +448,7 @@ Commands:
 node scripts/validate-checkpoint.mjs
 node scripts/validate-checkpoint.mjs --backend
 # optional aliases: npm run checkpoint, npm run checkpoint:backend, npm run scaffold:product, npm run test:scaffold-product
-# optional gates: npm run validate:api-exposure, npm run test:api-exposure, npm run validate:domain-hardening, npm run test:domain-hardening, npm run validate:private-recovery, npm run test:private-recovery, npm run validate:ops, npm run test:ops
+# optional gates: npm run validate:api-exposure, npm run test:api-exposure, npm run validate:domain-hardening, npm run test:domain-hardening, npm run validate:security-txt, npm run test:security-txt, npm run validate:private-recovery, npm run test:private-recovery, npm run validate:ops, npm run test:ops
 # PowerShell fallback: npm.cmd run checkpoint
 node --check assets/app.js
 node --check assets/runtime/page-runtime.js
@@ -489,6 +491,8 @@ node --check scripts/capture-live-safety-witness.mjs
 node --check scripts/test-capture-live-safety-witness.mjs
 node --check scripts/check-live-safety-witness.mjs
 node --check scripts/test-check-live-safety-witness.mjs
+node --check scripts/check-security-txt.mjs
+node --check scripts/test-check-security-txt.mjs
 node --check scripts/check-live-security-headers.mjs
 node --check scripts/test-check-live-security-headers.mjs
 node --check scripts/check-live-deployment-integrity.mjs
@@ -524,6 +528,8 @@ node scripts/test-check-website-origin.mjs
 node scripts/test-check-public-visibility.mjs
 node scripts/test-capture-live-safety-witness.mjs
 node scripts/test-check-live-safety-witness.mjs
+node scripts/check-security-txt.mjs
+node scripts/test-check-security-txt.mjs
 node scripts/test-check-live-security-headers.mjs
 node scripts/test-check-live-deployment-integrity.mjs
 node scripts/test-check-domain-security.mjs
@@ -606,6 +612,8 @@ node --check scripts/capture-live-safety-witness.mjs
 node --check scripts/test-capture-live-safety-witness.mjs
 node --check scripts/check-live-safety-witness.mjs
 node --check scripts/test-check-live-safety-witness.mjs
+node --check scripts/check-security-txt.mjs
+node --check scripts/test-check-security-txt.mjs
 node --check scripts/check-live-security-headers.mjs
 node --check scripts/test-check-live-security-headers.mjs
 node --check scripts/check-live-deployment-integrity.mjs
@@ -634,6 +642,8 @@ node scripts/test-check-website-origin.mjs
 node scripts/test-check-public-visibility.mjs
 node scripts/test-capture-live-safety-witness.mjs
 node scripts/test-check-live-safety-witness.mjs
+node scripts/check-security-txt.mjs
+node scripts/test-check-security-txt.mjs
 node scripts/test-check-live-security-headers.mjs
 node scripts/test-check-live-deployment-integrity.mjs
 node scripts/test-check-domain-security.mjs
@@ -729,6 +739,16 @@ The checker validates the public root, `/security/`, and `security.txt` routes
 for CSP, HSTS, frame blocking, cross-origin boundaries, nosniff, referrer
 policy, permissions policy, and legacy cross-domain policy blocking without
 recording raw header values.
+
+Before deployment, verify that the public disclosure metadata is current:
+
+```bash
+node scripts/check-security-txt.mjs
+```
+
+The checker validates required contacts, policy, canonical URL, preferred
+languages, and exactly one RFC3339 `Expires` freshness window without reading
+secrets or contacting public infrastructure.
 
 To check domain-level certificate and email hardening:
 

@@ -20,6 +20,7 @@
     "test:ops": "node scripts/test-ops-gates.mjs",
     "test:private-recovery": "node scripts/test-private-recovery-inventory.mjs",
     "test:scaffold-product": "node scripts/test-scaffold-product.mjs",
+    "test:security-txt": "node scripts/test-check-security-txt.mjs",
     "validate": "node scripts/validate-checkpoint.mjs",
     "validate:api-exposure": "node scripts/check-api-exposure-gate.mjs",
     "validate:architecture": "node scripts/validate-architecture-boundaries.mjs",
@@ -28,6 +29,7 @@
     "validate:ops": "node scripts/check-ops-gates.mjs",
     "validate:private-recovery": "node scripts/check-private-recovery-inventory.mjs --allow-missing",
     "validate:runtime": "node scripts/validate-runtime-witnesses.mjs",
+    "validate:security-txt": "node scripts/check-security-txt.mjs",
     "validate:site": "node scripts/validate-site.mjs"
   }
 }

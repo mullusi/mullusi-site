@@ -2,7 +2,7 @@
 Purpose: run the Mullusi local checkpoint gates in a deterministic order for solo-developer handoff.
 Governance scope: architecture boundary, ops gate, API exposure gate, domain-hardening preflight, private recovery inventory boundary, public-boundary test parity, generated platform drift, manifest authority, runtime witness state, public registry boundary, static site validation, Cloudflare artifact boundary, and optional backend tests.
 Dependencies: Node.js standard library, repository validation scripts, and optional Python backend test runtime.
-Invariants: commands run without shell interpolation, failures are reported with step labels, and backend tests run only when explicitly requested.
+Invariants: commands run without shell interpolation, child gates are time-bounded, failures are reported with step labels, and backend tests run only when explicitly requested.
 */
 
 import { spawnSync } from "node:child_process";
@@ -15,12 +15,14 @@ const backendRoot = path.join(repoRoot, "backend");
 
 const nodeExecutable = process.execPath;
 const requestedArgs = new Set(process.argv.slice(2));
+const defaultStepTimeoutMs = 60_000;
 
-function nodeStep(label, args) {
+function nodeStep(label, args, timeoutMs = defaultStepTimeoutMs) {
   return {
     args: [nodeExecutable, ...args],
     cwd: repoRoot,
     label,
+    timeoutMs,
   };
 }
 
@@ -29,6 +31,7 @@ function backendStep() {
     args: ["python", "-m", "unittest", "discover", "-s", "tests"],
     cwd: backendRoot,
     label: "backend tests",
+    timeoutMs: defaultStepTimeoutMs,
   };
 }
 
@@ -84,6 +87,8 @@ export function checkpointSteps(options = {}) {
     nodeStep("live safety witness capture test syntax", ["--check", "scripts/test-capture-live-safety-witness.mjs"]),
     nodeStep("live safety witness checker syntax", ["--check", "scripts/check-live-safety-witness.mjs"]),
     nodeStep("live safety witness checker test syntax", ["--check", "scripts/test-check-live-safety-witness.mjs"]),
+    nodeStep("security txt checker syntax", ["--check", "scripts/check-security-txt.mjs"]),
+    nodeStep("security txt test syntax", ["--check", "scripts/test-check-security-txt.mjs"]),
     nodeStep("live security header checker syntax", ["--check", "scripts/check-live-security-headers.mjs"]),
     nodeStep("live security header test syntax", ["--check", "scripts/test-check-live-security-headers.mjs"]),
     nodeStep("live deployment integrity checker syntax", ["--check", "scripts/check-live-deployment-integrity.mjs"]),
@@ -112,6 +117,8 @@ export function checkpointSteps(options = {}) {
     nodeStep("public visibility gate tests", ["scripts/test-check-public-visibility.mjs"]),
     nodeStep("live safety witness capture tests", ["scripts/test-capture-live-safety-witness.mjs"]),
     nodeStep("live safety witness artifact tests", ["scripts/test-check-live-safety-witness.mjs"]),
+    nodeStep("security txt metadata", ["scripts/check-security-txt.mjs"]),
+    nodeStep("security txt tests", ["scripts/test-check-security-txt.mjs"]),
     nodeStep("live security header tests", ["scripts/test-check-live-security-headers.mjs"]),
     nodeStep("live deployment integrity tests", ["scripts/test-check-live-deployment-integrity.mjs"]),
     nodeStep("domain security tests", ["scripts/test-check-domain-security.mjs"]),
@@ -123,7 +130,7 @@ export function checkpointSteps(options = {}) {
     nodeStep("product manifests", ["scripts/validate-manifests.mjs"]),
     nodeStep("runtime witnesses", ["scripts/validate-runtime-witnesses.mjs"]),
     nodeStep("generated platform drift", ["scripts/generate-platform.mjs", "--check"]),
-    nodeStep("Cloudflare artifact boundary", ["scripts/test-build-cloudflare-pages.mjs"]),
+    nodeStep("Cloudflare artifact boundary", ["scripts/test-build-cloudflare-pages.mjs"], 180_000),
     nodeStep("registry source boundary", ["scripts/verify-registry-repos.mjs"]),
   ];
   if (includeBackend) steps.push(backendStep());
@@ -137,6 +144,7 @@ function runStep(step) {
     cwd: step.cwd,
     shell: false,
     stdio: "inherit",
+    timeout: step.timeoutMs ?? defaultStepTimeoutMs,
   });
 }
 

@@ -1,6 +1,6 @@
 <!--
 Purpose: define the longitudinal live-safety witness monitor for mullusi.com.
-Governance scope: scheduled public visibility, origin, security-header, domain-hardening, search-surface, and artifact-retention evidence.
+Governance scope: scheduled public visibility, origin, security-header, security.txt, domain-hardening, search-surface, and artifact-retention evidence.
 Dependencies: .github/workflows/live-safety.yml and public-safe live checker scripts.
 Invariants: no secrets, raw private logs, provider account IDs, or raw response-header values are stored in monitor artifacts.
 -->
@@ -29,6 +29,7 @@ public_visibility=node scripts/check-public-visibility.mjs
 regional_public_visibility=node scripts/check-public-visibility.mjs --external-globalping --allow-pending
 origin_headers=node scripts/check-website-origin.mjs
 security_headers=node scripts/check-live-security-headers.mjs
+security_txt=node scripts/check-security-txt.mjs
 domain_security=node scripts/check-domain-security.mjs --allow-hardening-gaps
 domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --expect-blocked
 search_indexing_surface=node scripts/check-search-indexing-surface.mjs
@@ -62,7 +63,8 @@ regional_visibility_annotation=warning when external_multi_region_visibility rem
 ## Evidence Rule
 
 ```text
-single_run_public_edge=SolvedVerified when public visibility, origin headers, security headers, and search surface pass
+single_run_public_edge=SolvedVerified when public visibility, origin headers, security headers, security.txt metadata, and search surface pass
+security_txt_metadata=SolvedVerified when contacts, policy, canonical URL, preferred languages, and Expires freshness pass
 domain_security_hardening=AwaitingEvidence until CAA, DKIM, SPF enforcement, DMARC enforcement, MTA-STS, and TLS-RPT close
 domain_hardening_preflight=GovernanceBlocked until external admin evidence and mutation permissions are promoted
 deployment_integrity=SolvedVerified when live status-manifest hashes match governed live files and route sentinels pass
@@ -82,6 +84,6 @@ state after unobserved changes.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: scheduled probe set declared, artifact validator declared, artifact retention declared, public-safe witness boundary declared, universal claim boundary preserved
+  Invariants verified: scheduled probe set declared, artifact validator declared, artifact retention declared, security.txt disclosure metadata declared, public-safe witness boundary declared, universal claim boundary preserved
   Open issues: longitudinal evidence depends on future scheduled runs
   Next action: review uploaded live-safety artifacts after scheduled execution
