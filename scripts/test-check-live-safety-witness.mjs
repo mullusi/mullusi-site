@@ -116,6 +116,22 @@ function createFixture(files = {}) {
       "header_permissions_policy=Pass",
       "raw_response_headers=not_recorded",
     ].join("\n"),
+    "security-txt.txt": [
+      "verdict=SolvedVerified",
+      "proof_state=Pass",
+      "security_txt_state=SolvedVerified",
+      "observed_at=2026-05-27",
+      "expires_at=2027-05-16T00:00:00.000Z",
+      "expires_days_remaining=354",
+      "minimum_validity_days=30",
+      "maximum_validity_days=366",
+      "contact_count=2",
+      "policy_count=1",
+      "canonical_count=1",
+      "preferred_language_count=2",
+      "finding=none",
+      "raw_secret_values=not_read",
+    ].join("\n"),
     "domain-security.txt": [
       "verdict=AwaitingEvidence",
       "proof_state=Unknown",
@@ -189,7 +205,7 @@ function testPassingArtifactValidates() {
   assert.equal(result.verdict, "SolvedVerified");
   assert.equal(result.proofState, "Pass");
   assert.equal(result.liveSafetyWitnessState, "SolvedVerified");
-  assert.equal(result.artifactFileCount, 9);
+  assert.equal(result.artifactFileCount, 10);
   assert.match(formatted, /finding=none/);
 }
 

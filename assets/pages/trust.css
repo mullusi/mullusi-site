@@ -227,6 +227,7 @@ li + li {
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   margin-top: 16px;
 }
 
@@ -236,6 +237,7 @@ td {
   padding: 12px;
   text-align: left;
   vertical-align: top;
+  overflow-wrap: anywhere;
 }
 
 th {

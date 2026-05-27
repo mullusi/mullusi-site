@@ -166,6 +166,8 @@ const requiredFiles = [
   "scripts/test-capture-live-safety-witness.mjs",
   "scripts/check-live-safety-witness.mjs",
   "scripts/test-check-live-safety-witness.mjs",
+  "scripts/check-security-txt.mjs",
+  "scripts/test-check-security-txt.mjs",
   "scripts/check-live-security-headers.mjs",
   "scripts/test-check-live-security-headers.mjs",
   "scripts/check-live-deployment-integrity.mjs",
@@ -796,6 +798,7 @@ function validatePublicVisibilityWitness() {
     "regional_public_visibility=node scripts/check-public-visibility.mjs --external-globalping --allow-pending",
     "origin_headers=node scripts/check-website-origin.mjs",
     "security_headers=node scripts/check-live-security-headers.mjs",
+    "security_txt=node scripts/check-security-txt.mjs",
     "domain_security=node scripts/check-domain-security.mjs --allow-hardening-gaps",
     "domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
     "search_indexing_surface=node scripts/check-search-indexing-surface.mjs",
@@ -810,6 +813,7 @@ function validatePublicVisibilityWitness() {
     "domain_security_annotation=warning",
     "domain_hardening_preflight_annotation=notice",
     "universal_all_users_visibility=AwaitingEvidence",
+    "security_txt_metadata=SolvedVerified",
     "domain_security_hardening=AwaitingEvidence",
     "runtime_api_readiness=AwaitingEvidence",
     "STATUS:",
@@ -825,11 +829,14 @@ function validatePublicVisibilityWitness() {
     "function buildRunMetadataContent",
     "function captureLiveSafetyWitnessArtifact",
     "function formatCaptureResult",
+    "security_txt",
+    "scripts/check-security-txt.mjs",
     "run-metadata.txt",
     "public-visibility.txt",
     "regional-public-visibility.txt",
     "website-origin.txt",
     "security-headers.txt",
+    "security-txt.txt",
     "domain-security.txt",
     "domain-hardening-preflight.txt",
     "search-indexing-surface.txt",
@@ -857,6 +864,7 @@ function validatePublicVisibilityWitness() {
     "testTransientProbeFailureRetriesBeforeCapture",
     "testCliRejectsUnsupportedFlagsWithoutNetwork",
     "--external-globalping",
+    "security-txt.txt",
   ];
   for (const term of liveSafetyArtifactCaptureTestTerms) {
     if (!liveSafetyArtifactCaptureTest.includes(term)) {
@@ -872,6 +880,7 @@ function validatePublicVisibilityWitness() {
     "regional-public-visibility.txt",
     "website-origin.txt",
     "security-headers.txt",
+    "security-txt.txt",
     "domain-security.txt",
     "domain-hardening-preflight.txt",
     "search-indexing-surface.txt",
@@ -880,10 +889,12 @@ function validatePublicVisibilityWitness() {
     "raw_response_headers=not_recorded",
     "global_all_users_claim=AwaitingEvidence",
     "artifact_boundary_invalid",
+    "function validateSecurityTxt",
     "function validateDomainSecurity",
     "function validateDomainHardeningPreflight",
     "function validateDeploymentIntegrity",
     "raw_dns_values=not_recorded",
+    "raw_secret_values=not_read",
     "raw_secret_values=not_recorded",
   ];
   for (const term of liveSafetyArtifactCheckerTerms) {
@@ -902,7 +913,8 @@ function validatePublicVisibilityWitness() {
     "testCliRejectsUnsupportedArgument",
     "domain-hardening-preflight.txt",
     "deployment-integrity.txt",
-    "artifactFileCount, 9",
+    "security-txt.txt",
+    "artifactFileCount, 10",
   ];
   for (const term of liveSafetyArtifactTestTerms) {
     if (!liveSafetyArtifactTest.includes(term)) {
@@ -1651,6 +1663,7 @@ function validateCssTypographyContract() {
   const viewportFontPattern = /font-size\s*:\s*clamp\([^;]*(?:vw|vh|vmin|vmax|dvw|dvh|svw|svh|lvw|lvh)[^;]*;/i;
   const negativeLetterSpacingPattern = /letter-spacing\s*:\s*-\s*[\d.]+(?:em|rem|px|%|ch)?/i;
   const retiredPalettePattern = /#(?:f4f1e6|fbf8ee|f6f3e9|fffcf4|f0eadc|d6cdb5|d4cab8|070806|10120d|10130f|11130f|11140f|0d100b|283124|272d22|293124|2d3529|ece7d8|f1efe5|aaa38f|a9b09f|aab29f|aab09f|8a6914|d6ad48|e4b65c|121006|07100b|111006|f2f3ec|f2f4ed)\b/i;
+  const retiredRgbaPalettePattern = /rgba\(\s*214\s*,\s*173\s*,\s*72\s*,\s*[\d.]+\s*\)/i;
   for (const cssFile of publicCssFiles) {
     const css = readUtf8(cssFile);
     const viewportFont = css.match(viewportFontPattern);
@@ -1664,6 +1677,17 @@ function validateCssTypographyContract() {
     const retiredPalette = css.match(retiredPalettePattern);
     if (retiredPalette) {
       recordFailure(`css_retired_palette_token:${cssFile}:${retiredPalette[0]}`);
+    }
+    const retiredRgbaPalette = css.match(retiredRgbaPalettePattern);
+    if (retiredRgbaPalette) {
+      recordFailure(`css_retired_rgba_palette_token:${cssFile}:${retiredRgbaPalette[0]}`);
+    }
+  }
+  for (const htmlFile of publicHtmlFiles) {
+    const html = readUtf8(htmlFile);
+    const retiredPalette = html.match(retiredPalettePattern);
+    if (retiredPalette) {
+      recordFailure(`html_retired_palette_token:${htmlFile}:${retiredPalette[0]}`);
     }
   }
 }
@@ -4534,8 +4558,49 @@ function validateTrustRoutes() {
   if (!securityTxt.includes("Contact: mailto:support@mullusi.com")) {
     recordFailure("security_txt_support_contact_missing");
   }
+  if (!securityTxt.includes("Contact: mailto:research@mullusi.com")) {
+    recordFailure("security_txt_research_contact_missing");
+  }
+  if (!/^Expires: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000Z$/m.test(securityTxt)) {
+    recordFailure("security_txt_expires_missing_or_invalid");
+  }
+  if (!securityTxt.includes("Preferred-Languages: en, am")) {
+    recordFailure("security_txt_languages_missing");
+  }
+  if (!securityTxt.includes("Canonical: https://mullusi.com/.well-known/security.txt")) {
+    recordFailure("security_txt_canonical_missing");
+  }
   if (!securityTxt.includes("Policy: https://mullusi.com/responsible-disclosure/")) {
     recordFailure("security_txt_policy_missing");
+  }
+  const securityTxtChecker = readUtf8("scripts/check-security-txt.mjs");
+  const securityTxtTest = readUtf8("scripts/test-check-security-txt.mjs");
+  for (const term of [
+    "minimumValidityDays",
+    "maximumValidityDays",
+    "security_txt_state",
+    "rfc3339TimestampPattern",
+    "path_outside_repo",
+    "path_not_security_txt",
+    "expires_duplicate",
+    "expires_too_soon",
+    "expires_too_far",
+    "raw_secret_values=not_read",
+  ]) {
+    if (!securityTxtChecker.includes(term)) {
+      recordFailure(`security_txt_checker_term_missing:${term}`);
+    }
+  }
+  for (const term of [
+    "testValidSecurityTxtPasses",
+    "testMissingRequiredFieldsBlock",
+    "testExpirationBoundsBlock",
+    "testDuplicateExpiresAndMalformedLinesBlock",
+    "testCliUsesExplicitClockAndPath",
+  ]) {
+    if (!securityTxtTest.includes(term)) {
+      recordFailure(`security_txt_test_term_missing:${term}`);
+    }
   }
 }
 

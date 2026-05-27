@@ -14,7 +14,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       --muted: #99a0b4;
       --gold: #5ce6c4;
       --green: #e8b15c;
-      --violet: #9aa8ff;
+      --violet: #7dd3fc;
       --nav-bg: rgba(5, 6, 9, 0.88);
       --panel-tint: rgba(13, 16, 24, 0.72);
     }
@@ -28,14 +28,19 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       --muted: #455366;
       --gold: #0f766e;
       --green: #b45309;
-      --violet: #4f46e5;
+      --violet: #2563eb;
       --nav-bg: rgba(247, 248, 251, 0.86);
       --panel-tint: rgba(255, 255, 255, 0.78);
     }
 
     * { box-sizing: border-box; }
+    html {
+      overflow-x: hidden;
+    }
+
     body {
       margin: 0;
+      overflow-x: hidden;
       background: var(--bg);
       color: var(--text);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
@@ -94,7 +99,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       left: 0;
       right: 0;
       z-index: 2;
-      border-bottom: 1px solid rgba(214, 173, 72, 0.18);
+      border-bottom: 1px solid rgba(92, 230, 196, 0.16);
       background: var(--nav-bg);
       backdrop-filter: blur(12px);
     }
@@ -133,7 +138,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       gap: 8px;
       min-height: 36px;
       padding: 0 12px;
-      border: 1px solid rgba(214, 173, 72, 0.3);
+      border: 1px solid rgba(92, 230, 196, 0.28);
       background: transparent;
       color: var(--muted);
       font: inherit;
@@ -212,7 +217,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
     section {
       padding: 72px 0;
-      border-top: 1px solid rgba(214, 173, 72, 0.16);
+      border-top: 1px solid rgba(92, 230, 196, 0.14);
     }
 
     h2 {
@@ -271,7 +276,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       grid-template-columns: 0.85fr 1.15fr;
       gap: 24px;
       align-items: start;
-      border: 1px solid rgba(214, 173, 72, 0.2);
+      border: 1px solid rgba(92, 230, 196, 0.2);
       background: var(--panel-tint);
       padding: 28px;
     }
@@ -337,6 +342,21 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
 
     @media (max-width: 640px), (max-height: 620px) {
+      header,
+      main,
+      footer {
+        width: min(calc(100% - 24px), 1120px);
+      }
+
+      .nav-inner {
+        width: min(calc(100% - 24px), 1120px);
+        gap: 12px;
+      }
+
+      .brand {
+        letter-spacing: 0.14em;
+      }
+
       header {
         min-height: auto;
         align-content: start;
@@ -344,11 +364,16 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
         padding: 72px 0 18px;
       }
 
-      h1 { font-size: 54px; }
+      h1 {
+        font-size: 44px;
+        line-height: 0.98;
+        overflow-wrap: anywhere;
+      }
 
       h2 {
         font-size: 30px;
         line-height: 1.08;
+        overflow-wrap: anywhere;
       }
 
       .law {
@@ -362,14 +387,26 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       }
 
       .button {
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
         min-height: 40px;
         padding: 0 10px;
         font-size: 12px;
+        text-align: center;
+        white-space: normal;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
       }
 
       .status {
         font-size: 12px;
         line-height: 1.35;
+        overflow-wrap: anywhere;
       }
 
       section { padding: 56px 0; }

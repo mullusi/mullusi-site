@@ -45,6 +45,11 @@ const probeDefinitions = [
     args: ["scripts/check-live-security-headers.mjs"],
   },
   {
+    name: "security_txt",
+    fileName: "security-txt.txt",
+    args: ["scripts/check-security-txt.mjs"],
+  },
+  {
     name: "domain_security",
     fileName: "domain-security.txt",
     args: ["scripts/check-domain-security.mjs", "--allow-hardening-gaps"],

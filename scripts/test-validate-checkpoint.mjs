@@ -58,6 +58,8 @@ function testDefaultCheckpointSteps() {
     "live safety witness capture test syntax",
     "live safety witness checker syntax",
     "live safety witness checker test syntax",
+    "security txt checker syntax",
+    "security txt test syntax",
     "live security header checker syntax",
     "live security header test syntax",
     "live deployment integrity checker syntax",
@@ -86,6 +88,8 @@ function testDefaultCheckpointSteps() {
     "public visibility gate tests",
     "live safety witness capture tests",
     "live safety witness artifact tests",
+    "security txt metadata",
+    "security txt tests",
     "live security header tests",
     "live deployment integrity tests",
     "domain security tests",
@@ -114,10 +118,21 @@ function testCommandsDoNotUseShellWrappers() {
     assert.equal(typeof step.cwd, "string");
     assert.equal(typeof step.label, "string");
     assert.equal(step.args.some((arg) => /[;&|]/.test(arg)), false);
+    assert.equal(Number.isInteger(step.timeoutMs), true);
+    assert.equal(step.timeoutMs > 0, true);
   }
+}
+
+function testCloudflareArtifactBoundaryHasLongBudget() {
+  const step = checkpointSteps().find((candidate) => candidate.label === "Cloudflare artifact boundary");
+
+  assert.equal(step?.timeoutMs, 180_000);
+  assert.equal(step?.args.includes("scripts/test-build-cloudflare-pages.mjs"), true);
+  assert.equal(typeof step?.cwd, "string");
 }
 
 testDefaultCheckpointSteps();
 testBackendStepIsOptIn();
 testCommandsDoNotUseShellWrappers();
+testCloudflareArtifactBoundaryHasLongBudget();
 console.log("checkpoint validation tests passed");

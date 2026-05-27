@@ -68,7 +68,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       position: sticky;
       top: 0;
       z-index: 2;
-      border-bottom: 1px solid rgba(214, 173, 72, 0.18);
+      border-bottom: 1px solid rgba(92, 230, 196, 0.16);
       background: var(--nav-bg);
       backdrop-filter: blur(12px);
     }
@@ -189,7 +189,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
     section {
       padding: 64px 0;
-      border-top: 1px solid rgba(214, 173, 72, 0.16);
+      border-top: 1px solid rgba(92, 230, 196, 0.14);
     }
 
     .status-grid,
