@@ -55,8 +55,10 @@ const requiredFiles = [
   "ops/www-canonical-redirect-gate.md",
   "ops/recovery-inventory-template.md",
   "ops/recovery-completion-witness.md",
+  "ops/solo-developer-assistant-handoff.md",
   "ops/runtime-witness/README.md",
   "ops/runtime-witness/registry.json",
+  "package.json",
   "LICENSE",
   "CNAME",
   "_headers",
@@ -70,6 +72,7 @@ const requiredFiles = [
   "assets/runtime/page-runtime.js",
   "assets/runtime/preference-runtime.js",
   "assets/runtime/substrate-runtime.js",
+  "assets/runtime/homepage-lifecycle-plan.js",
   "assets/runtime/homepage-controller.js",
   "assets/runtime/homepage-context.js",
   "assets/registry/homepage-registry.js",
@@ -87,9 +90,12 @@ const requiredFiles = [
   "assets/pages/not-found.css",
   "assets/pages/pilot.css",
   "assets/pages/product-shell.css",
+  "assets/pages/route-preferences.js",
   "assets/pages/playground.js",
+  "assets/pages/playground-simulator.js",
   "assets/pages/playground.css",
   "assets/pages/proof.js",
+  "assets/pages/proof-renderer.js",
   "assets/pages/proof.css",
   "assets/pages/status.css",
   "assets/pages/trust.css",
@@ -120,7 +126,6 @@ const requiredFiles = [
   "data/generated/migration-coverage.json",
   "data/generated/product-registry-parity.json",
   "data/generated/public-surface-parity.json",
-  "data/generated/products-compat.json",
   "data/generated/runtime-witness-index.json",
   "data/generated/sitemap.xml",
   "schemas/product-manifest.schema.json",
@@ -141,6 +146,12 @@ const requiredFiles = [
   "scripts/fetch-news.mjs",
   "scripts/build-cloudflare-pages.mjs",
   "scripts/generate-platform.mjs",
+  "scripts/scaffold-product.mjs",
+  "scripts/test-scaffold-product.mjs",
+  "scripts/validate-architecture-boundaries.mjs",
+  "scripts/test-validate-architecture-boundaries.mjs",
+  "scripts/validate-checkpoint.mjs",
+  "scripts/test-validate-checkpoint.mjs",
   "scripts/validate-manifests.mjs",
   "scripts/validate-runtime-witnesses.mjs",
   "scripts/test-build-cloudflare-pages.mjs",
@@ -214,6 +225,10 @@ const publicHtmlFiles = [
 ];
 
 const publicCssFiles = requiredFiles.filter((file) => file.endsWith(".css"));
+const forbiddenSourceFiles = [
+  "data/products.json",
+  "data/generated/products-compat.json",
+];
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
@@ -385,6 +400,14 @@ function validateRequiredFiles() {
   }
 }
 
+function validateForbiddenSourceFiles() {
+  for (const forbiddenFile of forbiddenSourceFiles) {
+    if (pathExists(forbiddenFile)) {
+      recordFailure(`forbidden_source_file_present:${forbiddenFile}`);
+    }
+  }
+}
+
 function validateCname() {
   const cname = readUtf8("CNAME").trim();
   if (cname !== "mullusi.com") {
@@ -551,9 +574,12 @@ function validateCloudflarePagesArtifact() {
     "assets/pages/not-found.css",
     "assets/pages/pilot.css",
     "assets/pages/product-shell.css",
+    "assets/pages/route-preferences.js",
     "assets/pages/playground.js",
+    "assets/pages/playground-simulator.js",
     "assets/pages/playground.css",
     "assets/pages/proof.js",
+    "assets/pages/proof-renderer.js",
     "assets/pages/proof.css",
     "assets/pages/status.css",
     "assets/pages/trust.css",
@@ -3504,6 +3530,7 @@ function validateIndexDesignContract() {
   const pageRuntime = readUtf8("assets/runtime/page-runtime.js");
   const preferenceRuntime = readUtf8("assets/runtime/preference-runtime.js");
   const substrateRuntime = readUtf8("assets/runtime/substrate-runtime.js");
+  const homepageLifecyclePlan = readUtf8("assets/runtime/homepage-lifecycle-plan.js");
   const homepageController = readUtf8("assets/runtime/homepage-controller.js");
   const homepageContext = readUtf8("assets/runtime/homepage-context.js");
   const homepageRegistry = readUtf8("assets/registry/homepage-registry.js");
@@ -3514,13 +3541,14 @@ function validateIndexDesignContract() {
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
-  const assetVersion = "2026.05.platform.28";
+  const assetVersion = "2026.05.platform.29";
 
   if (
     !html.includes(`assets/styles.css?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/page-runtime.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/preference-runtime.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/substrate-runtime.js?v=${assetVersion}`) ||
+    !html.includes(`assets/runtime/homepage-lifecycle-plan.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/homepage-controller.js?v=${assetVersion}`) ||
     !html.includes(`assets/registry/homepage-registry.js?v=${assetVersion}`) ||
     !html.includes(`assets/render/site-content.js?v=${assetVersion}`) ||
@@ -3561,6 +3589,9 @@ function validateIndexDesignContract() {
   }
   if (html.indexOf("assets/runtime/homepage-controller.js") > html.indexOf("assets/app.js")) {
     recordFailure("homepage_controller_module_load_order_invalid");
+  }
+  if (html.indexOf("assets/runtime/homepage-lifecycle-plan.js") > html.indexOf("assets/runtime/homepage-controller.js")) {
+    recordFailure("homepage_lifecycle_plan_before_controller");
   }
   if (html.indexOf("assets/runtime/substrate-runtime.js") > html.indexOf("assets/runtime/homepage-controller.js")) {
     recordFailure("homepage_controller_before_substrate_runtime");
@@ -3605,6 +3636,7 @@ function validateIndexDesignContract() {
     "assets/runtime/page-runtime.js",
     "assets/runtime/preference-runtime.js",
     "assets/runtime/substrate-runtime.js",
+    "assets/runtime/homepage-lifecycle-plan.js",
     "assets/runtime/homepage-controller.js",
     "assets/registry/homepage-registry.js",
     "assets/render/site-content.js",
@@ -3903,6 +3935,24 @@ function validateIndexDesignContract() {
   if (!homepageContext.includes("const homepageController") || !homepageContext.includes("MullusiHomepageController")) {
     recordFailure("homepage_controller_module_missing");
   }
+  if (!homepageLifecyclePlan.includes("MullusiHomepageLifecyclePlan") || !homepageController.includes("MullusiHomepageLifecyclePlan")) {
+    recordFailure("homepage_lifecycle_plan_module_missing");
+  }
+  for (const requiredLifecyclePlanTerm of [
+    "siteRenderActions",
+    "registryRenderActions",
+    "registryFallbackSelectors",
+    "siteFailureSelectors",
+    "registryFailureSelectors",
+    "languageChangeActions",
+    "renderPlatformLayers",
+    "renderProductRegistryControls",
+    "renderRepoGrid",
+  ]) {
+    if (!homepageLifecyclePlan.includes(requiredLifecyclePlanTerm)) {
+      recordFailure(`homepage_lifecycle_plan_missing:${requiredLifecyclePlanTerm}`);
+    }
+  }
   for (const forbiddenHomepageControllerAppTerm of [
     "async function initContent",
     "function renderSiteContent",
@@ -3925,18 +3975,32 @@ function validateIndexDesignContract() {
     "function bumpVisits",
     "function renderSiteContent",
     "function renderRegistryContent",
+    "function runActionPlan",
     "async function initContent",
-    "function renderRegistryLoadError",
+    "lifecyclePlan().siteRenderActions",
+    "lifecyclePlan().registryRenderActions",
+    "callRequired(context, \"renderRegistryLoadError\")",
     "window.addEventListener(\"mullusi-lang-change\"",
     "state.visits = bumpVisits",
     "state.siteContent = await",
     "state.news = await",
     "state.registry = await",
-    "repo-card error-card",
-    "Product registry unavailable",
   ]) {
     if (!homepageController.includes(requiredHomepageControllerTerm)) {
       recordFailure(`homepage_controller_missing:${requiredHomepageControllerTerm}`);
+    }
+  }
+  for (const controllerOwnedPlanTerm of [
+    "renderPlatformLayers",
+    "renderRequestFlow",
+    "renderProductRegistryControls",
+    "renderRepoGrid",
+    "[data-platform-layers]",
+    "[data-product-registry]",
+    "[data-repo-stats]",
+  ]) {
+    if (homepageController.includes(`\"${controllerOwnedPlanTerm}\"`)) {
+      recordFailure(`homepage_controller_owns_lifecycle_plan:${controllerOwnedPlanTerm}`);
     }
   }
   if (!homepageContext.includes("function newsActivityRendererModule") || !homepageContext.includes("MullusiNewsActivityRenderer")) {
@@ -3966,7 +4030,7 @@ function validateIndexDesignContract() {
     "[data-mullu-activity]",
   ];
   for (const selector of staticFallbackTargets) {
-    if (!homepageController.includes(`"${selector}"`)) {
+    if (!homepageLifecyclePlan.includes(`"${selector}"`)) {
       recordFailure(`static_child_fallback_target_missing:${selector}`);
     }
   }
@@ -4073,6 +4137,7 @@ function validateIndexDesignContract() {
     "function renderFilters",
     "function renderStats",
     "function renderRepoGrid",
+    "function renderRegistryLoadError",
     "function renderMetrics",
     "function bindSearch",
     "data-category",
@@ -4085,6 +4150,12 @@ function validateIndexDesignContract() {
   }
   if (!homepageContext.includes("function renderProductRegistryControls") || !homepageContext.includes("MullusiProductRegistryRenderer")) {
     recordFailure("product_registry_controls_missing");
+  }
+  if (!homepageContext.includes("function renderRegistryLoadError") || !homepageController.includes("renderRegistryLoadError")) {
+    recordFailure("registry_load_error_renderer_handoff_missing");
+  }
+  if (homepageController.includes("repo-card error-card") || homepageController.includes("innerHTML")) {
+    recordFailure("homepage_controller_owns_registry_error_rendering");
   }
   if (app.includes("function renderProductRouteActions") || app.includes("product-route-actions")) {
     recordFailure("homepage_app_owns_product_registry_rendering");
@@ -4146,7 +4217,10 @@ function validateIndexDesignContract() {
 }
 
 function validateProofPageContract() {
-  const html = `${readUtf8("proof/index.html")}\n${readUtf8("assets/pages/proof.js")}`;
+  const proofBoot = readUtf8("assets/pages/proof.js");
+  const proofRenderer = readUtf8("assets/pages/proof-renderer.js");
+  const routePreferences = readUtf8("assets/pages/route-preferences.js");
+  const html = `${readUtf8("proof/index.html")}\n${proofBoot}\n${proofRenderer}\n${routePreferences}`;
   const requiredProofTerms = [
     'id="products"',
     "Product evidence lanes",
@@ -4225,6 +4299,20 @@ function validateProofPageContract() {
     if (!html.includes(term)) {
       recordFailure(`proof_page_contract_missing:${term}`);
     }
+  }
+  if (!readUtf8("proof/index.html").includes("/assets/pages/route-preferences.js")
+    || !readUtf8("proof/index.html").includes("/assets/pages/proof-renderer.js")
+    || !readUtf8("proof/index.html").includes("/assets/pages/proof.js")) {
+    recordFailure("proof_page_script_graph_invalid");
+  }
+  if (!proofBoot.includes("MullusiProofRenderer.init()") || proofBoot.includes("fetch(") || proofBoot.includes("innerHTML")) {
+    recordFailure("proof_boot_not_renderer_only");
+  }
+  if (!proofRenderer.includes("window.MullusiProofRenderer") || !proofRenderer.includes("public claims render only from generated claim decisions")) {
+    recordFailure("proof_renderer_boundary_missing");
+  }
+  if (!routePreferences.includes("MullusiRoutePreferences") || !routePreferences.includes("bindThemeToggle")) {
+    recordFailure("route_preferences_module_missing");
   }
   if (html.includes("../data/products.json") || html.includes("data/products.json")) {
     recordFailure("proof_page_legacy_products_registry_present");
@@ -4661,7 +4749,7 @@ function validateRuntimeGateState() {
 function validateHeadContract() {
   const ogImage = "https://mullusi.com/assets/mullusi-icon-512.png";
   const routes = [
-    { file: "index.html", url: "https://mullusi.com" },
+    { file: "index.html", url: "https://mullusi.com/" },
     { file: "doctrine/index.html", url: "https://mullusi.com/doctrine/" },
     { file: "mullu/index.html", url: "https://mullusi.com/mullu/" },
     { file: "search/index.html", url: "https://mullusi.com/search/" },
@@ -4702,8 +4790,66 @@ function validateHeadContract() {
   }
 }
 
+function validateSecondaryRouteScriptBoundaries() {
+  const routePreferences = readUtf8("assets/pages/route-preferences.js");
+  const mulluHtml = readUtf8("mullu/index.html");
+  const mulluBoot = readUtf8("assets/pages/mullu.js");
+  const playgroundHtml = readUtf8("playground/index.html");
+  const playgroundBoot = readUtf8("assets/pages/playground.js");
+  const playgroundSimulator = readUtf8("assets/pages/playground-simulator.js");
+  const proofHtml = readUtf8("proof/index.html");
+  const proofBoot = readUtf8("assets/pages/proof.js");
+  const proofRenderer = readUtf8("assets/pages/proof-renderer.js");
+
+  if (!routePreferences.includes("window.MullusiRoutePreferences") || !routePreferences.includes("function bindThemeToggle")) {
+    recordFailure("route_preferences_shared_module_invalid");
+  }
+  if (routePreferences.includes("fetch(") || routePreferences.includes("innerHTML")) {
+    recordFailure("route_preferences_owns_content_or_network");
+  }
+  if (
+    mulluHtml.indexOf("/assets/pages/route-preferences.js") === -1
+    || mulluHtml.indexOf("/assets/pages/mullu.js") === -1
+    || mulluHtml.indexOf("/assets/pages/route-preferences.js") > mulluHtml.indexOf("/assets/pages/mullu.js")
+  ) {
+    recordFailure("mullu_route_script_graph_invalid");
+  }
+  if (!mulluBoot.includes("MullusiRoutePreferences.bindThemeToggle()") || mulluBoot.includes("localStorage") || mulluBoot.includes("matchMedia")) {
+    recordFailure("mullu_route_boot_not_preference_only");
+  }
+  if (
+    playgroundHtml.indexOf("/assets/pages/playground-simulator.js") === -1
+    || playgroundHtml.indexOf("/assets/pages/playground.js") === -1
+    || playgroundHtml.indexOf("/assets/pages/playground-simulator.js") > playgroundHtml.indexOf("/assets/pages/playground.js")
+  ) {
+    recordFailure("playground_script_graph_invalid");
+  }
+  if (!playgroundBoot.includes("MullusiPlaygroundSimulator.init()") || playgroundBoot.includes("addEventListener") || playgroundBoot.includes("JSON.stringify")) {
+    recordFailure("playground_boot_not_simulator_only");
+  }
+  if (!playgroundSimulator.includes("window.MullusiPlaygroundSimulator") || !playgroundSimulator.includes("function evaluate") || playgroundSimulator.includes("â") || playgroundHtml.includes("â")) {
+    recordFailure("playground_simulator_boundary_invalid");
+  }
+  if (
+    proofHtml.indexOf("/assets/pages/route-preferences.js") === -1
+    || proofHtml.indexOf("/assets/pages/proof-renderer.js") === -1
+    || proofHtml.indexOf("/assets/pages/proof.js") === -1
+    || proofHtml.indexOf("/assets/pages/route-preferences.js") > proofHtml.indexOf("/assets/pages/proof-renderer.js")
+    || proofHtml.indexOf("/assets/pages/proof-renderer.js") > proofHtml.indexOf("/assets/pages/proof.js")
+  ) {
+    recordFailure("proof_route_script_graph_invalid");
+  }
+  if (!proofBoot.includes("MullusiRoutePreferences.bindThemeToggle()") || !proofBoot.includes("MullusiProofRenderer.init()") || proofBoot.includes("fetch(") || proofBoot.includes("innerHTML")) {
+    recordFailure("proof_route_boot_not_preference_and_renderer_only");
+  }
+  if (!proofRenderer.includes("window.MullusiProofRenderer") || proofRenderer.includes("localStorage") || proofRenderer.includes("matchMedia")) {
+    recordFailure("proof_renderer_owns_display_preference");
+  }
+}
+
 function runValidation() {
   validateRequiredFiles();
+  validateForbiddenSourceFiles();
   validateCname();
   validateCloudflarePagesControls();
   validateCloudflarePagesArtifact();
@@ -4731,6 +4877,7 @@ function runValidation() {
   validateSiteContent();
   validateI18n();
   validateIndexDesignContract();
+  validateSecondaryRouteScriptBoundaries();
   validateProofPageContract();
   validateDoctrinePageContract();
   validateDoctrineWordingContract();

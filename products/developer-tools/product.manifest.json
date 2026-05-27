@@ -59,7 +59,7 @@
     ]
   },
   "presentation": {
-    "compatibilityRegistry": true,
+    "homepageRegistry": true,
     "displayOrder": 10,
     "classification": "library/package",
     "registryStatus": "awaiting-evidence",

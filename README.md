@@ -27,6 +27,7 @@ framework, database, or server runtime.
 |-- robots.txt                         # Crawl policy
 |-- sitemap.xml                        # Search sitemap
 |-- site.webmanifest                   # Browser/app icon manifest
+|-- package.json                       # Script-only local validation aliases
 |-- data/manual/                       # Manual non-product public-surface sources
 |-- data/generated/                    # Generated product manifest witnesses
 |-- data/news.json                     # Cached Frontier Signal feed
@@ -56,6 +57,7 @@ framework, database, or server runtime.
 |   |-- www-canonical-redirect-gate.md # www-to-apex redirect gate
 |   |-- recovery-inventory-template.md # Private recovery inventory template
 |   |-- recovery-completion-witness.md # Recovery completion state
+|   |-- solo-developer-assistant-handoff.md # Safe handoff rules for coding assistants
 |   `-- runtime-witness/               # Product runtime witness registry
 |-- assets/
 |   |-- app.js                         # Homepage boot entry
@@ -63,12 +65,20 @@ framework, database, or server runtime.
 |   |   |-- page-runtime.js             # DOM, fallback, link, and reveal helpers
 |   |   |-- preference-runtime.js       # Language, theme, and i18n helpers
 |   |   |-- substrate-runtime.js        # Canvas substrate renderer
+|   |   |-- homepage-lifecycle-plan.js  # Homepage render sequence and fallback plan
 |   |   |-- homepage-controller.js      # Homepage load and render lifecycle
 |   |   `-- homepage-context.js         # Runtime state and renderer adapter composition
 |   |-- registry/
 |   |   `-- homepage-registry.js        # Homepage registry loading and composition
 |   |-- render/
 |   |   `-- product-registry.js         # Homepage product cards and controls renderer
+|   |-- pages/
+|   |   |-- route-preferences.js        # Shared route-local theme control
+|   |   |-- proof-renderer.js           # Proof route generated-registry renderer
+|   |   |-- proof.js                    # Proof route boot entry
+|   |   |-- playground-simulator.js     # Demo-only govern simulator
+|   |   |-- playground.js               # Playground route boot entry
+|   |   `-- mullu.js                    # Mullu route boot entry
 |   |-- styles.css                     # Full visual system
 |   |-- fonts/
 |   |   |-- noto-sans-symbols-2-math.woff2 # Scoped symbol font for Greek/math glyphs
@@ -85,6 +95,7 @@ framework, database, or server runtime.
 `-- scripts/
     |-- build-cloudflare-pages.mjs     # Builds the public Cloudflare Pages artifact
     |-- generate-platform.mjs          # Generates product manifest artifacts
+    |-- scaffold-product.mjs           # Dry-run-first product authority scaffold
     |-- validate-manifests.mjs         # Validates product manifest authority
     |-- test-build-cloudflare-pages.mjs # Verifies artifact source-boundary rules
     |-- test-validate-site-doctrine-wording.mjs # Tests Doctrine wording gate coverage
@@ -113,6 +124,11 @@ framework, database, or server runtime.
     |-- check-api-exposure-gate.mjs    # Blocks api.mullusi.com DNS exposure until recovery permits
     |-- test-check-api-exposure-gate.mjs # Tests API exposure gate behavior
     |-- fetch-news.mjs                 # Deterministic Frontier Signal refresh
+    |-- validate-architecture-boundaries.mjs # Fast structural boundary gate
+    |-- test-validate-architecture-boundaries.mjs # Tests architecture boundary behavior
+    |-- validate-checkpoint.mjs       # Local handoff checkpoint runner
+    |-- test-validate-checkpoint.mjs  # Tests checkpoint runner command plan
+    |-- test-scaffold-product.mjs     # Tests product scaffold fail-closed behavior
     |-- validate-site.mjs              # Static validation gate
     `-- verify-registry-repos.mjs      # Public registry source-boundary check
 ```
@@ -169,6 +185,21 @@ privacy boundary, proof boundary, runtime service, release gates, homepage
 presentation fields, and generation flags. Generated files under
 `data/generated/` are derived witnesses and must not be edited by hand.
 
+Use the scaffold for new private-incubation products so one command creates the
+manifest, contract, privacy policy, retention policy, proof boundary, and
+blocked runtime witness plan before any public exposure exists:
+
+```bash
+node scripts/scaffold-product.mjs --id=mullu-world-modeling --name="Mullu World Modeling" --category=world-modeling
+node scripts/scaffold-product.mjs --id=mullu-world-modeling --name="Mullu World Modeling" --category=world-modeling --write
+node scripts/generate-platform.mjs
+node scripts/validate-checkpoint.mjs
+```
+
+The scaffold is dry-run by default. It writes only with `--write`, keeps
+`presentation.homepageRegistry` false unless `--homepage` is explicit, and
+starts runtime/public exposure as blocked.
+
 Current manifest coverage:
 
 ```text
@@ -192,7 +223,6 @@ data/generated/release-checklists.json
 data/generated/migration-coverage.json
 data/generated/product-registry-parity.json
 data/generated/public-surface-parity.json
-data/generated/products-compat.json
 data/generated/runtime-witness-index.json
 data/generated/sitemap.xml
 ```
@@ -206,15 +236,12 @@ claim endpoint readiness, production quality, live browsing, or public product
 availability, and they do not enter the sitemap while the manifests remain
 private-incubation.
 `data/generated/homepage-product-registry.json` is the product-card source for
-the homepage. `data/generated/products-compat.json` preserves the previous
-combined registry shape as generated internal compatibility output, but it is
-not included in the Cloudflare Pages artifact.
-`data/generated/product-registry-parity.json` records legacy-field parity for
-product rows, and
-`data/generated/public-surface-parity.json` records parity between
-`data/manual/public-surfaces.json` and the generated compatibility projection.
-The homepage and proof page no longer read the temporary combined compatibility
-wrapper.
+the homepage. `data/generated/product-registry-parity.json` records homepage
+presentation projection consistency for product rows, and
+`data/generated/public-surface-parity.json` records the shape audit for
+`data/manual/public-surfaces.json`. The homepage and proof page read only the
+generated authorities they need; the old combined registry wrapper is not
+generated or published.
 
 ## Runtime Witness Authority
 
@@ -416,12 +443,35 @@ product names, code identifiers, routes, and state tokens (for example
 Commands:
 
 ```bash
+node scripts/validate-checkpoint.mjs
+node scripts/validate-checkpoint.mjs --backend
+# optional aliases: npm run checkpoint, npm run checkpoint:backend, npm run scaffold:product, npm run test:scaffold-product
+# optional gates: npm run validate:api-exposure, npm run test:api-exposure, npm run validate:domain-hardening, npm run test:domain-hardening, npm run validate:private-recovery, npm run test:private-recovery, npm run validate:ops, npm run test:ops
+# PowerShell fallback: npm.cmd run checkpoint
 node --check assets/app.js
 node --check assets/runtime/page-runtime.js
 node --check assets/runtime/preference-runtime.js
 node --check assets/runtime/substrate-runtime.js
+node --check assets/runtime/homepage-lifecycle-plan.js
 node --check assets/runtime/homepage-controller.js
 node --check assets/runtime/homepage-context.js
+node --check assets/registry/homepage-registry.js
+node --check assets/render/site-content.js
+node --check assets/render/public-surface-registry.js
+node --check assets/render/product-registry.js
+node --check assets/render/news-activity.js
+node --check assets/pages/route-preferences.js
+node --check assets/pages/proof-renderer.js
+node --check assets/pages/proof.js
+node --check assets/pages/playground-simulator.js
+node --check assets/pages/playground.js
+node --check assets/pages/mullu.js
+node --check scripts/validate-architecture-boundaries.mjs
+node --check scripts/test-validate-architecture-boundaries.mjs
+node --check scripts/validate-checkpoint.mjs
+node --check scripts/test-validate-checkpoint.mjs
+node --check scripts/scaffold-product.mjs
+node --check scripts/test-scaffold-product.mjs
 node --check scripts/validate-site.mjs
 node --check scripts/fetch-news.mjs
 node --check scripts/build-cloudflare-pages.mjs
@@ -454,12 +504,16 @@ node --check scripts/test-www-canonical-redirect-gate.mjs
 node --check scripts/verify-registry-repos.mjs
 node --check scripts/check-ops-gates.mjs
 node --check scripts/test-ops-gates.mjs
-node --check scripts/promote-recovery-witness.mjs
-node --check scripts/test-promote-recovery-witness.mjs
-node --check scripts/check-private-recovery-inventory.mjs
-node --check scripts/test-private-recovery-inventory.mjs
 node --check scripts/check-api-exposure-gate.mjs
 node --check scripts/test-check-api-exposure-gate.mjs
+node --check scripts/check-private-recovery-inventory.mjs
+node --check scripts/test-private-recovery-inventory.mjs
+node --check scripts/promote-recovery-witness.mjs
+node --check scripts/test-promote-recovery-witness.mjs
+node scripts/validate-architecture-boundaries.mjs
+node scripts/test-validate-architecture-boundaries.mjs
+node scripts/test-validate-checkpoint.mjs
+node scripts/test-scaffold-product.mjs
 node scripts/validate-site.mjs
 node scripts/validate-manifests.mjs
 node scripts/generate-platform.mjs --check
@@ -473,6 +527,7 @@ node scripts/test-check-live-safety-witness.mjs
 node scripts/test-check-live-security-headers.mjs
 node scripts/test-check-live-deployment-integrity.mjs
 node scripts/test-check-domain-security.mjs
+node scripts/check-domain-hardening-preflight.mjs
 node scripts/test-check-domain-hardening-preflight.mjs
 node scripts/check-domain-hardening-preflight.mjs --expect-blocked
 node scripts/test-promote-domain-hardening-preflight.mjs
@@ -481,9 +536,11 @@ node scripts/test-www-canonical-redirect-gate.mjs
 node scripts/verify-registry-repos.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
-node scripts/test-promote-recovery-witness.mjs
+node scripts/check-api-exposure-gate.mjs
+node scripts/test-check-api-exposure-gate.mjs
 node scripts/check-private-recovery-inventory.mjs --allow-missing
 node scripts/test-private-recovery-inventory.mjs
+node scripts/test-promote-recovery-witness.mjs
 node scripts/check-api-exposure-gate.mjs --expect-blocked
 node scripts/test-check-api-exposure-gate.mjs
 ```
@@ -498,13 +555,41 @@ python3 -m http.server 8080 --directory dist
 
 ## Validation
 
+GitHub CI runs the same unified checkpoint used locally, plus explicit
+stage-lock checks for API exposure, domain hardening, and private recovery
+inventory boundaries. Do not re-expand the workflow into a separate manual gate
+list; update `scripts/validate-checkpoint.mjs` instead.
+
 ```bash
+node scripts/validate-checkpoint.mjs
+node scripts/validate-checkpoint.mjs --backend
+# optional aliases: npm run checkpoint, npm run checkpoint:backend, npm run scaffold:product, npm run test:scaffold-product
+# optional gates: npm run validate:api-exposure, npm run test:api-exposure, npm run validate:domain-hardening, npm run test:domain-hardening, npm run validate:private-recovery, npm run test:private-recovery, npm run validate:ops, npm run test:ops
+# PowerShell fallback: npm.cmd run checkpoint
 node --check assets/app.js
 node --check assets/runtime/page-runtime.js
 node --check assets/runtime/preference-runtime.js
 node --check assets/runtime/substrate-runtime.js
+node --check assets/runtime/homepage-lifecycle-plan.js
 node --check assets/runtime/homepage-controller.js
 node --check assets/runtime/homepage-context.js
+node --check assets/registry/homepage-registry.js
+node --check assets/render/site-content.js
+node --check assets/render/public-surface-registry.js
+node --check assets/render/product-registry.js
+node --check assets/render/news-activity.js
+node --check assets/pages/route-preferences.js
+node --check assets/pages/proof-renderer.js
+node --check assets/pages/proof.js
+node --check assets/pages/playground-simulator.js
+node --check assets/pages/playground.js
+node --check assets/pages/mullu.js
+node --check scripts/validate-architecture-boundaries.mjs
+node --check scripts/test-validate-architecture-boundaries.mjs
+node --check scripts/validate-checkpoint.mjs
+node --check scripts/test-validate-checkpoint.mjs
+node --check scripts/scaffold-product.mjs
+node --check scripts/test-scaffold-product.mjs
 node --check scripts/validate-site.mjs
 node --check scripts/build-cloudflare-pages.mjs
 node --check scripts/generate-platform.mjs
@@ -535,6 +620,10 @@ node --check scripts/check-www-canonical-redirect-gate.mjs
 node --check scripts/test-www-canonical-redirect-gate.mjs
 node --check scripts/check-api-exposure-gate.mjs
 node --check scripts/test-check-api-exposure-gate.mjs
+node scripts/validate-architecture-boundaries.mjs
+node scripts/test-validate-architecture-boundaries.mjs
+node scripts/test-validate-checkpoint.mjs
+node scripts/test-scaffold-product.mjs
 node scripts/validate-site.mjs
 node scripts/validate-manifests.mjs
 node scripts/generate-platform.mjs --check
@@ -708,6 +797,7 @@ so a returning visitor can otherwise get new `index.html` with a stale cached
 `assets/runtime/page-runtime.js`,
 `assets/runtime/preference-runtime.js`,
 `assets/runtime/substrate-runtime.js`,
+`assets/runtime/homepage-lifecycle-plan.js`,
 `assets/runtime/homepage-controller.js`,
 `assets/runtime/homepage-context.js`,
 `assets/render/site-content.js`,
@@ -716,20 +806,22 @@ so a returning visitor can otherwise get new `index.html` with a stale cached
 `assets/render/news-activity.js`, and `assets/styles.css` with a `?v=`
 query; bump that token whenever one of those assets changes so the new HTML
 forces a fresh fetch. The JSON data files are fetched with `cache: "no-store"`
-and are also marked no-store by `_headers`. Secondary routes currently use
-route-local inline CSS/JS, so this cache token applies only to the main shared
-homepage assets.
+and are also marked no-store by `_headers`. Secondary route scripts are loaded
+as route-local modules under `assets/pages/`; they are included in the static
+validation and Cloudflare artifact gates, but they do not share the homepage
+cache token.
 
 ## Update rule
 
-When a new product surface is ready for public exposure, start with
-`products/<product-id>/product.manifest.json`, add the required contract,
-privacy, retention, and proof boundary files, then run
-`node scripts/generate-platform.mjs`. During the compatibility phase, set
-`presentation.compatibilityRegistry` in the manifest when it should appear in
-the current homepage registry contract; do not edit generated registry outputs
-by hand. Until then, keep it as a blocked manifest candidate or add public-safe
-non-product roadmap language to `data/manual/public-surfaces.json`.
+When a new product surface begins, run `node scripts/scaffold-product.mjs`
+first and inspect the dry-run output. Re-run with `--write` only after the
+planned manifest, contract, privacy, retention, proof, and runtime witness
+paths are correct. Then run `node scripts/generate-platform.mjs` and
+`node scripts/validate-checkpoint.mjs`. Set `presentation.homepageRegistry` in
+the manifest only when it should appear in the current homepage registry
+contract; do not edit generated registry outputs by hand. Until then, keep it
+as a blocked manifest candidate or add public-safe non-product roadmap language
+to `data/manual/public-surfaces.json`.
 
 Internal naming candidates must stay out of public data until a public-source
 release is intentionally approved.

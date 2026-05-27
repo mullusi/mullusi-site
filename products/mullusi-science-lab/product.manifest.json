@@ -60,7 +60,7 @@
     ]
   },
   "presentation": {
-    "compatibilityRegistry": true,
+    "homepageRegistry": true,
     "displayOrder": 7,
     "classification": "private research product",
     "registryStatus": "private-incubation",

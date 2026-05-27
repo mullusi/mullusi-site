@@ -212,6 +212,10 @@ Invariants: app boot owns no rendering logic, renderer modules stay dependency-i
       publicSurfaceRegistryRendererModule().renderRepoGrid(publicSurfaceRegistryRenderContext());
     }
 
+    function renderRegistryLoadError() {
+      publicSurfaceRegistryRendererModule().renderRegistryLoadError(publicSurfaceRegistryRenderContext());
+    }
+
     function renderMetrics() {
       publicSurfaceRegistryRendererModule().renderMetrics(publicSurfaceRegistryRenderContext());
     }
@@ -293,6 +297,7 @@ Invariants: app boot owns no rendering logic, renderer modules stay dependency-i
         renderProductRegistry,
         renderProductRegistryControls,
         renderProofLanes,
+        renderRegistryLoadError,
         renderReleaseMachine,
         renderReleaseStages,
         renderRepoGrid,

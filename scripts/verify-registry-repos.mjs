@@ -1,8 +1,8 @@
 /*
-Purpose: verify Mullusi generated compatibility registry source-boundary rules.
-Governance scope: public surface URLs, private-source state, future-domain boundaries, and repo disclosure prevention.
+Purpose: verify Mullusi public registry source-boundary rules.
+Governance scope: manual public surfaces, manifest-generated homepage products, private-source state, future-domain boundaries, and repo disclosure prevention.
 Dependencies: Node.js standard library only.
-Invariants: compatibility registry records must not expose private repository slugs or GitHub source links.
+Invariants: public registry records must not expose private repository slugs or GitHub source links.
 */
 
 import fs from "node:fs";
@@ -11,18 +11,19 @@ import { fileURLToPath } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
-const registryPath = path.join(repoRoot, "data", "generated", "products-compat.json");
+const manualPublicSurfacesPath = path.join(repoRoot, "data", "manual", "public-surfaces.json");
+const homepageProductRegistryPath = path.join(repoRoot, "data", "generated", "homepage-product-registry.json");
 const failures = [];
 
 function recordFailure(message) {
   failures.push(message);
 }
 
-function readRegistry() {
+function readJson(filePath, label) {
   try {
-    return JSON.parse(fs.readFileSync(registryPath, "utf8"));
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
   } catch (error) {
-    throw new Error(`registry_read_failed:${error.message}`);
+    throw new Error(`${label}_read_failed:${error.message}`);
   }
 }
 
@@ -78,6 +79,26 @@ function verifyProductRegistry(products) {
   }
 }
 
+function verifyManifestCandidates(candidates) {
+  const seenIds = new Set();
+  for (const [index, candidate] of candidates.entries()) {
+    const label = `manifestCandidates.${index}`;
+    if (Object.prototype.hasOwnProperty.call(candidate, "repo") || Object.prototype.hasOwnProperty.call(candidate, "plannedRepo")) {
+      recordFailure(`${label}.repo_forbidden`);
+    }
+    if (hasRepositorySlug([candidate.id, candidate.name, candidate.summary].join(" "))) {
+      recordFailure(`${label}.repo_reference_forbidden:${candidate.id || index}`);
+    }
+    if (typeof candidate.publicExposureAllowed !== "boolean") {
+      recordFailure(`${label}.public_exposure_allowed_not_boolean`);
+    }
+    if (seenIds.has(candidate.id)) {
+      recordFailure(`${label}.id_duplicate:${candidate.id}`);
+    }
+    seenIds.add(candidate.id);
+  }
+}
+
 function verifyFutureDomains(futureDomains) {
   const seenSlugs = new Set();
   for (const [index, domain] of futureDomains.entries()) {
@@ -109,14 +130,17 @@ function verifyPrivateIncubation(privateIncubation) {
 }
 
 function verifyRegistryBoundary() {
-  const registry = readRegistry();
-  const systems = requireArray(registry.systems, "registry_systems");
-  const productRegistry = requireArray(registry.productRegistry, "registry_product_registry");
-  const futureDomains = requireArray(registry.futureDomains, "registry_future_domains");
-  const privateIncubation = Array.isArray(registry.privateIncubation) ? registry.privateIncubation : [];
+  const publicSurfaces = readJson(manualPublicSurfacesPath, "manual_public_surfaces");
+  const homepageProducts = readJson(homepageProductRegistryPath, "homepage_product_registry");
+  const systems = requireArray(publicSurfaces.systems, "manual_systems");
+  const productRegistry = requireArray(homepageProducts.productRegistry, "homepage_product_registry");
+  const futureDomains = requireArray(publicSurfaces.futureDomains, "manual_future_domains");
+  const privateIncubation = Array.isArray(publicSurfaces.privateIncubation) ? publicSurfaces.privateIncubation : [];
+  const manifestCandidates = Array.isArray(homepageProducts.manifestCandidates) ? homepageProducts.manifestCandidates : [];
 
   verifySystems(systems);
   verifyProductRegistry(productRegistry);
+  verifyManifestCandidates(manifestCandidates);
   verifyFutureDomains(futureDomains);
   verifyPrivateIncubation(privateIncubation);
 
@@ -125,7 +149,7 @@ function verifyRegistryBoundary() {
     process.exit(1);
   }
 
-  console.log(`registry boundary verification passed: ${systems.length} public surfaces, ${productRegistry.length} product records, ${futureDomains.length} staged domains`);
+  console.log(`registry boundary verification passed: ${systems.length} public surfaces, ${productRegistry.length} homepage product records, ${manifestCandidates.length} manifest candidates, ${futureDomains.length} staged domains`);
 }
 
 try {

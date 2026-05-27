@@ -113,7 +113,6 @@ const generatedArtifacts = {
   migrationCoverage: "data/generated/migration-coverage.json",
   productRegistryParity: "data/generated/product-registry-parity.json",
   publicSurfaceParity: "data/generated/public-surface-parity.json",
-  productsCompatibility: "data/generated/products-compat.json",
   runtimeWitnessIndex: "data/generated/runtime-witness-index.json",
   sitemap: "data/generated/sitemap.xml",
 };
@@ -402,7 +401,10 @@ function validatePresentation(manifest, failures) {
     return;
   }
   const presentation = manifest.presentation;
-  requireBoolean(failures, presentation.compatibilityRegistry, `${manifest.id}.presentation.compatibilityRegistry`);
+  if (Object.prototype.hasOwnProperty.call(presentation, "compatibilityRegistry")) {
+    failures.push(`presentation_legacy_compatibility_registry_forbidden:${manifest.id}`);
+  }
+  requireBoolean(failures, presentation.homepageRegistry, `${manifest.id}.presentation.homepageRegistry`);
   const displayOrder = requireInteger(failures, presentation.displayOrder, `${manifest.id}.presentation.displayOrder`);
   if (displayOrder < 0) {
     failures.push(`presentation_display_order_invalid:${manifest.id}:${displayOrder}`);
@@ -1055,7 +1057,7 @@ export function validateManifestAuthority() {
   const seenProofRoutes = new Map();
   const seenStatusRoutes = new Map();
   const seenApiRoutes = new Map();
-  const seenCompatibilityDisplayOrders = new Map();
+  const seenHomepageRegistryDisplayOrders = new Map();
 
   for (const { relativePath, manifest } of manifests) {
     for (const [label, map, value] of [
@@ -1082,13 +1084,13 @@ export function validateManifestAuthority() {
       }
     }
 
-    if (isPlainObject(manifest.presentation) && manifest.presentation.compatibilityRegistry === true) {
+    if (isPlainObject(manifest.presentation) && manifest.presentation.homepageRegistry === true) {
       const displayOrder = manifest.presentation.displayOrder;
-      const previous = seenCompatibilityDisplayOrders.get(displayOrder);
+      const previous = seenHomepageRegistryDisplayOrders.get(displayOrder);
       if (previous) {
         failures.push(`presentation_display_order_duplicate:${displayOrder}:${previous}:${relativePath}`);
       } else {
-        seenCompatibilityDisplayOrders.set(displayOrder, relativePath);
+        seenHomepageRegistryDisplayOrders.set(displayOrder, relativePath);
       }
     }
   }
@@ -1101,7 +1103,7 @@ export function validateManifestAuthority() {
       failures.push(`registry_manifest_presentation_mismatch:${mismatch.id}:${mismatch.field}`);
     }
     for (const mismatch of buildPublicSurfaceParityReport(manifests).mismatches) {
-      failures.push(`legacy_manual_public_surface_mismatch:${mismatch.section}`);
+      failures.push(`manual_public_surface_invalid:${mismatch.section}`);
     }
   }
 
@@ -1217,7 +1219,7 @@ function productRecord(manifest, witnessMap = new Map()) {
   };
 }
 
-function legacyProductRegistryProjection(manifest) {
+function homepageProductPresentationProjection(manifest) {
   const presentation = manifest.presentation;
   return {
     id: manifest.id,
@@ -1240,7 +1242,7 @@ function legacyProductRegistryProjection(manifest) {
 function productRegistryProjection(manifest, relativePath, witnessMap = new Map()) {
   const runtimeWitness = runtimeWitnessDecision(manifest, witnessMap);
   return {
-    ...legacyProductRegistryProjection(manifest),
+    ...homepageProductPresentationProjection(manifest),
     manifestPath: relativePath,
     manifestStatus: manifest.status,
     manifestRuntimeService: manifest.runtime.service,
@@ -1256,9 +1258,9 @@ function productRegistryProjection(manifest, relativePath, witnessMap = new Map(
   };
 }
 
-function compatibilityManifestEntries(manifests) {
+function homepageRegistryManifestEntries(manifests) {
   return manifests
-    .filter(({ manifest }) => manifest.presentation.compatibilityRegistry === true)
+    .filter(({ manifest }) => manifest.presentation.homepageRegistry === true)
     .sort(
       (left, right) =>
         left.manifest.presentation.displayOrder - right.manifest.presentation.displayOrder ||
@@ -1284,19 +1286,19 @@ const productRegistryParityFields = [
 ];
 
 function buildProductRegistryParityReport(manifests) {
-  const compatibilityEntries = compatibilityManifestEntries(manifests);
+  const homepageEntries = homepageRegistryManifestEntries(manifests);
   const mismatches = [];
   const matchedProducts = [];
 
-  for (const { manifest, relativePath } of compatibilityEntries) {
-    const legacyProduct = legacyProductRegistryProjection(manifest);
+  for (const { manifest, relativePath } of homepageEntries) {
+    const homepageProduct = homepageProductPresentationProjection(manifest);
     const projected = productRegistryProjection(manifest, relativePath);
     for (const field of productRegistryParityFields) {
-      if (legacyProduct[field] !== projected[field]) {
+      if (homepageProduct[field] !== projected[field]) {
         mismatches.push({
           id: manifest.id,
           field,
-          legacy: String(legacyProduct[field] ?? ""),
+          presentation: String(homepageProduct[field] ?? ""),
           manifest: String(projected[field] ?? ""),
         });
       }
@@ -1312,12 +1314,12 @@ function buildProductRegistryParityReport(manifests) {
   }
 
   return {
-    generatedLegacyRegistryCount: compatibilityEntries.length,
-    manifestPresentationCount: compatibilityEntries.length,
+    homepageRegistryCount: homepageEntries.length,
+    manifestPresentationCount: homepageEntries.length,
     comparedFields: productRegistryParityFields,
     matchedProducts: matchedProducts.sort((left, right) => left.displayOrder - right.displayOrder || left.id.localeCompare(right.id)),
     nonRegistryManifests: manifests
-      .filter(({ manifest }) => manifest.presentation.compatibilityRegistry !== true)
+      .filter(({ manifest }) => manifest.presentation.homepageRegistry !== true)
       .map(({ manifest, relativePath }) => ({
         id: manifest.id,
         name: manifest.name,
@@ -1331,62 +1333,33 @@ function buildProductRegistryParityReport(manifests) {
 
 const publicSurfaceParitySections = ["principles", "systems", "futureDomains", "privateIncubation"];
 
-function canonicalEquivalent(left, right) {
-  return JSON.stringify(canonicalize(left)) === JSON.stringify(canonicalize(right));
-}
-
-function buildPublicSurfaceParityReport(manifests) {
-  const generatedLegacy = buildLegacyProductsBody(manifests);
+function buildPublicSurfaceParityReport() {
   const manual = readManualPublicSurfaceRegistry();
   const matchedSections = [];
   const mismatches = [];
 
   for (const section of publicSurfaceParitySections) {
-    const legacyValue = generatedLegacy[section] ?? [];
     const manualValue = manual[section] ?? [];
-    if (canonicalEquivalent(legacyValue, manualValue)) {
+    if (Array.isArray(manualValue)) {
       matchedSections.push({
         section,
-        count: Array.isArray(manualValue) ? manualValue.length : 0,
+        count: manualValue.length,
       });
     } else {
       mismatches.push({
         section,
-        legacyCount: Array.isArray(legacyValue) ? legacyValue.length : 0,
-        manualCount: Array.isArray(manualValue) ? manualValue.length : 0,
+        reason: "manual_section_not_array",
       });
     }
   }
 
   return {
     manualSource: manualPublicSurfacesPath,
-    legacySource: "internal compatibility projection",
+    sourceBoundary: "manual-public-surface-registry",
     sections: publicSurfaceParitySections,
     matchedSections,
     mismatches,
     parityState: mismatches.length === 0 ? "matched" : "blocked",
-  };
-}
-
-function buildLegacyProductsBody(manifests) {
-  const publicSurfaces = readManualPublicSurfaceRegistry();
-  return {
-    meta: {
-      name: "Mullusi",
-      domain: "mullusi.com",
-      version: publicSurfaces.meta.version,
-      description: "Generated public deployment and roadmap registry for Mullusi.",
-      source_boundary: "generated-compatibility-projection",
-      generated_from: ["products/*/product.manifest.json", manualPublicSurfacesPath],
-      content_hash: "pending",
-    },
-    principles: publicSurfaces.principles || [],
-    productRegistry: compatibilityManifestEntries(manifests).map(({ manifest }) =>
-      legacyProductRegistryProjection(manifest),
-    ),
-    systems: publicSurfaces.systems || [],
-    futureDomains: publicSurfaces.futureDomains || [],
-    privateIncubation: publicSurfaces.privateIncubation || [],
   };
 }
 
@@ -1573,17 +1546,17 @@ function buildHomepageCardsArtifact(manifests) {
 }
 
 function buildHomepageProductRegistryBody(manifests, witnessMap = new Map()) {
-  const productRegistry = compatibilityManifestEntries(manifests).map(({ manifest, relativePath }) =>
+  const productRegistry = homepageRegistryManifestEntries(manifests).map(({ manifest, relativePath }) =>
     productRegistryProjection(manifest, relativePath, witnessMap),
   );
   const manifestCandidates = manifests
-    .filter(({ manifest }) => manifest.presentation.compatibilityRegistry !== true)
+    .filter(({ manifest }) => manifest.presentation.homepageRegistry !== true)
     .map(({ manifest, relativePath }) => ({
       id: manifest.id,
       name: manifest.name,
       summary: manifest.summary,
       status: manifest.status,
-      compatibilityRegistry: manifest.presentation.compatibilityRegistry,
+      homepageRegistry: manifest.presentation.homepageRegistry,
       manifestPath: relativePath,
       publicExposureAllowed: publicExposureAllowed(manifest),
       releaseGateState: releaseGateState(manifest),
@@ -1651,15 +1624,15 @@ function buildReleaseChecklistsArtifact(manifests, witnessMap = new Map()) {
 }
 
 function buildMigrationCoverageArtifact(manifests) {
-  const compatibilityEntries = compatibilityManifestEntries(manifests);
-  const coveredProducts = compatibilityEntries.map(({ manifest, relativePath }) => ({
+  const homepageEntries = homepageRegistryManifestEntries(manifests);
+  const coveredProducts = homepageEntries.map(({ manifest, relativePath }) => ({
     id: manifest.id,
     name: manifest.name,
     registryStatus: manifest.presentation.registryStatus,
     manifestPath: relativePath,
   }));
   const extraManifests = manifests
-    .filter(({ manifest }) => manifest.presentation.compatibilityRegistry !== true)
+    .filter(({ manifest }) => manifest.presentation.homepageRegistry !== true)
     .map(({ manifest }) => ({
       id: manifest.id,
       name: manifest.name,
@@ -1667,7 +1640,7 @@ function buildMigrationCoverageArtifact(manifests) {
     }))
     .sort((left, right) => left.id.localeCompare(right.id));
   return withGeneratedMeta("Mullusi Generated Registry Migration Coverage", generatedArtifacts.migrationCoverage, {
-    registryProductCount: compatibilityEntries.length,
+    registryProductCount: homepageEntries.length,
     manifestCount: manifests.length,
     coveredProducts,
     extraManifests,
@@ -1679,41 +1652,13 @@ function buildMigrationCoverageArtifact(manifests) {
 function buildProductRegistryParityArtifact(manifests) {
   return withGeneratedMeta("Mullusi Generated Product Registry Parity Witness", generatedArtifacts.productRegistryParity, {
     ...buildProductRegistryParityReport(manifests),
-  }, "products/*/product.manifest.json + internal compatibility projection");
+  }, "products/*/product.manifest.json + homepage presentation projection");
 }
 
 function buildPublicSurfaceParityArtifact(manifests) {
   return withGeneratedMeta("Mullusi Generated Public Surface Parity Witness", generatedArtifacts.publicSurfaceParity, {
-    ...buildPublicSurfaceParityReport(manifests),
-  }, `${manualPublicSurfacesPath} + internal compatibility projection`, "Generated from manual public-surface registry and generated compatibility projection. Do not edit by hand.");
-}
-
-function buildProductsCompatibilityBody(manifests, witnessMap = new Map()) {
-  const publicSurfaces = readManualPublicSurfaceRegistry();
-  const homepageProducts = buildHomepageProductRegistryBody(manifests, witnessMap);
-  return {
-    compatibility: {
-      target: "assets/app.js current product registry renderer",
-      sourceBoundary: "manifest presentation projection plus manual public-surface registry",
-      cutoverState: "active",
-    },
-    principles: publicSurfaces.principles || [],
-    productRegistry: homepageProducts.productRegistry,
-    systems: publicSurfaces.systems || [],
-    futureDomains: publicSurfaces.futureDomains || [],
-    privateIncubation: publicSurfaces.privateIncubation || [],
-    manifestCandidates: homepageProducts.manifestCandidates,
-  };
-}
-
-function buildProductsCompatibilityArtifact(manifests, witnessMap = new Map()) {
-  return withGeneratedMeta(
-    "Mullusi Generated Products Compatibility Registry",
-    generatedArtifacts.productsCompatibility,
-    buildProductsCompatibilityBody(manifests, witnessMap),
-    `products/*/product.manifest.json + ${manualPublicSurfacesPath}`,
-    "Generated from product manifests and manual public-surface registry. Do not edit by hand.",
-  );
+    ...buildPublicSurfaceParityReport(),
+  }, manualPublicSurfacesPath, "Generated from manual public-surface registry. Do not edit by hand.");
 }
 
 function buildRuntimeWitnessIndexArtifact(manifests, witnessMap = new Map()) {
@@ -1785,7 +1730,6 @@ function buildSitemapArtifact(manifests) {
 
 export function buildGeneratedArtifacts(manifests) {
   const runtimeWitnessMap = buildRuntimeWitnessMap(readRuntimeWitnessRegistry());
-  const productsCompatibilityArtifact = stableStringify(buildProductsCompatibilityArtifact(manifests, runtimeWitnessMap));
   return new Map([
     [generatedArtifacts.products, stableStringify(buildProductsArtifact(manifests, runtimeWitnessMap))],
     [generatedArtifacts.status, stableStringify(buildStatusArtifact(manifests, runtimeWitnessMap))],
@@ -1799,7 +1743,6 @@ export function buildGeneratedArtifacts(manifests) {
     [generatedArtifacts.migrationCoverage, stableStringify(buildMigrationCoverageArtifact(manifests))],
     [generatedArtifacts.productRegistryParity, stableStringify(buildProductRegistryParityArtifact(manifests))],
     [generatedArtifacts.publicSurfaceParity, stableStringify(buildPublicSurfaceParityArtifact(manifests))],
-    [generatedArtifacts.productsCompatibility, productsCompatibilityArtifact],
     [generatedArtifacts.runtimeWitnessIndex, stableStringify(buildRuntimeWitnessIndexArtifact(manifests, runtimeWitnessMap))],
     [generatedArtifacts.sitemap, buildSitemapArtifact(manifests)],
   ]);

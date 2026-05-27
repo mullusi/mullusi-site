@@ -15,7 +15,7 @@
     "failureMode",
     "summary"
   ],
-  "generatedLegacyRegistryCount": 10,
+  "homepageRegistryCount": 10,
   "manifestPresentationCount": 10,
   "matchedProducts": [
     {
@@ -81,11 +81,11 @@
   ],
   "meta": {
     "artifact": "data/generated/product-registry-parity.json",
-    "content_hash": "sha256:ba7bdad34c159c23ecf20222682724ddb94233a9d18447a18e289b7003c42d23",
+    "content_hash": "sha256:0c95d30ab5409ee5f2bc3b10bb5a6722d16f2fe7a1014b7bb6e62466c9fb0cdd",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Product Registry Parity Witness",
     "purpose": "Generated from product manifests. Do not edit by hand.",
-    "source": "products/*/product.manifest.json + internal compatibility projection"
+    "source": "products/*/product.manifest.json + homepage presentation projection"
   },
   "mismatches": [],
   "nonRegistryManifests": [

@@ -5,7 +5,7 @@
     "version": "2026.05.public-site",
     "description": "Manual source for non-product homepage registry lists. Product rows are manifest-owned.",
     "source_boundary": "manual-public-surface-registry",
-    "content_hash": "sha256:87666563d5fa0cd5a6b215ad7b78a47ffb9976748adc735e20571a4da786a503"
+    "content_hash": "sha256:fdd9f22b1ddbc30cbccb3dcbc42f003aed34732d65326480b4ecaa70184c50c4"
   },
   "principles": [
     "Symbols are atomic.",
@@ -27,10 +27,7 @@
         "index",
         "public-boundary",
         "private-source"
-      ],
-      "am": {
-        "summary": "Public Mullusi website, domain boundary, and private-source deployment."
-      }
+      ]
     }
   ],
   "futureDomains": [
@@ -39,77 +36,49 @@
       "slug": "physics",
       "status": "planned",
       "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans.",
-      "am": {
-        "title": "ፊዚክስ",
-        "summary": "ለregimes፣ axioms፣ bridges፣ ክፍት ችግሮችና solver execution plans የታቀደ ምልክታዊ ምክንያታዊ የፊዚክስ ሞተር።"
-      }
+      "summary": "Planned symbolic causal physics engine for regimes, axioms, bridges, open problems, and solver execution plans."
     },
     {
       "name": "Mullusi Math Engine",
       "slug": "math",
       "status": "planned",
       "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow.",
-      "am": {
-        "title": "ሒሳብ",
-        "summary": "ለማረጋገጫዎች፣ ለአልጀብራ መዋቅሮች፣ ለcategory-theoretic ካርታዎች፣ ለoptimization እና ለtheorem workflow የታቀደ ምልክታዊ የሒሳብ ሞተር።"
-      }
+      "summary": "Planned symbolic mathematics engine for proofs, algebraic structures, category-theoretic maps, optimization, and theorem workflow."
     },
     {
       "name": "Mullusi Biology Engine",
       "slug": "biology",
       "status": "planned",
       "releaseBoundary": "private incubation",
-      "summary": "Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning.",
-      "am": {
-        "title": "ባዮሎጂ",
-        "summary": "ለDNA/protein ሐረግ፣ ለphenotype ገደቦች፣ ለsystems biology እና ለexperiment planning የታቀደ ምክንያታዊ የባዮሎጂ መዋቅር ሞተር።"
-      }
+      "summary": "Planned causal biological structure engine for DNA/protein lineage, phenotype constraints, systems biology, and experiment planning."
     },
     {
       "name": "Mullusi Chemistry Engine",
       "slug": "chemistry",
       "status": "planned",
       "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation.",
-      "am": {
-        "title": "ኬሚስትሪ",
-        "summary": "ለreaction graphs፣ ለmolecular constraints፣ ለregime bridges እና ለlab-safe hypothesis generation የታቀደ ምልክታዊ የኬሚስትሪ ሽፋን።"
-      }
+      "summary": "Planned symbolic chemistry layer for reaction graphs, molecular constraints, regime bridges, and lab-safe hypothesis generation."
     },
     {
       "name": "Mullusi Music Engine",
       "slug": "music",
       "status": "planned",
       "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure.",
-      "am": {
-        "title": "ሙዚቃ",
-        "summary": "ለrhythm፣ harmony፣ scale systems፣ cultural motifs፣ composition logic እና audio structure የታቀደ ምልክታዊ የሙዚቃ ምክንያት ሞተር።"
-      }
+      "summary": "Planned symbolic music reasoning engine for rhythm, harmony, scale systems, cultural motifs, composition logic, and audio structure."
     },
     {
       "name": "Mullusi Engineering Engine",
       "slug": "engineering",
       "status": "planned",
       "releaseBoundary": "private incubation",
-      "summary": "Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications across many engineering products.",
-      "am": {
-        "title": "ኢንጂነሪንግ",
-        "summary": "ለdesign constraints፣ systems modeling፣ tolerance እና safety analysis፣ simulation bridges እና በብዙ የኢንጂነሪንግ ምርቶች ላይ ሊረጋገጡ የሚችሉ build specifications የታቀደ ምልክታዊ የኢንጂነሪንግ ሞተር።"
-      }
+      "summary": "Planned symbolic engineering engine for design constraints, systems modeling, tolerance and safety analysis, simulation bridges, and verifiable build specifications across many engineering products."
     },
     {
       "name": "Mullusi Unified Science Lab",
       "slug": "unified-science",
       "status": "planned",
       "releaseBoundary": "private incubation",
-      "summary": "Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures.",
-      "am": {
-        "title": "የተዋሃደ ሳይንስ",
-        "summary": "math, physics, biology, chemistry እና music በሚተዳደሩ ምክንያታዊ መዋቅሮች የሚያገናኝ የታቀደ ተሻጋሪ-ጎራ ሽፋን።"
-      }
+      "summary": "Planned cross-domain bridge layer connecting math, physics, biology, chemistry, and music through governed causal structures."
     }
   ],
   "privateIncubation": [

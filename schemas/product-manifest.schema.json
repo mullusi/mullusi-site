@@ -217,7 +217,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "compatibilityRegistry",
+        "homepageRegistry",
         "displayOrder",
         "classification",
         "registryStatus",
@@ -232,7 +232,7 @@
         "failureMode"
       ],
       "properties": {
-        "compatibilityRegistry": {
+        "homepageRegistry": {
           "type": "boolean"
         },
         "displayOrder": {

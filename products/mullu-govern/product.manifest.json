@@ -60,7 +60,7 @@
     ]
   },
   "presentation": {
-    "compatibilityRegistry": true,
+    "homepageRegistry": true,
     "displayOrder": 1,
     "classification": "public product",
     "registryStatus": "awaiting-evidence",

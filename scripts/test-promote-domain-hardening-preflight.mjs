@@ -8,6 +8,7 @@ Invariants: tests do not promote the real preflight permanently and never provid
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -16,7 +17,7 @@ const scriptsDir = path.dirname(scriptPath);
 const repoRoot = path.resolve(scriptsDir, "..");
 const promoteScript = path.join(scriptsDir, "promote-domain-hardening-preflight.mjs");
 const checkScript = path.join(scriptsDir, "check-domain-hardening-preflight.mjs");
-const preflightPath = path.join(repoRoot, "ops", "domain-security-preflight.md");
+const sourcePreflightPath = path.join(repoRoot, "ops", "domain-security-preflight.md");
 
 const allConfirmationFlags = [
   "--active-cloudflare-ca-set",
@@ -29,32 +30,35 @@ const allConfirmationFlags = [
   "--tls-rpt-mailbox",
 ];
 
-function runPromote(args = []) {
-  return spawnSync(process.execPath, [promoteScript, ...args], {
+function runPromote(preflightPath, args = []) {
+  return spawnSync(process.execPath, [promoteScript, `--path=${preflightPath}`, ...args], {
     cwd: repoRoot,
     encoding: "utf8",
   });
 }
 
-function runCheck(args = []) {
-  return spawnSync(process.execPath, [checkScript, ...args], {
+function runCheck(preflightPath, args = []) {
+  return spawnSync(process.execPath, [checkScript, `--path=${preflightPath}`, ...args], {
     cwd: repoRoot,
     encoding: "utf8",
   });
 }
 
-function withPreflightRestore(testFn) {
-  const before = fs.readFileSync(preflightPath, "utf8");
+function withPreflightFixture(testFn) {
+  const fixtureDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-domain-preflight-"));
+  const preflightPath = path.join(fixtureDirectory, "domain-security-preflight.md");
+  const before = fs.readFileSync(sourcePreflightPath, "utf8");
+  fs.writeFileSync(preflightPath, before, "utf8");
   try {
-    testFn(before);
+    testFn(before, preflightPath);
   } finally {
-    fs.writeFileSync(preflightPath, before, "utf8");
+    fs.rmSync(fixtureDirectory, { force: true, recursive: true });
   }
 }
 
 function testDryRunWithoutFlagsDoesNotModifyPreflight() {
-  withPreflightRestore((before) => {
-    const result = runPromote(["--date=2026-05-24"]);
+  withPreflightFixture((before, preflightPath) => {
+    const result = runPromote(preflightPath, ["--date=2026-05-24"]);
     const after = fs.readFileSync(preflightPath, "utf8");
 
     assert.equal(result.status, 0);
@@ -65,8 +69,8 @@ function testDryRunWithoutFlagsDoesNotModifyPreflight() {
 }
 
 function testDryRunWithFlagsDoesNotModifyPreflight() {
-  withPreflightRestore((before) => {
-    const result = runPromote(["--active-cloudflare-ca-set", "--date=2026-05-24"]);
+  withPreflightFixture((before, preflightPath) => {
+    const result = runPromote(preflightPath, ["--active-cloudflare-ca-set", "--date=2026-05-24"]);
     const after = fs.readFileSync(preflightPath, "utf8");
 
     assert.equal(result.status, 0);
@@ -77,8 +81,8 @@ function testDryRunWithFlagsDoesNotModifyPreflight() {
 }
 
 function testPartialWritePromotesOnlyEvidenceAndDerivedPermissions() {
-  withPreflightRestore(() => {
-    const result = runPromote([
+  withPreflightFixture((_before, preflightPath) => {
+    const result = runPromote(preflightPath, [
       "--active-cloudflare-ca-set",
       "--cloudflare-ca-source",
       "--dns-write-authority",
@@ -86,7 +90,7 @@ function testPartialWritePromotesOnlyEvidenceAndDerivedPermissions() {
       "--write",
     ]);
     const content = fs.readFileSync(preflightPath, "utf8");
-    const check = runCheck(["--expect-blocked"]);
+    const check = runCheck(preflightPath, ["--expect-blocked"]);
 
     assert.equal(result.status, 0);
     assert.match(result.stdout, /domain_hardening_preflight_promoted=true/);
@@ -101,10 +105,10 @@ function testPartialWritePromotesOnlyEvidenceAndDerivedPermissions() {
 }
 
 function testFullWritePromotesReadyState() {
-  withPreflightRestore(() => {
-    const result = runPromote([...allConfirmationFlags, "--date=2026-05-24", "--write"]);
+  withPreflightFixture((_before, preflightPath) => {
+    const result = runPromote(preflightPath, [...allConfirmationFlags, "--date=2026-05-24", "--write"]);
     const content = fs.readFileSync(preflightPath, "utf8");
-    const check = runCheck(["--require-ready"]);
+    const check = runCheck(preflightPath, ["--require-ready"]);
 
     assert.equal(result.status, 0);
     assert.match(content, /^domain_hardening_preflight=SolvedVerified$/m);
@@ -120,8 +124,8 @@ function testFullWritePromotesReadyState() {
 }
 
 function testUnsupportedFlagFails() {
-  withPreflightRestore((before) => {
-    const result = runPromote(["--unsafe", "--date=2026-05-24"]);
+  withPreflightFixture((before, preflightPath) => {
+    const result = runPromote(preflightPath, ["--unsafe", "--date=2026-05-24"]);
     const after = fs.readFileSync(preflightPath, "utf8");
 
     assert.equal(result.status, 1);
@@ -132,8 +136,8 @@ function testUnsupportedFlagFails() {
 }
 
 function testInvalidDateFails() {
-  withPreflightRestore((before) => {
-    const result = runPromote(["--active-cloudflare-ca-set", "--date=05-24-2026"]);
+  withPreflightFixture((before, preflightPath) => {
+    const result = runPromote(preflightPath, ["--active-cloudflare-ca-set", "--date=05-24-2026"]);
     const after = fs.readFileSync(preflightPath, "utf8");
 
     assert.equal(result.status, 1);

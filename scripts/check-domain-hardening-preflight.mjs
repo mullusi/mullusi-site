@@ -12,7 +12,6 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
-const defaultPreflightPath = path.join(repoRoot, "ops/domain-security-preflight.md");
 const allowedOptions = new Set(["--require-ready", "--expect-blocked"]);
 
 const requiredEvidenceKeys = [
@@ -164,7 +163,7 @@ export function formatResult(result) {
 }
 
 function unsupportedOptions(args) {
-  return args.filter((arg) => arg.startsWith("--") && !allowedOptions.has(arg));
+  return args.filter((arg) => arg.startsWith("--") && !allowedOptions.has(arg) && !arg.startsWith("--path="));
 }
 
 function runCli() {
@@ -178,7 +177,9 @@ function runCli() {
 
   const requireReady = args.includes("--require-ready");
   const expectBlocked = args.includes("--expect-blocked");
-  const content = fs.readFileSync(defaultPreflightPath, "utf8");
+  const pathArg = args.find((arg) => arg.startsWith("--path="));
+  const preflightPath = path.resolve(repoRoot, pathArg ? pathArg.slice("--path=".length) : "ops/domain-security-preflight.md");
+  const content = fs.readFileSync(preflightPath, "utf8");
   const result = evaluateDomainHardeningPreflight(content);
   console.log(formatResult(result));
 
