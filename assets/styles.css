@@ -37,6 +37,7 @@ Invariants: content remains legible above the substrate, mobile layouts do not o
   --top-glow: rgba(92, 230, 196, 0.07);
   --maxw: 1180px;
   --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --sans: "Inter", "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica", "Arial", system-ui, sans-serif;
   --serif: Georgia, "Times New Roman", serif;
   --symbols: "Mullusi Symbols", "Noto Sans Symbols 2", "Segoe UI Symbol", "Cambria Math", var(--mono);
   --role-eyebrow-size: 11px;
@@ -44,7 +45,7 @@ Invariants: content remains legible above the substrate, mobile layouts do not o
   --role-subline-size: 14px;
   --role-plain-size: 13px;
   --role-card-title-size: 17px;
-  --role-card-body-size: 12px;
+  --role-card-body-size: 13px;
 }
 
 :root[data-theme="light"] {
@@ -103,9 +104,9 @@ body {
   overflow-x: hidden;
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--mono);
-  font-size: 15px;
-  line-height: 1.65;
+  font-family: var(--sans);
+  font-size: 15.5px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   transition: background 0.25s ease, color 0.25s ease;
@@ -174,6 +175,18 @@ code {
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 700ms ease 200ms;
+}
+
+body.substrate-ready #substrate {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #substrate {
+    transition: opacity 0ms;
+  }
 }
 
 #substrate canvas {
@@ -500,6 +513,16 @@ p {
   height: 28px;
 }
 
+.mobile-menu-label {
+  background: var(--bg-panel);
+  color: var(--accent-warm);
+  padding: 10px 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
 .mobile-menu a {
   display: block;
   background: var(--nav-elevated);
@@ -781,11 +804,11 @@ html.menu-open body {
 }
 
 .hero h1 {
-  max-width: 24ch;
-  margin: 16px 0 22px;
-  font-size: 46px;
+  max-width: 22ch;
+  margin: 18px 0 18px;
+  font-size: 52px;
   letter-spacing: 0;
-  line-height: 1.08;
+  line-height: 1.05;
 }
 
 .hero h1 em {
@@ -847,9 +870,13 @@ html.menu-open body {
 .hero-doctrine-status {
   max-width: 62ch;
   margin: 14px 0 0;
-  color: var(--ink-soft);
-  font-size: 12.5px;
-  line-height: 1.55;
+  padding: 6px 10px;
+  border-left: 2px solid var(--accent-deep);
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+  opacity: 0.82;
 }
 
 .hero-stage,
@@ -917,9 +944,9 @@ html.menu-open body {
   }
 
   .hero h1 {
-    max-width: 22ch;
+    max-width: 20ch;
     margin: 10px 0 16px;
-    font-size: 44px;
+    font-size: 50px;
   }
 
   .hero .lead {
@@ -978,7 +1005,18 @@ html.menu-open body {
   width: max-content;
   gap: 48px;
   white-space: nowrap;
-  animation: scroll 38s linear infinite;
+  animation: scroll 54s linear infinite;
+  opacity: 0.78;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mtrack {
+    animation: none;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 14px 32px;
+    justify-content: center;
+  }
 }
 
 .mtrack span {
@@ -1012,11 +1050,23 @@ html.menu-open body {
 }
 
 .tier-secondary {
-  padding: 88px 0;
+  padding: 80px 0;
+}
+
+.tier-secondary .sec-head h2 {
+  font-size: calc(var(--role-heading-size) * 0.86);
 }
 
 .tier-tertiary {
-  padding: 64px 0;
+  padding: 56px 0;
+}
+
+.tier-tertiary .sec-head h2 {
+  font-size: calc(var(--role-heading-size) * 0.78);
+}
+
+.tier-tertiary .sec-head p {
+  font-size: 14px;
 }
 
 .start-here {
@@ -1242,8 +1292,8 @@ html.menu-open body {
 }
 
 .card p {
-  font-size: 12.5px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .card .kind {
@@ -1722,6 +1772,7 @@ html.menu-open body {
 .product-card p {
   flex: 1;
   font-size: var(--role-card-body-size);
+  line-height: 1.55;
 }
 
 .route a.lnk,
@@ -2670,7 +2721,8 @@ html.menu-open body {
 }
 
 .pg p {
-  font-size: 12px;
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .road {
@@ -2698,7 +2750,7 @@ html.menu-open body {
 }
 
 .rd p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.55;
 }
 
