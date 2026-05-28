@@ -220,23 +220,23 @@
     },
     "hero.routeStateAria": {
       "en": "Public route state",
-      "am": "Public route state"
+      "am": "የይፋዊ መንገድ ሁኔታ"
     },
     "hero.railMapLabel": {
       "en": "Public map",
-      "am": "Public map"
+      "am": "ይፋዊ ካርታ"
     },
     "hero.railMapBody": {
       "en": "mullusi.com is the company and product routing surface.",
-      "am": "mullusi.com is the company and product routing surface."
+      "am": "mullusi.com የኩባንያውና የምርት የመንገድ ገጽ ነው።"
     },
     "hero.railMulluLabel": {
       "en": "Mullu",
-      "am": "Mullu"
+      "am": "ሙሉ"
     },
     "hero.railMulluBody": {
       "en": "Private beta product route with proof-boundary copy.",
-      "am": "Private beta product route with proof-boundary copy."
+      "am": "የግል ቤታ የምርት መንገድ ከማረጋገጫ-ወሰን ይዘት ጋር።"
     },
     "hero.railRuntimeLabel": {
       "en": "Runtime",
@@ -244,7 +244,7 @@
     },
     "hero.railRuntimeBody": {
       "en": "AwaitingEvidence until signed witness endpoints publish.",
-      "am": "AwaitingEvidence until signed witness endpoints publish."
+      "am": "የተፈረሙ የምስክር መዳረሻዎች እስኪታተሙ ድረስ AwaitingEvidence።"
     },
     "hero.viewPlatform": {
       "en": "View platform map",
@@ -307,8 +307,8 @@
       "am": "የማረጋገጫ ወሰንን ይመልከቱ"
     },
     "start.proof.b": {
-      "en": "Verified and pending runtime claims.",
-      "am": "የተረጋገጡና በመጠባበቅ ላይ ያሉ runtime የይገባኛል ጥያቄዎች።"
+      "en": "Pending runtime claims.",
+      "am": "በመጠባበቅ ላይ ያሉ runtime የይገባኛል ጥያቄዎች።"
     },
     "start.playground.k": {
       "en": "Demo",
@@ -423,8 +423,8 @@
       "am": "የማረጋገጫ መንገድ"
     },
     "claim.ledger.proofV": {
-      "en": "is the public boundary for verified and pending evidence.",
-      "am": "ለተረጋገጠና በመጠባበቅ ላይ ላለ ማስረጃ ይፋዊ ወሰን ነው።"
+      "en": "is the public boundary for pending runtime evidence.",
+      "am": "በመጠባበቅ ላይ ላለ runtime ማስረጃ ይፋዊ ወሰን ነው።"
     },
     "evidence.tag": {
       "en": "Evidence Plane",
