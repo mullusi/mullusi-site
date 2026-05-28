@@ -1017,6 +1017,10 @@ html.menu-open body {
     gap: 14px 32px;
     justify-content: center;
   }
+
+  .mtrack span:nth-child(n + 7) {
+    display: none;
+  }
 }
 
 .mtrack span {
