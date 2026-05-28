@@ -1224,6 +1224,31 @@ html.menu-open body {
   z-index: 1;
 }
 
+/* Interlace seal — crowns the canon-table arch like a manuscript seal.
+   Ethiopian-cross lattice: woven 8-point star (diamond over square) +
+   equal-arm witness cross inside a sealed ring. Single instance only,
+   so it reads as a seal, not a pattern.
+   Source: https://vanishingarts.gallery/the-evolution-and-brilliance-of-ethiopian-crosses/ */
+.arch-seal {
+  position: absolute;
+  top: -23px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line-bright);
+  border-radius: 50%;
+  background: var(--bg-raise);
+  color: var(--accent);
+}
+
+.arch-seal svg {
+  display: block;
+}
+
 .pillar-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
