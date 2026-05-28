@@ -177,6 +177,6 @@ Next:
 
 STATUS:
   Completeness: 100%
-  Invariants verified: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
+  Self-attested invariants: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
   Open issues: recovery evidence remains blocked by design until private inventory and live evidence close
   Next action: keep this file updated when new public surfaces or validation gates are added

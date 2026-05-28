@@ -110,6 +110,6 @@ finding=none
 
 STATUS:
   Completeness: 100%
-  Invariants verified: bounded execution order, CAA precondition, sender-inventory precondition, DMARC staged rollout, rollback defined
+  Self-attested invariants: bounded execution order, CAA precondition, sender-inventory precondition, DMARC staged rollout, rollback defined
   Open issues: active Cloudflare CA set, Google Workspace DKIM selector, sender inventory, report mailbox ownership, MTA-STS host
   Next action: confirm Cloudflare active certificate authority set and Google Workspace DKIM selector before mutating DNS

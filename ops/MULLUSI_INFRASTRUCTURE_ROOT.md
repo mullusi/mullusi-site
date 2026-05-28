@@ -195,6 +195,6 @@ Do not enable `includeSubDomains` or preload during active surface evolution.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: no secrets stored, authority chain explicit, recovery before runtime, public surfaces require purpose and health behavior, www one-hop 301 root and path/query witnesses verified
+  Self-attested invariants: no secrets stored, authority chain explicit, recovery before runtime, public surfaces require purpose and health behavior, www one-hop 301 root and path/query witnesses verified
   Open issues: recovery code storage, transfer lock confirmation, DKIM setup, hosted runtime witness, managed PostgreSQL
   Next action: complete private recovery inventory and promote recovery witness before host/database provisioning

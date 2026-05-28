@@ -210,6 +210,6 @@ release lineage and rollback are defined.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: declared evidence state, consequence re-governance, reversible release, rollback lineage, threat-modeled governance layer, doctrine versioning
+  Self-attested invariants: declared evidence state, consequence re-governance, reversible release, rollback lineage, threat-modeled governance layer, doctrine versioning
   Open issues: runtime conformance witnesses remain AwaitingEvidence
   Next action: apply before each doctrine, philosophy, or public-claim change

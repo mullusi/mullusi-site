@@ -336,6 +336,6 @@ raw_response_headers=not_recorded
 
 STATUS:
   Completeness: 99%
-  Invariants verified: historical five-route crawl parity, current thirteen-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback, Google route coverage readback, Search Console thirteen-route discovery
+  Self-attested invariants: historical five-route crawl parity, current thirteen-route crawl parity, robots root allow, sitemap reference, no detected noindex blocker on verified routes, first-party Google readback, route-specific /mullu/ Google readback, Google route coverage readback, Search Console thirteen-route discovery
   Open issues: eleven expanded routes still await public Google route-specific readback
   Next action: monitor public Google results for expanded route recrawl

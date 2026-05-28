@@ -117,6 +117,6 @@ Rollback must preserve the existing public website and email foundation:
 
 STATUS:
   Completeness: 100%
-  Invariants verified: provider-neutral host path, external persistence, staged HSTS, no secret storage, no placeholder subdomain
+  Self-attested invariants: provider-neutral host path, external persistence, staged HSTS, no secret storage, no placeholder subdomain
   Open issues: concrete host provider, managed PostgreSQL endpoint, production secret store, DNS target
   Next action: provision the private host and managed PostgreSQL, then execute the backend production release checklist

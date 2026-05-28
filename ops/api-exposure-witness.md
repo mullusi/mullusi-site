@@ -105,6 +105,6 @@ unchanged.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: no public API DNS before recovery, no raw host values, recovery dependency explicit, live probe public-safe
+  Self-attested invariants: no public API DNS before recovery, no raw host values, recovery dependency explicit, live probe public-safe
   Open issues: recovery witness, host provider, managed PostgreSQL, production credentials, release preflight, rollback confirmation
   Next action: keep API exposure blocked until recovery and pre-DNS runtime evidence pass

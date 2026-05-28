@@ -72,6 +72,6 @@ Before publication, link each accepted claim to one of:
 
 STATUS:
   Completeness: 100%
-  Invariants verified: claim status, evidence basis, risk decision, rollback path
+  Self-attested invariants: claim status, evidence basis, risk decision, rollback path
   Open issues: none
   Next action: apply before each website copy or registry change

@@ -84,6 +84,6 @@ state after unobserved changes.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: scheduled probe set declared, artifact validator declared, artifact retention declared, security.txt disclosure metadata declared, public-safe witness boundary declared, universal claim boundary preserved
+  Self-attested invariants: scheduled probe set declared, artifact validator declared, artifact retention declared, security.txt disclosure metadata declared, public-safe witness boundary declared, universal claim boundary preserved
   Open issues: longitudinal evidence depends on future scheduled runs
   Next action: review uploaded live-safety artifacts after scheduled execution

@@ -65,6 +65,6 @@ Rollback:
 
 STATUS:
   Completeness: 100%
-  Invariants verified: implementation privacy, release decision, license intent, rollback path
+  Self-attested invariants: implementation privacy, release decision, license intent, rollback path
   Open issues: formal legal review is outside this repository
   Next action: run before publishing technical internals or research artifacts
