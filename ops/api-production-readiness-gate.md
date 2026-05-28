@@ -168,6 +168,6 @@ If post-DNS evidence fails:
 
 STATUS:
   Completeness: 100%
-  Invariants verified: no placeholder DNS, recovery before exposure, external persistence, staged HSTS, rollback preserves root foundation
+  Self-attested invariants: no placeholder DNS, recovery before exposure, external persistence, staged HSTS, rollback preserves root foundation
   Open issues: concrete host provider, managed PostgreSQL endpoint, production credential store, recovery checklist confirmation
   Next action: satisfy pre-provision requirements before any public `api` DNS record is created

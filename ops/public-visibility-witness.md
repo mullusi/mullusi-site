@@ -187,6 +187,6 @@ probe, or edge cache gap without blocking the operator shell.
 
 STATUS:
   Completeness: 99%
-  Invariants verified: public DNS resolver floor, HTTPS 200, TLS authorized, one-hop www-to-apex 301, external regional probe floor met, scheduled live-safety monitor attached, bounded global-claim boundary
+  Self-attested invariants: public DNS resolver floor, HTTPS 200, TLS authorized, one-hop www-to-apex 301, external regional probe floor met, scheduled live-safety monitor attached, bounded global-claim boundary
   Open issues: universal all-user visibility remains unprovable by finite probes
   Next action: review scheduled live-safety runs for longitudinal evidence

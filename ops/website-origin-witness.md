@@ -146,6 +146,6 @@ required_www_redirect_status=301
 
 STATUS:
   Completeness: 100%
-  Invariants verified: Cloudflare edge observed, GitHub origin markers absent, one-hop www-to-apex 301 verified, path/query preservation verified, runtime API boundary unchanged
+  Self-attested invariants: Cloudflare edge observed, GitHub origin markers absent, one-hop www-to-apex 301 verified, path/query preservation verified, runtime API boundary unchanged
   Open issues: Cloudflare Pages project configuration readback
   Next action: preserve this witness during private-source migration and keep API readiness gated separately

@@ -82,6 +82,6 @@ witness is promoted.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: no secret values, explicit provisioning block, manual confirmation required, API DNS remains blocked
+  Self-attested invariants: no secret values, explicit provisioning block, manual confirmation required, API DNS remains blocked
   Open issues: all recovery witnesses remain AwaitingEvidence
   Next action: complete private recovery inventory outside Git, then promote this witness only after manual confirmation

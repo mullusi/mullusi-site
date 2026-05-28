@@ -85,6 +85,6 @@ node scripts/check-domain-security.mjs --allow-hardening-gaps
 
 STATUS:
   Completeness: 70%
-  Invariants verified: DNSSEC DS present, Google Workspace MX present, SPF present, DMARC present, raw DNS values not recorded
+  Self-attested invariants: DNSSEC DS present, Google Workspace MX present, SPF present, DMARC present, raw DNS values not recorded
   Open issues: CAA missing, SPF soft-fail, DMARC monitoring-only, known Google DKIM selector missing, MTA-STS missing, TLS-RPT missing
   Next action: update Cloudflare and Google Workspace DNS controls in the bounded order above, then rerun without --allow-hardening-gaps

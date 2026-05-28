@@ -66,6 +66,6 @@ tls_rpt_publication_allowed=true
 
 STATUS:
   Completeness: 100%
-  Invariants verified: mutation permissions are false, raw secrets not recorded, external evidence requirements explicit
+  Self-attested invariants: mutation permissions are false, raw secrets not recorded, external evidence requirements explicit
   Open issues: Cloudflare CA set, DNS write authority, sender inventory, Google DKIM selector, report mailboxes, MTA-STS host
   Next action: fill only public-safe Pass/AwaitingEvidence states after admin-console confirmation, then run scripts/check-domain-hardening-preflight.mjs --require-ready

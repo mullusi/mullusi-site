@@ -72,6 +72,6 @@ or operational runtime services.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: product state, proof boundary, runtime witness, support path
+  Self-attested invariants: product state, proof boundary, runtime witness, support path
   Open issues: live runtime endpoints remain AwaitingEvidence
   Next action: keep staged engines out of live-product copy until the gate closes

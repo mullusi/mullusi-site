@@ -67,6 +67,6 @@ notice unless a specific file states otherwise.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: private by default, deliberate release, license intent, rollback path, public governance mirror exception bounded
+  Self-attested invariants: private by default, deliberate release, license intent, rollback path, public governance mirror exception bounded
   Open issues: external repository visibility changes still require account-level action
   Next action: keep public mirrors evidence-only and classify each new public repository before adding strategic work

@@ -93,6 +93,6 @@ node scripts/check-live-security-headers.mjs
 
 STATUS:
   Completeness: 100%
-  Invariants verified: CSP present, HSTS preload present, frame blocking present, cross-origin headers present, nosniff present, permissions policy present, raw headers not recorded
+  Self-attested invariants: CSP present, HSTS preload present, frame blocking present, cross-origin headers present, nosniff present, permissions policy present, raw headers not recorded
   Open issues: account-level MFA/WAF/CAA cannot be proven from this repository; runtime API remains AwaitingEvidence
   Next action: keep live security-header checker in scheduled probes and rerun after every Pages deployment

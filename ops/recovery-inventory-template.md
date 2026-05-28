@@ -123,6 +123,6 @@ billing_renewal_path_confirmed=true
 
 STATUS:
   Completeness: 100%
-  Invariants verified: no secret values, recovery before runtime, emergency procedure bounded, public foundation retest required after recovery action
+  Self-attested invariants: no secret values, recovery before runtime, emergency procedure bounded, public foundation retest required after recovery action
   Open issues: private inventory must be filled by operator outside Git
   Next action: copy the structure into an ignored private file or encrypted password manager, then mark recovery witnesses complete

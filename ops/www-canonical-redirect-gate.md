@@ -133,6 +133,6 @@ must be a command output captured from the public HTTPS route after propagation.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: source redirect rule declared, unique witness blocks required, live redirect witness verified, permanent 301 verified, path/query preservation verified, operator closure contract declared, runtime API boundary unchanged
+  Self-attested invariants: source redirect rule declared, unique witness blocks required, live redirect witness verified, permanent 301 verified, path/query preservation verified, operator closure contract declared, runtime API boundary unchanged
   Open issues: none for www canonical redirect
   Next action: keep the redirect under versioned source control and monitor runtime API gates separately
