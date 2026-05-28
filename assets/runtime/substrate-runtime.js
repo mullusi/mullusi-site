@@ -158,9 +158,20 @@ Invariants: substrate rendering is optional, reduced motion produces a static fi
     let staticDrawn = false;
     let motionLastTime = performance.now();
 
+    let substrateDimmed = false;
     function readScroll() {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       scrollTarget = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      // Vivid in the hero, quiet in the body: dim the substrate once the
+      // reader scrolls past the hero, with hysteresis to avoid flicker.
+      const vh = window.innerHeight || 1;
+      if (!substrateDimmed && window.scrollY > vh * 0.7) {
+        substrateDimmed = true;
+        document.body.classList.add("substrate-dimmed");
+      } else if (substrateDimmed && window.scrollY < vh * 0.45) {
+        substrateDimmed = false;
+        document.body.classList.remove("substrate-dimmed");
+      }
     }
 
     function frameFactor(timestamp) {
