@@ -35,6 +35,7 @@ const requiredFiles = [
   ".well-known/security.txt",
   "README.md",
   "docs/private-source-deployment-migration.md",
+  "docs/mirror-to-deploy-port-runbook.md",
   "ops/public-claim-gate.md",
   "ops/repo-release-gate.md",
   "ops/product-release-gate.md",
