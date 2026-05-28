@@ -15,6 +15,17 @@ Invariants: substrate rendering is optional, reduced motion produces a static fi
 
   function initSubstrate(context = {}) {
     const qs = typeof context.qs === "function" ? context.qs : pageRuntime().qs;
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const lowEnd =
+      (connection && connection.saveData === true) ||
+      (typeof navigator.deviceMemory === "number" && navigator.deviceMemory < 2);
+    if (lowEnd) {
+      const substrateNode = qs("#substrate");
+      if (substrateNode && substrateNode.parentNode) {
+        substrateNode.parentNode.removeChild(substrateNode);
+      }
+      return;
+    }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const lat = qs("#c-lattice");
     const wav = qs("#c-wave");
