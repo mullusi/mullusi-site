@@ -144,6 +144,6 @@ public mirror posture separate from production source control.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary, origin headers without GitHub/Fastly markers, www one-hop 301 redirect closure, public governance mirror posture
+  Self-attested invariants: deployment continuity, private-source boundary, no planned repo disclosure, Cloudflare Pages artifact boundary, origin headers without GitHub/Fastly markers, www one-hop 301 redirect closure, public governance mirror posture
   Open issues: none for website hosting migration
   Next action: keep strategic source changes in the private repository and keep this public mirror limited to governed public evidence
