@@ -15,7 +15,7 @@ AwaitingEvidence on independent runtime witness until signed endpoints close.
 ```
 
 The doctrine is itself a claim and carries its own evidence boundary. It is
-Verified against the architecture and the published philosophy, and
+Self-attested against the architecture and the published philosophy, and
 AwaitingEvidence on independent runtime witness until `/health`,
 `/gateway/witness`, and `/runtime/conformance` publish signed witness evidence.
 
