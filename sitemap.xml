@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  /search/ and /browse/ are intentionally omitted: both route shells declare
+  <meta name="robots" content="noindex, follow"> while their product runtime
+  witnesses remain AwaitingEvidence. They are listed in status.json
+  published_routes but must not be advertised for indexing until the
+  product release gate closes.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mullusi.com/</loc>

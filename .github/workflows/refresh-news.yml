@@ -1,0 +1,52 @@
+# Purpose: refresh data/news.json on a daily schedule and open a pull request when it changes.
+# Governance scope: public technology-news signal refresh through the branch-protected PR pipeline.
+# Dependencies: GitHub Actions, Node.js, peter-evans/create-pull-request.
+# Invariants: pushes to main are not allowed; refreshed content lands only through a reviewable PR.
+
+name: Refresh News
+
+on:
+  schedule:
+    - cron: "13 8 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: refresh-news
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Refresh news.json
+        run: node scripts/fetch-news.mjs
+
+      - name: Open pull request when news.json changes
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: data/news.json
+          branch: bot/refresh-news
+          delete-branch: true
+          commit-message: "data(news): refresh frontier signal"
+          title: "data(news): refresh frontier signal"
+          body: |
+            Automated refresh of `data/news.json` produced by `scripts/fetch-news.mjs`.
+
+            - Source: Hacker News Algolia search (keyless public API).
+            - Deterministic, capped, HTTPS-only output.
+            - Required because branch protection blocks direct cron pushes to `main`.
+          labels: |
+            automated
+            data-refresh
