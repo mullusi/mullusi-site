@@ -183,8 +183,20 @@ body.substrate-ready #substrate {
   opacity: 1;
 }
 
+/* Vivid in the hero, quiet in the body: once the reader scrolls past the
+   hero, dim the substrate so it sits behind text instead of competing with
+   it. Toggled by the substrate runtime with hysteresis. */
+body.substrate-ready.substrate-dimmed #substrate {
+  opacity: 0.5;
+  transition: opacity 360ms ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   #substrate {
+    transition: opacity 0ms;
+  }
+
+  body.substrate-ready.substrate-dimmed #substrate {
     transition: opacity 0ms;
   }
 }
