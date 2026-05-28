@@ -879,6 +879,22 @@ html.menu-open body {
   opacity: 0.82;
 }
 
+.hero-last-updated {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-last-updated::before {
+  content: "◆";
+  margin-right: 8px;
+  color: var(--accent-deep);
+}
+
 .hero-stage,
 .hero-copy {
   min-width: 0;
@@ -1135,6 +1151,170 @@ html.menu-open body {
 .read-boundary p {
   max-width: 82ch;
   font-size: 12.5px;
+}
+
+/*
+  Verification Plane
+  Numbered pillars (Anthropic transparency pattern) + adversary-capability
+  language (SLSA L0-L3 pattern) + three primitives (Rekor/Sigstore vocab) +
+  haräg top divider and canon-table arch frame (Ethiopic manuscript tradition).
+  Sources: https://www.anthropic.com/transparency,
+  https://slsa.dev/spec/v1.0/levels,
+  https://docs.sigstore.dev/logging/overview/,
+  https://www.thedigitalwalters.org/Data/WaltersManuscripts/html/W838/description.html
+*/
+.verification-plane {
+  position: relative;
+}
+
+.harag-divider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background:
+    linear-gradient(90deg, transparent, rgba(92, 230, 196, 0.18) 18%, rgba(232, 177, 92, 0.22) 50%, rgba(92, 230, 196, 0.18) 82%, transparent),
+    repeating-linear-gradient(90deg, var(--accent-deep) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(90deg, transparent 0 7px, rgba(232, 177, 92, 0.42) 7px 8px, transparent 8px 14px);
+  border-bottom: 1px solid var(--accent-deep);
+}
+
+:root[data-theme="light"] .harag-divider {
+  background:
+    linear-gradient(90deg, transparent, rgba(15, 118, 110, 0.16) 18%, rgba(180, 83, 9, 0.18) 50%, rgba(15, 118, 110, 0.16) 82%, transparent),
+    repeating-linear-gradient(90deg, rgba(15, 118, 110, 0.5) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(90deg, transparent 0 7px, rgba(180, 83, 9, 0.42) 7px 8px, transparent 8px 14px);
+  border-bottom-color: rgba(15, 118, 110, 0.4);
+}
+
+.arch-frame {
+  position: relative;
+  margin: 36px auto 0;
+  padding: 28px 28px 0;
+  border: 1px solid var(--line-bright);
+  border-bottom: 0;
+  border-top-left-radius: 220px 56px;
+  border-top-right-radius: 220px 56px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-raise) 36%, transparent), transparent 76%);
+}
+
+.arch-frame::before,
+.arch-frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent-deep), transparent 88%);
+  opacity: 0.6;
+}
+
+.arch-frame::before {
+  left: 18px;
+}
+
+.arch-frame::after {
+  right: 18px;
+}
+
+.arch-frame-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pillar {
+  display: grid;
+  gap: 10px;
+  min-height: 188px;
+  background: var(--panel-glass);
+  padding: 22px 22px 18px;
+  align-content: start;
+}
+
+.pillar-num {
+  color: var(--accent-warm);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.pillar h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.pillar p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.pillar-state {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line-bright);
+  background: var(--panel-field);
+  color: var(--accent-warm);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+}
+
+.pillar-state::before {
+  content: "◇";
+  margin-right: 6px;
+  color: var(--accent-deep);
+}
+
+.verify-footnote {
+  max-width: 78ch;
+  margin: 26px auto 0;
+  color: var(--ink-dim);
+  font-size: 12.5px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .pillar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .arch-frame {
+    margin-top: 24px;
+    padding: 20px 14px 0;
+    border-top-left-radius: 140px 40px;
+    border-top-right-radius: 140px 40px;
+  }
+
+  .arch-frame::before {
+    left: 10px;
+  }
+
+  .arch-frame::after {
+    right: 10px;
+  }
 }
 
 .oldway-grid {

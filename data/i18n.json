@@ -154,6 +154,62 @@
       "en": "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
       "am": "ዶክትሪን v1.2 ከሙሉሲ አርክቴክቸር አንጻር በራስ-የተረጋገጠ ነው፤ የተፈረሙ መዳረሻዎች እስኪዘጉ ድረስ በነጻ runtime ምስክር ላይ AwaitingEvidence ነው።"
     },
+    "hero.lastUpdated": {
+      "en": "Last updated 2026-05-28",
+      "am": "የመጨረሻ ዝመና 2026-05-28"
+    },
+    "verify.tag": {
+      "en": "Verification Plane",
+      "am": "የማረጋገጫ ዘርፍ"
+    },
+    "verify.title": {
+      "en": "Three things you can check",
+      "am": "ሊፈትሹ የሚችሏቸው ሦስት ነገሮች"
+    },
+    "verify.body": {
+      "en": "Trust comes from what you can verify, not from what we promise. Each pillar is named after what it lets you catch — not what it prevents.",
+      "am": "እምነት የሚመጣው ከሚፈትሹት እንጂ ከምንቃጣው አይደለም። እያንዳንዱ ምሰሶ የሚሰየመው እንዲይዙ በሚያስችለው እንጂ በሚከለክለው አይደለም።"
+    },
+    "verify.p1.title": {
+      "en": "Inclusion",
+      "am": "ማካተት"
+    },
+    "verify.p1.body": {
+      "en": "Is a stamp recorded in the public log? Reserved until the witness endpoint publishes signed evidence.",
+      "am": "ማህተም በይፋዊው መዝገብ ላይ ተመዝግቧል? የተፈረመ ማስረጃ እስኪታተም ድረስ የተያዘ።"
+    },
+    "verify.p1.state": {
+      "en": "Reserved",
+      "am": "የተያዘ"
+    },
+    "verify.p2.title": {
+      "en": "Integrity",
+      "am": "ምሉእነት"
+    },
+    "verify.p2.body": {
+      "en": "Is the log itself append-only? AwaitingEvidence until cryptographic checkpoints publish.",
+      "am": "መዝገቡ ራሱ ጭማሪ-ብቻ ነው? ምስጥራዊ ቼክፖይንቶች እስኪታተሙ ድረስ AwaitingEvidence።"
+    },
+    "verify.p2.state": {
+      "en": "AwaitingEvidence",
+      "am": "AwaitingEvidence"
+    },
+    "verify.p3.title": {
+      "en": "Identity",
+      "am": "ማንነት"
+    },
+    "verify.p3.body": {
+      "en": "Which independent witnesses watch the log? Reserved until external monitors register their public keys.",
+      "am": "የትኞቹ ነጻ ምስክሮች መዝገቡን ይከታተላሉ? የውጭ ተቆጣጣሪዎች ይፋዊ ቁልፎቻቸውን እስኪያስመዘግቡ ድረስ የተያዘ።"
+    },
+    "verify.p3.state": {
+      "en": "Reserved",
+      "am": "የተያዘ"
+    },
+    "verify.footnote": {
+      "en": "Each pillar is the same shape: name what you catch, name the adversary baseline, name when it goes live. Borrowed from transparency-log practice and the Ethiopian canon-table tradition — both are witness apparatuses.",
+      "am": "እያንዳንዱ ምሰሶ ተመሳሳይ ቅርጽ አለው፦ የሚይዙትን ይሰይሙ፣ የተቃዋሚ መነሻን ይሰይሙ፣ መቼ ቀጥታ እንደሚሆን ይሰይሙ። ከግልጽነት-መዝገብ ልምድ እና ከኢትዮጵያ ካኖን-ጠረጴዛ ወግ የተወሰደ — ሁለቱም የምስክርነት መሣሪያዎች ናቸው።"
+    },
     "oldway.tag": {
       "en": "The Shift",
       "am": "ለውጡ"
