@@ -128,7 +128,7 @@
     },
     "hero.plain": {
       "en": "Every action checked. Every material consequence re-checked. Every verdict traced.",
-      "am": "እያንዳንዱ ድርጊት ይፈተሻል። ቁሳዊ ውጤት እንደገና ይፈተሻል። እያንዳንዱ ፍርድ ይከታተላል።"
+      "am": "እያንዳንዱ ድርጊት ይፈተሻል። እያንዳንዱ ቁሳዊ ውጤት እንደገና ይፈተሻል። እያንዳንዱ ፍርድ ይከታተላል።"
     },
     "hero.ctaPlayground": {
       "en": "Try Mullu Playground",
@@ -140,7 +140,7 @@
     },
     "hero.doctrineStatus": {
       "en": "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
-      "am": "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close."
+      "am": "ዶክትሪን v1.2 ከሙሉሲ አርክቴክቸር አንጻር በራስ-የተረጋገጠ ነው፤ የተፈረሙ መዳረሻዎች እስኪዘጉ ድረስ በነጻ runtime ምስክር ላይ AwaitingEvidence ነው።"
     },
     "oldway.tag": {
       "en": "The Shift",
