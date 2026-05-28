@@ -38,6 +38,6 @@ headers, or unpublished source paths.
 
 STATUS:
   Completeness: 100%
-  Invariants verified: runtime witness format, fail-closed preflight, service health evidence boundary
+  Self-attested invariants: runtime witness format, fail-closed preflight, service health evidence boundary
   Open issues: all product witnesses are AwaitingEvidence until deployed service health observations exist
   Next action: collect signed health, gateway witness, and runtime conformance observations before production promotion

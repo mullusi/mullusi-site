@@ -172,10 +172,10 @@ function nextPreflightContent(originalContent) {
       : "Open issues: Cloudflare CA set, DNS write authority, sender inventory, Google DKIM selector, report mailboxes, MTA-STS host",
   );
   content = content.replace(
-    /Invariants verified: .*/,
+    /Self-attested invariants: .*/,
     allEvidencePass
-      ? "Invariants verified: mutation permissions derived from evidence, raw secrets not recorded, preflight ready"
-      : "Invariants verified: mutation permissions are derived from evidence, raw secrets not recorded, external evidence requirements explicit",
+      ? "Self-attested invariants: mutation permissions derived from evidence, raw secrets not recorded, preflight ready"
+      : "Self-attested invariants: mutation permissions are derived from evidence, raw secrets not recorded, external evidence requirements explicit",
   );
   content = content.replace(
     /Completeness: \d+%/,
