@@ -88,17 +88,10 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <img class="brand-logo nav-logo logo-light" src="assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="190" height="48" />
       </a>
       <div class="nav-links">
-        <a href="#start" data-i18n="nav.start">Start</a>
-        <a href="#platform" data-i18n="nav.platform">Platform</a>
-        <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
         <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
-        <a href="#products" data-i18n="nav.products">Products</a>
-        <a href="#services" data-i18n="nav.services">Services</a>
-        <a href="#evidence" data-i18n="nav.evidence">Evidence</a>
+        <a href="#platform" data-i18n="nav.platform">Platform</a>
         <a href="/proof/" data-i18n="nav.proof">Proof</a>
         <a href="/doctrine/" data-i18n="nav.doctrine">Doctrine</a>
-        <a href="#sciences" data-i18n="nav.sciences">Engines</a>
-        <a href="#repos" data-i18n="nav.repos">Surfaces</a>
       </div>
       <div class="nav-cta">
         <button class="theme-toggle lang-toggle" type="button" data-lang-toggle aria-label="Switch language" aria-pressed="false">
@@ -124,19 +117,23 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       <img src="assets/mullusi-icon.svg" alt="" width="32" height="32" />
       <span>Mullusi</span>
     </div>
+    <div class="mobile-menu-label" data-i18n="nav.groupProduct">Product</div>
+    <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
+    <a href="/playground/" data-i18n="nav.playground">Playground</a>
+    <a href="#products" data-i18n="nav.products">Products</a>
+    <a href="#services" data-i18n="nav.services">Services</a>
+    <div class="mobile-menu-label" data-i18n="nav.groupEvidence">Evidence</div>
+    <a href="/proof/" data-i18n="nav.proof">Proof</a>
+    <a href="#evidence" data-i18n="nav.evidence">Evidence</a>
+    <a href="#use-cases" data-i18n="nav.usecases">Use Cases</a>
+    <a href="/doctrine/" data-i18n="nav.doctrine">Doctrine</a>
+    <div class="mobile-menu-label" data-i18n="nav.groupSystem">System</div>
     <a href="#start" data-i18n="nav.start">Start</a>
     <a href="#platform" data-i18n="nav.platform">Platform</a>
     <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
-    <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
-    <a href="#products" data-i18n="nav.products">Products</a>
-    <a href="#services" data-i18n="nav.services">Services</a>
-    <a href="#evidence" data-i18n="nav.evidence">Evidence</a>
-    <a href="#use-cases" data-i18n="nav.usecases">Use Cases</a>
-    <a href="/playground/" data-i18n="nav.playground">Playground</a>
-    <a href="/proof/" data-i18n="nav.proof">Proof</a>
-    <a href="/doctrine/" data-i18n="nav.doctrine">Doctrine</a>
     <a href="#sciences" data-i18n="nav.sciences">Engines</a>
     <a href="#repos" data-i18n="nav.repos">Surfaces</a>
+    <div class="mobile-menu-label" data-i18n="nav.groupMore">More</div>
     <a href="#news" data-i18n="nav.news">News</a>
     <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
     <a href="/contact/" data-i18n="nav.contact">Contact</a>
@@ -148,13 +145,6 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap">
         <div class="hero-stage">
-        <div class="spine" aria-hidden="true">
-          <div class="s" data-n="01">Ι</div><span class="arr">→</span>
-          <div class="s" data-n="02">Λ</div><span class="arr">→</span>
-          <div class="s" data-n="03">Σ</div><span class="arr">→</span>
-          <div class="s" data-n="04">Γ</div><span class="arr">→</span>
-          <div class="s" data-n="05">H</div>
-        </div>
         <div class="hero-wordmark" aria-label="ሙሉ Mullu">
           <span class="fidel-name" lang="am">ሙሉ</span>
           <span class="latin-name" data-text="Mullu">Mullu</span>
@@ -169,7 +159,6 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="hero-actions">
           <a href="/playground/" class="btn btn-solid" data-i18n="hero.ctaPlayground">Try Mullu Playground</a>
           <a href="/proof/" class="btn" data-i18n="hero.reviewProof">See Proof Boundaries</a>
-          <a href="/pilot/" class="btn" data-i18n="hero.ctaPilot">Request Governed Pilot</a>
         </div>
         <dl class="hero-proof-rail" aria-label="Public route state" data-i18n-attr="aria-label:hero.routeStateAria">
           <div>
@@ -185,7 +174,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
             <dd data-i18n="hero.railRuntimeBody">AwaitingEvidence until signed witness endpoints publish.</dd>
           </div>
         </dl>
-        <p class="plain hero-doctrine-status" data-i18n="hero.doctrineStatus">Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.</p>
+        <p class="hero-doctrine-status" data-i18n="hero.doctrineStatus">Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.</p>
         </div>
       </div>
     </section>
@@ -232,7 +221,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band tier-primary oldway-section" id="oldway" aria-labelledby="oldway-title">
+    <section class="band tier-secondary oldway-section" id="oldway" aria-labelledby="oldway-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="oldway.tag">The Shift</div>
@@ -413,7 +402,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band tier-primary" id="architecture" aria-labelledby="architecture-title">
+    <section class="band tier-secondary" id="architecture" aria-labelledby="architecture-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="architecture.tag">Architecture</div>
@@ -445,14 +434,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         </div>
         <div class="routes reveal" data-interface-links>
           <article class="route"><span class="badge">Public route</span><h3>Docs</h3><p>Reference material, architecture notes, and public learning paths.</p><a class="lnk" href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Open Docs →</a></article>
-          <article class="route"><span class="badge">Reserved</span><h3>Sandbox</h3><p>Experimental surface reserved for governed demonstrations and prototypes.</p><span class="reserved-route">Reserved - AwaitingEvidence</span></article>
-          <article class="route"><span class="badge">Reserved</span><h3>API</h3><p>Public gateway reserved for service contracts and machine-facing endpoints.</p><span class="reserved-route">Reserved - AwaitingEvidence</span></article>
-          <article class="route"><span class="badge">Reserved</span><h3>Metrics</h3><p>Evidence plane reserved for runtime metrics, audits, graphs, and release witnesses.</p><span class="reserved-route">Reserved - AwaitingEvidence</span></article>
         </div>
       </div>
     </section>
 
-    <section class="band tier-primary" id="services" aria-labelledby="services-title">
+    <section class="band tier-secondary" id="services" aria-labelledby="services-title">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="services.tag">Service Stack</div>

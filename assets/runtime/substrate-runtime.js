@@ -566,11 +566,13 @@ Invariants: substrate rendering is optional, reduced motion produces a static fi
 
     if (reduce) {
       drawStatic();
+      document.body.classList.add("substrate-ready");
       return;
     }
 
     readScroll();
     scrollFrac = scrollTarget;
+    document.body.classList.add("substrate-ready");
     requestAnimationFrame(drawFrame);
   }
 
