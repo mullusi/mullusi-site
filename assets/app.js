@@ -14,4 +14,6 @@ if (!window.MullusiHomepageContext) {
 const homepageRuntime = window.MullusiHomepageContext.createHomepageRuntime();
 
 homepageRuntime.substrateRuntime.initSubstrate({ qs: homepageRuntime.qs });
-homepageRuntime.homepageController.initContent(homepageRuntime.controllerContext());
+homepageRuntime.homepageController.initContent(homepageRuntime.controllerContext()).catch((error) => {
+  console.error(error);
+});

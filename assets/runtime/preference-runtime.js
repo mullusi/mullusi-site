@@ -110,7 +110,7 @@ Invariants: preference values are normalized, storage failures are surfaced, lan
     }
   }
 
-  function applyTheme(theme, contextSource = {}, persist = true) {
+  function applyTheme(theme, contextSource = {}, persist = true, dispatch = true) {
     const context = resolveContext(contextSource);
     const { qs, qsa } = pageRuntime();
     const normalizedTheme = theme === "light" ? "light" : "dark";
@@ -133,7 +133,9 @@ Invariants: preference values are normalized, storage failures are surfaced, lan
         : (contextText(context, "theme.light") || "Light");
     });
 
-    window.dispatchEvent(new CustomEvent("mullusi-theme-change", { detail: { theme: normalizedTheme } }));
+    if (dispatch) {
+      window.dispatchEvent(new CustomEvent("mullusi-theme-change", { detail: { theme: normalizedTheme } }));
+    }
     return normalizedTheme;
   }
 
@@ -172,7 +174,7 @@ Invariants: preference values are normalized, storage failures are surfaced, lan
     });
 
     const activeTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
-    applyTheme(activeTheme, contextSource, false);
+    applyTheme(activeTheme, contextSource, false, false);
 
     window.dispatchEvent(new CustomEvent("mullusi-lang-change", { detail: { lang: normalized } }));
     return normalized;
@@ -199,10 +201,14 @@ Invariants: preference values are normalized, storage failures are surfaced, lan
       });
     });
 
-    window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
-      if (storedTheme()) return;
-      applyTheme(event.matches ? "light" : "dark", contextSource, false);
-    });
+    try {
+      window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
+        if (storedTheme()) return;
+        applyTheme(event.matches ? "light" : "dark", contextSource, false);
+      });
+    } catch (error) {
+      // Older browsers without MediaQueryList.addEventListener keep the bound theme.
+    }
   }
 
   async function loadI18n(path = "data/i18n.json") {
