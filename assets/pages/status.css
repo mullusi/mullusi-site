@@ -26,6 +26,17 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       font: 15px/1.65 var(--mono);
     }
     a { color: inherit; }
+    .skip-link {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 10;
+      transform: translateY(-200%);
+      background: var(--accent);
+      color: #050609;
+      padding: 0.75rem 1rem;
+    }
+    .skip-link:focus { transform: translateY(0); }
     nav, main, footer {
       width: min(1120px, calc(100% - 32px));
       margin: 0 auto;

@@ -147,6 +147,7 @@ export function buildCloudflarePages(options = {}) {
   for (const relativePath of publicEntries) {
     copyPublicEntry(relativePath, outputDirectory);
   }
+  stampLastUpdated(outputDirectory, options.buildDate);
   assertForbiddenEntriesAbsent(outputDirectory);
   return {
     outputDirectory,
@@ -154,6 +155,31 @@ export function buildCloudflarePages(options = {}) {
     excludedPublicEntries: [...excludedPublicEntries],
     forbiddenOutputEntries: [...forbiddenOutputEntries],
   };
+}
+
+// Stamp the deploy date into the built i18n dictionary so the homepage
+// "Last updated" line reflects when the artifact was actually published,
+// instead of a hardcoded date that silently goes stale. data/i18n.json is
+// not byte-matched by validate-site, so mutating the dist copy is hash-safe;
+// the committed source keeps a stable placeholder. The inline <time> in
+// index.html stays as the pre-JS / noscript fallback.
+function stampLastUpdated(outputDirectory, buildDate) {
+  const i18nPath = path.join(outputDirectory, "data", "i18n.json");
+  if (!fs.existsSync(i18nPath)) {
+    return;
+  }
+  const iso = (buildDate ?? new Date().toISOString()).slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+    return;
+  }
+  const dictionary = JSON.parse(fs.readFileSync(i18nPath, "utf8"));
+  const entry = dictionary?.strings?.["hero.lastUpdated"];
+  if (!entry) {
+    return;
+  }
+  entry.en = `Last updated ${iso}`;
+  entry.am = `የመጨረሻ ዝመና ${iso}`;
+  fs.writeFileSync(i18nPath, `${JSON.stringify(dictionary, null, 2)}\n`, "utf8");
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
