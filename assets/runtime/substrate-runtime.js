@@ -13,8 +13,21 @@ Invariants: substrate rendering is optional, reduced motion produces a static fi
     return window.MullusiPageRuntime;
   }
 
+  // Temporary kill-switch: the canvas substrate's continuous rAF loop starves
+  // headless screenshot/preview tooling, blocking visual verification. While
+  // disabled, the substrate is removed from the DOM and the animation never
+  // starts. Flip to false (or delete this block) to restore the substrate.
+  const SUBSTRATE_DISABLED = true;
+
   function initSubstrate(context = {}) {
     const qs = typeof context.qs === "function" ? context.qs : pageRuntime().qs;
+    if (SUBSTRATE_DISABLED) {
+      const substrateNode = qs("#substrate");
+      if (substrateNode && substrateNode.parentNode) {
+        substrateNode.parentNode.removeChild(substrateNode);
+      }
+      return;
+    }
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     const lowEnd =
       (connection && connection.saveData === true) ||
