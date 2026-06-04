@@ -1,8 +1,8 @@
 <!--
 Purpose: define the Mullusi public-claim gate for website copy, structured data, and public routes.
-Governance scope: published claims, evidence state, public route readiness, risk classification, and witness records.
-Dependencies: data/site.json, data/generated/products.json, proof route, deployment host, and validation scripts.
-Invariants: no public claim ships without a status, evidence basis, exposure decision, and rollback path.
+Governance scope: Foundation Mode, published claims, evidence state, public route readiness, risk classification, and witness records.
+Dependencies: docs/FOUNDATION_MODE.md, data/site.json, data/generated/products.json, proof route, deployment host, and validation scripts.
+Invariants: no public claim ships without a status, evidence basis, exposure decision, and rollback path; Foundation Mode blocks access, deployment, endpoint-readiness, and customer-readiness claims.
 -->
 
 # Public Claim Gate
@@ -41,6 +41,9 @@ Rollback:
 
 ## Hard Blockers
 
+- Foundation Mode blocks customer access, active pilot workflow, public runtime
+  deployment, endpoint-readiness, and production service claims until explicit
+  promotion evidence closes.
 - Runtime availability claims are blocked until witness endpoints are reachable
   and published in the proof boundary.
 - Product-readiness claims are blocked when the surface is only a roadmap,
@@ -55,9 +58,11 @@ Rollback:
 ## Allowed Public Posture
 
 ```text
-Mullusi builds a governed symbolic product foundation.
-Mullu Govern Evaluation is the first public product boundary.
-Other engines remain staged or private until release gates close.
+Mullusi is preparing a governed foundation for high-risk symbolic work.
+Local proof first.
+Pilot access is not open yet.
+Runtime claims remain AwaitingEvidence.
+No customer access or deployment claim.
 ```
 
 ## Required Witness

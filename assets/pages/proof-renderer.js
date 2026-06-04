@@ -446,7 +446,7 @@ Invariants: all fetched records render with escaped text or bounded links, failu
               <h3>${escapeHtml(board.title || "What is live, what is not.")}</h3>
               <p class="runtime-follow">
                 ${escapeHtml(board.follow || "")}
-                ${followHref ? `<a href='${escapeHtml(followHref)}'>${escapeHtml(board.followLabel || "Request access")}</a>` : ""}
+                ${followHref ? `<a href='${escapeHtml(followHref)}'>${escapeHtml(board.followLabel || "Review proof boundary")}</a>` : ""}
               </p>
             </div>
             <div class="runtime-status-grid">

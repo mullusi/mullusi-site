@@ -38,10 +38,26 @@ function testValidatorCarriesDoctrineWordingGate() {
 
   for (const expectedTerm of [
     "function validateDoctrineWordingContract()",
+    "function validateFoundationModeBoundary()",
     "doctrine_wording_required_term_missing",
     "doctrine_wording_forbidden_phrase",
-    "Every material consequence re-checked.",
-    "re-governs material consequences when context, authority, risk, or dependency state changes.",
+    "foundation_mode_required_term_missing",
+    "foundation_mode_forbidden_invitation",
+    "status_witness_scope_invalid",
+    "status_website_publication_scope_missing",
+    "homepage_last_updated_datetime_mismatch",
+    "i18n_last_updated_am_mojibake",
+    "Mullusi is preparing a governed foundation for high-risk symbolic work.",
+    "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
+    "Static website published; product runtime release witnesses AwaitingEvidence.",
+    "Mullusi Contact - Foundation Questions",
+    "Structured question fields",
+    "Pilot access is not open yet.",
+    "foundation_mode_required_term_missing",
+    "public foundation route first",
+    "planned higher evaluation limits",
+    "customer-controlled deployment",
+    "output-derived actions become proposals first",
     "return PublishableWithBoundary or GovernanceBlocked(reason)",
     "threat_model_minimum",
   ]) {
@@ -60,10 +76,14 @@ function testPublicSurfacesCarryHardenedDoctrineTerms() {
     [
       "index.html",
       [
-        "Mullusi governs high-risk symbolic intelligence and software actions before they execute.",
+        "Mullusi is preparing a governed foundation for high-risk symbolic work.",
         "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
-        "Every material consequence re-checked.",
-        "re-governs material consequences when context, authority, risk, or dependency state changes.",
+        "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
+        "output-derived actions become proposals first",
+        "public foundation route first",
+        "witness closure preparation",
+        "foundation product path",
+        "public site can record future surface expansion",
         'href="/doctrine/"',
       ],
     ],
@@ -111,6 +131,22 @@ function testForbiddenDoctrinePhrasesStayOutOfPublicSurfaces() {
     "full runtime conformance",
     "high-risk software actions before they execute.",
     "governed intelligence for consequential action",
+    "Request access",
+    "private beta access",
+    "public-facing first",
+    "live product path",
+    "ready for direct surface expansion",
+    "limited public access",
+    "small-volume hosted evaluations",
+    "proof stamp access",
+    "customer-controlled deployment",
+    "product-ready public-source releases",
+    "Live Runtime",
+    "live runtime evidence",
+    "Live runtime witness",
+    "Runtime access",
+    "pending live runtime witness",
+    "live runtime availability",
     "teaches the model",
     "Free teaches the model",
   ];
@@ -131,7 +167,7 @@ function testDoctrineNavigationIsTranslated() {
   assert.ok(i18n.strings["nav.doctrine"].am.length > 0);
   assert.equal(
     i18n.strings["hero.title"].en,
-    "Mullusi governs high-risk symbolic intelligence and software actions before they execute.",
+    "Mullusi is preparing a governed foundation for high-risk symbolic work.",
   );
 }
 
@@ -139,4 +175,66 @@ testValidatorCarriesDoctrineWordingGate();
 testPublicSurfacesCarryHardenedDoctrineTerms();
 testForbiddenDoctrinePhrasesStayOutOfPublicSurfaces();
 testDoctrineNavigationIsTranslated();
+assertIncludes(readUtf8("docs/FOUNDATION_MODE.md"), "Keep `/pilot/` as a boundary route", "foundation mode doc");
+assertIncludes(readUtf8("docs/FOUNDATION_MODE.md"), "[Foundation Prerequisites](FOUNDATION_PREREQUISITES.md)", "foundation mode doc");
+assertIncludes(readUtf8("docs/FOUNDATION_MODE.md"), "external witness blockers belong to product/runtime release claims", "foundation mode doc");
+assertIncludes(readUtf8("docs/FOUNDATION_MODE.md"), "Static website published; product runtime release witnesses AwaitingEvidence.", "foundation mode doc");
+assertIncludes(readUtf8("docs/FOUNDATION_PREREQUISITES.md"), "Foundation prerequisites are preparation work, not launch work.", "foundation prerequisites doc");
+assertIncludes(readUtf8("docs/FOUNDATION_PREREQUISITES.md"), "External witness blockers apply to product/runtime release claims.", "foundation prerequisites doc");
+assertIncludes(readUtf8("docs/FOUNDATION_PREREQUISITES.md"), "First local proof thread is approval-gated and receipt-bound.", "foundation prerequisites doc");
+assertIncludes(readUtf8("docs/FOUNDATION_PREREQUISITES.md"), "No customer access or deployment claim.", "foundation prerequisites doc");
+assertIncludes(readUtf8("pilot/index.html"), "Pilot route state: Foundation boundary; no access claim", "pilot foundation route");
+assertIncludes(readUtf8("pilot/index.html"), "API runtime readiness", "pilot foundation route");
+assertExcludes(readUtf8("pilot/index.html"), "live API", "pilot foundation route");
+assertIncludes(readUtf8("contact/index.html"), "Mullusi Contact - Foundation Questions", "contact foundation route");
+assertIncludes(readUtf8("contact/index.html"), "Structured question fields", "contact foundation route");
+assertIncludes(readUtf8("contact/index.html"), "does not claim backend storage, access workflow, or pilot workflow.", "contact foundation route");
+assertExcludes(readUtf8("contact/index.html"), "Structured intake fields", "contact foundation route");
+assertExcludes(readUtf8("contact/index.html"), "Governed Intake", "contact foundation route");
+assertExcludes(readUtf8("contact/index.html"), "pilot intake", "contact foundation route");
+assertIncludes(readUtf8("status/index.html"), "Published website routes are live and linked.", "status foundation route");
+assertIncludes(readUtf8("status/index.html"), "They do not claim open pilot access.", "status foundation route");
+assertIncludes(readUtf8("terms/index.html"), "foundation-stage agreement-boundary questions", "terms foundation route");
+assertIncludes(readUtf8("terms/index.html"), "Pilot access remains closed until a separate readiness decision is published.", "terms foundation route");
+assertExcludes(readUtf8("terms/index.html"), "governed pilot or product agreement", "terms foundation route");
+assertIncludes(readUtf8("acceptable-use/index.html"), "future governed runtime conduct", "acceptable use foundation route");
+assertIncludes(readUtf8("acceptable-use/index.html"), "If a separate written runtime approval is published", "acceptable use foundation route");
+assertIncludes(readUtf8("acceptable-use/index.html"), "Runtime conduct terms: AwaitingEvidence until separate written approval.", "acceptable use foundation route");
+assertExcludes(readUtf8("acceptable-use/index.html"), "future governed runtime access", "acceptable use foundation route");
+assertExcludes(readUtf8("acceptable-use/index.html"), "When governed runtime access is granted", "acceptable use foundation route");
+assertIncludes(readUtf8("data/site.json"), "foundation examples", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "local proof examples", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "planned higher evaluation limits", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "proof stamp review", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "private deployment boundary", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "after release evidence closes", "site registry foundation boundary");
+assertExcludes(readUtf8("data/site.json"), "limited public access", "site registry foundation boundary");
+assertExcludes(readUtf8("data/site.json"), "small-volume hosted evaluations", "site registry foundation boundary");
+assertExcludes(readUtf8("data/site.json"), "proof stamp access", "site registry foundation boundary");
+assertExcludes(readUtf8("data/site.json"), "customer-controlled deployment", "site registry foundation boundary");
+assertIncludes(readUtf8("data/i18n.json"), "public foundation route first", "i18n foundation boundary");
+assertIncludes(readUtf8("data/i18n.json"), "witness closure preparation", "i18n foundation boundary");
+assertIncludes(readUtf8("data/i18n.json"), "foundation product path", "i18n foundation boundary");
+assertIncludes(readUtf8("data/i18n.json"), "public site can record future surface expansion", "i18n foundation boundary");
+assertExcludes(readUtf8("data/i18n.json"), "public-facing first", "i18n foundation boundary");
+assertExcludes(readUtf8("data/i18n.json"), "live product path", "i18n foundation boundary");
+assertExcludes(readUtf8("data/i18n.json"), "ready for direct surface expansion", "i18n foundation boundary");
+assertExcludes(readUtf8("data/i18n.json"), "product-ready public-source releases", "i18n foundation boundary");
+assertIncludes(readUtf8("index.html"), "Runtime Witness", "runtime witness label boundary");
+assertIncludes(readUtf8("data/i18n.json"), "Runtime Witness", "runtime witness label boundary");
+assertIncludes(readUtf8("proof/index.html"), "Runtime witness", "proof runtime witness boundary");
+assertIncludes(readUtf8("terms/index.html"), "Runtime product boundary", "terms runtime boundary");
+assertIncludes(readUtf8("playground/index.html"), "not the runtime service", "playground runtime boundary");
+assertIncludes(readUtf8("data/site.json"), "does not claim runtime availability", "sample response runtime boundary");
+assertIncludes(readUtf8("mullu/index.html"), "pilot workflow are not claimed", "mullu foundation route");
+assertExcludes(readUtf8("index.html"), "Live Runtime", "runtime witness label boundary");
+assertExcludes(readUtf8("mullu/index.html"), "pilot intake", "mullu foundation route");
+assertExcludes(readUtf8("proof/index.html"), "Live runtime witness", "proof runtime witness boundary");
+assertExcludes(readUtf8("terms/index.html"), "Runtime access", "terms runtime boundary");
+assertExcludes(readUtf8("playground/index.html"), "live runtime remains", "playground runtime boundary");
+assertExcludes(readUtf8("data/site.json"), "live runtime availability", "sample response runtime boundary");
+assertIncludes(readUtf8("index.html"), 'datetime="2026-06-04"', "homepage source date boundary");
+assertIncludes(readUtf8("index.html"), "Last updated 2026-06-04", "homepage source date boundary");
+assertIncludes(readUtf8("data/i18n.json"), '"en": "Last updated 2026-06-04"', "i18n source date boundary");
+assertIncludes(readUtf8("data/i18n.json"), '"am": "የመጨረሻ ዝመና 2026-06-04"', "i18n source date boundary");
 console.log("validate-site doctrine wording tests passed");

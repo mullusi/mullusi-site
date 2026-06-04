@@ -1,8 +1,14 @@
 {
   "site": "mullusi.com",
-  "version": "2026.05.public-site",
-  "built_at": "2026-05-24T00:00:00Z",
+  "version": "2026.06.foundation-site",
+  "built_at": "2026-06-04T00:00:00Z",
   "witness": "AwaitingEvidence",
+  "witness_scope": "product_runtime_release",
+  "website_publication": {
+    "state": "Published",
+    "scope": "static website, public routes, proof boundary, status route, and foundation copy",
+    "not_blocked_by": "product runtime, API, dashboard, sandbox, metrics, learn, pilot access, or proof-stamp release witnesses"
+  },
   "public_state": "Published",
   "canonical_contract": "POST /v1/govern/evaluate",
   "published_routes": [
@@ -50,8 +56,8 @@
     }
   ],
   "content_hashes": {
-    "index.html": "sha256:9d9351eab26cd850bbeea501740790fc41b0454af6e4e1ecdeb4a1bbc592cf10",
-    "data/site.json": "sha256:b4664b4e58fa6bba943be4aef7c68a2776eca7a4502fe8a9de900a5727e9535b",
+    "index.html": "sha256:3edd703ec3e7098c6cd98056dd58242a9f08dc33800b784459ffe8a2b2d46991",
+    "data/site.json": "sha256:48308060d102ba1106b351f1d0db74706fdaec0a1cf8f31c17b7a5745c32952b",
     "data/generated/products.json": "sha256:e16956ef5d0615659475556263818039cde94b674ffcecf064c2161a66f26d97",
     "data/manual/public-surfaces.json": "sha256:fdd9f22b1ddbc30cbccb3dcbc42f003aed34732d65326480b4ecaa70184c50c4",
     "data/generated/homepage-product-registry.json": "sha256:45f7c64ef020d9d44098929aba1e945164b8c0166bc5a049bb8b155ea5a698ba",

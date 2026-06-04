@@ -27,7 +27,7 @@ function testCloudflarePagesBuildArtifact() {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-pages-"));
   const outputDirectory = path.join(tempRoot, "dist");
   try {
-    const result = buildCloudflarePages({ outputDirectory });
+    const result = buildCloudflarePages({ outputDirectory, buildDate: "2026-06-04T12:00:00Z" });
 
     assert.equal(result.outputDirectory, outputDirectory);
     assert.ok(result.publicEntries.length >= 10);
@@ -102,6 +102,13 @@ function testCloudflarePagesBuildArtifact() {
     ]) {
       assertAbsent(outputDirectory, forbiddenPath);
     }
+
+    const i18n = JSON.parse(fs.readFileSync(path.join(outputDirectory, "data/i18n.json"), "utf8"));
+    const lastUpdated = i18n.strings["hero.lastUpdated"];
+    assert.equal(lastUpdated.en, "Last updated 2026-06-04");
+    assert.equal(lastUpdated.am, "የመጨረሻ ዝመና 2026-06-04");
+    assert.match(lastUpdated.am, /[\u1200-\u137F]/);
+    assert.doesNotMatch(lastUpdated.am, /[\u00C0-\u00FF]{2,}/);
   } finally {
     fs.rmSync(tempRoot, { force: true, recursive: true });
   }

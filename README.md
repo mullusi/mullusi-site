@@ -37,6 +37,8 @@ framework, database, or server runtime.
 |-- schemas/                           # Manifest and boundary schemas
 |-- contracts/                         # Product API contract schemas
 |-- docs/private-source-deployment-migration.md # Source-private hosting runbook
+|-- docs/FOUNDATION_MODE.md         # Solo-founder foundation boundary
+|-- docs/FOUNDATION_PREREQUISITES.md # Public-safe prerequisite ladder
 |-- ops/
 |   |-- public-claim-gate.md          # Public copy and claim release gate
 |   |-- repo-release-gate.md          # Repository visibility and license gate
@@ -136,6 +138,20 @@ framework, database, or server runtime.
     |-- validate-site.mjs              # Static validation gate
     `-- verify-registry-repos.mjs      # Public registry source-boundary check
 ```
+
+## Foundation Mode
+
+Mullusi is currently local-proof-first. Public pages may describe the static
+website, proof boundaries, foundation-stage product direction, and contact
+mailboxes. They must not claim customer access, active pilot workflow, public
+runtime deployment, endpoint readiness, or production service availability.
+
+The controlling source is `docs/FOUNDATION_MODE.md`. The short rule is:
+review proof boundary first, keep pilot access closed, and treat every runtime
+claim as `AwaitingEvidence` until signed witness evidence closes.
+Use `docs/FOUNDATION_PREREQUISITES.md` for public-safe wording about what is
+being prepared without exposing private account, credential, DNS, provider, or
+legal-detail evidence.
 
 ## Public Registry Contract
 
@@ -360,7 +376,7 @@ boundary discipline.
 
 ## Service stack contract
 
-`data/site.json` owns the public service ladder. Use `services` for hosted offers, developer packages, dashboards, inspection surfaces, validation endpoints, and enterprise deployment paths:
+`data/site.json` owns the public service ladder. Use `services` for hosted offers, developer packages, dashboards, inspection surfaces, validation endpoints, and enterprise deployment boundaries:
 
 ```json
 {
@@ -372,9 +388,9 @@ boundary discipline.
 }
 ```
 
-The website renders these records into the Service Stack section. Keep npm packages as access tools and keep governed judgment, traces, proof stamps, and operational control on Mullusi service surfaces.
+The website renders these records into the Service Stack section. Keep packages as local tooling, and keep governed judgment, traces, proof stamps, and operational control in `AwaitingEvidence` unless the relevant service witness closes.
 
-`serviceTiers` and `apiContracts` define the first Govern Cloud commercial/API boundary. Keep tiers public-facing and keep endpoint records concise:
+`serviceTiers` and `apiContracts` define the first Govern Cloud commercial/API boundary. Keep tiers foundation-stage unless release evidence closes, and keep endpoint records concise:
 
 ```json
 {
@@ -870,8 +886,8 @@ Public website contact is currently `hello@mullusi.com`.
 
 Use `social@mullusi.com` for social media platform ownership, verification messages, and platform notices. Keep it separate from public website contact unless the site intentionally exposes a social-team address.
 
-Use `support@mullusi.com` for responsible security disclosure intake and
-public-access issues. Use `research@mullusi.com` for research conversations and
+Use `support@mullusi.com` for responsible security disclosure intake, route defects, and
+public-route issues. Use `research@mullusi.com` for research conversations and
 `tamirat@mullusi.com` for named stewardship access.
 
 ## Governance boundary

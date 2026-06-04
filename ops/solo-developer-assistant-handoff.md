@@ -11,6 +11,20 @@ Mullusi is maintained by one developer with help from multiple coding assistants
 
 Assistants may make bounded code changes, but they must not create hidden state or undocumented release paths.
 
+## Foundation Mode
+
+The website is in Foundation Mode, defined in `docs/FOUNDATION_MODE.md`.
+
+Current public boundary:
+
+- Local proof first.
+- Pilot access is not open.
+- Contact is for foundation, research, support, and public-route questions.
+- Runtime claims remain `AwaitingEvidence`.
+- No customer access, deployment, endpoint-readiness, or production service claim is allowed without closed witness evidence.
+
+When public copy changes, preserve this boundary unless the user explicitly asks to open a governed access path and the relevant recovery, runtime, security, rollback, and public-claim gates pass.
+
 ## Source Authority
 
 | Surface | Source of truth | Edit rule |
@@ -36,6 +50,7 @@ Assistants may make bounded code changes, but they must not create hidden state 
 6. Do not introduce public text containing unsupported runtime, quality, scale, or production claims.
 7. Do not add corrupted or decomposed fidel text; omit optional translations until clean atomic text is available.
 8. Do not create a new product by hand when `scripts/scaffold-product.mjs` can create the governed starter bundle.
+9. Do not turn `/pilot/` into an access or intake route while Foundation Mode is active.
 
 ## Product Scaffold Rule
 

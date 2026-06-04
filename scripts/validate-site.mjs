@@ -34,6 +34,8 @@ const requiredFiles = [
   ".nojekyll",
   ".well-known/security.txt",
   "README.md",
+  "docs/FOUNDATION_MODE.md",
+  "docs/FOUNDATION_PREREQUISITES.md",
   "docs/private-source-deployment-migration.md",
   "docs/mirror-to-deploy-port-runbook.md",
   "ops/public-claim-gate.md",
@@ -1567,19 +1569,79 @@ function validateSitemap() {
 function validateStatusJson() {
   const status = JSON.parse(readUtf8("status.json"));
   const site = requireString(status.site, "status.site");
+  const witness = requireString(status.witness, "status.witness");
+  const witnessScope = requireString(status.witness_scope, "status.witness_scope");
   const publicState = requireString(status.public_state, "status.public_state");
   const canonicalContract = requireString(status.canonical_contract, "status.canonical_contract");
   if (site !== "mullusi.com") {
     recordFailure(`status_site_invalid:${site}`);
   }
+  if (witness !== "AwaitingEvidence") {
+    recordFailure(`status_witness_invalid:${witness}`);
+  }
+  if (witnessScope !== "product_runtime_release") {
+    recordFailure(`status_witness_scope_invalid:${witnessScope}`);
+  }
   if (publicState !== "Published") {
     recordFailure(`status_public_state_invalid:${publicState}`);
+  }
+  const websitePublication = status.website_publication || {};
+  if (websitePublication.state !== "Published") {
+    recordFailure(`status_website_publication_state_invalid:${websitePublication.state || ""}`);
+  }
+  for (const term of [
+    "static website",
+    "public routes",
+    "proof boundary",
+    "foundation copy",
+  ]) {
+    if (!String(websitePublication.scope || "").includes(term)) {
+      recordFailure(`status_website_publication_scope_missing:${term}`);
+    }
+  }
+  for (const term of [
+    "product runtime",
+    "API",
+    "dashboard",
+    "sandbox",
+    "pilot access",
+    "proof-stamp release witnesses",
+  ]) {
+    if (!String(websitePublication.not_blocked_by || "").includes(term)) {
+      recordFailure(`status_website_publication_not_blocked_by_missing:${term}`);
+    }
   }
   if (canonicalContract !== "POST /v1/govern/evaluate") {
     recordFailure(`status_canonical_contract_invalid:${canonicalContract}`);
   }
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(status.built_at || "")) {
     recordFailure(`status_built_at_invalid:${status.built_at}`);
+  }
+  const statusBuildDate = String(status.built_at || "").slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(statusBuildDate)) {
+    const indexHtml = readUtf8("index.html");
+    const i18n = JSON.parse(readUtf8("data/i18n.json"));
+    const lastUpdated = i18n.strings?.["hero.lastUpdated"] || {};
+    const expectedLastUpdatedEn = `Last updated ${statusBuildDate}`;
+    const expectedLastUpdatedAm = `የመጨረሻ ዝመና ${statusBuildDate}`;
+    if (!indexHtml.includes(`datetime="${statusBuildDate}"`)) {
+      recordFailure(`homepage_last_updated_datetime_mismatch:${statusBuildDate}`);
+    }
+    if (!indexHtml.includes(expectedLastUpdatedEn)) {
+      recordFailure(`homepage_last_updated_text_mismatch:${expectedLastUpdatedEn}`);
+    }
+    if (lastUpdated.en !== expectedLastUpdatedEn) {
+      recordFailure(`i18n_last_updated_en_mismatch:${lastUpdated.en || ""}`);
+    }
+    if (lastUpdated.am !== expectedLastUpdatedAm) {
+      recordFailure(`i18n_last_updated_am_mismatch:${lastUpdated.am || ""}`);
+    }
+    if (!/[\u1200-\u137F]/.test(lastUpdated.am || "")) {
+      recordFailure("i18n_last_updated_am_missing_ethiopic");
+    }
+    if (/[\u00C0-\u00FF]{2,}/.test(lastUpdated.am || "")) {
+      recordFailure("i18n_last_updated_am_mojibake");
+    }
   }
   const requiredPublishedRoutes = ["/search/", "/browse/", "/contact/", "/pilot/", "/status/", "/security/", "/privacy/", "/terms/", "/acceptable-use/", "/responsible-disclosure/"];
   if (!Array.isArray(status.published_routes) || requiredPublishedRoutes.some((route) => !status.published_routes.includes(route))) {
@@ -1740,7 +1802,7 @@ function validateProductRouteShellContract() {
         "This route is intentionally noindex",
         "/proof/",
         "/status/",
-        "/pilot/",
+        "Review proof boundary",
         "products/mullu-search/product.manifest.json",
         "POST /v1/search/query",
         "search-service",
@@ -1765,7 +1827,7 @@ function validateProductRouteShellContract() {
         "This route is intentionally noindex",
         "/proof/",
         "/status/",
-        "/pilot/",
+        "Review proof boundary",
         "products/mullu-browse/product.manifest.json",
         "POST /v1/browse/session",
         "browse-service",
@@ -3047,7 +3109,7 @@ function validateSiteContent() {
       if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(sampleResponse.checked_at || "")) {
         recordFailure(`site_proof_stamp_verifier_sample_checked_at_invalid:${sampleResponse.checked_at}`);
       }
-      if (!/does not claim live runtime availability/i.test(sampleResponse.note || "")) {
+      if (!/does not claim runtime availability/i.test(sampleResponse.note || "")) {
         recordFailure("site_proof_stamp_verifier_sample_boundary_note_missing");
       }
     }
@@ -3719,7 +3781,7 @@ function validateIndexDesignContract() {
   const forbiddenRepeatedCaveats = [
     "Public claims only",
     "not Mullusi claims",
-    "illustrative, not live runtime claims",
+    "illustrative, not runtime-service claims",
     "not a live endpoint",
   ];
   for (const phrase of forbiddenRepeatedCaveats) {
@@ -4391,10 +4453,10 @@ function validateDoctrineWordingContract() {
     {
       file: "index.html",
       terms: [
-        "Mullusi governs high-risk symbolic intelligence and software actions before they execute.",
+        "Mullusi is preparing a governed foundation for high-risk symbolic work.",
         "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
-        "Every material consequence re-checked.",
-        "re-governs material consequences when context, authority, risk, or dependency state changes.",
+        "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
+        "output-derived actions become proposals first",
         'href="/doctrine/"',
       ],
     },
@@ -4423,6 +4485,8 @@ function validateDoctrineWordingContract() {
     "full runtime conformance",
     "high-risk software actions before they execute.",
     "governed intelligence for consequential action",
+    "Request access",
+    "private beta access",
     "teaches the model",
     "Free teaches the model",
   ];
@@ -4441,6 +4505,187 @@ function validateDoctrineWordingContract() {
     for (const phrase of forbiddenPublicPhrases) {
       if (content.includes(phrase)) {
         recordFailure(`doctrine_wording_forbidden_phrase:${file}:${phrase}`);
+      }
+    }
+  }
+}
+
+function validateFoundationModeBoundary() {
+  const foundationDoc = readUtf8("docs/FOUNDATION_MODE.md");
+  const foundationPrerequisitesDoc = readUtf8("docs/FOUNDATION_PREREQUISITES.md");
+  for (const term of [
+    "Foundation Mode",
+    "local proof first",
+    "external witness blockers belong to product/runtime release claims",
+    "They do not block the current static `mullusi.com` website",
+    "Static website published; product runtime release witnesses AwaitingEvidence.",
+    "Pilot access is not open yet.",
+    "No customer access or deployment claim.",
+    "Runtime claims AwaitingEvidence.",
+    "Keep `/pilot/` as a boundary route",
+    "[Foundation Prerequisites](FOUNDATION_PREREQUISITES.md)",
+  ]) {
+    if (!foundationDoc.includes(term)) {
+      recordFailure(`foundation_mode_doc_term_missing:${term}`);
+    }
+  }
+
+  for (const term of [
+    "public-safe prerequisite ladder",
+    "Foundation prerequisites are preparation work, not launch work.",
+    "External witness blockers apply to product/runtime release claims.",
+    "They do not block the current static `mullusi.com` website",
+    "Static website published; product runtime release witnesses AwaitingEvidence.",
+    "Prerequisite setup is underway.",
+    "First local proof thread is approval-gated and receipt-bound.",
+    "No customer access or deployment claim.",
+    "Runtime claims AwaitingEvidence.",
+    "Pilot access is not open yet.",
+  ]) {
+    if (!foundationPrerequisitesDoc.includes(term)) {
+      recordFailure(`foundation_prerequisites_doc_term_missing:${term}`);
+    }
+  }
+
+  const requiredTermsBySurface = new Map([
+    [
+      "pilot/index.html",
+      [
+        "Pilot access is not open yet.",
+        "This route is a readiness boundary, not an intake form.",
+        "Pilot route state: Foundation boundary; no access claim",
+      ],
+    ],
+    [
+      "status/index.html",
+      [
+        "Published website routes are live and linked.",
+        "Product runtime, API, dashboard, sandbox, metrics, learn, pilot access, and proof-stamp release witnesses remain separate AwaitingEvidence claims.",
+        "They do not claim open pilot access.",
+      ],
+    ],
+    [
+      "terms/index.html",
+      [
+        "foundation-stage agreement-boundary questions",
+        "Pilot access remains closed until a separate readiness decision is published.",
+      ],
+    ],
+    [
+      "acceptable-use/index.html",
+      [
+        "future governed runtime conduct",
+        "If a separate written runtime approval is published",
+        "Runtime conduct terms: AwaitingEvidence until separate written approval.",
+      ],
+    ],
+    [
+      "contact/index.html",
+      [
+        "Mullusi Contact - Foundation Questions",
+        "Foundation",
+        "For foundation-stage questions, proof-boundary review, prerequisite planning, and public-route feedback.",
+        "does not claim backend storage, access workflow, or pilot workflow.",
+        "Structured question fields",
+        "Mullusi%20foundation%20question",
+      ],
+    ],
+    [
+      "index.html",
+      [
+        "Foundation before launch.",
+        "public foundation route first",
+        "witness closure preparation",
+        "foundation product path",
+        "public site can record future surface expansion",
+        "No customer access or deployment claim.",
+      ],
+    ],
+    [
+      "data/site.json",
+      [
+        "foundation examples",
+        "local proof examples",
+        "planned higher evaluation limits",
+        "proof stamp review",
+        "private deployment boundary",
+        "after release evidence closes",
+      ],
+    ],
+    [
+      "data/i18n.json",
+      [
+        "public foundation route first",
+        "witness closure preparation",
+        "foundation product path",
+        "public site can record future surface expansion",
+      ],
+    ],
+  ]);
+
+  for (const [file, terms] of requiredTermsBySurface) {
+    const content = readUtf8(file);
+    for (const term of terms) {
+      if (!content.includes(term)) {
+        recordFailure(`foundation_mode_required_term_missing:${file}:${term}`);
+      }
+    }
+  }
+
+  const publicFoundationSurfaces = [
+    "index.html",
+    "mullu/index.html",
+    "pilot/index.html",
+    "contact/index.html",
+    "acceptable-use/index.html",
+    "terms/index.html",
+    "proof/index.html",
+    "playground/index.html",
+    "status/index.html",
+    "security/index.html",
+    "search/index.html",
+    "browse/index.html",
+    "data/site.json",
+    "data/i18n.json",
+  ];
+  const forbiddenInvitationPhrases = [
+    "Request governed evaluation access.",
+    "Start pilot email",
+    "Request pilot access",
+    "requesting governed pilot access",
+    "Governed Evaluation Access",
+    "Mullusi governed pilot request",
+    "private beta access",
+    "live API",
+    "governed pilot or product agreement",
+    "future governed runtime access",
+    "When governed runtime access is granted",
+    "Runtime conduct terms: AwaitingEvidence until access agreement.",
+    "Mullusi Contact - Governed Intake",
+    "Structured intake fields",
+    "backend intake storage",
+    "pilot intake",
+    "public-facing first",
+    "live product path",
+    "ready for direct surface expansion",
+    "limited public access",
+    "small-volume hosted evaluations",
+    "proof stamp access",
+    "customer-controlled deployment",
+    "product-ready public-source releases",
+    "Live Runtime",
+    "live runtime evidence",
+    "Live runtime witness",
+    "Runtime access",
+    "pending live runtime witness",
+    "live runtime availability",
+  ];
+
+  for (const file of publicFoundationSurfaces) {
+    const content = readUtf8(file);
+    for (const phrase of forbiddenInvitationPhrases) {
+      if (content.includes(phrase)) {
+        recordFailure(`foundation_mode_forbidden_invitation:${file}:${phrase}`);
       }
     }
   }
@@ -4617,7 +4862,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/public-claim-gate.md",
-      terms: ["Claim:", "Evidence:", "Surface:", "Risk:", "Status:", "Decision:", "Rollback:", "AwaitingEvidence"],
+      terms: ["Foundation Mode", "Claim:", "Evidence:", "Surface:", "Risk:", "Status:", "Decision:", "Rollback:", "Pilot access is not open yet.", "No customer access or deployment claim.", "AwaitingEvidence"],
     },
     {
       file: "ops/repo-release-gate.md",
@@ -4981,6 +5226,7 @@ function runValidation() {
   validateProofPageContract();
   validateDoctrinePageContract();
   validateDoctrineWordingContract();
+  validateFoundationModeBoundary();
   validatePublicText();
   validateEmailRendering();
   validateTrustRoutes();
