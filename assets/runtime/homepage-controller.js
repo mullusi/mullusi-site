@@ -61,6 +61,7 @@ Invariants: load failures are visible, fallback promotion is explicit, public re
     pageRuntime.bindHeader();
     pageRuntime.bindLinkNavigation();
     pageRuntime.bindMenu({ i18nText: context.i18nText });
+    pageRuntime.bindInitialFragmentNavigation();
     preferenceRuntime.bindThemeToggle(preferenceContext);
     pageRuntime.bindReveal();
     callRequired(context, "bindSearch");
@@ -73,6 +74,7 @@ Invariants: load failures are visible, fallback promotion is explicit, public re
       console.error(error);
     }
     preferenceRuntime.applyLang(preferenceRuntime.preferredLang(), preferenceContext, false);
+    pageRuntime.alignFragmentTarget();
     const registryFallbacks = pageRuntime.captureFallbackContent(plan.registryFallbackSelectors);
     callRequired(context, "renderVisitMeter");
 
@@ -85,6 +87,7 @@ Invariants: load failures are visible, fallback promotion is explicit, public re
     try {
       state.siteContent = await callRequired(context, "loadSiteContent");
       renderSiteContent(context);
+      pageRuntime.alignFragmentTarget();
       callRequired(context, "renderVisitMeter");
     } catch (error) {
       console.error(error);
@@ -104,6 +107,7 @@ Invariants: load failures are visible, fallback promotion is explicit, public re
     try {
       state.registry = await callRequired(context, "loadRegistry");
       renderRegistryContent(context);
+      pageRuntime.alignFragmentTarget();
     } catch (error) {
       console.error(error);
       callRequired(context, "renderRegistryLoadError");

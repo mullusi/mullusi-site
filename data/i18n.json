@@ -130,6 +130,54 @@
       "en": "Foundation before launch.",
       "am": "ከድርጊት በፊት ማስረጃ።"
     },
+    "hero.runtimeStatus": {
+      "en": "Runtime: AwaitingEvidence",
+      "am": "አፈፃፀም፦ AwaitingEvidence"
+    },
+    "hero.readinessAria": {
+      "en": "Mullusi public readiness path",
+      "am": "የሙሉሲ ይፋዊ ዝግጁነት መንገድ"
+    },
+    "hero.readinessLabel": {
+      "en": "Public readiness",
+      "am": "ይፋዊ ዝግጁነት"
+    },
+    "hero.foundationStage": {
+      "en": "Foundation stage",
+      "am": "የመሠረት ደረጃ"
+    },
+    "hero.pathMapTitle": {
+      "en": "Map",
+      "am": "ካርታ"
+    },
+    "hero.pathMapBody": {
+      "en": "Live public route",
+      "am": "ቀጥታ ይፋዊ መንገድ"
+    },
+    "hero.pathProofTitle": {
+      "en": "Proof",
+      "am": "ማረጋገጫ"
+    },
+    "hero.pathProofBody": {
+      "en": "Claim boundary visible",
+      "am": "የይገባኛል ወሰን ይታያል"
+    },
+    "hero.pathRuntimeTitle": {
+      "en": "Runtime",
+      "am": "አፈፃፀም"
+    },
+    "hero.pathRuntimeBody": {
+      "en": "AwaitingEvidence",
+      "am": "AwaitingEvidence"
+    },
+    "hero.nextGateLabel": {
+      "en": "Next gate",
+      "am": "ቀጣይ በር"
+    },
+    "hero.nextGateBody": {
+      "en": "signed witness endpoints",
+      "am": "የተፈረሙ የምስክር መዳረሻዎች"
+    },
     "hero.title": {
       "en": "Mullusi is preparing a governed foundation for high-risk symbolic work.",
       "am": "ሙሉሲ ከፍተኛ-ስጋት ያላቸውን የምልክታዊ ብልህነት እና የሶፍትዌር ድርጊቶች ከመፈጸማቸው በፊት ያስተዳድራል።"
@@ -366,6 +414,10 @@
       "en": "Flagship governed product route.",
       "am": "ዋናው የሚተዳደር የምርት መንገድ።"
     },
+    "start.mullu.aria": {
+      "en": "Product: Open Mullu. Flagship governed product route.",
+      "am": "ምርት፦ ሙሉን ክፈት። ዋናው የሚተዳደር የምርት መንገድ።"
+    },
     "start.proof.k": {
       "en": "Evidence",
       "am": "ማስረጃ"
@@ -377,6 +429,10 @@
     "start.proof.b": {
       "en": "Pending runtime claims.",
       "am": "በመጠባበቅ ላይ ያሉ runtime የይገባኛል ጥያቄዎች።"
+    },
+    "start.proof.aria": {
+      "en": "Evidence: Review proof boundary. Pending runtime claims.",
+      "am": "ማስረጃ፦ የማረጋገጫ ወሰንን ይመልከቱ። በመጠባበቅ ላይ ያሉ የአፈፃፀም ይገባኛል ጥያቄዎች።"
     },
     "start.playground.k": {
       "en": "Demo",
@@ -390,6 +446,10 @@
       "en": "Illustrative governed evaluation flow.",
       "am": "የሚተዳደር የግምገማ ፍሰት ማሳያ።"
     },
+    "start.playground.aria": {
+      "en": "Demo: Try the playground. Illustrative governed evaluation flow.",
+      "am": "ማሳያ፦ የሙከራ መድረኩን ይሞክሩ። የሚተዳደር የግምገማ ፍሰት ማሳያ።"
+    },
     "start.architecture.k": {
       "en": "Structure",
       "am": "መዋቅር"
@@ -401,6 +461,10 @@
     "start.architecture.b": {
       "en": "Layer map, request flow, and release discipline.",
       "am": "ይፋዊ የመንገድ ካርታና የመለቀቅ ዲሲፕሊን።"
+    },
+    "start.architecture.aria": {
+      "en": "Structure: Read the platform map. Layer map, request flow, and release discipline.",
+      "am": "መዋቅር፦ የመድረኩን ካርታ ያንብቡ። የንብርብር ካርታ፣ የጥያቄ ፍሰት፣ እና የመለቀቅ ዲሲፕሊን።"
     },
     "boundary.title": {
       "en": "How to read this site",
@@ -748,7 +812,11 @@
     },
     "repos.searchPlaceholder": {
       "en": "website, index, domain, public...",
-      "am": "website, index, domain, public..."
+      "am": "ድረ-ገጽ፣ መነሻ፣ ጎራ፣ ይፋዊ..."
+    },
+    "repos.searchAria": {
+      "en": "Search public surfaces",
+      "am": "ይፋዊ ገጾችን ፈልግ"
     },
     "roadmap.tag": {
       "en": "Roadmap",

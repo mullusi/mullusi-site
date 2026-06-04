@@ -71,6 +71,7 @@ const requiredFiles = [
   "sitemap.xml",
   "status.json",
   "site.webmanifest",
+  "assets/fragment-bootstrap.js",
   "assets/lang-bootstrap.js",
   "assets/runtime/page-runtime.js",
   "assets/runtime/preference-runtime.js",
@@ -3617,6 +3618,7 @@ function validateI18n() {
 function validateIndexDesignContract() {
   const html = readUtf8("index.html");
   const css = readUtf8("assets/styles.css");
+  const fragmentBootstrap = readUtf8("assets/fragment-bootstrap.js");
   const app = readUtf8("assets/app.js");
   const pageRuntime = readUtf8("assets/runtime/page-runtime.js");
   const preferenceRuntime = readUtf8("assets/runtime/preference-runtime.js");
@@ -3633,8 +3635,10 @@ function validateIndexDesignContract() {
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
   const assetVersion = "2026.05.platform.29";
+  const fragmentVersion = "2026.06.fragment.6";
 
   if (
+    !html.includes(`/assets/fragment-bootstrap.js?v=${fragmentVersion}`) ||
     !html.includes(`assets/styles.css?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/page-runtime.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/preference-runtime.js?v=${assetVersion}`) ||
@@ -3650,6 +3654,95 @@ function validateIndexDesignContract() {
     !html.includes(`assets/app.js?v=${assetVersion}`)
   ) {
     recordFailure("index_asset_version_invalid");
+  }
+  if (
+    html.indexOf('src="/assets/fragment-bootstrap.js') >
+    html.indexOf('src="assets/runtime/page-runtime.js')
+  ) {
+    recordFailure("fragment_bootstrap_not_before_deferred_runtime");
+  }
+  for (const requiredFragmentToken of [
+    "const maxAttempts = 24",
+    "const retryDelayMs = 250",
+    "window.history && \"scrollRestoration\" in window.history",
+    "window.history.scrollRestoration = \"manual\"",
+    "window.addEventListener(\"pageshow\", scheduleAlignment)",
+    "window.addEventListener(\"hashchange\", scheduleAlignment)",
+    "queueFrame(retry)",
+    "window.MullusiFragmentBootstrap = state",
+    "version: \"2026.06.fragment.6\"",
+  ]) {
+    if (!fragmentBootstrap.includes(requiredFragmentToken)) {
+      recordFailure(`fragment_bootstrap_contract_missing:${requiredFragmentToken}`);
+    }
+  }
+  if (fragmentBootstrap.includes("while (") || fragmentBootstrap.includes("for (;;)")) {
+    recordFailure("fragment_bootstrap_unbounded_loop_present");
+  }
+  if (!html.includes('<a class="skip-link" href="#main"')) {
+    recordFailure("index_skip_link_missing");
+  }
+  if (!html.includes('<main id="main" tabindex="-1">')) {
+    recordFailure("index_main_focus_target_missing");
+  }
+  for (const requiredFocusSelector of [
+    "a:focus-visible",
+    "button:focus-visible",
+    "input:focus-visible",
+    "select:focus-visible",
+    "textarea:focus-visible",
+    '[tabindex]:not([tabindex="-1"]):focus-visible',
+    ".skip-link:focus-visible",
+  ]) {
+    if (!css.includes(requiredFocusSelector)) {
+      recordFailure(`index_focus_selector_missing:${requiredFocusSelector}`);
+    }
+  }
+  if (!/a:focus-visible,[\s\S]*?outline:\s*3px solid var\(--accent\);[\s\S]*?outline-offset:\s*4px;/.test(css)) {
+    recordFailure("index_focus_ring_contract_missing");
+  }
+  if (!/\.skip-link\s*\{[\s\S]*?z-index:\s*100;[\s\S]*?transform:\s*translateY\(-200%\);/.test(css)) {
+    recordFailure("skip_link_hidden_default_contract_missing");
+  }
+  if (!/\.skip-link:focus,[\s\S]*?\.skip-link:focus-visible,[\s\S]*?\.skip-link:active\s*\{[\s\S]*?transform:\s*translateY\(0\);/.test(css)) {
+    recordFailure("skip_link_focus_reveal_contract_missing");
+  }
+  if (!/main:focus\s*\{[\s\S]*?outline:\s*none;/.test(css)) {
+    recordFailure("main_programmatic_focus_contract_missing");
+  }
+  if (!html.includes('data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder;aria-label:repos.searchAria"')) {
+    recordFailure("repo_search_accessible_i18n_attrs_missing");
+  }
+  if (!publicSurfaceRegistryRenderer.includes('aria-pressed="${category === state.activeCategory ? "true" : "false"}"')) {
+    recordFailure("repo_filter_aria_pressed_missing");
+  }
+  const homepageStyleContracts = [
+    [/html\s*\{[\s\S]*?overflow-x:\s*clip;/, "homepage_html_overflow_clip_missing"],
+    [/#start\s*\{[\s\S]*?scroll-margin-top:\s*68px;/, "homepage_start_scroll_margin_missing"],
+    [/@supports not \(overflow: clip\)\s*\{[\s\S]*?overflow-x:\s*hidden;/, "homepage_overflow_fallback_missing"],
+    [/\.sec-head h2\s*\{[\s\S]*?line-height:\s*1\.18;/, "homepage_section_heading_line_height_missing"],
+    [/@media \(max-width: 560px\)\s*\{[\s\S]*?\.hero-wordmark \.latin-name::before\s*\{[\s\S]*?content:\s*none;[\s\S]*?\.hero-wordmark \.latin-name::after\s*\{[\s\S]*?content:\s*none;/, "homepage_mobile_wordmark_overflow_guard_missing"],
+    [/@media \(prefers-reduced-motion: reduce\)/, "homepage_reduced_motion_guard_missing"],
+  ];
+  for (const [contractPattern, failureCode] of homepageStyleContracts) {
+    if (!contractPattern.test(css)) {
+      recordFailure(failureCode);
+    }
+  }
+  const touchTargetContracts = [
+    [/\.brand\s*\{[\s\S]*?min-height:\s*44px;/, "brand_touch_target_contract_missing"],
+    [/\.nav-links a\s*\{[\s\S]*?min-height:\s*44px;/, "nav_link_touch_target_contract_missing"],
+    [/\.theme-toggle\s*\{[\s\S]*?min-height:\s*44px;/, "theme_toggle_touch_target_contract_missing"],
+    [/\.menu-toggle\s*\{[\s\S]*?width:\s*44px;[\s\S]*?height:\s*44px;/, "menu_toggle_touch_target_contract_missing"],
+    [/\.btn\s*\{[\s\S]*?min-height:\s*44px;/, "button_touch_target_contract_missing"],
+    [/\.search-box input\s*\{[\s\S]*?min-height:\s*44px;/, "search_touch_target_contract_missing"],
+    [/\.filter-button\s*\{[\s\S]*?min-height:\s*44px;/, "filter_touch_target_contract_missing"],
+    [/@media \(max-width: 560px\)\s*\{[\s\S]*?\.start-card\s*\{[\s\S]*?min-height:\s*112px;/, "mobile_start_card_touch_target_contract_missing"],
+  ];
+  for (const [contractPattern, failureCode] of touchTargetContracts) {
+    if (!contractPattern.test(css)) {
+      recordFailure(failureCode);
+    }
   }
   if (html.indexOf("assets/registry/homepage-registry.js") > html.indexOf("assets/app.js")) {
     recordFailure("homepage_registry_module_load_order_invalid");
@@ -3772,6 +3865,39 @@ function validateIndexDesignContract() {
     recordFailure("index_news_not_tertiary_footer_section");
   }
   const mobileMenu = html.match(/<div class="mobile-menu"[\s\S]*?<\/div>\s*<main/)?.[0] ?? "";
+  if (
+    !html.includes('class="menu-toggle"') ||
+    !html.includes('aria-expanded="false"') ||
+    !html.includes('aria-controls="mobile-menu"') ||
+    !html.includes("data-menu-toggle") ||
+    !html.includes('data-i18n-attr="aria-label:nav.menuOpen"')
+  ) {
+    recordFailure("mobile_menu_toggle_accessibility_contract_missing");
+  }
+  if (!html.includes('<div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>')) {
+    recordFailure("mobile_menu_hidden_state_contract_missing");
+  }
+  for (const requiredMenuRuntimeToken of [
+    'const toggle = qs("[data-menu-toggle]");',
+    'const menu = qs("[data-mobile-menu]");',
+    'toggle.setAttribute("aria-expanded", String(open));',
+    "menu.hidden = !open;",
+    'document.documentElement.classList.toggle("menu-open", open);',
+    'qsa("a", menu).forEach((link) => {',
+    'if (menu.hidden || menu.contains(event.target) || toggle.contains(event.target)) return;',
+    'if (event.key === "Escape") setOpen(false);',
+  ]) {
+    if (!pageRuntime.includes(requiredMenuRuntimeToken)) {
+      recordFailure(`mobile_menu_runtime_contract_missing:${requiredMenuRuntimeToken}`);
+    }
+  }
+  for (const key of ["nav.menuOpen", "nav.menuClose"]) {
+    for (const lang of ["en", "am"]) {
+      if (typeof dictionary?.strings?.[key]?.[lang] !== "string" || dictionary.strings[key][lang].trim().length === 0) {
+        recordFailure(`mobile_menu_i18n_missing:${key}:${lang}`);
+      }
+    }
+  }
   const mobileNewsIndex = mobileMenu.indexOf('href="#news"');
   const mobileReposIndex = mobileMenu.indexOf('href="#repos"');
   if (mobileNewsIndex === -1 || mobileReposIndex === -1 || mobileNewsIndex < mobileReposIndex) {

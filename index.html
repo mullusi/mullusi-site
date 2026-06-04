@@ -35,6 +35,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <script src="/assets/theme-bootstrap.js"></script>
   <script src="/assets/lang-bootstrap.js"></script>
   <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.29" />
+  <script src="/assets/fragment-bootstrap.js?v=2026.06.fragment.6"></script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -84,10 +85,11 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <nav class="site-nav" data-elevate aria-label="Primary navigation">
     <div class="wrap nav-in">
       <a href="#top" class="brand" aria-label="Mullusi home" data-i18n-attr="aria-label:nav.brandAria">
-        <img class="brand-logo nav-logo logo-dark" src="assets/mullusi-logo.svg" alt="Mullusi" width="190" height="48" />
-        <img class="brand-logo nav-logo logo-light" src="assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="190" height="48" />
+        <img class="brand-logo nav-logo logo-dark" src="assets/mullusi-logo.svg" alt="Mullusi" width="190" height="48" decoding="async" />
+        <img class="brand-logo nav-logo logo-light" src="assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="190" height="48" decoding="async" />
       </a>
       <div class="nav-links">
+        <a href="#start" data-i18n="nav.start">Start</a>
         <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
         <a href="#platform" data-i18n="nav.platform">Platform</a>
         <a href="/proof/" data-i18n="nav.proof">Proof</a>
@@ -114,7 +116,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
 
   <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
     <div class="mobile-menu-head" aria-hidden="true">
-      <img src="assets/mullusi-icon.svg" alt="" width="32" height="32" />
+      <img src="assets/mullusi-icon.svg" alt="" aria-hidden="true" width="32" height="32" decoding="async" />
       <span>Mullusi</span>
     </div>
     <div class="mobile-menu-label" data-i18n="nav.groupProduct">Product</div>
@@ -139,43 +141,61 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <a href="/contact/" data-i18n="nav.contact">Contact</a>
   </div>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <div id="top"></div>
 
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap">
         <div class="hero-stage">
-        <div class="hero-wordmark" aria-label="ሙሉ Mullu">
-          <span class="fidel-name" lang="am">ሙሉ</span>
-          <span class="latin-name" data-text="Mullu">Mullu</span>
-          <span class="latin-tag">Mullu</span>
-        </div>
+          <div class="hero-wordmark" aria-label="ሙሉ Mullu">
+            <span class="fidel-name" lang="am">ሙሉ</span>
+            <span class="latin-name" data-text="Mullu">Mullu</span>
+            <span class="latin-tag">Mullu</span>
+          </div>
+          <aside class="hero-system-panel" aria-label="Mullusi public readiness path" data-i18n-attr="aria-label:hero.readinessAria">
+            <div class="hero-panel-head">
+              <span data-i18n="hero.readinessLabel">Public readiness</span>
+              <strong data-i18n="hero.foundationStage">Foundation stage</strong>
+            </div>
+            <ol class="hero-path">
+              <li><span>01</span><strong data-i18n="hero.pathMapTitle">Map</strong><em data-i18n="hero.pathMapBody">Live public route</em></li>
+              <li><span>02</span><strong data-i18n="hero.pathProofTitle">Proof</strong><em data-i18n="hero.pathProofBody">Claim boundary visible</em></li>
+              <li><span>03</span><strong data-i18n="hero.pathRuntimeTitle">Runtime</strong><em data-i18n="hero.pathRuntimeBody">AwaitingEvidence</em></li>
+            </ol>
+            <div class="hero-panel-foot">
+              <span data-i18n="hero.nextGateLabel">Next gate</span>
+              <strong data-i18n="hero.nextGateBody">signed witness endpoints</strong>
+            </div>
+          </aside>
         </div>
         <div class="hero-copy">
-        <div class="tag" data-i18n="hero.tag">Foundation before launch.</div>
-        <h1 id="hero-title" data-i18n="hero.title">Mullusi is preparing a governed foundation for high-risk symbolic work.</h1>
-        <p class="lead" data-i18n="hero.lead">Current work is local proof, claim boundaries, and prerequisite setup before public deployment or customer access.</p>
-        <p class="plain hero-plain" data-i18n="hero.plain">Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.</p>
-        <div class="hero-actions">
-          <a href="/proof/" class="btn btn-solid" data-i18n="hero.ctaPlayground">Review Proof Boundary</a>
-          <a href="/mullu/" class="btn" data-i18n="hero.reviewProof">View Foundation Route</a>
-        </div>
-        <dl class="hero-proof-rail" aria-label="Public route state" data-i18n-attr="aria-label:hero.routeStateAria">
-          <div>
-            <dt data-i18n="hero.railMapLabel">Public map</dt>
-            <dd data-i18n="hero.railMapBody">mullusi.com is the company and foundation routing surface.</dd>
+          <div class="hero-status-row" aria-label="Homepage status">
+            <span data-i18n="hero.tag">Foundation before launch.</span>
+            <span data-i18n="hero.runtimeStatus">Runtime: AwaitingEvidence</span>
           </div>
-          <div>
-            <dt data-i18n="hero.railMulluLabel">Mullu</dt>
-            <dd data-i18n="hero.railMulluBody">Foundation-stage product route: local proof first, no customer access claim.</dd>
+          <h1 id="hero-title" data-i18n="hero.title">Mullusi is preparing a governed foundation for high-risk symbolic work.</h1>
+          <p class="lead" data-i18n="hero.lead">Current work is local proof, claim boundaries, and prerequisite setup before public deployment or customer access.</p>
+          <p class="plain hero-plain" data-i18n="hero.plain">Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.</p>
+          <div class="hero-actions">
+            <a href="/proof/" class="btn btn-solid" data-i18n="hero.ctaPlayground">Review Proof Boundary</a>
+            <a href="/mullu/" class="btn" data-i18n="hero.reviewProof">View Foundation Route</a>
           </div>
-          <div>
-            <dt data-i18n="hero.railRuntimeLabel">Runtime</dt>
-            <dd data-i18n="hero.railRuntimeBody">AwaitingEvidence until signed witness endpoints publish.</dd>
-          </div>
-        </dl>
-        <p class="hero-doctrine-status" data-i18n="hero.doctrineStatus">Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.</p>
-        <time class="hero-last-updated" datetime="2026-06-04" data-i18n="hero.lastUpdated">Last updated 2026-06-04</time>
+          <dl class="hero-proof-rail" aria-label="Public route state" data-i18n-attr="aria-label:hero.routeStateAria">
+            <div>
+              <dt data-i18n="hero.railMapLabel">Public map</dt>
+              <dd data-i18n="hero.railMapBody">mullusi.com is the company and foundation routing surface.</dd>
+            </div>
+            <div>
+              <dt data-i18n="hero.railMulluLabel">Mullu</dt>
+              <dd data-i18n="hero.railMulluBody">Foundation-stage product route: local proof first, no customer access claim.</dd>
+            </div>
+            <div>
+              <dt data-i18n="hero.railRuntimeLabel">Runtime</dt>
+              <dd data-i18n="hero.railRuntimeBody">AwaitingEvidence until signed witness endpoints publish.</dd>
+            </div>
+          </dl>
+          <p class="hero-doctrine-status" data-i18n="hero.doctrineStatus">Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.</p>
+          <time class="hero-last-updated" datetime="2026-06-04" data-i18n="hero.lastUpdated">Last updated 2026-06-04</time>
         </div>
       </div>
     </section>
@@ -188,10 +208,10 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <p data-i18n="start.body">A first visit should route quickly: product, proof, sandbox, or public structure.</p>
         </div>
         <div class="start-grid reveal">
-          <a class="start-card" href="/mullu/"><span data-i18n="start.mullu.k">Product</span><strong data-i18n="start.mullu.t">View Mullu</strong><em data-i18n="start.mullu.b">Foundation-stage governed product route.</em></a>
-          <a class="start-card" href="/proof/"><span data-i18n="start.proof.k">Evidence</span><strong data-i18n="start.proof.t">Review proof boundary</strong><em data-i18n="start.proof.b">Pending runtime claims.</em></a>
-          <a class="start-card" href="/playground/"><span data-i18n="start.playground.k">Demo</span><strong data-i18n="start.playground.t">Inspect the playground</strong><em data-i18n="start.playground.b">Illustrative flow only, not a runtime claim.</em></a>
-          <a class="start-card" href="#platform"><span data-i18n="start.architecture.k">Structure</span><strong data-i18n="start.architecture.t">Read the platform map</strong><em data-i18n="start.architecture.b">Layer map, request flow, and release discipline.</em></a>
+          <a class="start-card" href="/mullu/" aria-label="Product: Open Mullu. Flagship governed product route." data-i18n-attr="aria-label:start.mullu.aria"><span data-i18n="start.mullu.k">Product</span><strong data-i18n="start.mullu.t">View Mullu</strong><em data-i18n="start.mullu.b">Foundation-stage governed product route.</em></a>
+          <a class="start-card" href="/proof/" aria-label="Evidence: Review proof boundary. Pending runtime claims." data-i18n-attr="aria-label:start.proof.aria"><span data-i18n="start.proof.k">Evidence</span><strong data-i18n="start.proof.t">Review proof boundary</strong><em data-i18n="start.proof.b">Pending runtime claims.</em></a>
+          <a class="start-card" href="/playground/" aria-label="Demo: Try the playground. Illustrative governed evaluation flow." data-i18n-attr="aria-label:start.playground.aria"><span data-i18n="start.playground.k">Demo</span><strong data-i18n="start.playground.t">Inspect the playground</strong><em data-i18n="start.playground.b">Illustrative flow only, not a runtime claim.</em></a>
+          <a class="start-card" href="#platform" aria-label="Structure: Read the platform map. Layer map, request flow, and release discipline." data-i18n-attr="aria-label:start.architecture.aria"><span data-i18n="start.architecture.k">Structure</span><strong data-i18n="start.architecture.t">Read the platform map</strong><em data-i18n="start.architecture.b">Layer map, request flow, and release discipline.</em></a>
         </div>
         <aside class="read-boundary reveal" aria-labelledby="read-boundary-title">
           <h3 id="read-boundary-title" data-i18n="boundary.title">How to read this site</h3>
@@ -558,7 +578,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
         <div class="repo-toolbar reveal">
           <label class="search-box">
             <span>Search</span>
-            <input type="search" placeholder="website, index, domain, public..." data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder" />
+            <input type="search" placeholder="website, index, domain, public..." aria-label="Search public surfaces" data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder;aria-label:repos.searchAria" />
           </label>
           <div class="filters" role="group" aria-label="Public surface category filters" data-repo-filters></div>
         </div>
@@ -681,8 +701,8 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       <div class="foot-grid">
         <div class="foot-brand">
           <a href="#top" class="brand" aria-label="Mullusi home" data-i18n-attr="aria-label:nav.brandAria">
-            <img class="brand-logo footer-logo logo-dark" src="assets/mullusi-logo.svg" alt="Mullusi" width="260" height="66" />
-            <img class="brand-logo footer-logo logo-light" src="assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="260" height="66" />
+            <img class="brand-logo footer-logo logo-dark" src="assets/mullusi-logo.svg" alt="Mullusi" width="260" height="66" loading="lazy" decoding="async" />
+            <img class="brand-logo footer-logo logo-light" src="assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="260" height="66" loading="lazy" decoding="async" />
           </a>
           <p data-i18n="footer.brandLine">Governed software that checks, traces, and proves a decision before it runs.</p>
         </div>

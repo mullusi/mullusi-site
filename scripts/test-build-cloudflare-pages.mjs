@@ -55,6 +55,7 @@ function testCloudflarePagesBuildArtifact() {
       "_headers",
       "_redirects",
       ".well-known/security.txt",
+      "assets/fragment-bootstrap.js",
       "assets/app.js",
       "assets/runtime/page-runtime.js",
       "assets/runtime/preference-runtime.js",

@@ -146,7 +146,7 @@ Invariants: registry text is escaped, external links are bounded by upstream reg
     const target = qs("[data-repo-filters]");
     if (!target || !state.registry) return;
     target.innerHTML = categorySet(state.registry.systems).map((category) => `
-      <button class="filter-button ${category === state.activeCategory ? "active" : ""}" type="button" data-category="${escapeHtml(category)}">
+      <button class="filter-button ${category === state.activeCategory ? "active" : ""}" type="button" data-category="${escapeHtml(category)}" aria-pressed="${category === state.activeCategory ? "true" : "false"}">
         ${escapeHtml(category)}
       </button>
     `).join("");
