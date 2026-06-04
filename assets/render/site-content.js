@@ -24,12 +24,12 @@ Invariants: site-content text is escaped, public links are bounded, SVG IDs are 
 
   function proofSymbol(label, index) {
     const symbols = {
-      Identity: "Ι",
-      Governance: "Λ",
-      Structure: "Σ",
+      Identity: "I",
+      Governance: "L",
+      Structure: "S",
       Evolution: "H",
     };
-    return symbols[label] || ["Ι", "Λ", "Σ", "H"][index % 4];
+    return symbols[label] || ["I", "L", "S", "H"][index % 4];
   }
 
   function interfaceHref(item) {

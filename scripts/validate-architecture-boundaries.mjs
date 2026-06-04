@@ -320,6 +320,7 @@ function validateAssistantHandoffBoundary() {
   const handoff = readUtf8("ops/solo-developer-assistant-handoff.md");
   for (const requiredTerm of [
     "Source Authority",
+    "Foundation Mode",
     "Forbidden Assistant Moves",
     "Required Validation Trace",
     "node scripts/scaffold-product.mjs",

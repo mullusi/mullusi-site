@@ -34,6 +34,8 @@ const requiredFiles = [
   ".nojekyll",
   ".well-known/security.txt",
   "README.md",
+  "docs/FOUNDATION_MODE.md",
+  "docs/FOUNDATION_PREREQUISITES.md",
   "docs/private-source-deployment-migration.md",
   "docs/mirror-to-deploy-port-runbook.md",
   "ops/public-claim-gate.md",
@@ -69,6 +71,7 @@ const requiredFiles = [
   "sitemap.xml",
   "status.json",
   "site.webmanifest",
+  "assets/fragment-bootstrap.js",
   "assets/lang-bootstrap.js",
   "assets/runtime/page-runtime.js",
   "assets/runtime/preference-runtime.js",
@@ -1567,19 +1570,79 @@ function validateSitemap() {
 function validateStatusJson() {
   const status = JSON.parse(readUtf8("status.json"));
   const site = requireString(status.site, "status.site");
+  const witness = requireString(status.witness, "status.witness");
+  const witnessScope = requireString(status.witness_scope, "status.witness_scope");
   const publicState = requireString(status.public_state, "status.public_state");
   const canonicalContract = requireString(status.canonical_contract, "status.canonical_contract");
   if (site !== "mullusi.com") {
     recordFailure(`status_site_invalid:${site}`);
   }
+  if (witness !== "AwaitingEvidence") {
+    recordFailure(`status_witness_invalid:${witness}`);
+  }
+  if (witnessScope !== "product_runtime_release") {
+    recordFailure(`status_witness_scope_invalid:${witnessScope}`);
+  }
   if (publicState !== "Published") {
     recordFailure(`status_public_state_invalid:${publicState}`);
+  }
+  const websitePublication = status.website_publication || {};
+  if (websitePublication.state !== "Published") {
+    recordFailure(`status_website_publication_state_invalid:${websitePublication.state || ""}`);
+  }
+  for (const term of [
+    "static website",
+    "public routes",
+    "proof boundary",
+    "foundation copy",
+  ]) {
+    if (!String(websitePublication.scope || "").includes(term)) {
+      recordFailure(`status_website_publication_scope_missing:${term}`);
+    }
+  }
+  for (const term of [
+    "product runtime",
+    "API",
+    "dashboard",
+    "sandbox",
+    "pilot access",
+    "proof-stamp release witnesses",
+  ]) {
+    if (!String(websitePublication.not_blocked_by || "").includes(term)) {
+      recordFailure(`status_website_publication_not_blocked_by_missing:${term}`);
+    }
   }
   if (canonicalContract !== "POST /v1/govern/evaluate") {
     recordFailure(`status_canonical_contract_invalid:${canonicalContract}`);
   }
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(status.built_at || "")) {
     recordFailure(`status_built_at_invalid:${status.built_at}`);
+  }
+  const statusBuildDate = String(status.built_at || "").slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(statusBuildDate)) {
+    const indexHtml = readUtf8("index.html");
+    const i18n = JSON.parse(readUtf8("data/i18n.json"));
+    const lastUpdated = i18n.strings?.["hero.lastUpdated"] || {};
+    const expectedLastUpdatedEn = `Last updated ${statusBuildDate}`;
+    const expectedLastUpdatedAm = `የመጨረሻ ዝመና ${statusBuildDate}`;
+    if (!indexHtml.includes(`datetime="${statusBuildDate}"`)) {
+      recordFailure(`homepage_last_updated_datetime_mismatch:${statusBuildDate}`);
+    }
+    if (!indexHtml.includes(expectedLastUpdatedEn)) {
+      recordFailure(`homepage_last_updated_text_mismatch:${expectedLastUpdatedEn}`);
+    }
+    if (lastUpdated.en !== expectedLastUpdatedEn) {
+      recordFailure(`i18n_last_updated_en_mismatch:${lastUpdated.en || ""}`);
+    }
+    if (lastUpdated.am !== expectedLastUpdatedAm) {
+      recordFailure(`i18n_last_updated_am_mismatch:${lastUpdated.am || ""}`);
+    }
+    if (!/[\u1200-\u137F]/.test(lastUpdated.am || "")) {
+      recordFailure("i18n_last_updated_am_missing_ethiopic");
+    }
+    if (/[\u00C0-\u00FF]{2,}/.test(lastUpdated.am || "")) {
+      recordFailure("i18n_last_updated_am_mojibake");
+    }
   }
   const requiredPublishedRoutes = ["/search/", "/browse/", "/contact/", "/pilot/", "/status/", "/security/", "/privacy/", "/terms/", "/acceptable-use/", "/responsible-disclosure/"];
   if (!Array.isArray(status.published_routes) || requiredPublishedRoutes.some((route) => !status.published_routes.includes(route))) {
@@ -1740,7 +1803,7 @@ function validateProductRouteShellContract() {
         "This route is intentionally noindex",
         "/proof/",
         "/status/",
-        "/pilot/",
+        "Review proof boundary",
         "products/mullu-search/product.manifest.json",
         "POST /v1/search/query",
         "search-service",
@@ -1765,7 +1828,7 @@ function validateProductRouteShellContract() {
         "This route is intentionally noindex",
         "/proof/",
         "/status/",
-        "/pilot/",
+        "Review proof boundary",
         "products/mullu-browse/product.manifest.json",
         "POST /v1/browse/session",
         "browse-service",
@@ -3047,7 +3110,7 @@ function validateSiteContent() {
       if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(sampleResponse.checked_at || "")) {
         recordFailure(`site_proof_stamp_verifier_sample_checked_at_invalid:${sampleResponse.checked_at}`);
       }
-      if (!/does not claim live runtime availability/i.test(sampleResponse.note || "")) {
+      if (!/does not claim runtime availability/i.test(sampleResponse.note || "")) {
         recordFailure("site_proof_stamp_verifier_sample_boundary_note_missing");
       }
     }
@@ -3555,6 +3618,7 @@ function validateI18n() {
 function validateIndexDesignContract() {
   const html = readUtf8("index.html");
   const css = readUtf8("assets/styles.css");
+  const fragmentBootstrap = readUtf8("assets/fragment-bootstrap.js");
   const app = readUtf8("assets/app.js");
   const pageRuntime = readUtf8("assets/runtime/page-runtime.js");
   const preferenceRuntime = readUtf8("assets/runtime/preference-runtime.js");
@@ -3571,8 +3635,10 @@ function validateIndexDesignContract() {
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
   const assetVersion = "2026.05.platform.29";
+  const fragmentVersion = "2026.06.fragment.6";
 
   if (
+    !html.includes(`/assets/fragment-bootstrap.js?v=${fragmentVersion}`) ||
     !html.includes(`assets/styles.css?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/page-runtime.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/preference-runtime.js?v=${assetVersion}`) ||
@@ -3588,6 +3654,95 @@ function validateIndexDesignContract() {
     !html.includes(`assets/app.js?v=${assetVersion}`)
   ) {
     recordFailure("index_asset_version_invalid");
+  }
+  if (
+    html.indexOf('src="/assets/fragment-bootstrap.js') >
+    html.indexOf('src="assets/runtime/page-runtime.js')
+  ) {
+    recordFailure("fragment_bootstrap_not_before_deferred_runtime");
+  }
+  for (const requiredFragmentToken of [
+    "const maxAttempts = 24",
+    "const retryDelayMs = 250",
+    "window.history && \"scrollRestoration\" in window.history",
+    "window.history.scrollRestoration = \"manual\"",
+    "window.addEventListener(\"pageshow\", scheduleAlignment)",
+    "window.addEventListener(\"hashchange\", scheduleAlignment)",
+    "queueFrame(retry)",
+    "window.MullusiFragmentBootstrap = state",
+    "version: \"2026.06.fragment.6\"",
+  ]) {
+    if (!fragmentBootstrap.includes(requiredFragmentToken)) {
+      recordFailure(`fragment_bootstrap_contract_missing:${requiredFragmentToken}`);
+    }
+  }
+  if (fragmentBootstrap.includes("while (") || fragmentBootstrap.includes("for (;;)")) {
+    recordFailure("fragment_bootstrap_unbounded_loop_present");
+  }
+  if (!html.includes('<a class="skip-link" href="#main"')) {
+    recordFailure("index_skip_link_missing");
+  }
+  if (!html.includes('<main id="main" tabindex="-1">')) {
+    recordFailure("index_main_focus_target_missing");
+  }
+  for (const requiredFocusSelector of [
+    "a:focus-visible",
+    "button:focus-visible",
+    "input:focus-visible",
+    "select:focus-visible",
+    "textarea:focus-visible",
+    '[tabindex]:not([tabindex="-1"]):focus-visible',
+    ".skip-link:focus-visible",
+  ]) {
+    if (!css.includes(requiredFocusSelector)) {
+      recordFailure(`index_focus_selector_missing:${requiredFocusSelector}`);
+    }
+  }
+  if (!/a:focus-visible,[\s\S]*?outline:\s*3px solid var\(--accent\);[\s\S]*?outline-offset:\s*4px;/.test(css)) {
+    recordFailure("index_focus_ring_contract_missing");
+  }
+  if (!/\.skip-link\s*\{[\s\S]*?z-index:\s*100;[\s\S]*?transform:\s*translateY\(-200%\);/.test(css)) {
+    recordFailure("skip_link_hidden_default_contract_missing");
+  }
+  if (!/\.skip-link:focus,[\s\S]*?\.skip-link:focus-visible,[\s\S]*?\.skip-link:active\s*\{[\s\S]*?transform:\s*translateY\(0\);/.test(css)) {
+    recordFailure("skip_link_focus_reveal_contract_missing");
+  }
+  if (!/main:focus\s*\{[\s\S]*?outline:\s*none;/.test(css)) {
+    recordFailure("main_programmatic_focus_contract_missing");
+  }
+  if (!html.includes('data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder;aria-label:repos.searchAria"')) {
+    recordFailure("repo_search_accessible_i18n_attrs_missing");
+  }
+  if (!publicSurfaceRegistryRenderer.includes('aria-pressed="${category === state.activeCategory ? "true" : "false"}"')) {
+    recordFailure("repo_filter_aria_pressed_missing");
+  }
+  const homepageStyleContracts = [
+    [/html\s*\{[\s\S]*?overflow-x:\s*clip;/, "homepage_html_overflow_clip_missing"],
+    [/#start\s*\{[\s\S]*?scroll-margin-top:\s*68px;/, "homepage_start_scroll_margin_missing"],
+    [/@supports not \(overflow: clip\)\s*\{[\s\S]*?overflow-x:\s*hidden;/, "homepage_overflow_fallback_missing"],
+    [/\.sec-head h2\s*\{[\s\S]*?line-height:\s*1\.18;/, "homepage_section_heading_line_height_missing"],
+    [/@media \(max-width: 560px\)\s*\{[\s\S]*?\.hero-wordmark \.latin-name::before\s*\{[\s\S]*?content:\s*none;[\s\S]*?\.hero-wordmark \.latin-name::after\s*\{[\s\S]*?content:\s*none;/, "homepage_mobile_wordmark_overflow_guard_missing"],
+    [/@media \(prefers-reduced-motion: reduce\)/, "homepage_reduced_motion_guard_missing"],
+  ];
+  for (const [contractPattern, failureCode] of homepageStyleContracts) {
+    if (!contractPattern.test(css)) {
+      recordFailure(failureCode);
+    }
+  }
+  const touchTargetContracts = [
+    [/\.brand\s*\{[\s\S]*?min-height:\s*44px;/, "brand_touch_target_contract_missing"],
+    [/\.nav-links a\s*\{[\s\S]*?min-height:\s*44px;/, "nav_link_touch_target_contract_missing"],
+    [/\.theme-toggle\s*\{[\s\S]*?min-height:\s*44px;/, "theme_toggle_touch_target_contract_missing"],
+    [/\.menu-toggle\s*\{[\s\S]*?width:\s*44px;[\s\S]*?height:\s*44px;/, "menu_toggle_touch_target_contract_missing"],
+    [/\.btn\s*\{[\s\S]*?min-height:\s*44px;/, "button_touch_target_contract_missing"],
+    [/\.search-box input\s*\{[\s\S]*?min-height:\s*44px;/, "search_touch_target_contract_missing"],
+    [/\.filter-button\s*\{[\s\S]*?min-height:\s*44px;/, "filter_touch_target_contract_missing"],
+    [/@media \(max-width: 560px\)\s*\{[\s\S]*?\.start-card\s*\{[\s\S]*?min-height:\s*112px;/, "mobile_start_card_touch_target_contract_missing"],
+  ];
+  for (const [contractPattern, failureCode] of touchTargetContracts) {
+    if (!contractPattern.test(css)) {
+      recordFailure(failureCode);
+    }
   }
   if (html.indexOf("assets/registry/homepage-registry.js") > html.indexOf("assets/app.js")) {
     recordFailure("homepage_registry_module_load_order_invalid");
@@ -3710,6 +3865,39 @@ function validateIndexDesignContract() {
     recordFailure("index_news_not_tertiary_footer_section");
   }
   const mobileMenu = html.match(/<div class="mobile-menu"[\s\S]*?<\/div>\s*<main/)?.[0] ?? "";
+  if (
+    !html.includes('class="menu-toggle"') ||
+    !html.includes('aria-expanded="false"') ||
+    !html.includes('aria-controls="mobile-menu"') ||
+    !html.includes("data-menu-toggle") ||
+    !html.includes('data-i18n-attr="aria-label:nav.menuOpen"')
+  ) {
+    recordFailure("mobile_menu_toggle_accessibility_contract_missing");
+  }
+  if (!html.includes('<div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>')) {
+    recordFailure("mobile_menu_hidden_state_contract_missing");
+  }
+  for (const requiredMenuRuntimeToken of [
+    'const toggle = qs("[data-menu-toggle]");',
+    'const menu = qs("[data-mobile-menu]");',
+    'toggle.setAttribute("aria-expanded", String(open));',
+    "menu.hidden = !open;",
+    'document.documentElement.classList.toggle("menu-open", open);',
+    'qsa("a", menu).forEach((link) => {',
+    'if (menu.hidden || menu.contains(event.target) || toggle.contains(event.target)) return;',
+    'if (event.key === "Escape") setOpen(false);',
+  ]) {
+    if (!pageRuntime.includes(requiredMenuRuntimeToken)) {
+      recordFailure(`mobile_menu_runtime_contract_missing:${requiredMenuRuntimeToken}`);
+    }
+  }
+  for (const key of ["nav.menuOpen", "nav.menuClose"]) {
+    for (const lang of ["en", "am"]) {
+      if (typeof dictionary?.strings?.[key]?.[lang] !== "string" || dictionary.strings[key][lang].trim().length === 0) {
+        recordFailure(`mobile_menu_i18n_missing:${key}:${lang}`);
+      }
+    }
+  }
   const mobileNewsIndex = mobileMenu.indexOf('href="#news"');
   const mobileReposIndex = mobileMenu.indexOf('href="#repos"');
   if (mobileNewsIndex === -1 || mobileReposIndex === -1 || mobileNewsIndex < mobileReposIndex) {
@@ -3719,7 +3907,7 @@ function validateIndexDesignContract() {
   const forbiddenRepeatedCaveats = [
     "Public claims only",
     "not Mullusi claims",
-    "illustrative, not live runtime claims",
+    "illustrative, not runtime-service claims",
     "not a live endpoint",
   ];
   for (const phrase of forbiddenRepeatedCaveats) {
@@ -4391,10 +4579,10 @@ function validateDoctrineWordingContract() {
     {
       file: "index.html",
       terms: [
-        "Mullusi governs high-risk symbolic intelligence and software actions before they execute.",
+        "Mullusi is preparing a governed foundation for high-risk symbolic work.",
         "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
-        "Every material consequence re-checked.",
-        "re-governs material consequences when context, authority, risk, or dependency state changes.",
+        "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
+        "output-derived actions become proposals first",
         'href="/doctrine/"',
       ],
     },
@@ -4423,6 +4611,8 @@ function validateDoctrineWordingContract() {
     "full runtime conformance",
     "high-risk software actions before they execute.",
     "governed intelligence for consequential action",
+    "Request access",
+    "private beta access",
     "teaches the model",
     "Free teaches the model",
   ];
@@ -4441,6 +4631,187 @@ function validateDoctrineWordingContract() {
     for (const phrase of forbiddenPublicPhrases) {
       if (content.includes(phrase)) {
         recordFailure(`doctrine_wording_forbidden_phrase:${file}:${phrase}`);
+      }
+    }
+  }
+}
+
+function validateFoundationModeBoundary() {
+  const foundationDoc = readUtf8("docs/FOUNDATION_MODE.md");
+  const foundationPrerequisitesDoc = readUtf8("docs/FOUNDATION_PREREQUISITES.md");
+  for (const term of [
+    "Foundation Mode",
+    "local proof first",
+    "external witness blockers belong to product/runtime release claims",
+    "They do not block the current static `mullusi.com` website",
+    "Static website published; product runtime release witnesses AwaitingEvidence.",
+    "Pilot access is not open yet.",
+    "No customer access or deployment claim.",
+    "Runtime claims AwaitingEvidence.",
+    "Keep `/pilot/` as a boundary route",
+    "[Foundation Prerequisites](FOUNDATION_PREREQUISITES.md)",
+  ]) {
+    if (!foundationDoc.includes(term)) {
+      recordFailure(`foundation_mode_doc_term_missing:${term}`);
+    }
+  }
+
+  for (const term of [
+    "public-safe prerequisite ladder",
+    "Foundation prerequisites are preparation work, not launch work.",
+    "External witness blockers apply to product/runtime release claims.",
+    "They do not block the current static `mullusi.com` website",
+    "Static website published; product runtime release witnesses AwaitingEvidence.",
+    "Prerequisite setup is underway.",
+    "First local proof thread is approval-gated and receipt-bound.",
+    "No customer access or deployment claim.",
+    "Runtime claims AwaitingEvidence.",
+    "Pilot access is not open yet.",
+  ]) {
+    if (!foundationPrerequisitesDoc.includes(term)) {
+      recordFailure(`foundation_prerequisites_doc_term_missing:${term}`);
+    }
+  }
+
+  const requiredTermsBySurface = new Map([
+    [
+      "pilot/index.html",
+      [
+        "Pilot access is not open yet.",
+        "This route is a readiness boundary, not an intake form.",
+        "Pilot route state: Foundation boundary; no access claim",
+      ],
+    ],
+    [
+      "status/index.html",
+      [
+        "Published website routes are live and linked.",
+        "Product runtime, API, dashboard, sandbox, metrics, learn, pilot access, and proof-stamp release witnesses remain separate AwaitingEvidence claims.",
+        "They do not claim open pilot access.",
+      ],
+    ],
+    [
+      "terms/index.html",
+      [
+        "foundation-stage agreement-boundary questions",
+        "Pilot access remains closed until a separate readiness decision is published.",
+      ],
+    ],
+    [
+      "acceptable-use/index.html",
+      [
+        "future governed runtime conduct",
+        "If a separate written runtime approval is published",
+        "Runtime conduct terms: AwaitingEvidence until separate written approval.",
+      ],
+    ],
+    [
+      "contact/index.html",
+      [
+        "Mullusi Contact - Foundation Questions",
+        "Foundation",
+        "For foundation-stage questions, proof-boundary review, prerequisite planning, and public-route feedback.",
+        "does not claim backend storage, access workflow, or pilot workflow.",
+        "Structured question fields",
+        "Mullusi%20foundation%20question",
+      ],
+    ],
+    [
+      "index.html",
+      [
+        "Foundation before launch.",
+        "public foundation route first",
+        "witness closure preparation",
+        "foundation product path",
+        "public site can record future surface expansion",
+        "No customer access or deployment claim.",
+      ],
+    ],
+    [
+      "data/site.json",
+      [
+        "foundation examples",
+        "local proof examples",
+        "planned higher evaluation limits",
+        "proof stamp review",
+        "private deployment boundary",
+        "after release evidence closes",
+      ],
+    ],
+    [
+      "data/i18n.json",
+      [
+        "public foundation route first",
+        "witness closure preparation",
+        "foundation product path",
+        "public site can record future surface expansion",
+      ],
+    ],
+  ]);
+
+  for (const [file, terms] of requiredTermsBySurface) {
+    const content = readUtf8(file);
+    for (const term of terms) {
+      if (!content.includes(term)) {
+        recordFailure(`foundation_mode_required_term_missing:${file}:${term}`);
+      }
+    }
+  }
+
+  const publicFoundationSurfaces = [
+    "index.html",
+    "mullu/index.html",
+    "pilot/index.html",
+    "contact/index.html",
+    "acceptable-use/index.html",
+    "terms/index.html",
+    "proof/index.html",
+    "playground/index.html",
+    "status/index.html",
+    "security/index.html",
+    "search/index.html",
+    "browse/index.html",
+    "data/site.json",
+    "data/i18n.json",
+  ];
+  const forbiddenInvitationPhrases = [
+    "Request governed evaluation access.",
+    "Start pilot email",
+    "Request pilot access",
+    "requesting governed pilot access",
+    "Governed Evaluation Access",
+    "Mullusi governed pilot request",
+    "private beta access",
+    "live API",
+    "governed pilot or product agreement",
+    "future governed runtime access",
+    "When governed runtime access is granted",
+    "Runtime conduct terms: AwaitingEvidence until access agreement.",
+    "Mullusi Contact - Governed Intake",
+    "Structured intake fields",
+    "backend intake storage",
+    "pilot intake",
+    "public-facing first",
+    "live product path",
+    "ready for direct surface expansion",
+    "limited public access",
+    "small-volume hosted evaluations",
+    "proof stamp access",
+    "customer-controlled deployment",
+    "product-ready public-source releases",
+    "Live Runtime",
+    "live runtime evidence",
+    "Live runtime witness",
+    "Runtime access",
+    "pending live runtime witness",
+    "live runtime availability",
+  ];
+
+  for (const file of publicFoundationSurfaces) {
+    const content = readUtf8(file);
+    for (const phrase of forbiddenInvitationPhrases) {
+      if (content.includes(phrase)) {
+        recordFailure(`foundation_mode_forbidden_invitation:${file}:${phrase}`);
       }
     }
   }
@@ -4617,7 +4988,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/public-claim-gate.md",
-      terms: ["Claim:", "Evidence:", "Surface:", "Risk:", "Status:", "Decision:", "Rollback:", "AwaitingEvidence"],
+      terms: ["Foundation Mode", "Claim:", "Evidence:", "Surface:", "Risk:", "Status:", "Decision:", "Rollback:", "Pilot access is not open yet.", "No customer access or deployment claim.", "AwaitingEvidence"],
     },
     {
       file: "ops/repo-release-gate.md",
@@ -4981,6 +5352,7 @@ function runValidation() {
   validateProofPageContract();
   validateDoctrinePageContract();
   validateDoctrineWordingContract();
+  validateFoundationModeBoundary();
   validatePublicText();
   validateEmailRendering();
   validateTrustRoutes();

@@ -1,9 +1,9 @@
 <!doctype html>
 <!--
-Purpose: reliable public contact route for Mullusi visitor, research, support, and pilot requests.
-Governance scope: conversion routing, visible email fallback, intake boundary, and no-JavaScript reachability.
+Purpose: reliable public contact route for Mullusi visitor, research, support, and foundation questions.
+Governance scope: contact routing, visible email fallback, question boundary, and no-JavaScript reachability.
 Dependencies: Mullusi static assets and public mailbox addresses.
-Invariants: contact options remain visible without JavaScript, no form claims backend storage, and every visible email has a matching mailto link.
+Invariants: contact options remain visible without JavaScript, no form or access workflow is claimed, and every visible email has a matching mailto link.
 -->
 <html lang="en" translate="no">
 <head>
@@ -11,8 +11,8 @@ Invariants: contact options remain visible without JavaScript, no form claims ba
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#050609">
-  <title>Mullusi Contact - Governed Intake</title>
-  <meta name="description" content="Reliable Mullusi contact route for pilots, research, support, and public-surface questions.">
+  <title>Mullusi Contact - Foundation Questions</title>
+  <meta name="description" content="Reliable Mullusi contact route for foundation questions, research, support, and public-surface issues.">
   <link rel="canonical" href="https://mullusi.com/contact/">
   <link rel="shortcut icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
@@ -20,8 +20,8 @@ Invariants: contact options remain visible without JavaScript, no form claims ba
   <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
   <link rel="manifest" href="/site.webmanifest">
   <meta property="og:site_name" content="Mullusi">
-  <meta property="og:title" content="Mullusi Contact - Governed Intake">
-  <meta property="og:description" content="Visible contact routes for Mullusi pilot, research, support, and public-surface questions.">
+  <meta property="og:title" content="Mullusi Contact - Foundation Questions">
+  <meta property="og:description" content="Visible contact routes for Mullusi foundation questions, research, support, and public-surface issues.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mullusi.com/contact/">
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
@@ -35,7 +35,6 @@ Invariants: contact options remain visible without JavaScript, no form claims ba
     <a class="brand" href="/">Mullusi</a>
     <div class="nav-links">
       <a href="/mullu/">Mullu</a>
-      <a href="/pilot/">Pilot</a>
       <a href="/proof/">Proof</a>
       <a href="/status/">Status</a>
       <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Docs</a>
@@ -44,13 +43,13 @@ Invariants: contact options remain visible without JavaScript, no form claims ba
   <main id="main" tabindex="-1">
     <div class="eyebrow">Governed contact route</div>
     <h1>Contact Mullusi.</h1>
-    <p class="lede">Use the mailbox that matches the request. This page is static, works without JavaScript, and does not claim backend intake storage.</p>
+    <p class="lede">Use the mailbox that matches the question. This page is static, works without JavaScript, and does not claim backend storage, access workflow, or pilot workflow.</p>
 
     <section class="grid" aria-label="Contact mailboxes">
       <article class="card">
-        <h2>Pilot</h2>
-        <p>For governed evaluation pilots, deployment gates, agent action checks, and proof-state workflows.</p>
-        <a class="button primary" href="mailto:hello@mullusi.com?subject=Mullusi%20governed%20pilot%20request">hello@mullusi.com</a>
+        <h2>Foundation</h2>
+        <p>For foundation-stage questions, proof-boundary review, prerequisite planning, and public-route feedback.</p>
+        <a class="button primary" href="mailto:hello@mullusi.com?subject=Mullusi%20foundation%20question">hello@mullusi.com</a>
       </article>
       <article class="card">
         <h2>Research</h2>
@@ -59,14 +58,14 @@ Invariants: contact options remain visible without JavaScript, no form claims ba
       </article>
       <article class="card">
         <h2>Support</h2>
-        <p>For website route defects, reserved-surface evidence, disclosure routing, and public-access issues.</p>
+        <p>For website route defects, reserved-surface evidence, disclosure routing, and public-route issues.</p>
         <a class="button" href="mailto:support@mullusi.com?subject=Mullusi%20support%20request">support@mullusi.com</a>
       </article>
     </section>
 
     <section class="intake" aria-labelledby="intake-title">
-      <h2 id="intake-title">Structured intake fields</h2>
-      <p>Include these fields in the email so the request can be evaluated without hidden assumptions.</p>
+      <h2 id="intake-title">Structured question fields</h2>
+      <p>Include these fields in the email so the question can be evaluated without hidden assumptions.</p>
       <ol>
         <li>Organization or individual identity.</li>
         <li>Target workflow or action class.</li>

@@ -176,6 +176,7 @@ function createFixture() {
     [
       "# Handoff",
       "## Source Authority",
+      "## Foundation Mode",
       "## Forbidden Assistant Moves",
       "## Required Validation Trace",
       "node scripts/scaffold-product.mjs",

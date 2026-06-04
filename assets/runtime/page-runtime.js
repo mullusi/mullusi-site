@@ -83,6 +83,27 @@ Invariants: untrusted text is escaped, unsafe hrefs collapse to "#", external li
     });
   }
 
+  function alignFragmentTarget(options = {}) {
+    const hash = window.location.hash || "";
+    if (!/^#[A-Za-z][A-Za-z0-9_-]*$/.test(hash)) return false;
+
+    const target = document.getElementById(hash.slice(1));
+    if (!target) return false;
+
+    target.scrollIntoView({ behavior: options.behavior || "auto", block: "start" });
+    return true;
+  }
+
+  function bindInitialFragmentNavigation() {
+    if (!window.location.hash) return;
+
+    const align = () => alignFragmentTarget({ behavior: "auto" });
+    window.requestAnimationFrame(() => {
+      align();
+      window.setTimeout(align, 160);
+    });
+  }
+
   function bindMenu(context = {}) {
     const toggle = qs("[data-menu-toggle]");
     const menu = qs("[data-mobile-menu]");
@@ -187,6 +208,7 @@ Invariants: untrusted text is escaped, unsafe hrefs collapse to "#", external li
 
   window.MullusiPageRuntime = Object.freeze({
     bindHeader,
+    bindInitialFragmentNavigation,
     bindLinkNavigation,
     bindMenu,
     bindReveal,
@@ -198,6 +220,7 @@ Invariants: untrusted text is escaped, unsafe hrefs collapse to "#", external li
     qs,
     qsa,
     restoreFallbackContent,
+    alignFragmentTarget,
     revealRendered,
   });
 })();
