@@ -1,0 +1,55 @@
+# Purpose: refresh the Mullusi homepage Frontier Signal feed on a schedule.
+# Governance scope: scheduled public JSON mutation, validation before commit, and bounded repository write authority.
+# Dependencies: GitHub Actions, Node.js, Hacker News Algolia API, and Mullusi validation scripts.
+# Invariants: only data/news.json may be committed, empty refreshes are not written, and validation passes before push.
+
+name: Refresh Frontier Signal
+
+on:
+  schedule:
+    - cron: "23 8 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-frontier-signal
+  cancel-in-progress: false
+
+jobs:
+  refresh-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Refresh news registry
+        run: npm run news:refresh
+
+      - name: Validate refreshed site
+        run: npm run validate
+
+      - name: Commit refreshed news registry
+        shell: bash
+        run: |
+          changed_files="$(git status --porcelain | awk '{print $2}')"
+          if [[ -z "${changed_files}" ]]; then
+            echo "news_refresh_no_change"
+            exit 0
+          fi
+          echo "${changed_files}"
+          if [[ "${changed_files}" != "data/news.json" ]]; then
+            echo "news_refresh_unbounded_delta"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/news.json
+          git commit -m "chore(site): refresh frontier signal feed" -m "Refreshes the public homepage news registry after the scheduled feed pull passes validation. [UWMA] [CDCV]"
+          git push
