@@ -87,6 +87,10 @@ const requiredFiles = [
   "assets/render/news-activity.js",
   "assets/app.js",
   "assets/styles.css",
+  "assets/helper/MULLU_EYE_HELPER_V3_README.md",
+  "assets/helper/mullu-eye-helper-v3.bundle.css",
+  "assets/helper/mullu-eye-helper-v3.bundle.js",
+  "assets/helper/mullu-eye-helper-v3.install.js",
   "assets/theme-bootstrap.js",
   "assets/pages/contact.css",
   "assets/pages/doctrine.css",
@@ -577,6 +581,10 @@ function validateCloudflarePagesArtifact() {
     "assets/render/news-activity.js",
     "assets/app.js",
     "assets/styles.css",
+    "assets/helper/MULLU_EYE_HELPER_V3_README.md",
+    "assets/helper/mullu-eye-helper-v3.bundle.css",
+    "assets/helper/mullu-eye-helper-v3.bundle.js",
+    "assets/helper/mullu-eye-helper-v3.install.js",
     "assets/theme-bootstrap.js",
     "assets/pages/contact.css",
     "assets/pages/doctrine.css",
@@ -3632,15 +3640,20 @@ function validateIndexDesignContract() {
   const publicSurfaceRegistryRenderer = readUtf8("assets/render/public-surface-registry.js");
   const productRegistryRenderer = readUtf8("assets/render/product-registry.js");
   const newsActivityRenderer = readUtf8("assets/render/news-activity.js");
+  const eyeHelperCss = readUtf8("assets/helper/mullu-eye-helper-v3.bundle.css");
+  const eyeHelperBundle = readUtf8("assets/helper/mullu-eye-helper-v3.bundle.js");
+  const eyeHelperInstall = readUtf8("assets/helper/mullu-eye-helper-v3.install.js");
   const dictionary = JSON.parse(readUtf8("data/i18n.json"));
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
   const assetVersion = "2026.05.platform.29";
   const fragmentVersion = "2026.06.fragment.6";
+  const eyeHelperVersion = "2026.06.helper.1";
 
   if (
     !html.includes(`/assets/fragment-bootstrap.js?v=${fragmentVersion}`) ||
     !html.includes(`assets/styles.css?v=${assetVersion}`) ||
+    !html.includes(`/assets/helper/mullu-eye-helper-v3.bundle.css?v=${eyeHelperVersion}`) ||
     !html.includes(`assets/runtime/page-runtime.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/preference-runtime.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/substrate-runtime.js?v=${assetVersion}`) ||
@@ -3652,7 +3665,9 @@ function validateIndexDesignContract() {
     !html.includes(`assets/render/product-registry.js?v=${assetVersion}`) ||
     !html.includes(`assets/render/news-activity.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/homepage-context.js?v=${assetVersion}`) ||
-    !html.includes(`assets/app.js?v=${assetVersion}`)
+    !html.includes(`assets/app.js?v=${assetVersion}`) ||
+    !html.includes(`/assets/helper/mullu-eye-helper-v3.bundle.js?v=${eyeHelperVersion}`) ||
+    !html.includes(`/assets/helper/mullu-eye-helper-v3.install.js?v=${eyeHelperVersion}`)
   ) {
     recordFailure("index_asset_version_invalid");
   }
@@ -3679,6 +3694,35 @@ function validateIndexDesignContract() {
   }
   if (fragmentBootstrap.includes("while (") || fragmentBootstrap.includes("for (;;)")) {
     recordFailure("fragment_bootstrap_unbounded_loop_present");
+  }
+  const eyeHelperContracts = [
+    [html, 'data-mullu-helper="Explain the Mullusi homepage foundation boundary', "eye_helper_hero_metadata_missing"],
+    [html, 'data-mullu-helper="Open the proof boundary route', "eye_helper_proof_cta_metadata_missing"],
+    [html, 'data-mullu-helper="Explain the Mullusi platform map', "eye_helper_platform_metadata_missing"],
+    [html, 'data-mullu-helper="Explain product cards', "eye_helper_product_metadata_missing"],
+    [html, 'data-mullu-helper="Explain the promotion rule', "eye_helper_cta_metadata_missing"],
+    [eyeHelperCss, ".mullu-eye-helper-dock", "eye_helper_dock_style_missing"],
+    [eyeHelperCss, ".mullu-eye-helper-panel", "eye_helper_panel_style_missing"],
+    [eyeHelperCss, "html.mullu-eye-helper-active", "eye_helper_active_cursor_style_missing"],
+    [eyeHelperBundle, "document.elementsFromPoint", "eye_helper_pointer_resolver_missing"],
+    [eyeHelperBundle, "input[type='password']", "eye_helper_password_guard_missing"],
+    [eyeHelperBundle, "RISKY_WORDS", "eye_helper_risky_word_gate_missing"],
+    [eyeHelperBundle, "state.confirmActionId !== actionId", "eye_helper_confirmation_gate_missing"],
+    [eyeHelperBundle, "type: \"mullu.helper.inspect\"", "eye_helper_backend_packet_contract_missing"],
+    [eyeHelperBundle, "global.MulluEyeHelper", "eye_helper_global_missing"],
+    [eyeHelperInstall, "activeByDefault: false", "eye_helper_inactive_boot_missing"],
+    [eyeHelperInstall, "enabledOnCoarsePointer: false", "eye_helper_coarse_pointer_guard_missing"],
+  ];
+  for (const [sourceText, requiredTerm, failureCode] of eyeHelperContracts) {
+    if (!sourceText.includes(requiredTerm)) {
+      recordFailure(failureCode);
+    }
+  }
+  if (html.indexOf("/assets/helper/mullu-eye-helper-v3.bundle.js") > html.indexOf("/assets/helper/mullu-eye-helper-v3.install.js")) {
+    recordFailure("eye_helper_install_before_bundle");
+  }
+  if (eyeHelperBundle.includes("form.submit(") || eyeHelperBundle.includes(".submit()")) {
+    recordFailure("eye_helper_silent_form_submit_present");
   }
   if (!html.includes('<a class="skip-link" href="#main"')) {
     recordFailure("index_skip_link_missing");

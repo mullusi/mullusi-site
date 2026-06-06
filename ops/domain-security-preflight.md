@@ -31,6 +31,32 @@ mta_sts_enforce_allowed=false
 tls_rpt_publication_allowed=false
 raw_secret_values=not_recorded
 last_promoted=AwaitingEvidence
+last_reviewed=2026-06-06
+```
+
+Observed on 2026-06-06:
+
+```text
+command=node scripts/check-domain-hardening-preflight.mjs
+verdict=GovernanceBlocked
+proof_state=Unknown
+domain_hardening_preflight=GovernanceBlocked
+active_cloudflare_ca_set=AwaitingEvidence
+cloudflare_ca_source=AwaitingEvidence
+dns_write_authority=AwaitingEvidence
+sender_inventory=AwaitingEvidence
+google_workspace_dkim_selector=AwaitingEvidence
+dmarc_report_mailbox=AwaitingEvidence
+mta_sts_https_policy_host=AwaitingEvidence
+tls_rpt_report_mailbox=AwaitingEvidence
+manual_caa_allowed=false
+dkim_publication_allowed=false
+spf_hardfail_allowed=false
+dmarc_enforcement_allowed=false
+mta_sts_enforce_allowed=false
+tls_rpt_publication_allowed=false
+finding=preflight_waiting_for_external_evidence
+raw_secret_values=not_recorded
 ```
 
 ## Permission Rule

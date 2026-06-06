@@ -2,7 +2,7 @@
 <!--
 Purpose: public Mullusi landing page with governed product, service, public-surface, and science-engine surfaces.
 Governance scope: public claims, route boundaries, public surface registry, evidence plane, and visual substrate.
-Dependencies: assets/styles.css, assets/runtime/page-runtime.js, assets/runtime/preference-runtime.js, assets/runtime/substrate-runtime.js, assets/runtime/homepage-lifecycle-plan.js, assets/runtime/homepage-controller.js, assets/registry/homepage-registry.js, assets/render/site-content.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, assets/render/news-activity.js, assets/runtime/homepage-context.js, assets/app.js, data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, Mullusi icons, and public Mullusi domains.
+Dependencies: assets/styles.css, assets/helper/mullu-eye-helper-v3.bundle.css, assets/runtime/page-runtime.js, assets/runtime/preference-runtime.js, assets/runtime/substrate-runtime.js, assets/runtime/homepage-lifecycle-plan.js, assets/runtime/homepage-controller.js, assets/registry/homepage-registry.js, assets/render/site-content.js, assets/render/public-surface-registry.js, assets/render/product-registry.js, assets/render/news-activity.js, assets/runtime/homepage-context.js, assets/app.js, assets/helper/mullu-eye-helper-v3.bundle.js, assets/helper/mullu-eye-helper-v3.install.js, data/generated/homepage-product-registry.json, data/manual/public-surfaces.json, data/site.json, Mullusi icons, and public Mullusi domains.
 Invariants: no private repository claims, no silent content failure, all dynamic public records load from structured JSON.
 -->
 <html lang="en" translate="no">
@@ -35,6 +35,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <script src="/assets/theme-bootstrap.js"></script>
   <script src="/assets/lang-bootstrap.js"></script>
   <link rel="stylesheet" href="assets/styles.css?v=2026.05.platform.29" />
+  <link rel="stylesheet" href="/assets/helper/mullu-eye-helper-v3.bundle.css?v=2026.06.helper.1" />
   <script src="/assets/fragment-bootstrap.js?v=2026.06.fragment.6"></script>
   <script type="application/ld+json">
     {
@@ -72,6 +73,8 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <script defer src="assets/render/news-activity.js?v=2026.05.platform.29"></script>
   <script defer src="assets/runtime/homepage-context.js?v=2026.05.platform.29"></script>
   <script defer src="assets/app.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.1"></script>
+  <script defer src="/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.1"></script>
 </head>
 <body>
   <div id="substrate" aria-hidden="true">
@@ -144,7 +147,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <main id="main" tabindex="-1">
     <div id="top"></div>
 
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero" aria-labelledby="hero-title" data-mullu-helper="Explain the Mullusi homepage foundation boundary, public readiness state, and proof-first launch posture.">
       <div class="wrap">
         <div class="hero-stage">
           <div class="hero-mesh" aria-hidden="true">
@@ -187,8 +190,8 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <p class="lead" data-i18n="hero.lead">Current work is local proof, claim boundaries, and prerequisite setup before public deployment or customer access.</p>
           <p class="plain hero-plain" data-i18n="hero.plain">Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.</p>
           <div class="hero-actions">
-            <a href="/proof/" class="btn btn-solid" data-i18n="hero.ctaPlayground">Review Proof Boundary</a>
-            <a href="/mullu/" class="btn" data-i18n="hero.reviewProof">View Foundation Route</a>
+            <a href="/proof/" class="btn btn-solid" data-i18n="hero.ctaPlayground" data-mullu-helper="Open the proof boundary route for public claims, runtime evidence state, and release witness status.">Review Proof Boundary</a>
+            <a href="/mullu/" class="btn" data-i18n="hero.reviewProof" data-mullu-helper="Open the Mullu foundation route for the flagship governed product surface.">View Foundation Route</a>
           </div>
           <dl class="hero-proof-rail" aria-label="Public route state" data-i18n-attr="aria-label:hero.routeStateAria">
             <div>
@@ -210,7 +213,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band tier-primary start-here" id="start" aria-labelledby="start-title">
+    <section class="band tier-primary start-here" id="start" aria-labelledby="start-title" data-mullu-helper="Route first-time visitors to product, proof, playground, or platform structure based on intent.">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="start.tag">Start Here</div>
@@ -324,7 +327,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band tier-primary" id="platform" aria-labelledby="platform-title">
+    <section class="band tier-primary" id="platform" aria-labelledby="platform-title" data-mullu-helper="Explain the Mullusi platform map, public surfaces, request flow, and release discipline.">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="platform.tag">Platform Spine</div>
@@ -460,7 +463,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band tier-primary" id="evidence" aria-labelledby="evidence-title">
+    <section class="band tier-primary" id="evidence" aria-labelledby="evidence-title" data-mullu-helper="Explain the evidence plane: identity, governance, structured content, and expansion lineage.">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="evidence.tag">Evidence Plane</div>
@@ -477,7 +480,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band tier-secondary" id="architecture" aria-labelledby="architecture-title">
+    <section class="band tier-secondary" id="architecture" aria-labelledby="architecture-title" data-mullu-helper="Explain the architecture layer boundaries and governed request path for Mullusi public surfaces.">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="architecture.tag">Architecture</div>
@@ -530,7 +533,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band tier-primary" id="products" aria-labelledby="products-title">
+    <section class="band tier-primary" id="products" aria-labelledby="products-title" data-mullu-helper="Explain product cards, product evidence status, and which surfaces are public, planned, or restricted.">
       <div class="wrap">
         <div class="sec-head reveal">
           <div class="tag" data-i18n="products.tag">Product Graph</div>
@@ -692,7 +695,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="cta" aria-labelledby="cta-title">
+    <section class="cta" aria-labelledby="cta-title" data-mullu-helper="Explain the promotion rule: publish product surfaces only after proof, route, docs, and release boundaries are verified.">
       <div class="wrap">
         <div class="tag center-tag" data-i18n="cta.tag">Expansion</div>
         <h2 id="cta-title" data-i18n="cta.title">Promote after proof</h2>

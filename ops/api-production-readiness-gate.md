@@ -16,6 +16,47 @@ no_runtime_witness -> no_api_dns
 The public website, docs, email, DNSSEC, and Cloudflare baseline must remain
 untouched while this gate is executed.
 
+Observed on 2026-06-06:
+
+```text
+command=node scripts/check-api-production-readiness.mjs
+api_production_readiness_state=Blocked
+solver_outcome=AwaitingEvidence
+proof_state=Unknown
+api_dns_publication_allowed=false
+recovery_gate=Blocked
+recovery_witness_state=AwaitingEvidence
+api_provisioning_allowed=false
+manual_evidence_ready=false
+manual_evidence_missing_count=13
+runtime_witness_registry=Pass
+runtime_witness_count=11
+runtime_witness_closed_count=0
+runtime_witness_blocked_count=11
+host_path_contract=Pass
+readiness_gate_contract=Pass
+secret_boundary=Pass
+blocker=recovery_witness_not_ready
+blocker=manual_evidence_missing:production_image_published
+blocker=manual_evidence_missing:runtime_host_ready
+blocker=manual_evidence_missing:managed_postgres_ready
+blocker=manual_evidence_missing:schema_applied
+blocker=manual_evidence_missing:production_secrets_stored
+blocker=manual_evidence_missing:deploy_env_check_ready
+blocker=manual_evidence_missing:release_preflight_ready
+blocker=manual_evidence_missing:persistence_check_ready
+blocker=manual_evidence_missing:host_firewall_configured
+blocker=manual_evidence_missing:tls_certificate_ready
+blocker=manual_evidence_missing:rollback_path_defined
+blocker=manual_evidence_missing:private_runtime_witness_ready
+blocker=manual_evidence_missing:dns_authority_ready
+blocker=runtime_witness_registry_has_no_closed_products
+secret_values=not_recorded
+host_addresses=not_recorded
+database_urls=not_recorded
+private_recovery_values=not_read
+```
+
 ## Decision States
 
 ```text

@@ -7,7 +7,7 @@ Invariants: no Cloudflare account IDs, DNS target dashboard values, DKIM private
 
 # Domain Security Witness
 
-Observed on 2026-05-25:
+Observed on 2026-06-06:
 
 ```text
 command=node scripts/check-domain-security.mjs --allow-hardening-gaps

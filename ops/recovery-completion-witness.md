@@ -18,11 +18,22 @@ Current answer:
 ```text
 recovery_witness_state=AwaitingEvidence
 api_provisioning_allowed=false
-last_reviewed=2026-05-22
+last_reviewed=2026-06-06
 ```
 
 This state is intentionally blocked until the private recovery inventory is
 filled outside Git and the operator confirms each root recovery path.
+
+Observed on 2026-06-06:
+
+```text
+command=node scripts/check-private-recovery-inventory.mjs --allow-missing
+private_recovery_inventory state=Missing allowed=true
+```
+
+The missing state is a public-safe blocker. The private inventory is expected
+outside Git or in an ignored local file, and it must not be replaced by a
+committed public witness.
 
 ## Public-Safe Witness Table
 

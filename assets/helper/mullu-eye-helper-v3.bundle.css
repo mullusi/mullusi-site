@@ -1,0 +1,276 @@
+/*
+Purpose: style the Mullu Eye Helper cursor, target highlight, and action panel.
+Governance scope: visible helper state, bounded interaction surface, and non-overlapping fixed overlays.
+Dependencies: assets/helper/mullu-eye-helper-v3.bundle.js and browser DOM APIs.
+Invariants: helper chrome stays above page content, does not cover primary navigation, and preserves readable action controls.
+*/
+
+:root {
+  --mullu-eye-helper-bg: rgba(5, 8, 13, 0.92);
+  --mullu-eye-helper-panel: rgba(10, 15, 23, 0.96);
+  --mullu-eye-helper-line: rgba(126, 247, 209, 0.32);
+  --mullu-eye-helper-text: #f3fff9;
+  --mullu-eye-helper-muted: #9fb8b0;
+  --mullu-eye-helper-accent: #7ef7d1;
+  --mullu-eye-helper-warn: #ffd166;
+  --mullu-eye-helper-danger: #ff6b6b;
+  --mullu-eye-helper-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+}
+
+.mullu-eye-helper-dock {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2147483000;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 64px;
+  max-width: min(320px, calc(100vw - 32px));
+  height: 48px;
+  padding: 6px 12px 6px 8px;
+  border: 1px solid var(--mullu-eye-helper-line);
+  border-radius: 999px;
+  color: var(--mullu-eye-helper-text);
+  background: var(--mullu-eye-helper-bg);
+  box-shadow: var(--mullu-eye-helper-shadow);
+  cursor: pointer;
+  user-select: none;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.mullu-eye-helper-dock:focus-visible,
+.mullu-eye-helper-panel button:focus-visible {
+  outline: 2px solid var(--mullu-eye-helper-accent);
+  outline-offset: 3px;
+}
+
+.mullu-eye-helper-dock-eyes,
+.mullu-eye-helper-cursor-eyes {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 18px);
+  gap: 4px;
+  align-items: center;
+}
+
+.mullu-eye-helper-eye {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(126, 247, 209, 0.7);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 58% 54%, #061017 0 3px, transparent 4px),
+    radial-gradient(circle at 50% 50%, #f3fff9 0 8px, #7ef7d1 9px 10px, transparent 11px);
+  box-shadow: 0 0 18px rgba(126, 247, 209, 0.18);
+}
+
+.mullu-eye-helper-dock[aria-pressed="false"] .mullu-eye-helper-eye::after {
+  position: absolute;
+  inset: 7px 2px auto;
+  height: 2px;
+  border-radius: 99px;
+  background: rgba(126, 247, 209, 0.86);
+  content: "";
+}
+
+.mullu-eye-helper-dock-label {
+  overflow: hidden;
+  max-width: 210px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mullu-eye-helper-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2147482998;
+  width: 54px;
+  height: 34px;
+  pointer-events: none;
+  transform: translate3d(-200px, -200px, 0);
+  transition: opacity 140ms ease;
+}
+
+.mullu-eye-helper-cursor[hidden],
+.mullu-eye-helper-highlight[hidden],
+.mullu-eye-helper-panel[hidden] {
+  display: none;
+}
+
+.mullu-eye-helper-cursor-eyes {
+  transform: scale(var(--mullu-eye-helper-scale, 1));
+  transform-origin: center;
+}
+
+.mullu-eye-helper-highlight {
+  position: fixed;
+  z-index: 2147482997;
+  border: 2px solid var(--mullu-eye-helper-accent);
+  border-radius: 8px;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 1px rgba(5, 8, 13, 0.74),
+    0 0 26px rgba(126, 247, 209, 0.22);
+  transition: left 120ms ease, top 120ms ease, width 120ms ease, height 120ms ease, opacity 120ms ease;
+}
+
+.mullu-eye-helper-panel {
+  position: fixed;
+  z-index: 2147483001;
+  width: min(340px, calc(100vw - 32px));
+  max-height: min(440px, calc(100vh - 32px));
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid var(--mullu-eye-helper-line);
+  border-radius: 8px;
+  color: var(--mullu-eye-helper-text);
+  background: var(--mullu-eye-helper-panel);
+  box-shadow: var(--mullu-eye-helper-shadow);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.mullu-eye-helper-panel-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.mullu-eye-helper-kicker {
+  margin: 0 0 4px;
+  color: var(--mullu-eye-helper-accent);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.mullu-eye-helper-title {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.mullu-eye-helper-close {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: var(--mullu-eye-helper-text);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+.mullu-eye-helper-summary {
+  margin: 0 0 12px;
+  color: var(--mullu-eye-helper-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.mullu-eye-helper-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.mullu-eye-helper-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 38px;
+  padding: 9px 11px;
+  border: 1px solid rgba(126, 247, 209, 0.22);
+  border-radius: 8px;
+  color: var(--mullu-eye-helper-text);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.mullu-eye-helper-actions button:hover {
+  border-color: rgba(126, 247, 209, 0.56);
+  background: rgba(126, 247, 209, 0.1);
+}
+
+.mullu-eye-helper-actions button[data-risk="true"] {
+  border-color: rgba(255, 209, 102, 0.42);
+}
+
+.mullu-eye-helper-action-note {
+  color: var(--mullu-eye-helper-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mullu-eye-helper-warning {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 209, 102, 0.32);
+  border-radius: 8px;
+  color: var(--mullu-eye-helper-warn);
+  background: rgba(255, 209, 102, 0.08);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.mullu-eye-helper-toast {
+  position: fixed;
+  right: 18px;
+  bottom: 76px;
+  z-index: 2147483002;
+  max-width: min(360px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border: 1px solid var(--mullu-eye-helper-line);
+  border-radius: 8px;
+  color: var(--mullu-eye-helper-text);
+  background: var(--mullu-eye-helper-bg);
+  box-shadow: var(--mullu-eye-helper-shadow);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.mullu-eye-helper-toast[hidden] {
+  display: none;
+}
+
+html.mullu-eye-helper-active,
+html.mullu-eye-helper-active body {
+  cursor: none;
+}
+
+html.mullu-eye-helper-active input,
+html.mullu-eye-helper-active textarea,
+html.mullu-eye-helper-active select,
+html.mullu-eye-helper-active [contenteditable="true"] {
+  cursor: text;
+}
+
+@media (max-width: 640px) {
+  .mullu-eye-helper-dock {
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100vw - 24px);
+  }
+
+  .mullu-eye-helper-dock-label {
+    max-width: 150px;
+  }
+
+  .mullu-eye-helper-toast {
+    right: 12px;
+    bottom: 70px;
+  }
+}

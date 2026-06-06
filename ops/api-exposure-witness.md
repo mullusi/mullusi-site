@@ -21,12 +21,30 @@ api_dns_publication_allowed=false
 api_runtime_public_state=AwaitingEvidence
 recovery_witness_state=AwaitingEvidence
 api_provisioning_allowed=false
-last_reviewed=2026-05-25
+last_reviewed=2026-06-06
 ```
 
 The exposure state remains blocked while root recovery evidence is incomplete.
 This file does not replace the private recovery inventory; it only records the
 public-safe decision boundary.
+
+Observed on 2026-06-06:
+
+```text
+command=node scripts/check-api-exposure-gate.mjs --expect-blocked
+verdict=GovernanceBlocked
+proof_state=Unknown
+api_dns_publication_allowed=false
+recovery_witness_state=AwaitingEvidence
+api_provisioning_allowed=false
+api_runtime_public_state=AwaitingEvidence
+dns_probe_state=NotRequested
+https_probe_state=NotRequested
+blocker=api_exposure_blocked_until_recovery_ready
+raw_host_values=not_recorded
+secret_values=not_read
+private_recovery_values=not_read
+```
 
 `ReadyForDns` is a pre-DNS state. It means publication is allowed after all
 private evidence passes, even if the public `api` record is still absent.
