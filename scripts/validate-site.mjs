@@ -49,6 +49,7 @@ const requiredFiles = [
   "ops/api-exposure-witness.md",
   "ops/website-origin-witness.md",
   "ops/public-visibility-witness.md",
+  "ops/live-deployment-integrity-witness.md",
   "ops/live-safety-monitor.md",
   "ops/security-header-witness.md",
   "ops/domain-security-witness.md",
@@ -5031,6 +5032,10 @@ function validateOperatingGates() {
     {
       file: "ops/public-visibility-witness.md",
       terms: ["Public Visibility Witness", "public_edge_visibility=SolvedVerified", "external_multi_region_visibility=SolvedVerified", "persistent_regional_monitoring=Pass", "global_all_users_claim=AwaitingEvidence", "public_dns_resolution=Pass", "https_reachability=Pass", "tls_validation=Pass", "www_canonical_redirect=Pass", "security_header_witness=ops/security-header-witness.md", "STATUS:"],
+    },
+    {
+      file: "ops/live-deployment-integrity-witness.md",
+      terms: ["Live Deployment Integrity Witness", "live_deployment_integrity_state=SolvedVerified", "live_status_manifest=Pass", "live_content_hashes=Pass", "local_status_manifest_match=Pass", "route_sentinels=Pass", "raw_response_bodies=not_recorded", "runtime_api_readiness=AwaitingEvidence", "STATUS:"],
     },
     {
       file: "ops/live-safety-monitor.md",

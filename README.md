@@ -50,6 +50,7 @@ framework, database, or server runtime.
 |   |-- api-exposure-witness.md       # Public-safe API DNS exposure gate
 |   |-- website-origin-witness.md     # Live website origin-header witness
 |   |-- public-visibility-witness.md  # Public DNS and HTTPS visibility witness
+|   |-- live-deployment-integrity-witness.md # Live status-manifest integrity witness
 |   |-- live-safety-monitor.md        # Scheduled live probe artifact contract
 |   |-- security-header-witness.md    # Live browser-control header witness
 |   |-- domain-security-witness.md    # DNS, CAA, and mail-auth hardening witness
