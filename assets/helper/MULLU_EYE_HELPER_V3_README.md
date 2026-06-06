@@ -1,6 +1,6 @@
 # Mullu Eye Helper v3
 
-Purpose: click-activated helper cursor for the Mullusi public homepage.
+Purpose: animated click-activated helper cursor for the Mullusi public homepage.
 Governance scope: visible DOM inspection, contextual target summaries, safe local actions, risky-action confirmation, and optional same-origin backend inspection.
 Dependencies: `mullu-eye-helper-v3.bundle.css`, `mullu-eye-helper-v3.bundle.js`, `mullu-eye-helper-v3.install.js`, and browser DOM APIs.
 Invariants: no password values are read, forms are not submitted silently, risky actions require a second confirmation, and helper boot starts inactive.
@@ -9,7 +9,7 @@ Invariants: no password values are read, forms are not submitted silently, risky
 
 1. Sleeping eye dock is visible in the lower-right viewport.
 2. User clicks the dock to activate helper mode.
-3. Eye cursor follows the pointer and highlights the current DOM target.
+3. Eye cursor follows the pointer, blinks, breathes, tracks pointer position, and highlights the current DOM target.
 4. User clicks a target to open the action panel.
 5. Helper offers actions based on role: link, button, input, text, card, or section.
 6. Safe actions execute from user gestures.
@@ -29,6 +29,14 @@ Invariants: no password values are read, forms are not submitted silently, risky
 The helper treats targets as risky when visible label, text, section text, or link text includes state-changing terms such as delete, remove, reset, submit, send, pay, buy, checkout, logout, disconnect, revoke, cancel, or publish.
 
 Risky actions do not execute on first click. The panel rerenders with an explicit confirmation button.
+
+## Animation Boundary
+
+- Sleeping dock uses a slow breathe cycle and eyelid twitch.
+- Active dock uses a stronger awake pulse.
+- Cursor eyes blink and track bounded pointer movement through CSS variables.
+- Target highlight uses a quiet scan pulse.
+- `prefers-reduced-motion: reduce` disables continuous animation while preserving helper function.
 
 ## Privacy Boundary
 

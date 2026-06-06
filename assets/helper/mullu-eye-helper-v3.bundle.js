@@ -261,6 +261,20 @@ Test contract: run node --check assets/helper/mullu-eye-helper-v3.bundle.js and 
       toastTimer: 0,
     };
 
+    function updateEyeFocus(x, y) {
+      const viewportWidth = Math.max(1, global.innerWidth || 1);
+      const viewportHeight = Math.max(1, global.innerHeight || 1);
+      const focusX = Math.max(-3, Math.min(3, ((x / viewportWidth) - 0.5) * 6));
+      const focusY = Math.max(-2, Math.min(2, ((y / viewportHeight) - 0.5) * 4));
+      document.documentElement.style.setProperty("--mullu-eye-helper-eye-x", `${focusX.toFixed(2)}px`);
+      document.documentElement.style.setProperty("--mullu-eye-helper-eye-y", `${focusY.toFixed(2)}px`);
+    }
+
+    function resetEyeFocus() {
+      document.documentElement.style.setProperty("--mullu-eye-helper-eye-x", "0px");
+      document.documentElement.style.setProperty("--mullu-eye-helper-eye-y", "0px");
+    }
+
     function setDockLabel(text) {
       dom.dockLabel.textContent = clampText(text || "Eye helper", 42);
     }
@@ -307,6 +321,7 @@ Test contract: run node --check assets/helper/mullu-eye-helper-v3.bundle.js and 
         document.documentElement.classList.remove("mullu-eye-helper-active");
         global.cancelAnimationFrame(state.animationFrame);
         setDockLabel("Eye helper");
+        resetEyeFocus();
         return;
       }
       if (resolvedOptions.eyeCursorOptions.hideNativeCursor) {
@@ -319,6 +334,7 @@ Test contract: run node --check assets/helper/mullu-eye-helper-v3.bundle.js and 
     function updateTargetFromPointer(event) {
       if (!state.active || isHelperNode(event.target)) return;
       state.pointer = { x: event.clientX, y: event.clientY };
+      updateEyeFocus(event.clientX, event.clientY);
       const target = targetFromPoint(event.clientX, event.clientY);
       state.currentElement = target;
       state.currentPacket = target ? buildTargetPacket(target) : null;

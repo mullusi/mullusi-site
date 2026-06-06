@@ -15,6 +15,8 @@ Invariants: helper chrome stays above page content, does not cover primary navig
   --mullu-eye-helper-warn: #ffd166;
   --mullu-eye-helper-danger: #ff6b6b;
   --mullu-eye-helper-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+  --mullu-eye-helper-eye-x: 0px;
+  --mullu-eye-helper-eye-y: 0px;
 }
 
 .mullu-eye-helper-dock {
@@ -38,6 +40,7 @@ Invariants: helper chrome stays above page content, does not cover primary navig
   user-select: none;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  animation: mullu-eye-helper-dock-breathe 4.8s ease-in-out infinite;
 }
 
 .mullu-eye-helper-dock:focus-visible,
@@ -52,27 +55,72 @@ Invariants: helper chrome stays above page content, does not cover primary navig
   grid-template-columns: repeat(2, 18px);
   gap: 4px;
   align-items: center;
+  transform-origin: center;
 }
 
 .mullu-eye-helper-eye {
   position: relative;
+  overflow: hidden;
   width: 18px;
   height: 18px;
   border: 1px solid rgba(126, 247, 209, 0.7);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 58% 54%, #061017 0 3px, transparent 4px),
-    radial-gradient(circle at 50% 50%, #f3fff9 0 8px, #7ef7d1 9px 10px, transparent 11px);
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.92) 0 6px, rgba(126, 247, 209, 0.92) 7px 9px, rgba(19, 35, 44, 0.92) 10px 11px, transparent 12px),
+    linear-gradient(135deg, rgba(243, 255, 249, 0.96), rgba(126, 247, 209, 0.72));
   box-shadow: 0 0 18px rgba(126, 247, 209, 0.18);
+  animation: mullu-eye-helper-eye-breathe 3.8s ease-in-out infinite;
+}
+
+.mullu-eye-helper-eye::before {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.92) 0 1px, transparent 2px),
+    #051018;
+  box-shadow:
+    0 0 0 2px rgba(4, 11, 17, 0.18),
+    0 0 8px rgba(126, 247, 209, 0.36);
+  content: "";
+  transform: translate(
+    calc(-50% + var(--mullu-eye-helper-eye-x)),
+    calc(-50% + var(--mullu-eye-helper-eye-y))
+  );
+  transition: transform 120ms ease-out;
+}
+
+.mullu-eye-helper-eye::after {
+  position: absolute;
+  inset: -1px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(5, 8, 13, 0.96), rgba(10, 18, 24, 0.94));
+  content: "";
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: mullu-eye-helper-blink 6.2s infinite;
 }
 
 .mullu-eye-helper-dock[aria-pressed="false"] .mullu-eye-helper-eye::after {
-  position: absolute;
   inset: 7px 2px auto;
   height: 2px;
   border-radius: 99px;
   background: rgba(126, 247, 209, 0.86);
-  content: "";
+  transform: scaleY(1);
+  animation: mullu-eye-helper-sleep-twitch 7.6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.mullu-eye-helper-dock[aria-pressed="true"] {
+  border-color: rgba(126, 247, 209, 0.58);
+  animation: mullu-eye-helper-awake-pulse 2.6s ease-in-out infinite;
+}
+
+.mullu-eye-helper-dock[aria-pressed="true"] .mullu-eye-helper-dock-eyes {
+  animation: mullu-eye-helper-attention 3.2s ease-in-out infinite;
 }
 
 .mullu-eye-helper-dock-label {
@@ -95,6 +143,7 @@ Invariants: helper chrome stays above page content, does not cover primary navig
   pointer-events: none;
   transform: translate3d(-200px, -200px, 0);
   transition: opacity 140ms ease;
+  animation: mullu-eye-helper-cursor-float 2.8s ease-in-out infinite;
 }
 
 .mullu-eye-helper-cursor[hidden],
@@ -108,6 +157,10 @@ Invariants: helper chrome stays above page content, does not cover primary navig
   transform-origin: center;
 }
 
+.mullu-eye-helper-cursor .mullu-eye-helper-eye {
+  animation-duration: 2.9s;
+}
+
 .mullu-eye-helper-highlight {
   position: fixed;
   z-index: 2147482997;
@@ -118,6 +171,7 @@ Invariants: helper chrome stays above page content, does not cover primary navig
     0 0 0 1px rgba(5, 8, 13, 0.74),
     0 0 26px rgba(126, 247, 209, 0.22);
   transition: left 120ms ease, top 120ms ease, width 120ms ease, height 120ms ease, opacity 120ms ease;
+  animation: mullu-eye-helper-target-scan 1.8s ease-in-out infinite;
 }
 
 .mullu-eye-helper-panel {
@@ -256,6 +310,116 @@ html.mullu-eye-helper-active textarea,
 html.mullu-eye-helper-active select,
 html.mullu-eye-helper-active [contenteditable="true"] {
   cursor: text;
+}
+
+@keyframes mullu-eye-helper-dock-breathe {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow: var(--mullu-eye-helper-shadow), 0 0 0 rgba(126, 247, 209, 0);
+  }
+  50% {
+    transform: translateY(-2px);
+    box-shadow: var(--mullu-eye-helper-shadow), 0 0 20px rgba(126, 247, 209, 0.12);
+  }
+}
+
+@keyframes mullu-eye-helper-awake-pulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: var(--mullu-eye-helper-shadow), 0 0 0 rgba(126, 247, 209, 0);
+  }
+  45% {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: var(--mullu-eye-helper-shadow), 0 0 28px rgba(126, 247, 209, 0.2);
+  }
+}
+
+@keyframes mullu-eye-helper-attention {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.18);
+  }
+}
+
+@keyframes mullu-eye-helper-eye-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 14px rgba(126, 247, 209, 0.14);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(126, 247, 209, 0.28);
+  }
+}
+
+@keyframes mullu-eye-helper-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(0);
+  }
+  93%,
+  95% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes mullu-eye-helper-sleep-twitch {
+  0%,
+  82%,
+  100% {
+    opacity: 0.86;
+    transform: translateY(0) scaleX(1);
+  }
+  86% {
+    opacity: 1;
+    transform: translateY(-1px) scaleX(0.72);
+  }
+  90% {
+    opacity: 0.86;
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+@keyframes mullu-eye-helper-cursor-float {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(126, 247, 209, 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 10px rgba(126, 247, 209, 0.22));
+  }
+}
+
+@keyframes mullu-eye-helper-target-scan {
+  0%,
+  100% {
+    opacity: 0.78;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mullu-eye-helper-dock,
+  .mullu-eye-helper-dock[aria-pressed="true"],
+  .mullu-eye-helper-dock[aria-pressed="true"] .mullu-eye-helper-dock-eyes,
+  .mullu-eye-helper-eye,
+  .mullu-eye-helper-eye::after,
+  .mullu-eye-helper-dock[aria-pressed="false"] .mullu-eye-helper-eye::after,
+  .mullu-eye-helper-cursor,
+  .mullu-eye-helper-highlight {
+    animation: none;
+  }
+
+  .mullu-eye-helper-eye::before {
+    transition: none;
+  }
 }
 
 @media (max-width: 640px) {
