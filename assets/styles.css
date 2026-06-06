@@ -715,6 +715,128 @@ html.menu-open body {
   font-size: 11px;
 }
 
+.hero-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-mesh {
+  position: absolute;
+  inset: -20px -18px 8px;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 48%, transparent);
+  background:
+    radial-gradient(circle at 20% 24%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 28%),
+    radial-gradient(circle at 78% 54%, color-mix(in srgb, var(--accent-warm) 12%, transparent), transparent 26%),
+    linear-gradient(115deg, color-mix(in srgb, var(--panel-field) 86%, transparent), transparent 70%);
+  opacity: 0.78;
+  transform: skewY(-1deg);
+}
+
+.hero-mesh::before,
+.hero-mesh::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.hero-mesh::before {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 13%, transparent) 0 1px, transparent 1px 52px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--accent-warm) 8%, transparent) 0 1px, transparent 1px 44px);
+  mask-image: linear-gradient(90deg, black, transparent 88%);
+}
+
+.hero-mesh::after {
+  background:
+    linear-gradient(100deg, transparent 0 36%, color-mix(in srgb, var(--accent) 28%, transparent) 42%, transparent 50%),
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--bg) 62%, transparent));
+  opacity: 0.48;
+  animation: hero-mesh-sweep 8s ease-in-out infinite;
+}
+
+.mesh-node,
+.mesh-line,
+.mesh-cell {
+  position: absolute;
+  display: block;
+}
+
+.mesh-node {
+  width: 13px;
+  height: 13px;
+  border: 1px solid color-mix(in srgb, var(--accent) 72%, transparent);
+  background: var(--bg-raise);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 9%, transparent), 0 0 24px color-mix(in srgb, var(--accent) 32%, transparent);
+  transform: rotate(45deg);
+  animation: hero-node-pulse 5.2s ease-in-out infinite;
+}
+
+.node-input {
+  top: 28%;
+  left: 14%;
+}
+
+.node-proof {
+  top: 44%;
+  left: 48%;
+  animation-delay: 0.8s;
+}
+
+.node-verdict {
+  top: 30%;
+  right: 16%;
+  animation-delay: 1.6s;
+}
+
+.mesh-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 52%, transparent), transparent);
+  transform-origin: left center;
+  opacity: 0.7;
+}
+
+.line-input-proof {
+  top: 33%;
+  left: 17%;
+  width: 35%;
+  transform: rotate(10deg);
+}
+
+.line-proof-verdict {
+  top: 41%;
+  left: 51%;
+  width: 32%;
+  transform: rotate(-12deg);
+}
+
+.mesh-cell {
+  width: 18px;
+  height: 18px;
+  border: 1px solid color-mix(in srgb, var(--accent-warm) 42%, transparent);
+  background: color-mix(in srgb, var(--accent-warm) 8%, transparent);
+  opacity: 0.7;
+}
+
+.cell-a {
+  right: 24%;
+  bottom: 24%;
+}
+
+.cell-b {
+  right: 18%;
+  bottom: 24%;
+  animation: hero-cell-step 4.8s steps(4, end) infinite;
+}
+
+.cell-c {
+  right: 12%;
+  bottom: 24%;
+  animation: hero-cell-step 4.8s steps(4, end) infinite 0.4s;
+}
+
 .hero-wordmark {
   position: relative;
   display: grid;
@@ -725,6 +847,7 @@ html.menu-open body {
   padding: clamp(28px, 4vw, 54px) 0 clamp(22px, 3vw, 42px);
   overflow: hidden;
   isolation: isolate;
+  perspective: 900px;
 }
 
 .hero-wordmark::before,
@@ -741,9 +864,13 @@ html.menu-open body {
   border-top: 1px solid rgba(92, 230, 196, 0.36);
   border-bottom: 1px solid rgba(92, 230, 196, 0.18);
   background:
-    linear-gradient(90deg, rgba(92, 230, 196, 0.12), transparent 62%),
-    repeating-linear-gradient(90deg, rgba(92, 230, 196, 0.12) 0 1px, transparent 1px 46px);
-  opacity: 0.9;
+    radial-gradient(circle at 14% 36%, rgba(92, 230, 196, 0.26), transparent 20%),
+    radial-gradient(circle at 72% 42%, rgba(232, 177, 92, 0.12), transparent 24%),
+    linear-gradient(90deg, rgba(92, 230, 196, 0.14), transparent 64%),
+    repeating-linear-gradient(90deg, rgba(92, 230, 196, 0.13) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(0deg, rgba(232, 177, 92, 0.06) 0 1px, transparent 1px 38px);
+  opacity: 0.95;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 -28px 60px rgba(0, 0, 0, 0.16);
 }
 
 .hero-wordmark::after {
@@ -755,6 +882,7 @@ html.menu-open body {
     repeating-linear-gradient(90deg, rgba(92, 230, 196, 0.9) 0 14px, transparent 14px 22px),
     linear-gradient(90deg, rgba(232, 177, 92, 0.4), transparent 76%);
   opacity: 0.82;
+  animation: hero-signal-scan 4.8s ease-in-out infinite;
 }
 
 .hero-wordmark span {
@@ -775,7 +903,7 @@ html.menu-open body {
   font-size: 42px;
   line-height: 1;
   padding: 8px 14px 10px;
-  box-shadow: 10px 10px 0 rgba(92, 230, 196, 0.08);
+  box-shadow: 10px 10px 0 rgba(92, 230, 196, 0.08), 0 18px 46px rgba(0, 0, 0, 0.2);
 }
 
 .hero-wordmark .latin-name {
@@ -787,13 +915,18 @@ html.menu-open body {
   font-weight: 700;
   line-height: 0.74;
   background:
-    linear-gradient(180deg, rgba(233, 234, 239, 0.96), rgba(92, 230, 196, 0.18)),
+    linear-gradient(118deg, transparent 0 16%, rgba(92, 230, 196, 0.36) 16% 18%, transparent 18% 44%, rgba(232, 177, 92, 0.24) 44% 45%, transparent 45% 100%),
+    repeating-linear-gradient(90deg, transparent 0 18px, rgba(92, 230, 196, 0.18) 18px 20px, transparent 20px 32px),
+    linear-gradient(180deg, rgba(233, 234, 239, 0.98) 0%, rgba(181, 241, 225, 0.72) 48%, rgba(92, 230, 196, 0.26) 100%),
     repeating-linear-gradient(0deg, rgba(233, 234, 239, 0.95) 0 8px, transparent 8px 14px);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 1.4px rgba(233, 234, 239, 0.72);
-  filter: drop-shadow(0 0 24px rgba(92, 230, 196, 0.18));
+  -webkit-text-stroke: 1.5px rgba(233, 234, 239, 0.82);
+  filter:
+    drop-shadow(0 16px 18px rgba(0, 0, 0, 0.24))
+    drop-shadow(0 0 24px rgba(92, 230, 196, 0.2));
+  transform: translateZ(0);
 }
 
 .hero-wordmark .latin-name::before,
@@ -807,15 +940,28 @@ html.menu-open body {
 }
 
 .hero-wordmark .latin-name::before {
-  -webkit-text-stroke: 1px rgba(92, 230, 196, 0.5);
-  transform: translate(12px, 12px);
-  opacity: 0.68;
+  -webkit-text-fill-color: color-mix(in srgb, var(--accent-deep) 34%, transparent);
+  -webkit-text-stroke: 1px rgba(92, 230, 196, 0.46);
+  text-shadow:
+    1px 1px 0 rgba(92, 230, 196, 0.22),
+    2px 2px 0 rgba(92, 230, 196, 0.18),
+    3px 3px 0 rgba(92, 230, 196, 0.14),
+    4px 4px 0 rgba(92, 230, 196, 0.1),
+    7px 8px 18px rgba(0, 0, 0, 0.28);
+  transform: translate(10px, 12px);
+  opacity: 0.74;
 }
 
 .hero-wordmark .latin-name::after {
-  -webkit-text-stroke: 1px rgba(232, 177, 92, 0.36);
-  transform: translate(-10px, -8px);
-  opacity: 0.42;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px rgba(232, 177, 92, 0.42);
+  background:
+    linear-gradient(100deg, transparent 0 18%, rgba(232, 177, 92, 0.42) 18% 19%, transparent 19% 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 52%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  transform: translate(-8px, -7px);
+  opacity: 0.56;
 }
 
 .hero-wordmark .latin-tag {
@@ -973,8 +1119,25 @@ html.menu-open body {
   border-top-color: rgba(20, 124, 111, 0.42);
   border-bottom-color: rgba(20, 124, 111, 0.2);
   background:
+    radial-gradient(circle at 14% 36%, rgba(20, 124, 111, 0.18), transparent 20%),
+    radial-gradient(circle at 72% 42%, rgba(154, 100, 27, 0.1), transparent 24%),
     linear-gradient(90deg, rgba(20, 124, 111, 0.08), transparent 62%),
-    repeating-linear-gradient(90deg, rgba(20, 124, 111, 0.12) 0 1px, transparent 1px 46px);
+    repeating-linear-gradient(90deg, rgba(20, 124, 111, 0.12) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(0deg, rgba(154, 100, 27, 0.05) 0 1px, transparent 1px 38px);
+}
+
+:root[data-theme="light"] .hero-mesh {
+  border-color: rgba(20, 124, 111, 0.22);
+  background:
+    radial-gradient(circle at 20% 24%, rgba(20, 124, 111, 0.11), transparent 28%),
+    radial-gradient(circle at 78% 54%, rgba(154, 100, 27, 0.1), transparent 26%),
+    linear-gradient(115deg, rgba(247, 248, 251, 0.88), transparent 70%);
+  opacity: 0.92;
+}
+
+:root[data-theme="light"] .mesh-node {
+  background: rgba(247, 248, 251, 0.92);
+  box-shadow: 0 0 0 5px rgba(20, 124, 111, 0.08), 0 0 24px rgba(20, 124, 111, 0.16);
 }
 
 :root[data-theme="light"] .hero-wordmark::after {
@@ -993,23 +1156,34 @@ html.menu-open body {
 
 :root[data-theme="light"] .hero-wordmark .latin-name {
   background:
-    linear-gradient(180deg, #0c111a 0%, #1e2a38 58%, rgba(12, 94, 84, 0.95) 100%),
+    linear-gradient(118deg, transparent 0 15%, rgba(20, 124, 111, 0.32) 15% 17%, transparent 17% 43%, rgba(154, 100, 27, 0.24) 43% 44%, transparent 44% 100%),
+    repeating-linear-gradient(90deg, transparent 0 18px, rgba(20, 124, 111, 0.14) 18px 20px, transparent 20px 32px),
+    linear-gradient(180deg, #07111c 0%, #111b29 40%, #0a5f59 76%, #183d3a 100%),
     repeating-linear-gradient(0deg, #121722 0 8px, transparent 8px 14px);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke: 2px rgba(9, 14, 22, 0.9);
-  filter: drop-shadow(0 5px 12px rgba(20, 124, 111, 0.2));
+  filter:
+    drop-shadow(0 15px 16px rgba(11, 22, 31, 0.18))
+    drop-shadow(0 0 18px rgba(20, 124, 111, 0.16));
 }
 
 :root[data-theme="light"] .hero-wordmark .latin-name::before {
   -webkit-text-stroke-color: rgba(20, 124, 111, 0.42);
-  opacity: 0.5;
+  -webkit-text-fill-color: rgba(20, 124, 111, 0.18);
+  text-shadow:
+    1px 1px 0 rgba(20, 124, 111, 0.18),
+    2px 2px 0 rgba(20, 124, 111, 0.14),
+    3px 3px 0 rgba(20, 124, 111, 0.1),
+    4px 4px 0 rgba(20, 124, 111, 0.08),
+    7px 8px 16px rgba(11, 22, 31, 0.16);
+  opacity: 0.7;
 }
 
 :root[data-theme="light"] .hero-wordmark .latin-name::after {
   -webkit-text-stroke-color: rgba(154, 100, 27, 0.34);
-  opacity: 0.34;
+  opacity: 0.5;
 }
 
 :root[data-theme="light"] .hero-wordmark .latin-tag {
@@ -1278,6 +1452,68 @@ html.menu-open body {
 @keyframes scroll {
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes hero-signal-scan {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: translateX(0);
+  }
+
+  45% {
+    opacity: 0.9;
+  }
+
+  70% {
+    transform: translateX(18px);
+  }
+}
+
+@keyframes hero-mesh-sweep {
+  0%,
+  100% {
+    transform: translateX(-22%);
+    opacity: 0.28;
+  }
+
+  50% {
+    transform: translateX(16%);
+    opacity: 0.54;
+  }
+}
+
+@keyframes hero-node-pulse {
+  0%,
+  100% {
+    opacity: 0.52;
+    transform: rotate(45deg) scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1.08);
+  }
+}
+
+@keyframes hero-cell-step {
+  0%,
+  100% {
+    opacity: 0.42;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-wordmark::after,
+  .hero-mesh::after,
+  .mesh-node,
+  .mesh-cell {
+    animation: none;
   }
 }
 
@@ -5130,6 +5366,10 @@ html.menu-open body {
     height: 360px;
   }
 
+  .hero-stage {
+    margin-bottom: 18px;
+  }
+
   .hero h1 {
     max-width: 100%;
     margin: 10px 0 14px;
@@ -5161,9 +5401,37 @@ html.menu-open body {
   }
 
   .hero-proof-rail,
-  .hero-doctrine-status,
-  .hero-system-panel {
+  .hero-doctrine-status {
     display: none;
+  }
+
+  .hero-system-panel {
+    width: 100%;
+    margin-top: 10px;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.12);
+  }
+
+  .hero-panel-head,
+  .hero-panel-foot {
+    padding: 10px 12px;
+  }
+
+  .hero-panel-foot {
+    display: none;
+  }
+
+  .hero-path li {
+    padding: 12px 10px;
+  }
+
+  .hero-path strong {
+    margin-top: 6px;
+    font-size: 16px;
+  }
+
+  .hero-path em {
+    margin-top: 6px;
+    font-size: 10.5px;
   }
 
   .hero-foot {
@@ -5464,6 +5732,32 @@ html.menu-open body {
     margin-bottom: 18px;
     padding-top: 30px;
     padding-bottom: 18px;
+  }
+
+  .hero-mesh {
+    inset: -12px -8px auto;
+    height: 252px;
+    transform: none;
+  }
+
+  .mesh-node {
+    width: 11px;
+    height: 11px;
+  }
+
+  .node-input {
+    top: 22%;
+    left: 13%;
+  }
+
+  .node-proof {
+    top: 34%;
+    left: 48%;
+  }
+
+  .node-verdict {
+    top: 24%;
+    right: 14%;
   }
 
   .hero-wordmark .fidel-name {

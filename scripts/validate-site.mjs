@@ -3721,7 +3721,13 @@ function validateIndexDesignContract() {
     [/#start\s*\{[\s\S]*?scroll-margin-top:\s*68px;/, "homepage_start_scroll_margin_missing"],
     [/@supports not \(overflow: clip\)\s*\{[\s\S]*?overflow-x:\s*hidden;/, "homepage_overflow_fallback_missing"],
     [/\.sec-head h2\s*\{[\s\S]*?line-height:\s*1\.18;/, "homepage_section_heading_line_height_missing"],
+    [/\.hero-mesh\s*\{/, "homepage_hero_mesh_contract_missing"],
+    [/\.hero-mesh\s*\{[\s\S]*?pointer-events:\s*none;[\s\S]*?overflow:\s*hidden;/, "homepage_hero_mesh_boundary_missing"],
+    [/@keyframes hero-mesh-sweep/, "homepage_hero_mesh_motion_missing"],
+    [/\.hero-wordmark \.latin-name\s*\{[\s\S]*?linear-gradient\(118deg,[\s\S]*?repeating-linear-gradient\(90deg,[\s\S]*?drop-shadow\(0 16px 18px/, "homepage_wordmark_material_contract_missing"],
+    [/@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*?\.hero-wordmark::after,[\s\S]*?\.hero-mesh::after,[\s\S]*?\.mesh-node,[\s\S]*?\.mesh-cell\s*\{[\s\S]*?animation:\s*none;/, "homepage_hero_reduced_motion_contract_missing"],
     [/@media \(max-width: 560px\)\s*\{[\s\S]*?\.hero-wordmark \.latin-name::before\s*\{[\s\S]*?content:\s*none;[\s\S]*?\.hero-wordmark \.latin-name::after\s*\{[\s\S]*?content:\s*none;/, "homepage_mobile_wordmark_overflow_guard_missing"],
+    [/@media \(max-width: 560px\)\s*\{[\s\S]*?\.hero-system-panel\s*\{[\s\S]*?width:\s*100%;/, "homepage_mobile_proof_panel_contract_missing"],
     [/@media \(prefers-reduced-motion: reduce\)/, "homepage_reduced_motion_guard_missing"],
   ];
   for (const [contractPattern, failureCode] of homepageStyleContracts) {
