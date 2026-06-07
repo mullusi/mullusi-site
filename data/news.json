@@ -3,7 +3,7 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-06",
+    "updated": "2026-06-07",
     "count": 7
   },
   "items": [
@@ -11,57 +11,57 @@
       "title": "Please don't spam people looking for employment. It's just cruel",
       "url": "https://news.ycombinator.com/item?id=48370330",
       "source": "news.ycombinator.com",
-      "points": 964,
+      "points": 965,
       "comments": 270,
       "date": "2026-06-02"
+    },
+    {
+      "title": "Ask HN: What was your \"oh shit\" moment with GenAI?",
+      "url": "https://news.ycombinator.com/item?id=48406174",
+      "source": "news.ycombinator.com",
+      "points": 626,
+      "comments": 1015,
+      "date": "2026-06-04"
     },
     {
       "title": "MAI-Code-1-Flash",
       "url": "https://microsoft.ai/news/introducingmai-code-1-flash/",
       "source": "microsoft.ai",
-      "points": 539,
-      "comments": 253,
+      "points": 540,
+      "comments": 254,
       "date": "2026-06-02"
     },
     {
-      "title": "Mouseless – keyboard-driven control of macOS/Linux/Windows",
-      "url": "https://mouseless.click/",
-      "source": "mouseless.click",
-      "points": 532,
-      "comments": 216,
-      "date": "2026-06-03"
-    },
-    {
-      "title": "S&P 500 rejects SpaceX, also blocking entry for OpenAI and Anthropic",
-      "url": "https://arstechnica.com/tech-policy/2026/06/sp-500-blocks-fast-spacex-entry-wont-waive-rule-for-unprofitable-ai-firms/",
-      "source": "arstechnica.com",
-      "points": 488,
-      "comments": 165,
+      "title": "Ntsc-rs – open-source video emulation of analog TV and VHS artifacts",
+      "url": "https://ntsc.rs/",
+      "source": "ntsc.rs",
+      "points": 349,
+      "comments": 93,
       "date": "2026-06-06"
     },
     {
-      "title": "Gov.uk has replaced Stripe with Dutch provider Adyen",
-      "url": "https://www.theregister.com/public-sector/2026/06/04/govuk-goes-dutch-on-payments-as-it-dumps-stripe/5250763",
-      "source": "theregister.com",
-      "points": 457,
-      "comments": 165,
-      "date": "2026-06-05"
+      "title": "Pokemon Emerald Ported to WebAssembly (100k FPS)",
+      "url": "https://pokeemerald.com/",
+      "source": "pokeemerald.com",
+      "points": 322,
+      "comments": 94,
+      "date": "2026-06-06"
     },
     {
-      "title": "Did Claude increase bugs in rsync?",
-      "url": "https://alexispurslane.github.io/rsync-analysis/",
-      "source": "alexispurslane.github.io",
-      "points": 416,
-      "comments": 432,
-      "date": "2026-06-05"
+      "title": "Moving beyond fork() + exec()",
+      "url": "https://lwn.net/SubscriberLink/1076018/16f01bbbb8e0d1f0/",
+      "source": "lwn.net",
+      "points": 303,
+      "comments": 294,
+      "date": "2026-06-06"
     },
     {
-      "title": "pg_durable: Microsoft open sources in-database durable execution",
-      "url": "https://github.com/microsoft/pg_durable",
-      "source": "github.com",
-      "points": 405,
-      "comments": 90,
-      "date": "2026-06-05"
+      "title": "Nvidia is proposing a beast of a CPU system for Windows PCs",
+      "url": "https://twitter.com/lemire/status/2062880075117113739",
+      "source": "twitter.com",
+      "points": 286,
+      "comments": 478,
+      "date": "2026-06-06"
     }
   ]
 }
