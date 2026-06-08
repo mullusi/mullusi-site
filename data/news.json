@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-07",
+    "updated": "2026-06-08",
     "count": 7
   },
   "items": [
     {
-      "title": "Please don't spam people looking for employment. It's just cruel",
-      "url": "https://news.ycombinator.com/item?id=48370330",
-      "source": "news.ycombinator.com",
-      "points": 965,
-      "comments": 270,
-      "date": "2026-06-02"
+      "title": "Building from zero after addiction, prison, and a felony",
+      "url": "https://gavinray97.github.io/blog/building-from-zero-after-addiction-prison-felony",
+      "source": "gavinray97.github.io",
+      "points": 704,
+      "comments": 319,
+      "date": "2026-06-07"
     },
     {
-      "title": "Ask HN: What was your \"oh shit\" moment with GenAI?",
-      "url": "https://news.ycombinator.com/item?id=48406174",
-      "source": "news.ycombinator.com",
-      "points": 626,
-      "comments": 1015,
-      "date": "2026-06-04"
+      "title": "Dopamine Fracking",
+      "url": "https://igerman.cc/blog/dopamine-fracking/",
+      "source": "igerman.cc",
+      "points": 456,
+      "comments": 209,
+      "date": "2026-06-08"
     },
     {
-      "title": "MAI-Code-1-Flash",
-      "url": "https://microsoft.ai/news/introducingmai-code-1-flash/",
-      "source": "microsoft.ai",
-      "points": 540,
-      "comments": 254,
-      "date": "2026-06-02"
+      "title": "How's Linear so fast? A technical breakdown",
+      "url": "https://performance.dev/how-is-linear-so-fast-a-technical-breakdown",
+      "source": "performance.dev",
+      "points": 434,
+      "comments": 201,
+      "date": "2026-06-07"
     },
     {
-      "title": "Ntsc-rs – open-source video emulation of analog TV and VHS artifacts",
-      "url": "https://ntsc.rs/",
-      "source": "ntsc.rs",
-      "points": 349,
-      "comments": 93,
-      "date": "2026-06-06"
+      "title": "The 29th International Obfuscated C Code Contest (IOCCC) 2025 Winners",
+      "url": "https://www.ioccc.org/2025/",
+      "source": "ioccc.org",
+      "points": 403,
+      "comments": 92,
+      "date": "2026-06-07"
     },
     {
-      "title": "Pokemon Emerald Ported to WebAssembly (100k FPS)",
-      "url": "https://pokeemerald.com/",
-      "source": "pokeemerald.com",
-      "points": 322,
-      "comments": 94,
-      "date": "2026-06-06"
+      "title": "Show HN: Lathe – Use LLMs to learn a new domain, not skip past it",
+      "url": "https://github.com/devenjarvis/lathe",
+      "source": "github.com",
+      "points": 337,
+      "comments": 61,
+      "date": "2026-06-07"
     },
     {
-      "title": "Moving beyond fork() + exec()",
-      "url": "https://lwn.net/SubscriberLink/1076018/16f01bbbb8e0d1f0/",
-      "source": "lwn.net",
-      "points": 303,
-      "comments": 294,
-      "date": "2026-06-06"
+      "title": "Scientists ejected from diabetes conference for distributing journal reprints",
+      "url": "https://arstechnica.com/science/2026/06/scientists-ejected-from-diabetes-conference-for-distributing-journal-reprints/",
+      "source": "arstechnica.com",
+      "points": 330,
+      "comments": 211,
+      "date": "2026-06-07"
     },
     {
-      "title": "Nvidia is proposing a beast of a CPU system for Windows PCs",
-      "url": "https://twitter.com/lemire/status/2062880075117113739",
-      "source": "twitter.com",
-      "points": 286,
-      "comments": 478,
-      "date": "2026-06-06"
+      "title": "DeepSeek V4 Pro beats GPT-5.5 Pro on precision",
+      "url": "https://runtimewire.com/article/deepseek-v4-pro-beats-gpt-5-5-pro-on-precision",
+      "source": "runtimewire.com",
+      "points": 311,
+      "comments": 157,
+      "date": "2026-06-08"
     }
   ]
 }
