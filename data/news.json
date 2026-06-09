@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-08",
+    "updated": "2026-06-09",
     "count": 7
   },
   "items": [
     {
-      "title": "Building from zero after addiction, prison, and a felony",
-      "url": "https://gavinray97.github.io/blog/building-from-zero-after-addiction-prison-felony",
-      "source": "gavinray97.github.io",
-      "points": 704,
-      "comments": 319,
-      "date": "2026-06-07"
-    },
-    {
-      "title": "Dopamine Fracking",
-      "url": "https://igerman.cc/blog/dopamine-fracking/",
-      "source": "igerman.cc",
-      "points": 456,
-      "comments": 209,
+      "title": "Show HN: Performative-UI – A react component library of design tropes",
+      "url": "https://vorpus.github.io/performativeUI/",
+      "source": "vorpus.github.io",
+      "points": 1001,
+      "comments": 187,
       "date": "2026-06-08"
     },
     {
-      "title": "How's Linear so fast? A technical breakdown",
-      "url": "https://performance.dev/how-is-linear-so-fast-a-technical-breakdown",
-      "source": "performance.dev",
-      "points": 434,
-      "comments": 201,
-      "date": "2026-06-07"
+      "title": "Stop the Apple Music app from launching",
+      "url": "https://lowtechguys.com/musicdecoy/",
+      "source": "lowtechguys.com",
+      "points": 629,
+      "comments": 249,
+      "date": "2026-06-08"
     },
     {
-      "title": "The 29th International Obfuscated C Code Contest (IOCCC) 2025 Winners",
-      "url": "https://www.ioccc.org/2025/",
-      "source": "ioccc.org",
-      "points": 403,
-      "comments": 92,
-      "date": "2026-06-07"
+      "title": "Surveillance is not safety: A statement on the UK's latest threat to privacy [pdf]",
+      "url": "https://signal.org/blog/pdfs/2026-06-08-uk-surveillance-is-not-safety.pdf",
+      "source": "signal.org",
+      "points": 598,
+      "comments": 243,
+      "date": "2026-06-08"
     },
     {
-      "title": "Show HN: Lathe – Use LLMs to learn a new domain, not skip past it",
-      "url": "https://github.com/devenjarvis/lathe",
-      "source": "github.com",
-      "points": 337,
-      "comments": 61,
-      "date": "2026-06-07"
+      "title": "xAI is looking more like a datacentre REIT than a frontier lab",
+      "url": "https://martinalderson.com/posts/xais-new-rental-business/",
+      "source": "martinalderson.com",
+      "points": 581,
+      "comments": 452,
+      "date": "2026-06-08"
+    },
+    {
+      "title": "MiMo-v2.5-Pro-UltraSpeed: 1T model with 1000 tokens per second",
+      "url": "https://mimo.xiaomi.com/blog/mimo-tilert-1000tps",
+      "source": "mimo.xiaomi.com",
+      "points": 580,
+      "comments": 428,
+      "date": "2026-06-08"
+    },
+    {
+      "title": "EU-banned pesticides found in rice, tea and spices",
+      "url": "https://www.foodwatch.org/en/eu-banned-pesticides-found-in-rice-tea-and-spices",
+      "source": "foodwatch.org",
+      "points": 433,
+      "comments": 215,
+      "date": "2026-06-08"
     },
     {
       "title": "Scientists ejected from diabetes conference for distributing journal reprints",
       "url": "https://arstechnica.com/science/2026/06/scientists-ejected-from-diabetes-conference-for-distributing-journal-reprints/",
       "source": "arstechnica.com",
-      "points": 330,
-      "comments": 211,
+      "points": 345,
+      "comments": 212,
       "date": "2026-06-07"
-    },
-    {
-      "title": "DeepSeek V4 Pro beats GPT-5.5 Pro on precision",
-      "url": "https://runtimewire.com/article/deepseek-v4-pro-beats-gpt-5-5-pro-on-precision",
-      "source": "runtimewire.com",
-      "points": 311,
-      "comments": 157,
-      "date": "2026-06-08"
     }
   ]
 }
