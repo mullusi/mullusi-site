@@ -62,6 +62,12 @@ function assertIncludes(value, expected, label) {
   }
 }
 
+function assertDeepEqual(actual, expected, label) {
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    failures.push(`${label}:expected=${JSON.stringify(expected)}:actual=${JSON.stringify(actual)}`);
+  }
+}
+
 function testBlockedFixtureReportsMissingFlags() {
   const fixture = writeFixture("blocked.md", fixtureContent("false"));
   const result = runChecker([`--path=${fixture}`]);
@@ -108,12 +114,69 @@ function testForbiddenPrivatePatternFails() {
   assertIncludes(result.stderr, "private_inventory_contains_forbidden_value_pattern", "forbidden_stderr");
 }
 
+function testJsonModeReportsPublicSafeAggregateOnly() {
+  const fixture = writeFixture("blocked-json.md", fixtureContent("false"));
+  const result = runChecker([`--path=${fixture}`, "--json"]);
+  const payload = JSON.parse(result.stdout);
+
+  assertEqual(result.status, 0, "json_blocked_status");
+  assertEqual(payload.recoveryInventoryState, "Blocked", "json_blocked_state");
+  assertEqual(payload.solverOutcome, "AwaitingEvidence", "json_blocked_solver");
+  assertEqual(payload.proofState, "Unknown", "json_blocked_proof_state");
+  assertIncludes(payload.missingFlags.join(","), "cloudflare_recovery_saved", "json_blocked_missing");
+  assertEqual(payload.privateValueScan, "Pass", "json_blocked_private_scan");
+  assertEqual(result.stderr, "", "json_blocked_stderr_empty");
+}
+
+function testJsonOutputFilePersistsRequireReadyFailure() {
+  const fixture = writeFixture("blocked-output.md", fixtureContent("false"));
+  const outputPath = path.join(tempDir, "blocked-output.json");
+  const result = runChecker([`--path=${fixture}`, `--output=${outputPath}`, "--require-ready"]);
+  const payload = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+
+  assertEqual(result.status, 1, "json_output_require_ready_status");
+  assertEqual(result.stdout, "", "json_output_require_ready_stdout_empty");
+  assertEqual(payload.recoveryInventoryState, "Blocked", "json_output_require_ready_state");
+  assertEqual(payload.solverOutcome, "AwaitingEvidence", "json_output_require_ready_solver");
+  assertDeepEqual(
+    payload.failures,
+    [`private_recovery_inventory_not_ready:${flagNames.join(",")}`],
+    "json_output_require_ready_failures",
+  );
+}
+
+function testJsonModeFailureDoesNotEmitTextDiagnostics() {
+  const missingPath = path.join(tempDir, "missing-json.md");
+  const result = runChecker([`--path=${missingPath}`, "--json"]);
+  const payload = JSON.parse(result.stdout);
+
+  assertEqual(result.status, 1, "json_missing_status");
+  assertEqual(payload.recoveryInventoryState, "Blocked", "json_missing_state");
+  assertEqual(payload.failures[0], "private_recovery_inventory_missing", "json_missing_failure");
+  assertEqual(result.stderr, "", "json_missing_stderr_empty");
+}
+
+function testEmptyOutputPathIsRejectedBeforeWrite() {
+  const fixture = writeFixture("blocked-empty-output.md", fixtureContent("false"));
+  const result = runChecker([`--path=${fixture}`, "--json", "--output="]);
+  const payload = JSON.parse(result.stdout);
+
+  assertEqual(result.status, 1, "empty_output_status");
+  assertEqual(payload.recoveryInventoryState, "GovernanceBlocked", "empty_output_state");
+  assertEqual(payload.failures[0], "invalid_output_path", "empty_output_failure");
+  assertEqual(result.stderr, "", "empty_output_stderr_empty");
+}
+
 function runTests() {
   testBlockedFixtureReportsMissingFlags();
   testRequireReadyFailsForBlockedFixture();
   testReadyFixturePassesRequireReady();
   testMissingFileCanBeAllowed();
   testForbiddenPrivatePatternFails();
+  testJsonModeReportsPublicSafeAggregateOnly();
+  testJsonOutputFilePersistsRequireReadyFailure();
+  testJsonModeFailureDoesNotEmitTextDiagnostics();
+  testEmptyOutputPathIsRejectedBeforeWrite();
 
   fs.rmSync(tempDir, { recursive: true, force: true });
 

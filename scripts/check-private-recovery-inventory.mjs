@@ -25,16 +25,20 @@ const requiredFlags = [
 ];
 
 const pathArg = args.find((arg) => arg.startsWith("--path="));
+const outputArg = args.find((arg) => arg.startsWith("--output="));
 const inventoryPath = path.resolve(repoRoot, pathArg ? pathArg.slice("--path=".length) : "ops/recovery-inventory.private.md");
+const outputValue = outputArg ? outputArg.slice("--output=".length) : "";
+const outputPath = outputValue ? path.resolve(repoRoot, outputValue) : "";
 const requireReady = args.includes("--require-ready");
 const allowMissing = args.includes("--allow-missing");
+const jsonMode = args.includes("--json");
 const helpMode = args.includes("--help") || args.includes("-h");
-const supportedArgs = new Set(["--require-ready", "--allow-missing", "--help", "-h"]);
+const supportedArgs = new Set(["--require-ready", "--allow-missing", "--json", "--help", "-h"]);
 
 function usage() {
   return [
     "Usage:",
-    "  node scripts/check-private-recovery-inventory.mjs [--path=FILE] [--require-ready] [--allow-missing]",
+    "  node scripts/check-private-recovery-inventory.mjs [--path=FILE] [--output=FILE] [--json] [--require-ready] [--allow-missing]",
     "",
     "Checks only boolean confirmation flags and prints no private recovery details.",
   ].join("\n");
@@ -49,10 +53,57 @@ function validateArgs() {
     if (arg.startsWith("--path=")) {
       continue;
     }
+    if (arg.startsWith("--output=")) {
+      if (arg === "--output=") {
+        recordFailure("invalid_output_path");
+      }
+      continue;
+    }
     if (!supportedArgs.has(arg)) {
       recordFailure(`unsupported_arg:${arg}`);
     }
   }
+}
+
+function writeJsonPayload(payload) {
+  const jsonText = `${JSON.stringify(payload, null, 2)}\n`;
+  if (outputPath) {
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, jsonText, "utf8");
+  }
+  if (jsonMode) {
+    console.log(jsonText.trimEnd());
+  }
+}
+
+function resultPayload({ state, missingFlags = [], allowedMissing = false }) {
+  return {
+    allowMissing,
+    allowedMissing,
+    inventoryPathState: fs.existsSync(inventoryPath) ? "present" : "missing",
+    missingFlags,
+    privateValueScan: failures.includes("private_inventory_contains_forbidden_value_pattern") ? "Fail" : "Pass",
+    proofState: state === "ReadyForProvisioning" ? "Pass" : "Unknown",
+    recoveryInventoryState: state,
+    requireReady,
+    solverOutcome: state === "ReadyForProvisioning" ? "SolvedVerified" : "AwaitingEvidence",
+  };
+}
+
+function failurePayload() {
+  const awaitingEvidence = failures.every((failure) =>
+    failure === "private_recovery_inventory_missing"
+    || failure.startsWith("private_recovery_inventory_not_ready:"));
+  return {
+    allowMissing,
+    failures: [...failures],
+    inventoryPathState: fs.existsSync(inventoryPath) ? "present" : "missing",
+    privateValueScan: failures.includes("private_inventory_contains_forbidden_value_pattern") ? "Fail" : "Pass",
+    proofState: awaitingEvidence ? "Unknown" : "Fail",
+    recoveryInventoryState: awaitingEvidence ? "Blocked" : "GovernanceBlocked",
+    requireReady,
+    solverOutcome: awaitingEvidence ? "AwaitingEvidence" : "GovernanceBlocked",
+  };
 }
 
 function parseFlagValues(content) {
@@ -93,7 +144,10 @@ function runCheck() {
   validateArgs();
   if (!fs.existsSync(inventoryPath)) {
     if (allowMissing) {
-      console.log("private_recovery_inventory state=Missing allowed=true");
+      writeJsonPayload(resultPayload({ state: "Missing", allowedMissing: true }));
+      if (!jsonMode) {
+        console.log("private_recovery_inventory state=Missing allowed=true");
+      }
       return;
     }
     recordFailure("private_recovery_inventory_missing");
@@ -111,15 +165,24 @@ function runCheck() {
     }
 
     if (failures.length === 0) {
+      writeJsonPayload(resultPayload({ state, missingFlags }));
       if (state === "ReadyForProvisioning") {
-        console.log("private_recovery_inventory state=ReadyForProvisioning missing=none");
+        if (!jsonMode) {
+          console.log("private_recovery_inventory state=ReadyForProvisioning missing=none");
+        }
       } else {
-        console.log(`private_recovery_inventory state=Blocked missing=${missingFlags.join(",")}`);
+        if (!jsonMode) {
+          console.log(`private_recovery_inventory state=Blocked missing=${missingFlags.join(",")}`);
+        }
       }
       return;
     }
   }
 
+  writeJsonPayload(failurePayload());
+  if (jsonMode) {
+    process.exit(1);
+  }
   console.error([usage(), "", ...failures].join("\n"));
   process.exit(1);
 }
