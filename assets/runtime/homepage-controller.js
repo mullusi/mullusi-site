@@ -59,6 +59,7 @@ Invariants: load failures are visible, fallback promotion is explicit, public re
     const plan = lifecyclePlan();
 
     pageRuntime.bindHeader();
+    pageRuntime.bindSkipLinks();
     pageRuntime.bindLinkNavigation();
     pageRuntime.bindMenu({ i18nText: context.i18nText });
     pageRuntime.bindInitialFragmentNavigation();

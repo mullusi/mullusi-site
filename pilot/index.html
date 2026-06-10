@@ -27,7 +27,7 @@ Invariants: route remains static, no access or submission storage is implied, an
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
-  <link rel="stylesheet" href="/assets/pages/pilot.css">
+  <link rel="stylesheet" href="/assets/pages/pilot.css?v=signal-compression-pilot-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -50,6 +50,39 @@ Invariants: route remains static, no access or submission storage is implied, an
       <a class="button" href="/mullu/">View foundation route</a>
       <a class="button" href="/contact/">Contact</a>
     </div>
+
+    <section class="pilot-gate" aria-label="Pilot release gate">
+      <div class="pilot-flow" aria-label="Pilot readiness sequence">
+        <span>Foundation</span>
+        <span>Local proof</span>
+        <span>Runtime witness</span>
+        <span>Written scope</span>
+        <strong>Decision</strong>
+      </div>
+      <div class="pilot-state-grid">
+        <div>
+          <span>Route state</span>
+          <strong>Published boundary</strong>
+        </div>
+        <div>
+          <span>Pilot state</span>
+          <strong>Not open</strong>
+        </div>
+        <div>
+          <span>Runtime witness</span>
+          <strong>AwaitingEvidence</strong>
+        </div>
+        <div>
+          <span>Access claim</span>
+          <strong>Blocked</strong>
+        </div>
+        <div>
+          <span>Next gate</span>
+          <strong>Signed witness endpoints</strong>
+        </div>
+      </div>
+      <p>A pilot may only exist after proof, safety, lineage, written scope, and runtime witness evidence hold together.</p>
+    </section>
 
     <section class="grid" aria-label="Pilot prerequisites">
       <article class="card"><span>01</span><h2>Foundation</h2><p>Company identity, legal boundary, domain recovery, and source-control recovery need to be stable first.</p></article>

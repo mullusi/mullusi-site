@@ -50,6 +50,24 @@ Invariants: disclosure guidance permits only non-destructive testing and does no
       <a class="button" href="/security/">Security boundary</a>
     </div>
 
+    <section class="trust-boundary" aria-label="Responsible disclosure boundary">
+      <div class="trust-flow" aria-label="Disclosure boundary sequence">
+        <span>Public issue</span>
+        <span>Non-destructive test</span>
+        <span>Mailbox report</span>
+        <span>Triage</span>
+        <strong>Coordination</strong>
+      </div>
+      <div class="trust-state-grid">
+        <div><span>Public routes</span><strong>In scope</strong></div>
+        <div><span>Reserved runtime</span><strong>Out of scope</strong></div>
+        <div><span>Testing</span><strong>Non-destructive</strong></div>
+        <div><span>Bounty</span><strong>Not promised</strong></div>
+        <div><span>Report route</span><strong>Mailbox</strong></div>
+      </div>
+      <p>This route receives reports. It does not authorize reserved runtime access, destructive testing, stress testing, or public disclosure before coordination.</p>
+    </section>
+
     <section class="policy-grid" aria-label="Disclosure rules">
       <article class="policy-card">
         <h2>In scope</h2>

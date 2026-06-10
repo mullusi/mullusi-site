@@ -45,6 +45,24 @@ Invariants: no tracking claim beyond the implemented static site boundary; runti
     <h1>Privacy.</h1>
     <p class="lede">Mullusi.com is a static public website. It publishes product, proof, status, and contact information. It does not claim a live account system, backend intake store, or runtime product data processor on the public site.</p>
 
+    <section class="trust-boundary" aria-label="Privacy claim boundary">
+      <div class="trust-flow" aria-label="Privacy boundary sequence">
+        <span>Visitor route</span>
+        <span>Local browser</span>
+        <span>Mailbox</span>
+        <span>Runtime privacy</span>
+        <strong>Evidence state</strong>
+      </div>
+      <div class="trust-state-grid">
+        <div><span>Website</span><strong>Static</strong></div>
+        <div><span>Local prefs</span><strong>Browser-only</strong></div>
+        <div><span>Email content</span><strong>User-sent</strong></div>
+        <div><span>Runtime products</span><strong>AwaitingEvidence</strong></div>
+        <div><span>Account system</span><strong>Not claimed</strong></div>
+      </div>
+      <p>Privacy claims here apply to the public website and contact routes. Runtime product privacy remains separate until witness evidence and terms publish.</p>
+    </section>
+
     <section class="policy-grid" aria-label="Privacy commitments">
       <article class="policy-card">
         <h2>Local storage</h2>

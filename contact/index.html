@@ -27,7 +27,7 @@ Invariants: contact options remain visible without JavaScript, no form or access
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
-  <link rel="stylesheet" href="/assets/pages/contact.css">
+  <link rel="stylesheet" href="/assets/pages/contact.css?v=signal-compression-contact-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -44,6 +44,48 @@ Invariants: contact options remain visible without JavaScript, no form or access
     <div class="eyebrow">Governed contact route</div>
     <h1>Contact Mullusi.</h1>
     <p class="lede">Use the mailbox that matches the question. This page is static, works without JavaScript, and does not claim backend storage, access workflow, or pilot workflow.</p>
+
+    <section class="contact-boundary" aria-label="Contact claim boundary">
+      <div class="contact-flow" aria-label="Contact routing sequence">
+        <span>Question</span>
+        <span>Boundary check</span>
+        <span>Proof state</span>
+        <span>Mailbox</span>
+        <strong>Written reply</strong>
+      </div>
+      <div class="contact-state-grid">
+        <div>
+          <span>Contact route</span>
+          <strong>Published</strong>
+        </div>
+        <div>
+          <span>Mailboxes</span>
+          <strong>Visible</strong>
+        </div>
+        <div>
+          <span>Backend form</span>
+          <strong>Not claimed</strong>
+        </div>
+        <div>
+          <span>Runtime witness</span>
+          <strong>AwaitingEvidence</strong>
+        </div>
+        <div>
+          <span>Pilot workflow</span>
+          <strong>Not open</strong>
+        </div>
+        <div>
+          <span>Next gate</span>
+          <strong>Signed witness endpoints</strong>
+        </div>
+      </div>
+      <div class="contact-witnesses" aria-label="Witness endpoints that remain evidence-gated">
+        <code>/health</code>
+        <code>/gateway/witness</code>
+        <code>/runtime/conformance</code>
+      </div>
+      <p>Contact can start a written review; it cannot mutate a proof state or bypass a release gate.</p>
+    </section>
 
     <section class="grid" aria-label="Contact mailboxes">
       <article class="card">

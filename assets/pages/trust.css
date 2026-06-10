@@ -181,6 +181,85 @@ code {
   margin-top: 32px;
 }
 
+.trust-boundary {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 14px;
+  border: 1px solid rgba(92, 230, 196, 0.2);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.trust-flow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.trust-flow span,
+.trust-flow strong {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.trust-flow span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -9px;
+  width: 8px;
+  height: 1px;
+  background: rgba(92, 230, 196, 0.44);
+}
+
+.trust-flow strong {
+  border-color: rgba(232, 177, 92, 0.55);
+  color: var(--warm);
+}
+
+.trust-state-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.trust-state-grid div {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.trust-state-grid span {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.trust-state-grid strong {
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.trust-boundary p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .panel,
 .policy-card,
 .control-card,
@@ -265,6 +344,8 @@ footer {
   nav {
     align-items: flex-start;
     flex-direction: column;
+    gap: 10px;
+    padding: 14px 0;
   }
 
   .actions,
@@ -273,12 +354,85 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .actions {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .button {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 11px;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .lede {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  section {
+    margin-top: 22px;
+  }
+
+  .trust-boundary {
+    gap: 8px;
+    margin-top: 18px;
+    padding: 10px;
+  }
+
+  .trust-flow {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .trust-flow span,
+  .trust-flow strong {
+    min-height: 30px;
+    padding: 4px;
+    font-size: 8px;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .trust-flow span:not(:last-child)::after {
+    display: none;
+  }
+
+  .trust-state-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .trust-state-grid div {
+    padding: 8px 6px;
+  }
+
+  .trust-state-grid span {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+  }
+
+  .trust-state-grid strong {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .trust-boundary p {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
   main {
-    padding-top: 22px;
+    padding-top: 16px;
   }
 
   h1 {
-    font-size: 44px;
+    margin-top: 10px;
+    font-size: 36px;
+    overflow-wrap: anywhere;
   }
 
   h2 {

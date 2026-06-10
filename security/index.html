@@ -50,6 +50,24 @@ Invariants: controls are stated only when implemented on the static site; runtim
       <a class="button" href="/status/">View status</a>
     </div>
 
+    <section class="trust-boundary" aria-label="Security claim boundary">
+      <div class="trust-flow" aria-label="Security boundary sequence">
+        <span>Public route</span>
+        <span>Header controls</span>
+        <span>Static assets</span>
+        <span>Runtime security</span>
+        <strong>Proof state</strong>
+      </div>
+      <div class="trust-state-grid">
+        <div><span>Website</span><strong>Published</strong></div>
+        <div><span>Browser policy</span><strong>Implemented</strong></div>
+        <div><span>Reserved surfaces</span><strong>Not live-linked</strong></div>
+        <div><span>API security</span><strong>AwaitingEvidence</strong></div>
+        <div><span>Disclosure route</span><strong>Published</strong></div>
+      </div>
+      <p>Security claims here bind to the public static site. Runtime gateway and operator surfaces require signed witness evidence before public closure.</p>
+    </section>
+
     <section class="control-grid" aria-label="Implemented security controls">
       <article class="control-card">
         <h2>Browser policy</h2>

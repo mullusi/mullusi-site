@@ -61,6 +61,38 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
         <a class="button" href="/proof/">Review proof boundary</a>
         <a class="button" href="/status/">Check public status</a>
       </div>
+      <section class="shell-gate" aria-label="Mullu Browse public claim boundary">
+        <div class="shell-gate-flow" aria-label="Route shell gate sequence">
+          <span>Route shell</span>
+          <span>Manifest</span>
+          <span>Privacy boundary</span>
+          <span>Runtime witness</span>
+          <strong>Blocked claim</strong>
+        </div>
+        <div class="shell-gate-grid">
+          <div>
+            <span>Route</span>
+            <strong>Noindex shell</strong>
+          </div>
+          <div>
+            <span>Product state</span>
+            <strong>private-incubation</strong>
+          </div>
+          <div>
+            <span>Runtime witness</span>
+            <strong>AwaitingEvidence</strong>
+          </div>
+          <div>
+            <span>Remote actions</span>
+            <strong>Not claimed</strong>
+          </div>
+          <div>
+            <span>Release gate</span>
+            <strong>Blocked</strong>
+          </div>
+        </div>
+        <p>Browse may expose route identity and planned contracts. Remote page action safety, page-state accuracy, and endpoint readiness remain blocked.</p>
+      </section>
     </div>
     <img class="brand-icon" src="/assets/mullusi-icon.svg" alt="" aria-hidden="true">
   </header>

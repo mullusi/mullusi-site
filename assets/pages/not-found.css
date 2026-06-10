@@ -36,12 +36,12 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       min-height: 100vh;
       display: grid;
       align-content: center;
-      gap: 30px;
+      gap: 24px;
       background: var(--bg);
       color: var(--text);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
       line-height: 1.6;
-      padding: 64px 0;
+      padding: 46px 0;
     }
 
     a { color: inherit; }
@@ -68,10 +68,10 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
 
     main {
-      width: min(820px, calc(100% - 32px));
+      width: min(900px, calc(100% - 32px));
       margin: 0 auto;
       display: grid;
-      gap: 22px;
+      gap: 18px;
     }
 
     main:focus { outline: none; }
@@ -86,7 +86,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     .code {
       margin: 0;
       color: var(--gold);
-      font-size: 128px;
+      font-size: 112px;
       line-height: 0.9;
       letter-spacing: 0;
     }
@@ -105,6 +105,80 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       font-size: 15px;
     }
 
+    .route-boundary {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(92, 230, 196, 0.08), transparent 44%),
+        var(--panel);
+    }
+
+    .route-flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .route-flow span {
+      position: relative;
+      display: grid;
+      min-height: 38px;
+      place-items: center;
+      padding: 7px;
+      border: 1px solid rgba(92, 230, 196, 0.2);
+      color: var(--text);
+      font-size: 11px;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .route-flow span:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -8px;
+      z-index: 1;
+      width: 8px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .route-state-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .route-state-grid article {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid rgba(92, 230, 196, 0.16);
+      background: rgba(5, 6, 9, 0.32);
+    }
+
+    .route-state-grid span,
+    .route-state-grid strong {
+      display: block;
+    }
+
+    .route-state-grid span {
+      margin-bottom: 5px;
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    .route-state-grid strong {
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
     .actions {
       display: flex;
       flex-wrap: wrap;
@@ -121,6 +195,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       color: var(--text);
       text-decoration: none;
       font-size: 14px;
+      overflow-wrap: anywhere;
     }
 
     .button.primary {
@@ -138,11 +213,78 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
 
     @media (max-width: 640px) {
+      body {
+        align-content: start;
+        padding: 16px 0;
+      }
+
+      main {
+        gap: 10px;
+      }
+
       .code {
-        font-size: 82px;
+        font-size: 60px;
       }
 
       h1 {
-        font-size: 28px;
+        font-size: 25px;
+      }
+
+      p {
+        font-size: 13px;
+        line-height: 1.52;
+      }
+
+      .route-boundary {
+        gap: 9px;
+        padding: 8px;
+      }
+
+      .route-flow {
+        gap: 4px;
+      }
+
+      .route-flow span {
+        min-height: 30px;
+        padding: 4px 2px;
+        font-size: 8px;
+      }
+
+      .route-flow span:not(:last-child)::after {
+        right: -4px;
+        width: 4px;
+      }
+
+      .route-state-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .route-state-grid article {
+        padding: 7px;
+      }
+
+      .route-state-grid span {
+        font-size: 8px;
+      }
+
+      .route-state-grid strong {
+        font-size: 10px;
+      }
+
+      .actions {
+        gap: 8px;
+        margin-top: 0;
+      }
+
+      .button {
+        min-height: 36px;
+        padding: 0 12px;
+        font-size: 12px;
+      }
+
+      .law {
+        margin-top: 0;
+        font-size: 11px;
       }
     }

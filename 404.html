@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180" />
   <link rel="manifest" href="/site.webmanifest" />
   <script src="/assets/theme-bootstrap.js"></script>
-  <link rel="stylesheet" href="/assets/pages/not-found.css">
+  <link rel="stylesheet" href="/assets/pages/not-found.css?v=route-boundary">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -27,6 +27,32 @@
       not a deployed surface, or its release boundary has not been published
       yet. Return to a governed route below.
     </p>
+    <section class="route-boundary" aria-label="Route publication verdict">
+      <div class="route-flow" aria-label="Missing route governance sequence">
+        <span>Route requested</span>
+        <span>Public registry check</span>
+        <span>Evidence state check</span>
+        <span>Verdict</span>
+      </div>
+      <div class="route-state-grid">
+        <article>
+          <span>Surface</span>
+          <strong>NotPublished</strong>
+        </article>
+        <article>
+          <span>Runtime</span>
+          <strong>NotClaimed</strong>
+        </article>
+        <article>
+          <span>Boundary</span>
+          <strong>Preserved</strong>
+        </article>
+        <article>
+          <span>Next action</span>
+          <strong>Select a public route</strong>
+        </article>
+      </div>
+    </section>
     <div class="actions">
       <a class="button primary" href="/">Mullusi home</a>
       <a class="button" href="/mullu/">Open Mullu</a>

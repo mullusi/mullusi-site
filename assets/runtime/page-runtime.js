@@ -83,6 +83,23 @@ Invariants: untrusted text is escaped, unsafe hrefs collapse to "#", external li
     });
   }
 
+  function bindSkipLinks() {
+    qsa(".skip-link[href^='#']").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const href = link.getAttribute("href") || "";
+        if (!/^#[A-Za-z][A-Za-z0-9_-]*$/.test(href)) return;
+
+        const target = document.getElementById(href.slice(1));
+        if (!target) return;
+
+        event.preventDefault();
+        target.scrollIntoView({ behavior: "auto", block: "start" });
+        target.focus({ preventScroll: true });
+        history.pushState(null, "", href);
+      });
+    });
+  }
+
   function alignFragmentTarget(options = {}) {
     const hash = window.location.hash || "";
     if (!/^#[A-Za-z][A-Za-z0-9_-]*$/.test(hash)) return false;
@@ -212,6 +229,7 @@ Invariants: untrusted text is escaped, unsafe hrefs collapse to "#", external li
     bindLinkNavigation,
     bindMenu,
     bindReveal,
+    bindSkipLinks,
     captureFallbackContent,
     escapeAttribute,
     escapeHtml,

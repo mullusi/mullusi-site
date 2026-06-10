@@ -33,7 +33,7 @@ Invariants: Mullu remains a product under Mullusi; runtime closure is AwaitingEv
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
   <meta name="twitter:image:alt" content="Mullusi" />
   <script src="/assets/theme-bootstrap.js"></script>
-  <link rel="stylesheet" href="/assets/pages/mullu.css">
+  <link rel="stylesheet" href="/assets/pages/mullu.css?v=signal-compression-mullu-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -69,6 +69,38 @@ Invariants: Mullu remains a product under Mullusi; runtime closure is AwaitingEv
       <a class="button" href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Read architecture</a>
       <a class="button" href="/contact/">Contact</a>
     </div>
+    <section class="mullu-gate" aria-label="Mullu product claim boundary">
+      <div class="mullu-flow" aria-label="Mullu claim sequence">
+        <span>Product route</span>
+        <span>Proof boundary</span>
+        <span>Runtime witness</span>
+        <span>Release gate</span>
+        <strong>Public claim</strong>
+      </div>
+      <div class="mullu-state-grid">
+        <div>
+          <span>Route</span>
+          <strong>Visible</strong>
+        </div>
+        <div>
+          <span>Product stage</span>
+          <strong>Foundation</strong>
+        </div>
+        <div>
+          <span>Runtime witness</span>
+          <strong>AwaitingEvidence</strong>
+        </div>
+        <div>
+          <span>Customer access</span>
+          <strong>Not claimed</strong>
+        </div>
+        <div>
+          <span>Next gate</span>
+          <strong>Signed witness endpoints</strong>
+        </div>
+      </div>
+      <p>Mullu may be described as a foundation-stage product route. Runtime execution remains evidence-gated until signed witnesses publish.</p>
+    </section>
     <p class="status">Foundation mode while local proof, trademark, domain, legal, and deployment gates remain open.</p>
   </header>
 
