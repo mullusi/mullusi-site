@@ -7,6 +7,8 @@ Invariants: tests use local fixtures or current public-safe repo files only; the
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -20,6 +22,7 @@ const scriptPath = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(scriptPath);
 const repoRoot = path.resolve(scriptsDir, "..");
 const readinessScript = path.join(scriptsDir, "check-api-production-readiness.mjs");
+const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-api-readiness-test-"));
 
 function readyFlagMap(overrides = {}) {
   return Object.fromEntries(readinessFlags.map(({ key }) => [key, overrides[key] ?? true]));
@@ -204,6 +207,40 @@ function testCurrentCliRejectsUnsupportedArgs() {
   assert.match(result.stdout, /^finding=unsupported_args:--unsupported$/m);
 }
 
+function testOutputFilePersistsReadinessJson() {
+  const outputPath = path.join(tempDir, "readiness.json");
+  const result = runCli(["--require-ready", `--output=${outputPath}`]);
+  const payload = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, /^api_production_readiness_state=Blocked$/m);
+  assert.equal(payload.apiProductionReadinessState, "Blocked");
+  assert.equal(payload.solverOutcome, "AwaitingEvidence");
+  assert.equal(payload.apiDnsPublicationAllowed, false);
+  assert.ok(payload.blockers.includes("recovery_witness_not_ready"));
+}
+
+function testJsonOutputFilePersistsGovernanceBlock() {
+  const outputPath = path.join(tempDir, "invalid.json");
+  const result = runCli(["--unsupported", "--json", `--output=${outputPath}`]);
+  const stdoutPayload = JSON.parse(result.stdout);
+  const filePayload = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+
+  assert.equal(result.status, 1);
+  assert.equal(stdoutPayload.apiProductionReadinessState, "GovernanceBlocked");
+  assert.equal(filePayload.proofState, "Fail");
+  assert.deepEqual(filePayload.hardFindings, ["unsupported_args:--unsupported"]);
+}
+
+function testEmptyOutputPathIsRejectedBeforeWrite() {
+  const result = runCli(["--json", "--output="]);
+  const payload = JSON.parse(result.stdout);
+
+  assert.equal(result.status, 1);
+  assert.equal(payload.apiProductionReadinessState, "GovernanceBlocked");
+  assert.deepEqual(payload.hardFindings, ["unsupported_args:--output="]);
+}
+
 testReadyFixtureAllowsDns();
 testMissingManualEvidenceAwaitsEvidence();
 testRecoveryBlockDominatesReadiness();
@@ -213,5 +250,10 @@ testRuntimeWitnessClosurePredicate();
 testCurrentCliDefaultsBlockedPublicSafely();
 testCurrentCliRequireReadyFailsClosed();
 testCurrentCliRejectsUnsupportedArgs();
+testOutputFilePersistsReadinessJson();
+testJsonOutputFilePersistsGovernanceBlock();
+testEmptyOutputPathIsRejectedBeforeWrite();
+
+fs.rmSync(tempDir, { recursive: true, force: true });
 
 console.log("api production readiness tests passed");

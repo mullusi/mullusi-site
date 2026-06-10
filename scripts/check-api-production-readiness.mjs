@@ -282,12 +282,18 @@ export function formatApiProductionReadinessResult(result) {
 }
 
 function parseCliArgs(args) {
-  const invalidOptions = args.filter((arg) => arg.startsWith("--") && !allowedCliOptions.has(arg));
+  const outputArg = args.find((arg) => arg.startsWith("--output="));
+  const outputValue = outputArg ? outputArg.slice("--output=".length) : "";
+  const invalidOptions = args.filter((arg) =>
+    arg.startsWith("--")
+    && !allowedCliOptions.has(arg)
+    && !(arg.startsWith("--output=") && arg !== "--output="));
   const flagSet = new Set(args.filter((arg) => readinessFlags.some(({ flag }) => flag === arg)));
   return {
     invalidOptions,
     flagSet,
     outputJson: args.includes("--json"),
+    outputPath: outputValue ? path.resolve(repoRoot, outputValue) : "",
     requireReady: args.includes("--require-ready"),
     expectBlocked: args.includes("--expect-blocked"),
     help: args.includes("--help") || args.includes("-h"),
@@ -297,7 +303,7 @@ function parseCliArgs(args) {
 function usage() {
   return [
     "Usage:",
-    "  node scripts/check-api-production-readiness.mjs [flags] [--require-ready] [--expect-blocked] [--json]",
+    "  node scripts/check-api-production-readiness.mjs [flags] [--require-ready] [--expect-blocked] [--json] [--output=FILE]",
     "",
     "Evidence flags:",
     ...readinessFlags.map(({ flag }) => `  ${flag}`),
@@ -306,8 +312,12 @@ function usage() {
   ].join("\n");
 }
 
-function printResult(result, outputJson) {
-  if (outputJson) {
+function printResult(result, args) {
+  if (args.outputPath) {
+    fs.mkdirSync(path.dirname(args.outputPath), { recursive: true });
+    fs.writeFileSync(args.outputPath, `${JSON.stringify(result, null, 2)}\n`, "utf8");
+  }
+  if (args.outputJson) {
     console.log(JSON.stringify(result, null, 2));
     return;
   }
@@ -341,7 +351,7 @@ function runCli() {
       hardFindings: [`unsupported_args:${args.invalidOptions.join(",")}`],
       blockers: [],
     };
-    printResult(result, args.outputJson);
+    printResult(result, args);
     process.exit(1);
     return;
   }
@@ -349,7 +359,7 @@ function runCli() {
   try {
     const evidence = collectLocalApiProductionEvidence(args.flagSet);
     const result = evaluateApiProductionReadinessEvidence(evidence);
-    printResult(result, args.outputJson);
+    printResult(result, args);
     if (
       result.proofState === "Fail"
       || (args.requireReady && result.apiProductionReadinessState !== "ReadyForDns")
@@ -379,7 +389,7 @@ function runCli() {
       hardFindings: [`readiness_check_error:${message}`],
       blockers: [],
     };
-    printResult(result, args.outputJson);
+    printResult(result, args);
     process.exit(1);
   }
 }
