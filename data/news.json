@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-09",
+    "updated": "2026-06-10",
     "count": 7
   },
   "items": [
     {
-      "title": "Show HN: Performative-UI – A react component library of design tropes",
-      "url": "https://vorpus.github.io/performativeUI/",
-      "source": "vorpus.github.io",
-      "points": 1001,
-      "comments": 187,
-      "date": "2026-06-08"
+      "title": "Claude Fable 5",
+      "url": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
+      "source": "anthropic.com",
+      "points": 2304,
+      "comments": 1796,
+      "date": "2026-06-09"
+    },
+    {
+      "title": "Making Graphics Like it's 1993",
+      "url": "https://staniks.github.io/articles/catlantean-3d-blog-1/",
+      "source": "staniks.github.io",
+      "points": 883,
+      "comments": 147,
+      "date": "2026-06-09"
+    },
+    {
+      "title": "If Claude Fable stops helping you, you'll never know",
+      "url": "https://jonready.com/blog/posts/claude-fable5-is-allowed-to-sabotage-your-app-if-youre-a-competitor.html",
+      "source": "jonready.com",
+      "points": 861,
+      "comments": 416,
+      "date": "2026-06-09"
+    },
+    {
+      "title": "macOS Container Machines",
+      "url": "https://github.com/apple/container/blob/main/docs/container-machine.md",
+      "source": "github.com",
+      "points": 847,
+      "comments": 305,
+      "date": "2026-06-10"
+    },
+    {
+      "title": "OpenCV 5 Is Here: The Biggest Leap in Years for Computer Vision",
+      "url": "https://opencv.org/opencv-5/",
+      "source": "opencv.org",
+      "points": 773,
+      "comments": 139,
+      "date": "2026-06-06"
     },
     {
       "title": "Stop the Apple Music app from launching",
       "url": "https://lowtechguys.com/musicdecoy/",
       "source": "lowtechguys.com",
-      "points": 629,
-      "comments": 249,
+      "points": 658,
+      "comments": 266,
       "date": "2026-06-08"
     },
     {
-      "title": "Surveillance is not safety: A statement on the UK's latest threat to privacy [pdf]",
-      "url": "https://signal.org/blog/pdfs/2026-06-08-uk-surveillance-is-not-safety.pdf",
-      "source": "signal.org",
-      "points": 598,
-      "comments": 243,
-      "date": "2026-06-08"
-    },
-    {
-      "title": "xAI is looking more like a datacentre REIT than a frontier lab",
-      "url": "https://martinalderson.com/posts/xais-new-rental-business/",
-      "source": "martinalderson.com",
-      "points": 581,
-      "comments": 452,
-      "date": "2026-06-08"
-    },
-    {
-      "title": "MiMo-v2.5-Pro-UltraSpeed: 1T model with 1000 tokens per second",
-      "url": "https://mimo.xiaomi.com/blog/mimo-tilert-1000tps",
-      "source": "mimo.xiaomi.com",
-      "points": 580,
-      "comments": 428,
-      "date": "2026-06-08"
-    },
-    {
-      "title": "EU-banned pesticides found in rice, tea and spices",
-      "url": "https://www.foodwatch.org/en/eu-banned-pesticides-found-in-rice-tea-and-spices",
-      "source": "foodwatch.org",
-      "points": 433,
-      "comments": 215,
-      "date": "2026-06-08"
-    },
-    {
-      "title": "Scientists ejected from diabetes conference for distributing journal reprints",
-      "url": "https://arstechnica.com/science/2026/06/scientists-ejected-from-diabetes-conference-for-distributing-journal-reprints/",
-      "source": "arstechnica.com",
-      "points": 345,
-      "comments": 212,
-      "date": "2026-06-07"
+      "title": "Upcoming breaking changes for npm v12",
+      "url": "https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/",
+      "source": "github.blog",
+      "points": 396,
+      "comments": 157,
+      "date": "2026-06-09"
     }
   ]
 }
