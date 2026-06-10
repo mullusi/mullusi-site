@@ -63,6 +63,7 @@ export function checkpointSteps(options = {}) {
   const steps = [
     ...frontendSyntaxSteps(),
     nodeStep("product scaffold syntax", ["--check", "scripts/scaffold-product.mjs"]),
+    nodeStep("local preview server syntax", ["--check", "scripts/serve-local-preview.mjs"]),
     nodeStep("search indexing surface syntax", ["--check", "scripts/check-search-indexing-surface.mjs"]),
     nodeStep("website origin checker syntax", ["--check", "scripts/check-website-origin.mjs"]),
     nodeStep("public visibility checker syntax", ["--check", "scripts/check-public-visibility.mjs"]),
@@ -73,6 +74,7 @@ export function checkpointSteps(options = {}) {
     nodeStep("domain security checker syntax", ["--check", "scripts/check-domain-security.mjs"]),
     nodeStep("architecture boundaries", ["scripts/validate-architecture-boundaries.mjs"]),
     nodeStep("product scaffold tests", ["scripts/test-scaffold-product.mjs"]),
+    nodeStep("local preview server tests", ["scripts/test-serve-local-preview.mjs"]),
     nodeStep("architecture boundary tests", ["scripts/test-validate-architecture-boundaries.mjs"]),
     nodeStep("checkpoint runner tests", ["scripts/test-validate-checkpoint.mjs"]),
     nodeStep("ops gate", ["scripts/check-ops-gates.mjs"]),

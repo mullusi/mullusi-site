@@ -27,7 +27,7 @@
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
   <meta name="twitter:image:alt" content="Mullusi" />
   <script src="/assets/theme-bootstrap.js"></script>
-  <link rel="stylesheet" href="/assets/pages/playground.css">
+  <link rel="stylesheet" href="/assets/pages/playground.css?v=signal-compression-playground-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -54,6 +54,38 @@
       not the runtime service. It exists only to make the output shape tangible
       while the runtime stays AwaitingEvidence.
     </p>
+    <section class="playground-gate" aria-label="Playground claim boundary">
+      <div class="playground-flow" aria-label="Simulator boundary sequence">
+        <span>Input</span>
+        <span>Browser mock</span>
+        <span>Constraint check</span>
+        <span>Simulated verdict</span>
+        <strong>No proof stamp</strong>
+      </div>
+      <div class="playground-state-grid">
+        <div>
+          <span>Surface</span>
+          <strong>Static simulator</strong>
+        </div>
+        <div>
+          <span>Network</span>
+          <strong>No server contact</strong>
+        </div>
+        <div>
+          <span>Runtime witness</span>
+          <strong>AwaitingEvidence</strong>
+        </div>
+        <div>
+          <span>Proof stamp</span>
+          <strong>Not issued</strong>
+        </div>
+        <div>
+          <span>Public claim</span>
+          <strong>Illustrative only</strong>
+        </div>
+      </div>
+      <p>The playground shows output shape only. It is not a runtime endpoint, release witness, or verification surface.</p>
+    </section>
     <p class="sim-banner">Simulated evaluation surface; proof stamps remain unavailable.</p>
   </header>
 

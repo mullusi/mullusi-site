@@ -578,10 +578,12 @@ node scripts/check-api-production-readiness.mjs --expect-blocked
 ## Local preview
 
 ```bash
-node scripts/build-cloudflare-pages.mjs
-python3 -m http.server 8080 --directory dist
-# open http://localhost:8080
+npm run preview
+# open http://127.0.0.1:4173
 ```
+
+The local preview server builds `dist`, serves only the Cloudflare Pages artifact,
+and returns `404.html` with HTTP 404 for unpublished routes.
 
 ## Validation
 

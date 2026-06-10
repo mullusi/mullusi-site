@@ -138,15 +138,15 @@ footer {
 
 .shell-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 180px;
-  gap: 36px;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 28px;
   align-items: center;
-  padding: 78px 0 56px;
+  padding: 54px 0 34px;
 }
 
 .brand-icon {
-  width: 160px;
-  height: 160px;
+  width: 128px;
+  height: 128px;
   justify-self: end;
   border: 1px solid var(--line);
   background: var(--panel);
@@ -171,7 +171,7 @@ h3 {
 h1 {
   max-width: 12ch;
   margin-top: 14px;
-  font-size: 5rem;
+  font-size: 4rem;
 }
 
 h2 {
@@ -188,12 +188,12 @@ p {
 
 .lede {
   max-width: 76ch;
-  margin: 20px 0 0;
-  font-size: 1.08rem;
+  margin: 16px 0 0;
+  font-size: 1rem;
 }
 
 .state-row {
-  margin-top: 22px;
+  margin-top: 16px;
 }
 
 .state-token {
@@ -216,7 +216,86 @@ p {
 }
 
 .actions {
-  margin-top: 24px;
+  margin-top: 18px;
+}
+
+.shell-gate {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid rgba(92, 230, 196, 0.2);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.shell-gate-flow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.shell-gate-flow span,
+.shell-gate-flow strong {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.shell-gate-flow span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -9px;
+  width: 8px;
+  height: 1px;
+  background: rgba(92, 230, 196, 0.44);
+}
+
+.shell-gate-flow strong {
+  border-color: rgba(255, 111, 145, 0.55);
+  color: var(--red);
+}
+
+.shell-gate-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.shell-gate-grid div {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.shell-gate-grid span {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.shell-gate-grid strong {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.shell-gate p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .button {
@@ -369,6 +448,10 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .shell-gate-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .brand-icon {
     justify-self: start;
     width: 118px;
@@ -396,6 +479,100 @@ footer {
   }
 
   .shell-hero {
-    padding-top: 42px;
+    padding: 24px 0 18px;
+    gap: 12px;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    margin-top: 8px;
+  }
+
+  .lede {
+    margin-top: 10px;
+    font-size: 0.84rem;
+    line-height: 1.38;
+  }
+
+  .state-row {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .state-token {
+    min-height: 28px;
+    padding: 3px 7px;
+    font-size: 10px;
+  }
+
+  .brand-icon {
+    display: none;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .actions .primary {
+    grid-column: 1 / -1;
+  }
+
+  .button {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 11px;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .shell-gate {
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px;
+  }
+
+  .shell-gate-flow {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .shell-gate-flow span,
+  .shell-gate-flow strong {
+    min-height: 32px;
+    padding: 4px;
+    font-size: 8px;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .shell-gate-flow span:not(:last-child)::after {
+    display: none;
+  }
+
+  .shell-gate-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .shell-gate-grid div {
+    padding: 6px;
+  }
+
+  .shell-gate-grid span {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+  }
+
+  .shell-gate-grid strong {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .shell-gate p {
+    font-size: 12px;
+    line-height: 1.35;
   }
 }

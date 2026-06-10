@@ -5829,3 +5829,551 @@ html.menu-open body {
     animation: none;
   }
 }
+
+.hero.claim-lens-hero {
+  min-height: calc(100vh - 78px);
+  padding: 22px 0 18px;
+}
+
+.hero.claim-lens-hero::before {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 48%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-raise) 70%, transparent), transparent 76%);
+  opacity: 0.64;
+}
+
+.hero .claim-lens {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(390px, 1.08fr);
+  gap: clamp(28px, 6vw, 76px);
+  align-items: center;
+}
+
+.claim-lens-copy,
+.claim-lens-machine {
+  min-width: 0;
+}
+
+.claim-lens-copy h1 {
+  max-width: 100%;
+  margin: 16px 0 18px;
+  font-size: 42px;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.claim-lens-copy .lead {
+  max-width: 48ch;
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.claim-lens-copy .hero-plain {
+  max-width: 62ch;
+  color: var(--ink-soft);
+}
+
+.claim-lens-snapshot {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 640px;
+  margin: 22px 0 24px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.claim-lens-snapshot div {
+  min-width: 0;
+  background: color-mix(in srgb, var(--panel-soft) 92%, transparent);
+  padding: 12px 14px;
+}
+
+.claim-lens-snapshot dt {
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.claim-lens-snapshot dd {
+  margin-top: 5px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.claim-lens-snapshot div:nth-child(3) dd {
+  color: var(--accent-warm);
+}
+
+.claim-lens-machine {
+  display: grid;
+  gap: 10px;
+}
+
+.claim-lens-core,
+.claim-rewrite,
+.claim-lens-panel {
+  border: 1px solid color-mix(in srgb, var(--line-bright) 72%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 88%, transparent), color-mix(in srgb, var(--panel-soft) 96%, transparent));
+  backdrop-filter: blur(10px);
+}
+
+.claim-lens-core {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+  animation: claim-core-enter 1400ms ease-out both;
+}
+
+.claim-lens-core::before,
+.claim-lens-core::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.claim-lens-core::before {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 8%, transparent) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 42px);
+  mask-image: linear-gradient(90deg, black, transparent 90%);
+}
+
+.claim-lens-core::after {
+  width: 38%;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 15%, transparent), transparent);
+  transform: translateX(-110%);
+  animation: claim-scan-once 3200ms ease-out 700ms both;
+}
+
+.claim-lens-graph {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 300px;
+  min-height: 0;
+  color: var(--accent);
+}
+
+.claim-lens-orbit,
+.claim-lens-crossline,
+.claim-lens-flow,
+.claim-lens-node circle,
+.claim-lens-center circle {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.claim-lens-orbit {
+  stroke: color-mix(in srgb, var(--ink) 18%, transparent);
+  stroke-width: 1.2;
+}
+
+.claim-lens-crossline {
+  stroke: color-mix(in srgb, var(--ink) 14%, transparent);
+  stroke-width: 1;
+}
+
+.claim-lens-flow {
+  stroke: color-mix(in srgb, var(--accent) 64%, transparent);
+  stroke-width: 1.5;
+}
+
+.claim-lens-node circle {
+  stroke: color-mix(in srgb, var(--ink) 28%, transparent);
+  stroke-width: 1;
+}
+
+.claim-lens-node text,
+.claim-lens-formula {
+  fill: var(--ink-soft);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-anchor: middle;
+}
+
+.claim-lens-center circle {
+  stroke: color-mix(in srgb, var(--accent) 54%, transparent);
+  stroke-width: 1.4;
+}
+
+.claim-lens-system,
+.claim-lens-formula {
+  font-family: var(--symbols);
+}
+
+.claim-lens-system {
+  fill: var(--ink);
+  font-size: 58px;
+  line-height: 1;
+  text-anchor: middle;
+}
+
+.claim-lens-formula {
+  fill: var(--accent-warm);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.claim-rewrite {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 12px;
+  padding: 10px;
+}
+
+.claim-rewrite-head,
+.claim-rewrite ol {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.claim-rewrite-head {
+  grid-column: 1 / -1;
+}
+
+.claim-rewrite-head span {
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.claim-rewrite-head button,
+.claim-lens-tabs button {
+  border: 1px solid color-mix(in srgb, var(--line-bright) 74%, transparent);
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--mono);
+}
+
+.claim-rewrite-head button {
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 10.5px;
+  text-transform: uppercase;
+}
+
+.claim-rewrite p {
+  grid-column: 1;
+  min-height: 0;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.claim-lens-hero[data-claim-frame="0"] .claim-rewrite p {
+  color: var(--danger);
+  filter: blur(0.5px);
+}
+
+.claim-lens-hero[data-claim-frame="1"] .claim-rewrite p {
+  color: var(--accent-warm);
+}
+
+.claim-lens-hero[data-claim-frame="3"] .claim-rewrite p {
+  color: var(--accent);
+  filter: none;
+}
+
+.claim-rewrite ol {
+  grid-column: 2;
+  list-style: none;
+  justify-content: flex-end;
+}
+
+.claim-rewrite li {
+  width: 10px;
+  height: 10px;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 54%, transparent);
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 0;
+  padding: 0;
+}
+
+.claim-rewrite li.is-complete,
+.claim-rewrite li.is-active {
+  border-color: color-mix(in srgb, var(--accent) 48%, transparent);
+  color: var(--accent);
+}
+
+.claim-lens-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.claim-lens-tabs button {
+  min-height: 42px;
+  padding: 8px 6px;
+  font-size: 11px;
+}
+
+.claim-lens-tabs button.is-active {
+  border-color: color-mix(in srgb, var(--accent) 54%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--ink);
+}
+
+.claim-lens-panel {
+  min-height: 0;
+  padding: 14px;
+  view-transition-name: claim-lens-panel;
+}
+
+.claim-lens-state {
+  display: inline-flex;
+  margin: 0 0 10px;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 70%, transparent);
+  color: var(--accent-warm);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+.claim-lens-panel h2 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 400;
+}
+
+.claim-lens-panel > p:not(.claim-lens-state),
+.claim-lens-rule p {
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.claim-lens-rule {
+  display: none;
+}
+
+.claim-lens-rule span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.claim-lens-panel a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  border: 1px solid var(--line-bright);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+.claim-lens-panel a::after {
+  content: "->";
+  margin-left: 8px;
+  color: var(--accent);
+}
+
+.claim-lens-panel a:hover,
+.claim-rewrite-head button:hover,
+.claim-lens-tabs button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@keyframes claim-core-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+
+  65% {
+    opacity: 1;
+    transform: translateY(0) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes claim-scan-once {
+  0% {
+    transform: translateX(-110%);
+    opacity: 0;
+  }
+
+  20%,
+  62% {
+    opacity: 0.82;
+  }
+
+  100% {
+    transform: translateX(270%);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 980px) {
+  .hero .claim-lens {
+    grid-template-columns: 1fr;
+  }
+
+  .claim-lens-copy h1 {
+    max-width: 16ch;
+    font-size: 50px;
+  }
+
+  .claim-lens-snapshot {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .hero.claim-lens-hero {
+    padding: 18px 0 8px;
+  }
+
+  .claim-lens-copy h1 {
+    margin: 10px 0 12px;
+    font-size: 30px;
+    line-height: 1.02;
+  }
+
+  .claim-lens-copy .lead {
+    margin-bottom: 10px;
+    font-size: 14.5px;
+    line-height: 1.45;
+  }
+
+  .claim-lens-panel h2 {
+    font-size: 22px;
+  }
+
+  .claim-lens-copy .hero-plain,
+  .claim-lens-snapshot,
+  .claim-lens-copy .hero-last-updated {
+    display: none;
+  }
+
+  .claim-lens-core {
+    min-height: 104px;
+  }
+
+  .claim-lens-graph {
+    height: 104px;
+  }
+
+  .claim-lens-system {
+    font-size: 48px;
+  }
+
+  .claim-lens-formula {
+    font-size: 12px;
+  }
+
+  .claim-rewrite {
+    gap: 4px 8px;
+    padding: 6px;
+  }
+
+  .claim-rewrite p {
+    min-height: 20px;
+    font-size: 12px;
+  }
+
+  .claim-rewrite-head {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .claim-rewrite-head span {
+    display: none;
+  }
+
+  .claim-rewrite-head button {
+    min-height: 28px;
+    padding: 0 8px;
+    font-size: 9px;
+  }
+
+  .claim-lens-tabs {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .claim-lens-tabs button {
+    min-height: 34px;
+    padding: 4px 2px;
+    font-size: 9.5px;
+  }
+
+  .claim-lens-panel {
+    min-height: 0;
+    padding: 8px;
+  }
+
+  .claim-lens-panel > p:not(.claim-lens-state) {
+    display: none;
+  }
+
+  .claim-lens-state {
+    margin-bottom: 6px;
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+
+  .claim-lens-panel a {
+    min-height: 30px;
+    font-size: 10px;
+  }
+
+  .claim-rewrite-head,
+  .claim-rewrite ol {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .claim-rewrite li {
+    width: 10px;
+    height: 10px;
+    overflow: hidden;
+    padding: 0;
+    font-size: 0;
+  }
+}
+
+.legacy-hero[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .claim-lens-core,
+  .claim-lens-core::after {
+    animation: none !important;
+  }
+
+  .claim-lens-core::after {
+    content: none;
+  }
+}

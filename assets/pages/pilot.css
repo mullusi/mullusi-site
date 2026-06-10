@@ -63,7 +63,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
     .nav-links a { text-decoration: none; }
     .nav-links a:hover { color: var(--accent); }
-    main { padding: 48px 0 82px; }
+    main { padding: 38px 0 82px; }
     .eyebrow {
       color: var(--warm);
       font-size: 12px;
@@ -79,7 +79,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     h1 {
       max-width: 14ch;
       margin-top: 16px;
-      font-size: 68px;
+      font-size: 60px;
     }
     h2 { font-size: 36px; }
     h3 { font-size: 20px; }
@@ -87,13 +87,13 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     .lede {
       max-width: 74ch;
       margin-top: 18px;
-      font-size: 18px;
+      font-size: 17px;
     }
     .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 20px;
     }
     .button {
       display: inline-flex;
@@ -116,7 +116,76 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
-      margin-top: 34px;
+      margin-top: 24px;
+    }
+    .pilot-gate {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 14px;
+      border: 1px solid rgba(92, 230, 196, 0.2);
+      background: rgba(255, 255, 255, 0.025);
+    }
+    .pilot-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .pilot-flow span,
+    .pilot-flow strong {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pilot-flow span:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -9px;
+      width: 8px;
+      height: 1px;
+      background: rgba(92, 230, 196, 0.44);
+    }
+    .pilot-flow strong {
+      border-color: rgba(232, 177, 92, 0.55);
+      color: var(--warm);
+    }
+    .pilot-state-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .pilot-state-grid div {
+      display: grid;
+      gap: 5px;
+      padding: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.16);
+    }
+    .pilot-state-grid span {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .pilot-state-grid strong {
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.25;
+    }
+    .pilot-gate p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
     }
     .card, .boundary {
       border: 1px solid var(--line);
@@ -163,10 +232,63 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
     @media (max-width: 860px) {
       .grid, .boundary dl { grid-template-columns: 1fr; }
+      .pilot-state-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 700px) {
       nav, footer { align-items: flex-start; flex-direction: column; }
       main { padding-top: 22px; }
-      h1 { font-size: 44px; }
+      h1 { font-size: 38px; }
       h2 { font-size: 30px; }
+      .lede {
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      .actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .actions .primary { grid-column: 1 / -1; }
+      .button {
+        min-height: 36px;
+        padding: 0 10px;
+        font-size: 11px;
+        text-align: center;
+        white-space: normal;
+      }
+      .pilot-gate {
+        gap: 8px;
+        padding: 10px;
+      }
+      .pilot-flow {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 4px;
+      }
+      .pilot-flow span,
+      .pilot-flow strong {
+        min-height: 36px;
+        padding: 4px;
+        font-size: 8px;
+        letter-spacing: 0;
+        overflow-wrap: anywhere;
+      }
+      .pilot-flow span:not(:last-child)::after { display: none; }
+      .pilot-state-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+      }
+      .pilot-state-grid div {
+        padding: 8px 6px;
+      }
+      .pilot-state-grid span {
+        font-size: 9px;
+        letter-spacing: 0.06em;
+      }
+      .pilot-state-grid strong {
+        font-size: 12px;
+        overflow-wrap: anywhere;
+      }
+      .pilot-gate p {
+        font-size: 12px;
+      }
     }

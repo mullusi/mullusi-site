@@ -27,7 +27,7 @@
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
   <meta name="twitter:image:alt" content="Mullusi" />
   <script src="/assets/theme-bootstrap.js"></script>
-  <link rel="stylesheet" href="/assets/pages/proof.css">
+  <link rel="stylesheet" href="/assets/pages/proof.css?v=signal-compression-proof-2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -67,6 +67,35 @@
       <a class="button" href="/doctrine/">Read Doctrine v1.2</a>
       <a class="button" href="/contact/">Request evidence access</a>
     </div>
+    <aside class="proof-console" aria-label="Governed claim verification sequence">
+      <div class="proof-console-flow" aria-label="Claim governance flow">
+        <span>Claim</span>
+        <span>Evidence check</span>
+        <span>Authority check</span>
+        <span>Risk check</span>
+        <strong>Verdict</strong>
+      </div>
+      <div class="proof-console-grid">
+        <div>
+          <span>Website</span>
+          <strong>Published</strong>
+        </div>
+        <div>
+          <span>Runtime witness</span>
+          <strong>AwaitingEvidence</strong>
+        </div>
+        <div>
+          <span>Next gate</span>
+          <strong>Signed witness endpoints</strong>
+        </div>
+      </div>
+      <div class="proof-console-endpoints" aria-label="Witness endpoints awaiting evidence">
+        <code>/health</code>
+        <code>/gateway/witness</code>
+        <code>/runtime/conformance</code>
+      </div>
+      <p>A claim cannot exceed its available evidence.</p>
+    </aside>
   </header>
 
   <main id="main" tabindex="-1">

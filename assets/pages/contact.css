@@ -96,6 +96,89 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       gap: 14px;
       margin-top: 32px;
     }
+    .contact-boundary {
+      display: grid;
+      gap: 12px;
+      margin-top: 24px;
+      padding: 16px;
+      border: 1px solid rgba(92, 230, 196, 0.2);
+      background: rgba(255, 255, 255, 0.025);
+    }
+    .contact-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .contact-flow span,
+    .contact-flow strong {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .contact-flow span:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -9px;
+      width: 8px;
+      height: 1px;
+      background: rgba(92, 230, 196, 0.44);
+    }
+    .contact-flow strong {
+      border-color: rgba(232, 177, 92, 0.55);
+      color: var(--warm);
+    }
+    .contact-state-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .contact-state-grid div {
+      display: grid;
+      gap: 5px;
+      padding: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.16);
+    }
+    .contact-state-grid span {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .contact-state-grid strong {
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.25;
+    }
+    .contact-witnesses {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .contact-witnesses code {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 9px;
+      border: 1px solid rgba(232, 177, 92, 0.24);
+      color: var(--warm);
+      background: rgba(232, 177, 92, 0.06);
+      font-size: 12px;
+    }
+    .contact-boundary p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
     .card, .intake {
       border: 1px solid var(--line);
       background: rgba(17, 19, 15, 0.84);
@@ -150,4 +233,47 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       main { padding-top: 22px; }
       h1 { font-size: 44px; }
       h2 { font-size: 30px; }
+      .contact-boundary {
+        gap: 8px;
+        padding: 10px;
+      }
+      .contact-flow {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 4px;
+      }
+      .contact-flow span,
+      .contact-flow strong {
+        min-height: 36px;
+        padding: 4px;
+        font-size: 8px;
+        letter-spacing: 0;
+        overflow-wrap: anywhere;
+      }
+      .contact-flow span:not(:last-child)::after { display: none; }
+      .contact-state-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+      }
+      .contact-state-grid div {
+        padding: 8px 6px;
+      }
+      .contact-state-grid span {
+        font-size: 9px;
+        letter-spacing: 0.06em;
+      }
+      .contact-state-grid strong {
+        font-size: 12px;
+        overflow-wrap: anywhere;
+      }
+      .contact-witnesses {
+        gap: 4px;
+      }
+      .contact-witnesses code {
+        min-height: 26px;
+        padding: 0 6px;
+        font-size: 10px;
+      }
+      .contact-boundary p {
+        font-size: 12px;
+      }
     }

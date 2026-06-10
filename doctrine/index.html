@@ -57,6 +57,41 @@ Invariants: no runtime-conformance claim is published as verified without signed
       execution is claimed. Every public claim must carry a declared evidence state,
       proof boundary, release lineage, and rollback path.
     </p>
+    <section class="doctrine-boundary" aria-label="Doctrine public boundary">
+      <div class="doctrine-flow" aria-label="Claim governance sequence">
+        <span>Claim</span>
+        <span>Evidence state</span>
+        <span>Proof boundary</span>
+        <span>Release lineage</span>
+        <span>Public verdict</span>
+      </div>
+      <div class="doctrine-state-grid">
+        <article>
+          <span>Doctrine v1.2</span>
+          <strong>Published</strong>
+        </article>
+        <article>
+          <span>Architecture</span>
+          <strong>Verified</strong>
+        </article>
+        <article>
+          <span>Runtime</span>
+          <strong>AwaitingEvidence</strong>
+        </article>
+        <article>
+          <span>Release</span>
+          <strong>Reversible</strong>
+        </article>
+        <article>
+          <span>Next gate</span>
+          <strong>Signed witness endpoints</strong>
+        </article>
+      </div>
+      <p>
+        Doctrine is public posture and release doctrine. It is not a verified
+        runtime claim until signed witness endpoints publish.
+      </p>
+    </section>
     <div class="actions">
       <a class="button primary" href="/proof/">See Proof Boundaries</a>
       <a class="button" href="/mullu/">View Foundation Route</a>

@@ -72,6 +72,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <script defer src="assets/render/product-registry.js?v=2026.05.platform.29"></script>
   <script defer src="assets/render/news-activity.js?v=2026.05.platform.29"></script>
   <script defer src="assets/runtime/homepage-context.js?v=2026.05.platform.29"></script>
+  <script defer src="assets/runtime/claim-lens-runtime.js?v=2026.06.signal.1"></script>
   <script defer src="assets/app.js?v=2026.05.platform.29"></script>
   <script defer src="/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.2"></script>
   <script defer src="/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.2"></script>
@@ -147,7 +148,93 @@ Invariants: no private repository claims, no silent content failure, all dynamic
   <main id="main" tabindex="-1">
     <div id="top"></div>
 
-    <section class="hero" aria-labelledby="hero-title" data-mullu-helper="Explain the Mullusi homepage foundation boundary, public readiness state, and proof-first launch posture.">
+    <section class="hero claim-lens-hero" aria-labelledby="hero-title" data-claim-lens data-active-lens="public-route" data-mullu-helper="Explain the Mullusi homepage foundation boundary, Signal Compression Index, governed claim lens, public readiness state, and proof-first launch posture.">
+      <div class="wrap claim-lens">
+        <div class="claim-lens-copy">
+          <div class="hero-status-row" aria-label="Homepage status">
+            <span>Mullusi Signal Compression Index</span>
+            <span>Runtime witness: AwaitingEvidence</span>
+          </div>
+          <h1 id="hero-title">Every public claim must survive governance before it becomes visible.</h1>
+          <p class="lead">Governed software that does not execute a claim until its state is known.</p>
+          <p class="plain hero-plain">Mullusi separates product routes, proof boundaries, runtime witness state, and release gates into one symbolic control surface.</p>
+          <dl class="claim-lens-snapshot" aria-label="Current public claim state">
+            <div><dt>Website</dt><dd>Live</dd></div>
+            <div><dt>Proof boundary</dt><dd>Visible</dd></div>
+            <div><dt>Runtime witness</dt><dd>AwaitingEvidence</dd></div>
+            <div><dt>Next gate</dt><dd>Signed witness endpoints</dd></div>
+          </dl>
+          <div class="hero-actions">
+            <a href="/proof/" class="btn btn-solid" data-i18n="hero.ctaPlayground" data-mullu-helper="Open the proof boundary route for public claims, runtime evidence state, and release witness status.">Review Proof Boundary</a>
+            <a href="/mullu/" class="btn" data-i18n="hero.reviewProof" data-mullu-helper="Open the Mullu foundation route for the flagship governed product surface.">View Foundation Route</a>
+          </div>
+          <time class="hero-last-updated" datetime="2026-06-09">Last updated 2026-06-09</time>
+        </div>
+
+        <div class="claim-lens-machine" aria-label="Governed Claim Lens">
+          <div class="claim-lens-core" aria-hidden="true">
+            <svg class="claim-lens-graph" viewBox="0 0 520 390" role="img" aria-label="Claim to governance to evidence state to public verdict">
+              <defs>
+                <marker id="claim-arrow" viewBox="0 0 8 8" markerWidth="6" markerHeight="6" refX="7" refY="4" orient="auto">
+                  <path d="M0 0 L8 4 L0 8 Z" fill="currentColor" />
+                </marker>
+              </defs>
+              <path class="claim-lens-orbit" d="M260 72 C356 72 432 130 432 196 C432 262 356 320 260 320 C164 320 88 262 88 196 C88 130 164 72 260 72 Z" />
+              <path class="claim-lens-crossline" d="M260 62 V326" />
+              <path class="claim-lens-crossline" d="M96 196 H424" />
+              <path class="claim-lens-flow" d="M90 196 H206" marker-end="url(#claim-arrow)" />
+              <path class="claim-lens-flow" d="M314 196 H430" marker-end="url(#claim-arrow)" />
+              <path class="claim-lens-flow claim-lens-flow-vertical" d="M260 82 V142" marker-end="url(#claim-arrow)" />
+              <path class="claim-lens-flow claim-lens-flow-vertical" d="M260 250 V312" marker-end="url(#claim-arrow)" />
+              <g class="claim-lens-node"><circle cx="90" cy="196" r="34" /><text x="90" y="201">CLAIM</text></g>
+              <g class="claim-lens-node"><circle cx="430" cy="196" r="34" /><text x="430" y="201">PROOF</text></g>
+              <g class="claim-lens-node"><circle cx="260" cy="82" r="34" /><text x="260" y="87">ROUTE</text></g>
+              <g class="claim-lens-node"><circle cx="260" cy="312" r="34" /><text x="260" y="317">WITNESS</text></g>
+              <g class="claim-lens-center">
+                <circle cx="260" cy="196" r="62" />
+                <text x="260" y="183" class="claim-lens-system">𝕊</text>
+                <text x="260" y="222" class="claim-lens-formula">⟨Ι, Λ, Σ, Γ, H⟩</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="claim-rewrite" data-claim-rewrite aria-live="polite">
+            <div class="claim-rewrite-head">
+              <span>Claim declassification</span>
+              <button type="button" data-claim-replay>Replay</button>
+            </div>
+            <p data-claim-frame-text>Runtime is live</p>
+            <ol aria-label="Claim rewrite trace">
+              <li data-claim-step class="is-active">scan</li>
+              <li data-claim-step>conflict</li>
+              <li data-claim-step>rewrite</li>
+              <li data-claim-step>verdict</li>
+            </ol>
+          </div>
+
+          <div class="claim-lens-tabs" role="tablist" aria-label="Governed claim lens routes">
+            <button type="button" role="tab" aria-selected="true" aria-controls="claim-lens-panel" class="is-active" data-lens-node="public-route">Product</button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="claim-lens-panel" data-lens-node="proof-boundary">Proof</button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="claim-lens-panel" data-lens-node="runtime-witness">Runtime</button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="claim-lens-panel" data-lens-node="platform-spine">Platform</button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="claim-lens-panel" data-lens-node="release-gates">Release</button>
+          </div>
+
+          <article class="claim-lens-panel" id="claim-lens-panel" tabindex="-1">
+            <p class="claim-lens-state" data-lens-state>Live</p>
+            <h2 data-lens-title>Public Route</h2>
+            <p data-lens-text>mullusi.com is the company and foundation routing surface.</p>
+            <div class="claim-lens-rule">
+              <span>Rule</span>
+              <p data-lens-rule>Public identity may be shown because the surface exists.</p>
+            </div>
+            <a href="#start" data-lens-href>Inspect surface</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero legacy-hero" hidden aria-labelledby="legacy-hero-title" data-mullu-helper="Legacy homepage foundation boundary retained for rollback reference.">
       <div class="wrap">
         <div class="hero-stage">
           <div class="hero-mesh" aria-hidden="true">
@@ -186,7 +273,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
             <span data-i18n="hero.tag">Foundation before launch.</span>
             <span data-i18n="hero.runtimeStatus">Runtime: AwaitingEvidence</span>
           </div>
-          <h1 id="hero-title" data-i18n="hero.title">Mullusi is preparing a governed foundation for high-risk symbolic work.</h1>
+          <h1 id="legacy-hero-title">Mullusi is preparing a governed foundation for high-risk symbolic work.</h1>
           <p class="lead" data-i18n="hero.lead">Current work is local proof, claim boundaries, and prerequisite setup before public deployment or customer access.</p>
           <p class="plain hero-plain" data-i18n="hero.plain">Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.</p>
           <div class="hero-actions">
@@ -277,6 +364,50 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
+    <section class="band tier-primary" id="platform" aria-labelledby="platform-title" data-mullu-helper="Explain the Mullusi platform map, public surfaces, request flow, and release discipline.">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="platform.tag">Platform Spine</div>
+          <h2 id="platform-title" data-i18n="platform.title">Company, platform, products</h2>
+          <p data-i18n="platform.body">Mullusi is layered: public surfaces route users, the control plane governs actions, product services execute privately, storage preserves memory, Cloudflare protects the edge, and GitHub remains the source factory.</p>
+          <p class="plain" data-i18n="platform.plain">In plain terms: the website is the map; the dashboard is the control room; the API is the machine gateway; the control plane decides what can run.</p>
+        </div>
+        <div class="platform-layers reveal" data-platform-layers>
+          <noscript>
+            <article class="platform-layer"><div class="platform-layer-head"><span class="badge">public map</span><h3>Public Surface</h3></div><p>mullusi.com, docs, learn, and future status routes.</p></article>
+            <article class="platform-layer"><div class="platform-layer-head"><span class="badge">governance brain</span><h3>Control Plane</h3></div><p>Auth, users, product registry, permissions, policy, audit, and job routing.</p></article>
+            <article class="platform-layer"><div class="platform-layer-head"><span class="badge">private execution</span><h3>Product Services</h3></div><p>Search, agents, chain, video, music, science, robotics, and developer services.</p></article>
+          </noscript>
+        </div>
+        <div class="request-flow reveal" data-request-flow>
+          <noscript>
+            <p>User surface &rarr; API gateway &rarr; Control plane checks &rarr; Job registry &rarr; Product service &rarr; Storage and audit &rarr; Result surface.</p>
+          </noscript>
+        </div>
+        <div class="platform-build reveal" data-platform-build-sequence>
+          <noscript>
+            <ol>
+              <li>Public website</li>
+              <li>Docs route</li>
+              <li>Private source boundary</li>
+              <li>Cloudflare edge</li>
+              <li>Control-plane skeleton</li>
+              <li>API health endpoint</li>
+              <li>User/auth layer</li>
+              <li>First governed product</li>
+            </ol>
+          </noscript>
+        </div>
+        <ol class="product-questions reveal" data-product-questions>
+          <noscript>
+            <li><span>01</span><strong>What is it?</strong></li>
+            <li><span>02</span><strong>Who can use it?</strong></li>
+            <li><span>03</span><strong>What happens if it fails?</strong></li>
+          </noscript>
+        </ol>
+      </div>
+    </section>
+
     <section class="band tier-secondary metrics-section" id="metrics" aria-labelledby="metrics-title">
       <div class="wrap">
         <div class="sec-head reveal">
@@ -324,50 +455,6 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="ow-old" data-i18n="oldway.r7.old">Deadlines pressure evidence claims</div>
           <div class="ow-new" data-i18n="oldway.r7.new">Evidence state cannot be mutated by pressure</div>
         </div>
-      </div>
-    </section>
-
-    <section class="band tier-primary" id="platform" aria-labelledby="platform-title" data-mullu-helper="Explain the Mullusi platform map, public surfaces, request flow, and release discipline.">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="platform.tag">Platform Spine</div>
-          <h2 id="platform-title" data-i18n="platform.title">Company, platform, products</h2>
-          <p data-i18n="platform.body">Mullusi is layered: public surfaces route users, the control plane governs actions, product services execute privately, storage preserves memory, Cloudflare protects the edge, and GitHub remains the source factory.</p>
-          <p class="plain" data-i18n="platform.plain">In plain terms: the website is the map; the dashboard is the control room; the API is the machine gateway; the control plane decides what can run.</p>
-        </div>
-        <div class="platform-layers reveal" data-platform-layers>
-          <noscript>
-            <article class="platform-layer"><div class="platform-layer-head"><span class="badge">public map</span><h3>Public Surface</h3></div><p>mullusi.com, docs, learn, and future status routes.</p></article>
-            <article class="platform-layer"><div class="platform-layer-head"><span class="badge">governance brain</span><h3>Control Plane</h3></div><p>Auth, users, product registry, permissions, policy, audit, and job routing.</p></article>
-            <article class="platform-layer"><div class="platform-layer-head"><span class="badge">private execution</span><h3>Product Services</h3></div><p>Search, agents, chain, video, music, science, robotics, and developer services.</p></article>
-          </noscript>
-        </div>
-        <div class="request-flow reveal" data-request-flow>
-          <noscript>
-            <p>User surface &rarr; API gateway &rarr; Control plane checks &rarr; Job registry &rarr; Product service &rarr; Storage and audit &rarr; Result surface.</p>
-          </noscript>
-        </div>
-        <div class="platform-build reveal" data-platform-build-sequence>
-          <noscript>
-            <ol>
-              <li>Public website</li>
-              <li>Docs route</li>
-              <li>Private source boundary</li>
-              <li>Cloudflare edge</li>
-              <li>Control-plane skeleton</li>
-              <li>API health endpoint</li>
-              <li>User/auth layer</li>
-              <li>First governed product</li>
-            </ol>
-          </noscript>
-        </div>
-        <ol class="product-questions reveal" data-product-questions>
-          <noscript>
-            <li><span>01</span><strong>What is it?</strong></li>
-            <li><span>02</span><strong>Who can use it?</strong></li>
-            <li><span>03</span><strong>What happens if it fails?</strong></li>
-          </noscript>
-        </ol>
       </div>
     </section>
 

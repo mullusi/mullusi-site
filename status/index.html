@@ -27,7 +27,7 @@ Invariants: reserved surfaces are not linked as live endpoints, runtime claims r
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
-  <link rel="stylesheet" href="/assets/pages/status.css">
+  <link rel="stylesheet" href="/assets/pages/status.css?v=signal-compression-status-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -51,6 +51,39 @@ Invariants: reserved surfaces are not linked as live endpoints, runtime claims r
       <a class="button" href="/proof/">Review proof boundary</a>
       <a class="button" href="/contact/">Contact Mullusi</a>
     </div>
+
+    <section class="status-boundary" aria-label="Public status boundary">
+      <div class="status-flow" aria-label="Status verification sequence">
+        <span>Route</span>
+        <span>Surface state</span>
+        <span>Witness state</span>
+        <span>Public link</span>
+        <strong>Boundary</strong>
+      </div>
+      <div class="status-state-grid">
+        <div>
+          <span>Website routes</span>
+          <strong>Published</strong>
+        </div>
+        <div>
+          <span>Proof boundary</span>
+          <strong>Visible</strong>
+        </div>
+        <div>
+          <span>Runtime witness</span>
+          <strong>AwaitingEvidence</strong>
+        </div>
+        <div>
+          <span>Reserved surfaces</span>
+          <strong>Not linked live</strong>
+        </div>
+        <div>
+          <span>Next gate</span>
+          <strong>Signed witness endpoints</strong>
+        </div>
+      </div>
+      <p>Status reports public route state. It does not promote API, dashboard, sandbox, metrics, learn, pilot access, or proof-stamp release witnesses beyond their current evidence state.</p>
+    </section>
 
     <section class="status-grid" aria-label="Surface status cards">
       <article class="status-card"><span class="state">Published</span><h2>mullusi.com</h2><p>Static website, public routes, proof boundary, status route, and foundation copy are published.</p></article>
