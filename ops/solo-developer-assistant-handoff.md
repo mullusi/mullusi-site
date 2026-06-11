@@ -70,6 +70,42 @@ Then run generation and checkpoint validation. The scaffold starts private-incub
 
 ## Required Validation Trace
 
+## Current Operator State
+
+As of 2026-06-11, the current public-safe operator state is:
+
+```text
+recovery_witness_state=AwaitingEvidence
+api_provisioning_allowed=false
+domain_hardening_preflight=GovernanceBlocked
+domain_dns_mutation_allowed=false
+api_production_readiness_state=Blocked
+api_dns_publication_allowed=false
+```
+
+The next safe local command is:
+
+```bash
+npm run ops:next
+```
+
+The command is read-only and reports aggregate state only. It does not read or
+print private recovery locations, browser sessions, Cloudflare dashboard values,
+DNS target values, host addresses, database URLs, mailbox contents, or secret
+values.
+
+Current external blockers:
+
+```text
+root_recovery
+domain_security_hardening
+api_runtime
+```
+
+Do not continue to DNS mutation, API provisioning, or production-runtime claims
+until the relevant manual evidence is closed outside Git and the local gates
+report readiness.
+
 Run these before handoff when the touched area is relevant:
 
 Preferred local checkpoint:
@@ -83,6 +119,7 @@ Optional npm aliases:
 ```bash
 npm run checkpoint
 npm run checkpoint:backend
+npm run ops:next
 npm run validate:api-exposure
 npm run test:api-exposure
 npm run validate:api-production
@@ -93,6 +130,7 @@ npm run validate:security-txt
 npm run test:security-txt
 npm run validate:ops
 npm run test:ops
+npm run test:ops-next
 npm run validate:private-recovery
 npm run test:private-recovery
 npm run scaffold:product
@@ -133,6 +171,8 @@ node --check scripts/scaffold-product.mjs
 node --check scripts/test-scaffold-product.mjs
 node --check scripts/check-ops-gates.mjs
 node --check scripts/test-ops-gates.mjs
+node --check scripts/report-ops-next-action.mjs
+node --check scripts/test-report-ops-next-action.mjs
 node --check scripts/check-api-exposure-gate.mjs
 node --check scripts/test-check-api-exposure-gate.mjs
 node --check scripts/check-api-production-readiness.mjs
@@ -152,6 +192,8 @@ node scripts/test-validate-checkpoint.mjs
 node scripts/test-scaffold-product.mjs
 node scripts/check-ops-gates.mjs
 node scripts/test-ops-gates.mjs
+node scripts/report-ops-next-action.mjs
+node scripts/test-report-ops-next-action.mjs
 node scripts/check-api-exposure-gate.mjs
 node scripts/test-check-api-exposure-gate.mjs
 node scripts/check-api-production-readiness.mjs
@@ -192,6 +234,6 @@ Next:
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
-  Open issues: recovery evidence remains blocked by design until private inventory and live evidence close
-  Next action: keep this file updated when new public surfaces or validation gates are added
+  Self-attested invariants: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed ops next-action reporter, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
+  Open issues: recovery evidence remains blocked by design until private inventory and live evidence close; domain hardening and API runtime evidence remain manual
+  Next action: run npm run ops:next, then complete only the reported manual blocker outside Git
