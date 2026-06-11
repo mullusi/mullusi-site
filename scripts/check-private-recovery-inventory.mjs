@@ -2,7 +2,7 @@
 Purpose: check the ignored Mullusi private recovery inventory without printing private details.
 Governance scope: recovery confirmation flags, provisioning readiness, and private-file safety.
 Dependencies: Node.js standard library and an ignored recovery inventory file.
-Invariants: this script prints only aggregate state and missing flag names; it never prints recovery locations, credentials, codes, or notes.
+Invariants: this script prints or writes only aggregate state and missing flag names; it never prints or writes recovery locations, credentials, codes, or notes.
 */
 
 import fs from "node:fs";

@@ -2,7 +2,7 @@
 Purpose: report the public-safe API production readiness state before api.mullusi.com DNS activation.
 Governance scope: recovery gate, runtime host evidence, managed PostgreSQL evidence, secret-store boundary, TLS, rollback, and runtime witness registry coverage.
 Dependencies: Node.js standard library, ops API readiness documents, recovery witness, and runtime witness registry.
-Invariants: read-only execution, fail-closed readiness, no secret values, host addresses, provider account IDs, database URLs, or private recovery values are read or printed.
+Invariants: fail-closed readiness; optional JSON output writes only aggregate public-safe state; no secret values, host addresses, provider account IDs, database URLs, or private recovery values are read, printed, or written.
 Test contract: run node scripts/test-check-api-production-readiness.mjs.
 */
 
@@ -308,7 +308,7 @@ function usage() {
     "Evidence flags:",
     ...readinessFlags.map(({ flag }) => `  ${flag}`),
     "",
-    "The command is read-only and records readiness state without printing secret values.",
+    "The command records public-safe readiness state without printing or writing secret values.",
   ].join("\n");
 }
 
