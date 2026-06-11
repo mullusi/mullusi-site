@@ -93,10 +93,10 @@
     },
     {
       "id": "sciences",
-      "route": "/",
+      "route": "/sciences/",
       "titleKey": "sciences.title",
       "plainKey": "sciences.plain",
-      "migrationState": "home"
+      "migrationState": "dedicated"
     },
     {
       "id": "repos",

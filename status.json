@@ -17,6 +17,7 @@
     "/search/",
     "/browse/",
     "/doctrine/",
+    "/sciences/",
     "/proof/",
     "/playground/",
     "/contact/",
@@ -56,7 +57,7 @@
     }
   ],
   "content_hashes": {
-    "index.html": "sha256:f787214f8d65727eeac0d8966c2c0ecd2ac371b5bb57fb76e80ab6ba97019ba5",
+    "index.html": "sha256:defd320c0d97577f4cb845ee74d44b07e99df80bab6e6652842d3c694e071405",
     "data/site.json": "sha256:48308060d102ba1106b351f1d0db74706fdaec0a1cf8f31c17b7a5745c32952b",
     "data/generated/products.json": "sha256:e16956ef5d0615659475556263818039cde94b674ffcecf064c2161a66f26d97",
     "data/manual/public-surfaces.json": "sha256:fdd9f22b1ddbc30cbccb3dcbc42f003aed34732d65326480b4ecaa70184c50c4",
