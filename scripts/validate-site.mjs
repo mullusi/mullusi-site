@@ -120,6 +120,7 @@ const requiredFiles = [
   "assets/mullusi-mark.svg",
   "assets/fonts/noto-sans-symbols-2-math.woff2",
   "assets/fonts/OFL.txt",
+  "data/manual/homepage-section-routes.json",
   "data/manual/public-surfaces.json",
   "data/news.json",
   "data/site.json",
@@ -243,6 +244,22 @@ const forbiddenSourceFiles = [
   "data/products.json",
   "data/generated/products-compat.json",
 ];
+
+function publicHtmlFileForRoute(route, label) {
+  if (route === "/") {
+    return "index.html";
+  }
+  if (!/^\/[a-z0-9-]+\/$/i.test(route)) {
+    recordFailure(`homepage_section_route_invalid:${label}:${route}`);
+    return "";
+  }
+  const htmlFile = `${route.slice(1)}index.html`;
+  if (!publicHtmlFiles.includes(htmlFile)) {
+    recordFailure(`homepage_section_route_not_public_html:${label}:${route}`);
+    return "";
+  }
+  return htmlFile;
+}
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
@@ -3606,21 +3623,75 @@ function validateI18n() {
   }
 
   const referencedKeys = new Set();
-  const html = readUtf8("index.html");
-  for (const match of html.matchAll(/\sdata-i18n="([^"]+)"/g)) {
-    referencedKeys.add(match[1]);
-  }
-  for (const match of html.matchAll(/\sdata-i18n-attr="([^"]+)"/g)) {
-    for (const pair of match[1].split(";")) {
-      const key = pair.split(":")[1];
-      if (key && key.trim().length > 0) {
-        referencedKeys.add(key.trim());
+  for (const htmlFile of publicHtmlFiles) {
+    const html = readUtf8(htmlFile);
+    for (const match of html.matchAll(/\sdata-i18n="([^"]+)"/g)) {
+      referencedKeys.add(`${htmlFile}:${match[1]}`);
+    }
+    for (const match of html.matchAll(/\sdata-i18n-attr="([^"]+)"/g)) {
+      for (const pair of match[1].split(";")) {
+        const key = pair.split(":")[1];
+        if (key && key.trim().length > 0) {
+          referencedKeys.add(`${htmlFile}:${key.trim()}`);
+        }
       }
     }
   }
-  for (const key of referencedKeys) {
+  for (const reference of referencedKeys) {
+    const [htmlFile, key] = reference.split(":");
     if (!Object.prototype.hasOwnProperty.call(strings, key)) {
-      recordFailure(`i18n_key_undefined:index.html:${key}`);
+      recordFailure(`i18n_key_undefined:${htmlFile}:${key}`);
+    }
+  }
+}
+
+function validateHomepageSectionRouteManifest() {
+  const dictionary = JSON.parse(readUtf8("data/i18n.json"));
+  const manifest = JSON.parse(readUtf8("data/manual/homepage-section-routes.json"));
+  const sections = manifest?.sections;
+  if (!Array.isArray(sections) || sections.length === 0) {
+    recordFailure("homepage_section_manifest_sections_missing");
+    return;
+  }
+  const seenIds = new Set();
+  for (const [index, section] of sections.entries()) {
+    const label = `homepage.sections.${index}`;
+    const id = requireString(section?.id, `${label}.id`);
+    const route = requireString(section?.route, `${label}.route`);
+    if (id.length === 0 || route.length === 0) {
+      continue;
+    }
+    if (seenIds.has(id)) {
+      recordFailure(`homepage_section_manifest_duplicate_id:${id}`);
+    }
+    seenIds.add(id);
+    const htmlFile = publicHtmlFileForRoute(route, id);
+    if (htmlFile.length === 0) {
+      continue;
+    }
+    const html = readUtf8(htmlFile);
+    if (!html.includes(`id="${id}"`)) {
+      recordFailure(`homepage_section_route_id_missing:${id}:${htmlFile}`);
+    }
+    for (const keyName of ["titleKey", "plainKey"]) {
+      const key = section?.[keyName];
+      if (key === undefined) {
+        continue;
+      }
+      const keyLabel = `${label}.${keyName}`;
+      requireString(key, keyLabel);
+      if (!html.includes(`data-i18n="${key}"`)) {
+        recordFailure(`homepage_section_i18n_key_missing:${id}:${htmlFile}:${key}`);
+      }
+      for (const lang of ["en", "am"]) {
+        if (typeof dictionary?.strings?.[key]?.[lang] !== "string" || dictionary.strings[key][lang].trim().length === 0) {
+          recordFailure(`homepage_section_i18n_translation_missing:${key}:${lang}`);
+        }
+      }
+    }
+    const migrationState = requireString(section?.migrationState, `${label}.migrationState`);
+    if (!["home", "dedicated"].includes(migrationState)) {
+      recordFailure(`homepage_section_migration_state_invalid:${id}:${migrationState}`);
     }
   }
 }
@@ -4031,25 +4102,6 @@ function validateIndexDesignContract() {
     }
   }
 
-  const requiredPlainKeys = [
-    "hero.plain",
-    "govern.plain",
-    "evidence.plain",
-    "architecture.plain",
-    "products.plain",
-    "sciences.plain",
-    "governance.plain",
-  ];
-  for (const key of requiredPlainKeys) {
-    if (!html.includes(`data-i18n="${key}"`)) {
-      recordFailure(`index_plain_terms_missing:${key}`);
-    }
-    for (const lang of ["en", "am"]) {
-      if (typeof dictionary?.strings?.[key]?.[lang] !== "string" || dictionary.strings[key][lang].trim().length === 0) {
-        recordFailure(`plain_terms_i18n_missing:${key}:${lang}`);
-      }
-    }
-  }
   for (const key of ["repo.errorBody", "news.errorBody"]) {
     const localized = dictionary?.strings?.[key] ?? {};
     if (/data\/[A-Za-z0-9./_-]+/.test(localized.en ?? "") || /data\/[A-Za-z0-9./_-]+/.test(localized.am ?? "")) {
@@ -5465,6 +5517,7 @@ function runValidation() {
   validateNewsFeed();
   validateSiteContent();
   validateI18n();
+  validateHomepageSectionRouteManifest();
   validateIndexDesignContract();
   validateSecondaryRouteScriptBoundaries();
   validateProofPageContract();
