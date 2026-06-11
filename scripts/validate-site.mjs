@@ -19,6 +19,7 @@ const requiredFiles = [
   "doctrine/index.html",
   "mullu/index.html",
   "sciences/index.html",
+  "surfaces/index.html",
   "search/index.html",
   "browse/index.html",
   "proof/index.html",
@@ -226,6 +227,7 @@ const publicHtmlFiles = [
   "doctrine/index.html",
   "mullu/index.html",
   "sciences/index.html",
+  "surfaces/index.html",
   "search/index.html",
   "browse/index.html",
   "proof/index.html",
@@ -512,6 +514,7 @@ function validateCloudflarePagesArtifact() {
     "doctrine",
     "mullu",
     "sciences",
+    "surfaces",
     "pilot",
     "playground",
     "proof",
@@ -574,6 +577,7 @@ function validateCloudflarePagesArtifact() {
     "doctrine/index.html",
     "mullu/index.html",
     "sciences/index.html",
+    "surfaces/index.html",
     "search/index.html",
     "browse/index.html",
     "proof/index.html",
@@ -3891,7 +3895,10 @@ function validateIndexDesignContract() {
   if (!/main:focus\s*\{[\s\S]*?outline:\s*none;/.test(css)) {
     recordFailure("main_programmatic_focus_contract_missing");
   }
-  if (!html.includes('data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder;aria-label:repos.searchAria"')) {
+  const surfacesHtml = readUtf8("surfaces/index.html");
+  const hasSearchableRepoRegistry = html.includes('data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder;aria-label:repos.searchAria"');
+  const hasStaticSurfaceRegistry = surfacesHtml.includes('id="repos"') && surfacesHtml.includes('class="repo-card"') && surfacesHtml.includes("Mullusi Website");
+  if (!hasSearchableRepoRegistry && !hasStaticSurfaceRegistry) {
     recordFailure("repo_search_accessible_i18n_attrs_missing");
   }
   if (!publicSurfaceRegistryRenderer.includes('aria-pressed="${category === state.activeCategory ? "true" : "false"}"')) {
@@ -4086,7 +4093,9 @@ function validateIndexDesignContract() {
     }
   }
   const mobileNewsIndex = mobileMenu.indexOf('href="#news"');
-  const mobileReposIndex = mobileMenu.indexOf('href="#repos"');
+  const mobileReposIndex = mobileMenu.includes('href="#repos"')
+    ? mobileMenu.indexOf('href="#repos"')
+    : mobileMenu.indexOf('href="/surfaces/"');
   if (mobileNewsIndex === -1 || mobileReposIndex === -1 || mobileNewsIndex < mobileReposIndex) {
     recordFailure("mobile_news_not_footer_ordered");
   }

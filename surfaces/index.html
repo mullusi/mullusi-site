@@ -1,0 +1,131 @@
+<!doctype html>
+<!--
+Purpose: public Mullusi surface registry route with deployed, private-source, and incubation boundaries.
+Governance scope: homepage section migration, public surface disclosure, private-source boundary, and release-gate continuity.
+Dependencies: /assets/styles.css, Mullusi icons, data/manual/public-surfaces.json content contract, and the homepage section route manifest.
+Invariants: only deployed public surfaces are represented as public; product, SDK, runtime, science, and research source work remains private until separate release evidence closes.
+-->
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google" content="notranslate" />
+  <meta name="theme-color" content="#050609" />
+  <title>Public Surfaces - Mullusi</title>
+  <meta name="description" content="Mullusi public surface registry: deployed website surface, private-source boundary, and release gates for future public surfaces." />
+  <link rel="canonical" href="https://mullusi.com/surfaces/" />
+  <meta property="og:site_name" content="Mullusi" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Public Surfaces - Mullusi" />
+  <meta property="og:description" content="A governed public registry for Mullusi surfaces and release boundaries." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mullusi.com/surfaces/" />
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:image:alt" content="Mullusi" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
+  <meta name="twitter:image:alt" content="Mullusi" />
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <script src="/assets/theme-bootstrap.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=2026.05.platform.29" />
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip.toContent">Skip to content</a>
+
+  <nav class="site-nav is-elevated" aria-label="Primary navigation">
+    <div class="wrap nav-in">
+      <a href="/" class="brand" aria-label="Mullusi home" data-i18n-attr="aria-label:nav.brandAria">
+        <img class="brand-logo nav-logo logo-dark" src="/assets/mullusi-logo.svg" alt="Mullusi" width="190" height="48" decoding="async" />
+        <img class="brand-logo nav-logo logo-light" src="/assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="190" height="48" decoding="async" />
+      </a>
+      <div class="nav-links">
+        <a href="/#start" data-i18n="nav.start">Start</a>
+        <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
+        <a href="/#platform" data-i18n="nav.platform">Platform</a>
+        <a href="/proof/" data-i18n="nav.proof">Proof</a>
+        <a href="/doctrine/" data-i18n="nav.doctrine">Doctrine</a>
+      </div>
+      <div class="nav-cta">
+        <a href="/contact/" class="btn" data-i18n="nav.contact">Contact</a>
+        <a href="https://docs.mullusi.com" class="btn btn-solid" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <section class="band tier-primary" id="repos" aria-labelledby="repos-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="tag" data-i18n="repos.tag">Public Surface Registry</div>
+          <h1 id="repos-title" data-i18n="repos.title">Public surface registry</h1>
+          <p>Searchable runtime surfaces, product repositories, SDK packages, science engines, and research source work stay private unless Mullusi approves a separate public release. This route records what is public now and what remains gated.</p>
+        </div>
+        <div class="hero-foot repo-stats">
+          <div><div class="k">1</div><div class="l">Deployed public surfaces</div></div>
+          <div><div class="k">1</div><div class="l">Public category</div></div>
+          <div><div class="k">0</div><div class="l">Public product surfaces</div></div>
+        </div>
+        <div class="repo-grid">
+          <article class="repo-card">
+            <div class="repo-card-head">
+              <h2>Mullusi Website</h2>
+              <span class="status-pill">deployed</span>
+            </div>
+            <p>Public index page, domain boundary, and website registry for Mullusi. Source remains private unless Mullusi publishes a separate release artifact.</p>
+            <div class="repo-meta">
+              <span>Website</span>
+              <span>private-source</span>
+              <span>public-boundary</span>
+            </div>
+            <a href="https://mullusi.com" target="_blank" rel="noopener noreferrer">Open public surface</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tier-secondary" aria-labelledby="private-incubation-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="tag">Private incubation</div>
+          <h2 id="private-incubation-title">What stays out of the public catalog</h2>
+          <p>Private surfaces become public only after documentation, proof, route, support, and rollback boundaries are explicit.</p>
+        </div>
+        <div class="road">
+          <article class="rd"><div class="n">01</div><h3>Core kernels</h3><p>Foundation kernels stay private until public contracts, examples, tests, and release scope are complete.</p></article>
+          <article class="rd"><div class="n">02</div><h3>Governance runtime</h3><p>Operational routing, approvals, traces, budgets, and dashboard state remain private until contracts are stable.</p></article>
+          <article class="rd"><div class="n">03</div><h3>SDK work</h3><p>Packages wait for install, auth, examples, versioning, and support boundaries.</p></article>
+          <article class="rd"><div class="n">04</div><h3>Research engines</h3><p>Science and traversal work stays private until frozen snapshots or demos state limits clearly.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="surfaces-cta-title">
+      <div class="wrap">
+        <div class="tag center-tag" data-i18n="roadmap.tag">Roadmap</div>
+        <h2 id="surfaces-cta-title" data-i18n="roadmap.title">Release gates</h2>
+        <p data-i18n="roadmap.body">The public site can record future surface expansion, but each new domain stays private until it has a route, demo boundary, docs route, governance status, and product card that can be defended.</p>
+        <div class="cta-actions">
+          <a href="/proof/" class="btn btn-solid" data-i18n="hero.reviewProof">Review proof boundary</a>
+          <a href="/contact/" class="btn" data-i18n="nav.contact">Contact</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="foot-base">
+        <span class="law" data-i18n="footer.law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</span>
+        <span data-i18n="footer.rights">&copy; 2026 Mullusi - All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+  <script defer src="/assets/pages/route-preferences.js"></script>
+</body>
+</html>

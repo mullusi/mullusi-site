@@ -100,9 +100,9 @@
     },
     {
       "id": "repos",
-      "route": "/",
+      "route": "/surfaces/",
       "titleKey": "repos.title",
-      "migrationState": "home"
+      "migrationState": "dedicated"
     },
     {
       "id": "roadmap",
