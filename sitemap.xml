@@ -32,6 +32,12 @@
     <priority>0.72</priority>
   </url>
   <url>
+    <loc>https://mullusi.com/news/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.69</priority>
+  </url>
+  <url>
     <loc>https://mullusi.com/architecture/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>

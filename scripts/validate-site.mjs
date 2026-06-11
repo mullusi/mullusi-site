@@ -20,6 +20,7 @@ const requiredFiles = [
   "architecture/index.html",
   "doctrine/index.html",
   "mullu/index.html",
+  "news/index.html",
   "sciences/index.html",
   "surfaces/index.html",
   "search/index.html",
@@ -230,6 +231,7 @@ const publicHtmlFiles = [
   "architecture/index.html",
   "doctrine/index.html",
   "mullu/index.html",
+  "news/index.html",
   "sciences/index.html",
   "surfaces/index.html",
   "search/index.html",
@@ -519,6 +521,7 @@ function validateCloudflarePagesArtifact() {
     "contact",
     "doctrine",
     "mullu",
+    "news",
     "sciences",
     "surfaces",
     "pilot",
@@ -584,6 +587,7 @@ function validateCloudflarePagesArtifact() {
     "architecture/index.html",
     "doctrine/index.html",
     "mullu/index.html",
+    "news/index.html",
     "sciences/index.html",
     "surfaces/index.html",
     "search/index.html",
@@ -4100,7 +4104,9 @@ function validateIndexDesignContract() {
       }
     }
   }
-  const mobileNewsIndex = mobileMenu.indexOf('href="#news"');
+  const mobileNewsIndex = mobileMenu.includes('href="#news"')
+    ? mobileMenu.indexOf('href="#news"')
+    : mobileMenu.indexOf('href="/news/"');
   const mobileReposIndex = mobileMenu.includes('href="#repos"')
     ? mobileMenu.indexOf('href="#repos"')
     : mobileMenu.indexOf('href="/surfaces/"');
