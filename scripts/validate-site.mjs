@@ -16,6 +16,7 @@ const failures = [];
 
 const requiredFiles = [
   "index.html",
+  "about/index.html",
   "architecture/index.html",
   "doctrine/index.html",
   "mullu/index.html",
@@ -225,6 +226,7 @@ const allowedProductClassifications = new Set([
 
 const publicHtmlFiles = [
   "index.html",
+  "about/index.html",
   "architecture/index.html",
   "doctrine/index.html",
   "mullu/index.html",
@@ -509,6 +511,7 @@ function validateCloudflarePagesArtifact() {
   }
   const allowedTopLevelEntries = new Set([
     ".well-known",
+    "about",
     "architecture",
     "assets",
     "data",
@@ -577,6 +580,7 @@ function validateCloudflarePagesArtifact() {
   }
   const byteMatchedFiles = [
     "index.html",
+    "about/index.html",
     "architecture/index.html",
     "doctrine/index.html",
     "mullu/index.html",
