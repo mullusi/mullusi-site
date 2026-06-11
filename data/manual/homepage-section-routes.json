@@ -112,10 +112,10 @@
     },
     {
       "id": "governance",
-      "route": "/",
+      "route": "/about/",
       "titleKey": "governance.title",
       "plainKey": "governance.plain",
-      "migrationState": "home"
+      "migrationState": "dedicated"
     },
     {
       "id": "news",
