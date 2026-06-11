@@ -6,6 +6,7 @@
 https://www.mullusi.com/* https://mullusi.com/:splat 301
 /about /about/ 301
 /architecture /architecture/ 301
+/news /news/ 301
 /sciences /sciences/ 301
 /surfaces /surfaces/ 301
 /CNAME / 302

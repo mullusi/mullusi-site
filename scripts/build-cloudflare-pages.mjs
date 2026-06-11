@@ -21,6 +21,7 @@ const publicEntries = [
   "architecture",
   "doctrine",
   "mullu",
+  "news",
   "sciences",
   "surfaces",
   "search",

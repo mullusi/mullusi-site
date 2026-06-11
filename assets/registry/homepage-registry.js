@@ -7,10 +7,10 @@ Invariants: fetch failures are explicit, product truth remains manifest-generate
 
 (() => {
   const registryPaths = Object.freeze({
-    manualPublicSurfaces: "data/manual/public-surfaces.json",
-    homepageProductRegistry: "data/generated/homepage-product-registry.json",
-    siteContent: "data/site.json",
-    news: "data/news.json",
+    manualPublicSurfaces: "/data/manual/public-surfaces.json",
+    homepageProductRegistry: "/data/generated/homepage-product-registry.json",
+    siteContent: "/data/site.json",
+    news: "/data/news.json",
   });
 
   async function loadJsonResource(resourcePath, label) {

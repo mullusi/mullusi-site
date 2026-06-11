@@ -1,0 +1,118 @@
+<!doctype html>
+<!--
+Purpose: public Mullusi news route for frontier signal items, product activity, and release-note visibility.
+Governance scope: homepage section migration, public feed rendering, activity link boundaries, and explicit feed load errors.
+Dependencies: /assets/styles.css, /assets/runtime/page-runtime.js, /assets/runtime/preference-runtime.js, /assets/runtime/substrate-runtime.js, /assets/runtime/homepage-lifecycle-plan.js, /assets/runtime/homepage-controller.js, /assets/registry/homepage-registry.js, /assets/render/site-content.js, /assets/render/public-surface-registry.js, /assets/render/product-registry.js, /assets/render/news-activity.js, /assets/runtime/homepage-context.js, /assets/app.js, /data/news.json, and /data/site.json.
+Invariants: feed text is escaped, activity links remain Mullusi-bounded, and missing feed data renders an explicit error state.
+-->
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google" content="notranslate" />
+  <meta name="theme-color" content="#050609" />
+  <title>News - Mullusi</title>
+  <meta name="description" content="Mullusi frontier signal route: daily ranked technology and research links, Mullu activity, and platform release notes." />
+  <link rel="canonical" href="https://mullusi.com/news/" />
+  <meta property="og:site_name" content="Mullusi" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="News - Mullusi" />
+  <meta property="og:description" content="Daily frontier signal and Mullusi product activity in one public route." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mullusi.com/news/" />
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:image:alt" content="Mullusi" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
+  <meta name="twitter:image:alt" content="Mullusi" />
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <script src="/assets/theme-bootstrap.js"></script>
+  <script src="/assets/lang-bootstrap.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=2026.05.platform.29" />
+  <script defer src="/assets/runtime/page-runtime.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/runtime/preference-runtime.js?v=2026.06.news.1"></script>
+  <script defer src="/assets/runtime/substrate-runtime.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/runtime/homepage-lifecycle-plan.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/runtime/homepage-controller.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/registry/homepage-registry.js?v=2026.06.news.1"></script>
+  <script defer src="/assets/render/site-content.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/render/public-surface-registry.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/render/product-registry.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/render/news-activity.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/runtime/homepage-context.js?v=2026.05.platform.29"></script>
+  <script defer src="/assets/app.js?v=2026.05.platform.29"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip.toContent">Skip to content</a>
+
+  <nav class="site-nav is-elevated" aria-label="Primary navigation">
+    <div class="wrap nav-in">
+      <a href="/" class="brand" aria-label="Mullusi home" data-i18n-attr="aria-label:nav.brandAria">
+        <img class="brand-logo nav-logo logo-dark" src="/assets/mullusi-logo.svg" alt="Mullusi" width="190" height="48" decoding="async" />
+        <img class="brand-logo nav-logo logo-light" src="/assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="190" height="48" decoding="async" />
+      </a>
+      <div class="nav-links">
+        <a href="/#start" data-i18n="nav.start">Start</a>
+        <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
+        <a href="/proof/" data-i18n="nav.proof">Proof</a>
+        <a href="/about/" data-i18n="governance.profileTitle">Architect note</a>
+        <a href="/surfaces/" data-i18n="nav.repos">Surfaces</a>
+      </div>
+      <div class="nav-cta">
+        <a href="/contact/" class="btn" data-i18n="nav.contact">Contact</a>
+        <a href="https://docs.mullusi.com" class="btn btn-solid" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <section class="band tier-primary" id="news" aria-labelledby="news-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="tag" data-i18n="news.tag">Frontier Signal</div>
+          <h1 id="news-title" data-i18n="news.title">Frontier signal</h1>
+          <p data-i18n="news.body">A daily ranked digest of notable technology, science breakthroughs, and research releases, followed by Mullu product activity and platform release notes.</p>
+        </div>
+        <div class="news-feed reveal" data-news>
+          <noscript>
+            <p>Enable JavaScript to view the daily technology and research digest. It is generated from <code>/data/news.json</code>.</p>
+          </noscript>
+        </div>
+        <div class="news-feed activity-feed reveal" data-mullu-activity>
+          <noscript>
+            <p>Enable JavaScript to view Mullu related news and activity. It is generated from <code>/data/site.json</code>.</p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="news-cta-title">
+      <div class="wrap">
+        <div class="tag center-tag" data-i18n="evidence.tag">Evidence Plane</div>
+        <h2 id="news-cta-title" data-i18n="evidence.title">Evidence plane</h2>
+        <p data-i18n="evidence.body">Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether runtime witness evidence is closed.</p>
+        <div class="cta-actions">
+          <a href="/proof/" class="btn btn-solid" data-i18n="hero.reviewProof">Review proof boundary</a>
+          <a href="/status/" class="btn" data-i18n="footer.learn">Status</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="foot-base">
+        <span class="law" data-i18n="footer.law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</span>
+        <span data-i18n="footer.rights">&copy; 2026 Mullusi - All rights reserved.</span>
+      </div>
+      <p class="foot-meter" data-visit-meter aria-label="This visit count is stored only in your browser and is not site-wide analytics." data-i18n-attr="aria-label:footer.meterAria"></p>
+    </div>
+  </footer>
+</body>
+</html>

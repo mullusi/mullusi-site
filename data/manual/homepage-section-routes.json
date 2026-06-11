@@ -119,9 +119,9 @@
     },
     {
       "id": "news",
-      "route": "/",
+      "route": "/news/",
       "titleKey": "news.title",
-      "migrationState": "home"
+      "migrationState": "dedicated"
     }
   ]
 }

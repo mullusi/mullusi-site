@@ -211,7 +211,7 @@ Invariants: preference values are normalized, storage failures are surfaced, lan
     }
   }
 
-  async function loadI18n(path = "data/i18n.json") {
+  async function loadI18n(path = "/data/i18n.json") {
     const response = await fetch(path, { cache: "no-store" });
     if (!response.ok) throw new Error(`i18n load failed: ${response.status}`);
     return response.json();
