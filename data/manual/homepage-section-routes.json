@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "artifact": "data/manual/homepage-section-routes.json",
+    "name": "Mullusi Homepage Section Route Manifest",
+    "purpose": "Manual ownership map for governed homepage sections before route migration.",
+    "governance_scope": "section placement, plain-language claim ownership, i18n coverage, and reversible homepage IA migration",
+    "status": "Step1NoVisualMove",
+    "updated": "2026-06-11"
+  },
+  "sections": [
+    {
+      "id": "start",
+      "route": "/",
+      "titleKey": "start.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "verify",
+      "route": "/",
+      "titleKey": "verify.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "platform",
+      "route": "/",
+      "titleKey": "platform.title",
+      "plainKey": "platform.plain",
+      "migrationState": "home"
+    },
+    {
+      "id": "metrics",
+      "route": "/",
+      "titleKey": "metrics.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "oldway",
+      "route": "/",
+      "titleKey": "oldway.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "govern-cloud",
+      "route": "/",
+      "titleKey": "govern.title",
+      "plainKey": "govern.plain",
+      "migrationState": "home"
+    },
+    {
+      "id": "use-cases",
+      "route": "/",
+      "titleKey": "usecases.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "production-boundary",
+      "route": "/",
+      "titleKey": "claim.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "evidence",
+      "route": "/",
+      "titleKey": "evidence.title",
+      "plainKey": "evidence.plain",
+      "migrationState": "home"
+    },
+    {
+      "id": "architecture",
+      "route": "/",
+      "titleKey": "architecture.title",
+      "plainKey": "architecture.plain",
+      "migrationState": "home"
+    },
+    {
+      "id": "interfaces",
+      "route": "/",
+      "titleKey": "interfaces.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "services",
+      "route": "/",
+      "titleKey": "services.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "products",
+      "route": "/",
+      "titleKey": "products.title",
+      "plainKey": "products.plain",
+      "migrationState": "home"
+    },
+    {
+      "id": "sciences",
+      "route": "/",
+      "titleKey": "sciences.title",
+      "plainKey": "sciences.plain",
+      "migrationState": "home"
+    },
+    {
+      "id": "repos",
+      "route": "/",
+      "titleKey": "repos.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "roadmap",
+      "route": "/",
+      "titleKey": "roadmap.title",
+      "migrationState": "home"
+    },
+    {
+      "id": "governance",
+      "route": "/",
+      "titleKey": "governance.title",
+      "plainKey": "governance.plain",
+      "migrationState": "home"
+    },
+    {
+      "id": "news",
+      "route": "/",
+      "titleKey": "news.title",
+      "migrationState": "home"
+    }
+  ]
+}
