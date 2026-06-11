@@ -1556,6 +1556,62 @@ html.menu-open body {
     var(--bg);
 }
 
+.start-peek {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 780px;
+  margin: -202px 0 46px;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 72%, transparent);
+  background: var(--line);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.26);
+}
+
+.start-peek a {
+  display: grid;
+  align-content: center;
+  min-height: 66px;
+  min-width: 0;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 94%, transparent), color-mix(in srgb, var(--panel-soft) 96%, transparent)),
+    var(--bg-panel);
+  padding: 10px 14px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.start-peek a:hover,
+.start-peek a:focus-visible {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--hover-panel) 92%, transparent), color-mix(in srgb, var(--panel-soft) 96%, transparent)),
+    var(--hover-panel);
+}
+
+.start-peek span {
+  overflow: hidden;
+  color: var(--accent-warm);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.start-peek strong {
+  overflow: hidden;
+  margin-top: 5px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .start-grid {
   position: relative;
   display: grid;
@@ -5459,6 +5515,26 @@ html.menu-open body {
   .start-here {
     padding-top: 42px;
     padding-bottom: 50px;
+  }
+
+  .start-peek {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+    margin: -132px 0 28px;
+  }
+
+  .start-peek a {
+    min-height: 54px;
+    padding: 9px 11px;
+  }
+
+  .start-peek span {
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+  }
+
+  .start-peek strong {
+    font-size: 16px;
   }
 
   .sec-head {
