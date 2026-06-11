@@ -5926,7 +5926,7 @@ html.menu-open body {
 .claim-lens-core {
   position: relative;
   overflow: hidden;
-  min-height: 300px;
+  min-height: 328px;
   animation: claim-core-enter 1400ms ease-out both;
 }
 
@@ -5952,13 +5952,142 @@ html.menu-open body {
   animation: claim-scan-once 3200ms ease-out 700ms both;
 }
 
+.mullu-identity-signal {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 3;
+  display: grid;
+  width: min(58%, 320px);
+  min-width: 240px;
+  padding: 16px 18px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--bg) 64%, transparent), color-mix(in srgb, var(--panel-glass) 86%, transparent)),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 12%, transparent) 0 1px, transparent 1px 13px);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 10%, transparent);
+  backdrop-filter: blur(14px);
+  isolation: isolate;
+}
+
+.mullu-identity-signal::before,
+.mullu-identity-signal::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.mullu-identity-signal::before {
+  inset: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent-warm) 28%, transparent);
+  opacity: 0.72;
+}
+
+.mullu-identity-signal::after {
+  top: 0;
+  bottom: 0;
+  left: 18%;
+  width: 22%;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 18%, transparent), transparent);
+  transform: skewX(-14deg) translateX(-160%);
+  animation: mullu-identity-sweep 5200ms ease-in-out 900ms infinite;
+}
+
+.mullu-identity-kicker,
+.mullu-identity-rule {
+  position: relative;
+  z-index: 1;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.mullu-identity-word {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin: 8px 0 6px;
+  color: var(--accent);
+  font-family: var(--serif);
+  font-size: 86px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.86;
+  text-shadow:
+    0 0 22px color-mix(in srgb, var(--accent) 32%, transparent),
+    0 14px 34px rgba(0, 0, 0, 0.34);
+}
+
+.mullu-identity-word::before,
+.mullu-identity-word::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mullu-identity-word::before {
+  color: color-mix(in srgb, var(--accent-warm) 48%, transparent);
+  transform: translate(2px, -1px);
+  clip-path: inset(0 0 62% 0);
+  opacity: 0.72;
+}
+
+.mullu-identity-word::after {
+  color: color-mix(in srgb, var(--ink) 22%, transparent);
+  transform: translate(-2px, 2px);
+  clip-path: inset(58% 0 0 0);
+  opacity: 0.58;
+}
+
+.mullu-identity-rule {
+  color: var(--accent-warm);
+}
+
+.mullu-identity-bars {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 1.1fr 0.55fr;
+  gap: 6px;
+  margin-top: 13px;
+}
+
+.mullu-identity-bars i {
+  display: block;
+  height: 3px;
+  background: color-mix(in srgb, var(--accent) 56%, transparent);
+  transform-origin: left;
+  animation: mullu-identity-bars 2600ms steps(4, end) infinite;
+}
+
+.mullu-identity-bars i:nth-child(2) {
+  background: color-mix(in srgb, var(--accent-warm) 62%, transparent);
+  animation-delay: 180ms;
+}
+
+.mullu-identity-bars i:nth-child(3) {
+  animation-delay: 360ms;
+}
+
+.mullu-identity-bars i:nth-child(4) {
+  background: color-mix(in srgb, var(--ink) 34%, transparent);
+  animation-delay: 540ms;
+}
+
 .claim-lens-graph {
   position: relative;
   z-index: 1;
   width: 100%;
-  height: 300px;
+  height: 328px;
   min-height: 0;
   color: var(--accent);
+  transform: translateX(32px);
 }
 
 .claim-lens-orbit,
@@ -6234,6 +6363,37 @@ html.menu-open body {
   }
 }
 
+@keyframes mullu-identity-sweep {
+  0%,
+  42% {
+    opacity: 0;
+    transform: skewX(-14deg) translateX(-160%);
+  }
+
+  52% {
+    opacity: 0.74;
+  }
+
+  72%,
+  100% {
+    opacity: 0;
+    transform: skewX(-14deg) translateX(390%);
+  }
+}
+
+@keyframes mullu-identity-bars {
+  0%,
+  100% {
+    transform: scaleX(0.42);
+    opacity: 0.42;
+  }
+
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 980px) {
   .hero .claim-lens {
     grid-template-columns: 1fr;
@@ -6277,11 +6437,13 @@ html.menu-open body {
   }
 
   .claim-lens-core {
-    min-height: 104px;
+    min-height: 168px;
   }
 
   .claim-lens-graph {
-    height: 104px;
+    height: 168px;
+    transform: translateX(70px) scale(0.92);
+    transform-origin: center;
   }
 
   .claim-lens-system {
@@ -6290,6 +6452,30 @@ html.menu-open body {
 
   .claim-lens-formula {
     font-size: 12px;
+  }
+
+  .mullu-identity-signal {
+    top: 10px;
+    left: 10px;
+    width: min(66%, 250px);
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .mullu-identity-kicker,
+  .mullu-identity-rule {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .mullu-identity-word {
+    margin: 6px 0 4px;
+    font-size: 52px;
+  }
+
+  .mullu-identity-bars {
+    gap: 4px;
+    margin-top: 9px;
   }
 
   .claim-rewrite {
@@ -6369,7 +6555,9 @@ html.menu-open body {
 
 @media (prefers-reduced-motion: reduce) {
   .claim-lens-core,
-  .claim-lens-core::after {
+  .claim-lens-core::after,
+  .mullu-identity-signal::after,
+  .mullu-identity-bars i {
     animation: none !important;
   }
 
