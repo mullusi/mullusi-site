@@ -138,7 +138,7 @@ Invariants: no private repository claims, no silent content failure, all dynamic
     <a href="#platform" data-i18n="nav.platform">Platform</a>
     <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
     <a href="/sciences/" data-i18n="nav.sciences">Engines</a>
-    <a href="#repos" data-i18n="nav.repos">Surfaces</a>
+    <a href="/surfaces/" data-i18n="nav.repos">Surfaces</a>
     <div class="mobile-menu-label" data-i18n="nav.groupMore">More</div>
     <a href="#news" data-i18n="nav.news">News</a>
     <a href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
@@ -668,44 +668,10 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="tag" data-i18n="repos.tag">Public Surface Registry</div>
           <h2 id="repos-title" data-i18n="repos.title">Public surface registry</h2>
           <p>Search the deployed public surfaces. Product, runtime, SDK, science, and research source work stay outside this catalog unless Mullusi approves a separate public release.</p>
-        </div>
-
-        <div class="repo-toolbar reveal">
-          <label class="search-box">
-            <span>Search</span>
-            <input type="search" placeholder="website, index, domain, public..." aria-label="Search public surfaces" data-repo-search data-i18n-attr="placeholder:repos.searchPlaceholder;aria-label:repos.searchAria" />
-          </label>
-          <div class="filters" role="group" aria-label="Public surface category filters" data-repo-filters></div>
-        </div>
-
-        <div class="hero-foot repo-stats reveal" data-repo-stats>
-          <div><div class="k">1</div><div class="l">Deployed public surfaces</div></div>
-          <div><div class="k">1</div><div class="l">Categories</div></div>
-          <div><div class="k">0</div><div class="l">Public product surfaces</div></div>
-        </div>
-
-        <div class="repo-grid reveal" data-repo-grid>
-          <noscript>
-            <p>Enable JavaScript to view the searchable deployment registry. Current no-JavaScript count: 1 deployed public surface from <code>data/generated/homepage-product-registry.json</code>.</p>
-          </noscript>
-        </div>
-
-        <div class="repo-handoff reveal" aria-label="Public surface to roadmap continuity" data-repository-handoff>
-          <div>
-            <span class="handoff-kicker">Lineage handoff</span>
-            <p><strong>Registry state feeds release state.</strong> A private incubation project becomes a public surface only when its proof surface, docs route, and demo boundary are ready.</p>
+          <div class="actions">
+            <a class="btn btn-solid" href="/surfaces/" data-i18n="nav.repos">Surfaces</a>
+            <a class="btn" href="/proof/" data-i18n="hero.reviewProof">Review proof boundary</a>
           </div>
-          <div class="handoff-chain" aria-hidden="true">
-            <span>Surface</span>
-            <span>Proof</span>
-            <span>Route</span>
-            <span>Release</span>
-          </div>
-        </div>
-        <div class="diagram reveal" data-release-machine>
-          <noscript>
-            <p>Surface &rarr; Proof &rarr; Route &rarr; Release &rarr; AwaitingEvidence.</p>
-          </noscript>
         </div>
       </div>
     </section>

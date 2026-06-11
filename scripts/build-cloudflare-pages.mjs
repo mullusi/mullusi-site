@@ -20,6 +20,7 @@ const publicEntries = [
   "doctrine",
   "mullu",
   "sciences",
+  "surfaces",
   "search",
   "browse",
   "proof",
