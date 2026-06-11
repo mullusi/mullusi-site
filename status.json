@@ -17,6 +17,7 @@
     "/search/",
     "/browse/",
     "/doctrine/",
+    "/architecture/",
     "/sciences/",
     "/surfaces/",
     "/proof/",
@@ -58,7 +59,7 @@
     }
   ],
   "content_hashes": {
-    "index.html": "sha256:c4a13a1de50e1bf9685e5c73c39db1a59df9c215617c0370e070797235f3deb2",
+    "index.html": "sha256:fcedaba73603386211e3fb57eebb1efcb6124be8fdaf49fb993123408949d8e5",
     "data/site.json": "sha256:48308060d102ba1106b351f1d0db74706fdaec0a1cf8f31c17b7a5745c32952b",
     "data/generated/products.json": "sha256:e16956ef5d0615659475556263818039cde94b674ffcecf064c2161a66f26d97",
     "data/manual/public-surfaces.json": "sha256:fdd9f22b1ddbc30cbccb3dcbc42f003aed34732d65326480b4ecaa70184c50c4",

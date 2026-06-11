@@ -1,0 +1,120 @@
+<!doctype html>
+<!--
+Purpose: public Mullusi architecture route for governed public-spine structure and request-flow boundaries.
+Governance scope: homepage section migration, architecture claim ownership, public route boundaries, and private-incubation disclosure limits.
+Dependencies: /assets/styles.css, Mullusi icons, data/i18n.json architecture keys, and the homepage section route manifest.
+Invariants: architecture claims describe public routing and governance structure only; no private runtime, repository, kernel, or deployment internals are exposed.
+-->
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google" content="notranslate" />
+  <meta name="theme-color" content="#050609" />
+  <title>Architecture - Mullusi</title>
+  <meta name="description" content="Mullusi public architecture route: governed public spine, route boundaries, proof surfaces, and release-gated expansion." />
+  <link rel="canonical" href="https://mullusi.com/architecture/" />
+  <meta property="og:site_name" content="Mullusi" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Architecture - Mullusi" />
+  <meta property="og:description" content="A governed public-spine map for Mullusi routes, claims, proof surfaces, and release-gated expansion." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mullusi.com/architecture/" />
+  <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:image:alt" content="Mullusi" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
+  <meta name="twitter:image:alt" content="Mullusi" />
+  <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/mullusi-icon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <script src="/assets/theme-bootstrap.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=2026.05.platform.29" />
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip.toContent">Skip to content</a>
+
+  <nav class="site-nav is-elevated" aria-label="Primary navigation">
+    <div class="wrap nav-in">
+      <a href="/" class="brand" aria-label="Mullusi home" data-i18n-attr="aria-label:nav.brandAria">
+        <img class="brand-logo nav-logo logo-dark" src="/assets/mullusi-logo.svg" alt="Mullusi" width="190" height="48" decoding="async" />
+        <img class="brand-logo nav-logo logo-light" src="/assets/mullusi-logo-light.svg" alt="" aria-hidden="true" width="190" height="48" decoding="async" />
+      </a>
+      <div class="nav-links">
+        <a href="/#start" data-i18n="nav.start">Start</a>
+        <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
+        <a href="/#platform" data-i18n="nav.platform">Platform</a>
+        <a href="/proof/" data-i18n="nav.proof">Proof</a>
+        <a href="/surfaces/" data-i18n="nav.repos">Surfaces</a>
+      </div>
+      <div class="nav-cta">
+        <a href="/contact/" class="btn" data-i18n="nav.contact">Contact</a>
+        <a href="https://docs.mullusi.com" class="btn btn-solid" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <section class="band tier-primary" id="architecture" aria-labelledby="architecture-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="tag" data-i18n="architecture.tag">Architecture</div>
+          <h1 id="architecture-title" data-i18n="architecture.title">Governed public spine</h1>
+          <p data-i18n="architecture.body">The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.</p>
+          <p class="plain" data-i18n="architecture.plain">In plain terms: every public claim points to a real surface, a planned slot, or nothing - never a guess.</p>
+        </div>
+        <div class="pipe">
+          <article class="step"><div class="num">01</div><h2 data-i18n="architecture.step1.title">Input</h2><p data-i18n="architecture.step1.body">Observe task, paper, engine, or product intent.</p></article>
+          <article class="step"><div class="num">02</div><h2 data-i18n="architecture.step2.title">Activate Symbols</h2><p data-i18n="architecture.step2.body">Map the task into the system's symbol, rule, and causal-chain terms.</p></article>
+          <article class="step"><div class="num">03</div><h2 data-i18n="architecture.step3.title">Propagate Constraints</h2><p data-i18n="architecture.step3.body">Apply governance rules: budget, policy, causality, proof, and lineage.</p></article>
+          <article class="step"><div class="num">04</div><h2 data-i18n="architecture.step4.title">Detect Conflicts</h2><p data-i18n="architecture.step4.body">Expose unresolved claims, missing evidence, unsafe transitions, and naming risk.</p></article>
+          <article class="step"><div class="num">05</div><h2 data-i18n="architecture.step5.title">Settle Judgment</h2><p data-i18n="architecture.step5.body">Publish only stable meaning, action, deployed surface, demo, or roadmap state.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tier-secondary" aria-labelledby="architecture-boundary-title">
+      <div class="wrap">
+        <div class="split">
+          <div>
+            <div class="tag">Boundary map</div>
+            <h2 id="architecture-boundary-title">Public routes expose claims, not private internals.</h2>
+            <p>Mullusi is the umbrella. Mullu, Proof, Playground, Sciences, and Surfaces are public routes. Product engines, runtime internals, repositories, dashboards, and operational data stay private until their release gates close.</p>
+          </div>
+          <ul class="proof-list" aria-label="Architecture release boundaries">
+            <li>Public pages describe route boundaries, evidence state, and release posture.</li>
+            <li>Private incubation work is named only as a boundary, not as an accessible surface.</li>
+            <li>Rollback path: point the manifest back to the homepage and remove this route from sitemap/status/build allowlists.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="architecture-cta-title">
+      <div class="wrap">
+        <div class="tag center-tag" data-i18n="evidence.tag">Evidence Plane</div>
+        <h2 id="architecture-cta-title" data-i18n="evidence.title">Evidence plane</h2>
+        <p data-i18n="evidence.body">Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether runtime witness evidence is closed.</p>
+        <div class="cta-actions">
+          <a href="/proof/" class="btn btn-solid" data-i18n="hero.reviewProof">Review proof boundary</a>
+          <a href="/surfaces/" class="btn" data-i18n="nav.repos">Surfaces</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="foot-base">
+        <span class="law" data-i18n="footer.law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</span>
+        <span data-i18n="footer.rights">&copy; 2026 Mullusi - All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+  <script defer src="/assets/pages/route-preferences.js"></script>
+</body>
+</html>
