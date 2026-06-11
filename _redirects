@@ -4,4 +4,5 @@
 # Invariants: redirects must not require secrets, backend availability, or mutable runtime state.
 
 https://www.mullusi.com/* https://mullusi.com/:splat 301
+/sciences /sciences/ 301
 /CNAME / 302

@@ -19,6 +19,7 @@ const publicEntries = [
   "index.html",
   "doctrine",
   "mullu",
+  "sciences",
   "search",
   "browse",
   "proof",
