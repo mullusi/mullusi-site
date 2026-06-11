@@ -5252,6 +5252,10 @@ function validateOperatingGates() {
       terms: ["Recovery Completion Witness", "recovery_witness_state=", "api_provisioning_allowed=", "Public-Safe Witness Table", "Promotion Rule", "API Provisioning Block", "STATUS:"],
     },
     {
+      file: "ops/solo-developer-assistant-handoff.md",
+      terms: ["Solo Developer Assistant Handoff", "Current Operator State", "npm run ops:next", "recovery_witness_state=AwaitingEvidence", "domain_hardening_preflight=GovernanceBlocked", "api_production_readiness_state=Blocked", "domain_dns_mutation_allowed=false", "root_recovery", "domain_security_hardening", "api_runtime", "test:ops-next", "node scripts/report-ops-next-action.mjs", "STATUS:"],
+    },
+    {
       file: "ops/runtime-witness/README.md",
       terms: ["Runtime Witness Registry", "fail-closed", "service health evidence", "control-plane", "runtimeWitnessClosed", "STATUS:"],
     },
