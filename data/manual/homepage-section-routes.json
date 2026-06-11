@@ -2,9 +2,9 @@
   "meta": {
     "artifact": "data/manual/homepage-section-routes.json",
     "name": "Mullusi Homepage Section Route Manifest",
-    "purpose": "Manual ownership map for governed homepage sections before route migration.",
+    "purpose": "Manual ownership map for governed homepage sections after route migration.",
     "governance_scope": "section placement, plain-language claim ownership, i18n coverage, and reversible homepage IA migration",
-    "status": "Step1NoVisualMove",
+    "status": "RouteMigrationClosed",
     "updated": "2026-06-11"
   },
   "sections": [
