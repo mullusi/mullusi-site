@@ -67,10 +67,10 @@
     },
     {
       "id": "architecture",
-      "route": "/",
+      "route": "/architecture/",
       "titleKey": "architecture.title",
       "plainKey": "architecture.plain",
-      "migrationState": "home"
+      "migrationState": "dedicated"
     },
     {
       "id": "interfaces",
