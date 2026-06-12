@@ -55,6 +55,8 @@ function frontendSyntaxSteps() {
     ["playground route boot syntax", "assets/pages/playground.js"],
     ["proof renderer syntax", "assets/pages/proof-renderer.js"],
     ["proof route boot syntax", "assets/pages/proof.js"],
+    ["Mullu Eye Helper syntax", "assets/helper/mullu-eye-helper-v3.bundle.js"],
+    ["Mullu Eye Helper install syntax", "assets/helper/mullu-eye-helper-v3.install.js"],
   ].map(([label, filePath]) => nodeStep(label, ["--check", filePath]));
 }
 
@@ -78,6 +80,7 @@ export function checkpointSteps(options = {}) {
     nodeStep("local preview server tests", ["scripts/test-serve-local-preview.mjs"]),
     nodeStep("architecture boundary tests", ["scripts/test-validate-architecture-boundaries.mjs"]),
     nodeStep("checkpoint runner tests", ["scripts/test-validate-checkpoint.mjs"]),
+    nodeStep("Mullu Eye Helper contract tests", ["scripts/test-mullu-eye-helper-contract.mjs"]),
     nodeStep("ops gate", ["scripts/check-ops-gates.mjs"]),
     nodeStep("ops gate tests", ["scripts/test-ops-gates.mjs"]),
     nodeStep("ops next-action reporter", ["scripts/report-ops-next-action.mjs"]),

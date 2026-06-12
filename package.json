@@ -22,6 +22,7 @@
     "test:architecture": "node scripts/test-validate-architecture-boundaries.mjs",
     "test:checkpoint": "node scripts/test-validate-checkpoint.mjs",
     "test:domain-hardening": "node scripts/test-check-domain-hardening-preflight.mjs",
+    "test:helper": "node scripts/test-mullu-eye-helper-contract.mjs",
     "test:ops": "node scripts/test-ops-gates.mjs",
     "test:ops-next": "node scripts/test-report-ops-next-action.mjs",
     "test:preview": "node scripts/test-serve-local-preview.mjs",
