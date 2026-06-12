@@ -55,6 +55,7 @@ const requiredFiles = [
   "ops/website-origin-witness.md",
   "ops/public-visibility-witness.md",
   "ops/live-deployment-integrity-witness.md",
+  "ops/release-readiness-summary.md",
   "ops/live-safety-monitor.md",
   "ops/security-header-witness.md",
   "ops/domain-security-witness.md",
@@ -168,6 +169,7 @@ const requiredFiles = [
   "scripts/test-validate-architecture-boundaries.mjs",
   "scripts/validate-checkpoint.mjs",
   "scripts/test-validate-checkpoint.mjs",
+  "scripts/test-mullu-eye-helper-contract.mjs",
   "scripts/validate-manifests.mjs",
   "scripts/validate-runtime-witnesses.mjs",
   "scripts/test-build-cloudflare-pages.mjs",
@@ -5222,6 +5224,10 @@ function validateOperatingGates() {
     {
       file: "ops/live-deployment-integrity-witness.md",
       terms: ["Live Deployment Integrity Witness", "live_deployment_integrity_state=SolvedVerified", "live_status_manifest=Pass", "live_content_hashes=Pass", "local_status_manifest_match=Pass", "route_sentinels=Pass", "raw_response_bodies=not_recorded", "runtime_api_readiness=AwaitingEvidence", "STATUS:"],
+    },
+    {
+      file: "ops/release-readiness-summary.md",
+      terms: ["Release Readiness Summary", "website_static_deployment_integrity=SolvedVerified", "api_exposure_state=GovernanceBlocked", "api_dns_publication_allowed=false", "api_production_readiness_state=Blocked", "product_runtime_release_witness=AwaitingEvidence", "recovery_witness_state=AwaitingEvidence", "domain_hardening_preflight=GovernanceBlocked", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
     },
     {
       file: "ops/live-safety-monitor.md",
