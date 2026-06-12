@@ -31,10 +31,10 @@ mta_sts_enforce_allowed=false
 tls_rpt_publication_allowed=false
 raw_secret_values=not_recorded
 last_promoted=AwaitingEvidence
-last_reviewed=2026-06-06
+last_reviewed=2026-06-12
 ```
 
-Observed on 2026-06-06:
+Observed on 2026-06-12:
 
 ```text
 command=node scripts/check-domain-hardening-preflight.mjs

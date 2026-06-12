@@ -10,6 +10,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { promotedWitnessContent } from "./promote-recovery-witness.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(scriptPath);
@@ -58,6 +59,12 @@ function assertIncludes(value, expected, label) {
   }
 }
 
+function assertNotIncludes(value, expected, label) {
+  if (value.includes(expected)) {
+    failures.push(`${label}:unexpected=${expected}`);
+  }
+}
+
 function writePrivateInventoryFixture(fileName, value) {
   const filePath = path.join(tempDir, fileName);
   fs.writeFileSync(
@@ -91,6 +98,21 @@ function testDryRunDoesNotModifyWitness() {
   assertEqual(after, before, "dry_run_no_write");
 }
 
+function testPromotionTransformIsPublicSafeAndDeterministic() {
+  const original = fs.readFileSync(witnessPath, "utf8");
+  const promoted = promotedWitnessContent(original, "2026-06-12");
+
+  assertIncludes(promoted, "recovery_witness_state=ReadyForProvisioning", "transform_ready_state");
+  assertIncludes(promoted, "api_provisioning_allowed=true", "transform_api_allowed");
+  assertIncludes(promoted, "last_reviewed=2026-06-12", "transform_review_date");
+  assertIncludes(promoted, "| Private inventory | Non-secret locations recorded outside Git | Confirmed |", "transform_confirmed_private_inventory");
+  assertIncludes(promoted, "provision_private_runtime_host", "transform_next_host");
+  assertIncludes(promoted, "keep_api_dns_absent_until_pre_dns_evidence_passes", "transform_dns_block");
+  assertIncludes(promoted, "Never write these into this file:", "transform_forbidden_section_kept");
+  assertNotIncludes(promoted, "recovery_witness_state=AwaitingEvidence", "transform_no_awaiting_state");
+  assertNotIncludes(promoted, "api_provisioning_allowed=false", "transform_no_api_block");
+}
+
 function testWriteRequiresReadyPrivateInventory() {
   const blockedInventory = writePrivateInventoryFixture("blocked.md", "false");
   const before = fs.readFileSync(witnessPath, "utf8");
@@ -119,6 +141,7 @@ function testInvalidDateFails() {
 function runTests() {
   testMissingConfirmationsFail();
   testDryRunDoesNotModifyWitness();
+  testPromotionTransformIsPublicSafeAndDeterministic();
   testWriteRequiresReadyPrivateInventory();
   testUnsupportedFlagFails();
   testInvalidDateFails();

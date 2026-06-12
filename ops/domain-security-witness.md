@@ -7,58 +7,53 @@ Invariants: no Cloudflare account IDs, DNS target dashboard values, DKIM private
 
 # Domain Security Witness
 
-Observed on 2026-06-06:
+Observed on 2026-06-12:
 
 ```text
-command=node scripts/check-domain-security.mjs --allow-hardening-gaps
-verdict=AwaitingEvidence
-proof_state=Unknown
-domain_security_state=AwaitingEvidence
+command=node scripts/check-domain-security.mjs
+verdict=SolvedVerified
+proof_state=Pass
+domain_security_state=SolvedVerified
 dnssec_ds=Pass
-caa_policy=AwaitingEvidence
+caa_policy=Pass
 mx_google_workspace=Pass
 spf_record=Pass
-spf_enforcement=AwaitingEvidence
+spf_enforcement=Pass
 dmarc_record=Pass
-dmarc_policy=none
-dmarc_enforcement=AwaitingEvidence
-known_google_dkim_selector=AwaitingEvidence
-mta_sts=AwaitingEvidence
-tls_rpt=AwaitingEvidence
+dmarc_policy=quarantine
+dmarc_enforcement=Pass
+known_google_dkim_selector=Pass
+mta_sts=Pass
+tls_rpt=Pass
 ds_record_count=1
-caa_record_count=0
+caa_record_count=12
 mx_record_count=1
-finding=spf_not_hardfail
-finding=dmarc_policy_monitoring_only
-finding=caa_record_missing
-finding=known_google_dkim_selector_missing
-finding=mta_sts_policy_missing
-finding=tls_rpt_record_missing
+finding=none
 raw_dns_values=not_recorded
 ```
 
 ## Meaning
 
-The domain has DNSSEC delegation evidence, Google Workspace mail routing, SPF,
-and a DMARC record. The current state is not a delivery outage, but it is not a
-closed hardening state. Certificate-authority authorization is absent, SPF is
-not hard-fail, DMARC is monitoring-only, the common Google DKIM selector is not
-published, and MTA-STS/TLS-RPT evidence is absent.
+The public DNS readback now has DNSSEC delegation evidence, CAA policy,
+Google Workspace mail routing, SPF enforcement, DMARC enforcement at
+`p=quarantine`, the known Google DKIM selector, MTA-STS, and TLS-RPT.
 
-`AwaitingEvidence` is intentional here: DNS changes can affect certificate
-renewal and mail delivery, so the gate records the gaps and blocks a false
-`SolvedVerified` claim until admin-console and DNS changes are confirmed.
+This closes the public DNS/mail-authentication readback witness. It does not
+close future DNS mutation authority. `ops/domain-security-preflight.md` remains
+the separate admin-side mutation gate and must stay `GovernanceBlocked` until
+Cloudflare, Google Workspace, sender inventory, and report-mailbox authority are
+confirmed without recording private values.
 
 ## Bounded Actions
 
 | Control | Current state | Required action | Closure evidence |
 | --- | --- | --- | --- |
-| CAA | AwaitingEvidence | Add Cloudflare-compatible CAA records only after confirming the active Cloudflare certificate product and CA set. | `caa_policy=Pass` and nonzero CAA record count. |
-| DKIM | AwaitingEvidence | Generate and publish the Google Workspace DKIM TXT record for the active selector, then start authentication in Google Admin. | DKIM selector TXT resolves and a live sent message passes DKIM alignment. |
-| SPF | AwaitingEvidence | Inventory every legitimate sender, then move from soft-fail to hard-fail only after no sender gaps remain. | `spf_enforcement=Pass` plus sent-message SPF alignment. |
-| DMARC | AwaitingEvidence | Review aggregate reports, then ratchet from `p=none` to `p=quarantine` and later `p=reject` with bounded `pct` rollout. | `dmarc_enforcement=Pass` and no legitimate delivery breakage. |
-| MTA-STS | AwaitingEvidence | Publish `_mta-sts` TXT and a valid HTTPS policy at `mta-sts.mullusi.com/.well-known/mta-sts.txt`. | `mta_sts=Pass` and HTTPS policy readback. |
-| TLS-RPT | AwaitingEvidence | Publish `_smtp._tls` TXT with a monitored report mailbox. | `tls_rpt=Pass` and report mailbox ownership confirmed. |
+| CAA | Pass | Preserve current Cloudflare-compatible CAA policy unless the active CA set changes. | `caa_policy=Pass` and nonzero CAA record count. |
+| DKIM | Pass | Preserve the active Google Workspace DKIM selector and rotate only through admin-confirmed procedure. | DKIM selector TXT resolves. |
+| SPF | Pass | Preserve hard-fail only while sender inventory remains accurate. | `spf_enforcement=Pass`. |
+| DMARC | Pass | Keep monitoring aggregate reports before any later `p=reject` ratchet. | `dmarc_enforcement=Pass` and no legitimate delivery breakage. |
+| MTA-STS | Pass | Preserve `_mta-sts` TXT and HTTPS policy readback. | `mta_sts=Pass`. |
+| TLS-RPT | Pass | Preserve `_smtp._tls` TXT and monitored report mailbox ownership. | `tls_rpt=Pass`. |
 
 ## Guardrails
 
@@ -84,7 +79,7 @@ node scripts/check-domain-security.mjs --allow-hardening-gaps
 ```
 
 STATUS:
-  Completeness: 70%
-  Self-attested invariants: DNSSEC DS present, Google Workspace MX present, SPF present, DMARC present, raw DNS values not recorded
-  Open issues: CAA missing, SPF soft-fail, DMARC monitoring-only, known Google DKIM selector missing, MTA-STS missing, TLS-RPT missing
-  Next action: update Cloudflare and Google Workspace DNS controls in the bounded order above, then rerun without --allow-hardening-gaps
+  Completeness: 100%
+  Self-attested invariants: DNSSEC DS present, CAA present, Google Workspace MX present, SPF enforcement present, DMARC quarantine present, DKIM selector present, MTA-STS present, TLS-RPT present, raw DNS values not recorded
+  Open issues: future DNS mutation authority remains gated by ops/domain-security-preflight.md
+  Next action: keep domain mutation authority blocked until admin-side preflight evidence is explicitly confirmed

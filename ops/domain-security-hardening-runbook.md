@@ -7,8 +7,9 @@ Invariants: no DNS mutation occurs from this file; no DKIM private keys, mailbox
 
 # Domain Security Hardening Runbook
 
-This runbook converts the domain-security witness gaps into a bounded execution
-order. It must be executed from the Cloudflare and Google Workspace admin
+This runbook records the bounded execution order used for domain-security
+hardening and the ongoing mutation guard. Future DNS/mail-authentication
+changes must still be executed from the Cloudflare and Google Workspace admin
 surfaces, then verified from this repository with public DNS readback.
 
 ## Current Evidence
@@ -16,17 +17,18 @@ surfaces, then verified from this repository with public DNS readback.
 ```text
 witness=ops/domain-security-witness.md
 checker=scripts/check-domain-security.mjs
-current_domain_security_state=AwaitingEvidence
+current_domain_security_state=SolvedVerified
 dnssec_ds=Pass
 mx_google_workspace=Pass
 spf_record=Pass
 dmarc_record=Pass
-caa_policy=AwaitingEvidence
-spf_enforcement=AwaitingEvidence
-dmarc_enforcement=AwaitingEvidence
-known_google_dkim_selector=AwaitingEvidence
-mta_sts=AwaitingEvidence
-tls_rpt=AwaitingEvidence
+caa_policy=Pass
+spf_enforcement=Pass
+dmarc_enforcement=Pass
+known_google_dkim_selector=Pass
+mta_sts=Pass
+tls_rpt=Pass
+future_mutation_preflight=GovernanceBlocked
 ```
 
 ## Execution Order
@@ -110,6 +112,6 @@ finding=none
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: bounded execution order, CAA precondition, sender-inventory precondition, DMARC staged rollout, rollback defined
-  Open issues: active Cloudflare CA set, Google Workspace DKIM selector, sender inventory, report mailbox ownership, MTA-STS host
-  Next action: confirm Cloudflare active certificate authority set and Google Workspace DKIM selector before mutating DNS
+  Self-attested invariants: bounded execution order, CAA precondition, sender-inventory precondition, DMARC staged rollout, rollback defined, public DNS readback solved
+  Open issues: future mutation authority remains blocked until admin-side preflight evidence is refreshed
+  Next action: keep mutation permissions false unless ops/domain-security-preflight.md is explicitly promoted with public-safe admin evidence
