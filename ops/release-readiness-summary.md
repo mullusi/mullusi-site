@@ -33,7 +33,7 @@ private_recovery_values=not_read
 
 | Surface | Current state | Evidence file | Release decision |
 | --- | --- | --- | --- |
-| Static website parity | AwaitingEvidence | `ops/live-deployment-integrity-witness.md` | Keep public; rerun after deployment propagation or status-manifest alignment |
+| Static website parity | AwaitingEvidence | `ops/live-deployment-integrity-witness.md` | Keep public; port mirror state to private deploy source, then rerun strict local-match checker |
 | Public visibility | SolvedVerified | `ops/public-visibility-witness.md` | Keep public and monitor regional visibility |
 | Security headers | SolvedVerified | `ops/security-header-witness.md` | Keep current Cloudflare header policy |
 | API DNS exposure | GovernanceBlocked | `ops/api-exposure-witness.md` | Do not publish `api` DNS |
@@ -57,22 +57,27 @@ The static website may remain public because live manifest readback, live
 content hashes, route sentinels, visibility, security headers, and
 domain-security readback pass. Current local/live status-manifest parity remains
 `AwaitingEvidence`, so the current repository state must not be described as
-fully deployed until parity closes. Product/runtime release remains blocked
-because recovery, host, persistence, TLS, DNS authority, rollback, and runtime
-witness evidence are still open.
+fully deployed until parity closes. The current parity gap is bounded to the
+public mirror -> private deploy source handoff unless later evidence proves a
+different release boundary. Product/runtime release remains blocked because
+recovery, host, persistence, TLS, DNS authority, rollback, and runtime witness
+evidence are still open.
 
 ## Next-Action Order
 
-1. Complete private recovery inventory outside Git.
-2. Promote `ops/recovery-completion-witness.md` only after all public-safe rows
+1. Port the current validated public mirror state to the private deploy source
+   through `docs/mirror-to-deploy-port-runbook.md`, publish it, then rerun
+   `node scripts/check-live-deployment-integrity.mjs --require-local-match`.
+2. Complete private recovery inventory outside Git.
+3. Promote `ops/recovery-completion-witness.md` only after all public-safe rows
    are confirmed.
-3. Collect API pre-DNS evidence: host, managed persistence, production secrets,
+4. Collect API pre-DNS evidence: host, managed persistence, production secrets,
    release preflight, schema, TLS, firewall, rollback, and private runtime
    witness.
-4. Publish `api` DNS only after `api_dns_publication_allowed=true`.
-5. Collect post-DNS public runtime evidence before any `SolvedVerified` product
+5. Publish `api` DNS only after `api_dns_publication_allowed=true`.
+6. Collect post-DNS public runtime evidence before any `SolvedVerified` product
    release claim.
-6. Harden domain security only after `ops/domain-security-preflight.md` changes
+7. Harden domain security only after `ops/domain-security-preflight.md` changes
    from `GovernanceBlocked` to `SolvedVerified`.
 
 ## Edge Cases
@@ -89,4 +94,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: static website and product runtime boundaries separated, API DNS remains blocked, domain mutation remains blocked, no private values recorded
   Open issues: recovery inventory, API runtime, product runtime witnesses, DNS authority, domain hardening evidence
-  Next action: complete private recovery inventory outside Git before API or product release promotion
+  Next action: close static website parity through the mirror-to-deploy handoff, then complete private recovery inventory before API or product release promotion
