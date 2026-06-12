@@ -18,22 +18,28 @@ Current answer:
 ```text
 recovery_witness_state=AwaitingEvidence
 api_provisioning_allowed=false
-last_reviewed=2026-06-06
+last_reviewed=2026-06-12
 ```
 
-This state is intentionally blocked until the private recovery inventory is
-filled outside Git and the operator confirms each root recovery path.
+This state is intentionally blocked until the ignored private recovery inventory
+has all required confirmation flags set to `true` after the operator confirms
+each root recovery path outside Git.
 
-Observed on 2026-06-06:
+Observed on 2026-06-12:
 
 ```text
-command=node scripts/check-private-recovery-inventory.mjs --allow-missing
-private_recovery_inventory state=Missing allowed=true
+command=node scripts/check-private-recovery-inventory.mjs --json
+inventoryPathState=present
+recoveryInventoryState=Blocked
+proofState=Unknown
+solverOutcome=AwaitingEvidence
+privateValueScan=Pass
+missingFlags=cloudflare_recovery_saved,github_recovery_saved,google_workspace_recovery_confirmed,namecheap_recovery_confirmed,namecheap_transfer_lock_confirmed,billing_renewal_path_confirmed,private_inventory_complete
 ```
 
-The missing state is a public-safe blocker. The private inventory is expected
-outside Git or in an ignored local file, and it must not be replaced by a
-committed public witness.
+The blocked state is a public-safe blocker. The ignored private inventory exists
+locally, but it is not ready for recovery witness promotion. The public witness
+records only aggregate flag names and never replaces the private inventory.
 
 ## Public-Safe Witness Table
 
@@ -94,5 +100,5 @@ witness is promoted.
 STATUS:
   Completeness: 100%
   Self-attested invariants: no secret values, explicit provisioning block, manual confirmation required, API DNS remains blocked
-  Open issues: all recovery witnesses remain AwaitingEvidence
+  Open issues: all private recovery confirmation flags remain AwaitingEvidence
   Next action: complete private recovery inventory outside Git, then promote this witness only after manual confirmation
