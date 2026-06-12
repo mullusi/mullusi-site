@@ -8,7 +8,7 @@ Invariants: this script never accepts or writes recovery codes, passwords, API k
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -69,14 +69,14 @@ function validateArgs() {
   }
 }
 
-function promotedWitnessContent(originalContent) {
+export function promotedWitnessContent(originalContent, reviewDateValue = reviewDate) {
   let content = originalContent;
   content = content.replace("recovery_witness_state=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning");
   content = content.replace("api_provisioning_allowed=false", "api_provisioning_allowed=true");
-  content = content.replace(/last_reviewed=\d{4}-\d{2}-\d{2}/, `last_reviewed=${reviewDate}`);
+  content = content.replace(/last_reviewed=\d{4}-\d{2}-\d{2}/, `last_reviewed=${reviewDateValue}`);
   content = content.replaceAll("| AwaitingEvidence |", "| Confirmed |");
   content = content.replace(
-    "This state is intentionally blocked until the private recovery inventory is\nfilled outside Git and the operator confirms each root recovery path.",
+    /This state is intentionally blocked until the private recovery inventory is\r?\nfilled outside Git and the operator confirms each root recovery path\./,
     "This state means the private recovery inventory exists outside Git and the\noperator has confirmed each root recovery path."
   );
   content = content.replace(
@@ -84,14 +84,7 @@ function promotedWitnessContent(originalContent) {
     "When `api_provisioning_allowed=true`, the next actions are limited to:"
   );
   content = content.replace(
-    [
-      "complete_private_recovery_inventory",
-      "confirm_namecheap_transfer_lock",
-      "confirm_google_workspace_recovery",
-      "confirm_github_recovery_codes",
-      "confirm_cloudflare_recovery_codes",
-      "confirm_billing_renewal_path",
-    ].join("\n"),
+    /complete_private_recovery_inventory\r?\nconfirm_namecheap_transfer_lock\r?\nconfirm_google_workspace_recovery\r?\nconfirm_github_recovery_codes\r?\nconfirm_cloudflare_recovery_codes\r?\nconfirm_billing_renewal_path/,
     [
       "provision_private_runtime_host",
       "provision_managed_postgresql",
@@ -101,7 +94,7 @@ function promotedWitnessContent(originalContent) {
     ].join("\n")
   );
   content = content.replace(
-    "Do not provision production host/database and do not create `api` DNS until this\nwitness is promoted.",
+    /Do not provision production host\/database and do not create `api` DNS until this\r?\nwitness is promoted\./,
     "Do not create `api` DNS until host, database, secret, TLS, and pre-DNS\nevidence pass."
   );
   content = content.replace(
@@ -158,7 +151,7 @@ function runPromotion() {
   }
 
   const originalContent = fs.readFileSync(witnessPath, "utf8");
-  const nextContent = promotedWitnessContent(originalContent);
+  const nextContent = promotedWitnessContent(originalContent, reviewDate);
 
   if (nextContent === originalContent) {
     console.error("witness_already_promoted_or_unexpected_shape");
@@ -174,4 +167,6 @@ function runPromotion() {
   console.log(`recovery_witness_promoted=true write=true review_date=${reviewDate}`);
 }
 
-runPromotion();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  runPromotion();
+}
