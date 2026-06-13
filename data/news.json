@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-12",
+    "updated": "2026-06-13",
     "count": 7
   },
   "items": [
     {
-      "title": "Show HN: Homebrew 6.0.0",
-      "url": "https://brew.sh/2026/06/11/homebrew-6.0.0/",
-      "source": "brew.sh",
-      "points": 1278,
-      "comments": 309,
-      "date": "2026-06-11"
+      "title": "Statement on US government directive to suspend access to Fable 5 and Mythos 5",
+      "url": "https://www.anthropic.com/news/fable-mythos-access",
+      "source": "anthropic.com",
+      "points": 2352,
+      "comments": 1698,
+      "date": "2026-06-13"
     },
     {
-      "title": "If you are asking for human attention, demonstrate human effort",
-      "url": "https://tombedor.dev/human-attention-and-human-effort/",
-      "source": "tombedor.dev",
-      "points": 881,
-      "comments": 291,
-      "date": "2026-06-11"
+      "title": "CRISPR tech selectively shreds cancer cells, including \"undruggable\" cancers",
+      "url": "https://innovativegenomics.org/news/crispr-technique-selectively-shreds-cancer-cells/",
+      "source": "innovativegenomics.org",
+      "points": 829,
+      "comments": 190,
+      "date": "2026-06-12"
     },
     {
       "title": "Stop the Apple Music app from launching",
       "url": "https://lowtechguys.com/musicdecoy/",
       "source": "lowtechguys.com",
-      "points": 666,
-      "comments": 276,
+      "points": 667,
+      "comments": 278,
       "date": "2026-06-08"
     },
     {
       "title": "Cybersecurity researchers aren't happy about the guardrails on Anthropic's Fable",
       "url": "https://techcrunch.com/2026/06/10/cybersecurity-researchers-arent-happy-about-the-guardrails-on-anthropics-fable/",
       "source": "techcrunch.com",
-      "points": 584,
-      "comments": 517,
+      "points": 587,
+      "comments": 523,
       "date": "2026-06-10"
     },
     {
       "title": "MiMo Code is now released and open-source",
       "url": "https://mimo.xiaomi.com/mimocode",
       "source": "mimo.xiaomi.com",
-      "points": 508,
-      "comments": 281,
+      "points": 548,
+      "comments": 307,
       "date": "2026-06-11"
     },
     {
-      "title": "Nobody ever gets credit for fixing problems that never happened (2001) [pdf]",
-      "url": "https://web.mit.edu/nelsonr/www/Repenning=Sterman_CMR_su01_.pdf",
-      "source": "web.mit.edu",
-      "points": 508,
-      "comments": 169,
+      "title": "Electric motors with no rare earths",
+      "url": "https://www.renaultgroup.com/en/magazine/energy-and-powertrains/all-about-electric-motors-with-no-rare-earths/",
+      "source": "renaultgroup.com",
+      "points": 480,
+      "comments": 133,
       "date": "2026-06-12"
     },
     {
-      "title": "Claude Fable is relentlessly proactive",
-      "url": "https://simonwillison.net/2026/Jun/11/fable-is-relentlessly-proactive/",
-      "source": "simonwillison.net",
-      "points": 507,
-      "comments": 405,
-      "date": "2026-06-12"
+      "title": "Claude Desktop spawns 1.8 GB Hyper-V VM on every launch, even for chat-only use",
+      "url": "https://github.com/anthropics/claude-code/issues/29045",
+      "source": "github.com",
+      "points": 431,
+      "comments": 301,
+      "date": "2026-06-10"
     }
   ]
 }
