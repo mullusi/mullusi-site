@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { requiredLiveEvidenceApprovalKeys } from "./govern-live-evidence-ref-contract.mjs";
 import {
   formatGovernApprovalReadinessPreflightReport,
   validateGovernApprovalReadinessPreflight,
@@ -19,17 +20,6 @@ const scriptPath = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(scriptPath);
 const repoRoot = path.resolve(scriptsDir, "..");
 const validatorScript = path.join(scriptsDir, "validate-govern-approval-readiness-preflight.mjs");
-
-const missingApprovalKeys = [
-  "operator_approval_ref",
-  "product_status_promotion_ref",
-  "api_contract_test_ref",
-  "privacy_activation_ref",
-  "retention_activation_ref",
-  "dashboard_operator_readiness_ref",
-  "runtime_witness_ref",
-  "public_claim_update_ref",
-];
 
 function runValidator(args = []) {
   return spawnSync(process.execPath, [validatorScript, ...args], {
@@ -73,7 +63,7 @@ function validEvidence(overrides = {}) {
       "packet_state=AwaitingEvidence",
       "approval_state=NotApproved",
       "public_write_route_allowed=false",
-      ...missingApprovalKeys.map((key) => `${key}=missing`),
+      ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=missing`),
     ].join("\n"),
     privateValueScanSources: {
       approvalPacket: "public_write_route_allowed=false\noperator_approval_ref=missing\n",
@@ -118,7 +108,7 @@ function testSyntheticOperatorApprovalRefFailsClosed() {
       "approval_state=NotApproved",
       "public_write_route_allowed=false",
       "operator_approval_ref=approval://operator/ready",
-      ...missingApprovalKeys.filter((key) => key !== "operator_approval_ref").map((key) => `${key}=missing`),
+      ...requiredLiveEvidenceApprovalKeys.filter((key) => key !== "operator_approval_ref").map((key) => `${key}=missing`),
     ].join("\n"),
   });
   const result = validateGovernApprovalReadinessPreflightEvidence(evidence);
@@ -150,7 +140,7 @@ function testSyntheticWriteRouteOpenFailsClosed() {
       "packet_state=AwaitingEvidence",
       "approval_state=NotApproved",
       "public_write_route_allowed=true",
-      ...missingApprovalKeys.map((key) => `${key}=missing`),
+      ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=missing`),
     ].join("\n"),
   });
   const result = validateGovernApprovalReadinessPreflightEvidence(evidence);
