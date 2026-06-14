@@ -114,6 +114,8 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   assert.equal(decision.packetPath, "ops/runtime-witness/mullu-govern-closure-packet.md");
   assert.equal(decision.decisionRecordPath, "ops/mullu-govern-evaluate-write-route-decision.md");
   assert.equal(decision.approvalPacketPath, "ops/mullu-govern-public-beta-approval-packet.md");
+  assert.equal(decision.liveEvidenceRefIntakePath, "ops/mullu-govern-live-evidence-ref-intake-template.json");
+  assert.equal(decision.liveEvidenceRefIntakeCommand, "node scripts/validate-govern-live-evidence-ref-intake.mjs");
   assert.equal(decision.operatorRunbookPath, "ops/mullu-govern-live-evidence-operator-runbook.md");
   assert.equal(decision.sequencePreflightPath, "ops/mullu-govern-live-evidence-sequence-preflight.md");
   assert.match(decision.manualEvidenceBoundary, /live evidence sequence refs/);
@@ -141,6 +143,8 @@ function testFormattedReportStaysPublicSafe() {
   assert.match(report, /product_runtime_witness_packet=none/);
   assert.match(report, /product_write_route_decision_record=none/);
   assert.match(report, /product_public_beta_approval_packet=none/);
+  assert.match(report, /product_live_evidence_ref_intake=none/);
+  assert.match(report, /product_live_evidence_ref_intake_command=none/);
   assert.match(report, /product_live_evidence_operator_runbook=none/);
   assert.match(report, /product_live_evidence_sequence_preflight=none/);
   assert.match(report, /secret_values=not_recorded/);
@@ -165,6 +169,8 @@ function testFormattedJsonStaysPublicSafeAndStructured() {
   assert.equal(payload.productRuntimeWitnessPacket, "none");
   assert.equal(payload.productWriteRouteDecisionRecord, "none");
   assert.equal(payload.productPublicBetaApprovalPacket, "none");
+  assert.equal(payload.productLiveEvidenceRefIntake, "none");
+  assert.equal(payload.productLiveEvidenceRefIntakeCommand, "none");
   assert.equal(payload.productLiveEvidenceOperatorRunbook, "none");
   assert.equal(payload.productLiveEvidenceSequencePreflight, "none");
   assert.equal(payload.secretValues, "not_recorded");
