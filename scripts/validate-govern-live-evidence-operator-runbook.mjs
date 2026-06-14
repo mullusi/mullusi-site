@@ -15,6 +15,7 @@ import {
   scanForbiddenEvidencePatterns,
 } from "./govern-live-evidence-ref-contract.mjs";
 import { validateGovernApprovalReadinessPreflight } from "./validate-govern-approval-readiness-preflight.mjs";
+import { validateGovernLiveEvidenceRefCollectionChecklist } from "./validate-govern-live-evidence-ref-collection-checklist.mjs";
 import { validateGovernLiveEvidenceRefIntake } from "./validate-govern-live-evidence-ref-intake.mjs";
 import { validateGovernLiveEvidenceSequencePreflight } from "./validate-govern-live-evidence-sequence-preflight.mjs";
 import { validateGovernPublicBetaApprovalPacket } from "./validate-govern-public-beta-approval-packet.mjs";
@@ -128,6 +129,15 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
   if (evidence.intakeResult?.requireComplete !== false) {
     findings.push("live_evidence_ref_intake_require_complete_must_remain_false");
   }
+  if (evidence.collectionChecklistResult?.solverOutcome !== "SolvedVerified") {
+    findings.push(`live_evidence_ref_collection_checklist_not_solved:${evidence.collectionChecklistResult?.solverOutcome || "missing"}`);
+  }
+  if (evidence.collectionChecklistResult?.proofState !== "Pass") {
+    findings.push(`live_evidence_ref_collection_checklist_proof_not_pass:${evidence.collectionChecklistResult?.proofState || "missing"}`);
+  }
+  if (evidence.collectionChecklistResult?.readyForLiveEvidence !== false) {
+    findings.push("live_evidence_ref_collection_checklist_ready_for_live_evidence_must_remain_false");
+  }
   if (evidence.releaseReadinessResult?.solverOutcome !== "SolvedVerified") {
     findings.push(`release_readiness_summary_not_solved:${evidence.releaseReadinessResult?.solverOutcome || "missing"}`);
   }
@@ -160,6 +170,7 @@ export function collectGovernLiveEvidenceOperatorRunbookEvidence(relativePath = 
     approvalPacket,
     approvalPacketResult: validateGovernPublicBetaApprovalPacket(),
     approvalReadinessResult: validateGovernApprovalReadinessPreflight(),
+    collectionChecklistResult: validateGovernLiveEvidenceRefCollectionChecklist(),
     intakeResult: validateGovernLiveEvidenceRefIntake(),
     privateValueScanSources: {
       approvalPacket,

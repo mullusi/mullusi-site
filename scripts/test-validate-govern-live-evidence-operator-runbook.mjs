@@ -77,6 +77,11 @@ function validEvidence(overrides = {}) {
       readyForApproval: false,
       solverOutcome: "SolvedVerified",
     },
+    collectionChecklistResult: {
+      proofState: "Pass",
+      readyForLiveEvidence: false,
+      solverOutcome: "SolvedVerified",
+    },
     intakeResult: {
       proofState: "Pass",
       readyForLiveEvidence: false,
@@ -217,6 +222,23 @@ function testSyntheticIntakeFailureFailsClosed() {
   assert.match(result.findings.join("\n"), /live_evidence_ref_intake_require_complete_must_remain_false/);
 }
 
+function testSyntheticCollectionChecklistFailureFailsClosed() {
+  const evidence = validEvidence({
+    collectionChecklistResult: {
+      proofState: "Fail",
+      readyForLiveEvidence: true,
+      solverOutcome: "GovernanceBlocked",
+    },
+  });
+  const result = validateGovernLiveEvidenceOperatorRunbookEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.readyForLiveEvidence, false);
+  assert.match(result.findings.join("\n"), /live_evidence_ref_collection_checklist_not_solved:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /live_evidence_ref_collection_checklist_ready_for_live_evidence_must_remain_false/);
+}
+
 function testSyntheticReleaseReadinessFailureFailsClosed() {
   const evidence = validEvidence({
     releaseReadinessResult: {
@@ -272,6 +294,7 @@ testSyntheticApprovalPacketFilledRefFailsClosed();
 testSyntheticSequencePreflightFailureFailsClosed();
 testSyntheticApprovalAggregateFailureFailsClosed();
 testSyntheticIntakeFailureFailsClosed();
+testSyntheticCollectionChecklistFailureFailsClosed();
 testSyntheticReleaseReadinessFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
