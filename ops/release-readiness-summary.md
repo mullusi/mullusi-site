@@ -21,6 +21,8 @@ api_exposure_state=SolvedVerified
 api_dns_publication_allowed=true
 api_production_readiness_state=ReadyForDns
 product_runtime_release_witness=AwaitingEvidence
+product_runtime_claims_allowed=false
+public_product_release_allowed=false
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
 domain_security_state=SolvedVerified
@@ -51,6 +53,8 @@ product_runtime_release=false
 api_dns_publication_allowed=true
 api_gateway_public=true
 runtime_claims_allowed=false
+product_runtime_claims_allowed=false
+public_product_release_allowed=false
 domain_hardening_mutation_allowed=true
 ```
 

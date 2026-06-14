@@ -65,6 +65,8 @@ function testRecoveryBlockIsFirstPriority() {
   assert.equal(decision.opsNextState, "AwaitingEvidence");
   assert.equal(decision.nextAction, "complete_private_recovery_inventory_outside_git");
   assert.equal(decision.blockedSurface, "root_recovery");
+  assert.equal(decision.productRuntimeClaimsAllowed, false);
+  assert.equal(decision.publicProductReleaseAllowed, false);
 }
 
 function testDomainBlockFollowsRecoveryReadiness() {
@@ -74,6 +76,8 @@ function testDomainBlockFollowsRecoveryReadiness() {
   assert.equal(decision.opsNextState, "AwaitingEvidence");
   assert.equal(decision.nextAction, "collect_domain_hardening_preflight_evidence");
   assert.equal(decision.blockedSurface, "domain_security_hardening");
+  assert.equal(decision.productRuntimeClaimsAllowed, false);
+  assert.equal(decision.publicProductReleaseAllowed, false);
 }
 
 function testApiBlockFollowsDomainReadiness() {
@@ -88,6 +92,8 @@ function testApiBlockFollowsDomainReadiness() {
   assert.equal(decision.opsNextState, "AwaitingEvidence");
   assert.equal(decision.nextAction, "close_private_api_runtime_evidence_before_dns");
   assert.equal(decision.blockedSurface, "api_runtime");
+  assert.equal(decision.productRuntimeClaimsAllowed, false);
+  assert.equal(decision.publicProductReleaseAllowed, false);
 }
 
 function testReadyForDnsRequiresAllPriorGates() {
@@ -95,6 +101,8 @@ function testReadyForDnsRequiresAllPriorGates() {
   assert.equal(decision.opsNextState, "ReadyForDns");
   assert.equal(decision.nextAction, "publish_only_api_dns_after_final_manual_review");
   assert.equal(decision.blockedSurface, "none");
+  assert.equal(decision.productRuntimeClaimsAllowed, false);
+  assert.equal(decision.publicProductReleaseAllowed, false);
 }
 
 function testSolvedApiExposureMovesToProductRuntimeWitness() {
@@ -118,6 +126,8 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   assert.equal(decision.liveEvidenceRefIntakeCommand, "node scripts/validate-govern-live-evidence-ref-intake.mjs");
   assert.equal(decision.operatorRunbookPath, "ops/mullu-govern-live-evidence-operator-runbook.md");
   assert.equal(decision.sequencePreflightPath, "ops/mullu-govern-live-evidence-sequence-preflight.md");
+  assert.equal(decision.productRuntimeClaimsAllowed, false);
+  assert.equal(decision.publicProductReleaseAllowed, false);
   assert.match(decision.manualEvidenceBoundary, /live evidence sequence refs/);
   assert.match(decision.manualEvidenceBoundary, /product status promotion approval/);
   assert.match(decision.manualEvidenceBoundary, /privacy activation approval/);
@@ -140,6 +150,8 @@ function testFormattedReportStaysPublicSafe() {
   assert.match(report, /ops_next_state=AwaitingEvidence/);
   assert.match(report, /domain_dns_mutation_allowed=false/);
   assert.match(report, /api_exposure_state=AwaitingEvidence/);
+  assert.match(report, /product_runtime_claims_allowed=false/);
+  assert.match(report, /public_product_release_allowed=false/);
   assert.match(report, /product_runtime_witness_packet=none/);
   assert.match(report, /product_write_route_decision_record=none/);
   assert.match(report, /product_public_beta_approval_packet=none/);
@@ -166,6 +178,8 @@ function testFormattedJsonStaysPublicSafeAndStructured() {
   assert.equal(payload.opsNextState, "AwaitingEvidence");
   assert.equal(payload.apiProductionReadinessState, "Blocked");
   assert.equal(payload.manualEvidenceMissingCount, 1);
+  assert.equal(payload.productRuntimeClaimsAllowed, false);
+  assert.equal(payload.publicProductReleaseAllowed, false);
   assert.equal(payload.productRuntimeWitnessPacket, "none");
   assert.equal(payload.productWriteRouteDecisionRecord, "none");
   assert.equal(payload.productPublicBetaApprovalPacket, "none");
