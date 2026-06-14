@@ -1,7 +1,7 @@
 <!--
 Purpose: define the approval packet required before Mullu Govern public-beta evaluate-route exposure.
 Governance scope: product-status promotion, public write-route publication, API contract execution, privacy activation, retention activation, rollback readiness, support readiness, runtime witness closure, and operator approval.
-Dependencies: products/mullu-govern/product.manifest.json, ops/mullu-govern-evaluate-write-route-decision.md, ops/runtime-witness/mullu-govern-closure-packet.md, privacy/govern.policy.json, privacy/govern.retention.json, and public-safe api.mullusi.com guard probes.
+Dependencies: products/mullu-govern/product.manifest.json, ops/mullu-govern-evaluate-write-route-decision.md, ops/mullu-govern-live-evidence-sequence-preflight.md, ops/runtime-witness/mullu-govern-closure-packet.md, privacy/govern.policy.json, privacy/govern.retention.json, and public-safe api.mullusi.com guard probes.
 Invariants: this file is a non-operative approval packet; it does not publish a route, mutate DNS, reveal secrets, store raw request/response bodies, or record provider-private values.
 -->
 
@@ -51,6 +51,7 @@ stamps, and audit events.
 | Rollback witness | rollback test disables only the evaluate route and preserves public health routes | control-plane PR #1686 merged `scripts/validate_govern_evaluate_route_rollback.py`; witness reports `SolvedVerified`, preserves `/v1/health` and `/v1/version`, and keeps `POST /v1/govern/evaluate` blocked with no outbound transport | Pass |
 | Support readiness | support and incident path for route users verified | `ops/mullu-govern-support-readiness.md` verifies support contact, privacy contact, responsible disclosure, security contact metadata, and fail-closed incident routing | Pass |
 | Public claim update | product page/status copy remains bounded to evidence | preflight ready in `ops/mullu-govern-public-claim-update-preflight.md`; no public-beta claim emitted | AwaitingEvidence |
+| Live evidence sequence | live evidence collection order is explicit and still blocked | preflight ready in `ops/mullu-govern-live-evidence-sequence-preflight.md`; every live/effect-bearing evidence ref remains missing | AwaitingEvidence |
 
 ## Required Approval Inputs
 
@@ -113,4 +114,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: packet is non-operative, public route remains blocked, API gateway witness remains separate from product write-route exposure, privacy and retention remain not-active, no raw secret or provider values recorded
   Open issues: operator approval, product-status promotion approval, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, runtime witness closure
-  Next action: close runtime witness closure or request explicit approval before collecting live API contract execution evidence
+  Next action: keep the live evidence sequence blocked until every approval-bound public-safe evidence ref is supplied

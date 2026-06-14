@@ -1,7 +1,7 @@
 <!--
 Purpose: record the public-safe product runtime witness closure packet for Mullu Govern.
 Governance scope: product runtime witness evidence, product-status promotion boundary, health observations, rollback readiness, privacy/contract evidence, and public claim blocking.
-Dependencies: ops/runtime-witness/registry.json, products/mullu-govern/product.manifest.json, ops/api-exposure-witness.md, ops/api-production-readiness-gate.md, and public api.mullusi.com probes.
+Dependencies: ops/runtime-witness/registry.json, products/mullu-govern/product.manifest.json, ops/api-exposure-witness.md, ops/api-production-readiness-gate.md, ops/mullu-govern-live-evidence-sequence-preflight.md, and public api.mullusi.com probes.
 Invariants: no host address, provider account id, credential value, database URL, billing detail, raw header, raw response body, or token value is stored in this file.
 -->
 
@@ -57,6 +57,9 @@ explicit public claim update reference.
 Approval-readiness preflight is ready in
 `ops/mullu-govern-approval-readiness-preflight.md`, but operator approval
 remains blocked until every approval-bound evidence ref is supplied.
+Live evidence sequence preflight is ready in
+`ops/mullu-govern-live-evidence-sequence-preflight.md`, but live collection
+remains blocked until every live/effect-bearing evidence ref is supplied.
 
 ## Public-Safe Live Observations
 
@@ -95,6 +98,7 @@ The registry closure rule requires all of the following:
 | Dashboard operator readiness | verified | preflight Ready; live evidence AwaitingEvidence |
 | Public claim update | bounded to verified evidence | preflight Ready; update evidence AwaitingEvidence |
 | Operator approval readiness | approval packet organized without approval | preflight Ready; approval NotApproved |
+| Live evidence sequence | collection order explicit without live action | preflight Ready; live evidence collection blocked |
 | Support readiness | verified | Ready via `ops/mullu-govern-support-readiness.md` |
 | Public write-route decision | approve or keep blocked with evidence | KeepBlocked in `ops/mullu-govern-evaluate-write-route-decision.md` |
 | Public-beta approval packet | ReadyForApproval or stronger | AwaitingEvidence in `ops/mullu-govern-public-beta-approval-packet.md` |
@@ -124,8 +128,10 @@ blocker=runtime_witness_registry_not_closed
    `mullu-govern` from `limited-preview` to `public-beta`.
 5. Record dashboard operator-readiness evidence before claiming product runtime
    witness closure.
-6. Record bounded public claim update evidence before emitting public-beta copy.
-7. Only after those pass, update `ops/runtime-witness/registry.json` in a
+6. Follow `ops/mullu-govern-live-evidence-sequence-preflight.md` before any
+   live evidence collection or product status update.
+7. Record bounded public claim update evidence before emitting public-beta copy.
+8. Only after those pass, update `ops/runtime-witness/registry.json` in a
    separate PR and rerun `node scripts/validate-runtime-witnesses.mjs`.
 
 STATUS:
