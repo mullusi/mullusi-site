@@ -40,7 +40,7 @@ stamps, and audit events.
 
 | Gate | Required approval evidence | Current evidence | State |
 | --- | --- | --- | --- |
-| Operator approval | Explicit approval ref for public `POST /v1/govern/evaluate` | none | AwaitingEvidence |
+| Operator approval | Explicit approval ref for public `POST /v1/govern/evaluate` | readiness preflight in `ops/mullu-govern-approval-readiness-preflight.md`; `operator_approval_ref=missing` | AwaitingEvidence |
 | Product status | Manifest promotion from `limited-preview` to `public-beta` | preflight ready in `ops/mullu-govern-product-status-preflight.md`; `products/mullu-govern/product.manifest.json` remains `limited-preview` | AwaitingEvidence |
 | Route guard | Public route closed until approval | public-safe guard probe returns 404 | Pass |
 | API contract | Request, response, malformed, unauthorized, rejected, and rate-limited cases verified | preflight ready in `ops/mullu-govern-evaluate-contract-preflight.md`; live execution cases remain `AwaitingEvidence` because public route is intentionally not published | AwaitingEvidence |

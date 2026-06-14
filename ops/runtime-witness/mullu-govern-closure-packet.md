@@ -54,6 +54,9 @@ Public-claim update preflight is ready in
 `ops/mullu-govern-public-claim-update-preflight.md`, but the actual public
 claim update remains blocked until the public-beta approval packet supplies an
 explicit public claim update reference.
+Approval-readiness preflight is ready in
+`ops/mullu-govern-approval-readiness-preflight.md`, but operator approval
+remains blocked until every approval-bound evidence ref is supplied.
 
 ## Public-Safe Live Observations
 
@@ -91,6 +94,7 @@ The registry closure rule requires all of the following:
 | Privacy and retention boundary | verified for product runtime | preflight Ready; activation AwaitingEvidence |
 | Dashboard operator readiness | verified | preflight Ready; live evidence AwaitingEvidence |
 | Public claim update | bounded to verified evidence | preflight Ready; update evidence AwaitingEvidence |
+| Operator approval readiness | approval packet organized without approval | preflight Ready; approval NotApproved |
 | Support readiness | verified | Ready via `ops/mullu-govern-support-readiness.md` |
 | Public write-route decision | approve or keep blocked with evidence | KeepBlocked in `ops/mullu-govern-evaluate-write-route-decision.md` |
 | Public-beta approval packet | ReadyForApproval or stronger | AwaitingEvidence in `ops/mullu-govern-public-beta-approval-packet.md` |
