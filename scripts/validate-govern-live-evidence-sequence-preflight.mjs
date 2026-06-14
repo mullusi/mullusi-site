@@ -9,6 +9,10 @@ Test contract: run node scripts/test-validate-govern-live-evidence-sequence-pref
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  requiredLiveEvidenceApprovalKeys,
+  scanForbiddenEvidencePatterns,
+} from "./govern-live-evidence-ref-contract.mjs";
 import { validateGovernApprovalReadinessPreflight } from "./validate-govern-approval-readiness-preflight.mjs";
 import { validateGovernDashboardOperatorReadinessPreflight } from "./validate-govern-dashboard-operator-readiness-preflight.mjs";
 import { validateGovernEvaluateContractPreflight } from "./validate-govern-evaluate-contract-preflight.mjs";
@@ -22,17 +26,6 @@ const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
 const defaultWitnessPath = "ops/mullu-govern-live-evidence-sequence-preflight.md";
 const allowedArgs = new Set(["--json"]);
-
-const sequencedApprovalKeys = [
-  "operator_approval_ref",
-  "product_status_promotion_ref",
-  "privacy_activation_ref",
-  "retention_activation_ref",
-  "dashboard_operator_readiness_ref",
-  "api_contract_test_ref",
-  "public_claim_update_ref",
-  "runtime_witness_ref",
-];
 
 const expectedRuntimeBlockers = [
   "blocker=product_status_promotion_approval_missing",
@@ -64,14 +57,6 @@ const requiredWitnessTerms = [
   "runtime_witness_update_allowed=false",
   "provider_values_recorded=false",
   "STATUS:",
-];
-
-const forbiddenEvidencePatterns = [
-  { label: "postgres_url", pattern: /postgres(?:ql)?:\/\//i },
-  { label: "private_key", pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
-  { label: "bearer_token", pattern: /Bearer\s+[A-Za-z0-9._~+/-]{16,}/ },
-  { label: "api_key_shape", pattern: /\b(?:sk|pk|rk|ghp|gho|ghu|ghs|github_pat)_[A-Za-z0-9_]{12,}/ },
-  { label: "google_api_key_shape", pattern: /\bAIza[0-9A-Za-z_-]{20,}/ },
 ];
 
 function readUtf8(relativePath) {
@@ -107,13 +92,11 @@ export function validateGovernLiveEvidenceSequencePreflightEvidence(evidence) {
     if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
   }
 
-  for (const { label, pattern } of forbiddenEvidencePatterns) {
-    for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
-      if (pattern.test(content)) findings.push(`forbidden_private_value_pattern:${source}:${label}`);
-    }
+  for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
+    findings.push(...scanForbiddenEvidencePatterns(source, content));
   }
 
-  for (const key of sequencedApprovalKeys) {
+  for (const key of requiredLiveEvidenceApprovalKeys) {
     const packetValue = lineValue(evidence.approvalPacket, key);
     const witnessValue = lineValue(evidence.witness, key);
     if (packetValue !== "missing") findings.push(`approval_input_must_remain_missing:${key}:${packetValue || "missing"}`);

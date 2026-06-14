@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { requiredLiveEvidenceApprovalKeys } from "./govern-live-evidence-ref-contract.mjs";
 import {
   formatGovernLiveEvidenceSequencePreflightReport,
   validateGovernLiveEvidenceSequencePreflight,
@@ -19,17 +20,6 @@ const scriptPath = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(scriptPath);
 const repoRoot = path.resolve(scriptsDir, "..");
 const validatorScript = path.join(scriptsDir, "validate-govern-live-evidence-sequence-preflight.mjs");
-
-const sequencedApprovalKeys = [
-  "operator_approval_ref",
-  "product_status_promotion_ref",
-  "privacy_activation_ref",
-  "retention_activation_ref",
-  "dashboard_operator_readiness_ref",
-  "api_contract_test_ref",
-  "public_claim_update_ref",
-  "runtime_witness_ref",
-];
 
 const expectedRuntimeBlockers = [
   "blocker=product_status_promotion_approval_missing",
@@ -76,7 +66,7 @@ function validEvidence(overrides = {}) {
     "public_claim_update_allowed=false",
     "runtime_witness_update_allowed=false",
     "provider_values_recorded=false",
-    ...sequencedApprovalKeys.map((key) => `${key}=missing`),
+    ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=missing`),
     "STATUS:",
   ].join("\n");
 
@@ -88,7 +78,7 @@ function validEvidence(overrides = {}) {
       "route_publication_action=none",
       "dns_mutation=none",
       "runtime_mutation=none",
-      ...sequencedApprovalKeys.map((key) => `${key}=missing`),
+      ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=missing`),
     ].join("\n"),
     privateValueScanSources: {
       approvalPacket: "public_write_route_allowed=false\noperator_approval_ref=missing\n",
@@ -139,7 +129,7 @@ function testSyntheticApprovalRefFailsClosed() {
       "dns_mutation=none",
       "runtime_mutation=none",
       "api_contract_test_ref=approval://api-contract/ready",
-      ...sequencedApprovalKeys.filter((key) => key !== "api_contract_test_ref").map((key) => `${key}=missing`),
+      ...requiredLiveEvidenceApprovalKeys.filter((key) => key !== "api_contract_test_ref").map((key) => `${key}=missing`),
     ].join("\n"),
   });
   const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
@@ -187,7 +177,7 @@ function testSyntheticWriteRouteOpenFailsClosed() {
       "route_publication_action=none",
       "dns_mutation=none",
       "runtime_mutation=none",
-      ...sequencedApprovalKeys.map((key) => `${key}=missing`),
+      ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=missing`),
     ].join("\n"),
   });
   const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
