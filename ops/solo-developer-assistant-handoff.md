@@ -20,8 +20,8 @@ Current public boundary:
 - Local proof first.
 - Pilot access is not open.
 - Contact is for foundation, research, support, and public-route questions.
-- Runtime claims remain `AwaitingEvidence`.
-- No customer access, deployment, endpoint-readiness, or production service claim is allowed without closed witness evidence.
+- Product runtime claims remain `AwaitingEvidence`.
+- No customer access or product production-service claim is allowed without closed product witness evidence.
 
 When public copy changes, preserve this boundary unless the user explicitly asks to open a governed access path and the relevant recovery, runtime, security, rollback, and public-claim gates pass.
 
@@ -79,8 +79,10 @@ recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
 domain_hardening_preflight=SolvedVerified
 domain_dns_mutation_allowed=true
-api_production_readiness_state=AwaitingEvidence
-api_dns_publication_allowed=false
+api_exposure_state=SolvedVerified
+api_dns_publication_allowed=true
+api_production_readiness_state=ReadyForDns
+product_runtime_release_witness=AwaitingEvidence
 ```
 
 The next safe local command is:
@@ -97,11 +99,11 @@ values.
 Current external blockers:
 
 ```text
-api_runtime
+product_runtime_witness
 ```
 
-Do not continue to `api` DNS publication or production-runtime claims until the
-API runtime evidence is closed outside Git and the local gates report readiness.
+Do not continue to product production-runtime claims until the selected product
+runtime evidence is closed outside Git and the local gates report readiness.
 
 Run these before handoff when the touched area is relevant:
 
@@ -232,5 +234,5 @@ Next:
 STATUS:
   Completeness: 100%
   Self-attested invariants: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed ops next-action reporter, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
-  Open issues: API runtime evidence remains manual
-  Next action: run npm run ops:next, then complete only the reported manual blocker outside Git
+  Open issues: product runtime witness evidence remains manual
+  Next action: run npm run ops:next, then close one product runtime witness outside Git before changing product claims

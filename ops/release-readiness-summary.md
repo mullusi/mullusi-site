@@ -17,9 +17,9 @@ Observed on 2026-06-14:
 website_static_deployment_integrity=AwaitingEvidence
 live_status_manifest=Pass
 local_status_manifest_match=AwaitingEvidence
-api_exposure_state=AwaitingEvidence
-api_dns_publication_allowed=false
-api_production_readiness_state=AwaitingEvidence
+api_exposure_state=SolvedVerified
+api_dns_publication_allowed=true
+api_production_readiness_state=ReadyForDns
 product_runtime_release_witness=AwaitingEvidence
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
@@ -36,8 +36,8 @@ private_recovery_values=not_read
 | Static website parity | AwaitingEvidence | `ops/live-deployment-integrity-witness.md` | Keep public; port mirror state to private deploy source, then rerun strict local-match checker |
 | Public visibility | SolvedVerified | `ops/public-visibility-witness.md` | Keep public and monitor regional visibility |
 | Security headers | SolvedVerified | `ops/security-header-witness.md` | Keep current Cloudflare header policy |
-| API DNS exposure | AwaitingEvidence | `ops/api-exposure-witness.md` | Do not publish `api` DNS |
-| API production readiness | AwaitingEvidence | `ops/api-production-readiness-gate.md` | Continue private setup only |
+| API DNS exposure | SolvedVerified | `ops/api-exposure-witness.md` | Keep live and monitor |
+| API production readiness | ReadyForDns | `ops/api-production-readiness-gate.md` | Keep the pre-DNS evidence packet retained |
 | Product runtime witnesses | AwaitingEvidence | `ops/runtime-witness/registry.json` | Do not claim product runtime release |
 | Recovery prerequisite | ReadyForProvisioning | `ops/recovery-completion-witness.md` | Continue private runtime provisioning |
 | Domain security readback | SolvedVerified | `ops/domain-security-witness.md` | Keep current DNS/mail controls and monitor |
@@ -48,7 +48,8 @@ private_recovery_values=not_read
 ```text
 static_website_public=true
 product_runtime_release=false
-api_dns_publication_allowed=false
+api_dns_publication_allowed=true
+api_gateway_public=true
 runtime_claims_allowed=false
 domain_hardening_mutation_allowed=true
 ```
@@ -60,18 +61,18 @@ domain-security readback pass. Current local/live status-manifest parity remains
 fully deployed until parity closes. The current parity gap is bounded to the
 public mirror -> private deploy source handoff unless later evidence proves a
 different release boundary. Product/runtime release remains blocked because
-host, persistence, TLS, DNS authority, rollback, and runtime witness evidence
-are still open.
+product-specific service health, privacy, contract, rollback, and runtime
+witness evidence are still open.
 
 ## Next-Action Order
 
 1. Port the current validated public mirror state to the private deploy source
    through `docs/mirror-to-deploy-port-runbook.md`, publish it, then rerun
    `node scripts/check-live-deployment-integrity.mjs --require-local-match`.
-2. Collect API pre-DNS evidence: host, managed persistence, production secrets,
-   release preflight, schema, TLS, firewall, rollback, and private runtime
-   witness.
-3. Publish `api` DNS only after `api_dns_publication_allowed=true`.
+2. Keep the API gateway live witness monitored through the exposure gate and
+   control-plane deployment witness.
+3. Select one product runtime witness and collect product-specific service
+   health, rollback, privacy, and contract evidence.
 4. Collect post-DNS public runtime evidence before any `SolvedVerified` product
    release claim.
 5. Keep future domain-security changes inside the bounded runbook and rerun
@@ -89,6 +90,6 @@ are still open.
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: static website and product runtime boundaries separated, API DNS remains blocked, domain mutation remains bounded, no private values recorded
-  Open issues: API runtime, product runtime witnesses, DNS authority
-  Next action: close static website parity through the mirror-to-deploy handoff, then collect API pre-DNS runtime evidence
+  Self-attested invariants: static website, API gateway, and product runtime boundaries separated; domain mutation remains bounded; no private values recorded
+  Open issues: product runtime witnesses
+  Next action: close static website parity through the mirror-to-deploy handoff, then close one product runtime witness

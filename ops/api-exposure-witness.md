@@ -1,5 +1,5 @@
 <!--
-Purpose: record the public-safe exposure state for api.mullusi.com before any DNS publication.
+Purpose: record the public-safe exposure state for api.mullusi.com before and after DNS publication.
 Governance scope: API DNS publication, runtime public reachability, recovery dependency, and witness boundary.
 Dependencies: ops/recovery-completion-witness.md, ops/api-production-readiness-gate.md, ops/api-runtime-host-path.md, and scripts/check-api-exposure-gate.mjs.
 Invariants: no host IP, provider account id, credential value, database URL, billing detail, or private inventory path is stored in this file.
@@ -16,31 +16,31 @@ Can api.mullusi.com be publicly exposed now?
 Current answer:
 
 ```text
-api_exposure_state=AwaitingEvidence
-api_dns_publication_allowed=false
-api_runtime_public_state=AwaitingEvidence
+api_exposure_state=SolvedVerified
+api_dns_publication_allowed=true
+api_runtime_public_state=SolvedVerified
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
 last_reviewed=2026-06-14
 ```
 
-The exposure state remains `AwaitingEvidence` while private runtime, database,
-TLS, release preflight, persistence, rollback, and runtime witness evidence are
-incomplete. This file does not replace private evidence; it only records the
-public-safe decision boundary.
+The exposure state is `SolvedVerified` for the API gateway after pre-DNS
+evidence passed, DNS was present, and the public HTTPS health probe was
+reachable. This file does not promote product runtime witnesses; it only records
+the public-safe API gateway exposure boundary.
 
 Observed on 2026-06-14:
 
 ```text
-command=node scripts/check-api-exposure-gate.mjs
-verdict=AwaitingEvidence
-proof_state=Unknown
-api_dns_publication_allowed=false
+command=node scripts/check-api-exposure-gate.mjs --live --require-ready
+verdict=SolvedVerified
+proof_state=Pass
+api_dns_publication_allowed=true
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
-api_runtime_public_state=AwaitingEvidence
-dns_probe_state=NotRequested
-https_probe_state=NotRequested
+api_runtime_public_state=SolvedVerified
+dns_probe_state=Present
+https_probe_state=Reachable
 blocker=none
 raw_host_values=not_recorded
 secret_values=not_read
@@ -69,16 +69,16 @@ be reachable and recorded after DNS activation.
 | Recovery witness | ReadyForProvisioning | ReadyForProvisioning |
 | API provisioning flag | true | true |
 | Host path | accepted | accepted |
-| Pre-DNS runtime evidence | Pass | AwaitingEvidence |
-| DNS publication | allowed | false |
-| Public runtime witness | SolvedVerified after DNS | AwaitingEvidence |
+| Pre-DNS runtime evidence | Pass | Pass |
+| DNS publication | allowed | true |
+| Public runtime witness | SolvedVerified after DNS | SolvedVerified |
 
 ## Executable Check
 
-Run the deterministic repository gate:
+Run the live repository gate:
 
 ```bash
-node scripts/check-api-exposure-gate.mjs
+node scripts/check-api-exposure-gate.mjs --live --require-ready
 ```
 
 Run the optional live public probe during audits:
@@ -125,6 +125,6 @@ unchanged.
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: no public API DNS before recovery, no raw host values, recovery dependency explicit, live probe public-safe
-  Open issues: host provider, managed PostgreSQL, production credentials, release preflight, rollback confirmation, runtime witness
-  Next action: keep API DNS unpublished until pre-DNS runtime evidence passes
+  Self-attested invariants: recovery dependency explicit, public API DNS witnessed, live probe public-safe, no raw host values, product runtime witnesses remain separate
+  Open issues: product runtime witnesses remain AwaitingEvidence
+  Next action: keep API gateway monitored and close product-specific runtime witnesses one at a time
