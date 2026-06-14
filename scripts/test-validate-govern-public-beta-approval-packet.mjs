@@ -27,6 +27,31 @@ function runValidator(args = []) {
   });
 }
 
+function validPacketContent() {
+  return `
+packet_state=AwaitingEvidence
+approval_state=NotApproved
+public_write_route_allowed=false
+current_decision=KeepBlocked
+route_publication_action=none
+dns_mutation=none
+runtime_mutation=none
+secret_rotation_required=false
+operator_approval_ref=missing
+product_status_promotion_ref=missing
+api_contract_test_ref=missing
+privacy_activation_ref=missing
+retention_activation_ref=missing
+dashboard_operator_readiness_ref=missing
+runtime_witness_ref=missing
+rollback_witness_ref=control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py
+support_readiness_ref=ops/mullu-govern-support-readiness.md
+public_claim_update_ref=missing
+POST /v1/govern/evaluate
+STATUS:
+`;
+}
+
 function testCurrentPacketPassesAsNonOperative() {
   const result = validateGovernPublicBetaApprovalPacket();
   const report = formatApprovalPacketReport(result);
@@ -44,28 +69,10 @@ function testCurrentPacketPassesAsNonOperative() {
 }
 
 function testOnlyRollbackEvidenceRefIsAllowed() {
-  const packet = `
-packet_state=AwaitingEvidence
-approval_state=NotApproved
-public_write_route_allowed=false
-current_decision=KeepBlocked
-route_publication_action=none
-dns_mutation=none
-runtime_mutation=none
-secret_rotation_required=false
-operator_approval_ref=approval://not-yet-allowed
-product_status_promotion_ref=missing
-api_contract_test_ref=missing
-privacy_activation_ref=missing
-retention_activation_ref=missing
-dashboard_operator_readiness_ref=missing
-runtime_witness_ref=missing
-rollback_witness_ref=control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py
-support_readiness_ref=ops/mullu-govern-support-readiness.md
-public_claim_update_ref=missing
-POST /v1/govern/evaluate
-STATUS:
-`;
+  const packet = validPacketContent().replace(
+    "operator_approval_ref=missing",
+    "operator_approval_ref=approval://not-yet-allowed",
+  );
   const result = validateApprovalPacketContent(packet);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
@@ -74,6 +81,33 @@ STATUS:
   assert.equal(result.missingApprovalInputs.length, 7);
   assert.match(result.findings.join("\n"), /approval_input_ref_not_allowed:operator_approval_ref/);
   assert.match(result.findings.join("\n"), /approval_inputs_must_remain_missing_except_allowed_refs:7\/10/);
+}
+
+function testAggregateDecisionAndRuntimeFailuresBlockApprovalPacket() {
+  const result = validateApprovalPacketContent(validPacketContent(), {
+    runtimeClosurePacket: {
+      productClaimsAllowed: true,
+      proofState: "Fail",
+      runtimeWitnessClosureAllowed: true,
+      solverOutcome: "GovernanceBlocked",
+    },
+    writeRouteDecision: {
+      decisionState: "Approve",
+      proofState: "Fail",
+      publicWriteRouteAllowed: true,
+      solverOutcome: "GovernanceBlocked",
+    },
+  });
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.publicWriteRouteAllowed, false);
+  assert.match(result.findings.join("\n"), /write_route_decision_not_solved:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /write_route_decision_must_remain_keep_blocked:Approve/);
+  assert.match(result.findings.join("\n"), /write_route_decision_public_route_not_blocked/);
+  assert.match(result.findings.join("\n"), /runtime_closure_packet_not_solved:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /runtime_closure_packet_closure_not_blocked/);
+  assert.match(result.findings.join("\n"), /runtime_closure_packet_product_claims_not_blocked/);
 }
 
 function testSecretShapedAllowedRefFailsClosed() {
@@ -123,6 +157,7 @@ function testCliJsonAndUnsupportedArgs() {
 
 testCurrentPacketPassesAsNonOperative();
 testOnlyRollbackEvidenceRefIsAllowed();
+testAggregateDecisionAndRuntimeFailuresBlockApprovalPacket();
 testSecretShapedAllowedRefFailsClosed();
 testCliJsonAndUnsupportedArgs();
 

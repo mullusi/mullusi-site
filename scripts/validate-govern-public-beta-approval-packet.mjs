@@ -14,6 +14,8 @@ import {
   scanForbiddenEvidencePatterns,
   validatePublicSafeEvidenceRef,
 } from "./govern-live-evidence-ref-contract.mjs";
+import { validateGovernEvaluateWriteRouteDecision } from "./validate-govern-evaluate-write-route-decision.mjs";
+import { validateGovernRuntimeClosurePacket } from "./validate-govern-runtime-closure-packet.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -63,7 +65,7 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
-export function validateApprovalPacketContent(content) {
+export function validateApprovalPacketContent(content, context = {}) {
   const findings = [];
 
   for (const term of requiredTerms) {
@@ -134,6 +136,36 @@ export function validateApprovalPacketContent(content) {
     if (value !== expectedValue) findings.push(`required_allowed_evidence_ref_missing:${key}`);
   }
 
+  if (context.writeRouteDecision) {
+    if (context.writeRouteDecision.solverOutcome !== "SolvedVerified") {
+      findings.push(`write_route_decision_not_solved:${context.writeRouteDecision.solverOutcome || "missing"}`);
+    }
+    if (context.writeRouteDecision.proofState !== "Pass") {
+      findings.push(`write_route_decision_proof_not_pass:${context.writeRouteDecision.proofState || "missing"}`);
+    }
+    if (context.writeRouteDecision.decisionState !== "KeepBlocked") {
+      findings.push(`write_route_decision_must_remain_keep_blocked:${context.writeRouteDecision.decisionState || "missing"}`);
+    }
+    if (context.writeRouteDecision.publicWriteRouteAllowed !== false) {
+      findings.push("write_route_decision_public_route_not_blocked");
+    }
+  }
+
+  if (context.runtimeClosurePacket) {
+    if (context.runtimeClosurePacket.solverOutcome !== "SolvedVerified") {
+      findings.push(`runtime_closure_packet_not_solved:${context.runtimeClosurePacket.solverOutcome || "missing"}`);
+    }
+    if (context.runtimeClosurePacket.proofState !== "Pass") {
+      findings.push(`runtime_closure_packet_proof_not_pass:${context.runtimeClosurePacket.proofState || "missing"}`);
+    }
+    if (context.runtimeClosurePacket.runtimeWitnessClosureAllowed !== false) {
+      findings.push("runtime_closure_packet_closure_not_blocked");
+    }
+    if (context.runtimeClosurePacket.productClaimsAllowed !== false) {
+      findings.push("runtime_closure_packet_product_claims_not_blocked");
+    }
+  }
+
   return {
     approvalState: approvalState || "Unknown",
     closedApprovalInputs,
@@ -147,7 +179,10 @@ export function validateApprovalPacketContent(content) {
 }
 
 export function validateGovernPublicBetaApprovalPacket(relativePath = defaultPacketPath) {
-  return validateApprovalPacketContent(readUtf8(relativePath));
+  return validateApprovalPacketContent(readUtf8(relativePath), {
+    runtimeClosurePacket: validateGovernRuntimeClosurePacket(),
+    writeRouteDecision: validateGovernEvaluateWriteRouteDecision(),
+  });
 }
 
 export function formatApprovalPacketReport(result) {
