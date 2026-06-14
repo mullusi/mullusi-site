@@ -1,6 +1,6 @@
 /*
 Purpose: report the next public-safe Mullusi operator action from local gate state.
-Governance scope: recovery witness, domain-hardening preflight, API readiness, and no-secret handoff guidance.
+Governance scope: recovery witness, domain-hardening preflight, API readiness, product live evidence sequencing, and no-secret handoff guidance.
 Dependencies: Node.js standard library, ops gate documents, and the API production readiness checker.
 Invariants: read-only; no browser sessions, provider dashboards, private recovery files, DNS target values, host addresses, database URLs, or secret values are read or printed.
 Test contract: run node scripts/test-report-ops-next-action.mjs.
@@ -122,13 +122,14 @@ export function decideOpsNextAction(evidence) {
   if (apiExposureSolved) {
     return {
       opsNextState: "AwaitingEvidence",
-      nextAction: "decide_product_evaluate_public_write_route",
-      blockedSurface: "product_evaluate_write_route_promotion_boundary",
-      safeLocalCommand: "node scripts/validate-runtime-witnesses.mjs",
+      nextAction: "complete_govern_live_evidence_sequence_refs",
+      blockedSurface: "govern_live_evidence_sequence_boundary",
+      safeLocalCommand: "node scripts/validate-govern-live-evidence-sequence-preflight.mjs",
       packetPath: "ops/runtime-witness/mullu-govern-closure-packet.md",
       decisionRecordPath: "ops/mullu-govern-evaluate-write-route-decision.md",
       approvalPacketPath: "ops/mullu-govern-public-beta-approval-packet.md",
-      manualEvidenceBoundary: "product status promotion approval, public evaluate write-route approval, live contract execution approval, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, and runtime witness evidence",
+      sequencePreflightPath: "ops/mullu-govern-live-evidence-sequence-preflight.md",
+      manualEvidenceBoundary: "live evidence sequence refs for product status promotion approval, public evaluate write-route approval, live contract execution approval, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, and runtime witness evidence",
     };
   }
 
@@ -159,6 +160,7 @@ export function formatOpsNextReport(evidence, decision) {
     `product_runtime_witness_packet=${decision.packetPath || "none"}`,
     `product_write_route_decision_record=${decision.decisionRecordPath || "none"}`,
     `product_public_beta_approval_packet=${decision.approvalPacketPath || "none"}`,
+    `product_live_evidence_sequence_preflight=${decision.sequencePreflightPath || "none"}`,
     `recovery_witness_state=${evidence.recoveryWitnessState}`,
     `api_provisioning_allowed=${evidence.apiProvisioningAllowed ? "true" : "false"}`,
     `domain_hardening_preflight=${evidence.domainHardeningPreflight}`,
@@ -197,6 +199,7 @@ export function formatOpsNextJson(evidence, decision) {
     productRuntimeWitnessPacket: decision.packetPath || "none",
     productWriteRouteDecisionRecord: decision.decisionRecordPath || "none",
     productPublicBetaApprovalPacket: decision.approvalPacketPath || "none",
+    productLiveEvidenceSequencePreflight: decision.sequencePreflightPath || "none",
     recoveryWitnessState: evidence.recoveryWitnessState,
     apiProvisioningAllowed: evidence.apiProvisioningAllowed,
     domainHardeningPreflight: evidence.domainHardeningPreflight,
