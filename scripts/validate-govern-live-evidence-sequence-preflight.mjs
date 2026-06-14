@@ -16,6 +16,7 @@ import {
 import { validateGovernApprovalReadinessPreflight } from "./validate-govern-approval-readiness-preflight.mjs";
 import { validateGovernDashboardOperatorReadinessPreflight } from "./validate-govern-dashboard-operator-readiness-preflight.mjs";
 import { validateGovernEvaluateContractPreflight } from "./validate-govern-evaluate-contract-preflight.mjs";
+import { validateGovernLiveEvidenceRefIntake } from "./validate-govern-live-evidence-ref-intake.mjs";
 import { validateGovernPrivacyRetentionPreflight } from "./validate-govern-privacy-retention-preflight.mjs";
 import { validateGovernProductStatusPreflight } from "./validate-govern-product-status-preflight.mjs";
 import { validateGovernPublicBetaApprovalPacket } from "./validate-govern-public-beta-approval-packet.mjs";
@@ -56,6 +57,8 @@ const requiredWitnessTerms = [
   "public_claim_update_allowed=false",
   "runtime_witness_update_allowed=false",
   "provider_values_recorded=false",
+  "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
+  "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
   "STATUS:",
 ];
 
@@ -78,6 +81,7 @@ function aggregateValidatorResults() {
     approvalReadinessPreflight: validateGovernApprovalReadinessPreflight(),
     contractPreflight: validateGovernEvaluateContractPreflight(),
     dashboardPreflight: validateGovernDashboardOperatorReadinessPreflight(),
+    liveEvidenceRefIntake: validateGovernLiveEvidenceRefIntake(),
     privacyRetentionPreflight: validateGovernPrivacyRetentionPreflight(),
     productStatusPreflight: validateGovernProductStatusPreflight(),
     publicClaimPreflight: validateGovernPublicClaimUpdatePreflight(),
@@ -131,6 +135,7 @@ export function validateGovernLiveEvidenceSequencePreflightEvidence(evidence) {
     approvalReadinessPreflight: "SolvedVerified",
     contractPreflight: "SolvedVerified",
     dashboardPreflight: "SolvedVerified",
+    liveEvidenceRefIntake: "SolvedVerified",
     privacyRetentionPreflight: "SolvedVerified",
     productStatusPreflight: "SolvedVerified",
     publicClaimPreflight: "SolvedVerified",
@@ -170,12 +175,14 @@ export function validateGovernLiveEvidenceSequencePreflightEvidence(evidence) {
 
 export function collectGovernLiveEvidenceSequencePreflightEvidence(relativePath = defaultWitnessPath) {
   const approvalPacket = readUtf8("ops/mullu-govern-public-beta-approval-packet.md");
+  const liveEvidenceRefIntake = readUtf8("ops/mullu-govern-live-evidence-ref-intake-template.json");
   const runtimeClosurePacket = readUtf8("ops/runtime-witness/mullu-govern-closure-packet.md");
   const witness = readUtf8(relativePath);
   return {
     approvalPacket,
     privateValueScanSources: {
       approvalPacket,
+      liveEvidenceRefIntake,
       runtimeClosurePacket,
       witness,
     },
