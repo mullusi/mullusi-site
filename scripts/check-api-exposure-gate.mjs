@@ -54,7 +54,7 @@ function withTimeout(promise, timeoutMs, fallback) {
 export function parseApiExposureDocuments({ recoveryWitness, exposureWitness, apiGate, runtimeHostPath }) {
   const findings = [
     ...hasRequiredTerms(apiGate, [
-      "no_runtime_witness -> no_api_dns",
+      "no_gateway_runtime_evidence -> no_api_dns",
       "ops/recovery-completion-witness.md",
       "ReadyForDns",
       "Post-DNS Evidence",

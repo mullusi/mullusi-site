@@ -1,6 +1,6 @@
 <!--
 Purpose: define the go/no-go gate before api.mullusi.com receives public DNS.
-Governance scope: recovery readiness, provider-neutral host provisioning, managed PostgreSQL, production credential placement, release preflight, DNS activation, and rollback.
+Governance scope: recovery readiness, provider-neutral host provisioning, managed PostgreSQL, production credential placement, gateway runtime evidence, DNS activation, and rollback.
 Dependencies: ops/MULLUSI_INFRASTRUCTURE_ROOT.md, ops/api-runtime-host-path.md, backend deploy package, Cloudflare DNS, container registry, and managed PostgreSQL.
 Invariants: no provider account id, host IP, credential value, database URL, recovery code, billing detail, or token value is stored in this file.
 -->
@@ -10,7 +10,7 @@ Invariants: no provider account id, host IP, credential value, database URL, rec
 This gate controls when `api.mullusi.com` may become public. The rule is:
 
 ```text
-no_runtime_witness -> no_api_dns
+no_gateway_runtime_evidence -> no_api_dns
 ```
 
 The public website, docs, email, DNSSEC, and Cloudflare baseline must remain
@@ -49,7 +49,6 @@ blocker=manual_evidence_missing:tls_certificate_ready
 blocker=manual_evidence_missing:rollback_path_defined
 blocker=manual_evidence_missing:private_runtime_witness_ready
 blocker=manual_evidence_missing:dns_authority_ready
-blocker=runtime_witness_registry_has_no_closed_products
 secret_values=not_recorded
 host_addresses=not_recorded
 database_urls=not_recorded
@@ -145,6 +144,20 @@ The reporter records only boolean evidence presence and public-safe blocker
 names. It must not print host addresses, DNS target values, database URLs,
 secret values, provider account IDs, or private recovery details.
 
+## Product Runtime Witness Boundary
+
+The API gateway readiness gate is separate from the public product runtime
+witness registry. `ops/runtime-witness/registry.json` continues to block product
+runtime claims until product-specific health, gateway witness, runtime
+conformance, rollback, privacy, and contract evidence close. A product witness
+remaining `AwaitingEvidence` must not block the gateway DNS readiness gate when
+the gateway runtime evidence plane is independently verified.
+
+```text
+api_gateway_ready_for_dns may be true while product_runtime_release_witness=AwaitingEvidence
+product_runtime_claims_allowed=false until product-specific proof and witness rows close
+```
+
 ## DNS Activation Rule
 
 Only after pre-DNS evidence passes:
@@ -202,7 +215,7 @@ If post-DNS evidence fails:
 | --- | --- | --- |
 | GovernanceBlocked | Recovery, credential, host, database, or HSTS gate fails | Do not publish DNS |
 | AwaitingEvidence | Host exists but preflight or persistence is incomplete | Continue private setup |
-| ReadyForDns | All pre-DNS evidence passes | Publish only `api` DNS |
+| ReadyForDns | All pre-DNS evidence passes and gateway runtime evidence is verified | Publish only `api` DNS |
 | SolvedVerified | Public witness and probes pass | Keep live and monitor |
 | SafeHalt | Runtime writes fail closed | Remove `api` DNS and preserve evidence |
 

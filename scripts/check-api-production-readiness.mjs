@@ -1,6 +1,6 @@
 /*
-Purpose: report the public-safe API production readiness state before api.mullusi.com DNS activation.
-Governance scope: recovery gate, runtime host evidence, managed PostgreSQL evidence, secret-store boundary, TLS, rollback, and runtime witness registry coverage.
+Purpose: report the public-safe API gateway production readiness state before api.mullusi.com DNS activation.
+Governance scope: recovery gate, runtime host evidence, managed PostgreSQL evidence, secret-store boundary, TLS, rollback, gateway runtime evidence, and product runtime witness separation.
 Dependencies: Node.js standard library, ops API readiness documents, recovery witness, and runtime witness registry.
 Invariants: fail-closed readiness; optional JSON output writes only aggregate public-safe state; no secret values, host addresses, provider account IDs, database URLs, or private recovery values are read, printed, or written.
 Test contract: run node scripts/test-check-api-production-readiness.mjs.
@@ -166,7 +166,7 @@ export function evaluateApiProductionReadinessEvidence(evidence) {
     "rollback_path_defined=true",
   ]);
   assertDocumentIncludes(hardFindings, "production_readiness_gate", productionReadinessGate, [
-    "no_runtime_witness -> no_api_dns",
+    "no_gateway_runtime_evidence -> no_api_dns",
     "python scripts/check_deploy_env.py",
     "python scripts/preflight_release.py",
     "python scripts/apply_schema.py",
@@ -205,10 +205,6 @@ export function evaluateApiProductionReadinessEvidence(evidence) {
   for (const key of missingReadinessEvidence) blockers.push(`manual_evidence_missing:${key}`);
 
   const runtimeWitnessSummary = validateRuntimeWitnessRegistry(hardFindings, evidence.runtimeWitnessRegistry);
-  if (runtimeWitnessSummary.closedWitnessCount === 0) {
-    blockers.push("runtime_witness_registry_has_no_closed_products");
-  }
-
   let apiProductionReadinessState = "ReadyForDns";
   let solverOutcome = "SolvedVerified";
   let proofState = "Pass";

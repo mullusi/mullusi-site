@@ -1,6 +1,6 @@
 /*
 Purpose: test the API production readiness reporter without infrastructure mutation.
-Governance scope: fail-closed DNS readiness, manual evidence flags, runtime witness registry closure, and public-safe output.
+Governance scope: fail-closed DNS readiness, manual evidence flags, product runtime witness separation, and public-safe output.
 Dependencies: Node.js standard library and scripts/check-api-production-readiness.mjs.
 Invariants: tests use local fixtures or current public-safe repo files only; they never read private recovery inventories or secret values.
 */
@@ -81,7 +81,7 @@ function fixtureEvidence({ recoveryState = "ReadyForProvisioning", allowed = "tr
         "rollback_path_defined=true",
       ].join("\n"),
       productionReadinessGate: [
-        "no_runtime_witness -> no_api_dns",
+        "no_gateway_runtime_evidence -> no_api_dns",
         "python scripts/check_deploy_env.py",
         "python scripts/preflight_release.py",
         "python scripts/apply_schema.py",
@@ -149,15 +149,16 @@ function testRecoveryBlockDominatesReadiness() {
   assert.equal(result.apiDnsPublicationAllowed, false);
 }
 
-function testBlockedRuntimeWitnessAwaitsEvidenceAfterRecovery() {
+function testBlockedProductRuntimeWitnessDoesNotBlockGatewayReadiness() {
   const result = evaluateApiProductionReadinessEvidence(fixtureEvidence({ witnesses: [blockedWitness()] }));
 
-  assert.equal(result.apiProductionReadinessState, "AwaitingEvidence");
+  assert.equal(result.apiProductionReadinessState, "ReadyForDns");
   assert.equal(result.runtimeWitnessRegistry, "Pass");
   assert.equal(result.witnessCount, 1);
   assert.equal(result.closedWitnessCount, 0);
   assert.equal(result.blockedWitnessCount, 1);
-  assert.ok(result.blockers.includes("runtime_witness_registry_has_no_closed_products"));
+  assert.equal(result.apiDnsPublicationAllowed, true);
+  assert.deepEqual(result.blockers, []);
 }
 
 function testSecretLikeValueBlocksContract() {
@@ -197,6 +198,31 @@ function testCurrentCliRequireReadyFailsClosed() {
   assert.match(result.stdout, /^api_production_readiness_state=AwaitingEvidence$/m);
   assert.match(result.stdout, /^proof_state=Unknown$/m);
   assert.match(result.stdout, /^blocker=manual_evidence_missing:production_image_published$/m);
+}
+
+function testCurrentCliWithAllEvidenceFlagsRequiresReady() {
+  const result = runCli([
+    "--production-image-published",
+    "--runtime-host-ready",
+    "--managed-postgres-ready",
+    "--schema-applied",
+    "--production-secrets-stored",
+    "--deploy-env-ready",
+    "--release-preflight-ready",
+    "--persistence-ready",
+    "--host-firewall-configured",
+    "--tls-certificate-ready",
+    "--rollback-path-defined",
+    "--private-runtime-witness-ready",
+    "--dns-authority-ready",
+    "--require-ready",
+  ]);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^api_production_readiness_state=ReadyForDns$/m);
+  assert.match(result.stdout, /^api_dns_publication_allowed=true$/m);
+  assert.match(result.stdout, /^runtime_witness_closed_count=0$/m);
+  assert.doesNotMatch(result.stdout, /runtime_witness_registry_has_no_closed_products/);
 }
 
 function testCurrentCliRejectsUnsupportedArgs() {
@@ -245,11 +271,12 @@ function testEmptyOutputPathIsRejectedBeforeWrite() {
 testReadyFixtureAllowsDns();
 testMissingManualEvidenceAwaitsEvidence();
 testRecoveryBlockDominatesReadiness();
-testBlockedRuntimeWitnessAwaitsEvidenceAfterRecovery();
+testBlockedProductRuntimeWitnessDoesNotBlockGatewayReadiness();
 testSecretLikeValueBlocksContract();
 testRuntimeWitnessClosurePredicate();
 testCurrentCliDefaultsAwaitEvidenceAfterRecovery();
 testCurrentCliRequireReadyFailsClosed();
+testCurrentCliWithAllEvidenceFlagsRequiresReady();
 testCurrentCliRejectsUnsupportedArgs();
 testOutputFilePersistsReadinessJson();
 testJsonOutputFilePersistsGovernanceBlock();
