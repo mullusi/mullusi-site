@@ -42,6 +42,7 @@ function validRunbook() {
     "approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md",
     "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
     "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
+    "live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collection-checklist.md",
     "sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md",
     "runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md",
     "safe_local_command=node scripts/validate-govern-live-evidence-sequence-preflight.mjs",
@@ -123,6 +124,21 @@ function testSyntheticMissingApprovalKeyFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.match(result.findings.join("\n"), /required_approval_key_missing_from_table:runtime_witness_ref/);
+}
+
+function testSyntheticMissingCollectionChecklistFailsClosed() {
+  const evidence = validEvidence({
+    runbook: validRunbook().replace(
+      "live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collection-checklist.md",
+      "",
+    ),
+  });
+  evidence.privateValueScanSources.runbook = evidence.runbook;
+  const result = validateGovernLiveEvidenceOperatorRunbookEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_runbook_term_missing:live_evidence_ref_collection_checklist=ops\/mullu-govern-live-evidence-ref-collection-checklist.md/);
 }
 
 function testSyntheticApprovalPacketFilledRefFailsClosed() {
@@ -251,6 +267,7 @@ function testCliJsonAndUnsupportedArgs() {
 
 testCurrentRunbookPasses();
 testSyntheticMissingApprovalKeyFailsClosed();
+testSyntheticMissingCollectionChecklistFailsClosed();
 testSyntheticApprovalPacketFilledRefFailsClosed();
 testSyntheticSequencePreflightFailureFailsClosed();
 testSyntheticApprovalAggregateFailureFailsClosed();

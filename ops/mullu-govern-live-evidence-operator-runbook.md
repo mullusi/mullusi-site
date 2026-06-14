@@ -26,6 +26,7 @@ approval_packet=ops/mullu-govern-public-beta-approval-packet.md
 approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
+live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collection-checklist.md
 sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md
 runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md
 safe_local_command=node scripts/validate-govern-live-evidence-sequence-preflight.mjs
@@ -96,7 +97,8 @@ public_product_release_allowed=false
 2. Run `node scripts/validate-govern-approval-readiness-preflight.mjs`.
 3. Run `node scripts/validate-govern-live-evidence-sequence-preflight.mjs`.
 4. Confirm every current live evidence ref is still `missing`.
-5. Collect only public-safe ref identifiers for the required inputs.
+5. Use `ops/mullu-govern-live-evidence-ref-collection-checklist.md` to
+   collect only public-safe ref identifiers for the required inputs.
 6. Do not paste secrets, database URLs, raw headers, raw request bodies, raw
    response bodies, provider host values, billing details, or account ids.
 7. Update the approval packet only in a separate PR that validates the exact
