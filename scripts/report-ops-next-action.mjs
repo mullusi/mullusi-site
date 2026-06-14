@@ -128,6 +128,7 @@ export function decideOpsNextAction(evidence) {
       packetPath: "ops/runtime-witness/mullu-govern-closure-packet.md",
       decisionRecordPath: "ops/mullu-govern-evaluate-write-route-decision.md",
       approvalPacketPath: "ops/mullu-govern-public-beta-approval-packet.md",
+      operatorRunbookPath: "ops/mullu-govern-live-evidence-operator-runbook.md",
       sequencePreflightPath: "ops/mullu-govern-live-evidence-sequence-preflight.md",
       manualEvidenceBoundary: "live evidence sequence refs for product status promotion approval, public evaluate write-route approval, live contract execution approval, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, and runtime witness evidence",
     };
@@ -160,6 +161,7 @@ export function formatOpsNextReport(evidence, decision) {
     `product_runtime_witness_packet=${decision.packetPath || "none"}`,
     `product_write_route_decision_record=${decision.decisionRecordPath || "none"}`,
     `product_public_beta_approval_packet=${decision.approvalPacketPath || "none"}`,
+    `product_live_evidence_operator_runbook=${decision.operatorRunbookPath || "none"}`,
     `product_live_evidence_sequence_preflight=${decision.sequencePreflightPath || "none"}`,
     `recovery_witness_state=${evidence.recoveryWitnessState}`,
     `api_provisioning_allowed=${evidence.apiProvisioningAllowed ? "true" : "false"}`,
@@ -199,6 +201,7 @@ export function formatOpsNextJson(evidence, decision) {
     productRuntimeWitnessPacket: decision.packetPath || "none",
     productWriteRouteDecisionRecord: decision.decisionRecordPath || "none",
     productPublicBetaApprovalPacket: decision.approvalPacketPath || "none",
+    productLiveEvidenceOperatorRunbook: decision.operatorRunbookPath || "none",
     productLiveEvidenceSequencePreflight: decision.sequencePreflightPath || "none",
     recoveryWitnessState: evidence.recoveryWitnessState,
     apiProvisioningAllowed: evidence.apiProvisioningAllowed,
