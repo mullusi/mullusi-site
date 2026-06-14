@@ -81,7 +81,7 @@ function testSyntheticCompleteRefsPassCompleteMode() {
 
   assert.equal(result.solverOutcome, "SolvedVerified");
   assert.equal(result.proofState, "Pass");
-  assert.equal(result.readyForLiveEvidence, true);
+  assert.equal(result.readyForLiveEvidence, false);
   assert.equal(result.missingApprovalInputCount, 0);
 }
 
@@ -108,6 +108,15 @@ function testUnsafeRouteFlagFailsClosed() {
   assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:true/);
 }
 
+function testReadyForLiveEvidenceFlagFailsClosed() {
+  const result = validateGovernLiveEvidenceRefIntakeContent(intake({ ready_for_live_evidence: true }));
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.readyForLiveEvidence, false);
+  assert.match(result.findings.join("\n"), /ready_for_live_evidence_must_remain_false:true/);
+}
+
 function testCliJsonAndUnsupportedArgs() {
   const jsonResult = runValidator(["--json"]);
   const payload = JSON.parse(jsonResult.stdout);
@@ -126,6 +135,7 @@ testCompleteModeRequiresRefs();
 testSyntheticCompleteRefsPassCompleteMode();
 testSecretAndUnknownKeyFailClosed();
 testUnsafeRouteFlagFailsClosed();
+testReadyForLiveEvidenceFlagFailsClosed();
 testCliJsonAndUnsupportedArgs();
 
 console.log("govern live evidence ref intake validator tests passed");
