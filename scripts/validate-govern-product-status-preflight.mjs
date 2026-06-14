@@ -1,7 +1,7 @@
 /*
 Purpose: validate public-safe product-status promotion preflight evidence for Mullu Govern.
-Governance scope: limited-preview preservation, release-gate ordering, approval-packet fail-closed refs, public write-route blocking, and no-secret evidence.
-Dependencies: Node.js standard library, ops/mullu-govern-product-status-preflight.md, product manifest, and public-beta approval packet.
+Governance scope: limited-preview preservation, release-gate ordering, approval-packet fail-closed refs, public write-route blocking, runtime closure blocking, and no-secret evidence.
+Dependencies: Node.js standard library, ops/mullu-govern-product-status-preflight.md, product manifest, public-beta approval packet, write-route decision validator, runtime closure validator, and approval-packet validator.
 Invariants: read-only; does not promote product status, publish routes, activate privacy or retention, mutate DNS, or print private values.
 Test contract: run node scripts/test-validate-govern-product-status-preflight.mjs.
 */
@@ -10,6 +10,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
+import { validateGovernPublicBetaApprovalPacket } from "./validate-govern-public-beta-approval-packet.mjs";
+import { validateGovernEvaluateWriteRouteDecision } from "./validate-govern-evaluate-write-route-decision.mjs";
+import { validateGovernRuntimeClosurePacket } from "./validate-govern-runtime-closure-packet.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -79,6 +82,14 @@ function includesAll(observed, expected) {
   return Array.isArray(observed) && expected.every((value) => observed.includes(value));
 }
 
+function aggregateValidatorResults() {
+  return {
+    approvalPacket: validateGovernPublicBetaApprovalPacket(),
+    runtimeClosurePacket: validateGovernRuntimeClosurePacket(),
+    writeRouteDecision: validateGovernEvaluateWriteRouteDecision(),
+  };
+}
+
 export function validateGovernProductStatusPreflightEvidence(evidence) {
   const findings = [];
 
@@ -124,6 +135,44 @@ export function validateGovernProductStatusPreflightEvidence(evidence) {
     findings.push(`approval_packet_product_status_promotion_ref_must_remain_missing:${lineValue(evidence.approvalPacket, "product_status_promotion_ref") || "missing"}`);
   }
 
+  const expectedPassResults = {
+    approvalPacket: "SolvedVerified",
+    runtimeClosurePacket: "SolvedVerified",
+    writeRouteDecision: "SolvedVerified",
+  };
+  for (const [name, expectedOutcome] of Object.entries(expectedPassResults)) {
+    const observed = evidence.validatorResults?.[name]?.solverOutcome;
+    if (observed !== expectedOutcome) {
+      findings.push(`aggregate_validator_not_solved:${name}:${observed || "missing"}`);
+    }
+    const proofState = evidence.validatorResults?.[name]?.proofState;
+    if (proofState !== "Pass") {
+      findings.push(`aggregate_validator_proof_not_pass:${name}:${proofState || "missing"}`);
+    }
+  }
+  const missingApprovalInputCount = evidence.validatorResults?.approvalPacket?.missingApprovalInputs?.length ?? 0;
+  if (missingApprovalInputCount !== 8) {
+    findings.push(`approval_packet_missing_input_count_must_remain_eight:${missingApprovalInputCount}`);
+  }
+  if (evidence.validatorResults?.approvalPacket?.publicWriteRouteAllowed !== false) {
+    findings.push("approval_packet_public_write_route_not_blocked");
+  }
+  if (evidence.validatorResults?.runtimeClosurePacket?.runtimeWitnessClosureAllowed !== false) {
+    findings.push("runtime_closure_packet_must_not_allow_runtime_closure");
+  }
+  if (evidence.validatorResults?.runtimeClosurePacket?.productClaimsAllowed !== false) {
+    findings.push("runtime_closure_packet_must_not_allow_product_claims");
+  }
+  if (evidence.validatorResults?.runtimeClosurePacket?.publicWriteRouteAllowed !== false) {
+    findings.push("runtime_closure_packet_public_write_route_not_blocked");
+  }
+  if (evidence.validatorResults?.writeRouteDecision?.publicWriteRouteAllowed !== false) {
+    findings.push("write_route_decision_public_route_not_blocked");
+  }
+  if (evidence.validatorResults?.writeRouteDecision?.routePublicationAction !== "none") {
+    findings.push(`write_route_decision_route_publication_action_must_remain_none:${evidence.validatorResults?.writeRouteDecision?.routePublicationAction || "missing"}`);
+  }
+
   return {
     findingCount: findings.length,
     findings,
@@ -145,6 +194,7 @@ export function collectGovernProductStatusPreflightEvidence(relativePath = defau
       manifest: readUtf8("products/mullu-govern/product.manifest.json"),
       witness,
     },
+    validatorResults: aggregateValidatorResults(),
     witness,
   };
 }

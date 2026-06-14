@@ -33,6 +33,37 @@ function runValidator(args = []) {
   });
 }
 
+function solvedAggregateValidatorResults(overrides = {}) {
+  return {
+    approvalPacket: {
+      missingApprovalInputs: Array.from({ length: 8 }, (_, index) => `missing_${index + 1}`),
+      proofState: "Pass",
+      publicWriteRouteAllowed: false,
+      solverOutcome: "SolvedVerified",
+    },
+    productStatusPreflight: {
+      productStatusPreflightState: "Ready",
+      proofState: "Pass",
+      publicWriteRouteAllowed: false,
+      solverOutcome: "SolvedVerified",
+    },
+    runtimeClosurePacket: {
+      productClaimsAllowed: false,
+      proofState: "Pass",
+      publicWriteRouteAllowed: false,
+      runtimeWitnessClosureAllowed: false,
+      solverOutcome: "SolvedVerified",
+    },
+    writeRouteDecision: {
+      proofState: "Pass",
+      publicWriteRouteAllowed: false,
+      routePublicationAction: "none",
+      solverOutcome: "SolvedVerified",
+    },
+    ...overrides,
+  };
+}
+
 function claimBinding(claimId) {
   return {
     claimId,
@@ -112,6 +143,7 @@ function validEvidence(overrides = {}) {
       claimBindings: blockedClaimIds.map(claimBinding),
     },
     publicClaimGate: "no public claim ships without a status, evidence basis, exposure decision, and rollback path",
+    validatorResults: solvedAggregateValidatorResults(),
     witness,
     ...overrides,
   };
@@ -173,6 +205,26 @@ function testSyntheticApprovalRefFailsClosed() {
   assert.match(result.findings.join("\n"), /approval_packet_public_claim_update_ref_must_remain_missing/);
 }
 
+function testSyntheticAggregateProductStatusFailureFailsClosed() {
+  const evidence = validEvidence({
+    validatorResults: solvedAggregateValidatorResults({
+      productStatusPreflight: {
+        productStatusPreflightState: "Blocked",
+        proofState: "Fail",
+        publicWriteRouteAllowed: true,
+        solverOutcome: "GovernanceBlocked",
+      },
+    }),
+  });
+  const result = validateGovernPublicClaimUpdatePreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.publicClaimUpdatePreflightState, "Blocked");
+  assert.match(result.findings.join("\n"), /aggregate_validator_not_solved:productStatusPreflight:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /product_status_preflight_public_write_route_not_blocked/);
+}
+
 function testSyntheticSecretPatternFailsClosed() {
   const evidence = validEvidence({
     privateValueScanSources: {
@@ -207,6 +259,7 @@ testCurrentPublicClaimUpdatePreflightPasses();
 testSyntheticRenderableClaimFailsClosed();
 testSyntheticAllowedProofClaimFailsClosed();
 testSyntheticApprovalRefFailsClosed();
+testSyntheticAggregateProductStatusFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 

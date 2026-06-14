@@ -1,7 +1,7 @@
 <!--
 Purpose: record public-safe product-status promotion preflight evidence for Mullu Govern.
-Governance scope: limited-preview preservation, public-beta promotion boundary, release-gate ordering, public write-route blocking, approval-packet placeholders, and no-secret evidence.
-Dependencies: products/mullu-govern/product.manifest.json, ops/mullu-govern-public-beta-approval-packet.md, ops/mullu-govern-evaluate-write-route-decision.md, and ops/runtime-witness/mullu-govern-closure-packet.md.
+Governance scope: limited-preview preservation, public-beta promotion boundary, release-gate ordering, public write-route blocking, runtime closure blocking, approval-packet placeholders, and no-secret evidence.
+Dependencies: products/mullu-govern/product.manifest.json, ops/mullu-govern-public-beta-approval-packet.md, ops/mullu-govern-evaluate-write-route-decision.md, ops/runtime-witness/mullu-govern-closure-packet.md, scripts/validate-govern-public-beta-approval-packet.mjs, scripts/validate-govern-evaluate-write-route-decision.mjs, and scripts/validate-govern-runtime-closure-packet.mjs.
 Invariants: this file is non-operative; it does not promote product status, publish routes, mutate DNS, activate privacy or retention, rotate secrets, or record provider-private values.
 -->
 
@@ -54,6 +54,7 @@ and does not publish `POST /v1/govern/evaluate`.
 | Required release gates | route, docs, contract, privacy, runtime witness, rollback, support, and status are listed | `releaseGate.required` includes all required gates | Pass |
 | Approval packet | public-beta packet remains non-operative | `product_status_promotion_ref=missing` | Pass |
 | Public route | evaluate write route remains closed | `public_write_route_allowed=false` | Pass |
+| Validator aggregate | approval packet, write-route decision, and runtime closure packet validators pass while blocking publication | aggregate validator results are `SolvedVerified` and `Pass`; public write route, runtime closure, and product claims remain false | Pass |
 | Runtime/DNS mutation | no runtime or DNS mutation is performed | `runtime_mutation=none`, `dns_mutation=none` | Pass |
 | Public claim | no public-beta claim is emitted | `public_beta_claim_allowed=false` | Pass |
 

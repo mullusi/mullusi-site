@@ -46,6 +46,31 @@ function runValidator(args = []) {
   });
 }
 
+function solvedAggregateValidatorResults(overrides = {}) {
+  return {
+    approvalPacket: {
+      missingApprovalInputs: Array.from({ length: 8 }, (_, index) => `missing_${index + 1}`),
+      proofState: "Pass",
+      publicWriteRouteAllowed: false,
+      solverOutcome: "SolvedVerified",
+    },
+    runtimeClosurePacket: {
+      productClaimsAllowed: false,
+      proofState: "Pass",
+      publicWriteRouteAllowed: false,
+      runtimeWitnessClosureAllowed: false,
+      solverOutcome: "SolvedVerified",
+    },
+    writeRouteDecision: {
+      proofState: "Pass",
+      publicWriteRouteAllowed: false,
+      routePublicationAction: "none",
+      solverOutcome: "SolvedVerified",
+    },
+    ...overrides,
+  };
+}
+
 function validEvidence(overrides = {}) {
   const witness = [
     "product_status_preflight_state=Ready",
@@ -87,6 +112,7 @@ function validEvidence(overrides = {}) {
       manifest: JSON.stringify({ status: "limited-preview" }),
       witness,
     },
+    validatorResults: solvedAggregateValidatorResults(),
     witness,
     ...overrides,
   };
@@ -157,6 +183,27 @@ function testSyntheticInvalidPromotionPathFailsClosed() {
   assert.match(result.findings.join("\n"), /manifest_promotion_path_invalid:limited-preview>production/);
 }
 
+function testSyntheticAggregateValidatorFailureFailsClosed() {
+  const evidence = validEvidence({
+    validatorResults: solvedAggregateValidatorResults({
+      runtimeClosurePacket: {
+        productClaimsAllowed: true,
+        proofState: "Fail",
+        publicWriteRouteAllowed: false,
+        runtimeWitnessClosureAllowed: true,
+        solverOutcome: "GovernanceBlocked",
+      },
+    }),
+  });
+  const result = validateGovernProductStatusPreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.productStatusPreflightState, "Blocked");
+  assert.match(result.findings.join("\n"), /aggregate_validator_not_solved:runtimeClosurePacket:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /runtime_closure_packet_must_not_allow_runtime_closure/);
+}
+
 function testSyntheticSecretPatternFailsClosed() {
   const evidence = validEvidence({
     privateValueScanSources: {
@@ -191,6 +238,7 @@ testCurrentProductStatusPreflightPasses();
 testSyntheticPromotionFailsClosed();
 testSyntheticApprovalRefFailsClosed();
 testSyntheticInvalidPromotionPathFailsClosed();
+testSyntheticAggregateValidatorFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 

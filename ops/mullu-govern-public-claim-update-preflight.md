@@ -1,7 +1,7 @@
 <!--
 Purpose: record public-safe public-claim update preflight evidence for Mullu Govern.
-Governance scope: product page/status wording boundary, proof claim blocking, generated claim registry blocking, public-beta claim denial, approval-packet placeholder, and no-secret evidence.
-Dependencies: products/mullu-govern/product.manifest.json, proof/govern.proof.json, data/generated/products.json, data/generated/claim-registry.json, ops/public-claim-gate.md, and ops/mullu-govern-public-beta-approval-packet.md.
+Governance scope: product page/status wording boundary, proof claim blocking, generated claim registry blocking, public-beta claim denial, product-status blocking, approval-packet placeholder, runtime closure blocking, and no-secret evidence.
+Dependencies: products/mullu-govern/product.manifest.json, proof/govern.proof.json, data/generated/products.json, data/generated/claim-registry.json, ops/public-claim-gate.md, ops/mullu-govern-public-beta-approval-packet.md, scripts/validate-govern-product-status-preflight.mjs, scripts/validate-govern-public-beta-approval-packet.mjs, scripts/validate-govern-evaluate-write-route-decision.mjs, and scripts/validate-govern-runtime-closure-packet.mjs.
 Invariants: this file is non-operative; it does not promote product status, render public-beta claims, publish routes, mutate DNS, activate collection, or record provider-private values.
 -->
 
@@ -51,6 +51,7 @@ claims blocked and keeps all renderable public claims at zero.
 | Generated claims | no renderable public claim exists | `renderableClaims=[]` | Pass |
 | Approval packet | public claim update evidence remains missing | `public_claim_update_ref=missing` | Pass |
 | Public write route | evaluate route remains closed | `public_write_route_allowed=false` | Pass |
+| Validator aggregate | product-status, approval packet, write-route decision, and runtime closure validators pass while blocking public claims and route publication | aggregate validator results are `SolvedVerified` and `Pass`; public write route, runtime closure, and product claims remain false | Pass |
 
 ## Future Claim Update Envelope
 
