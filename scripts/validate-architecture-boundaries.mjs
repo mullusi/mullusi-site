@@ -158,7 +158,7 @@ function validateWorkflowBoundary() {
     "Run unified checkpoint",
     "node scripts/validate-checkpoint.mjs",
     "node --check scripts/fetch-news.mjs",
-    "node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
+    "node scripts/check-domain-hardening-preflight.mjs --require-ready",
     "node scripts/check-api-exposure-gate.mjs",
     "node scripts/check-api-production-readiness.mjs",
     "node scripts/check-private-recovery-inventory.mjs --allow-missing",

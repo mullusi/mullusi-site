@@ -31,7 +31,7 @@ origin_headers=node scripts/check-website-origin.mjs
 security_headers=node scripts/check-live-security-headers.mjs
 security_txt=node scripts/check-security-txt.mjs
 domain_security=node scripts/check-domain-security.mjs
-domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --expect-blocked
+domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --require-ready
 search_indexing_surface=node scripts/check-search-indexing-surface.mjs
 deployment_integrity=node scripts/check-live-deployment-integrity.mjs --allow-pending
 artifact_validator=node scripts/check-live-safety-witness.mjs live-safety-witness
@@ -56,7 +56,7 @@ boundary terms.
 deployment_integrity_annotation=notice when SolvedVerified or SolvedUnverified with edge_html_transform=AcceptedBoundary
 deployment_integrity_annotation=warning when AwaitingEvidence or GovernanceBlocked
 domain_security_annotation=notice while domain_security_state=SolvedVerified
-domain_hardening_preflight_annotation=notice while domain_hardening_preflight=GovernanceBlocked by external admin-evidence requirements
+domain_hardening_preflight_annotation=notice while domain_hardening_preflight=SolvedVerified
 regional_visibility_annotation=warning when external_multi_region_visibility remains AwaitingEvidence
 ```
 
@@ -66,7 +66,7 @@ regional_visibility_annotation=warning when external_multi_region_visibility rem
 single_run_public_edge=SolvedVerified when public visibility, origin headers, security headers, security.txt metadata, and search surface pass
 security_txt_metadata=SolvedVerified when contacts, policy, canonical URL, preferred languages, and Expires freshness pass
 domain_security_hardening=SolvedVerified while CAA, DKIM, SPF enforcement, DMARC enforcement, MTA-STS, and TLS-RPT pass public DNS readback
-domain_hardening_preflight=GovernanceBlocked until external admin evidence and mutation permissions are promoted
+domain_hardening_preflight=SolvedVerified while external admin evidence and mutation permissions remain promoted
 deployment_integrity=SolvedVerified when live status-manifest hashes match governed live files and route sentinels pass
 deployment_integrity=SolvedUnverified when live files match live status after canonical Cloudflare edge transforms, route sentinels pass, and edge_html_transform=AcceptedBoundary
 deployment_integrity=AwaitingEvidence when live files match live status but local status has not caught up

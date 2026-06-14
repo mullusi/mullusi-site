@@ -1,7 +1,7 @@
 # Purpose: verify Mullusi public website package before static host deployment.
 # Governance scope: unified checkpoint, stage-locked exposure gates, fetch tooling syntax, and public text gates.
 # Dependencies: GitHub Actions, Node.js, and Mullusi validation scripts.
-# Invariants: pushes and pull requests fail when the unified checkpoint or explicit stage locks fail.
+# Invariants: pushes and pull requests fail when the unified checkpoint or explicit readiness gates fail.
 
 name: Validate Site
 
@@ -32,8 +32,8 @@ jobs:
       - name: Run unified checkpoint
         run: node scripts/validate-checkpoint.mjs
 
-      - name: Confirm domain hardening remains blocked
-        run: node scripts/check-domain-hardening-preflight.mjs --expect-blocked
+      - name: Confirm domain hardening preflight is ready
+        run: node scripts/check-domain-hardening-preflight.mjs --require-ready
 
       - name: Confirm API exposure remains unpublished
         run: node scripts/check-api-exposure-gate.mjs
