@@ -5227,7 +5227,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/release-readiness-summary.md",
-      terms: ["Release Readiness Summary", "website_static_deployment_integrity=AwaitingEvidence", "live_status_manifest=Pass", "local_status_manifest_match=AwaitingEvidence", "api_exposure_state=SolvedVerified", "api_dns_publication_allowed=true", "api_production_readiness_state=ReadyForDns", "product_runtime_release_witness=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning", "domain_security_state=SolvedVerified", "domain_hardening_preflight=SolvedVerified", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
+      terms: ["Release Readiness Summary", "website_static_deployment_integrity=AwaitingEvidence", "live_status_manifest=Pass", "local_status_manifest_match=AwaitingEvidence", "api_exposure_state=SolvedVerified", "api_dns_publication_allowed=true", "api_production_readiness_state=ReadyForDns", "product_runtime_release_witness=AwaitingEvidence", "product_runtime_claims_allowed=false", "public_product_release_allowed=false", "recovery_witness_state=ReadyForProvisioning", "domain_security_state=SolvedVerified", "domain_hardening_preflight=SolvedVerified", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
     },
     {
       file: "ops/live-safety-monitor.md",
