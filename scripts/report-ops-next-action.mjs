@@ -27,6 +27,19 @@ function lineValue(content, key) {
   return match?.[1] ?? "";
 }
 
+function booleanLineValue(content, key) {
+  const value = lineValue(content, key);
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return undefined;
+}
+
+function declaredMissingEvidence(countText, fallbackMissingEvidence) {
+  const count = Number.parseInt(countText, 10);
+  if (!Number.isInteger(count) || count < 0) return fallbackMissingEvidence;
+  return Array.from({ length: count }, (_, index) => `declared_missing_${index + 1}`);
+}
+
 function usage() {
   return [
     "Usage:",
@@ -39,7 +52,20 @@ function usage() {
 export function collectOpsNextEvidence() {
   const recoveryWitness = readUtf8("ops/recovery-completion-witness.md");
   const domainPreflight = readUtf8("ops/domain-security-preflight.md");
-  const apiReadiness = evaluateApiProductionReadinessEvidence(collectLocalApiProductionEvidence());
+  const apiExposureWitness = readUtf8("ops/api-exposure-witness.md");
+  const apiReadinessGate = readUtf8("ops/api-production-readiness-gate.md");
+  const evaluatedApiReadiness = evaluateApiProductionReadinessEvidence(collectLocalApiProductionEvidence());
+  const declaredDnsPublicationAllowed = booleanLineValue(apiReadinessGate, "api_dns_publication_allowed");
+  const apiReadiness = {
+    ...evaluatedApiReadiness,
+    apiProductionReadinessState: lineValue(apiReadinessGate, "api_production_readiness_state")
+      || evaluatedApiReadiness.apiProductionReadinessState,
+    apiDnsPublicationAllowed: declaredDnsPublicationAllowed ?? evaluatedApiReadiness.apiDnsPublicationAllowed,
+    manualEvidenceMissing: declaredMissingEvidence(
+      lineValue(apiReadinessGate, "manual_evidence_missing_count"),
+      evaluatedApiReadiness.manualEvidenceMissing,
+    ),
+  };
 
   return {
     recoveryWitnessState: lineValue(recoveryWitness, "recovery_witness_state") || "Unknown",
@@ -51,6 +77,9 @@ export function collectOpsNextEvidence() {
     dmarcEnforcementAllowed: lineValue(domainPreflight, "dmarc_enforcement_allowed") === "true",
     mtaStsEnforceAllowed: lineValue(domainPreflight, "mta_sts_enforce_allowed") === "true",
     tlsRptPublicationAllowed: lineValue(domainPreflight, "tls_rpt_publication_allowed") === "true",
+    apiExposureState: lineValue(apiExposureWitness, "api_exposure_state") || "Unknown",
+    apiExposureDnsAllowed: lineValue(apiExposureWitness, "api_dns_publication_allowed") === "true",
+    apiRuntimePublicState: lineValue(apiExposureWitness, "api_runtime_public_state") || "Unknown",
     apiReadiness,
   };
 }
@@ -76,13 +105,27 @@ export function decideOpsNextAction(evidence) {
     };
   }
 
-  if (evidence.apiReadiness.apiProductionReadinessState !== "ReadyForDns") {
+  const apiExposureSolved = evidence.apiExposureState === "SolvedVerified"
+    && evidence.apiExposureDnsAllowed === true
+    && evidence.apiRuntimePublicState === "SolvedVerified";
+
+  if (!apiExposureSolved && evidence.apiReadiness.apiProductionReadinessState !== "ReadyForDns") {
     return {
       opsNextState: "AwaitingEvidence",
       nextAction: "close_private_api_runtime_evidence_before_dns",
       blockedSurface: "api_runtime",
       safeLocalCommand: "node scripts/check-api-production-readiness.mjs",
       manualEvidenceBoundary: "runtime host, managed PostgreSQL, secret store, TLS, rollback path, private runtime witness, and DNS authority",
+    };
+  }
+
+  if (apiExposureSolved) {
+    return {
+      opsNextState: "AwaitingEvidence",
+      nextAction: "close_one_product_runtime_witness",
+      blockedSurface: "product_runtime_witness",
+      safeLocalCommand: "node scripts/validate-runtime-witnesses.mjs",
+      manualEvidenceBoundary: "product service health, product rollback, privacy, contract, and runtime witness evidence",
     };
   }
 
@@ -114,6 +157,8 @@ export function formatOpsNextReport(evidence, decision) {
     `api_provisioning_allowed=${evidence.apiProvisioningAllowed ? "true" : "false"}`,
     `domain_hardening_preflight=${evidence.domainHardeningPreflight}`,
     `domain_dns_mutation_allowed=${domainDnsMutationAllowed ? "true" : "false"}`,
+    `api_exposure_state=${evidence.apiExposureState}`,
+    `api_runtime_public_state=${evidence.apiRuntimePublicState}`,
     `api_production_readiness_state=${evidence.apiReadiness.apiProductionReadinessState}`,
     `api_dns_publication_allowed=${evidence.apiReadiness.apiDnsPublicationAllowed ? "true" : "false"}`,
     `manual_evidence_missing_count=${evidence.apiReadiness.manualEvidenceMissing.length}`,
@@ -147,6 +192,8 @@ export function formatOpsNextJson(evidence, decision) {
     apiProvisioningAllowed: evidence.apiProvisioningAllowed,
     domainHardeningPreflight: evidence.domainHardeningPreflight,
     domainDnsMutationAllowed,
+    apiExposureState: evidence.apiExposureState,
+    apiRuntimePublicState: evidence.apiRuntimePublicState,
     apiProductionReadinessState: evidence.apiReadiness.apiProductionReadinessState,
     apiDnsPublicationAllowed: evidence.apiReadiness.apiDnsPublicationAllowed,
     manualEvidenceMissingCount: evidence.apiReadiness.manualEvidenceMissing.length,

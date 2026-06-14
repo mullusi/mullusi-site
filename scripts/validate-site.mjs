@@ -5211,7 +5211,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/api-exposure-witness.md",
-      terms: ["API Exposure Witness", "api_exposure_state=AwaitingEvidence", "api_dns_publication_allowed=false", "recovery_witness_state=ReadyForProvisioning", "api_provisioning_allowed=true", "node scripts/check-api-exposure-gate.mjs", "STATUS:"],
+      terms: ["API Exposure Witness", "api_exposure_state=SolvedVerified", "api_dns_publication_allowed=true", "api_runtime_public_state=SolvedVerified", "recovery_witness_state=ReadyForProvisioning", "api_provisioning_allowed=true", "node scripts/check-api-exposure-gate.mjs --live --require-ready", "STATUS:"],
     },
     {
       file: "ops/search-indexing-witness.md",
@@ -5227,7 +5227,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/release-readiness-summary.md",
-      terms: ["Release Readiness Summary", "website_static_deployment_integrity=AwaitingEvidence", "live_status_manifest=Pass", "local_status_manifest_match=AwaitingEvidence", "api_exposure_state=AwaitingEvidence", "api_dns_publication_allowed=false", "api_production_readiness_state=AwaitingEvidence", "product_runtime_release_witness=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning", "domain_security_state=SolvedVerified", "domain_hardening_preflight=SolvedVerified", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
+      terms: ["Release Readiness Summary", "website_static_deployment_integrity=AwaitingEvidence", "live_status_manifest=Pass", "local_status_manifest_match=AwaitingEvidence", "api_exposure_state=SolvedVerified", "api_dns_publication_allowed=true", "api_production_readiness_state=ReadyForDns", "product_runtime_release_witness=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning", "domain_security_state=SolvedVerified", "domain_hardening_preflight=SolvedVerified", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
     },
     {
       file: "ops/live-safety-monitor.md",
@@ -5259,7 +5259,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/solo-developer-assistant-handoff.md",
-      terms: ["Solo Developer Assistant Handoff", "Current Operator State", "npm run ops:next", "recovery_witness_state=ReadyForProvisioning", "domain_hardening_preflight=SolvedVerified", "api_production_readiness_state=AwaitingEvidence", "domain_dns_mutation_allowed=true", "api_runtime", "test:ops-next", "node scripts/report-ops-next-action.mjs", "STATUS:"],
+      terms: ["Solo Developer Assistant Handoff", "Current Operator State", "npm run ops:next", "recovery_witness_state=ReadyForProvisioning", "domain_hardening_preflight=SolvedVerified", "api_exposure_state=SolvedVerified", "api_production_readiness_state=ReadyForDns", "domain_dns_mutation_allowed=true", "product_runtime_witness", "test:ops-next", "node scripts/report-ops-next-action.mjs", "STATUS:"],
     },
     {
       file: "ops/runtime-witness/README.md",

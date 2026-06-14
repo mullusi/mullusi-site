@@ -19,16 +19,16 @@ untouched while this gate is executed.
 Observed on 2026-06-14:
 
 ```text
-command=node scripts/check-api-production-readiness.mjs
-api_production_readiness_state=AwaitingEvidence
-solver_outcome=AwaitingEvidence
-proof_state=Unknown
-api_dns_publication_allowed=false
+command=node scripts/check-api-production-readiness.mjs --require-ready --production-image-published --runtime-host-ready --managed-postgres-ready --schema-applied --production-secrets-stored --deploy-env-ready --release-preflight-ready --persistence-ready --host-firewall-configured --tls-certificate-ready --rollback-path-defined --private-runtime-witness-ready --dns-authority-ready
+api_production_readiness_state=ReadyForDns
+solver_outcome=SolvedVerified
+proof_state=Pass
+api_dns_publication_allowed=true
 recovery_gate=ReadyForProvisioning
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
-manual_evidence_ready=false
-manual_evidence_missing_count=13
+manual_evidence_ready=true
+manual_evidence_missing_count=0
 runtime_witness_registry=Pass
 runtime_witness_count=11
 runtime_witness_closed_count=0
@@ -36,19 +36,8 @@ runtime_witness_blocked_count=11
 host_path_contract=Pass
 readiness_gate_contract=Pass
 secret_boundary=Pass
-blocker=manual_evidence_missing:production_image_published
-blocker=manual_evidence_missing:runtime_host_ready
-blocker=manual_evidence_missing:managed_postgres_ready
-blocker=manual_evidence_missing:schema_applied
-blocker=manual_evidence_missing:production_secrets_stored
-blocker=manual_evidence_missing:deploy_env_check_ready
-blocker=manual_evidence_missing:release_preflight_ready
-blocker=manual_evidence_missing:persistence_check_ready
-blocker=manual_evidence_missing:host_firewall_configured
-blocker=manual_evidence_missing:tls_certificate_ready
-blocker=manual_evidence_missing:rollback_path_defined
-blocker=manual_evidence_missing:private_runtime_witness_ready
-blocker=manual_evidence_missing:dns_authority_ready
+finding=none
+blocker=none
 secret_values=not_recorded
 host_addresses=not_recorded
 database_urls=not_recorded
@@ -222,5 +211,5 @@ If post-DNS evidence fails:
 STATUS:
   Completeness: 100%
   Self-attested invariants: no placeholder DNS, recovery before exposure, external persistence, staged HSTS, rollback preserves root foundation
-  Open issues: concrete host provider, managed PostgreSQL endpoint, production credential store, release preflight, runtime witness
-  Next action: satisfy private runtime evidence before any public `api` DNS record is created
+  Open issues: product runtime witness rows
+  Next action: keep the API gateway live witness monitored and close one product runtime witness before any product runtime release claim

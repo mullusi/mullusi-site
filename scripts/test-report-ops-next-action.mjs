@@ -27,6 +27,9 @@ function baseEvidence(overrides = {}) {
     dmarcEnforcementAllowed: true,
     mtaStsEnforceAllowed: true,
     tlsRptPublicationAllowed: true,
+    apiExposureState: "AwaitingEvidence",
+    apiExposureDnsAllowed: false,
+    apiRuntimePublicState: "AwaitingEvidence",
     apiReadiness: {
       apiProductionReadinessState: "ReadyForDns",
       apiDnsPublicationAllowed: true,
@@ -35,6 +38,15 @@ function baseEvidence(overrides = {}) {
     },
     ...overrides,
   };
+}
+
+function solvedApiExposureEvidence(overrides = {}) {
+  return baseEvidence({
+    apiExposureState: "SolvedVerified",
+    apiExposureDnsAllowed: true,
+    apiRuntimePublicState: "SolvedVerified",
+    ...overrides,
+  });
 }
 
 function runReporter(args = []) {
@@ -85,6 +97,21 @@ function testReadyForDnsRequiresAllPriorGates() {
   assert.equal(decision.blockedSurface, "none");
 }
 
+function testSolvedApiExposureMovesToProductRuntimeWitness() {
+  const decision = decideOpsNextAction(solvedApiExposureEvidence({
+    apiReadiness: {
+      apiProductionReadinessState: "AwaitingEvidence",
+      apiDnsPublicationAllowed: false,
+      manualEvidenceMissing: ["production_image_published"],
+      closedWitnessCount: 0,
+    },
+  }));
+
+  assert.equal(decision.opsNextState, "AwaitingEvidence");
+  assert.equal(decision.nextAction, "close_one_product_runtime_witness");
+  assert.equal(decision.blockedSurface, "product_runtime_witness");
+}
+
 function testFormattedReportStaysPublicSafe() {
   const evidence = baseEvidence({
     recoveryWitnessState: "AwaitingEvidence",
@@ -95,6 +122,7 @@ function testFormattedReportStaysPublicSafe() {
   const report = formatOpsNextReport(evidence, decision);
   assert.match(report, /ops_next_state=AwaitingEvidence/);
   assert.match(report, /domain_dns_mutation_allowed=false/);
+  assert.match(report, /api_exposure_state=AwaitingEvidence/);
   assert.match(report, /secret_values=not_recorded/);
   assert.doesNotMatch(report, /postgres:\/\//i);
 }
@@ -151,6 +179,7 @@ testRecoveryBlockIsFirstPriority();
 testDomainBlockFollowsRecoveryReadiness();
 testApiBlockFollowsDomainReadiness();
 testReadyForDnsRequiresAllPriorGates();
+testSolvedApiExposureMovesToProductRuntimeWitness();
 testFormattedReportStaysPublicSafe();
 testFormattedJsonStaysPublicSafeAndStructured();
 testCliReportsCurrentStateAndRejectsUnsupportedArgs();
