@@ -10,6 +10,10 @@ import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  publicSafeEvidenceRefFamilies,
+  requiredLiveEvidenceApprovalKeys,
+} from "./govern-live-evidence-ref-contract.mjs";
+import {
   formatGovernLiveEvidenceOperatorRunbookReport,
   validateGovernLiveEvidenceOperatorRunbook,
   validateGovernLiveEvidenceOperatorRunbookEvidence,
@@ -19,30 +23,6 @@ const scriptPath = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(scriptPath);
 const repoRoot = path.resolve(scriptsDir, "..");
 const validatorScript = path.join(scriptsDir, "validate-govern-live-evidence-operator-runbook.mjs");
-
-const requiredApprovalKeys = [
-  "operator_approval_ref",
-  "product_status_promotion_ref",
-  "privacy_activation_ref",
-  "retention_activation_ref",
-  "dashboard_operator_readiness_ref",
-  "api_contract_test_ref",
-  "public_claim_update_ref",
-  "runtime_witness_ref",
-];
-
-const requiredRefFamilies = [
-  "approval://",
-  "receipt://",
-  "github:pull/",
-  "github:actions/runs/",
-  "site:ops/",
-  "control-plane:pull/",
-  "control-plane:receipt/",
-  "render:event/",
-  "cloudflare:audit/",
-  "google-workspace:audit/",
-];
 
 function runValidator(args = []) {
   return spawnSync(process.execPath, [validatorScript, ...args], {
@@ -66,8 +46,8 @@ function validRunbook() {
     "raw_request_bodies_allowed=false",
     "raw_response_bodies_allowed=false",
     "provider_values_allowed=false",
-    ...requiredRefFamilies,
-    ...requiredApprovalKeys.map((key) => `| \`${key}\` | proves something | shape | \`missing\` |`),
+    ...publicSafeEvidenceRefFamilies,
+    ...requiredLiveEvidenceApprovalKeys.map((key) => `| \`${key}\` | proves something | shape | \`missing\` |`),
     "STATUS:",
   ].join("\n");
 }
@@ -77,7 +57,7 @@ function validEvidence(overrides = {}) {
     approvalPacket: [
       "approval_state=NotApproved",
       "public_write_route_allowed=false",
-      ...requiredApprovalKeys.map((key) => `${key}=missing`),
+      ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=missing`),
     ].join("\n"),
     privateValueScanSources: {
       approvalPacket: "public_write_route_allowed=false\noperator_approval_ref=missing\n",
@@ -126,7 +106,7 @@ function testSyntheticApprovalPacketFilledRefFailsClosed() {
       "approval_state=NotApproved",
       "public_write_route_allowed=false",
       "operator_approval_ref=approval://mullu-govern/live-evidence/2026-06-14/operator-approved",
-      ...requiredApprovalKeys.filter((key) => key !== "operator_approval_ref").map((key) => `${key}=missing`),
+      ...requiredLiveEvidenceApprovalKeys.filter((key) => key !== "operator_approval_ref").map((key) => `${key}=missing`),
     ].join("\n"),
   });
   const result = validateGovernLiveEvidenceOperatorRunbookEvidence(evidence);
