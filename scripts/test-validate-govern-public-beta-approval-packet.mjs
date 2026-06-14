@@ -11,6 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   formatApprovalPacketReport,
+  validateApprovalPacketContent,
   validateGovernPublicBetaApprovalPacket,
 } from "./validate-govern-public-beta-approval-packet.mjs";
 
@@ -35,9 +36,43 @@ function testCurrentPacketPassesAsNonOperative() {
   assert.equal(result.packetState, "AwaitingEvidence");
   assert.equal(result.approvalState, "NotApproved");
   assert.equal(result.publicWriteRouteAllowed, false);
-  assert.equal(result.missingApprovalInputs.length, 9);
+  assert.equal(result.missingApprovalInputs.length, 8);
+  assert.deepEqual(result.closedApprovalInputs, ["rollback_witness_ref"]);
   assert.equal(result.findings.length, 0);
+  assert.match(report, /missing_approval_input_count=8/);
   assert.match(report, /secret_values=not_recorded/);
+}
+
+function testOnlyRollbackEvidenceRefIsAllowed() {
+  const packet = `
+packet_state=AwaitingEvidence
+approval_state=NotApproved
+public_write_route_allowed=false
+current_decision=KeepBlocked
+route_publication_action=none
+dns_mutation=none
+runtime_mutation=none
+secret_rotation_required=false
+operator_approval_ref=approval://not-yet-allowed
+product_status_promotion_ref=missing
+api_contract_test_ref=missing
+privacy_activation_ref=missing
+retention_activation_ref=missing
+runtime_witness_ref=missing
+rollback_witness_ref=control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py
+support_readiness_ref=missing
+public_claim_update_ref=missing
+POST /v1/govern/evaluate
+STATUS:
+`;
+  const result = validateApprovalPacketContent(packet);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.publicWriteRouteAllowed, false);
+  assert.equal(result.missingApprovalInputs.length, 7);
+  assert.match(result.findings.join("\n"), /approval_input_ref_not_allowed:operator_approval_ref/);
+  assert.match(result.findings.join("\n"), /approval_inputs_must_remain_missing_except_allowed_refs:7\/9/);
 }
 
 function testCliJsonAndUnsupportedArgs() {
@@ -54,6 +89,7 @@ function testCliJsonAndUnsupportedArgs() {
 }
 
 testCurrentPacketPassesAsNonOperative();
+testOnlyRollbackEvidenceRefIsAllowed();
 testCliJsonAndUnsupportedArgs();
 
 console.log("govern public-beta approval packet validator tests passed");

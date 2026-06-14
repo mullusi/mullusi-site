@@ -113,6 +113,8 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   assert.equal(decision.packetPath, "ops/runtime-witness/mullu-govern-closure-packet.md");
   assert.equal(decision.decisionRecordPath, "ops/mullu-govern-evaluate-write-route-decision.md");
   assert.equal(decision.approvalPacketPath, "ops/mullu-govern-public-beta-approval-packet.md");
+  assert.match(decision.manualEvidenceBoundary, /support readiness/);
+  assert.doesNotMatch(decision.manualEvidenceBoundary, /product rollback/);
 }
 
 function testFormattedReportStaysPublicSafe() {

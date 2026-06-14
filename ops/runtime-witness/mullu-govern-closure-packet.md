@@ -32,8 +32,9 @@ last_reviewed=2026-06-14
 
 The shared API gateway is live and witnessed. The Mullu Govern product runtime
 witness is not closed because closure would require a product-status promotion
-decision plus product write-route exposure approval, privacy, rollback,
-dashboard, and runtime witness evidence.
+decision plus product write-route exposure approval, privacy, dashboard, and
+runtime witness evidence. The route-level rollback witness is now closed by
+control-plane PR #1686 and mirrored in the public-beta approval packet.
 
 ## Public-Safe Live Observations
 
@@ -66,7 +67,7 @@ The registry closure rule requires all of the following:
 | Health evidence | pass with `/health`, `/gateway/witness`, `/runtime/conformance` observations | public gateway observations pass |
 | Preflight decision | allow | block |
 | Public exposure | allowed | blocked |
-| Rollback | Ready | AwaitingEvidence |
+| Rollback | Ready | Ready via `ops/mullu-govern-public-beta-approval-packet.md` |
 | Product API contract | verified or explicitly deferred | guarded; public write route not published |
 | Privacy and retention boundary | verified for product runtime | AwaitingEvidence |
 | Dashboard operator readiness | verified | AwaitingEvidence |
@@ -81,7 +82,6 @@ blocker=product_evaluate_write_route_approval_missing
 blocker=product_api_contract_execution_not_published
 blocker=product_privacy_boundary_not_verified
 blocker=product_retention_boundary_not_verified
-blocker=product_rollback_ready_missing
 blocker=dashboard_operator_readiness_missing
 blocker=runtime_witness_registry_not_closed
 ```
@@ -93,14 +93,13 @@ blocker=runtime_witness_registry_not_closed
    `ops/mullu-govern-public-beta-approval-packet.md` is completed and approved
    in a separate PR.
 3. Verify the privacy and retention documents named by the manifest.
-4. Create a product-specific rollback witness.
-5. Decide whether `mullu-govern` may move from `limited-preview` to
+4. Decide whether `mullu-govern` may move from `limited-preview` to
    `public-beta`.
-6. Only after those pass, update `ops/runtime-witness/registry.json` in a
+5. Only after those pass, update `ops/runtime-witness/registry.json` in a
    separate PR and rerun `node scripts/validate-runtime-witnesses.mjs`.
 
 STATUS:
   Completeness: 100%
   Self-attested invariants: API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
-  Open issues: public-beta approval evidence, privacy boundary, retention boundary, rollback witness, dashboard operator readiness, product-status promotion decision
+  Open issues: public-beta approval evidence, privacy boundary, retention boundary, dashboard operator readiness, product-status promotion decision
   Next action: keep the Mullu Govern public evaluate write route blocked unless the approval packet closes every gate

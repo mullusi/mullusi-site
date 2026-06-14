@@ -47,7 +47,7 @@ stamps, and audit events.
 | Privacy activation | Active policy permits collection for named data classes | `privacy/govern.policy.json` collection state is `not-active` | AwaitingEvidence |
 | Retention activation | Active bounded retention days for every collected class | all `privacy/govern.retention.json` classes are `not-active` with `maximumDays=0` | AwaitingEvidence |
 | Runtime witness | product runtime witness closes as `SolvedVerified` | runtime witness registry remains `AwaitingEvidence` | AwaitingEvidence |
-| Rollback witness | rollback test disables only the evaluate route and preserves public health routes | documented rollback boundary exists, tested rollback witness missing | AwaitingEvidence |
+| Rollback witness | rollback test disables only the evaluate route and preserves public health routes | control-plane PR #1686 merged `scripts/validate_govern_evaluate_route_rollback.py`; witness reports `SolvedVerified`, preserves `/v1/health` and `/v1/version`, and keeps `POST /v1/govern/evaluate` blocked with no outbound transport | Pass |
 | Support readiness | support and incident path for route users verified | not verified in this packet | AwaitingEvidence |
 | Public claim update | product page/status copy remains bounded to evidence | no public-beta claim emitted | Pass |
 
@@ -63,7 +63,7 @@ api_contract_test_ref=missing
 privacy_activation_ref=missing
 retention_activation_ref=missing
 runtime_witness_ref=missing
-rollback_witness_ref=missing
+rollback_witness_ref=control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py
 support_readiness_ref=missing
 public_claim_update_ref=missing
 ```
@@ -110,5 +110,5 @@ next_action=close_missing_public_beta_gate_evidence_before_requesting_approval
 STATUS:
   Completeness: 100%
   Self-attested invariants: packet is non-operative, public route remains blocked, API gateway witness remains separate from product write-route exposure, privacy and retention remain not-active, no raw secret or provider values recorded
-  Open issues: operator approval, product-status promotion, API contract execution evidence, privacy activation, retention activation, runtime witness closure, rollback witness, support readiness
+  Open issues: operator approval, product-status promotion, API contract execution evidence, privacy activation, retention activation, runtime witness closure, support readiness
   Next action: close missing public-beta gate evidence before requesting approval to publish POST /v1/govern/evaluate
