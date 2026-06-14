@@ -39,7 +39,7 @@ close.
 
 | Gate | Required before exposure | Current state | Decision |
 | --- | --- | --- | --- |
-| Product status | `public-beta` or `production` | `limited-preview` | block |
+| Product status | `public-beta` or `production` | preflight ready in `ops/mullu-govern-product-status-preflight.md`; manifest remains `limited-preview` | block |
 | Public route guard | route remains closed before approval | `POST /v1/govern/evaluate` returns 404 | pass |
 | Privacy boundary | collection allowed and user-facing policy active | preflight ready in `ops/mullu-govern-privacy-retention-preflight.md`; policy remains `collectionState=not-active` | block |
 | Retention boundary | nonzero retention policy approved for each active data class | preflight ready in `ops/mullu-govern-privacy-retention-preflight.md`; all classes remain `not-active`, `maximumDays=0` | block |
@@ -70,7 +70,7 @@ A later request to expose the route must supersede
 `ReadyForApproval` or stronger, with all of the following:
 
 1. Operator approval reference for public `POST /v1/govern/evaluate`.
-2. Product status promotion decision from `limited-preview` to `public-beta` or stronger.
+2. Product status promotion approval from `limited-preview` to `public-beta` or stronger.
 3. Active privacy policy for policy records, evaluations, traces, proof stamps, and audit events.
 4. Active retention policy with bounded retention days for every collected data class.
 5. Contract test evidence for accepted, rejected, malformed, unauthorized, and rate-limited requests.
@@ -93,5 +93,5 @@ record_incident=true
 STATUS:
   Completeness: 100%
   Self-attested invariants: public API gateway remains separate from product write-route exposure, route publication remains blocked, privacy and retention not-active states are preserved, no raw secret or host values recorded
-  Open issues: operator approval, product-status promotion, active privacy policy approval, active retention policy approval, live contract execution evidence
+  Open issues: operator approval, product-status promotion approval, active privacy policy approval, active retention policy approval, live contract execution evidence
   Next action: keep POST /v1/govern/evaluate blocked unless the public-beta approval packet closes every listed gate

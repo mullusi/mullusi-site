@@ -113,6 +113,7 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   assert.equal(decision.packetPath, "ops/runtime-witness/mullu-govern-closure-packet.md");
   assert.equal(decision.decisionRecordPath, "ops/mullu-govern-evaluate-write-route-decision.md");
   assert.equal(decision.approvalPacketPath, "ops/mullu-govern-public-beta-approval-packet.md");
+  assert.match(decision.manualEvidenceBoundary, /product status promotion approval/);
   assert.match(decision.manualEvidenceBoundary, /privacy activation approval/);
   assert.match(decision.manualEvidenceBoundary, /retention activation approval/);
   assert.match(decision.manualEvidenceBoundary, /live contract execution approval/);
