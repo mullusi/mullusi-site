@@ -39,6 +39,7 @@ function validRunbook() {
     "ready_for_live_evidence=false",
     "public_write_route_allowed=false",
     "approval_packet=ops/mullu-govern-public-beta-approval-packet.md",
+    "approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md",
     "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
     "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
     "sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md",
@@ -64,6 +65,16 @@ function validEvidence(overrides = {}) {
     privateValueScanSources: {
       approvalPacket: "public_write_route_allowed=false\noperator_approval_ref=missing\n",
       runbook: validRunbook(),
+    },
+    approvalPacketResult: {
+      proofState: "Pass",
+      publicWriteRouteAllowed: false,
+      solverOutcome: "SolvedVerified",
+    },
+    approvalReadinessResult: {
+      proofState: "Pass",
+      readyForApproval: false,
+      solverOutcome: "SolvedVerified",
     },
     runbook: validRunbook(),
     sequencePreflightResult: {
@@ -135,6 +146,30 @@ function testSyntheticSequencePreflightFailureFailsClosed() {
   assert.match(result.findings.join("\n"), /sequence_preflight_ready_for_live_evidence_must_remain_false/);
 }
 
+function testSyntheticApprovalAggregateFailureFailsClosed() {
+  const evidence = validEvidence({
+    approvalPacketResult: {
+      proofState: "Fail",
+      publicWriteRouteAllowed: true,
+      solverOutcome: "GovernanceBlocked",
+    },
+    approvalReadinessResult: {
+      proofState: "Fail",
+      readyForApproval: true,
+      solverOutcome: "GovernanceBlocked",
+    },
+  });
+  const result = validateGovernLiveEvidenceOperatorRunbookEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.readyForLiveEvidence, false);
+  assert.match(result.findings.join("\n"), /approval_packet_not_solved:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /approval_packet_public_route_not_blocked/);
+  assert.match(result.findings.join("\n"), /approval_readiness_not_solved:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /approval_readiness_ready_for_approval_must_remain_false/);
+}
+
 function testSyntheticSecretPatternFailsClosed() {
   const evidence = validEvidence({
     privateValueScanSources: {
@@ -168,6 +203,7 @@ testCurrentRunbookPasses();
 testSyntheticMissingApprovalKeyFailsClosed();
 testSyntheticApprovalPacketFilledRefFailsClosed();
 testSyntheticSequencePreflightFailureFailsClosed();
+testSyntheticApprovalAggregateFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 

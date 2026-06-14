@@ -23,6 +23,7 @@ proof_state=Pass
 ready_for_live_evidence=false
 public_write_route_allowed=false
 approval_packet=ops/mullu-govern-public-beta-approval-packet.md
+approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
 sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md
@@ -76,17 +77,18 @@ Raw values are never valid refs.
 ## Operator Steps
 
 1. Run `node scripts/report-ops-next-action.mjs`.
-2. Run `node scripts/validate-govern-live-evidence-sequence-preflight.mjs`.
-3. Confirm every current live evidence ref is still `missing`.
-4. Collect only public-safe ref identifiers for the required inputs.
-5. Do not paste secrets, database URLs, raw headers, raw request bodies, raw
+2. Run `node scripts/validate-govern-approval-readiness-preflight.mjs`.
+3. Run `node scripts/validate-govern-live-evidence-sequence-preflight.mjs`.
+4. Confirm every current live evidence ref is still `missing`.
+5. Collect only public-safe ref identifiers for the required inputs.
+6. Do not paste secrets, database URLs, raw headers, raw request bodies, raw
    response bodies, provider host values, billing details, or account ids.
-6. Update the approval packet only in a separate PR that validates the exact
+7. Update the approval packet only in a separate PR that validates the exact
    refs supplied.
-7. Keep `POST /v1/govern/evaluate` blocked until the approval packet changes
+8. Keep `POST /v1/govern/evaluate` blocked until the approval packet changes
    to `ReadyForApproval` or stronger and then receives explicit operator
    approval.
-8. Update `ops/runtime-witness/registry.json` only after product status,
+9. Update `ops/runtime-witness/registry.json` only after product status,
    privacy, retention, dashboard, API contract, public claim, and runtime
    evidence refs are closed.
 
