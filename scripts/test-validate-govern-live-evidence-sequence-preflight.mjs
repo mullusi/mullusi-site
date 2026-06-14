@@ -66,6 +66,8 @@ function validEvidence(overrides = {}) {
     "public_claim_update_allowed=false",
     "runtime_witness_update_allowed=false",
     "provider_values_recorded=false",
+    "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
+    "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
     ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=missing`),
     "STATUS:",
   ].join("\n");
@@ -94,6 +96,7 @@ function validEvidence(overrides = {}) {
       approvalReadinessPreflight: passingResult(),
       contractPreflight: passingResult(),
       dashboardPreflight: passingResult(),
+      liveEvidenceRefIntake: passingResult(),
       privacyRetentionPreflight: passingResult(),
       productStatusPreflight: passingResult(),
       publicClaimPreflight: passingResult(),

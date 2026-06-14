@@ -35,6 +35,8 @@ public_claim_update_allowed=false
 runtime_witness_update_allowed=false
 provider_values_recorded=false
 operator_runbook=ops/mullu-govern-live-evidence-operator-runbook.md
+live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
+live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
 last_reviewed=2026-06-14
 ```
 
@@ -79,8 +81,11 @@ runtime_witness_ref=missing
 Rollback and support evidence are already present in the approval packet, but
 they are not approval for live evidence collection.
 
-Use `ops/mullu-govern-live-evidence-operator-runbook.md` as the public-safe
-intake contract before replacing any `missing` value with an evidence ref.
+Use `ops/mullu-govern-live-evidence-ref-intake-template.json` as the public-safe
+intake file and validate it with
+`node scripts/validate-govern-live-evidence-ref-intake.mjs` before replacing any
+`missing` value with an evidence ref. Use
+`ops/mullu-govern-live-evidence-operator-runbook.md` as the operator procedure.
 
 ## Denial Rules
 
