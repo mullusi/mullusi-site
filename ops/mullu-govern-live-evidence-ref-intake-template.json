@@ -1,0 +1,25 @@
+{
+  "purpose": "Public-safe Mullu Govern live evidence ref intake template.",
+  "governance_scope": "approval-bound live evidence refs only; no secrets, raw payloads, provider values, account ids, host addresses, database URLs, or billing details.",
+  "product_id": "mullu-govern",
+  "ready_for_live_evidence": false,
+  "public_write_route_allowed": false,
+  "secret_values_allowed": false,
+  "raw_payloads_allowed": false,
+  "provider_values_allowed": false,
+  "approval_refs": {
+    "operator_approval_ref": "missing",
+    "product_status_promotion_ref": "missing",
+    "privacy_activation_ref": "missing",
+    "retention_activation_ref": "missing",
+    "dashboard_operator_readiness_ref": "missing",
+    "api_contract_test_ref": "missing",
+    "public_claim_update_ref": "missing",
+    "runtime_witness_ref": "missing"
+  },
+  "status": {
+    "solver_outcome": "AwaitingEvidence",
+    "proof_state": "Unknown",
+    "next_action": "replace missing refs only after explicit operator approval and public-safe evidence review"
+  }
+}
