@@ -116,6 +116,7 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   assert.match(decision.manualEvidenceBoundary, /product status promotion approval/);
   assert.match(decision.manualEvidenceBoundary, /privacy activation approval/);
   assert.match(decision.manualEvidenceBoundary, /retention activation approval/);
+  assert.match(decision.manualEvidenceBoundary, /dashboard operator-readiness evidence/);
   assert.match(decision.manualEvidenceBoundary, /live contract execution approval/);
   assert.doesNotMatch(decision.manualEvidenceBoundary, /support readiness/);
   assert.doesNotMatch(decision.manualEvidenceBoundary, /product rollback/);

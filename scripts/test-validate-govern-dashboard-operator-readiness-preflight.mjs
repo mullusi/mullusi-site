@@ -1,0 +1,158 @@
+/*
+Purpose: test the Mullu Govern dashboard operator readiness preflight validator.
+Governance scope: dashboard route reservation, blocked readiness claim, fail-closed approval refs, unsupported args, and no-secret pattern rejection.
+Dependencies: Node.js standard library and scripts/validate-govern-dashboard-operator-readiness-preflight.mjs.
+Invariants: tests use public-safe repository evidence or synthetic fixtures only; they never inspect provider dashboards or private values.
+*/
+
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  formatGovernDashboardOperatorReadinessPreflightReport,
+  validateGovernDashboardOperatorReadinessPreflight,
+  validateGovernDashboardOperatorReadinessPreflightEvidence,
+} from "./validate-govern-dashboard-operator-readiness-preflight.mjs";
+
+const scriptPath = fileURLToPath(import.meta.url);
+const scriptsDir = path.dirname(scriptPath);
+const repoRoot = path.resolve(scriptsDir, "..");
+const validatorScript = path.join(scriptsDir, "validate-govern-dashboard-operator-readiness-preflight.mjs");
+const dashboardRoute = "https://dashboard.mullusi.com/govern";
+
+function runValidator(args = []) {
+  return spawnSync(process.execPath, [validatorScript, ...args], {
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
+}
+
+function validEvidence(overrides = {}) {
+  const witness = [
+    "dashboard_operator_readiness_preflight_state=Ready",
+    "solver_outcome=SolvedVerified",
+    "proof_state=Pass",
+    `dashboard_route=${dashboardRoute}`,
+    "dashboard_route_reserved=true",
+    "dashboard_live_claim_allowed=false",
+    "dashboard_operator_readiness_ref=missing",
+    "public_write_route_allowed=false",
+    "route_publication_action=none",
+    "dns_mutation=none",
+    "runtime_mutation=none",
+    "dashboard_auth_mutation=none",
+    "secret_rotation_required=false",
+    "provider_dashboard_values_recorded=false",
+    "STATUS:",
+  ].join("\n");
+  return {
+    approvalPacket: "public_write_route_allowed=false\ndashboard_operator_readiness_ref=missing\n",
+    manifest: {
+      id: "mullu-govern",
+      api: { exposure: "planned" },
+      proof: { claimsBlockedUntilVerified: ["dashboard operator readiness"] },
+      surfaces: { dashboardRoute },
+    },
+    privateValueScanSources: {
+      approvalPacket: "public_write_route_allowed=false\ndashboard_operator_readiness_ref=missing\n",
+      manifest: JSON.stringify({ dashboardRoute }),
+      witness,
+    },
+    witness,
+    ...overrides,
+  };
+}
+
+function testCurrentDashboardOperatorReadinessPreflightPasses() {
+  const result = validateGovernDashboardOperatorReadinessPreflight();
+  const report = formatGovernDashboardOperatorReadinessPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "SolvedVerified");
+  assert.equal(result.proofState, "Pass");
+  assert.equal(result.dashboardOperatorReadinessPreflightState, "Ready");
+  assert.equal(result.dashboardRoute, dashboardRoute);
+  assert.equal(result.publicWriteRouteAllowed, false);
+  assert.equal(result.findings.length, 0);
+  assert.match(report, /dashboard_live_claim_allowed=false/);
+  assert.match(report, /provider_dashboard_values=not_recorded/);
+}
+
+function testSyntheticDashboardRouteMismatchFailsClosed() {
+  const evidence = validEvidence({
+    manifest: {
+      ...validEvidence().manifest,
+      surfaces: { dashboardRoute: "https://dashboard.mullusi.com/wrong" },
+    },
+  });
+  const result = validateGovernDashboardOperatorReadinessPreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.dashboardOperatorReadinessPreflightState, "Blocked");
+  assert.match(result.findings.join("\n"), /manifest_dashboard_route_invalid/);
+}
+
+function testSyntheticUnblockedDashboardClaimFailsClosed() {
+  const evidence = validEvidence({
+    manifest: {
+      ...validEvidence().manifest,
+      proof: { claimsBlockedUntilVerified: ["production runtime witness closure"] },
+    },
+  });
+  const result = validateGovernDashboardOperatorReadinessPreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.publicWriteRouteAllowed, false);
+  assert.match(result.findings.join("\n"), /manifest_dashboard_operator_readiness_claim_not_blocked/);
+}
+
+function testSyntheticApprovalRefFailsClosed() {
+  const evidence = validEvidence({
+    approvalPacket: "public_write_route_allowed=false\ndashboard_operator_readiness_ref=ops/dashboard-ready.md\n",
+  });
+  const result = validateGovernDashboardOperatorReadinessPreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /approval_packet_dashboard_operator_readiness_ref_must_remain_missing/);
+}
+
+function testSyntheticSecretPatternFailsClosed() {
+  const evidence = validEvidence({
+    privateValueScanSources: {
+      approvalPacket: "{}",
+      manifest: "Bearer abcdefghijklmnopqrstuvwxyz123456",
+      witness: "dashboard_operator_readiness_preflight_state=Ready",
+    },
+  });
+  const result = validateGovernDashboardOperatorReadinessPreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /forbidden_private_value_pattern:manifest:bearer_token/);
+}
+
+function testCliJsonAndUnsupportedArgs() {
+  const jsonResult = runValidator(["--json"]);
+  const payload = JSON.parse(jsonResult.stdout);
+  assert.equal(jsonResult.status, 0);
+  assert.equal(payload.solverOutcome, "SolvedVerified");
+  assert.equal(payload.proofState, "Pass");
+  assert.equal(payload.dashboardOperatorReadinessPreflightState, "Ready");
+
+  const invalid = runValidator(["--unknown"]);
+  assert.equal(invalid.status, 1);
+  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /govern_dashboard_operator_readiness_preflight=GovernanceBlocked/);
+}
+
+testCurrentDashboardOperatorReadinessPreflightPasses();
+testSyntheticDashboardRouteMismatchFailsClosed();
+testSyntheticUnblockedDashboardClaimFailsClosed();
+testSyntheticApprovalRefFailsClosed();
+testSyntheticSecretPatternFailsClosed();
+testCliJsonAndUnsupportedArgs();
+
+console.log("govern dashboard operator-readiness preflight validator tests passed");

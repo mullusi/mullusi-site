@@ -46,6 +46,7 @@ stamps, and audit events.
 | API contract | Request, response, malformed, unauthorized, rejected, and rate-limited cases verified | preflight ready in `ops/mullu-govern-evaluate-contract-preflight.md`; live execution cases remain `AwaitingEvidence` because public route is intentionally not published | AwaitingEvidence |
 | Privacy activation | Active policy permits collection for named data classes | preflight ready in `ops/mullu-govern-privacy-retention-preflight.md`; `privacy/govern.policy.json` remains `not-active` | AwaitingEvidence |
 | Retention activation | Active bounded retention days for every collected class | preflight ready in `ops/mullu-govern-privacy-retention-preflight.md`; all `privacy/govern.retention.json` classes remain `not-active` with `maximumDays=0` | AwaitingEvidence |
+| Dashboard operator readiness | Authenticated operator dashboard path verified without exposing private data | preflight ready in `ops/mullu-govern-dashboard-operator-readiness-preflight.md`; live dashboard readiness evidence remains `AwaitingEvidence` | AwaitingEvidence |
 | Runtime witness | product runtime witness closes as `SolvedVerified` | runtime witness registry remains `AwaitingEvidence` | AwaitingEvidence |
 | Rollback witness | rollback test disables only the evaluate route and preserves public health routes | control-plane PR #1686 merged `scripts/validate_govern_evaluate_route_rollback.py`; witness reports `SolvedVerified`, preserves `/v1/health` and `/v1/version`, and keeps `POST /v1/govern/evaluate` blocked with no outbound transport | Pass |
 | Support readiness | support and incident path for route users verified | `ops/mullu-govern-support-readiness.md` verifies support contact, privacy contact, responsible disclosure, security contact metadata, and fail-closed incident routing | Pass |
@@ -62,6 +63,7 @@ product_status_promotion_ref=missing
 api_contract_test_ref=missing
 privacy_activation_ref=missing
 retention_activation_ref=missing
+dashboard_operator_readiness_ref=missing
 runtime_witness_ref=missing
 rollback_witness_ref=control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py
 support_readiness_ref=ops/mullu-govern-support-readiness.md
@@ -110,5 +112,5 @@ next_action=close_missing_public_beta_gate_evidence_before_requesting_approval
 STATUS:
   Completeness: 100%
   Self-attested invariants: packet is non-operative, public route remains blocked, API gateway witness remains separate from product write-route exposure, privacy and retention remain not-active, no raw secret or provider values recorded
-  Open issues: operator approval, product-status promotion approval, live API contract execution evidence, privacy activation approval, retention activation approval, runtime witness closure
+  Open issues: operator approval, product-status promotion approval, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, runtime witness closure
   Next action: close runtime witness closure or request explicit approval before collecting live API contract execution evidence

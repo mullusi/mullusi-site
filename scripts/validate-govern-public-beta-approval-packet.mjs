@@ -21,6 +21,7 @@ const approvalInputKeys = [
   "api_contract_test_ref",
   "privacy_activation_ref",
   "retention_activation_ref",
+  "dashboard_operator_readiness_ref",
   "runtime_witness_ref",
   "rollback_witness_ref",
   "support_readiness_ref",

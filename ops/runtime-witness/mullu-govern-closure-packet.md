@@ -46,6 +46,10 @@ blocked until a later approval changes the policy and retention state.
 API contract preflight is ready in
 `ops/mullu-govern-evaluate-contract-preflight.md`, but live execution cases
 remain blocked until the route is approved.
+Dashboard operator-readiness preflight is ready in
+`ops/mullu-govern-dashboard-operator-readiness-preflight.md`, but live
+dashboard readiness evidence remains blocked until the public-beta approval
+packet supplies an explicit dashboard operator-readiness reference.
 
 ## Public-Safe Live Observations
 
@@ -81,7 +85,7 @@ The registry closure rule requires all of the following:
 | Rollback | Ready | Ready via `ops/mullu-govern-public-beta-approval-packet.md` |
 | Product API contract | verified or explicitly deferred | preflight Ready; live execution AwaitingEvidence |
 | Privacy and retention boundary | verified for product runtime | preflight Ready; activation AwaitingEvidence |
-| Dashboard operator readiness | verified | AwaitingEvidence |
+| Dashboard operator readiness | verified | preflight Ready; live evidence AwaitingEvidence |
 | Support readiness | verified | Ready via `ops/mullu-govern-support-readiness.md` |
 | Public write-route decision | approve or keep blocked with evidence | KeepBlocked in `ops/mullu-govern-evaluate-write-route-decision.md` |
 | Public-beta approval packet | ReadyForApproval or stronger | AwaitingEvidence in `ops/mullu-govern-public-beta-approval-packet.md` |
@@ -94,7 +98,7 @@ blocker=product_evaluate_write_route_approval_missing
 blocker=product_api_contract_live_execution_not_published
 blocker=product_privacy_boundary_not_verified
 blocker=product_retention_boundary_not_verified
-blocker=dashboard_operator_readiness_missing
+blocker=dashboard_operator_readiness_evidence_missing
 blocker=runtime_witness_registry_not_closed
 ```
 
@@ -108,7 +112,9 @@ blocker=runtime_witness_registry_not_closed
    approval changes `privacy/govern.policy.json` and `privacy/govern.retention.json`.
 4. Record explicit product-status promotion approval before moving
    `mullu-govern` from `limited-preview` to `public-beta`.
-5. Only after those pass, update `ops/runtime-witness/registry.json` in a
+5. Record dashboard operator-readiness evidence before claiming product runtime
+   witness closure.
+6. Only after those pass, update `ops/runtime-witness/registry.json` in a
    separate PR and rerun `node scripts/validate-runtime-witnesses.mjs`.
 
 STATUS:
