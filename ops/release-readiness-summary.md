@@ -24,7 +24,7 @@ product_runtime_release_witness=AwaitingEvidence
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
 domain_security_state=SolvedVerified
-domain_hardening_preflight=GovernanceBlocked
+domain_hardening_preflight=SolvedVerified
 raw_secret_values=not_recorded
 private_recovery_values=not_read
 ```
@@ -41,7 +41,7 @@ private_recovery_values=not_read
 | Product runtime witnesses | AwaitingEvidence | `ops/runtime-witness/registry.json` | Do not claim product runtime release |
 | Recovery prerequisite | ReadyForProvisioning | `ops/recovery-completion-witness.md` | Continue private runtime provisioning |
 | Domain security readback | SolvedVerified | `ops/domain-security-witness.md` | Keep current DNS/mail controls and monitor |
-| Domain mutation authority | GovernanceBlocked | `ops/domain-security-preflight.md` | No CAA, SPF, DKIM, DMARC, MTA-STS, or TLS-RPT mutation yet |
+| Domain mutation authority | SolvedVerified | `ops/domain-security-preflight.md` | Mutation authority is available only through the bounded hardening runbook |
 
 ## Go/No-Go Rule
 
@@ -50,7 +50,7 @@ static_website_public=true
 product_runtime_release=false
 api_dns_publication_allowed=false
 runtime_claims_allowed=false
-domain_hardening_mutation_allowed=false
+domain_hardening_mutation_allowed=true
 ```
 
 The static website may remain public because live manifest readback, live
@@ -74,8 +74,8 @@ are still open.
 3. Publish `api` DNS only after `api_dns_publication_allowed=true`.
 4. Collect post-DNS public runtime evidence before any `SolvedVerified` product
    release claim.
-5. Harden domain security only after `ops/domain-security-preflight.md` changes
-   from `GovernanceBlocked` to `SolvedVerified`.
+5. Keep future domain-security changes inside the bounded runbook and rerun
+   public DNS readback after every mutation.
 
 ## Edge Cases
 
@@ -83,12 +83,12 @@ are still open.
 | --- | --- |
 | Static website passes but runtime witnesses remain open | Report website as `SolvedVerified`; report product/runtime release as `AwaitingEvidence` |
 | `api` DNS appears while `api_dns_publication_allowed=false` | Enter `SafeHalt`; remove only `api` DNS and preserve apex/www/email |
-| Domain hardening evidence is incomplete | Keep all mutation flags false |
+| Domain hardening evidence regresses | Return mutation permissions to false and rerun the preflight |
 | Private recovery inventory is missing from Git | Treat as expected blocker; do not commit private locations or codes |
 | Product page copy implies runtime availability | Reword or remove until runtime witness closes |
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: static website and product runtime boundaries separated, API DNS remains blocked, domain mutation remains blocked, no private values recorded
-  Open issues: API runtime, product runtime witnesses, DNS authority, domain hardening evidence
+  Self-attested invariants: static website and product runtime boundaries separated, API DNS remains blocked, domain mutation remains bounded, no private values recorded
+  Open issues: API runtime, product runtime witnesses, DNS authority
   Next action: close static website parity through the mirror-to-deploy handoff, then collect API pre-DNS runtime evidence

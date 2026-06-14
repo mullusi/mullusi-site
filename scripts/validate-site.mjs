@@ -830,7 +830,7 @@ function validatePublicVisibilityWitness() {
     "Classify domain security",
     "Domain security AwaitingEvidence",
     "Classify domain hardening preflight",
-    "Domain hardening preflight blocked",
+    "Domain hardening preflight not ready",
     "Classify regional visibility",
     "external_probe_error",
     "Regional visibility AwaitingEvidence",
@@ -857,7 +857,7 @@ function validatePublicVisibilityWitness() {
     "security_headers=node scripts/check-live-security-headers.mjs",
     "security_txt=node scripts/check-security-txt.mjs",
     "domain_security=node scripts/check-domain-security.mjs",
-    "domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
+    "domain_hardening_preflight=node scripts/check-domain-hardening-preflight.mjs --require-ready",
     "search_indexing_surface=node scripts/check-search-indexing-surface.mjs",
     "deployment_integrity=node scripts/check-live-deployment-integrity.mjs --allow-pending",
     "artifact_validator=node scripts/check-live-safety-witness.mjs live-safety-witness",
@@ -1145,7 +1145,7 @@ function validateDomainSecurityGate() {
   const requiredRunbookTerms = [
     "Domain Security Hardening Runbook",
     "current_domain_security_state=SolvedVerified",
-    "future_mutation_preflight=GovernanceBlocked",
+    "future_mutation_preflight=SolvedVerified",
     "manual_caa_allowed=false until active_cloudflare_ca_set=confirmed",
     "no_spf_hardfail_without_sender_inventory",
     "no_dmarc_enforcement_without_spf_or_dkim_alignment",
@@ -1163,19 +1163,19 @@ function validateDomainSecurityGate() {
 
   const requiredPreflightTerms = [
     "Domain Security Preflight",
-    "domain_hardening_preflight=GovernanceBlocked",
-    "active_cloudflare_ca_set=AwaitingEvidence",
-    "dns_write_authority=AwaitingEvidence",
-    "sender_inventory=AwaitingEvidence",
-    "google_workspace_dkim_selector=AwaitingEvidence",
-    "manual_caa_allowed=false",
-    "dkim_publication_allowed=false",
-    "spf_hardfail_allowed=false",
-    "dmarc_enforcement_allowed=false",
-    "mta_sts_enforce_allowed=false",
-    "tls_rpt_publication_allowed=false",
+    "domain_hardening_preflight=SolvedVerified",
+    "active_cloudflare_ca_set=Pass",
+    "dns_write_authority=Pass",
+    "sender_inventory=Pass",
+    "google_workspace_dkim_selector=Pass",
+    "manual_caa_allowed=true",
+    "dkim_publication_allowed=true",
+    "spf_hardfail_allowed=true",
+    "dmarc_enforcement_allowed=true",
+    "mta_sts_enforce_allowed=true",
+    "tls_rpt_publication_allowed=true",
     "raw_secret_values=not_recorded",
-    "last_promoted=AwaitingEvidence",
+    "last_promoted=2026-06-14",
     "STATUS:",
   ];
   for (const term of requiredPreflightTerms) {
@@ -1236,8 +1236,8 @@ function validateDomainSecurityGate() {
     "testPermissionWithoutEvidenceBlocks",
     "testSolvedWithoutEvidenceFails",
     "testBoundaryViolationFails",
-    "testCliRequireReadyFailsForCurrentPreflight",
-    "testCliExpectBlockedPassesForCurrentPreflight",
+    "testCliRequireReadyPassesForCurrentPreflight",
+    "testCliExpectBlockedFailsForCurrentPreflight",
   ];
   for (const term of requiredPreflightTestTerms) {
     if (!preflightTest.includes(term)) {
@@ -5227,7 +5227,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/release-readiness-summary.md",
-      terms: ["Release Readiness Summary", "website_static_deployment_integrity=AwaitingEvidence", "live_status_manifest=Pass", "local_status_manifest_match=AwaitingEvidence", "api_exposure_state=AwaitingEvidence", "api_dns_publication_allowed=false", "api_production_readiness_state=AwaitingEvidence", "product_runtime_release_witness=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning", "domain_security_state=SolvedVerified", "domain_hardening_preflight=GovernanceBlocked", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
+      terms: ["Release Readiness Summary", "website_static_deployment_integrity=AwaitingEvidence", "live_status_manifest=Pass", "local_status_manifest_match=AwaitingEvidence", "api_exposure_state=AwaitingEvidence", "api_dns_publication_allowed=false", "api_production_readiness_state=AwaitingEvidence", "product_runtime_release_witness=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning", "domain_security_state=SolvedVerified", "domain_hardening_preflight=SolvedVerified", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
     },
     {
       file: "ops/live-safety-monitor.md",
@@ -5243,11 +5243,11 @@ function validateOperatingGates() {
     },
     {
       file: "ops/domain-security-hardening-runbook.md",
-      terms: ["Domain Security Hardening Runbook", "Execution Order", "manual_caa_allowed=false", "no_spf_hardfail_without_sender_inventory", "domain_security_state=SolvedVerified", "Rollback", "STATUS:"],
+      terms: ["Domain Security Hardening Runbook", "Execution Order", "future_mutation_preflight=SolvedVerified", "no_spf_hardfail_without_sender_inventory", "domain_security_state=SolvedVerified", "Rollback", "STATUS:"],
     },
     {
       file: "ops/domain-security-preflight.md",
-      terms: ["Domain Security Preflight", "domain_hardening_preflight=GovernanceBlocked", "manual_caa_allowed=false", "spf_hardfail_allowed=false", "dmarc_enforcement_allowed=false", "raw_secret_values=not_recorded", "STATUS:"],
+      terms: ["Domain Security Preflight", "domain_hardening_preflight=SolvedVerified", "manual_caa_allowed=true", "spf_hardfail_allowed=true", "dmarc_enforcement_allowed=true", "raw_secret_values=not_recorded", "STATUS:"],
     },
     {
       file: "ops/recovery-inventory-template.md",
@@ -5259,7 +5259,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/solo-developer-assistant-handoff.md",
-      terms: ["Solo Developer Assistant Handoff", "Current Operator State", "npm run ops:next", "recovery_witness_state=ReadyForProvisioning", "domain_hardening_preflight=GovernanceBlocked", "api_production_readiness_state=AwaitingEvidence", "domain_dns_mutation_allowed=false", "domain_security_hardening", "api_runtime", "test:ops-next", "node scripts/report-ops-next-action.mjs", "STATUS:"],
+      terms: ["Solo Developer Assistant Handoff", "Current Operator State", "npm run ops:next", "recovery_witness_state=ReadyForProvisioning", "domain_hardening_preflight=SolvedVerified", "api_production_readiness_state=AwaitingEvidence", "domain_dns_mutation_allowed=true", "api_runtime", "test:ops-next", "node scripts/report-ops-next-action.mjs", "STATUS:"],
     },
     {
       file: "ops/runtime-witness/README.md",

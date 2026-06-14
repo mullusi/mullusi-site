@@ -17,8 +17,6 @@ const scriptsDir = path.dirname(scriptPath);
 const repoRoot = path.resolve(scriptsDir, "..");
 const promoteScript = path.join(scriptsDir, "promote-domain-hardening-preflight.mjs");
 const checkScript = path.join(scriptsDir, "check-domain-hardening-preflight.mjs");
-const sourcePreflightPath = path.join(repoRoot, "ops", "domain-security-preflight.md");
-
 const allConfirmationFlags = [
   "--active-cloudflare-ca-set",
   "--cloudflare-ca-source",
@@ -29,6 +27,38 @@ const allConfirmationFlags = [
   "--mta-sts-host",
   "--tls-rpt-mailbox",
 ];
+
+function blockedPreflightFixture() {
+  return `# Domain Security Preflight
+
+\`\`\`text
+domain_hardening_preflight=GovernanceBlocked
+active_cloudflare_ca_set=AwaitingEvidence
+cloudflare_ca_source=AwaitingEvidence
+dns_write_authority=AwaitingEvidence
+sender_inventory=AwaitingEvidence
+google_workspace_dkim_selector=AwaitingEvidence
+dmarc_report_mailbox=AwaitingEvidence
+mta_sts_https_policy_host=AwaitingEvidence
+tls_rpt_report_mailbox=AwaitingEvidence
+manual_caa_allowed=false
+dkim_publication_allowed=false
+spf_hardfail_allowed=false
+dmarc_enforcement_allowed=false
+mta_sts_enforce_allowed=false
+tls_rpt_publication_allowed=false
+raw_secret_values=not_recorded
+last_promoted=AwaitingEvidence
+last_reviewed=2026-05-24
+\`\`\`
+
+STATUS:
+  Completeness: 100%
+  Self-attested invariants: mutation permissions are false, raw secrets not recorded, external evidence requirements explicit
+  Open issues: Cloudflare CA set, DNS write authority, sender inventory, Google DKIM selector, report mailboxes, MTA-STS host
+  Next action: fill only public-safe Pass/AwaitingEvidence states after admin-console confirmation, then run scripts/check-domain-hardening-preflight.mjs --require-ready
+`;
+}
 
 function runPromote(preflightPath, args = []) {
   return spawnSync(process.execPath, [promoteScript, `--path=${preflightPath}`, ...args], {
@@ -47,7 +77,7 @@ function runCheck(preflightPath, args = []) {
 function withPreflightFixture(testFn) {
   const fixtureDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-domain-preflight-"));
   const preflightPath = path.join(fixtureDirectory, "domain-security-preflight.md");
-  const before = fs.readFileSync(sourcePreflightPath, "utf8");
+  const before = blockedPreflightFixture();
   fs.writeFileSync(preflightPath, before, "utf8");
   try {
     testFn(before, preflightPath);

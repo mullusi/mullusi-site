@@ -61,7 +61,7 @@ jobs:
           if grep -q "^domain_hardening_preflight=SolvedVerified$" live-safety-witness/domain-hardening-preflight.txt; then
             echo "::notice title=Domain hardening preflight::${preflight_summary}"
           else
-            echo "::notice title=Domain hardening preflight blocked::${preflight_summary}"
+            echo "::warning title=Domain hardening preflight not ready::${preflight_summary}"
           fi
 
       - name: Classify regional visibility

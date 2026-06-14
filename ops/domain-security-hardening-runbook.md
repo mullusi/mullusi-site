@@ -28,7 +28,7 @@ dmarc_enforcement=Pass
 known_google_dkim_selector=Pass
 mta_sts=Pass
 tls_rpt=Pass
-future_mutation_preflight=GovernanceBlocked
+future_mutation_preflight=SolvedVerified
 ```
 
 ## Execution Order

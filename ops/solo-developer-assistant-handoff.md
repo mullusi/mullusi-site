@@ -77,8 +77,8 @@ As of 2026-06-14, the current public-safe operator state is:
 ```text
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
-domain_hardening_preflight=GovernanceBlocked
-domain_dns_mutation_allowed=false
+domain_hardening_preflight=SolvedVerified
+domain_dns_mutation_allowed=true
 api_production_readiness_state=AwaitingEvidence
 api_dns_publication_allowed=false
 ```
@@ -97,12 +97,11 @@ values.
 Current external blockers:
 
 ```text
-domain_security_hardening
 api_runtime
 ```
 
-Do not continue to DNS mutation or production-runtime claims until the relevant
-manual evidence is closed outside Git and the local gates report readiness.
+Do not continue to `api` DNS publication or production-runtime claims until the
+API runtime evidence is closed outside Git and the local gates report readiness.
 
 Run these before handoff when the touched area is relevant:
 
@@ -233,5 +232,5 @@ Next:
 STATUS:
   Completeness: 100%
   Self-attested invariants: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed ops next-action reporter, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
-  Open issues: domain hardening and API runtime evidence remain manual
+  Open issues: API runtime evidence remains manual
   Next action: run npm run ops:next, then complete only the reported manual blocker outside Git

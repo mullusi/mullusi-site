@@ -57,7 +57,7 @@ const probeDefinitions = [
   {
     name: "domain_hardening_preflight",
     fileName: "domain-hardening-preflight.txt",
-    args: ["scripts/check-domain-hardening-preflight.mjs", "--expect-blocked"],
+    args: ["scripts/check-domain-hardening-preflight.mjs", "--require-ready"],
   },
   {
     name: "search_indexing_surface",

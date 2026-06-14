@@ -254,16 +254,16 @@ function validateDomainSecurity(findings, content) {
 function validateDomainHardeningPreflight(findings, content) {
   const fileName = "domain-hardening-preflight.txt";
   for (const line of [
-    "verdict=GovernanceBlocked",
-    "proof_state=Unknown",
-    "domain_hardening_preflight=GovernanceBlocked",
-    "manual_caa_allowed=false",
-    "dkim_publication_allowed=false",
-    "spf_hardfail_allowed=false",
-    "dmarc_enforcement_allowed=false",
-    "mta_sts_enforce_allowed=false",
-    "tls_rpt_publication_allowed=false",
-    "finding=preflight_waiting_for_external_evidence",
+    "verdict=SolvedVerified",
+    "proof_state=Pass",
+    "domain_hardening_preflight=SolvedVerified",
+    "manual_caa_allowed=true",
+    "dkim_publication_allowed=true",
+    "spf_hardfail_allowed=true",
+    "dmarc_enforcement_allowed=true",
+    "mta_sts_enforce_allowed=true",
+    "tls_rpt_publication_allowed=true",
+    "finding=none",
     "raw_secret_values=not_recorded",
   ]) {
     requireLine(findings, fileName, content, line);

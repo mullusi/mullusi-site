@@ -112,20 +112,20 @@ function testBoundaryViolationFails() {
   assert.ok(result.findings.includes("preflight_boundary_invalid:private_key"));
 }
 
-function testCliRequireReadyFailsForCurrentPreflight() {
+function testCliRequireReadyPassesForCurrentPreflight() {
   const result = runPreflightCli(["--require-ready"]);
-
-  assert.equal(result.status, 1);
-  assert.equal(result.stderr, "");
-  assert.match(result.stdout, /domain_hardening_preflight=GovernanceBlocked/);
-}
-
-function testCliExpectBlockedPassesForCurrentPreflight() {
-  const result = runPreflightCli(["--expect-blocked"]);
 
   assert.equal(result.status, 0);
   assert.equal(result.stderr, "");
-  assert.match(result.stdout, /domain_hardening_preflight=GovernanceBlocked/);
+  assert.match(result.stdout, /domain_hardening_preflight=SolvedVerified/);
+}
+
+function testCliExpectBlockedFailsForCurrentPreflight() {
+  const result = runPreflightCli(["--expect-blocked"]);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stderr, "");
+  assert.match(result.stdout, /domain_hardening_preflight=SolvedVerified/);
 }
 
 function testCliRejectsUnsupportedArgument() {
@@ -141,8 +141,8 @@ testReadyFixturePasses();
 testPermissionWithoutEvidenceBlocks();
 testSolvedWithoutEvidenceFails();
 testBoundaryViolationFails();
-testCliRequireReadyFailsForCurrentPreflight();
-testCliExpectBlockedPassesForCurrentPreflight();
+testCliRequireReadyPassesForCurrentPreflight();
+testCliExpectBlockedFailsForCurrentPreflight();
 testCliRejectsUnsupportedArgument();
 
 console.log("domain hardening preflight tests passed");

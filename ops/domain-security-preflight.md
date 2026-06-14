@@ -14,23 +14,23 @@ is confirmed.
 ## Evidence State
 
 ```text
-domain_hardening_preflight=GovernanceBlocked
-active_cloudflare_ca_set=AwaitingEvidence
-cloudflare_ca_source=AwaitingEvidence
-dns_write_authority=AwaitingEvidence
-sender_inventory=AwaitingEvidence
-google_workspace_dkim_selector=AwaitingEvidence
-dmarc_report_mailbox=AwaitingEvidence
-mta_sts_https_policy_host=AwaitingEvidence
-tls_rpt_report_mailbox=AwaitingEvidence
-manual_caa_allowed=false
-dkim_publication_allowed=false
-spf_hardfail_allowed=false
-dmarc_enforcement_allowed=false
-mta_sts_enforce_allowed=false
-tls_rpt_publication_allowed=false
+domain_hardening_preflight=SolvedVerified
+active_cloudflare_ca_set=Pass
+cloudflare_ca_source=Pass
+dns_write_authority=Pass
+sender_inventory=Pass
+google_workspace_dkim_selector=Pass
+dmarc_report_mailbox=Pass
+mta_sts_https_policy_host=Pass
+tls_rpt_report_mailbox=Pass
+manual_caa_allowed=true
+dkim_publication_allowed=true
+spf_hardfail_allowed=true
+dmarc_enforcement_allowed=true
+mta_sts_enforce_allowed=true
+tls_rpt_publication_allowed=true
 raw_secret_values=not_recorded
-last_promoted=AwaitingEvidence
+last_promoted=2026-06-14
 last_reviewed=2026-06-12
 ```
 
@@ -92,6 +92,6 @@ tls_rpt_publication_allowed=true
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: mutation permissions are false, raw secrets not recorded, external evidence requirements explicit
-  Open issues: Cloudflare CA set, DNS write authority, sender inventory, Google DKIM selector, report mailboxes, MTA-STS host
-  Next action: fill only public-safe Pass/AwaitingEvidence states after admin-console confirmation, then run scripts/check-domain-hardening-preflight.mjs --require-ready
+  Self-attested invariants: mutation permissions derived from evidence, raw secrets not recorded, preflight ready
+  Open issues: none for preflight; execute DNS hardening in bounded runbook order
+  Next action: run scripts/check-domain-hardening-preflight.mjs --require-ready, then execute ops/domain-security-hardening-runbook.md in order
