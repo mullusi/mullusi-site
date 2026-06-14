@@ -126,6 +126,7 @@ export function decideOpsNextAction(evidence) {
       blockedSurface: "product_evaluate_write_route_promotion_boundary",
       safeLocalCommand: "node scripts/validate-runtime-witnesses.mjs",
       packetPath: "ops/runtime-witness/mullu-govern-closure-packet.md",
+      decisionRecordPath: "ops/mullu-govern-evaluate-write-route-decision.md",
       manualEvidenceBoundary: "product status promotion decision, public evaluate write-route approval, product rollback, privacy, contract execution, and runtime witness evidence",
     };
   }
@@ -155,6 +156,7 @@ export function formatOpsNextReport(evidence, decision) {
     `blocked_surface=${decision.blockedSurface}`,
     `safe_local_command=${decision.safeLocalCommand}`,
     `product_runtime_witness_packet=${decision.packetPath || "none"}`,
+    `product_write_route_decision_record=${decision.decisionRecordPath || "none"}`,
     `recovery_witness_state=${evidence.recoveryWitnessState}`,
     `api_provisioning_allowed=${evidence.apiProvisioningAllowed ? "true" : "false"}`,
     `domain_hardening_preflight=${evidence.domainHardeningPreflight}`,
@@ -191,6 +193,7 @@ export function formatOpsNextJson(evidence, decision) {
     blockedSurface: decision.blockedSurface,
     safeLocalCommand: decision.safeLocalCommand,
     productRuntimeWitnessPacket: decision.packetPath || "none",
+    productWriteRouteDecisionRecord: decision.decisionRecordPath || "none",
     recoveryWitnessState: evidence.recoveryWitnessState,
     apiProvisioningAllowed: evidence.apiProvisioningAllowed,
     domainHardeningPreflight: evidence.domainHardeningPreflight,
