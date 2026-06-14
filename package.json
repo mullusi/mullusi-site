@@ -26,6 +26,7 @@
     "test:ops": "node scripts/test-ops-gates.mjs",
     "test:ops-next": "node scripts/test-report-ops-next-action.mjs",
     "test:public-beta-approval": "node scripts/test-validate-govern-public-beta-approval-packet.mjs",
+    "test:privacy-retention-preflight": "node scripts/test-validate-govern-privacy-retention-preflight.mjs",
     "test:preview": "node scripts/test-serve-local-preview.mjs",
     "test:private-recovery": "node scripts/test-private-recovery-inventory.mjs",
     "test:scaffold-product": "node scripts/test-scaffold-product.mjs",
@@ -39,6 +40,7 @@
     "validate:ops": "node scripts/check-ops-gates.mjs",
     "validate:private-recovery": "node scripts/check-private-recovery-inventory.mjs --allow-missing",
     "validate:public-beta-approval": "node scripts/validate-govern-public-beta-approval-packet.mjs",
+    "validate:privacy-retention-preflight": "node scripts/validate-govern-privacy-retention-preflight.mjs",
     "validate:runtime": "node scripts/validate-runtime-witnesses.mjs",
     "validate:security-txt": "node scripts/check-security-txt.mjs",
     "validate:site": "node scripts/validate-site.mjs"

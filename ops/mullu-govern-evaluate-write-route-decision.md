@@ -41,8 +41,8 @@ close.
 | --- | --- | --- | --- |
 | Product status | `public-beta` or `production` | `limited-preview` | block |
 | Public route guard | route remains closed before approval | `POST /v1/govern/evaluate` returns 404 | pass |
-| Privacy boundary | collection allowed and user-facing policy active | `privacy/govern.policy.json` says `collectionState=not-active` | block |
-| Retention boundary | nonzero retention policy approved for each active data class | `privacy/govern.retention.json` has all classes `not-active`, `maximumDays=0` | block |
+| Privacy boundary | collection allowed and user-facing policy active | preflight ready in `ops/mullu-govern-privacy-retention-preflight.md`; policy remains `collectionState=not-active` | block |
+| Retention boundary | nonzero retention policy approved for each active data class | preflight ready in `ops/mullu-govern-privacy-retention-preflight.md`; all classes remain `not-active`, `maximumDays=0` | block |
 | Runtime witness | `SolvedVerified` for product runtime | `AwaitingEvidence` | block |
 | Rollback witness | route rollback documented and tested | control-plane PR #1686 witness merged and mirrored in `ops/mullu-govern-public-beta-approval-packet.md` | pass |
 | Contract execution | request and response contract verified against public route | route intentionally not published | block |
@@ -93,5 +93,5 @@ record_incident=true
 STATUS:
   Completeness: 100%
   Self-attested invariants: public API gateway remains separate from product write-route exposure, route publication remains blocked, privacy and retention not-active states are preserved, no raw secret or host values recorded
-  Open issues: operator approval, product-status promotion, active privacy policy, active retention policy, contract execution evidence
+  Open issues: operator approval, product-status promotion, active privacy policy approval, active retention policy approval, contract execution evidence
   Next action: keep POST /v1/govern/evaluate blocked unless the public-beta approval packet closes every listed gate
