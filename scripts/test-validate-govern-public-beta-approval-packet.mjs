@@ -76,6 +76,38 @@ STATUS:
   assert.match(result.findings.join("\n"), /approval_inputs_must_remain_missing_except_allowed_refs:7\/10/);
 }
 
+function testSecretShapedAllowedRefFailsClosed() {
+  const packet = `
+packet_state=AwaitingEvidence
+approval_state=NotApproved
+public_write_route_allowed=false
+current_decision=KeepBlocked
+route_publication_action=none
+dns_mutation=none
+runtime_mutation=none
+secret_rotation_required=false
+operator_approval_ref=missing
+product_status_promotion_ref=missing
+privacy_activation_ref=missing
+retention_activation_ref=missing
+dashboard_operator_readiness_ref=missing
+api_contract_test_ref=missing
+public_claim_update_ref=missing
+runtime_witness_ref=missing
+rollback_witness_ref=control-plane:pull/1686:ghp_abcdefghijklmnopqrstuvwxyz123456
+support_readiness_ref=ops/mullu-govern-support-readiness.md
+POST /v1/govern/evaluate
+STATUS:
+`;
+  const result = validateApprovalPacketContent(packet);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.missingApprovalInputs.length, 8);
+  assert.match(result.findings.join("\n"), /approval_input_ref_not_allowed:rollback_witness_ref/);
+  assert.match(result.findings.join("\n"), /approval_input_ref_invalid:rollback_witness_ref:forbidden_private_value_pattern:evidence_ref:api_key_shape/);
+}
+
 function testCliJsonAndUnsupportedArgs() {
   const jsonResult = runValidator(["--json"]);
   const payload = JSON.parse(jsonResult.stdout);
@@ -91,6 +123,7 @@ function testCliJsonAndUnsupportedArgs() {
 
 testCurrentPacketPassesAsNonOperative();
 testOnlyRollbackEvidenceRefIsAllowed();
+testSecretShapedAllowedRefFailsClosed();
 testCliJsonAndUnsupportedArgs();
 
 console.log("govern public-beta approval packet validator tests passed");

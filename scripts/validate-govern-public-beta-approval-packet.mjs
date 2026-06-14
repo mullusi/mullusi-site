@@ -9,24 +9,22 @@ Test contract: run node scripts/test-validate-govern-public-beta-approval-packet
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  requiredLiveEvidenceApprovalKeys,
+  scanForbiddenEvidencePatterns,
+  validatePublicSafeEvidenceRef,
+} from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
 const defaultPacketPath = "ops/mullu-govern-public-beta-approval-packet.md";
 const allowedArgs = new Set(["--json"]);
 
-const approvalInputKeys = [
-  "operator_approval_ref",
-  "product_status_promotion_ref",
-  "api_contract_test_ref",
-  "privacy_activation_ref",
-  "retention_activation_ref",
-  "dashboard_operator_readiness_ref",
-  "runtime_witness_ref",
+const approvalInputKeys = Object.freeze([
+  ...requiredLiveEvidenceApprovalKeys,
   "rollback_witness_ref",
   "support_readiness_ref",
-  "public_claim_update_ref",
-];
+]);
 
 const currentAllowedEvidenceRefs = new Map([
   [
@@ -52,14 +50,6 @@ const requiredTerms = [
   "STATUS:",
 ];
 
-const forbiddenEvidencePatterns = [
-  { label: "postgres_url", pattern: /postgres(?:ql)?:\/\//i },
-  { label: "private_key", pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
-  { label: "bearer_token", pattern: /Bearer\s+[A-Za-z0-9._~+/-]{16,}/ },
-  { label: "api_key_shape", pattern: /\b(?:sk|pk|rk|ghp|gho|ghu|ghs|github_pat)_[A-Za-z0-9_]{12,}/ },
-  { label: "google_api_key_shape", pattern: /\bAIza[0-9A-Za-z_-]{20,}/ },
-];
-
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
 }
@@ -80,9 +70,10 @@ export function validateApprovalPacketContent(content) {
     if (!content.includes(term)) findings.push(`required_term_missing:${term}`);
   }
 
-  for (const { label, pattern } of forbiddenEvidencePatterns) {
-    if (pattern.test(content)) findings.push(`forbidden_private_value_pattern:${label}`);
-  }
+  findings.push(
+    ...scanForbiddenEvidencePatterns("approval_packet", content)
+      .map((finding) => finding.replace("forbidden_private_value_pattern:approval_packet:", "forbidden_private_value_pattern:")),
+  );
 
   const packetState = lineValue(content, "packet_state");
   const approvalState = lineValue(content, "approval_state");
@@ -126,6 +117,10 @@ export function validateApprovalPacketContent(content) {
       const allowedValue = currentAllowedEvidenceRefs.get(key);
       if (value !== allowedValue) {
         findings.push(`approval_input_ref_not_allowed:${key}`);
+        const refResult = validatePublicSafeEvidenceRef(value);
+        for (const refFinding of refResult.findings) {
+          findings.push(`approval_input_ref_invalid:${key}:${refFinding}`);
+        }
       }
     }
   }
