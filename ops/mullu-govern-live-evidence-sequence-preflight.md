@@ -1,7 +1,7 @@
 <!--
 Purpose: define the non-operative live evidence collection sequence for Mullu Govern public-beta readiness.
 Governance scope: approval-bound sequencing for product status, privacy, retention, dashboard, API contract, public claim, runtime witness, route publication, and no-secret evidence handling.
-Dependencies: ops/mullu-govern-public-beta-approval-packet.md, ops/mullu-govern-approval-readiness-preflight.md, ops/runtime-witness/mullu-govern-closure-packet.md, and the Mullu Govern preflight validators.
+Dependencies: ops/mullu-govern-public-beta-approval-packet.md, ops/mullu-govern-approval-readiness-preflight.md, ops/mullu-govern-live-evidence-operator-runbook.md, ops/runtime-witness/mullu-govern-closure-packet.md, and the Mullu Govern preflight validators.
 Invariants: this preflight does not approve public-beta, publish routes, mutate DNS, activate privacy or retention, change dashboard auth, update runtime witnesses, or record provider-private values.
 -->
 
@@ -34,6 +34,7 @@ product_status_promotion_allowed=false
 public_claim_update_allowed=false
 runtime_witness_update_allowed=false
 provider_values_recorded=false
+operator_runbook=ops/mullu-govern-live-evidence-operator-runbook.md
 last_reviewed=2026-06-14
 ```
 
@@ -78,6 +79,9 @@ runtime_witness_ref=missing
 Rollback and support evidence are already present in the approval packet, but
 they are not approval for live evidence collection.
 
+Use `ops/mullu-govern-live-evidence-operator-runbook.md` as the public-safe
+intake contract before replacing any `missing` value with an evidence ref.
+
 ## Denial Rules
 
 ```text
@@ -120,4 +124,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: sequence is explicit, current live action remains denied, public write route remains blocked, privacy and retention remain inactive, product status remains limited-preview, no raw secret or provider values recorded
   Open issues: operator approval, product-status promotion approval, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, live API contract execution evidence, public claim update evidence, runtime witness evidence
-  Next action: keep live evidence collection blocked until the public-beta approval packet supplies every required public-safe evidence ref
+  Next action: keep live evidence collection blocked until the public-beta approval packet supplies every required public-safe evidence ref using the operator runbook contract
