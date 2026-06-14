@@ -42,7 +42,7 @@ STATUS:`;
 }
 
 function apiGateFixture() {
-  return `no_runtime_witness -> no_api_dns
+  return `no_gateway_runtime_evidence -> no_api_dns
 ops/recovery-completion-witness.md
 ReadyForDns
 Post-DNS Evidence
