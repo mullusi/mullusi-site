@@ -128,7 +128,7 @@ export function decideOpsNextAction(evidence) {
       packetPath: "ops/runtime-witness/mullu-govern-closure-packet.md",
       decisionRecordPath: "ops/mullu-govern-evaluate-write-route-decision.md",
       approvalPacketPath: "ops/mullu-govern-public-beta-approval-packet.md",
-      manualEvidenceBoundary: "product status promotion approval, public evaluate write-route approval, live contract execution approval, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, and runtime witness evidence",
+      manualEvidenceBoundary: "product status promotion approval, public evaluate write-route approval, live contract execution approval, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, and runtime witness evidence",
     };
   }
 
