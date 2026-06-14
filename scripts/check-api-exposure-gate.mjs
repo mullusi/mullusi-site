@@ -20,7 +20,7 @@ const dnsTimeoutMs = 8_000;
 const httpsTimeoutMs = 10_000;
 const allowedOptions = new Set(["--expect-blocked", "--require-ready", "--live", "--json"]);
 const allowedRecoveryStates = new Set(["AwaitingEvidence", "ReadyForProvisioning"]);
-const allowedExposureStates = new Set(["GovernanceBlocked", "ReadyForDns", "SolvedVerified", "SafeHalt"]);
+const allowedExposureStates = new Set(["GovernanceBlocked", "AwaitingEvidence", "ReadyForDns", "SolvedVerified", "SafeHalt"]);
 const allowedRuntimeStates = new Set(["AwaitingEvidence", "ReadyForDns", "SolvedVerified", "SafeHalt"]);
 
 function readUtf8(relativePath) {
@@ -72,7 +72,7 @@ export function parseApiExposureDocuments({ recoveryWitness, exposureWitness, ap
       "api_runtime_public_state=",
       "recovery_witness_state=",
       "api_provisioning_allowed=",
-      "node scripts/check-api-exposure-gate.mjs --expect-blocked",
+      "node scripts/check-api-exposure-gate.mjs",
       "STATUS:",
     ], "api-exposure-witness"),
   ];
@@ -201,6 +201,9 @@ export function evaluateApiExposureEvidence({ documentState, liveState }) {
   }
   if (!dnsAllowed && documentState.runtimePublicState !== "AwaitingEvidence") {
     hardFindings.push("api_runtime_public_state_not_awaiting_while_dns_blocked");
+  }
+  if (recoveryReady && !dnsAllowed && documentState.exposureState === "GovernanceBlocked") {
+    hardFindings.push("api_exposure_governance_blocked_after_recovery_ready");
   }
 
   if (liveState.dnsState === "Unknown") softFindings.push("api_dns_state_unknown");

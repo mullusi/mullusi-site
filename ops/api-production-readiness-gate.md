@@ -16,17 +16,17 @@ no_runtime_witness -> no_api_dns
 The public website, docs, email, DNSSEC, and Cloudflare baseline must remain
 untouched while this gate is executed.
 
-Observed on 2026-06-06:
+Observed on 2026-06-14:
 
 ```text
 command=node scripts/check-api-production-readiness.mjs
-api_production_readiness_state=Blocked
+api_production_readiness_state=AwaitingEvidence
 solver_outcome=AwaitingEvidence
 proof_state=Unknown
 api_dns_publication_allowed=false
-recovery_gate=Blocked
-recovery_witness_state=AwaitingEvidence
-api_provisioning_allowed=false
+recovery_gate=ReadyForProvisioning
+recovery_witness_state=ReadyForProvisioning
+api_provisioning_allowed=true
 manual_evidence_ready=false
 manual_evidence_missing_count=13
 runtime_witness_registry=Pass
@@ -36,7 +36,6 @@ runtime_witness_blocked_count=11
 host_path_contract=Pass
 readiness_gate_contract=Pass
 secret_boundary=Pass
-blocker=recovery_witness_not_ready
 blocker=manual_evidence_missing:production_image_published
 blocker=manual_evidence_missing:runtime_host_ready
 blocker=manual_evidence_missing:managed_postgres_ready
@@ -210,5 +209,5 @@ If post-DNS evidence fails:
 STATUS:
   Completeness: 100%
   Self-attested invariants: no placeholder DNS, recovery before exposure, external persistence, staged HSTS, rollback preserves root foundation
-  Open issues: concrete host provider, managed PostgreSQL endpoint, production credential store, recovery checklist confirmation
-  Next action: satisfy pre-provision requirements before any public `api` DNS record is created
+  Open issues: concrete host provider, managed PostgreSQL endpoint, production credential store, release preflight, runtime witness
+  Next action: satisfy private runtime evidence before any public `api` DNS record is created

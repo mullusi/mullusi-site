@@ -179,11 +179,12 @@ function testRuntimeWitnessClosurePredicate() {
   assert.equal(runtimeWitnessClosed({}), false);
 }
 
-function testCurrentCliDefaultsBlockedPublicSafely() {
+function testCurrentCliDefaultsAwaitEvidenceAfterRecovery() {
   const result = runCli();
 
   assert.equal(result.status, 0);
-  assert.match(result.stdout, /^api_production_readiness_state=Blocked$/m);
+  assert.match(result.stdout, /^api_production_readiness_state=AwaitingEvidence$/m);
+  assert.match(result.stdout, /^recovery_gate=ReadyForProvisioning$/m);
   assert.match(result.stdout, /^api_dns_publication_allowed=false$/m);
   assert.match(result.stdout, /^secret_values=not_recorded$/m);
   assert.match(result.stdout, /^private_recovery_values=not_read$/m);
@@ -193,9 +194,9 @@ function testCurrentCliRequireReadyFailsClosed() {
   const result = runCli(["--require-ready"]);
 
   assert.equal(result.status, 1);
-  assert.match(result.stdout, /^api_production_readiness_state=Blocked$/m);
+  assert.match(result.stdout, /^api_production_readiness_state=AwaitingEvidence$/m);
   assert.match(result.stdout, /^proof_state=Unknown$/m);
-  assert.match(result.stdout, /^blocker=recovery_witness_not_ready$/m);
+  assert.match(result.stdout, /^blocker=manual_evidence_missing:production_image_published$/m);
 }
 
 function testCurrentCliRejectsUnsupportedArgs() {
@@ -213,11 +214,11 @@ function testOutputFilePersistsReadinessJson() {
   const payload = JSON.parse(fs.readFileSync(outputPath, "utf8"));
 
   assert.equal(result.status, 1);
-  assert.match(result.stdout, /^api_production_readiness_state=Blocked$/m);
-  assert.equal(payload.apiProductionReadinessState, "Blocked");
+  assert.match(result.stdout, /^api_production_readiness_state=AwaitingEvidence$/m);
+  assert.equal(payload.apiProductionReadinessState, "AwaitingEvidence");
   assert.equal(payload.solverOutcome, "AwaitingEvidence");
   assert.equal(payload.apiDnsPublicationAllowed, false);
-  assert.ok(payload.blockers.includes("recovery_witness_not_ready"));
+  assert.ok(payload.blockers.includes("manual_evidence_missing:production_image_published"));
 }
 
 function testJsonOutputFilePersistsGovernanceBlock() {
@@ -247,7 +248,7 @@ testRecoveryBlockDominatesReadiness();
 testBlockedRuntimeWitnessAwaitsEvidenceAfterRecovery();
 testSecretLikeValueBlocksContract();
 testRuntimeWitnessClosurePredicate();
-testCurrentCliDefaultsBlockedPublicSafely();
+testCurrentCliDefaultsAwaitEvidenceAfterRecovery();
 testCurrentCliRequireReadyFailsClosed();
 testCurrentCliRejectsUnsupportedArgs();
 testOutputFilePersistsReadinessJson();

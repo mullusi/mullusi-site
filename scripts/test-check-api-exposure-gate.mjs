@@ -37,7 +37,7 @@ api_dns_publication_allowed=${dnsAllowed}
 api_runtime_public_state=${runtimeState}
 recovery_witness_state=${recoveryState}
 api_provisioning_allowed=${provisioningAllowed}
-node scripts/check-api-exposure-gate.mjs --expect-blocked
+node scripts/check-api-exposure-gate.mjs
 STATUS:`;
 }
 
@@ -201,12 +201,15 @@ function testDocumentMismatchFails() {
   assert.ok(result.hardFindings.includes("api_exposure_provisioning_flag_mismatch"));
 }
 
-function testCurrentCliDefaultsBlockedPublicSafely() {
+function testCurrentCliDefaultsAwaitRuntimeEvidence() {
   const result = runGateCli([]);
 
   assert.equal(result.status, 0);
-  assert.match(result.stdout, /^api_exposure_state=GovernanceBlocked$/m);
+  assert.match(result.stdout, /^api_exposure_state=AwaitingEvidence$/m);
+  assert.match(result.stdout, /^recovery_witness_state=ReadyForProvisioning$/m);
+  assert.match(result.stdout, /^api_provisioning_allowed=true$/m);
   assert.match(result.stdout, /^api_dns_publication_allowed=false$/m);
+  assert.match(result.stdout, /^blocker=none$/m);
   assert.match(result.stdout, /^raw_host_values=not_recorded$/m);
   assert.match(result.stdout, /^private_recovery_values=not_read$/m);
 }
@@ -215,9 +218,9 @@ function testCurrentCliRequireReadyFailsClosed() {
   const result = runGateCli(["--require-ready"]);
 
   assert.equal(result.status, 1);
-  assert.match(result.stdout, /^api_exposure_state=GovernanceBlocked$/m);
+  assert.match(result.stdout, /^api_exposure_state=AwaitingEvidence$/m);
   assert.match(result.stdout, /^proof_state=Unknown$/m);
-  assert.match(result.stdout, /^blocker=api_exposure_blocked_until_recovery_ready$/m);
+  assert.match(result.stdout, /^blocker=none$/m);
 }
 
 function testCurrentCliRejectsUnsupportedArgs() {
@@ -236,7 +239,7 @@ testSolvedVerifiedFixtureWithDnsProbePasses();
 testDnsPresentWhileBlockedFailsClosed();
 testHttpsReachableWhileBlockedFailsClosed();
 testDocumentMismatchFails();
-testCurrentCliDefaultsBlockedPublicSafely();
+testCurrentCliDefaultsAwaitRuntimeEvidence();
 testCurrentCliRequireReadyFailsClosed();
 testCurrentCliRejectsUnsupportedArgs();
 

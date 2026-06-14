@@ -5211,7 +5211,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/api-exposure-witness.md",
-      terms: ["API Exposure Witness", "api_exposure_state=GovernanceBlocked", "api_dns_publication_allowed=false", "recovery_witness_state=AwaitingEvidence", "api_provisioning_allowed=false", "node scripts/check-api-exposure-gate.mjs --expect-blocked", "STATUS:"],
+      terms: ["API Exposure Witness", "api_exposure_state=AwaitingEvidence", "api_dns_publication_allowed=false", "recovery_witness_state=ReadyForProvisioning", "api_provisioning_allowed=true", "node scripts/check-api-exposure-gate.mjs", "STATUS:"],
     },
     {
       file: "ops/search-indexing-witness.md",
@@ -5227,7 +5227,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/release-readiness-summary.md",
-      terms: ["Release Readiness Summary", "website_static_deployment_integrity=AwaitingEvidence", "live_status_manifest=Pass", "local_status_manifest_match=AwaitingEvidence", "api_exposure_state=GovernanceBlocked", "api_dns_publication_allowed=false", "api_production_readiness_state=Blocked", "product_runtime_release_witness=AwaitingEvidence", "recovery_witness_state=AwaitingEvidence", "domain_security_state=SolvedVerified", "domain_hardening_preflight=GovernanceBlocked", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
+      terms: ["Release Readiness Summary", "website_static_deployment_integrity=AwaitingEvidence", "live_status_manifest=Pass", "local_status_manifest_match=AwaitingEvidence", "api_exposure_state=AwaitingEvidence", "api_dns_publication_allowed=false", "api_production_readiness_state=AwaitingEvidence", "product_runtime_release_witness=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning", "domain_security_state=SolvedVerified", "domain_hardening_preflight=GovernanceBlocked", "static_website_public=true", "product_runtime_release=false", "STATUS:"],
     },
     {
       file: "ops/live-safety-monitor.md",
@@ -5259,7 +5259,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/solo-developer-assistant-handoff.md",
-      terms: ["Solo Developer Assistant Handoff", "Current Operator State", "npm run ops:next", "recovery_witness_state=AwaitingEvidence", "domain_hardening_preflight=GovernanceBlocked", "api_production_readiness_state=Blocked", "domain_dns_mutation_allowed=false", "root_recovery", "domain_security_hardening", "api_runtime", "test:ops-next", "node scripts/report-ops-next-action.mjs", "STATUS:"],
+      terms: ["Solo Developer Assistant Handoff", "Current Operator State", "npm run ops:next", "recovery_witness_state=ReadyForProvisioning", "domain_hardening_preflight=GovernanceBlocked", "api_production_readiness_state=AwaitingEvidence", "domain_dns_mutation_allowed=false", "domain_security_hardening", "api_runtime", "test:ops-next", "node scripts/report-ops-next-action.mjs", "STATUS:"],
     },
     {
       file: "ops/runtime-witness/README.md",
@@ -5345,7 +5345,7 @@ function validateRuntimeGateState() {
     "testReadyFixtureWithDnsPresentAwaitsPostDnsWitness",
     "testSolvedVerifiedFixtureWithDnsProbePasses",
     "testDnsPresentWhileBlockedFailsClosed",
-    "testCurrentCliDefaultsBlockedPublicSafely",
+    "testCurrentCliDefaultsAwaitRuntimeEvidence",
     "testCurrentCliRequireReadyFailsClosed",
   ]) {
     if (!apiExposureCheckerTest.includes(term)) {
@@ -5372,7 +5372,7 @@ function validateRuntimeGateState() {
     "testRecoveryBlockDominatesReadiness",
     "testBlockedRuntimeWitnessAwaitsEvidenceAfterRecovery",
     "testSecretLikeValueBlocksContract",
-    "testCurrentCliDefaultsBlockedPublicSafely",
+    "testCurrentCliDefaultsAwaitEvidenceAfterRecovery",
     "testCurrentCliRequireReadyFailsClosed",
     "testCurrentCliRejectsUnsupportedArgs",
   ]) {

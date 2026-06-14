@@ -159,8 +159,8 @@ function validateWorkflowBoundary() {
     "node scripts/validate-checkpoint.mjs",
     "node --check scripts/fetch-news.mjs",
     "node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
-    "node scripts/check-api-exposure-gate.mjs --expect-blocked",
-    "node scripts/check-api-production-readiness.mjs --expect-blocked",
+    "node scripts/check-api-exposure-gate.mjs",
+    "node scripts/check-api-production-readiness.mjs",
     "node scripts/check-private-recovery-inventory.mjs --allow-missing",
   ]) {
     assertIncludes(workflow, requiredWorkflowTerm, "validate_workflow");
