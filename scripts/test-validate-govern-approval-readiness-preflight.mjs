@@ -79,7 +79,9 @@ function validEvidence(overrides = {}) {
       privacyRetentionPreflight: passingResult(),
       productStatusPreflight: passingResult(),
       publicClaimPreflight: passingResult(),
+      runtimeClosurePacket: passingResult(),
       supportReadiness: passingResult(),
+      writeRouteDecision: passingResult(),
     },
     witness,
     ...overrides,
@@ -134,6 +136,25 @@ function testSyntheticAggregateFailureFailsClosed() {
   assert.match(result.findings.join("\n"), /aggregate_validator_proof_not_pass:contractPreflight:Fail/);
 }
 
+function testSyntheticRouteRuntimeAggregateFailureFailsClosed() {
+  const evidence = validEvidence({
+    validatorResults: {
+      ...validEvidence().validatorResults,
+      runtimeClosurePacket: { proofState: "Fail", solverOutcome: "GovernanceBlocked" },
+      writeRouteDecision: { proofState: "Fail", solverOutcome: "GovernanceBlocked" },
+    },
+  });
+  const result = validateGovernApprovalReadinessPreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.readyForApproval, false);
+  assert.match(result.findings.join("\n"), /aggregate_validator_not_solved:runtimeClosurePacket:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /aggregate_validator_proof_not_pass:runtimeClosurePacket:Fail/);
+  assert.match(result.findings.join("\n"), /aggregate_validator_not_solved:writeRouteDecision:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /aggregate_validator_proof_not_pass:writeRouteDecision:Fail/);
+}
+
 function testSyntheticWriteRouteOpenFailsClosed() {
   const evidence = validEvidence({
     approvalPacket: [
@@ -182,6 +203,7 @@ function testCliJsonAndUnsupportedArgs() {
 testCurrentApprovalReadinessPreflightPasses();
 testSyntheticOperatorApprovalRefFailsClosed();
 testSyntheticAggregateFailureFailsClosed();
+testSyntheticRouteRuntimeAggregateFailureFailsClosed();
 testSyntheticWriteRouteOpenFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
