@@ -9,13 +9,17 @@ Test contract: run node scripts/test-validate-govern-support-readiness.mjs.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
+import {
+  scanForbiddenEvidencePatterns,
+  validatePublicSafeEvidenceRef,
+} from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
 const defaultWitnessPath = "ops/mullu-govern-support-readiness.md";
 const allowedArgs = new Set(["--json"]);
 const supportEmail = "support@mullusi.com";
+const supportReadinessRef = "site:ops/mullu-govern-support-readiness.md";
 
 const requiredWitnessTerms = [
   "support_readiness_state=Ready",
@@ -84,8 +88,13 @@ export function validateGovernSupportReadinessEvidence(evidence) {
   if (!evidence.approvalPacket.includes("public_write_route_allowed=false")) {
     findings.push("approval_packet_write_route_not_blocked");
   }
-  if (lineValue(evidence.approvalPacket, "support_readiness_ref") !== defaultWitnessPath) {
+  const observedSupportReadinessRef = lineValue(evidence.approvalPacket, "support_readiness_ref");
+  if (observedSupportReadinessRef !== supportReadinessRef) {
     findings.push(`approval_packet_support_readiness_ref_invalid:${lineValue(evidence.approvalPacket, "support_readiness_ref") || "missing"}`);
+  }
+  const supportRefResult = validatePublicSafeEvidenceRef(observedSupportReadinessRef);
+  for (const refFinding of supportRefResult.findings) {
+    findings.push(`approval_packet_support_readiness_ref_invalid:${refFinding}`);
   }
 
   return {

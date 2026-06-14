@@ -45,7 +45,7 @@ retention_activation_ref=missing
 dashboard_operator_readiness_ref=missing
 runtime_witness_ref=missing
 rollback_witness_ref=control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py
-support_readiness_ref=ops/mullu-govern-support-readiness.md
+support_readiness_ref=site:ops/mullu-govern-support-readiness.md
 public_claim_update_ref=missing
 POST /v1/govern/evaluate
 STATUS:
@@ -129,7 +129,7 @@ api_contract_test_ref=missing
 public_claim_update_ref=missing
 runtime_witness_ref=missing
 rollback_witness_ref=control-plane:pull/1686:ghp_abcdefghijklmnopqrstuvwxyz123456
-support_readiness_ref=ops/mullu-govern-support-readiness.md
+support_readiness_ref=site:ops/mullu-govern-support-readiness.md
 POST /v1/govern/evaluate
 STATUS:
 `;
@@ -140,6 +140,19 @@ STATUS:
   assert.equal(result.missingApprovalInputs.length, 8);
   assert.match(result.findings.join("\n"), /approval_input_ref_not_allowed:rollback_witness_ref/);
   assert.match(result.findings.join("\n"), /approval_input_ref_invalid:rollback_witness_ref:forbidden_private_value_pattern:evidence_ref:api_key_shape/);
+}
+
+function testMalformedAllowedRefFailsClosed() {
+  const packet = validPacketContent().replace(
+    "support_readiness_ref=site:ops/mullu-govern-support-readiness.md",
+    "support_readiness_ref=ops/mullu-govern-support-readiness.md",
+  );
+  const result = validateApprovalPacketContent(packet);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /approval_input_ref_not_allowed:support_readiness_ref/);
+  assert.match(result.findings.join("\n"), /approval_input_ref_invalid:support_readiness_ref:evidence_ref_family_not_allowed/);
 }
 
 function testCliJsonAndUnsupportedArgs() {
@@ -159,6 +172,7 @@ testCurrentPacketPassesAsNonOperative();
 testOnlyRollbackEvidenceRefIsAllowed();
 testAggregateDecisionAndRuntimeFailuresBlockApprovalPacket();
 testSecretShapedAllowedRefFailsClosed();
+testMalformedAllowedRefFailsClosed();
 testCliJsonAndUnsupportedArgs();
 
 console.log("govern public-beta approval packet validator tests passed");

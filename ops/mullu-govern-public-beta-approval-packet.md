@@ -67,7 +67,7 @@ retention_activation_ref=missing
 dashboard_operator_readiness_ref=missing
 runtime_witness_ref=missing
 rollback_witness_ref=control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py
-support_readiness_ref=ops/mullu-govern-support-readiness.md
+support_readiness_ref=site:ops/mullu-govern-support-readiness.md
 public_claim_update_ref=missing
 ```
 

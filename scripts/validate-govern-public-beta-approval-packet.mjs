@@ -35,7 +35,7 @@ const currentAllowedEvidenceRefs = new Map([
   ],
   [
     "support_readiness_ref",
-    "ops/mullu-govern-support-readiness.md",
+    "site:ops/mullu-govern-support-readiness.md",
   ],
 ]);
 
@@ -119,10 +119,10 @@ export function validateApprovalPacketContent(content, context = {}) {
       const allowedValue = currentAllowedEvidenceRefs.get(key);
       if (value !== allowedValue) {
         findings.push(`approval_input_ref_not_allowed:${key}`);
-        const refResult = validatePublicSafeEvidenceRef(value);
-        for (const refFinding of refResult.findings) {
-          findings.push(`approval_input_ref_invalid:${key}:${refFinding}`);
-        }
+      }
+      const refResult = validatePublicSafeEvidenceRef(value);
+      for (const refFinding of refResult.findings) {
+        findings.push(`approval_input_ref_invalid:${key}:${refFinding}`);
       }
     }
   }

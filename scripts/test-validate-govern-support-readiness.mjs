@@ -29,12 +29,12 @@ function runValidator(args = []) {
 
 function validEvidence(overrides = {}) {
   return {
-    approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=ops/mullu-govern-support-readiness.md\n",
+    approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=site:ops/mullu-govern-support-readiness.md\n",
     contactPage: '<a href="mailto:support@mullusi.com">support@mullusi.com</a>',
     manifest: { ownership: { supportEmail: "support@mullusi.com" } },
     privacyPage: '<a href="mailto:support@mullusi.com?subject=Mullusi%20privacy%20question">support@mullusi.com</a>',
     privateValueScanSources: {
-      approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=ops/mullu-govern-support-readiness.md\n",
+      approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=site:ops/mullu-govern-support-readiness.md\n",
       witness: [
         "support_readiness_state=Ready",
         "solver_outcome=SolvedVerified",
@@ -105,7 +105,7 @@ function testSyntheticMissingSupportContactFailsClosed() {
 function testSyntheticSecretPatternFailsClosed() {
   const evidence = validEvidence({
     privateValueScanSources: {
-      approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=ops/mullu-govern-support-readiness.md\n",
+      approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=site:ops/mullu-govern-support-readiness.md\n",
       witness: "Bearer abcdefghijklmnopqrstuvwxyz123456",
     },
   });
@@ -115,6 +115,19 @@ function testSyntheticSecretPatternFailsClosed() {
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
   assert.match(result.findings.join("\n"), /forbidden_private_value_pattern:witness:bearer_token/);
+}
+
+function testSyntheticMalformedSupportRefFailsClosed() {
+  const evidence = validEvidence({
+    approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=ops/mullu-govern-support-readiness.md\n",
+  });
+  const result = validateGovernSupportReadinessEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.publicWriteRouteAllowed, false);
+  assert.match(result.findings.join("\n"), /approval_packet_support_readiness_ref_invalid:ops\/mullu-govern-support-readiness.md/);
+  assert.match(result.findings.join("\n"), /approval_packet_support_readiness_ref_invalid:evidence_ref_family_not_allowed/);
 }
 
 function testCliJsonAndUnsupportedArgs() {
@@ -133,6 +146,7 @@ function testCliJsonAndUnsupportedArgs() {
 testCurrentSupportReadinessPasses();
 testSyntheticMissingSupportContactFailsClosed();
 testSyntheticSecretPatternFailsClosed();
+testSyntheticMalformedSupportRefFailsClosed();
 testCliJsonAndUnsupportedArgs();
 
 console.log("govern support readiness validator tests passed");
