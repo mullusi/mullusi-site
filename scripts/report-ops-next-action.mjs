@@ -92,6 +92,8 @@ export function decideOpsNextAction(evidence) {
       blockedSurface: "root_recovery",
       safeLocalCommand: "node scripts/check-private-recovery-inventory.mjs --allow-missing",
       manualEvidenceBoundary: "Cloudflare, GitHub, Google Workspace, Namecheap, billing, and private recovery storage",
+      productRuntimeClaimsAllowed: false,
+      publicProductReleaseAllowed: false,
     };
   }
 
@@ -102,6 +104,8 @@ export function decideOpsNextAction(evidence) {
       blockedSurface: "domain_security_hardening",
       safeLocalCommand: "node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
       manualEvidenceBoundary: "Cloudflare SSL/TLS, DNS write authority, sender inventory, DKIM selector, report mailboxes, and MTA-STS host",
+      productRuntimeClaimsAllowed: false,
+      publicProductReleaseAllowed: false,
     };
   }
 
@@ -116,6 +120,8 @@ export function decideOpsNextAction(evidence) {
       blockedSurface: "api_runtime",
       safeLocalCommand: "node scripts/check-api-production-readiness.mjs",
       manualEvidenceBoundary: "runtime host, managed PostgreSQL, secret store, TLS, rollback path, private runtime witness, and DNS authority",
+      productRuntimeClaimsAllowed: false,
+      publicProductReleaseAllowed: false,
     };
   }
 
@@ -133,6 +139,8 @@ export function decideOpsNextAction(evidence) {
       operatorRunbookPath: "ops/mullu-govern-live-evidence-operator-runbook.md",
       sequencePreflightPath: "ops/mullu-govern-live-evidence-sequence-preflight.md",
       manualEvidenceBoundary: "live evidence sequence refs for product status promotion approval, public evaluate write-route approval, live contract execution approval, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, and runtime witness evidence",
+      productRuntimeClaimsAllowed: false,
+      publicProductReleaseAllowed: false,
     };
   }
 
@@ -142,6 +150,8 @@ export function decideOpsNextAction(evidence) {
     blockedSurface: "none",
     safeLocalCommand: "node scripts/check-api-production-readiness.mjs --require-ready",
     manualEvidenceBoundary: "Cloudflare DNS mutation remains manual and must preserve apex, www, docs, and email surfaces",
+    productRuntimeClaimsAllowed: false,
+    publicProductReleaseAllowed: false,
   };
 }
 
@@ -175,6 +185,8 @@ export function formatOpsNextReport(evidence, decision) {
     `api_runtime_public_state=${evidence.apiRuntimePublicState}`,
     `api_production_readiness_state=${evidence.apiReadiness.apiProductionReadinessState}`,
     `api_dns_publication_allowed=${evidence.apiReadiness.apiDnsPublicationAllowed ? "true" : "false"}`,
+    `product_runtime_claims_allowed=${decision.productRuntimeClaimsAllowed === true ? "true" : "false"}`,
+    `public_product_release_allowed=${decision.publicProductReleaseAllowed === true ? "true" : "false"}`,
     `manual_evidence_missing_count=${evidence.apiReadiness.manualEvidenceMissing.length}`,
     `runtime_witness_closed_count=${evidence.apiReadiness.closedWitnessCount}`,
     `manual_evidence_boundary=${decision.manualEvidenceBoundary}`,
@@ -217,6 +229,8 @@ export function formatOpsNextJson(evidence, decision) {
     apiRuntimePublicState: evidence.apiRuntimePublicState,
     apiProductionReadinessState: evidence.apiReadiness.apiProductionReadinessState,
     apiDnsPublicationAllowed: evidence.apiReadiness.apiDnsPublicationAllowed,
+    productRuntimeClaimsAllowed: decision.productRuntimeClaimsAllowed === true,
+    publicProductReleaseAllowed: decision.publicProductReleaseAllowed === true,
     manualEvidenceMissingCount: evidence.apiReadiness.manualEvidenceMissing.length,
     runtimeWitnessClosedCount: evidence.apiReadiness.closedWitnessCount,
     manualEvidenceBoundary: decision.manualEvidenceBoundary,
