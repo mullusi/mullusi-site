@@ -39,6 +39,7 @@
     "test:public-claim-update-preflight": "node scripts/test-validate-govern-public-claim-update-preflight.mjs",
     "test:scaffold-product": "node scripts/test-scaffold-product.mjs",
     "test:security-txt": "node scripts/test-check-security-txt.mjs",
+    "test:shared-evidence-scanner-boundary": "node scripts/test-validate-govern-shared-evidence-scanner-boundary.mjs",
     "validate": "node scripts/validate-checkpoint.mjs",
     "validate:approval-readiness-preflight": "node scripts/validate-govern-approval-readiness-preflight.mjs",
     "validate:api-exposure": "node scripts/check-api-exposure-gate.mjs",
@@ -58,6 +59,7 @@
     "validate:privacy-retention-preflight": "node scripts/validate-govern-privacy-retention-preflight.mjs",
     "validate:runtime": "node scripts/validate-runtime-witnesses.mjs",
     "validate:security-txt": "node scripts/check-security-txt.mjs",
+    "validate:shared-evidence-scanner-boundary": "node scripts/validate-govern-shared-evidence-scanner-boundary.mjs",
     "validate:site": "node scripts/validate-site.mjs"
   }
 }
