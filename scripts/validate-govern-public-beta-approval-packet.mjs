@@ -32,6 +32,10 @@ const currentAllowedEvidenceRefs = new Map([
     "rollback_witness_ref",
     "control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py",
   ],
+  [
+    "support_readiness_ref",
+    "ops/mullu-govern-support-readiness.md",
+  ],
 ]);
 
 const requiredTerms = [

@@ -36,10 +36,10 @@ function testCurrentPacketPassesAsNonOperative() {
   assert.equal(result.packetState, "AwaitingEvidence");
   assert.equal(result.approvalState, "NotApproved");
   assert.equal(result.publicWriteRouteAllowed, false);
-  assert.equal(result.missingApprovalInputs.length, 8);
-  assert.deepEqual(result.closedApprovalInputs, ["rollback_witness_ref"]);
+  assert.equal(result.missingApprovalInputs.length, 7);
+  assert.deepEqual(result.closedApprovalInputs, ["rollback_witness_ref", "support_readiness_ref"]);
   assert.equal(result.findings.length, 0);
-  assert.match(report, /missing_approval_input_count=8/);
+  assert.match(report, /missing_approval_input_count=7/);
   assert.match(report, /secret_values=not_recorded/);
 }
 
@@ -60,7 +60,7 @@ privacy_activation_ref=missing
 retention_activation_ref=missing
 runtime_witness_ref=missing
 rollback_witness_ref=control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py
-support_readiness_ref=missing
+support_readiness_ref=ops/mullu-govern-support-readiness.md
 public_claim_update_ref=missing
 POST /v1/govern/evaluate
 STATUS:
@@ -70,9 +70,9 @@ STATUS:
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
-  assert.equal(result.missingApprovalInputs.length, 7);
+  assert.equal(result.missingApprovalInputs.length, 6);
   assert.match(result.findings.join("\n"), /approval_input_ref_not_allowed:operator_approval_ref/);
-  assert.match(result.findings.join("\n"), /approval_inputs_must_remain_missing_except_allowed_refs:7\/9/);
+  assert.match(result.findings.join("\n"), /approval_inputs_must_remain_missing_except_allowed_refs:6\/9/);
 }
 
 function testCliJsonAndUnsupportedArgs() {

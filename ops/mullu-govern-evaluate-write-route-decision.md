@@ -32,7 +32,7 @@ last_reviewed=2026-06-14
 The API gateway is public and witnessed. The product write route is a separate
 boundary because it can accept evaluation requests, create traces, and produce
 proof or audit records. That boundary remains blocked until product-specific
-privacy, retention, contract, support, and runtime witness evidence
+privacy, retention, contract, and runtime witness evidence
 close.
 
 ## Decision Matrix
@@ -46,7 +46,7 @@ close.
 | Runtime witness | `SolvedVerified` for product runtime | `AwaitingEvidence` | block |
 | Rollback witness | route rollback documented and tested | control-plane PR #1686 witness merged and mirrored in `ops/mullu-govern-public-beta-approval-packet.md` | pass |
 | Contract execution | request and response contract verified against public route | route intentionally not published | block |
-| Support readiness | support path validated for route users | not verified in this record | block |
+| Support readiness | support path validated for route users | `ops/mullu-govern-support-readiness.md` | pass |
 | Operator approval | explicit public write-route approval ref | missing | block |
 
 ## Non-Approval
@@ -76,7 +76,7 @@ A later request to expose the route must supersede
 5. Contract test evidence for accepted, rejected, malformed, unauthorized, and rate-limited requests.
 6. Runtime witness evidence for health, gateway witness, runtime conformance, deployment witness, audit verification, and proof verification.
 7. Rollback procedure that disables only the evaluate write route while preserving public gateway health routes; current witness ref is `control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py`.
-8. Support and incident path for user-visible failures.
+8. Support and incident path for user-visible failures; current witness ref is `ops/mullu-govern-support-readiness.md`.
 
 ## Rollback Boundary
 
@@ -93,5 +93,5 @@ record_incident=true
 STATUS:
   Completeness: 100%
   Self-attested invariants: public API gateway remains separate from product write-route exposure, route publication remains blocked, privacy and retention not-active states are preserved, no raw secret or host values recorded
-  Open issues: operator approval, product-status promotion, active privacy policy, active retention policy, contract execution evidence, support readiness
+  Open issues: operator approval, product-status promotion, active privacy policy, active retention policy, contract execution evidence
   Next action: keep POST /v1/govern/evaluate blocked unless the public-beta approval packet closes every listed gate

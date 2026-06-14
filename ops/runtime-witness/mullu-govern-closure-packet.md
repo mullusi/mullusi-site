@@ -35,6 +35,7 @@ witness is not closed because closure would require a product-status promotion
 decision plus product write-route exposure approval, privacy, dashboard, and
 runtime witness evidence. The route-level rollback witness is now closed by
 control-plane PR #1686 and mirrored in the public-beta approval packet.
+Support readiness is closed by `ops/mullu-govern-support-readiness.md`.
 
 ## Public-Safe Live Observations
 
@@ -71,6 +72,7 @@ The registry closure rule requires all of the following:
 | Product API contract | verified or explicitly deferred | guarded; public write route not published |
 | Privacy and retention boundary | verified for product runtime | AwaitingEvidence |
 | Dashboard operator readiness | verified | AwaitingEvidence |
+| Support readiness | verified | Ready via `ops/mullu-govern-support-readiness.md` |
 | Public write-route decision | approve or keep blocked with evidence | KeepBlocked in `ops/mullu-govern-evaluate-write-route-decision.md` |
 | Public-beta approval packet | ReadyForApproval or stronger | AwaitingEvidence in `ops/mullu-govern-public-beta-approval-packet.md` |
 
