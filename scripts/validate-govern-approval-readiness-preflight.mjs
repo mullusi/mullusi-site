@@ -17,9 +17,11 @@ import { validateGovernPublicBetaApprovalPacket } from "./validate-govern-public
 import { validateGovernSupportReadiness } from "./validate-govern-support-readiness.mjs";
 import { validateGovernPrivacyRetentionPreflight } from "./validate-govern-privacy-retention-preflight.mjs";
 import { validateGovernEvaluateContractPreflight } from "./validate-govern-evaluate-contract-preflight.mjs";
+import { validateGovernEvaluateWriteRouteDecision } from "./validate-govern-evaluate-write-route-decision.mjs";
 import { validateGovernProductStatusPreflight } from "./validate-govern-product-status-preflight.mjs";
 import { validateGovernDashboardOperatorReadinessPreflight } from "./validate-govern-dashboard-operator-readiness-preflight.mjs";
 import { validateGovernPublicClaimUpdatePreflight } from "./validate-govern-public-claim-update-preflight.mjs";
+import { validateGovernRuntimeClosurePacket } from "./validate-govern-runtime-closure-packet.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -69,7 +71,9 @@ function aggregateValidatorResults() {
     privacyRetentionPreflight: validateGovernPrivacyRetentionPreflight(),
     productStatusPreflight: validateGovernProductStatusPreflight(),
     publicClaimPreflight: validateGovernPublicClaimUpdatePreflight(),
+    runtimeClosurePacket: validateGovernRuntimeClosurePacket(),
     supportReadiness: validateGovernSupportReadiness(),
+    writeRouteDecision: validateGovernEvaluateWriteRouteDecision(),
   };
 }
 
@@ -106,7 +110,9 @@ export function validateGovernApprovalReadinessPreflightEvidence(evidence) {
     privacyRetentionPreflight: "SolvedVerified",
     productStatusPreflight: "SolvedVerified",
     publicClaimPreflight: "SolvedVerified",
+    runtimeClosurePacket: "SolvedVerified",
     supportReadiness: "SolvedVerified",
+    writeRouteDecision: "SolvedVerified",
   };
   for (const [name, expectedOutcome] of Object.entries(expectedPassResults)) {
     const observed = evidence.validatorResults[name]?.solverOutcome;

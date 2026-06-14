@@ -48,6 +48,8 @@ that boundary explicit and machine-checked.
 | Evidence lane | Current evidence | Approval effect |
 | --- | --- | --- |
 | Public-beta approval packet | `ops/mullu-govern-public-beta-approval-packet.md` validates as non-operative | no approval granted |
+| Evaluate write-route decision | `ops/mullu-govern-evaluate-write-route-decision.md` validates as `KeepBlocked` | public route remains blocked |
+| Runtime closure packet | `ops/runtime-witness/mullu-govern-closure-packet.md` validates without closure approval | runtime witness closure remains blocked |
 | Product status preflight | `ops/mullu-govern-product-status-preflight.md` | promotion still blocked |
 | API contract preflight | `ops/mullu-govern-evaluate-contract-preflight.md` | live execution still blocked |
 | Privacy and retention preflight | `ops/mullu-govern-privacy-retention-preflight.md` | activation still blocked |
