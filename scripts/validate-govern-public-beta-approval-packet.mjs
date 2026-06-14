@@ -1,0 +1,173 @@
+/*
+Purpose: validate the non-operative Mullu Govern public-beta approval packet.
+Governance scope: public write-route approval state, missing evidence refs, route publication denial, and no-secret approval evidence.
+Dependencies: Node.js standard library and ops/mullu-govern-public-beta-approval-packet.md.
+Invariants: read-only; does not inspect provider dashboards, mutate DNS, publish routes, or print private values.
+Test contract: run node scripts/test-validate-govern-public-beta-approval-packet.mjs.
+*/
+
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+const scriptPath = fileURLToPath(import.meta.url);
+const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const defaultPacketPath = "ops/mullu-govern-public-beta-approval-packet.md";
+const allowedArgs = new Set(["--json"]);
+
+const approvalInputKeys = [
+  "operator_approval_ref",
+  "product_status_promotion_ref",
+  "api_contract_test_ref",
+  "privacy_activation_ref",
+  "retention_activation_ref",
+  "runtime_witness_ref",
+  "rollback_witness_ref",
+  "support_readiness_ref",
+  "public_claim_update_ref",
+];
+
+const requiredTerms = [
+  "packet_state=AwaitingEvidence",
+  "approval_state=NotApproved",
+  "public_write_route_allowed=false",
+  "current_decision=KeepBlocked",
+  "route_publication_action=none",
+  "dns_mutation=none",
+  "runtime_mutation=none",
+  "secret_rotation_required=false",
+  "POST /v1/govern/evaluate",
+  "STATUS:",
+];
+
+const forbiddenEvidencePatterns = [
+  { label: "postgres_url", pattern: /postgres(?:ql)?:\/\//i },
+  { label: "private_key", pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
+  { label: "bearer_token", pattern: /Bearer\s+[A-Za-z0-9._~+/-]{16,}/ },
+  { label: "api_key_shape", pattern: /\b(?:sk|pk|rk|ghp|gho|ghu|ghs|github_pat)_[A-Za-z0-9_]{12,}/ },
+  { label: "google_api_key_shape", pattern: /\bAIza[0-9A-Za-z_-]{20,}/ },
+];
+
+function readUtf8(relativePath) {
+  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+}
+
+function lineValue(content, key) {
+  const match = content.match(new RegExp(`^${key}=([^\\s]+)$`, "m"));
+  return match?.[1] ?? "";
+}
+
+function unsupportedArgs(args) {
+  return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
+}
+
+function validateApprovalPacketContent(content) {
+  const findings = [];
+
+  for (const term of requiredTerms) {
+    if (!content.includes(term)) findings.push(`required_term_missing:${term}`);
+  }
+
+  for (const { label, pattern } of forbiddenEvidencePatterns) {
+    if (pattern.test(content)) findings.push(`forbidden_private_value_pattern:${label}`);
+  }
+
+  const packetState = lineValue(content, "packet_state");
+  const approvalState = lineValue(content, "approval_state");
+  const publicWriteRouteAllowed = lineValue(content, "public_write_route_allowed");
+  const routePublicationAction = lineValue(content, "route_publication_action");
+  const dnsMutation = lineValue(content, "dns_mutation");
+  const runtimeMutation = lineValue(content, "runtime_mutation");
+  const secretRotationRequired = lineValue(content, "secret_rotation_required");
+  const missingApprovalInputs = approvalInputKeys.filter((key) => lineValue(content, key) === "missing");
+
+  if (packetState !== "AwaitingEvidence") {
+    findings.push(`packet_state_must_remain_awaiting_evidence:${packetState || "missing"}`);
+  }
+  if (approvalState !== "NotApproved") {
+    findings.push(`approval_state_must_remain_not_approved:${approvalState || "missing"}`);
+  }
+  if (publicWriteRouteAllowed !== "false") {
+    findings.push(`public_write_route_allowed_must_remain_false:${publicWriteRouteAllowed || "missing"}`);
+  }
+  if (routePublicationAction !== "none") {
+    findings.push(`route_publication_action_must_remain_none:${routePublicationAction || "missing"}`);
+  }
+  if (dnsMutation !== "none") {
+    findings.push(`dns_mutation_must_remain_none:${dnsMutation || "missing"}`);
+  }
+  if (runtimeMutation !== "none") {
+    findings.push(`runtime_mutation_must_remain_none:${runtimeMutation || "missing"}`);
+  }
+  if (secretRotationRequired !== "false") {
+    findings.push(`secret_rotation_required_must_remain_false:${secretRotationRequired || "missing"}`);
+  }
+
+  for (const key of approvalInputKeys) {
+    const value = lineValue(content, key);
+    if (!value) findings.push(`approval_input_missing:${key}`);
+  }
+
+  if (missingApprovalInputs.length !== approvalInputKeys.length) {
+    findings.push(`approval_inputs_must_remain_missing_until_superseding_validator:${missingApprovalInputs.length}/${approvalInputKeys.length}`);
+  }
+
+  return {
+    approvalState: approvalState || "Unknown",
+    missingApprovalInputs,
+    packetState: packetState || "Unknown",
+    proofState: findings.length === 0 ? "Pass" : "Fail",
+    publicWriteRouteAllowed: publicWriteRouteAllowed === "true",
+    solverOutcome: findings.length === 0 ? "SolvedVerified" : "GovernanceBlocked",
+    findings,
+  };
+}
+
+export function validateGovernPublicBetaApprovalPacket(relativePath = defaultPacketPath) {
+  return validateApprovalPacketContent(readUtf8(relativePath));
+}
+
+export function formatApprovalPacketReport(result) {
+  return [
+    `govern_public_beta_approval_packet=${result.solverOutcome}`,
+    `proof_state=${result.proofState}`,
+    `packet_state=${result.packetState}`,
+    `approval_state=${result.approvalState}`,
+    `public_write_route_allowed=${result.publicWriteRouteAllowed ? "true" : "false"}`,
+    `missing_approval_input_count=${result.missingApprovalInputs.length}`,
+    `finding_count=${result.findings.length}`,
+    ...result.findings.map((finding) => `finding=${finding}`),
+    "secret_values=not_recorded",
+    "host_addresses=not_recorded",
+    "database_urls=not_recorded",
+  ].join("\n");
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  const invalidArgs = unsupportedArgs(args);
+  if (invalidArgs.length > 0) {
+    const result = {
+      approvalState: "Unknown",
+      findings: [`unsupported_args:${invalidArgs.join(",")}`],
+      missingApprovalInputs: [],
+      packetState: "Unknown",
+      proofState: "Fail",
+      publicWriteRouteAllowed: false,
+      solverOutcome: "GovernanceBlocked",
+    };
+    if (args.includes("--json")) console.log(JSON.stringify(result, null, 2));
+    else console.log(formatApprovalPacketReport(result));
+    process.exit(1);
+    return;
+  }
+
+  const result = validateGovernPublicBetaApprovalPacket();
+  if (args.includes("--json")) console.log(JSON.stringify(result, null, 2));
+  else console.log(formatApprovalPacketReport(result));
+  if (result.findings.length > 0) process.exit(1);
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main();
+}
