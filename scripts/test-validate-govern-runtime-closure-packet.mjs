@@ -85,6 +85,15 @@ function validRuntimeRegistry(overrides = {}) {
   };
 }
 
+function passingWriteRouteDecision(overrides = {}) {
+  return {
+    proofState: "Pass",
+    publicWriteRouteAllowed: false,
+    solverOutcome: "SolvedVerified",
+    ...overrides,
+  };
+}
+
 function validEvidence(overrides = {}) {
   return {
     approvalPacket: "packet_state=AwaitingEvidence\napproval_state=NotApproved\npublic_write_route_allowed=false\n",
@@ -100,6 +109,7 @@ function validEvidence(overrides = {}) {
       packet: validPacket(),
     },
     runtimeRegistry: validRuntimeRegistry(),
+    writeRouteDecision: passingWriteRouteDecision(),
     ...overrides,
   };
 }
@@ -164,6 +174,24 @@ function testSyntheticApprovalPacketRouteExposureFailsClosed() {
   assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:true/);
 }
 
+function testSyntheticWriteRouteAggregateFailureFailsClosed() {
+  const evidence = validEvidence({
+    writeRouteDecision: passingWriteRouteDecision({
+      proofState: "Fail",
+      publicWriteRouteAllowed: true,
+      solverOutcome: "GovernanceBlocked",
+    }),
+  });
+  const result = validateGovernRuntimeClosurePacketEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.runtimeWitnessClosureAllowed, false);
+  assert.match(result.findings.join("\n"), /write_route_decision_not_solved:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /write_route_decision_proof_not_pass:Fail/);
+  assert.match(result.findings.join("\n"), /write_route_decision_public_route_not_blocked/);
+}
+
 function testSyntheticSecretPatternFailsClosed() {
   const packet = `${validPacket()}\nBearer abcdefghijklmnopqrstuvwxyz123456`;
   const evidence = validEvidence({
@@ -200,6 +228,7 @@ testCurrentGovernRuntimeClosurePacketPasses();
 testSyntheticProductClaimAllowanceFailsClosed();
 testSyntheticRuntimeRegistryPromotionFailsClosed();
 testSyntheticApprovalPacketRouteExposureFailsClosed();
+testSyntheticWriteRouteAggregateFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 

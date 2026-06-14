@@ -10,6 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
+import { validateGovernEvaluateWriteRouteDecision } from "./validate-govern-evaluate-write-route-decision.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -140,6 +141,15 @@ export function validateGovernRuntimeClosurePacketEvidence(evidence) {
   if (lineValue(evidence.liveEvidenceSequence, "ready_for_live_evidence") !== "false") {
     findings.push(`live_evidence_sequence_must_remain_not_ready:${lineValue(evidence.liveEvidenceSequence, "ready_for_live_evidence") || "missing"}`);
   }
+  if (evidence.writeRouteDecision?.solverOutcome !== "SolvedVerified") {
+    findings.push(`write_route_decision_not_solved:${evidence.writeRouteDecision?.solverOutcome || "missing"}`);
+  }
+  if (evidence.writeRouteDecision?.proofState !== "Pass") {
+    findings.push(`write_route_decision_proof_not_pass:${evidence.writeRouteDecision?.proofState || "missing"}`);
+  }
+  if (evidence.writeRouteDecision?.publicWriteRouteAllowed !== false) {
+    findings.push("write_route_decision_public_route_not_blocked");
+  }
 
   return {
     findingCount: findings.length,
@@ -168,6 +178,7 @@ export function collectGovernRuntimeClosurePacketEvidence(relativePath = default
       packet,
     },
     runtimeRegistry: readJson("ops/runtime-witness/registry.json"),
+    writeRouteDecision: validateGovernEvaluateWriteRouteDecision(),
   };
 }
 
