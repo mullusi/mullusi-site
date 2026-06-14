@@ -106,6 +106,10 @@ function testPromotionTransformIsPublicSafeAndDeterministic() {
   assertIncludes(promoted, "api_provisioning_allowed=true", "transform_api_allowed");
   assertIncludes(promoted, "last_reviewed=2026-06-12", "transform_review_date");
   assertIncludes(promoted, "| Private inventory | Non-secret locations recorded outside Git | Confirmed |", "transform_confirmed_private_inventory");
+  assertIncludes(promoted, "command=node scripts/check-private-recovery-inventory.mjs --require-ready --json", "transform_ready_command");
+  assertIncludes(promoted, "recoveryInventoryState=ReadyForProvisioning", "transform_private_inventory_ready");
+  assertIncludes(promoted, "missingFlags=none", "transform_no_missing_flags");
+  assertIncludes(promoted, "The ready state is a public-safe provisioning allowance.", "transform_ready_explanation");
   assertIncludes(promoted, "provision_private_runtime_host", "transform_next_host");
   assertIncludes(promoted, "keep_api_dns_absent_until_pre_dns_evidence_passes", "transform_dns_block");
   assertIncludes(promoted, "Never write these into this file:", "transform_forbidden_section_kept");

@@ -81,7 +81,7 @@ export function decideOpsNextAction(evidence) {
       opsNextState: "AwaitingEvidence",
       nextAction: "close_private_api_runtime_evidence_before_dns",
       blockedSurface: "api_runtime",
-      safeLocalCommand: "node scripts/check-api-production-readiness.mjs --expect-blocked",
+      safeLocalCommand: "node scripts/check-api-production-readiness.mjs",
       manualEvidenceBoundary: "runtime host, managed PostgreSQL, secret store, TLS, rollback path, private runtime witness, and DNS authority",
     };
   }

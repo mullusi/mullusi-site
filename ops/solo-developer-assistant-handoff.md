@@ -72,14 +72,14 @@ Then run generation and checkpoint validation. The scaffold starts private-incub
 
 ## Current Operator State
 
-As of 2026-06-11, the current public-safe operator state is:
+As of 2026-06-14, the current public-safe operator state is:
 
 ```text
-recovery_witness_state=AwaitingEvidence
-api_provisioning_allowed=false
+recovery_witness_state=ReadyForProvisioning
+api_provisioning_allowed=true
 domain_hardening_preflight=GovernanceBlocked
 domain_dns_mutation_allowed=false
-api_production_readiness_state=Blocked
+api_production_readiness_state=AwaitingEvidence
 api_dns_publication_allowed=false
 ```
 
@@ -97,14 +97,12 @@ values.
 Current external blockers:
 
 ```text
-root_recovery
 domain_security_hardening
 api_runtime
 ```
 
-Do not continue to DNS mutation, API provisioning, or production-runtime claims
-until the relevant manual evidence is closed outside Git and the local gates
-report readiness.
+Do not continue to DNS mutation or production-runtime claims until the relevant
+manual evidence is closed outside Git and the local gates report readiness.
 
 Run these before handoff when the touched area is relevant:
 
@@ -198,7 +196,7 @@ node scripts/check-api-exposure-gate.mjs
 node scripts/test-check-api-exposure-gate.mjs
 node scripts/check-api-production-readiness.mjs
 node scripts/test-check-api-production-readiness.mjs
-node scripts/check-api-production-readiness.mjs --expect-blocked
+node scripts/check-api-production-readiness.mjs
 node scripts/check-domain-hardening-preflight.mjs
 node scripts/test-check-domain-hardening-preflight.mjs
 node scripts/check-private-recovery-inventory.mjs --allow-missing
@@ -235,5 +233,5 @@ Next:
 STATUS:
   Completeness: 100%
   Self-attested invariants: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed ops next-action reporter, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
-  Open issues: recovery evidence remains blocked by design until private inventory and live evidence close; domain hardening and API runtime evidence remain manual
+  Open issues: domain hardening and API runtime evidence remain manual
   Next action: run npm run ops:next, then complete only the reported manual blocker outside Git

@@ -46,8 +46,8 @@ function createFixture() {
       "name: Run unified checkpoint",
       "run: node scripts/validate-checkpoint.mjs",
       "run: node scripts/check-domain-hardening-preflight.mjs --expect-blocked",
-      "run: node scripts/check-api-exposure-gate.mjs --expect-blocked",
-      "run: node scripts/check-api-production-readiness.mjs --expect-blocked",
+      "run: node scripts/check-api-exposure-gate.mjs",
+      "run: node scripts/check-api-production-readiness.mjs",
       "run: node scripts/check-private-recovery-inventory.mjs --allow-missing",
     ].join("\n"),
   );

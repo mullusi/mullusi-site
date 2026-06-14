@@ -33,25 +33,24 @@ function assertIncludes(value, expected, label) {
   }
 }
 
-function testDefaultCheckReportsBlocked() {
+function testDefaultCheckReportsReadyForProvisioning() {
   const result = runGate();
   assertEqual(result.status, 0, "default_status");
-  assertIncludes(result.stdout, "ops_gate state=Blocked", "default_stdout_state");
-  assertIncludes(result.stdout, "api_provisioning_allowed=false", "default_stdout_api_block");
+  assertIncludes(result.stdout, "ops_gate state=ReadyForProvisioning", "default_stdout_state");
+  assertIncludes(result.stdout, "api_provisioning_allowed=true", "default_stdout_api_allowed");
 }
 
-function testExpectBlockedPasses() {
+function testExpectBlockedFailsAfterRecoveryPromotion() {
   const result = runGate(["--expect-blocked"]);
-  assertEqual(result.status, 0, "expect_blocked_status");
-  assertIncludes(result.stdout, "ops_gate state=Blocked", "expect_blocked_stdout_state");
-  assertIncludes(result.stdout, "recovery_awaiting_evidence", "expect_blocked_stdout_reason");
+  assertEqual(result.status, 1, "expect_blocked_status");
+  assertEqual(result.stdout, "", "expect_blocked_stdout_empty");
+  assertIncludes(result.stderr, "api_provisioning_not_blocked", "expect_blocked_stderr");
 }
 
-function testRequireReadyFailsWhileRecoveryIsBlocked() {
+function testRequireReadyPassesAfterRecoveryPromotion() {
   const result = runGate(["--require-ready"]);
-  assertEqual(result.status, 1, "require_ready_status");
-  assertEqual(result.stdout, "", "require_ready_stdout_empty");
-  assertIncludes(result.stderr, "api_provisioning_not_ready", "require_ready_stderr");
+  assertEqual(result.status, 0, "require_ready_status");
+  assertIncludes(result.stdout, "ops_gate state=ReadyForProvisioning", "require_ready_stdout_state");
 }
 
 function testUnsupportedModeFails() {
@@ -62,9 +61,9 @@ function testUnsupportedModeFails() {
 }
 
 function runTests() {
-  testDefaultCheckReportsBlocked();
-  testExpectBlockedPasses();
-  testRequireReadyFailsWhileRecoveryIsBlocked();
+  testDefaultCheckReportsReadyForProvisioning();
+  testExpectBlockedFailsAfterRecoveryPromotion();
+  testRequireReadyPassesAfterRecoveryPromotion();
   testUnsupportedModeFails();
 
   if (failures.length > 0) {

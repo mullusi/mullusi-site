@@ -16,42 +16,41 @@ Is Mullusi recovery hardening complete enough to provision api.mullusi.com?
 Current answer:
 
 ```text
-recovery_witness_state=AwaitingEvidence
-api_provisioning_allowed=false
-last_reviewed=2026-06-12
+recovery_witness_state=ReadyForProvisioning
+api_provisioning_allowed=true
+last_reviewed=2026-06-14
 ```
 
-This state is intentionally blocked until the ignored private recovery inventory
-has all required confirmation flags set to `true` after the operator confirms
-each root recovery path outside Git.
+This state means the ignored private recovery inventory has all required
+confirmation flags set to `true` after the operator confirmed each root
+recovery path outside Git.
 
-Observed on 2026-06-12:
+Observed on 2026-06-14:
 
 ```text
-command=node scripts/check-private-recovery-inventory.mjs --json
+command=node scripts/check-private-recovery-inventory.mjs --require-ready --json
 inventoryPathState=present
-recoveryInventoryState=Blocked
-proofState=Unknown
-solverOutcome=AwaitingEvidence
+recoveryInventoryState=ReadyForProvisioning
+proofState=Pass
+solverOutcome=SolvedVerified
 privateValueScan=Pass
-missingFlags=cloudflare_recovery_saved,github_recovery_saved,google_workspace_recovery_confirmed,namecheap_recovery_confirmed,namecheap_transfer_lock_confirmed,billing_renewal_path_confirmed,private_inventory_complete
+missingFlags=none
 ```
 
-The blocked state is a public-safe blocker. The ignored private inventory exists
-locally, but it is not ready for recovery witness promotion. The public witness
+The ready state is a public-safe provisioning allowance. The public witness
 records only aggregate flag names and never replaces the private inventory.
 
 ## Public-Safe Witness Table
 
 | Witness | Required Confirmation | State |
 | --- | --- | --- |
-| Cloudflare recovery | 2FA active and recovery codes saved outside Git | AwaitingEvidence |
-| GitHub recovery | 2FA active and recovery codes saved outside Git | AwaitingEvidence |
-| Google Workspace recovery | Admin login and recovery path confirmed | AwaitingEvidence |
-| Namecheap recovery | Account recovery path confirmed | AwaitingEvidence |
-| Namecheap transfer lock | Domain transfer lock confirmed enabled | AwaitingEvidence |
-| Billing renewal | Payment and renewal owner confirmed | AwaitingEvidence |
-| Private inventory | Non-secret locations recorded outside Git | AwaitingEvidence |
+| Cloudflare recovery | 2FA active and recovery codes saved outside Git | Confirmed |
+| GitHub recovery | 2FA active and recovery codes saved outside Git | Confirmed |
+| Google Workspace recovery | Admin login and recovery path confirmed | Confirmed |
+| Namecheap recovery | Account recovery path confirmed | Confirmed |
+| Namecheap transfer lock | Domain transfer lock confirmed enabled | Confirmed |
+| Billing renewal | Payment and renewal owner confirmed | Confirmed |
+| Private inventory | Non-secret locations recorded outside Git | Confirmed |
 
 ## Promotion Rule
 
@@ -83,22 +82,21 @@ browser session material
 
 ## API Provisioning Block
 
-While `api_provisioning_allowed=false`, the next actions are limited to:
+When `api_provisioning_allowed=true`, the next actions are limited to:
 
 ```text
-complete_private_recovery_inventory
-confirm_namecheap_transfer_lock
-confirm_google_workspace_recovery
-confirm_github_recovery_codes
-confirm_cloudflare_recovery_codes
-confirm_billing_renewal_path
+provision_private_runtime_host
+provision_managed_postgresql
+create_production_secret_store
+run_api_production_readiness_gate
+keep_api_dns_absent_until_pre_dns_evidence_passes
 ```
 
-Do not provision production host/database and do not create `api` DNS until this
-witness is promoted.
+Do not create `api` DNS until host, database, secret, TLS, and pre-DNS
+evidence pass.
 
 STATUS:
   Completeness: 100%
   Self-attested invariants: no secret values, explicit provisioning block, manual confirmation required, API DNS remains blocked
-  Open issues: all private recovery confirmation flags remain AwaitingEvidence
-  Next action: complete private recovery inventory outside Git, then promote this witness only after manual confirmation
+  Open issues: host/database provisioning still pending
+  Next action: provision private host and managed PostgreSQL, then run the API production readiness gate

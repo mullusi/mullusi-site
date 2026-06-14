@@ -80,6 +80,26 @@ export function promotedWitnessContent(originalContent, reviewDateValue = review
     "This state means the private recovery inventory exists outside Git and the\noperator has confirmed each root recovery path."
   );
   content = content.replace(
+    /This state is intentionally blocked until the ignored private recovery inventory\r?\nhas all required confirmation flags set to `true` after the operator confirms\r?\neach root recovery path outside Git\./,
+    "This state means the ignored private recovery inventory has all required\nconfirmation flags set to `true` after the operator confirmed each root\nrecovery path outside Git."
+  );
+  content = content.replace("Observed on 2026-06-12:", `Observed on ${reviewDateValue}:`);
+  content = content.replace(
+    "command=node scripts/check-private-recovery-inventory.mjs --json",
+    "command=node scripts/check-private-recovery-inventory.mjs --require-ready --json"
+  );
+  content = content.replace("recoveryInventoryState=Blocked", "recoveryInventoryState=ReadyForProvisioning");
+  content = content.replace("proofState=Unknown", "proofState=Pass");
+  content = content.replace("solverOutcome=AwaitingEvidence", "solverOutcome=SolvedVerified");
+  content = content.replace(
+    /missingFlags=cloudflare_recovery_saved,github_recovery_saved,google_workspace_recovery_confirmed,namecheap_recovery_confirmed,namecheap_transfer_lock_confirmed,billing_renewal_path_confirmed,private_inventory_complete/,
+    "missingFlags=none"
+  );
+  content = content.replace(
+    /The blocked state is a public-safe blocker\. The ignored private inventory exists\r?\nlocally, but it is not ready for recovery witness promotion\. The public witness\r?\nrecords only aggregate flag names and never replaces the private inventory\./,
+    "The ready state is a public-safe provisioning allowance. The public witness\nrecords only aggregate flag names and never replaces the private inventory."
+  );
+  content = content.replace(
     "While `api_provisioning_allowed=false`, the next actions are limited to:",
     "When `api_provisioning_allowed=true`, the next actions are limited to:"
   );
@@ -99,6 +119,10 @@ export function promotedWitnessContent(originalContent, reviewDateValue = review
   );
   content = content.replace(
     "Open issues: all recovery witnesses remain AwaitingEvidence",
+    "Open issues: host/database provisioning still pending"
+  );
+  content = content.replace(
+    "Open issues: all private recovery confirmation flags remain AwaitingEvidence",
     "Open issues: host/database provisioning still pending"
   );
   content = content.replace(
