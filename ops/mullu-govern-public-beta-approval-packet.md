@@ -1,0 +1,114 @@
+<!--
+Purpose: define the approval packet required before Mullu Govern public-beta evaluate-route exposure.
+Governance scope: product-status promotion, public write-route publication, API contract execution, privacy activation, retention activation, rollback readiness, support readiness, runtime witness closure, and operator approval.
+Dependencies: products/mullu-govern/product.manifest.json, ops/mullu-govern-evaluate-write-route-decision.md, ops/runtime-witness/mullu-govern-closure-packet.md, privacy/govern.policy.json, privacy/govern.retention.json, and public-safe api.mullusi.com guard probes.
+Invariants: this file is a non-operative approval packet; it does not publish a route, mutate DNS, reveal secrets, store raw request/response bodies, or record provider-private values.
+-->
+
+# Mullu Govern Public-Beta Approval Packet
+
+This packet answers one question:
+
+```text
+Can Mullu Govern public-beta exposure for POST /v1/govern/evaluate be approved now?
+```
+
+Current answer:
+
+```text
+product_id=mullu-govern
+route=POST /v1/govern/evaluate
+packet_state=AwaitingEvidence
+approval_state=NotApproved
+solver_outcome=AwaitingEvidence
+proof_state=Unknown
+public_write_route_allowed=false
+product_status_current=limited-preview
+product_status_target=public-beta
+current_decision=KeepBlocked
+decision_record=ops/mullu-govern-evaluate-write-route-decision.md
+runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md
+last_reviewed=2026-06-14
+```
+
+The public API gateway is verified, but this packet does not approve the
+product write route. Public-beta exposure remains blocked because the route
+would accept user-supplied evaluation inputs and may create traces, proof
+stamps, and audit events.
+
+## Approval Gate Ledger
+
+| Gate | Required approval evidence | Current evidence | State |
+| --- | --- | --- | --- |
+| Operator approval | Explicit approval ref for public `POST /v1/govern/evaluate` | none | AwaitingEvidence |
+| Product status | Manifest promotion from `limited-preview` to `public-beta` | `products/mullu-govern/product.manifest.json` remains `limited-preview` | AwaitingEvidence |
+| Route guard | Public route closed until approval | public-safe guard probe returns 404 | Pass |
+| API contract | Request, response, malformed, unauthorized, rejected, and rate-limited cases verified | public route intentionally not published | AwaitingEvidence |
+| Privacy activation | Active policy permits collection for named data classes | `privacy/govern.policy.json` collection state is `not-active` | AwaitingEvidence |
+| Retention activation | Active bounded retention days for every collected class | all `privacy/govern.retention.json` classes are `not-active` with `maximumDays=0` | AwaitingEvidence |
+| Runtime witness | product runtime witness closes as `SolvedVerified` | runtime witness registry remains `AwaitingEvidence` | AwaitingEvidence |
+| Rollback witness | rollback test disables only the evaluate route and preserves public health routes | documented rollback boundary exists, tested rollback witness missing | AwaitingEvidence |
+| Support readiness | support and incident path for route users verified | not verified in this packet | AwaitingEvidence |
+| Public claim update | product page/status copy remains bounded to evidence | no public-beta claim emitted | Pass |
+
+## Required Approval Inputs
+
+The approval packet may become `ReadyForApproval` only when every placeholder
+below has a public-safe evidence ref:
+
+```text
+operator_approval_ref=missing
+product_status_promotion_ref=missing
+api_contract_test_ref=missing
+privacy_activation_ref=missing
+retention_activation_ref=missing
+runtime_witness_ref=missing
+rollback_witness_ref=missing
+support_readiness_ref=missing
+public_claim_update_ref=missing
+```
+
+No secret value, raw request body, raw response body, database URL, provider
+host value, account id, token, or private header may be used as an evidence ref.
+
+## Publication Rule
+
+Publication remains denied unless all approval inputs are present and validated
+in a later PR:
+
+```text
+if packet_state != ReadyForApproval:
+  deny_publication(reason="approval_packet_incomplete")
+if approval_state != Approved:
+  deny_publication(reason="operator_approval_missing")
+if runtime_witness_state != SolvedVerified:
+  deny_publication(reason="runtime_witness_not_closed")
+```
+
+## Rollback Requirement
+
+Before approval, rollback must be tested against a route-level exposure change:
+
+```text
+rollback_action=remove /v1/govern/evaluate from public gateway allowlist
+must_preserve=/v1/health,/v1/version,api.mullusi.com DNS
+must_record=incident_or_superseding_decision
+must_verify=POST /v1/govern/evaluate returns 404 after rollback
+```
+
+## Current Decision
+
+```text
+approval_state=NotApproved
+route_publication_action=none
+dns_mutation=none
+runtime_mutation=none
+secret_rotation_required=false
+next_action=close_missing_public_beta_gate_evidence_before_requesting_approval
+```
+
+STATUS:
+  Completeness: 100%
+  Self-attested invariants: packet is non-operative, public route remains blocked, API gateway witness remains separate from product write-route exposure, privacy and retention remain not-active, no raw secret or provider values recorded
+  Open issues: operator approval, product-status promotion, API contract execution evidence, privacy activation, retention activation, runtime witness closure, rollback witness, support readiness
+  Next action: close missing public-beta gate evidence before requesting approval to publish POST /v1/govern/evaluate

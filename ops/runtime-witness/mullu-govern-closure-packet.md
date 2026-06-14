@@ -26,6 +26,7 @@ runtime_witness_registry_state=AwaitingEvidence
 runtime_witness_closure_allowed=false
 product_claims_allowed=false
 write_route_decision=ops/mullu-govern-evaluate-write-route-decision.md
+public_beta_approval_packet=ops/mullu-govern-public-beta-approval-packet.md
 last_reviewed=2026-06-14
 ```
 
@@ -70,6 +71,7 @@ The registry closure rule requires all of the following:
 | Privacy and retention boundary | verified for product runtime | AwaitingEvidence |
 | Dashboard operator readiness | verified | AwaitingEvidence |
 | Public write-route decision | approve or keep blocked with evidence | KeepBlocked in `ops/mullu-govern-evaluate-write-route-decision.md` |
+| Public-beta approval packet | ReadyForApproval or stronger | AwaitingEvidence in `ops/mullu-govern-public-beta-approval-packet.md` |
 
 ## Blockers
 
@@ -88,8 +90,8 @@ blocker=runtime_witness_registry_not_closed
 
 1. Keep `mullu-govern` in `limited-preview`.
 2. Keep the public `POST /v1/govern/evaluate` write route blocked unless
-   `ops/mullu-govern-evaluate-write-route-decision.md` is superseded by a
-   complete public-beta approval packet.
+   `ops/mullu-govern-public-beta-approval-packet.md` is completed and approved
+   in a separate PR.
 3. Verify the privacy and retention documents named by the manifest.
 4. Create a product-specific rollback witness.
 5. Decide whether `mullu-govern` may move from `limited-preview` to
@@ -100,5 +102,5 @@ blocker=runtime_witness_registry_not_closed
 STATUS:
   Completeness: 100%
   Self-attested invariants: API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
-  Open issues: public-beta approval packet, privacy boundary, retention boundary, rollback witness, dashboard operator readiness, product-status promotion decision
-  Next action: keep the Mullu Govern public evaluate write route blocked unless a separate approval packet closes every gate
+  Open issues: public-beta approval evidence, privacy boundary, retention boundary, rollback witness, dashboard operator readiness, product-status promotion decision
+  Next action: keep the Mullu Govern public evaluate write route blocked unless the approval packet closes every gate
