@@ -9,6 +9,7 @@ Test contract: run node scripts/test-validate-govern-dashboard-operator-readines
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -32,14 +33,6 @@ const requiredWitnessTerms = [
   "secret_rotation_required=false",
   "provider_dashboard_values_recorded=false",
   "STATUS:",
-];
-
-const forbiddenEvidencePatterns = [
-  { label: "postgres_url", pattern: /postgres(?:ql)?:\/\//i },
-  { label: "private_key", pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
-  { label: "bearer_token", pattern: /Bearer\s+[A-Za-z0-9._~+/-]{16,}/ },
-  { label: "api_key_shape", pattern: /\b(?:sk|pk|rk|ghp|gho|ghu|ghs|github_pat)_[A-Za-z0-9_]{12,}/ },
-  { label: "google_api_key_shape", pattern: /\bAIza[0-9A-Za-z_-]{20,}/ },
 ];
 
 function readUtf8(relativePath) {
@@ -66,10 +59,8 @@ export function validateGovernDashboardOperatorReadinessPreflightEvidence(eviden
     if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
   }
 
-  for (const { label, pattern } of forbiddenEvidencePatterns) {
-    for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
-      if (pattern.test(content)) findings.push(`forbidden_private_value_pattern:${source}:${label}`);
-    }
+  for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
+    findings.push(...scanForbiddenEvidencePatterns(source, content));
   }
 
   if (evidence.manifest?.id !== "mullu-govern") {
