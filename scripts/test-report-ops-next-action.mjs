@@ -108,8 +108,8 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   }));
 
   assert.equal(decision.opsNextState, "AwaitingEvidence");
-  assert.equal(decision.nextAction, "prepare_product_runtime_witness_closure_packet");
-  assert.equal(decision.blockedSurface, "product_runtime_witness_promotion_boundary");
+  assert.equal(decision.nextAction, "decide_product_evaluate_public_write_route");
+  assert.equal(decision.blockedSurface, "product_evaluate_write_route_promotion_boundary");
   assert.equal(decision.packetPath, "ops/runtime-witness/mullu-govern-closure-packet.md");
 }
 

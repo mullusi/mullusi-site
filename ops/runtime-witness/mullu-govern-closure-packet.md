@@ -30,8 +30,8 @@ last_reviewed=2026-06-14
 
 The shared API gateway is live and witnessed. The Mullu Govern product runtime
 witness is not closed because closure would require a product-status promotion
-decision plus product-specific contract, privacy, rollback, dashboard, and
-runtime witness evidence.
+decision plus product write-route exposure approval, privacy, rollback,
+dashboard, and runtime witness evidence.
 
 ## Public-Safe Live Observations
 
@@ -46,7 +46,7 @@ Observed from public `https://api.mullusi.com` probes on 2026-06-14:
 | `/deployment/witness` | 200 | gateway, API, database, audit store, proof store checks pass |
 | `/audit/verify` | 200 | governed audit verification valid |
 | `/proof/verify` | 200 | runtime proof verification valid |
-| `/v1/govern/evaluate` | 404 on safe GET probe | product contract route not verified |
+| `POST /v1/govern/evaluate` | 404 on safe product contract guard probe | product write route intentionally not published |
 
 The observations above are evidence references, not raw evidence dumps. Raw
 responses, signatures, provider host data, database URLs, headers, and secrets
@@ -65,7 +65,7 @@ The registry closure rule requires all of the following:
 | Preflight decision | allow | block |
 | Public exposure | allowed | blocked |
 | Rollback | Ready | AwaitingEvidence |
-| Product API contract | verified | AwaitingEvidence |
+| Product API contract | verified or explicitly deferred | guarded; public write route not published |
 | Privacy and retention boundary | verified for product runtime | AwaitingEvidence |
 | Dashboard operator readiness | verified | AwaitingEvidence |
 
@@ -73,7 +73,8 @@ The registry closure rule requires all of the following:
 
 ```text
 blocker=product_status_promotion_decision_missing
-blocker=product_api_contract_not_verified
+blocker=product_evaluate_write_route_approval_missing
+blocker=product_api_contract_execution_not_published
 blocker=product_privacy_boundary_not_verified
 blocker=product_retention_boundary_not_verified
 blocker=product_rollback_ready_missing
@@ -84,8 +85,8 @@ blocker=runtime_witness_registry_not_closed
 ## Safe Next Action
 
 1. Keep `mullu-govern` in `limited-preview`.
-2. Define a safe contract probe for `POST /v1/govern/evaluate` that uses no
-   private customer data and no secret values.
+2. Decide whether the public `POST /v1/govern/evaluate` write route should
+   remain blocked or enter a separate public-beta approval path.
 3. Verify the privacy and retention documents named by the manifest.
 4. Create a product-specific rollback witness.
 5. Decide whether `mullu-govern` may move from `limited-preview` to
@@ -96,5 +97,5 @@ blocker=runtime_witness_registry_not_closed
 STATUS:
   Completeness: 100%
   Self-attested invariants: API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
-  Open issues: product contract probe, privacy boundary, retention boundary, rollback witness, dashboard operator readiness, product-status promotion decision
-  Next action: define and run a safe product contract probe for Mullu Govern
+  Open issues: product write-route approval decision, privacy boundary, retention boundary, rollback witness, dashboard operator readiness, product-status promotion decision
+  Next action: decide whether the Mullu Govern public evaluate write route remains blocked or enters a separate public-beta approval path

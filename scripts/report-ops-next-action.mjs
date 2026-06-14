@@ -122,11 +122,11 @@ export function decideOpsNextAction(evidence) {
   if (apiExposureSolved) {
     return {
       opsNextState: "AwaitingEvidence",
-      nextAction: "prepare_product_runtime_witness_closure_packet",
-      blockedSurface: "product_runtime_witness_promotion_boundary",
+      nextAction: "decide_product_evaluate_public_write_route",
+      blockedSurface: "product_evaluate_write_route_promotion_boundary",
       safeLocalCommand: "node scripts/validate-runtime-witnesses.mjs",
       packetPath: "ops/runtime-witness/mullu-govern-closure-packet.md",
-      manualEvidenceBoundary: "product status promotion decision, service health, product rollback, privacy, contract, and runtime witness evidence",
+      manualEvidenceBoundary: "product status promotion decision, public evaluate write-route approval, product rollback, privacy, contract execution, and runtime witness evidence",
     };
   }
 
