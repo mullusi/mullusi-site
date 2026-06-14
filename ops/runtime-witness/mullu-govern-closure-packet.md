@@ -36,6 +36,9 @@ decision plus product write-route exposure approval, privacy, dashboard, and
 runtime witness evidence. The route-level rollback witness is now closed by
 control-plane PR #1686 and mirrored in the public-beta approval packet.
 Support readiness is closed by `ops/mullu-govern-support-readiness.md`.
+Privacy and retention preflight is ready in
+`ops/mullu-govern-privacy-retention-preflight.md`, but activation remains
+blocked until a later approval changes the policy and retention state.
 
 ## Public-Safe Live Observations
 
@@ -70,7 +73,7 @@ The registry closure rule requires all of the following:
 | Public exposure | allowed | blocked |
 | Rollback | Ready | Ready via `ops/mullu-govern-public-beta-approval-packet.md` |
 | Product API contract | verified or explicitly deferred | guarded; public write route not published |
-| Privacy and retention boundary | verified for product runtime | AwaitingEvidence |
+| Privacy and retention boundary | verified for product runtime | preflight Ready; activation AwaitingEvidence |
 | Dashboard operator readiness | verified | AwaitingEvidence |
 | Support readiness | verified | Ready via `ops/mullu-govern-support-readiness.md` |
 | Public write-route decision | approve or keep blocked with evidence | KeepBlocked in `ops/mullu-govern-evaluate-write-route-decision.md` |
@@ -94,7 +97,8 @@ blocker=runtime_witness_registry_not_closed
 2. Keep the public `POST /v1/govern/evaluate` write route blocked unless
    `ops/mullu-govern-public-beta-approval-packet.md` is completed and approved
    in a separate PR.
-3. Verify the privacy and retention documents named by the manifest.
+3. Keep privacy and retention activation blocked until an explicit activation
+   approval changes `privacy/govern.policy.json` and `privacy/govern.retention.json`.
 4. Decide whether `mullu-govern` may move from `limited-preview` to
    `public-beta`.
 5. Only after those pass, update `ops/runtime-witness/registry.json` in a
@@ -103,5 +107,5 @@ blocker=runtime_witness_registry_not_closed
 STATUS:
   Completeness: 100%
   Self-attested invariants: API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
-  Open issues: public-beta approval evidence, privacy boundary, retention boundary, dashboard operator readiness, product-status promotion decision
+  Open issues: public-beta approval evidence, privacy activation approval, retention activation approval, dashboard operator readiness, product-status promotion decision
   Next action: keep the Mullu Govern public evaluate write route blocked unless the approval packet closes every gate
