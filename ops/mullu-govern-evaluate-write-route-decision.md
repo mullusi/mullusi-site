@@ -45,7 +45,7 @@ close.
 | Retention boundary | nonzero retention policy approved for each active data class | preflight ready in `ops/mullu-govern-privacy-retention-preflight.md`; all classes remain `not-active`, `maximumDays=0` | block |
 | Runtime witness | `SolvedVerified` for product runtime | `AwaitingEvidence` | block |
 | Rollback witness | route rollback documented and tested | control-plane PR #1686 witness merged and mirrored in `ops/mullu-govern-public-beta-approval-packet.md` | pass |
-| Contract execution | request and response contract verified against public route | route intentionally not published | block |
+| Contract execution | request and response contract verified against public route | preflight ready in `ops/mullu-govern-evaluate-contract-preflight.md`; live route execution not published | block |
 | Support readiness | support path validated for route users | `ops/mullu-govern-support-readiness.md` | pass |
 | Operator approval | explicit public write-route approval ref | missing | block |
 
@@ -93,5 +93,5 @@ record_incident=true
 STATUS:
   Completeness: 100%
   Self-attested invariants: public API gateway remains separate from product write-route exposure, route publication remains blocked, privacy and retention not-active states are preserved, no raw secret or host values recorded
-  Open issues: operator approval, product-status promotion, active privacy policy approval, active retention policy approval, contract execution evidence
+  Open issues: operator approval, product-status promotion, active privacy policy approval, active retention policy approval, live contract execution evidence
   Next action: keep POST /v1/govern/evaluate blocked unless the public-beta approval packet closes every listed gate

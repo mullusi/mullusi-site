@@ -2,15 +2,98 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://mullusi.com/contracts/govern/evaluate.schema.json",
   "title": "Mullu Govern POST /v1/govern/evaluate Contract",
-  "description": "Purpose: request contract placeholder for Mullu Govern. Governance scope: control-plane admission, trace requirement, and release-gate validation. Invariants: runtime execution must remain blocked until product-specific schema details and witness checks close.",
+  "description": "Purpose: request contract for a governed evaluation proposal. Governance scope: action classification, constraint evidence, trace requirement, privacy acknowledgement, and fail-closed release-gate validation. Invariants: execution must enter through the control plane, reject unbounded inputs, preserve traceability, and remain blocked until runtime witness and operator approval close.",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": [
-    "trace_required"
+    "schema_version",
+    "action",
+    "constraints",
+    "requested_outputs",
+    "trace_required",
+    "privacy_acknowledgement"
   ],
   "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "subject_id",
+        "summary"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "policy_evaluation",
+            "deployment_decision",
+            "runtime_promotion",
+            "governance_review"
+          ]
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9._:/-]*$"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300,
+        "pattern": "^(ops|docs|products|privacy|contracts|proof|control-plane):[A-Za-z0-9._:/#-]+$"
+      }
+    },
+    "requested_outputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "string",
+        "enum": [
+          "decision",
+          "proof_summary",
+          "repair_actions",
+          "audit_trace"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 120,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
     "trace_required": {
       "const": true
+    },
+    "privacy_acknowledgement": {
+      "const": "no_raw_secret_or_unapproved_user_data"
     }
   }
 }

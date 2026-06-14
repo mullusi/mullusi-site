@@ -39,6 +39,9 @@ Support readiness is closed by `ops/mullu-govern-support-readiness.md`.
 Privacy and retention preflight is ready in
 `ops/mullu-govern-privacy-retention-preflight.md`, but activation remains
 blocked until a later approval changes the policy and retention state.
+API contract preflight is ready in
+`ops/mullu-govern-evaluate-contract-preflight.md`, but live execution cases
+remain blocked until the route is approved.
 
 ## Public-Safe Live Observations
 
@@ -72,7 +75,7 @@ The registry closure rule requires all of the following:
 | Preflight decision | allow | block |
 | Public exposure | allowed | blocked |
 | Rollback | Ready | Ready via `ops/mullu-govern-public-beta-approval-packet.md` |
-| Product API contract | verified or explicitly deferred | guarded; public write route not published |
+| Product API contract | verified or explicitly deferred | preflight Ready; live execution AwaitingEvidence |
 | Privacy and retention boundary | verified for product runtime | preflight Ready; activation AwaitingEvidence |
 | Dashboard operator readiness | verified | AwaitingEvidence |
 | Support readiness | verified | Ready via `ops/mullu-govern-support-readiness.md` |
@@ -84,7 +87,7 @@ The registry closure rule requires all of the following:
 ```text
 blocker=product_status_promotion_decision_missing
 blocker=product_evaluate_write_route_approval_missing
-blocker=product_api_contract_execution_not_published
+blocker=product_api_contract_live_execution_not_published
 blocker=product_privacy_boundary_not_verified
 blocker=product_retention_boundary_not_verified
 blocker=dashboard_operator_readiness_missing
@@ -107,5 +110,5 @@ blocker=runtime_witness_registry_not_closed
 STATUS:
   Completeness: 100%
   Self-attested invariants: API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
-  Open issues: public-beta approval evidence, privacy activation approval, retention activation approval, dashboard operator readiness, product-status promotion decision
+  Open issues: public-beta approval evidence, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator readiness, product-status promotion decision
   Next action: keep the Mullu Govern public evaluate write route blocked unless the approval packet closes every gate
