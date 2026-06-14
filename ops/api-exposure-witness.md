@@ -127,4 +127,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: recovery dependency explicit, public API DNS witnessed, live probe public-safe, no raw host values, product runtime witnesses remain separate
   Open issues: product runtime witnesses remain AwaitingEvidence
-  Next action: keep API gateway monitored and close product-specific runtime witnesses one at a time
+  Next action: keep API gateway monitored and prepare product-specific runtime witness closure packets one at a time

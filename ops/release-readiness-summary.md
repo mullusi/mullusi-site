@@ -71,8 +71,9 @@ witness evidence are still open.
    `node scripts/check-live-deployment-integrity.mjs --require-local-match`.
 2. Keep the API gateway live witness monitored through the exposure gate and
    control-plane deployment witness.
-3. Select one product runtime witness and collect product-specific service
-   health, rollback, privacy, and contract evidence.
+3. Select one product runtime witness candidate and prepare the product-status
+   promotion decision plus service health, rollback, privacy, and contract
+   evidence.
 4. Collect post-DNS public runtime evidence before any `SolvedVerified` product
    release claim.
 5. Keep future domain-security changes inside the bounded runbook and rerun
@@ -92,4 +93,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: static website, API gateway, and product runtime boundaries separated; domain mutation remains bounded; no private values recorded
   Open issues: product runtime witnesses
-  Next action: close static website parity through the mirror-to-deploy handoff, then close one product runtime witness
+  Next action: close static website parity through the mirror-to-deploy handoff, then prepare one product runtime witness closure packet

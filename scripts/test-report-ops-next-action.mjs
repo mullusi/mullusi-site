@@ -108,8 +108,8 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   }));
 
   assert.equal(decision.opsNextState, "AwaitingEvidence");
-  assert.equal(decision.nextAction, "close_one_product_runtime_witness");
-  assert.equal(decision.blockedSurface, "product_runtime_witness");
+  assert.equal(decision.nextAction, "prepare_product_runtime_witness_closure_packet");
+  assert.equal(decision.blockedSurface, "product_runtime_witness_promotion_boundary");
 }
 
 function testFormattedReportStaysPublicSafe() {

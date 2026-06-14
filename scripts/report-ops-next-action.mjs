@@ -122,10 +122,10 @@ export function decideOpsNextAction(evidence) {
   if (apiExposureSolved) {
     return {
       opsNextState: "AwaitingEvidence",
-      nextAction: "close_one_product_runtime_witness",
-      blockedSurface: "product_runtime_witness",
+      nextAction: "prepare_product_runtime_witness_closure_packet",
+      blockedSurface: "product_runtime_witness_promotion_boundary",
       safeLocalCommand: "node scripts/validate-runtime-witnesses.mjs",
-      manualEvidenceBoundary: "product service health, product rollback, privacy, contract, and runtime witness evidence",
+      manualEvidenceBoundary: "product status promotion decision, service health, product rollback, privacy, contract, and runtime witness evidence",
     };
   }
 
