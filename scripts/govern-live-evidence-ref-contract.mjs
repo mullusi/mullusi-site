@@ -30,6 +30,49 @@ export const publicSafeEvidenceRefFamilies = Object.freeze([
   "google-workspace:audit/",
 ]);
 
+const publicSafeEvidenceRefShapes = Object.freeze([
+  {
+    family: "approval://",
+    pattern: /^approval:\/\/[a-z0-9][a-z0-9-]*(?:\/[a-z0-9][a-z0-9-]*)*\/\d{4}-\d{2}-\d{2}\/[a-z0-9][a-z0-9-]*$/,
+  },
+  {
+    family: "receipt://",
+    pattern: /^receipt:\/\/[a-z0-9][a-z0-9-]*(?:\/[a-z0-9][a-z0-9-]*)*\/\d{4}-\d{2}-\d{2}$/,
+  },
+  {
+    family: "github:pull/",
+    pattern: /^github:pull\/\d+:[A-Za-z0-9][A-Za-z0-9._/-]*$/,
+  },
+  {
+    family: "github:actions/runs/",
+    pattern: /^github:actions\/runs\/\d+:[A-Za-z0-9][A-Za-z0-9._/-]*$/,
+  },
+  {
+    family: "site:ops/",
+    pattern: /^site:ops\/[A-Za-z0-9][A-Za-z0-9._/-]*$/,
+  },
+  {
+    family: "control-plane:pull/",
+    pattern: /^control-plane:pull\/\d+:[A-Za-z0-9][A-Za-z0-9._/-]*$/,
+  },
+  {
+    family: "control-plane:receipt/",
+    pattern: /^control-plane:receipt\/[A-Za-z0-9][A-Za-z0-9._/-]*$/,
+  },
+  {
+    family: "render:event/",
+    pattern: /^render:event\/[A-Za-z0-9][A-Za-z0-9._:-]*$/,
+  },
+  {
+    family: "cloudflare:audit/",
+    pattern: /^cloudflare:audit\/[A-Za-z0-9][A-Za-z0-9._:-]*$/,
+  },
+  {
+    family: "google-workspace:audit/",
+    pattern: /^google-workspace:audit\/[A-Za-z0-9][A-Za-z0-9._:-]*$/,
+  },
+]);
+
 export const forbiddenEvidencePatterns = Object.freeze([
   { label: "postgres_url", pattern: /postgres(?:ql)?:\/\//i },
   { label: "private_key", pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
@@ -64,8 +107,11 @@ export function validatePublicSafeEvidenceRef(value, options = {}) {
   if (!ref) findings.push("evidence_ref_empty");
   if (/\s/.test(ref)) findings.push("evidence_ref_must_not_contain_whitespace");
   if (ref.length > 160) findings.push(`evidence_ref_too_long:${ref.length}`);
-  if (!publicSafeEvidenceRefFamilies.some((family) => ref.startsWith(family))) {
+  const shape = publicSafeEvidenceRefShapes.find((candidate) => ref.startsWith(candidate.family));
+  if (!shape) {
     findings.push(`evidence_ref_family_not_allowed:${ref || "missing"}`);
+  } else if (!shape.pattern.test(ref)) {
+    findings.push(`evidence_ref_shape_invalid:${shape.family}`);
   }
   findings.push(...scanForbiddenEvidencePatterns("evidence_ref", ref));
 

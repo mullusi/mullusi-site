@@ -13,6 +13,19 @@ import {
   validatePublicSafeEvidenceRef,
 } from "./govern-live-evidence-ref-contract.mjs";
 
+const validRefByFamily = Object.freeze({
+  "approval://": "approval://mullu-govern/live-evidence/2026-06-14/operator-approved",
+  "receipt://": "receipt://dashboard/govern/operator-readiness/2026-06-14",
+  "github:pull/": "github:pull/101:product-status-public-beta-approval",
+  "github:actions/runs/": "github:actions/runs/27500000000:govern-evaluate-contract-live",
+  "site:ops/": "site:ops/mullu-govern-live-evidence-sequence-preflight.md",
+  "control-plane:pull/": "control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py",
+  "control-plane:receipt/": "control-plane:receipt/runtime/govern/2026-06-14",
+  "render:event/": "render:event/srv-d8id2tj7-deploy-2026-06-14",
+  "cloudflare:audit/": "cloudflare:audit/mullusi-com-2026-06-14",
+  "google-workspace:audit/": "google-workspace:audit/gmail-auth-2026-06-14",
+});
+
 function testRequiredKeysRemainStable() {
   assert.equal(requiredLiveEvidenceApprovalKeys.length, 8);
   assert.equal(requiredLiveEvidenceApprovalKeys.includes("operator_approval_ref"), true);
@@ -23,7 +36,7 @@ function testRequiredKeysRemainStable() {
 function testAllowedFamiliesValidate() {
   assert.equal(publicSafeEvidenceRefFamilies.length, 10);
   for (const family of publicSafeEvidenceRefFamilies) {
-    const result = validatePublicSafeEvidenceRef(`${family}example-ref`);
+    const result = validatePublicSafeEvidenceRef(validRefByFamily[family]);
     assert.equal(result.valid, true);
     assert.equal(result.isMissing, false);
     assert.deepEqual(result.findings, []);
@@ -45,6 +58,8 @@ function testMalformedRefsFailClosed() {
   const empty = validatePublicSafeEvidenceRef("");
   const unknownFamily = validatePublicSafeEvidenceRef("https://example.com/evidence");
   const whitespace = validatePublicSafeEvidenceRef("github:pull/12 bad");
+  const malformedGithubPull = validatePublicSafeEvidenceRef("github:pull/not-a-number");
+  const malformedApproval = validatePublicSafeEvidenceRef("approval://operator/ready");
 
   assert.equal(empty.valid, false);
   assert.match(empty.findings.join("\n"), /evidence_ref_empty/);
@@ -52,6 +67,10 @@ function testMalformedRefsFailClosed() {
   assert.match(unknownFamily.findings.join("\n"), /evidence_ref_family_not_allowed/);
   assert.equal(whitespace.valid, false);
   assert.match(whitespace.findings.join("\n"), /evidence_ref_must_not_contain_whitespace/);
+  assert.equal(malformedGithubPull.valid, false);
+  assert.match(malformedGithubPull.findings.join("\n"), /evidence_ref_shape_invalid:github:pull\//);
+  assert.equal(malformedApproval.valid, false);
+  assert.match(malformedApproval.findings.join("\n"), /evidence_ref_shape_invalid:approval:\/\//);
 }
 
 function testSecretAndRawPayloadPatternsFailClosed() {
