@@ -1,7 +1,7 @@
 <!--
 Purpose: define the operator-safe intake contract for Mullu Govern live evidence refs.
-Governance scope: public-safe evidence ref format, approval-bound live collection inputs, secret exclusion, rollback boundary, and route-publication denial.
-Dependencies: ops/mullu-govern-live-evidence-sequence-preflight.md, ops/mullu-govern-public-beta-approval-packet.md, ops/runtime-witness/mullu-govern-closure-packet.md, and Mullu Govern preflight validators.
+Governance scope: public-safe evidence ref format, approval-bound live collection inputs, secret exclusion, rollback boundary, release-claim denial, intake gating, and route-publication denial.
+Dependencies: ops/mullu-govern-live-evidence-sequence-preflight.md, ops/mullu-govern-live-evidence-ref-intake-template.json, ops/mullu-govern-public-beta-approval-packet.md, ops/release-readiness-summary.md, ops/runtime-witness/mullu-govern-closure-packet.md, and Mullu Govern preflight validators.
 Invariants: this runbook does not approve public-beta, publish routes, mutate DNS, activate privacy or retention, change dashboard auth, update runtime witnesses, record raw payloads, or store private provider values.
 -->
 
@@ -73,6 +73,22 @@ Raw values are never valid refs.
 | `api_contract_test_ref` | Live accepted, rejected, malformed, unauthorized, and rate-limited API cases were verified after approval | `github:actions/runs/NNN:govern-evaluate-contract-live` | `missing` |
 | `public_claim_update_ref` | Public copy/status update stayed bounded to verified evidence | `github:pull/NNN:govern-public-claim-update` | `missing` |
 | `runtime_witness_ref` | Runtime witness registry closure was validated after all prior refs existed | `github:pull/NNN:runtime-witness-govern-closure` | `missing` |
+
+## Validator Bindings
+
+This runbook is valid only while these read-only validators pass and still
+deny live evidence collection or public product release:
+
+```text
+approval_packet_validator=Pass
+approval_readiness_validator=Pass
+live_evidence_sequence_validator=Pass
+live_evidence_ref_intake_validator=Pass
+release_readiness_summary_validator=Pass
+ready_for_live_evidence=false
+product_runtime_claims_allowed=false
+public_product_release_allowed=false
+```
 
 ## Operator Steps
 

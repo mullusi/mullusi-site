@@ -1,7 +1,7 @@
 /*
 Purpose: validate the Mullu Govern live evidence operator runbook.
-Governance scope: public-safe evidence ref contract, required live approval refs, secret exclusion, route blocking, and non-operative live collection guidance.
-Dependencies: Node.js standard library, ops/mullu-govern-live-evidence-operator-runbook.md, public-beta approval packet, and live evidence sequence preflight validator.
+Governance scope: public-safe evidence ref contract, required live approval refs, secret exclusion, route blocking, release blocking, intake blocking, and non-operative live collection guidance.
+Dependencies: Node.js standard library, ops/mullu-govern-live-evidence-operator-runbook.md, public-beta approval packet, live evidence ref intake validator, release readiness summary validator, and live evidence sequence preflight validator.
 Invariants: read-only; does not approve live evidence collection, publish routes, promote product status, activate privacy or retention, mutate DNS/runtime/auth, or print private values.
 Test contract: run node scripts/test-validate-govern-live-evidence-operator-runbook.mjs.
 */
@@ -15,8 +15,10 @@ import {
   scanForbiddenEvidencePatterns,
 } from "./govern-live-evidence-ref-contract.mjs";
 import { validateGovernApprovalReadinessPreflight } from "./validate-govern-approval-readiness-preflight.mjs";
+import { validateGovernLiveEvidenceRefIntake } from "./validate-govern-live-evidence-ref-intake.mjs";
 import { validateGovernLiveEvidenceSequencePreflight } from "./validate-govern-live-evidence-sequence-preflight.mjs";
 import { validateGovernPublicBetaApprovalPacket } from "./validate-govern-public-beta-approval-packet.mjs";
+import { validateReleaseReadinessSummary } from "./validate-release-readiness-summary.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -113,6 +115,30 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
   if (evidence.sequencePreflightResult?.readyForLiveEvidence !== false) {
     findings.push("sequence_preflight_ready_for_live_evidence_must_remain_false");
   }
+  if (evidence.intakeResult?.solverOutcome !== "SolvedVerified") {
+    findings.push(`live_evidence_ref_intake_not_solved:${evidence.intakeResult?.solverOutcome || "missing"}`);
+  }
+  if (evidence.intakeResult?.proofState !== "Pass") {
+    findings.push(`live_evidence_ref_intake_proof_not_pass:${evidence.intakeResult?.proofState || "missing"}`);
+  }
+  if (evidence.intakeResult?.readyForLiveEvidence !== false) {
+    findings.push("live_evidence_ref_intake_ready_for_live_evidence_must_remain_false");
+  }
+  if (evidence.intakeResult?.requireComplete !== false) {
+    findings.push("live_evidence_ref_intake_require_complete_must_remain_false");
+  }
+  if (evidence.releaseReadinessResult?.solverOutcome !== "SolvedVerified") {
+    findings.push(`release_readiness_summary_not_solved:${evidence.releaseReadinessResult?.solverOutcome || "missing"}`);
+  }
+  if (evidence.releaseReadinessResult?.proofState !== "Pass") {
+    findings.push(`release_readiness_summary_proof_not_pass:${evidence.releaseReadinessResult?.proofState || "missing"}`);
+  }
+  if (evidence.releaseReadinessResult?.productRuntimeClaimsAllowed !== false) {
+    findings.push("release_readiness_product_runtime_claims_must_remain_false");
+  }
+  if (evidence.releaseReadinessResult?.publicProductReleaseAllowed !== false) {
+    findings.push("release_readiness_public_product_release_must_remain_false");
+  }
 
   return {
     findingCount: findings.length,
@@ -133,10 +159,12 @@ export function collectGovernLiveEvidenceOperatorRunbookEvidence(relativePath = 
     approvalPacket,
     approvalPacketResult: validateGovernPublicBetaApprovalPacket(),
     approvalReadinessResult: validateGovernApprovalReadinessPreflight(),
+    intakeResult: validateGovernLiveEvidenceRefIntake(),
     privateValueScanSources: {
       approvalPacket,
       runbook,
     },
+    releaseReadinessResult: validateReleaseReadinessSummary(),
     runbook,
     sequencePreflightResult: validateGovernLiveEvidenceSequencePreflight(),
   };

@@ -76,6 +76,18 @@ function validEvidence(overrides = {}) {
       readyForApproval: false,
       solverOutcome: "SolvedVerified",
     },
+    intakeResult: {
+      proofState: "Pass",
+      readyForLiveEvidence: false,
+      requireComplete: false,
+      solverOutcome: "SolvedVerified",
+    },
+    releaseReadinessResult: {
+      productRuntimeClaimsAllowed: false,
+      proofState: "Pass",
+      publicProductReleaseAllowed: false,
+      solverOutcome: "SolvedVerified",
+    },
     runbook: validRunbook(),
     sequencePreflightResult: {
       proofState: "Pass",
@@ -170,6 +182,44 @@ function testSyntheticApprovalAggregateFailureFailsClosed() {
   assert.match(result.findings.join("\n"), /approval_readiness_ready_for_approval_must_remain_false/);
 }
 
+function testSyntheticIntakeFailureFailsClosed() {
+  const evidence = validEvidence({
+    intakeResult: {
+      proofState: "Fail",
+      readyForLiveEvidence: true,
+      requireComplete: true,
+      solverOutcome: "GovernanceBlocked",
+    },
+  });
+  const result = validateGovernLiveEvidenceOperatorRunbookEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.readyForLiveEvidence, false);
+  assert.match(result.findings.join("\n"), /live_evidence_ref_intake_not_solved:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /live_evidence_ref_intake_ready_for_live_evidence_must_remain_false/);
+  assert.match(result.findings.join("\n"), /live_evidence_ref_intake_require_complete_must_remain_false/);
+}
+
+function testSyntheticReleaseReadinessFailureFailsClosed() {
+  const evidence = validEvidence({
+    releaseReadinessResult: {
+      productRuntimeClaimsAllowed: true,
+      proofState: "Fail",
+      publicProductReleaseAllowed: true,
+      solverOutcome: "GovernanceBlocked",
+    },
+  });
+  const result = validateGovernLiveEvidenceOperatorRunbookEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.readyForLiveEvidence, false);
+  assert.match(result.findings.join("\n"), /release_readiness_summary_not_solved:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /release_readiness_product_runtime_claims_must_remain_false/);
+  assert.match(result.findings.join("\n"), /release_readiness_public_product_release_must_remain_false/);
+}
+
 function testSyntheticSecretPatternFailsClosed() {
   const evidence = validEvidence({
     privateValueScanSources: {
@@ -204,6 +254,8 @@ testSyntheticMissingApprovalKeyFailsClosed();
 testSyntheticApprovalPacketFilledRefFailsClosed();
 testSyntheticSequencePreflightFailureFailsClosed();
 testSyntheticApprovalAggregateFailureFailsClosed();
+testSyntheticIntakeFailureFailsClosed();
+testSyntheticReleaseReadinessFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 
