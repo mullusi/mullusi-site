@@ -100,6 +100,7 @@ function validEvidence(overrides = {}) {
       privacyRetentionPreflight: passingResult(),
       productStatusPreflight: passingResult(),
       publicClaimPreflight: passingResult(),
+      runtimeClosurePacket: passingResult(),
       supportReadiness: passingResult(),
     },
     witness,
