@@ -21,6 +21,7 @@ import { validateGovernPrivacyRetentionPreflight } from "./validate-govern-priva
 import { validateGovernProductStatusPreflight } from "./validate-govern-product-status-preflight.mjs";
 import { validateGovernPublicBetaApprovalPacket } from "./validate-govern-public-beta-approval-packet.mjs";
 import { validateGovernPublicClaimUpdatePreflight } from "./validate-govern-public-claim-update-preflight.mjs";
+import { validateGovernRuntimeClosurePacket } from "./validate-govern-runtime-closure-packet.mjs";
 import { validateGovernSupportReadiness } from "./validate-govern-support-readiness.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
@@ -85,6 +86,7 @@ function aggregateValidatorResults() {
     privacyRetentionPreflight: validateGovernPrivacyRetentionPreflight(),
     productStatusPreflight: validateGovernProductStatusPreflight(),
     publicClaimPreflight: validateGovernPublicClaimUpdatePreflight(),
+    runtimeClosurePacket: validateGovernRuntimeClosurePacket(),
     supportReadiness: validateGovernSupportReadiness(),
   };
 }
@@ -139,6 +141,7 @@ export function validateGovernLiveEvidenceSequencePreflightEvidence(evidence) {
     privacyRetentionPreflight: "SolvedVerified",
     productStatusPreflight: "SolvedVerified",
     publicClaimPreflight: "SolvedVerified",
+    runtimeClosurePacket: "SolvedVerified",
     supportReadiness: "SolvedVerified",
   };
 
