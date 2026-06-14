@@ -212,4 +212,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: no placeholder DNS, recovery before exposure, external persistence, staged HSTS, rollback preserves root foundation
   Open issues: product runtime witness rows
-  Next action: keep the API gateway live witness monitored and close one product runtime witness before any product runtime release claim
+  Next action: keep the API gateway live witness monitored and prepare one product runtime witness closure packet before any product runtime release claim

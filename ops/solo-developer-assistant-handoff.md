@@ -235,4 +235,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: solo authority, dry-run-first product scaffold, generated artifact boundary, proof-bound claim boundary, fail-closed runtime witness, fail-closed ops gate, fail-closed ops next-action reporter, fail-closed API exposure gate, fail-closed API production readiness gate, domain hardening preflight, security.txt expiry gate, private recovery boundary, thin route boot files
   Open issues: product runtime witness evidence remains manual
-  Next action: run npm run ops:next, then close one product runtime witness outside Git before changing product claims
+  Next action: run npm run ops:next, then prepare one product runtime witness closure packet before changing product claims
