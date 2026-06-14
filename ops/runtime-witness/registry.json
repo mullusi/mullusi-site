@@ -195,15 +195,15 @@
       "publicExposure": {
         "allowed": false,
         "state": "blocked",
-        "reason": "Govern runtime remains limited-preview until signed gateway, health, conformance, and rollback evidence close."
+        "reason": "Govern runtime remains limited-preview until product-status, privacy, contract, support, and runtime witness evidence close."
       },
       "rollback": {
-        "state": "AwaitingEvidence",
-        "path": "ops/api-production-readiness-gate.md"
+        "state": "Ready",
+        "path": "ops/mullu-govern-public-beta-approval-packet.md"
       },
       "lineage": {
         "source": "ops/runtime-witness/registry.json",
-        "updatedAt": "2026-05-24T00:00:00Z"
+        "updatedAt": "2026-06-14T00:00:00Z"
       }
     },
     {

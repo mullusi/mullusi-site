@@ -27,6 +27,13 @@ const approvalInputKeys = [
   "public_claim_update_ref",
 ];
 
+const currentAllowedEvidenceRefs = new Map([
+  [
+    "rollback_witness_ref",
+    "control-plane:pull/1686:scripts/validate_govern_evaluate_route_rollback.py",
+  ],
+]);
+
 const requiredTerms = [
   "packet_state=AwaitingEvidence",
   "approval_state=NotApproved",
@@ -61,7 +68,7 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
-function validateApprovalPacketContent(content) {
+export function validateApprovalPacketContent(content) {
   const findings = [];
 
   for (const term of requiredTerms) {
@@ -80,6 +87,10 @@ function validateApprovalPacketContent(content) {
   const runtimeMutation = lineValue(content, "runtime_mutation");
   const secretRotationRequired = lineValue(content, "secret_rotation_required");
   const missingApprovalInputs = approvalInputKeys.filter((key) => lineValue(content, key) === "missing");
+  const closedApprovalInputs = approvalInputKeys.filter((key) => {
+    const value = lineValue(content, key);
+    return value && value !== "missing";
+  });
 
   if (packetState !== "AwaitingEvidence") {
     findings.push(`packet_state_must_remain_awaiting_evidence:${packetState || "missing"}`);
@@ -106,14 +117,26 @@ function validateApprovalPacketContent(content) {
   for (const key of approvalInputKeys) {
     const value = lineValue(content, key);
     if (!value) findings.push(`approval_input_missing:${key}`);
+    if (value && value !== "missing") {
+      const allowedValue = currentAllowedEvidenceRefs.get(key);
+      if (value !== allowedValue) {
+        findings.push(`approval_input_ref_not_allowed:${key}`);
+      }
+    }
   }
 
-  if (missingApprovalInputs.length !== approvalInputKeys.length) {
-    findings.push(`approval_inputs_must_remain_missing_until_superseding_validator:${missingApprovalInputs.length}/${approvalInputKeys.length}`);
+  if (missingApprovalInputs.length !== approvalInputKeys.length - currentAllowedEvidenceRefs.size) {
+    findings.push(`approval_inputs_must_remain_missing_except_allowed_refs:${missingApprovalInputs.length}/${approvalInputKeys.length}`);
+  }
+
+  for (const [key, expectedValue] of currentAllowedEvidenceRefs) {
+    const value = lineValue(content, key);
+    if (value !== expectedValue) findings.push(`required_allowed_evidence_ref_missing:${key}`);
   }
 
   return {
     approvalState: approvalState || "Unknown",
+    closedApprovalInputs,
     missingApprovalInputs,
     packetState: packetState || "Unknown",
     proofState: findings.length === 0 ? "Pass" : "Fail",

@@ -67,6 +67,6 @@
     "data/manual/public-surfaces.json": "sha256:fdd9f22b1ddbc30cbccb3dcbc42f003aed34732d65326480b4ecaa70184c50c4",
     "data/generated/homepage-product-registry.json": "sha256:45f7c64ef020d9d44098929aba1e945164b8c0166bc5a049bb8b155ea5a698ba",
     "data/generated/claim-registry.json": "sha256:90210d27761651e208b994368f19eac5b1e1b69034f72ae759aa7622ec5953ec",
-    "data/generated/runtime-witness-index.json": "sha256:6a75cc8551a70b552b38b7795328a6abdf8f96846653b14155c09c853b026588"
+    "data/generated/runtime-witness-index.json": "sha256:ef393d419f5b946dc274eb077c4bb7562eba70e4441a6529eb2ddb687acdd1f1"
   }
 }

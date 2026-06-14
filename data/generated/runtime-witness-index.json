@@ -126,7 +126,7 @@
         "/gateway/witness",
         "/runtime/conformance"
       ],
-      "rollbackState": "AwaitingEvidence",
+      "rollbackState": "Ready",
       "runtimeState": "private-only",
       "runtimeWitnessClosed": false,
       "service": "mullusi-govern-cloud",
@@ -246,7 +246,7 @@
   "closedProducts": [],
   "meta": {
     "artifact": "data/generated/runtime-witness-index.json",
-    "content_hash": "sha256:6a75cc8551a70b552b38b7795328a6abdf8f96846653b14155c09c853b026588",
+    "content_hash": "sha256:ef393d419f5b946dc274eb077c4bb7562eba70e4441a6529eb2ddb687acdd1f1",
     "generator": "scripts/generate-platform.mjs",
     "name": "Mullusi Generated Runtime Witness Index",
     "purpose": "Generated public-safe runtime witness index. Do not edit by hand.",
@@ -390,7 +390,7 @@
         "/gateway/witness",
         "/runtime/conformance"
       ],
-      "rollbackState": "AwaitingEvidence",
+      "rollbackState": "Ready",
       "runtimeState": "private-only",
       "runtimeWitnessClosed": false,
       "service": "mullusi-govern-cloud",
