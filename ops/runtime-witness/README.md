@@ -10,6 +10,7 @@ decision.
 Dependencies:
 
 - `ops/runtime-witness/registry.json`
+- `ops/runtime-witness/mullu-govern-closure-packet.md`
 - `schemas/runtime-witness.schema.json`
 - `products/*/product.manifest.json`
 - `scripts/generate-platform.mjs`
@@ -39,5 +40,5 @@ headers, or unpublished source paths.
 STATUS:
   Completeness: 100%
   Self-attested invariants: runtime witness format, fail-closed preflight, service health evidence boundary
-  Open issues: all product witnesses are AwaitingEvidence until deployed service health observations exist
-  Next action: collect signed health, gateway witness, and runtime conformance observations before production promotion
+  Open issues: product witnesses are AwaitingEvidence until product-status promotion, contract, privacy, rollback, and service health evidence close
+  Next action: use ops/runtime-witness/mullu-govern-closure-packet.md as the first closure packet candidate
