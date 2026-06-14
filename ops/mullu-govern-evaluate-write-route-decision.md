@@ -25,6 +25,7 @@ public_write_route_allowed=false
 product_status=limited-preview
 api_gateway_exposure_state=SolvedVerified
 runtime_witness_closure_allowed=false
+approval_packet=ops/mullu-govern-public-beta-approval-packet.md
 last_reviewed=2026-06-14
 ```
 
@@ -64,7 +65,9 @@ rollback_triggered=false
 
 ## Required Future Approval Packet
 
-A later request to expose the route must include all of the following:
+A later request to expose the route must supersede
+`ops/mullu-govern-public-beta-approval-packet.md` from `AwaitingEvidence` to
+`ReadyForApproval` or stronger, with all of the following:
 
 1. Operator approval reference for public `POST /v1/govern/evaluate`.
 2. Product status promotion decision from `limited-preview` to `public-beta` or stronger.
@@ -91,4 +94,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: public API gateway remains separate from product write-route exposure, route publication remains blocked, privacy and retention not-active states are preserved, no raw secret or host values recorded
   Open issues: operator approval, product-status promotion, active privacy policy, active retention policy, product rollback witness, contract execution evidence, support readiness
-  Next action: keep POST /v1/govern/evaluate blocked unless a separate public-beta approval packet closes every listed gate
+  Next action: keep POST /v1/govern/evaluate blocked unless the public-beta approval packet closes every listed gate

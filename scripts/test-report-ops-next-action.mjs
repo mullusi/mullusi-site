@@ -112,6 +112,7 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   assert.equal(decision.blockedSurface, "product_evaluate_write_route_promotion_boundary");
   assert.equal(decision.packetPath, "ops/runtime-witness/mullu-govern-closure-packet.md");
   assert.equal(decision.decisionRecordPath, "ops/mullu-govern-evaluate-write-route-decision.md");
+  assert.equal(decision.approvalPacketPath, "ops/mullu-govern-public-beta-approval-packet.md");
 }
 
 function testFormattedReportStaysPublicSafe() {
@@ -127,6 +128,7 @@ function testFormattedReportStaysPublicSafe() {
   assert.match(report, /api_exposure_state=AwaitingEvidence/);
   assert.match(report, /product_runtime_witness_packet=none/);
   assert.match(report, /product_write_route_decision_record=none/);
+  assert.match(report, /product_public_beta_approval_packet=none/);
   assert.match(report, /secret_values=not_recorded/);
   assert.doesNotMatch(report, /postgres:\/\//i);
 }
@@ -148,6 +150,7 @@ function testFormattedJsonStaysPublicSafeAndStructured() {
   assert.equal(payload.manualEvidenceMissingCount, 1);
   assert.equal(payload.productRuntimeWitnessPacket, "none");
   assert.equal(payload.productWriteRouteDecisionRecord, "none");
+  assert.equal(payload.productPublicBetaApprovalPacket, "none");
   assert.equal(payload.secretValues, "not_recorded");
   assert.equal(Object.hasOwn(payload, "apiReadiness"), false);
 }
