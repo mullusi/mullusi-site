@@ -1,0 +1,238 @@
+/*
+Purpose: test the Mullu Govern live evidence sequence preflight validator.
+Governance scope: approval-bound sequencing, missing refs, runtime blockers, aggregate validator health, unsupported args, and no-secret pattern rejection.
+Dependencies: Node.js standard library and scripts/validate-govern-live-evidence-sequence-preflight.mjs.
+Invariants: tests use public-safe repository evidence or synthetic fixtures only; they never inspect provider dashboards or private values.
+*/
+
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  formatGovernLiveEvidenceSequencePreflightReport,
+  validateGovernLiveEvidenceSequencePreflight,
+  validateGovernLiveEvidenceSequencePreflightEvidence,
+} from "./validate-govern-live-evidence-sequence-preflight.mjs";
+
+const scriptPath = fileURLToPath(import.meta.url);
+const scriptsDir = path.dirname(scriptPath);
+const repoRoot = path.resolve(scriptsDir, "..");
+const validatorScript = path.join(scriptsDir, "validate-govern-live-evidence-sequence-preflight.mjs");
+
+const sequencedApprovalKeys = [
+  "operator_approval_ref",
+  "product_status_promotion_ref",
+  "privacy_activation_ref",
+  "retention_activation_ref",
+  "dashboard_operator_readiness_ref",
+  "api_contract_test_ref",
+  "public_claim_update_ref",
+  "runtime_witness_ref",
+];
+
+const expectedRuntimeBlockers = [
+  "blocker=product_status_promotion_approval_missing",
+  "blocker=product_evaluate_write_route_approval_missing",
+  "blocker=product_api_contract_live_execution_not_published",
+  "blocker=product_privacy_boundary_not_verified",
+  "blocker=product_retention_boundary_not_verified",
+  "blocker=dashboard_operator_readiness_evidence_missing",
+  "blocker=public_claim_update_evidence_missing",
+  "blocker=runtime_witness_registry_not_closed",
+];
+
+function runValidator(args = []) {
+  return spawnSync(process.execPath, [validatorScript, ...args], {
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
+}
+
+function passingResult(extra = {}) {
+  return {
+    proofState: "Pass",
+    solverOutcome: "SolvedVerified",
+    ...extra,
+  };
+}
+
+function validEvidence(overrides = {}) {
+  const witness = [
+    "live_evidence_sequence_preflight_state=Ready",
+    "solver_outcome=SolvedVerified",
+    "proof_state=Pass",
+    "packet_state=AwaitingEvidence",
+    "approval_state=NotApproved",
+    "ready_for_live_evidence=false",
+    "public_write_route_allowed=false",
+    "route_publication_action=none",
+    "dns_mutation=none",
+    "runtime_mutation=none",
+    "dashboard_auth_mutation=none",
+    "privacy_activation_allowed=false",
+    "retention_activation_allowed=false",
+    "product_status_promotion_allowed=false",
+    "public_claim_update_allowed=false",
+    "runtime_witness_update_allowed=false",
+    "provider_values_recorded=false",
+    ...sequencedApprovalKeys.map((key) => `${key}=missing`),
+    "STATUS:",
+  ].join("\n");
+
+  return {
+    approvalPacket: [
+      "packet_state=AwaitingEvidence",
+      "approval_state=NotApproved",
+      "public_write_route_allowed=false",
+      "route_publication_action=none",
+      "dns_mutation=none",
+      "runtime_mutation=none",
+      ...sequencedApprovalKeys.map((key) => `${key}=missing`),
+    ].join("\n"),
+    privateValueScanSources: {
+      approvalPacket: "public_write_route_allowed=false\noperator_approval_ref=missing\n",
+      runtimeClosurePacket: expectedRuntimeBlockers.join("\n"),
+      witness,
+    },
+    runtimeClosurePacket: expectedRuntimeBlockers.join("\n"),
+    validatorResults: {
+      approvalPacket: passingResult({
+        missingApprovalInputs: Array.from({ length: 8 }, (_, index) => `missing_${index}`),
+        publicWriteRouteAllowed: false,
+      }),
+      approvalReadinessPreflight: passingResult(),
+      contractPreflight: passingResult(),
+      dashboardPreflight: passingResult(),
+      privacyRetentionPreflight: passingResult(),
+      productStatusPreflight: passingResult(),
+      publicClaimPreflight: passingResult(),
+      supportReadiness: passingResult(),
+    },
+    witness,
+    ...overrides,
+  };
+}
+
+function testCurrentSequencePreflightPasses() {
+  const result = validateGovernLiveEvidenceSequencePreflight();
+  const report = formatGovernLiveEvidenceSequencePreflightReport(result);
+
+  assert.equal(result.solverOutcome, "SolvedVerified");
+  assert.equal(result.proofState, "Pass");
+  assert.equal(result.liveEvidenceSequencePreflightState, "Ready");
+  assert.equal(result.readyForLiveEvidence, false);
+  assert.equal(result.publicWriteRouteAllowed, false);
+  assert.equal(result.missingApprovalInputCount, 8);
+  assert.equal(result.findings.length, 0);
+  assert.match(report, /govern_live_evidence_sequence_preflight=SolvedVerified/);
+  assert.match(report, /provider_values=not_recorded/);
+}
+
+function testSyntheticApprovalRefFailsClosed() {
+  const evidence = validEvidence({
+    approvalPacket: [
+      "packet_state=AwaitingEvidence",
+      "approval_state=NotApproved",
+      "public_write_route_allowed=false",
+      "route_publication_action=none",
+      "dns_mutation=none",
+      "runtime_mutation=none",
+      "api_contract_test_ref=approval://api-contract/ready",
+      ...sequencedApprovalKeys.filter((key) => key !== "api_contract_test_ref").map((key) => `${key}=missing`),
+    ].join("\n"),
+  });
+  const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.readyForLiveEvidence, false);
+  assert.match(result.findings.join("\n"), /approval_input_must_remain_missing:api_contract_test_ref/);
+}
+
+function testSyntheticRuntimeBlockerMissingFailsClosed() {
+  const evidence = validEvidence({
+    runtimeClosurePacket: expectedRuntimeBlockers
+      .filter((blocker) => blocker !== "blocker=runtime_witness_registry_not_closed")
+      .join("\n"),
+  });
+  const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /runtime_blocker_missing:blocker=runtime_witness_registry_not_closed/);
+}
+
+function testSyntheticAggregateFailureFailsClosed() {
+  const evidence = validEvidence({
+    validatorResults: {
+      ...validEvidence().validatorResults,
+      dashboardPreflight: { proofState: "Fail", solverOutcome: "GovernanceBlocked" },
+    },
+  });
+  const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /aggregate_validator_not_solved:dashboardPreflight:GovernanceBlocked/);
+  assert.match(result.findings.join("\n"), /aggregate_validator_proof_not_pass:dashboardPreflight:Fail/);
+}
+
+function testSyntheticWriteRouteOpenFailsClosed() {
+  const evidence = validEvidence({
+    approvalPacket: [
+      "packet_state=AwaitingEvidence",
+      "approval_state=NotApproved",
+      "public_write_route_allowed=true",
+      "route_publication_action=none",
+      "dns_mutation=none",
+      "runtime_mutation=none",
+      ...sequencedApprovalKeys.map((key) => `${key}=missing`),
+    ].join("\n"),
+  });
+  const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.publicWriteRouteAllowed, true);
+  assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:true/);
+}
+
+function testSyntheticSecretPatternFailsClosed() {
+  const evidence = validEvidence({
+    privateValueScanSources: {
+      approvalPacket: "Bearer abcdefghijklmnopqrstuvwxyz123456",
+      runtimeClosurePacket: expectedRuntimeBlockers.join("\n"),
+      witness: "live_evidence_sequence_preflight_state=Ready",
+    },
+  });
+  const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /forbidden_private_value_pattern:approvalPacket:bearer_token/);
+}
+
+function testCliJsonAndUnsupportedArgs() {
+  const jsonResult = runValidator(["--json"]);
+  const payload = JSON.parse(jsonResult.stdout);
+  assert.equal(jsonResult.status, 0);
+  assert.equal(payload.solverOutcome, "SolvedVerified");
+  assert.equal(payload.proofState, "Pass");
+  assert.equal(payload.liveEvidenceSequencePreflightState, "Ready");
+
+  const invalid = runValidator(["--unknown"]);
+  assert.equal(invalid.status, 1);
+  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /govern_live_evidence_sequence_preflight=GovernanceBlocked/);
+}
+
+testCurrentSequencePreflightPasses();
+testSyntheticApprovalRefFailsClosed();
+testSyntheticRuntimeBlockerMissingFailsClosed();
+testSyntheticAggregateFailureFailsClosed();
+testSyntheticWriteRouteOpenFailsClosed();
+testSyntheticSecretPatternFailsClosed();
+testCliJsonAndUnsupportedArgs();
+
+console.log("govern live evidence sequence preflight validator tests passed");
