@@ -14,7 +14,9 @@ import {
   requiredLiveEvidenceApprovalKeys,
   scanForbiddenEvidencePatterns,
 } from "./govern-live-evidence-ref-contract.mjs";
+import { validateGovernApprovalReadinessPreflight } from "./validate-govern-approval-readiness-preflight.mjs";
 import { validateGovernLiveEvidenceSequencePreflight } from "./validate-govern-live-evidence-sequence-preflight.mjs";
+import { validateGovernPublicBetaApprovalPacket } from "./validate-govern-public-beta-approval-packet.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -28,6 +30,7 @@ const requiredRunbookTerms = [
   "ready_for_live_evidence=false",
   "public_write_route_allowed=false",
   "approval_packet=ops/mullu-govern-public-beta-approval-packet.md",
+  "approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md",
   "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
   "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
   "sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md",
@@ -83,6 +86,24 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
   if (lineValue(evidence.approvalPacket, "approval_state") !== "NotApproved") {
     findings.push(`approval_state_must_remain_not_approved:${lineValue(evidence.approvalPacket, "approval_state") || "missing"}`);
   }
+  if (evidence.approvalPacketResult?.solverOutcome !== "SolvedVerified") {
+    findings.push(`approval_packet_not_solved:${evidence.approvalPacketResult?.solverOutcome || "missing"}`);
+  }
+  if (evidence.approvalPacketResult?.proofState !== "Pass") {
+    findings.push(`approval_packet_proof_not_pass:${evidence.approvalPacketResult?.proofState || "missing"}`);
+  }
+  if (evidence.approvalPacketResult?.publicWriteRouteAllowed !== false) {
+    findings.push("approval_packet_public_route_not_blocked");
+  }
+  if (evidence.approvalReadinessResult?.solverOutcome !== "SolvedVerified") {
+    findings.push(`approval_readiness_not_solved:${evidence.approvalReadinessResult?.solverOutcome || "missing"}`);
+  }
+  if (evidence.approvalReadinessResult?.proofState !== "Pass") {
+    findings.push(`approval_readiness_proof_not_pass:${evidence.approvalReadinessResult?.proofState || "missing"}`);
+  }
+  if (evidence.approvalReadinessResult?.readyForApproval !== false) {
+    findings.push("approval_readiness_ready_for_approval_must_remain_false");
+  }
   if (evidence.sequencePreflightResult?.solverOutcome !== "SolvedVerified") {
     findings.push(`sequence_preflight_not_solved:${evidence.sequencePreflightResult?.solverOutcome || "missing"}`);
   }
@@ -110,6 +131,8 @@ export function collectGovernLiveEvidenceOperatorRunbookEvidence(relativePath = 
   const runbook = readUtf8(relativePath);
   return {
     approvalPacket,
+    approvalPacketResult: validateGovernPublicBetaApprovalPacket(),
+    approvalReadinessResult: validateGovernApprovalReadinessPreflight(),
     privateValueScanSources: {
       approvalPacket,
       runbook,
