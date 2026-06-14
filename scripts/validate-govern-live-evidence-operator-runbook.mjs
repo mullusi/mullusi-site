@@ -9,36 +9,17 @@ Test contract: run node scripts/test-validate-govern-live-evidence-operator-runb
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  publicSafeEvidenceRefFamilies,
+  requiredLiveEvidenceApprovalKeys,
+  scanForbiddenEvidencePatterns,
+} from "./govern-live-evidence-ref-contract.mjs";
 import { validateGovernLiveEvidenceSequencePreflight } from "./validate-govern-live-evidence-sequence-preflight.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
 const defaultRunbookPath = "ops/mullu-govern-live-evidence-operator-runbook.md";
 const allowedArgs = new Set(["--json"]);
-
-const requiredApprovalKeys = [
-  "operator_approval_ref",
-  "product_status_promotion_ref",
-  "privacy_activation_ref",
-  "retention_activation_ref",
-  "dashboard_operator_readiness_ref",
-  "api_contract_test_ref",
-  "public_claim_update_ref",
-  "runtime_witness_ref",
-];
-
-const requiredRefFamilies = [
-  "approval://",
-  "receipt://",
-  "github:pull/",
-  "github:actions/runs/",
-  "site:ops/",
-  "control-plane:pull/",
-  "control-plane:receipt/",
-  "render:event/",
-  "cloudflare:audit/",
-  "google-workspace:audit/",
-];
 
 const requiredRunbookTerms = [
   "operator_runbook_state=Ready",
@@ -55,16 +36,6 @@ const requiredRunbookTerms = [
   "raw_response_bodies_allowed=false",
   "provider_values_allowed=false",
   "STATUS:",
-];
-
-const forbiddenEvidencePatterns = [
-  { label: "postgres_url", pattern: /postgres(?:ql)?:\/\//i },
-  { label: "private_key", pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
-  { label: "bearer_token", pattern: /Bearer\s+[A-Za-z0-9._~+/-]{16,}/ },
-  { label: "api_key_shape", pattern: /\b(?:sk|pk|rk|ghp|gho|ghu|ghs|github_pat)_[A-Za-z0-9_]{12,}/ },
-  { label: "google_api_key_shape", pattern: /\bAIza[0-9A-Za-z_-]{20,}/ },
-  { label: "raw_header_authorization", pattern: /^Authorization:/im },
-  { label: "raw_json_payload", pattern: /^\s*{\s*"(?:input|prompt|message|token|authorization|password|secret)"/im },
 ];
 
 function readUtf8(relativePath) {
@@ -87,7 +58,7 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
     if (!evidence.runbook.includes(term)) findings.push(`required_runbook_term_missing:${term}`);
   }
 
-  for (const key of requiredApprovalKeys) {
+  for (const key of requiredLiveEvidenceApprovalKeys) {
     if (!evidence.runbook.includes(`| \`${key}\` |`)) {
       findings.push(`required_approval_key_missing_from_table:${key}`);
     }
@@ -96,14 +67,12 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
     }
   }
 
-  for (const family of requiredRefFamilies) {
+  for (const family of publicSafeEvidenceRefFamilies) {
     if (!evidence.runbook.includes(family)) findings.push(`required_ref_family_missing:${family}`);
   }
 
-  for (const { label, pattern } of forbiddenEvidencePatterns) {
-    for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
-      if (pattern.test(content)) findings.push(`forbidden_private_value_pattern:${source}:${label}`);
-    }
+  for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
+    findings.push(...scanForbiddenEvidencePatterns(source, content));
   }
 
   if (lineValue(evidence.approvalPacket, "public_write_route_allowed") !== "false") {
@@ -125,7 +94,7 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
   return {
     findingCount: findings.length,
     findings,
-    missingApprovalInputCount: requiredApprovalKeys.filter((key) => lineValue(evidence.approvalPacket, key) === "missing").length,
+    missingApprovalInputCount: requiredLiveEvidenceApprovalKeys.filter((key) => lineValue(evidence.approvalPacket, key) === "missing").length,
     operatorRunbookState: findings.length === 0 ? "Ready" : "Blocked",
     proofState: findings.length === 0 ? "Pass" : "Fail",
     publicWriteRouteAllowed: lineValue(evidence.approvalPacket, "public_write_route_allowed") === "true",

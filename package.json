@@ -26,6 +26,7 @@
     "test:evaluate-contract-preflight": "node scripts/test-validate-govern-evaluate-contract-preflight.mjs",
     "test:domain-hardening": "node scripts/test-check-domain-hardening-preflight.mjs",
     "test:helper": "node scripts/test-mullu-eye-helper-contract.mjs",
+    "test:live-evidence-ref-contract": "node scripts/test-govern-live-evidence-ref-contract.mjs",
     "test:live-evidence-operator-runbook": "node scripts/test-validate-govern-live-evidence-operator-runbook.mjs",
     "test:live-evidence-sequence-preflight": "node scripts/test-validate-govern-live-evidence-sequence-preflight.mjs",
     "test:ops": "node scripts/test-ops-gates.mjs",
