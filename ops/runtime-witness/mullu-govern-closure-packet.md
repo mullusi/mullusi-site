@@ -50,6 +50,10 @@ Dashboard operator-readiness preflight is ready in
 `ops/mullu-govern-dashboard-operator-readiness-preflight.md`, but live
 dashboard readiness evidence remains blocked until the public-beta approval
 packet supplies an explicit dashboard operator-readiness reference.
+Public-claim update preflight is ready in
+`ops/mullu-govern-public-claim-update-preflight.md`, but the actual public
+claim update remains blocked until the public-beta approval packet supplies an
+explicit public claim update reference.
 
 ## Public-Safe Live Observations
 
@@ -86,6 +90,7 @@ The registry closure rule requires all of the following:
 | Product API contract | verified or explicitly deferred | preflight Ready; live execution AwaitingEvidence |
 | Privacy and retention boundary | verified for product runtime | preflight Ready; activation AwaitingEvidence |
 | Dashboard operator readiness | verified | preflight Ready; live evidence AwaitingEvidence |
+| Public claim update | bounded to verified evidence | preflight Ready; update evidence AwaitingEvidence |
 | Support readiness | verified | Ready via `ops/mullu-govern-support-readiness.md` |
 | Public write-route decision | approve or keep blocked with evidence | KeepBlocked in `ops/mullu-govern-evaluate-write-route-decision.md` |
 | Public-beta approval packet | ReadyForApproval or stronger | AwaitingEvidence in `ops/mullu-govern-public-beta-approval-packet.md` |
@@ -99,6 +104,7 @@ blocker=product_api_contract_live_execution_not_published
 blocker=product_privacy_boundary_not_verified
 blocker=product_retention_boundary_not_verified
 blocker=dashboard_operator_readiness_evidence_missing
+blocker=public_claim_update_evidence_missing
 blocker=runtime_witness_registry_not_closed
 ```
 
@@ -114,11 +120,12 @@ blocker=runtime_witness_registry_not_closed
    `mullu-govern` from `limited-preview` to `public-beta`.
 5. Record dashboard operator-readiness evidence before claiming product runtime
    witness closure.
-6. Only after those pass, update `ops/runtime-witness/registry.json` in a
+6. Record bounded public claim update evidence before emitting public-beta copy.
+7. Only after those pass, update `ops/runtime-witness/registry.json` in a
    separate PR and rerun `node scripts/validate-runtime-witnesses.mjs`.
 
 STATUS:
   Completeness: 100%
   Self-attested invariants: API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
-  Open issues: public-beta approval evidence, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator readiness, product-status promotion approval
+  Open issues: public-beta approval evidence, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator readiness, public claim update evidence, product-status promotion approval
   Next action: keep the Mullu Govern public evaluate write route blocked unless the approval packet closes every gate

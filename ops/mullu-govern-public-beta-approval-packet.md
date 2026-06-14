@@ -50,7 +50,7 @@ stamps, and audit events.
 | Runtime witness | product runtime witness closes as `SolvedVerified` | runtime witness registry remains `AwaitingEvidence` | AwaitingEvidence |
 | Rollback witness | rollback test disables only the evaluate route and preserves public health routes | control-plane PR #1686 merged `scripts/validate_govern_evaluate_route_rollback.py`; witness reports `SolvedVerified`, preserves `/v1/health` and `/v1/version`, and keeps `POST /v1/govern/evaluate` blocked with no outbound transport | Pass |
 | Support readiness | support and incident path for route users verified | `ops/mullu-govern-support-readiness.md` verifies support contact, privacy contact, responsible disclosure, security contact metadata, and fail-closed incident routing | Pass |
-| Public claim update | product page/status copy remains bounded to evidence | no public-beta claim emitted | Pass |
+| Public claim update | product page/status copy remains bounded to evidence | preflight ready in `ops/mullu-govern-public-claim-update-preflight.md`; no public-beta claim emitted | AwaitingEvidence |
 
 ## Required Approval Inputs
 
@@ -112,5 +112,5 @@ next_action=close_missing_public_beta_gate_evidence_before_requesting_approval
 STATUS:
   Completeness: 100%
   Self-attested invariants: packet is non-operative, public route remains blocked, API gateway witness remains separate from product write-route exposure, privacy and retention remain not-active, no raw secret or provider values recorded
-  Open issues: operator approval, product-status promotion approval, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, runtime witness closure
+  Open issues: operator approval, product-status promotion approval, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, runtime witness closure
   Next action: close runtime witness closure or request explicit approval before collecting live API contract execution evidence
