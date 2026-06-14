@@ -36,6 +36,10 @@ decision plus product write-route exposure approval, privacy, dashboard, and
 runtime witness evidence. The route-level rollback witness is now closed by
 control-plane PR #1686 and mirrored in the public-beta approval packet.
 Support readiness is closed by `ops/mullu-govern-support-readiness.md`.
+Product-status preflight is ready in
+`ops/mullu-govern-product-status-preflight.md`, but promotion remains blocked
+until the public-beta approval packet supplies an explicit promotion approval
+reference.
 Privacy and retention preflight is ready in
 `ops/mullu-govern-privacy-retention-preflight.md`, but activation remains
 blocked until a later approval changes the policy and retention state.
@@ -68,7 +72,7 @@ The registry closure rule requires all of the following:
 
 | Gate | Required state | Current state |
 | --- | --- | --- |
-| Product manifest status | public-beta or production before public exposure | limited-preview |
+| Product manifest status | public-beta or production before public exposure | preflight Ready; current limited-preview |
 | Runtime witness proofState | SolvedVerified | AwaitingEvidence |
 | Runtime state | public-witness-ready or production-ready | private-only |
 | Health evidence | pass with `/health`, `/gateway/witness`, `/runtime/conformance` observations | public gateway observations pass |
@@ -85,7 +89,7 @@ The registry closure rule requires all of the following:
 ## Blockers
 
 ```text
-blocker=product_status_promotion_decision_missing
+blocker=product_status_promotion_approval_missing
 blocker=product_evaluate_write_route_approval_missing
 blocker=product_api_contract_live_execution_not_published
 blocker=product_privacy_boundary_not_verified
@@ -102,13 +106,13 @@ blocker=runtime_witness_registry_not_closed
    in a separate PR.
 3. Keep privacy and retention activation blocked until an explicit activation
    approval changes `privacy/govern.policy.json` and `privacy/govern.retention.json`.
-4. Decide whether `mullu-govern` may move from `limited-preview` to
-   `public-beta`.
+4. Record explicit product-status promotion approval before moving
+   `mullu-govern` from `limited-preview` to `public-beta`.
 5. Only after those pass, update `ops/runtime-witness/registry.json` in a
    separate PR and rerun `node scripts/validate-runtime-witnesses.mjs`.
 
 STATUS:
   Completeness: 100%
   Self-attested invariants: API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
-  Open issues: public-beta approval evidence, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator readiness, product-status promotion decision
+  Open issues: public-beta approval evidence, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator readiness, product-status promotion approval
   Next action: keep the Mullu Govern public evaluate write route blocked unless the approval packet closes every gate
