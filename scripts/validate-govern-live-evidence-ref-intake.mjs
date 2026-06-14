@@ -77,6 +77,9 @@ export function validateGovernLiveEvidenceRefIntakeContent(content, options = {}
   if (intake?.product_id !== "mullu-govern") {
     findings.push(`product_id_invalid:${intake?.product_id || "missing"}`);
   }
+  if (intake?.ready_for_live_evidence !== false) {
+    findings.push(`ready_for_live_evidence_must_remain_false:${String(intake?.ready_for_live_evidence)}`);
+  }
   if (intake?.public_write_route_allowed !== false) {
     findings.push(`public_write_route_allowed_must_remain_false:${String(intake?.public_write_route_allowed)}`);
   }
@@ -99,7 +102,7 @@ export function validateGovernLiveEvidenceRefIntakeContent(content, options = {}
     findings,
     missingApprovalInputCount: missingCount,
     proofState: findings.length === 0 ? "Pass" : "Fail",
-    readyForLiveEvidence: requireComplete && findings.length === 0 && missingCount === 0,
+    readyForLiveEvidence: false,
     requireComplete,
     solverOutcome: findings.length === 0 ? "SolvedVerified" : "GovernanceBlocked",
   };
