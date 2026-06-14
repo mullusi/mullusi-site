@@ -6253,11 +6253,11 @@ html.menu-open body {
   left: 18px;
   z-index: 3;
   display: grid;
-  width: min(62%, 356px);
-  min-width: 258px;
-  min-height: 224px;
+  width: min(36%, 210px);
+  min-width: 178px;
+  min-height: 142px;
   overflow: hidden;
-  padding: 18px 20px 16px;
+  padding: 12px 14px 11px;
   border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
   border-radius: 8px;
   background:
@@ -6332,14 +6332,14 @@ html.menu-open body {
   position: relative;
   z-index: 3;
   display: inline-block;
-  margin: 14px 0 12px;
+  margin: 8px 0 7px;
   color: transparent;
   background:
     linear-gradient(115deg, color-mix(in srgb, var(--ink) 22%, var(--accent)) 0%, var(--accent) 34%, color-mix(in srgb, var(--accent-warm) 72%, var(--accent)) 68%, color-mix(in srgb, var(--ink) 18%, var(--accent)) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   font-family: var(--serif);
-  font-size: 104px;
+  font-size: 58px;
   font-weight: 400;
   letter-spacing: 0;
   line-height: 0.82;
@@ -6393,17 +6393,17 @@ html.menu-open body {
 }
 
 .mullu-identity-node {
-  min-width: 54px;
+  min-width: 46px;
   border: 1px solid color-mix(in srgb, var(--line-bright) 72%, transparent);
   border-radius: 999px;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--bg) 72%, transparent), color-mix(in srgb, var(--panel-soft) 92%, transparent));
   color: var(--ink-soft);
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 7.5px;
   letter-spacing: 0.1em;
   line-height: 1;
-  padding: 7px 8px;
+  padding: 6px 7px 6px 12px;
   text-align: center;
   text-transform: uppercase;
   box-shadow:
@@ -6415,9 +6415,9 @@ html.menu-open body {
   content: "";
   position: absolute;
   top: 50%;
-  left: 8px;
-  width: 5px;
-  height: 5px;
+  left: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 70%, transparent);
@@ -6425,13 +6425,13 @@ html.menu-open body {
 }
 
 .mullu-identity-node-claim {
-  top: 82px;
-  left: 13px;
+  top: 52px;
+  left: 9px;
 }
 
 .mullu-identity-node-proof {
-  top: 58px;
-  right: 14px;
+  top: 38px;
+  right: 9px;
   border-color: color-mix(in srgb, var(--accent-warm) 44%, var(--line-bright));
 }
 
@@ -6441,8 +6441,8 @@ html.menu-open body {
 }
 
 .mullu-identity-node-witness {
-  right: 18px;
-  bottom: 42px;
+  right: 11px;
+  bottom: 28px;
 }
 
 .mullu-identity-thread {
@@ -6456,24 +6456,24 @@ html.menu-open body {
 }
 
 .mullu-identity-thread-a {
-  top: 75px;
-  left: 72px;
-  width: 170px;
+  top: 50px;
+  left: 52px;
+  width: 104px;
   transform: rotate(-7deg);
 }
 
 .mullu-identity-thread-b {
-  top: 104px;
-  right: 58px;
-  width: 128px;
+  top: 72px;
+  right: 38px;
+  width: 76px;
   transform: rotate(149deg);
   animation-delay: 420ms;
 }
 
 .mullu-identity-thread-c {
-  right: 57px;
-  bottom: 74px;
-  width: 154px;
+  right: 40px;
+  bottom: 52px;
+  width: 88px;
   transform: rotate(181deg);
   animation-delay: 840ms;
 }
@@ -6483,8 +6483,8 @@ html.menu-open body {
   z-index: 1;
   display: grid;
   grid-template-columns: 1.4fr 0.8fr 1.1fr 0.55fr;
-  gap: 6px;
-  margin-top: 13px;
+  gap: 4px;
+  margin-top: 8px;
 }
 
 .mullu-identity-bars i {
@@ -6516,7 +6516,7 @@ html.menu-open body {
   height: 328px;
   min-height: 0;
   color: var(--accent);
-  transform: translateX(32px);
+  transform: none;
 }
 
 .claim-lens-orbit,
@@ -6558,6 +6558,7 @@ html.menu-open body {
 }
 
 .claim-lens-center circle {
+  fill: color-mix(in srgb, var(--bg) 78%, transparent);
   stroke: color-mix(in srgb, var(--accent) 54%, transparent);
   stroke-width: 1.4;
 }
@@ -6569,15 +6570,40 @@ html.menu-open body {
 
 .claim-lens-system {
   fill: var(--ink);
-  font-size: 58px;
+  font-size: 66px;
   line-height: 1;
   text-anchor: middle;
 }
 
 .claim-lens-formula {
   fill: var(--accent-warm);
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 0;
+}
+
+.claim-lens-hero[data-active-lens="public-route"] .claim-lens-node--route circle,
+.claim-lens-hero[data-active-lens="proof-boundary"] .claim-lens-node--proof circle,
+.claim-lens-hero[data-active-lens="runtime-witness"] .claim-lens-node--witness circle,
+.claim-lens-hero[data-active-lens="platform-spine"] .claim-lens-center circle,
+.claim-lens-hero[data-active-lens="release-gates"] .claim-lens-node--claim circle {
+  fill: color-mix(in srgb, var(--accent) 12%, transparent);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.claim-lens-hero[data-active-lens="public-route"] .claim-lens-node--route text,
+.claim-lens-hero[data-active-lens="proof-boundary"] .claim-lens-node--proof text,
+.claim-lens-hero[data-active-lens="runtime-witness"] .claim-lens-node--witness text,
+.claim-lens-hero[data-active-lens="platform-spine"] .claim-lens-system,
+.claim-lens-hero[data-active-lens="release-gates"] .claim-lens-node--claim text {
+  fill: var(--accent);
+}
+
+.claim-lens-hero[data-active-lens="proof-boundary"] .claim-lens-flow,
+.claim-lens-hero[data-active-lens="runtime-witness"] .claim-lens-flow-vertical,
+.claim-lens-hero[data-active-lens="release-gates"] .claim-lens-flow {
+  stroke: var(--accent-warm);
+  stroke-width: 2;
 }
 
 .claim-rewrite {
@@ -6720,7 +6746,10 @@ html.menu-open body {
 }
 
 .claim-lens-rule {
-  display: none;
+  margin: 12px 0;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 48%, transparent);
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  padding: 10px 12px;
 }
 
 .claim-lens-rule span {
@@ -6913,7 +6942,7 @@ html.menu-open body {
 
   .claim-lens-graph {
     height: 154px;
-    transform: translateX(58px) scale(0.84);
+    transform: none;
     transform-origin: center;
   }
 
@@ -6928,10 +6957,10 @@ html.menu-open body {
   .mullu-identity-signal {
     top: 8px;
     left: 8px;
-    width: min(68%, 256px);
+    width: min(42%, 154px);
     min-width: 0;
-    min-height: 154px;
-    padding: 10px;
+    min-height: 120px;
+    padding: 8px;
   }
 
   .mullu-identity-kicker,
@@ -6941,8 +6970,12 @@ html.menu-open body {
   }
 
   .mullu-identity-word {
-    margin: 8px 0 6px;
-    font-size: 52px;
+    margin: 6px 0 5px;
+    font-size: 34px;
+  }
+
+  .mullu-identity-routing {
+    display: none;
   }
 
   .mullu-identity-node {
@@ -7037,6 +7070,10 @@ html.menu-open body {
   }
 
   .claim-lens-panel > p:not(.claim-lens-state) {
+    display: none;
+  }
+
+  .claim-lens-rule {
     display: none;
   }
 

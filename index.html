@@ -175,8 +175,8 @@ Invariants: no private repository claims, no silent content failure, all dynamic
 
         <div class="claim-lens-machine" aria-label="Governed Claim Lens">
           <div class="claim-lens-core">
-            <div class="mullu-identity-signal" role="img" aria-label="Mullu product identity: claim, proof, witness.">
-              <span class="mullu-identity-kicker">Flagship route</span>
+            <div class="mullu-identity-signal" role="img" aria-label="Mullu route proof badge.">
+              <span class="mullu-identity-kicker">Product route</span>
               <strong class="mullu-identity-word" data-text="Mullu">Mullu</strong>
               <span class="mullu-identity-rule">claim -> proof -> witness</span>
               <span class="mullu-identity-routing" aria-hidden="true">
@@ -202,10 +202,10 @@ Invariants: no private repository claims, no silent content failure, all dynamic
               <path class="claim-lens-flow" d="M314 196 H430" marker-end="url(#claim-arrow)" />
               <path class="claim-lens-flow claim-lens-flow-vertical" d="M260 82 V142" marker-end="url(#claim-arrow)" />
               <path class="claim-lens-flow claim-lens-flow-vertical" d="M260 250 V312" marker-end="url(#claim-arrow)" />
-              <g class="claim-lens-node"><circle cx="90" cy="196" r="34" /><text x="90" y="201">CLAIM</text></g>
-              <g class="claim-lens-node"><circle cx="430" cy="196" r="34" /><text x="430" y="201">PROOF</text></g>
-              <g class="claim-lens-node"><circle cx="260" cy="82" r="34" /><text x="260" y="87">ROUTE</text></g>
-              <g class="claim-lens-node"><circle cx="260" cy="312" r="34" /><text x="260" y="317">WITNESS</text></g>
+              <g class="claim-lens-node claim-lens-node--claim"><circle cx="90" cy="196" r="34" /><text x="90" y="201">CLAIM</text></g>
+              <g class="claim-lens-node claim-lens-node--proof"><circle cx="430" cy="196" r="34" /><text x="430" y="201">PROOF</text></g>
+              <g class="claim-lens-node claim-lens-node--route"><circle cx="260" cy="82" r="34" /><text x="260" y="87">ROUTE</text></g>
+              <g class="claim-lens-node claim-lens-node--witness"><circle cx="260" cy="312" r="34" /><text x="260" y="317">WITNESS</text></g>
               <g class="claim-lens-center">
                 <circle cx="260" cy="196" r="62" />
                 <text x="260" y="183" class="claim-lens-system">𝕊</text>
@@ -342,6 +342,41 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
+    <section class="band tier-primary claim-boundary" id="production-boundary" aria-labelledby="production-boundary-title">
+      <div class="wrap">
+        <div class="claim-panel reveal">
+          <div>
+            <div class="tag" data-i18n="claim.tag">Production Claim Boundary</div>
+            <h2 id="production-boundary-title" data-i18n="claim.title">Production claim boundary</h2>
+            <p data-i18n="claim.body">The website proves the public company and product route boundary. It does not claim a live governed runtime until the deployment witness endpoints publish signed evidence.</p>
+          </div>
+          <dl class="claim-ledger" aria-label="Production claim ledger">
+            <div>
+              <dt>Mullusi</dt>
+              <dd data-i18n="claim.ledger.mullusiV">Company, research, governance authority, trust boundary, and public domain owner.</dd>
+            </div>
+            <div>
+              <dt>Mullu</dt>
+              <dd data-i18n="claim.ledger.mulluV">Flagship governed product under Mullusi for proof-backed symbolic work.</dd>
+            </div>
+            <div>
+              <dt data-i18n="claim.ledger.runtimeK">Runtime Witness</dt>
+              <dd><span class="state-token">AwaitingEvidence</span> <span data-i18n="claim.ledger.runtimeUntil">until /health, /gateway/witness, and /runtime/conformance close.</span></dd>
+            </div>
+            <div>
+              <dt data-i18n="claim.ledger.proofK">Proof Route</dt>
+              <dd><a href="/proof/">mullusi.com/proof/</a> <span data-i18n="claim.ledger.proofV">is the public boundary for pending runtime evidence.</span></dd>
+            </div>
+          </dl>
+        </div>
+        <div class="status-board reveal" data-system-status>
+          <noscript>
+            <p>Website is live. Govern API and proof stamps remain AwaitingEvidence until signed runtime evidence publishes. The status board is generated from <code>data/site.json</code>.</p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
     <section class="band tier-primary verification-plane" id="verify" aria-labelledby="verify-title">
       <div class="harag-divider" aria-hidden="true"></div>
       <div class="wrap">
@@ -427,6 +462,126 @@ Invariants: no private repository claims, no silent content failure, all dynamic
             <li><span>03</span><strong>What happens if it fails?</strong></li>
           </noscript>
         </ol>
+      </div>
+    </section>
+
+    <section class="band tier-primary" id="products" aria-labelledby="products-title" data-mullu-helper="Explain product cards, product evidence status, and which surfaces are public, planned, or restricted.">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="products.tag">Product Graph</div>
+          <h2 id="products-title" data-i18n="products.title">Product graph</h2>
+          <p data-i18n="products.body">The public site now separates the Mullusi umbrella, the Mullu product route, and the proof boundary. Product-shaped runtime, SDK, science, language, and interface work remains private until release gates are met.</p>
+          <p class="plain" data-i18n="products.plain">In plain terms: Mullu has the public foundation route first; the other engines wait for proof-ready release gates.</p>
+        </div>
+        <div class="pgraph reveal">
+          <article class="pg"><span class="sym">M</span><h3 data-i18n="products.pg1.title">Mullu</h3><p data-i18n="products.pg1.body">Foundation-stage governed product for proof-backed work, local proof threads, product surfaces, and runtime-bound symbolic execution.</p></article>
+          <article class="pg"><span class="sym">G</span><h3 data-i18n="products.pg2.title">Mullu Control Plane</h3><p data-i18n="products.pg2.body">Governance, channels, approvals, budgets, audit traces, multi-provider runtime boundaries, and witness closure preparation.</p></article>
+          <article class="pg"><span class="sym">Σ</span><h3 data-i18n="products.pg3.title">SDK &amp; Cells</h3><p data-i18n="products.pg3.body">MSIC, symbol cells, causal-chain linking, mesh binding, deterministic memory routing, Φ traversal.</p></article>
+          <article class="pg"><span class="sym">H</span><h3 data-i18n="products.pg4.title">Evidence &amp; Interfaces</h3><p data-i18n="products.pg4.body">Search, inspect, capsule, 3D, SCC harnesses, trace surfaces, and proof-carrying public demos.</p></article>
+        </div>
+        <div class="product-registry-controls reveal" data-product-registry-controls>
+          <noscript>
+            <p>Product registry filters load from <code>data/generated/homepage-product-registry.json</code>.</p>
+          </noscript>
+        </div>
+        <div class="product-registry reveal" data-product-registry>
+          <noscript>
+            <article class="product-card"><div class="product-card-head"><span class="badge">public product</span><span class="status-pill">awaiting-evidence</span></div><h3>Mullu Govern</h3><p>Flagship governed evaluation product for checking actions, recording traces, and issuing proof-backed verdicts.</p></article>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tier-tertiary" id="roadmap" aria-labelledby="roadmap-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="roadmap.tag">Roadmap</div>
+          <h2 id="roadmap-title" data-i18n="roadmap.title">Release gates</h2>
+          <p data-i18n="roadmap.body">The public site can record future surface expansion, but each new domain stays private until it has a route, demo boundary, docs route, governance status, and product card that can be defended.</p>
+        </div>
+        <div class="road reveal" data-release-stages>
+          <article class="rd"><div class="n">01</div><h3>Register</h3><p>Add or revise a deployed public-surface record in the structured registry.</p></article>
+          <article class="rd"><div class="n">02</div><h3>Attach</h3><p>Connect docs, demo, proof, status, and contact routes.</p></article>
+          <article class="rd"><div class="n">03</div><h3>Verify</h3><p>Confirm claims, accessibility, local rendering, and public boundary constraints.</p></article>
+          <article class="rd"><div class="n">04</div><h3>Publish</h3><p>Expose the product surface only after the public boundary is verified.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tier-tertiary" id="governance" aria-labelledby="governance-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="governance.tag">Judgment Kernel</div>
+          <h2 id="governance-title" data-i18n="governance.title">Judgment kernel</h2>
+          <p data-i18n="governance.body">Website claims follow the same discipline as the system: observable public surface, stated boundary, reversible update, and no silent failure. That is why the public graph separates deployed surfaces, private incubation, staged domains, and operational interfaces.</p>
+          <p class="plain" data-i18n="governance.plain">In plain terms: Psi is the judgment step. It releases a public claim only when state, effects, safety guards, proof, and lineage all hold. If anything is unresolved, nothing is published.</p>
+          <div class="cta-actions">
+            <a href="/about/" class="btn btn-solid" data-i18n="governance.profileTitle">Architect note</a>
+            <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tier-primary" id="evidence" aria-labelledby="evidence-title" data-mullu-helper="Explain the evidence plane: identity, governance, structured content, and expansion lineage.">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="evidence.tag">Evidence Plane</div>
+          <h2 id="evidence-title" data-i18n="evidence.title">Evidence plane</h2>
+          <p data-i18n="evidence.body">Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether runtime witness evidence is closed.</p>
+          <p class="plain" data-i18n="evidence.plain">In plain terms: if it is stated here, you can check where it lives and how it is governed.</p>
+        </div>
+        <div class="cards-4 reveal" data-proof-lanes>
+          <article class="card"><span class="kind">Identity</span><div class="ix">Ι</div><h3>Immutable public boundary</h3><p>Mullusi is presented as one governed system across website, docs, release evidence, sandbox, metrics, and contact paths.</p></article>
+          <article class="card"><span class="kind">Governance</span><div class="ix">Λ</div><h3>Claims tied to evidence</h3><p>Public claims are separated into the deployed website, private incubation, planned domains, and operational interfaces.</p></article>
+          <article class="card"><span class="kind">Structure</span><div class="ix">Σ</div><h3>Content is data-backed</h3><p>Deployment card, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records.</p></article>
+          <article class="card"><span class="kind">Evolution</span><div class="ix">H</div><h3>Expansion without redesign</h3><p>New product surfaces and domains enter the public site through data updates before they need dedicated pages.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tier-secondary" id="architecture" aria-labelledby="architecture-title" data-mullu-helper="Explain the architecture layer boundaries and governed request path for Mullusi public surfaces.">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="architecture.tag">Architecture</div>
+          <h2 id="architecture-title" data-i18n="architecture.title">Governed public spine</h2>
+          <p data-i18n="architecture.body">The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.</p>
+          <p class="plain" data-i18n="architecture.plain">In plain terms: every public claim points to a real surface, a planned slot, or nothing — never a guess.</p>
+          <div class="actions">
+            <a class="btn btn-solid" href="/architecture/" data-i18n="nav.architecture">Architecture</a>
+            <a class="btn" href="/proof/" data-i18n="hero.reviewProof">Review proof boundary</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tier-secondary" id="interfaces" aria-labelledby="interfaces-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="interfaces.tag">Interfaces</div>
+          <h2 id="interfaces-title" data-i18n="interfaces.title">Public routes</h2>
+          <p data-i18n="interfaces.body">Interface links are treated as managed records so new public routes can be added without reworking the layout.</p>
+        </div>
+        <div class="routes reveal" data-interface-links>
+          <article class="route"><span class="badge">Public route</span><h3>Docs</h3><p>Reference material, architecture notes, and public learning paths.</p><a class="lnk" href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Open Docs →</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tier-secondary" id="services" aria-labelledby="services-title">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div class="tag" data-i18n="services.tag">Service Stack</div>
+          <h2 id="services-title" data-i18n="services.title">Service stack</h2>
+          <p data-i18n="services.body">Packages help users connect, validate, and submit work. Hosted services perform governance, preserve traces, issue proof stamps, and expose operational control.</p>
+        </div>
+        <div class="services reveal" data-service-grid>
+          <noscript>
+            <article class="service"><span class="badge">Primary offer</span><h3>Mullusi Govern Cloud</h3><p>Hosted symbolic governance for constraint evaluation, causal verdicts, proof states, and trace records.</p></article>
+            <article class="service"><span class="badge">Access layer</span><h3>Developer Packages</h3><p>Client SDK, CLI, and local validators for connecting to Mullusi services.</p></article>
+            <article class="service"><span class="badge">Operator surface</span><h3>Mullusi Dashboard</h3><p>Project control, trace review, proof stamps, violations, usage, teams, and release witness visibility.</p></article>
+          </noscript>
+        </div>
       </div>
     </section>
 
@@ -537,130 +692,6 @@ Invariants: no private repository claims, no silent content failure, all dynamic
       </div>
     </section>
 
-    <section class="band tier-primary claim-boundary" id="production-boundary" aria-labelledby="production-boundary-title">
-      <div class="wrap">
-        <div class="claim-panel reveal">
-          <div>
-            <div class="tag" data-i18n="claim.tag">Production Claim Boundary</div>
-            <h2 id="production-boundary-title" data-i18n="claim.title">Production claim boundary</h2>
-            <p data-i18n="claim.body">The website proves the public company and product route boundary. It does not claim a live governed runtime until the deployment witness endpoints publish signed evidence.</p>
-          </div>
-          <dl class="claim-ledger" aria-label="Production claim ledger">
-            <div>
-              <dt>Mullusi</dt>
-              <dd data-i18n="claim.ledger.mullusiV">Company, research, governance authority, trust boundary, and public domain owner.</dd>
-            </div>
-            <div>
-              <dt>Mullu</dt>
-              <dd data-i18n="claim.ledger.mulluV">Flagship governed product under Mullusi for proof-backed symbolic work.</dd>
-            </div>
-            <div>
-              <dt data-i18n="claim.ledger.runtimeK">Runtime Witness</dt>
-              <dd><span class="state-token">AwaitingEvidence</span> <span data-i18n="claim.ledger.runtimeUntil">until /health, /gateway/witness, and /runtime/conformance close.</span></dd>
-            </div>
-            <div>
-              <dt data-i18n="claim.ledger.proofK">Proof Route</dt>
-              <dd><a href="/proof/">mullusi.com/proof/</a> <span data-i18n="claim.ledger.proofV">is the public boundary for pending runtime evidence.</span></dd>
-            </div>
-          </dl>
-        </div>
-        <div class="status-board reveal" data-system-status>
-          <noscript>
-            <p>Website is live. Govern API and proof stamps remain AwaitingEvidence until signed runtime evidence publishes. The status board is generated from <code>data/site.json</code>.</p>
-          </noscript>
-        </div>
-      </div>
-    </section>
-
-    <section class="band tier-primary" id="evidence" aria-labelledby="evidence-title" data-mullu-helper="Explain the evidence plane: identity, governance, structured content, and expansion lineage.">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="evidence.tag">Evidence Plane</div>
-          <h2 id="evidence-title" data-i18n="evidence.title">Evidence plane</h2>
-          <p data-i18n="evidence.body">Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether runtime witness evidence is closed.</p>
-          <p class="plain" data-i18n="evidence.plain">In plain terms: if it is stated here, you can check where it lives and how it is governed.</p>
-        </div>
-        <div class="cards-4 reveal" data-proof-lanes>
-          <article class="card"><span class="kind">Identity</span><div class="ix">Ι</div><h3>Immutable public boundary</h3><p>Mullusi is presented as one governed system across website, docs, release evidence, sandbox, metrics, and contact paths.</p></article>
-          <article class="card"><span class="kind">Governance</span><div class="ix">Λ</div><h3>Claims tied to evidence</h3><p>Public claims are separated into the deployed website, private incubation, planned domains, and operational interfaces.</p></article>
-          <article class="card"><span class="kind">Structure</span><div class="ix">Σ</div><h3>Content is data-backed</h3><p>Deployment card, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records.</p></article>
-          <article class="card"><span class="kind">Evolution</span><div class="ix">H</div><h3>Expansion without redesign</h3><p>New product surfaces and domains enter the public site through data updates before they need dedicated pages.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="band tier-secondary" id="architecture" aria-labelledby="architecture-title" data-mullu-helper="Explain the architecture layer boundaries and governed request path for Mullusi public surfaces.">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="architecture.tag">Architecture</div>
-          <h2 id="architecture-title" data-i18n="architecture.title">Governed public spine</h2>
-          <p data-i18n="architecture.body">The site is structured around Mullusi's invariant model. Public pages point only to the deployed website surface, staged domain engines, proof artifacts, demos, or planned roadmap slots without exposing private incubation work.</p>
-          <p class="plain" data-i18n="architecture.plain">In plain terms: every public claim points to a real surface, a planned slot, or nothing — never a guess.</p>
-          <div class="actions">
-            <a class="btn btn-solid" href="/architecture/" data-i18n="nav.architecture">Architecture</a>
-            <a class="btn" href="/proof/" data-i18n="hero.reviewProof">Review proof boundary</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="band tier-secondary" id="interfaces" aria-labelledby="interfaces-title">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="interfaces.tag">Interfaces</div>
-          <h2 id="interfaces-title" data-i18n="interfaces.title">Public routes</h2>
-          <p data-i18n="interfaces.body">Interface links are treated as managed records so new public routes can be added without reworking the layout.</p>
-        </div>
-        <div class="routes reveal" data-interface-links>
-          <article class="route"><span class="badge">Public route</span><h3>Docs</h3><p>Reference material, architecture notes, and public learning paths.</p><a class="lnk" href="https://docs.mullusi.com" target="_blank" rel="noopener noreferrer">Open Docs →</a></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="band tier-secondary" id="services" aria-labelledby="services-title">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="services.tag">Service Stack</div>
-          <h2 id="services-title" data-i18n="services.title">Service stack</h2>
-          <p data-i18n="services.body">Packages help users connect, validate, and submit work. Hosted services perform governance, preserve traces, issue proof stamps, and expose operational control.</p>
-        </div>
-        <div class="services reveal" data-service-grid>
-          <noscript>
-            <article class="service"><span class="badge">Primary offer</span><h3>Mullusi Govern Cloud</h3><p>Hosted symbolic governance for constraint evaluation, causal verdicts, proof states, and trace records.</p></article>
-            <article class="service"><span class="badge">Access layer</span><h3>Developer Packages</h3><p>Client SDK, CLI, and local validators for connecting to Mullusi services.</p></article>
-            <article class="service"><span class="badge">Operator surface</span><h3>Mullusi Dashboard</h3><p>Project control, trace review, proof stamps, violations, usage, teams, and release witness visibility.</p></article>
-          </noscript>
-        </div>
-      </div>
-    </section>
-
-    <section class="band tier-primary" id="products" aria-labelledby="products-title" data-mullu-helper="Explain product cards, product evidence status, and which surfaces are public, planned, or restricted.">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="products.tag">Product Graph</div>
-          <h2 id="products-title" data-i18n="products.title">Product graph</h2>
-          <p data-i18n="products.body">The public site now separates the Mullusi umbrella, the Mullu product route, and the proof boundary. Product-shaped runtime, SDK, science, language, and interface work remains private until release gates are met.</p>
-          <p class="plain" data-i18n="products.plain">In plain terms: Mullu has the public foundation route first; the other engines wait for proof-ready release gates.</p>
-        </div>
-        <div class="pgraph reveal">
-          <article class="pg"><span class="sym">M</span><h3 data-i18n="products.pg1.title">Mullu</h3><p data-i18n="products.pg1.body">Foundation-stage governed product for proof-backed work, local proof threads, product surfaces, and runtime-bound symbolic execution.</p></article>
-          <article class="pg"><span class="sym">G</span><h3 data-i18n="products.pg2.title">Mullu Control Plane</h3><p data-i18n="products.pg2.body">Governance, channels, approvals, budgets, audit traces, multi-provider runtime boundaries, and witness closure preparation.</p></article>
-          <article class="pg"><span class="sym">Σ</span><h3 data-i18n="products.pg3.title">SDK &amp; Cells</h3><p data-i18n="products.pg3.body">MSIC, symbol cells, causal-chain linking, mesh binding, deterministic memory routing, Φ traversal.</p></article>
-          <article class="pg"><span class="sym">H</span><h3 data-i18n="products.pg4.title">Evidence &amp; Interfaces</h3><p data-i18n="products.pg4.body">Search, inspect, capsule, 3D, SCC harnesses, trace surfaces, and proof-carrying public demos.</p></article>
-        </div>
-        <div class="product-registry-controls reveal" data-product-registry-controls>
-          <noscript>
-            <p>Product registry filters load from <code>data/generated/homepage-product-registry.json</code>.</p>
-          </noscript>
-        </div>
-        <div class="product-registry reveal" data-product-registry>
-          <noscript>
-            <article class="product-card"><div class="product-card-head"><span class="badge">public product</span><span class="status-pill">awaiting-evidence</span></div><h3>Mullu Govern</h3><p>Flagship governed evaluation product for checking actions, recording traces, and issuing proof-backed verdicts.</p></article>
-          </noscript>
-        </div>
-      </div>
-    </section>
-
     <section class="band tier-secondary" id="sciences" aria-labelledby="sciences-title">
       <div class="wrap">
         <div class="sec-head reveal">
@@ -685,37 +716,6 @@ Invariants: no private repository claims, no silent content failure, all dynamic
           <div class="actions">
             <a class="btn btn-solid" href="/surfaces/" data-i18n="nav.repos">Surfaces</a>
             <a class="btn" href="/proof/" data-i18n="hero.reviewProof">Review proof boundary</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="band tier-tertiary" id="roadmap" aria-labelledby="roadmap-title">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="roadmap.tag">Roadmap</div>
-          <h2 id="roadmap-title" data-i18n="roadmap.title">Release gates</h2>
-          <p data-i18n="roadmap.body">The public site can record future surface expansion, but each new domain stays private until it has a route, demo boundary, docs route, governance status, and product card that can be defended.</p>
-        </div>
-        <div class="road reveal" data-release-stages>
-          <article class="rd"><div class="n">01</div><h3>Register</h3><p>Add or revise a deployed public-surface record in the structured registry.</p></article>
-          <article class="rd"><div class="n">02</div><h3>Attach</h3><p>Connect docs, demo, proof, status, and contact routes.</p></article>
-          <article class="rd"><div class="n">03</div><h3>Verify</h3><p>Confirm claims, accessibility, local rendering, and public boundary constraints.</p></article>
-          <article class="rd"><div class="n">04</div><h3>Publish</h3><p>Expose the product surface only after the public boundary is verified.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="band tier-tertiary" id="governance" aria-labelledby="governance-title">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div class="tag" data-i18n="governance.tag">Judgment Kernel</div>
-          <h2 id="governance-title" data-i18n="governance.title">Judgment kernel</h2>
-          <p data-i18n="governance.body">Website claims follow the same discipline as the system: observable public surface, stated boundary, reversible update, and no silent failure. That is why the public graph separates deployed surfaces, private incubation, staged domains, and operational interfaces.</p>
-          <p class="plain" data-i18n="governance.plain">In plain terms: Psi is the judgment step. It releases a public claim only when state, effects, safety guards, proof, and lineage all hold. If anything is unresolved, nothing is published.</p>
-          <div class="cta-actions">
-            <a href="/about/" class="btn btn-solid" data-i18n="governance.profileTitle">Architect note</a>
-            <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
           </div>
         </div>
       </div>
