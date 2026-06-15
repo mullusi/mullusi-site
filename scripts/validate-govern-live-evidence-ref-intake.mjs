@@ -37,8 +37,19 @@ function parseIntake(content) {
   try {
     return { intake: JSON.parse(content), parseError: "" };
   } catch (error) {
-    return { intake: null, parseError: error.message };
+    return { intake: null, parseError: error.message ? "present" : "missing" };
   }
+}
+
+function describeIntakeValue(value) {
+  if (value === undefined) return "missing";
+  if (value === null) return "null";
+  if (Array.isArray(value)) return "array";
+  if (typeof value === "boolean") return `boolean:${value ? "true" : "false"}`;
+  if (typeof value === "string") return "string";
+  if (typeof value === "number") return "number";
+  if (typeof value === "object") return "object";
+  return typeof value;
 }
 
 export function validateGovernLiveEvidenceRefIntakeContent(content, options = {}) {
@@ -49,7 +60,7 @@ export function validateGovernLiveEvidenceRefIntakeContent(content, options = {}
   findings.push(...scanForbiddenEvidencePatterns("intake", content));
 
   if (parseError) {
-    findings.push(`intake_json_invalid:${parseError}`);
+    findings.push("intake_json_invalid");
   }
 
   const approvalRefs = intake?.approval_refs;
@@ -71,26 +82,26 @@ export function validateGovernLiveEvidenceRefIntakeContent(content, options = {}
   }
 
   for (const key of Object.keys(approvalRefs || {})) {
-    if (!requiredLiveEvidenceApprovalKeys.includes(key)) findings.push(`approval_ref_unknown_key:${key}`);
+    if (!requiredLiveEvidenceApprovalKeys.includes(key)) findings.push("approval_ref_unknown_key:present");
   }
 
   if (intake?.product_id !== "mullu-govern") {
-    findings.push(`product_id_invalid:${intake?.product_id || "missing"}`);
+    findings.push(`product_id_invalid:${describeIntakeValue(intake?.product_id)}`);
   }
   if (intake?.ready_for_live_evidence !== false) {
-    findings.push(`ready_for_live_evidence_must_remain_false:${String(intake?.ready_for_live_evidence)}`);
+    findings.push(`ready_for_live_evidence_must_remain_false:${describeIntakeValue(intake?.ready_for_live_evidence)}`);
   }
   if (intake?.public_write_route_allowed !== false) {
-    findings.push(`public_write_route_allowed_must_remain_false:${String(intake?.public_write_route_allowed)}`);
+    findings.push(`public_write_route_allowed_must_remain_false:${describeIntakeValue(intake?.public_write_route_allowed)}`);
   }
   if (intake?.secret_values_allowed !== false) {
-    findings.push(`secret_values_allowed_must_remain_false:${String(intake?.secret_values_allowed)}`);
+    findings.push(`secret_values_allowed_must_remain_false:${describeIntakeValue(intake?.secret_values_allowed)}`);
   }
   if (intake?.raw_payloads_allowed !== false) {
-    findings.push(`raw_payloads_allowed_must_remain_false:${String(intake?.raw_payloads_allowed)}`);
+    findings.push(`raw_payloads_allowed_must_remain_false:${describeIntakeValue(intake?.raw_payloads_allowed)}`);
   }
   if (intake?.provider_values_allowed !== false) {
-    findings.push(`provider_values_allowed_must_remain_false:${String(intake?.provider_values_allowed)}`);
+    findings.push(`provider_values_allowed_must_remain_false:${describeIntakeValue(intake?.provider_values_allowed)}`);
   }
 
   const missingCount = requiredLiveEvidenceApprovalKeys
@@ -133,7 +144,7 @@ function main() {
   if (invalidArgs.length > 0) {
     const result = {
       findingCount: invalidArgs.length,
-      findings: [`unsupported_args:${invalidArgs.join(",")}`],
+      findings: [`unsupported_args_count:${invalidArgs.length}`],
       missingApprovalInputCount: 0,
       proofState: "Fail",
       readyForLiveEvidence: false,
