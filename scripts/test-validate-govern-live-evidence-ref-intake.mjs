@@ -96,7 +96,8 @@ function testSecretAndUnknownKeyFailClosed() {
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
-  assert.match(result.findings.join("\n"), /approval_ref_unknown_key:unknown_ref/);
+  assert.match(result.findings.join("\n"), /approval_ref_unknown_key:present/);
+  assert.doesNotMatch(result.findings.join("\n"), /unknown_ref/);
   assert.match(result.findings.join("\n"), /approval_ref_invalid:operator_approval_ref:forbidden_private_value_pattern/);
 }
 
@@ -105,7 +106,7 @@ function testUnsafeRouteFlagFailsClosed() {
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
-  assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:true/);
+  assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:boolean:true/);
 }
 
 function testReadyForLiveEvidenceFlagFailsClosed() {
@@ -114,7 +115,31 @@ function testReadyForLiveEvidenceFlagFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.readyForLiveEvidence, false);
-  assert.match(result.findings.join("\n"), /ready_for_live_evidence_must_remain_false:true/);
+  assert.match(result.findings.join("\n"), /ready_for_live_evidence_must_remain_false:boolean:true/);
+}
+
+function testInvalidMetadataValuesAreRedacted() {
+  const sensitiveProductId = "sk_sensitiveproductidabcdefghijklmnopqrstuvwxyz";
+  const result = validateGovernLiveEvidenceRefIntakeContent(intake({
+    product_id: sensitiveProductId,
+    secret_values_allowed: "yes",
+  }));
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /product_id_invalid:string/);
+  assert.match(result.findings.join("\n"), /secret_values_allowed_must_remain_false:string/);
+  assert.doesNotMatch(result.findings.join("\n"), /sk_sensitiveproductid/);
+}
+
+function testJsonParseFindingIsRedacted() {
+  const content = "{\"product_id\":\"sk_parseabcdefghijklmnopqrstuvwxyz\"";
+  const result = validateGovernLiveEvidenceRefIntakeContent(content);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /intake_json_invalid/);
+  assert.doesNotMatch(result.findings.join("\n"), /sk_parse/);
 }
 
 function testCliJsonAndUnsupportedArgs() {
@@ -126,7 +151,8 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_live_evidence_ref_intake=GovernanceBlocked/);
 }
 
@@ -136,6 +162,8 @@ testSyntheticCompleteRefsPassCompleteMode();
 testSecretAndUnknownKeyFailClosed();
 testUnsafeRouteFlagFailsClosed();
 testReadyForLiveEvidenceFlagFailsClosed();
+testInvalidMetadataValuesAreRedacted();
+testJsonParseFindingIsRedacted();
 testCliJsonAndUnsupportedArgs();
 
 console.log("govern live evidence ref intake validator tests passed");
