@@ -101,8 +101,26 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_live_evidence_ref_collection_checklist=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsidePath = path.join("..", "private-checklist.md");
+  const result = validateGovernLiveEvidenceRefCollectionChecklist(outsidePath);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.checklistState, "Blocked");
+  assert.deepEqual(result.findings, ["collection_checklist_path_outside_repo"]);
+  assert.doesNotMatch(formatGovernLiveEvidenceRefCollectionChecklistReport(result), /private-checklist/);
+
+  const unreadable = validateGovernLiveEvidenceRefCollectionChecklist(path.join("ops", "missing-private-checklist.md"));
+  assert.equal(unreadable.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadable.proofState, "Fail");
+  assert.deepEqual(unreadable.findings, ["collection_checklist_unreadable"]);
+  assert.doesNotMatch(formatGovernLiveEvidenceRefCollectionChecklistReport(unreadable), /missing-private-checklist/);
 }
 
 testCurrentChecklistPasses();
@@ -110,5 +128,6 @@ testSyntheticMissingApprovalRowFailsClosed();
 testSyntheticMissingStopConditionFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern live evidence ref collection checklist validator tests passed");
