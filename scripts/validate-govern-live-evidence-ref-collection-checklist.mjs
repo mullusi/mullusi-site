@@ -16,6 +16,7 @@ import {
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultChecklistPath = "ops/mullu-govern-live-evidence-ref-collection-checklist.md";
 const allowedArgs = new Set(["--json"]);
 
@@ -50,8 +51,32 @@ const requiredForbiddenValueTerms = [
   "database URLs",
 ];
 
-function readUtf8(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+function blockedResult(finding) {
+  return {
+    checklistState: "Blocked",
+    findingCount: 1,
+    findings: [finding],
+    proofState: "Fail",
+    readyForLiveEvidence: false,
+    solverOutcome: "GovernanceBlocked",
+  };
+}
+
+function readUtf8Result(relativePath) {
+  if (typeof relativePath !== "string" || relativePath.trim() === "") {
+    return { content: "", finding: "collection_checklist_path_invalid" };
+  }
+
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", finding: "collection_checklist_path_outside_repo" };
+  }
+
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), finding: "" };
+  } catch {
+    return { content: "", finding: "collection_checklist_unreadable" };
+  }
 }
 
 function unsupportedArgs(args) {
@@ -92,7 +117,9 @@ export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklis
 }
 
 export function validateGovernLiveEvidenceRefCollectionChecklist(relativePath = defaultChecklistPath) {
-  return validateGovernLiveEvidenceRefCollectionChecklistContent(readUtf8(relativePath));
+  const readResult = readUtf8Result(relativePath);
+  if (readResult.finding) return blockedResult(readResult.finding);
+  return validateGovernLiveEvidenceRefCollectionChecklistContent(readResult.content);
 }
 
 export function formatGovernLiveEvidenceRefCollectionChecklistReport(result) {
@@ -113,7 +140,7 @@ function blockedResultForInvalidArgs(invalidArgs) {
   return {
     checklistState: "Blocked",
     findingCount: invalidArgs.length,
-    findings: [`unsupported_args:${invalidArgs.join(",")}`],
+    findings: [`unsupported_args_count:${invalidArgs.length}`],
     proofState: "Fail",
     readyForLiveEvidence: false,
     solverOutcome: "GovernanceBlocked",
