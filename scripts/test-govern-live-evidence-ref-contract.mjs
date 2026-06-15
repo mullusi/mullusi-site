@@ -65,6 +65,8 @@ function testMalformedRefsFailClosed() {
   assert.match(empty.findings.join("\n"), /evidence_ref_empty/);
   assert.equal(unknownFamily.valid, false);
   assert.match(unknownFamily.findings.join("\n"), /evidence_ref_family_not_allowed/);
+  assert.doesNotMatch(unknownFamily.findings.join("\n"), /https:\/\/example\.com\/evidence/);
+  assert.match(unknownFamily.findings.join("\n"), /evidence_ref_family_not_allowed:present/);
   assert.equal(whitespace.valid, false);
   assert.match(whitespace.findings.join("\n"), /evidence_ref_must_not_contain_whitespace/);
   assert.equal(malformedGithubPull.valid, false);
