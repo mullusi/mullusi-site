@@ -17,11 +17,37 @@ import {
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultIntakePath = "ops/mullu-govern-live-evidence-ref-intake-template.json";
 const allowedArgs = new Set(["--json", "--require-complete"]);
 
-function readUtf8(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+function blockedResult(finding, options = {}) {
+  return {
+    findingCount: 1,
+    findings: [finding],
+    missingApprovalInputCount: 0,
+    proofState: "Fail",
+    readyForLiveEvidence: false,
+    requireComplete: options.requireComplete === true,
+    solverOutcome: "GovernanceBlocked",
+  };
+}
+
+function readUtf8Result(relativePath) {
+  if (typeof relativePath !== "string" || relativePath.trim() === "") {
+    return { content: "", finding: "intake_file_path_invalid" };
+  }
+
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", finding: "intake_file_path_outside_repo" };
+  }
+
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), finding: "" };
+  } catch {
+    return { content: "", finding: "intake_file_unreadable" };
+  }
 }
 
 function unsupportedArgs(args) {
@@ -120,7 +146,9 @@ export function validateGovernLiveEvidenceRefIntakeContent(content, options = {}
 }
 
 export function validateGovernLiveEvidenceRefIntake(relativePath = defaultIntakePath, options = {}) {
-  return validateGovernLiveEvidenceRefIntakeContent(readUtf8(relativePath), options);
+  const readResult = readUtf8Result(relativePath);
+  if (readResult.finding) return blockedResult(readResult.finding, options);
+  return validateGovernLiveEvidenceRefIntakeContent(readResult.content, options);
 }
 
 export function formatGovernLiveEvidenceRefIntakeReport(result) {

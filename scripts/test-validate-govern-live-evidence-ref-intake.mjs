@@ -156,6 +156,25 @@ function testCliJsonAndUnsupportedArgs() {
   assert.match(invalid.stdout, /govern_live_evidence_ref_intake=GovernanceBlocked/);
 }
 
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsidePath = path.join("..", "private-secret-intake.json");
+  const outside = runValidator([`--path=${outsidePath}`]);
+  assert.equal(outside.status, 1);
+  assert.match(outside.stdout, /intake_file_path_outside_repo/);
+  assert.doesNotMatch(outside.stdout, /private-secret-intake/);
+
+  const unreadablePath = path.join("ops", "missing-secret-intake.json");
+  const unreadable = runValidator([`--path=${unreadablePath}`]);
+  assert.equal(unreadable.status, 1);
+  assert.match(unreadable.stdout, /intake_file_unreadable/);
+  assert.doesNotMatch(unreadable.stdout, /missing-secret-intake/);
+
+  const directResult = validateGovernLiveEvidenceRefIntake(outsidePath);
+  assert.equal(directResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(directResult.proofState, "Fail");
+  assert.deepEqual(directResult.findings, ["intake_file_path_outside_repo"]);
+}
+
 testCurrentTemplatePassesAsNonOperative();
 testCompleteModeRequiresRefs();
 testSyntheticCompleteRefsPassCompleteMode();
@@ -165,5 +184,6 @@ testReadyForLiveEvidenceFlagFailsClosed();
 testInvalidMetadataValuesAreRedacted();
 testJsonParseFindingIsRedacted();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern live evidence ref intake validator tests passed");
