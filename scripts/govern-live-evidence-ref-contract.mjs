@@ -109,7 +109,7 @@ export function validatePublicSafeEvidenceRef(value, options = {}) {
   if (ref.length > 160) findings.push(`evidence_ref_too_long:${ref.length}`);
   const shape = publicSafeEvidenceRefShapes.find((candidate) => ref.startsWith(candidate.family));
   if (!shape) {
-    findings.push(`evidence_ref_family_not_allowed:${ref || "missing"}`);
+    findings.push(`evidence_ref_family_not_allowed:${ref ? "present" : "missing"}`);
   } else if (!shape.pattern.test(ref)) {
     findings.push(`evidence_ref_shape_invalid:${shape.family}`);
   }
