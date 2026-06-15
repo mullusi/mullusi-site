@@ -283,8 +283,26 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_live_evidence_operator_runbook=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsidePath = path.join("..", "private-runbook.md");
+  const outside = validateGovernLiveEvidenceOperatorRunbook(outsidePath);
+
+  assert.equal(outside.solverOutcome, "GovernanceBlocked");
+  assert.equal(outside.proofState, "Fail");
+  assert.equal(outside.operatorRunbookState, "Blocked");
+  assert.deepEqual(outside.findings, ["operator_runbook_path_outside_repo"]);
+  assert.doesNotMatch(formatGovernLiveEvidenceOperatorRunbookReport(outside), /private-runbook/);
+
+  const unreadable = validateGovernLiveEvidenceOperatorRunbook(path.join("ops", "missing-private-runbook.md"));
+  assert.equal(unreadable.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadable.proofState, "Fail");
+  assert.deepEqual(unreadable.findings, ["operator_runbook_unreadable"]);
+  assert.doesNotMatch(formatGovernLiveEvidenceOperatorRunbookReport(unreadable), /missing-private-runbook/);
 }
 
 testCurrentRunbookPasses();
@@ -298,5 +316,6 @@ testSyntheticCollectionChecklistFailureFailsClosed();
 testSyntheticReleaseReadinessFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern live evidence operator runbook validator tests passed");
