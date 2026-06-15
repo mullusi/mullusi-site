@@ -217,8 +217,26 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_live_evidence_sequence_preflight=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsidePath = path.join("..", "private-sequence-preflight.md");
+  const outside = validateGovernLiveEvidenceSequencePreflight(outsidePath);
+
+  assert.equal(outside.solverOutcome, "GovernanceBlocked");
+  assert.equal(outside.proofState, "Fail");
+  assert.equal(outside.liveEvidenceSequencePreflightState, "Blocked");
+  assert.deepEqual(outside.findings, ["live_evidence_sequence_preflight_path_outside_repo"]);
+  assert.doesNotMatch(formatGovernLiveEvidenceSequencePreflightReport(outside), /private-sequence-preflight/);
+
+  const unreadable = validateGovernLiveEvidenceSequencePreflight(path.join("ops", "missing-private-sequence-preflight.md"));
+  assert.equal(unreadable.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadable.proofState, "Fail");
+  assert.deepEqual(unreadable.findings, ["live_evidence_sequence_preflight_unreadable"]);
+  assert.doesNotMatch(formatGovernLiveEvidenceSequencePreflightReport(unreadable), /missing-private-sequence-preflight/);
 }
 
 testCurrentSequencePreflightPasses();
@@ -228,5 +246,6 @@ testSyntheticAggregateFailureFailsClosed();
 testSyntheticWriteRouteOpenFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern live evidence sequence preflight validator tests passed");

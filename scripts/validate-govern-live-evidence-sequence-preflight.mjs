@@ -26,6 +26,7 @@ import { validateGovernSupportReadiness } from "./validate-govern-support-readin
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultWitnessPath = "ops/mullu-govern-live-evidence-sequence-preflight.md";
 const allowedArgs = new Set(["--json"]);
 
@@ -63,8 +64,34 @@ const requiredWitnessTerms = [
   "STATUS:",
 ];
 
-function readUtf8(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+function blockedResult(finding) {
+  return {
+    findingCount: 1,
+    findings: [finding],
+    liveEvidenceSequencePreflightState: "Blocked",
+    missingApprovalInputCount: 0,
+    proofState: "Fail",
+    publicWriteRouteAllowed: false,
+    readyForLiveEvidence: false,
+    solverOutcome: "GovernanceBlocked",
+  };
+}
+
+function readUtf8Result(relativePath, findingPrefix) {
+  if (typeof relativePath !== "string" || relativePath.trim() === "") {
+    return { content: "", finding: `${findingPrefix}_path_invalid` };
+  }
+
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", finding: `${findingPrefix}_path_outside_repo` };
+  }
+
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), finding: "" };
+  } catch {
+    return { content: "", finding: `${findingPrefix}_unreadable` };
+  }
 }
 
 function lineValue(content, key) {
@@ -177,10 +204,22 @@ export function validateGovernLiveEvidenceSequencePreflightEvidence(evidence) {
 }
 
 export function collectGovernLiveEvidenceSequencePreflightEvidence(relativePath = defaultWitnessPath) {
-  const approvalPacket = readUtf8("ops/mullu-govern-public-beta-approval-packet.md");
-  const liveEvidenceRefIntake = readUtf8("ops/mullu-govern-live-evidence-ref-intake-template.json");
-  const runtimeClosurePacket = readUtf8("ops/runtime-witness/mullu-govern-closure-packet.md");
-  const witness = readUtf8(relativePath);
+  const approvalPacketResult = readUtf8Result("ops/mullu-govern-public-beta-approval-packet.md", "approval_packet");
+  const liveEvidenceRefIntakeResult = readUtf8Result("ops/mullu-govern-live-evidence-ref-intake-template.json", "live_evidence_ref_intake");
+  const runtimeClosurePacketResult = readUtf8Result("ops/runtime-witness/mullu-govern-closure-packet.md", "runtime_closure_packet");
+  const witnessResult = readUtf8Result(relativePath, "live_evidence_sequence_preflight");
+  const firstFinding = [
+    approvalPacketResult,
+    liveEvidenceRefIntakeResult,
+    runtimeClosurePacketResult,
+    witnessResult,
+  ].find((result) => result.finding)?.finding ?? "";
+  if (firstFinding) return { blockedResult: blockedResult(firstFinding) };
+
+  const approvalPacket = approvalPacketResult.content;
+  const liveEvidenceRefIntake = liveEvidenceRefIntakeResult.content;
+  const runtimeClosurePacket = runtimeClosurePacketResult.content;
+  const witness = witnessResult.content;
   return {
     approvalPacket,
     privateValueScanSources: {
@@ -196,9 +235,9 @@ export function collectGovernLiveEvidenceSequencePreflightEvidence(relativePath 
 }
 
 export function validateGovernLiveEvidenceSequencePreflight(relativePath = defaultWitnessPath) {
-  return validateGovernLiveEvidenceSequencePreflightEvidence(
-    collectGovernLiveEvidenceSequencePreflightEvidence(relativePath),
-  );
+  const evidence = collectGovernLiveEvidenceSequencePreflightEvidence(relativePath);
+  if (evidence.blockedResult) return evidence.blockedResult;
+  return validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
 }
 
 export function formatGovernLiveEvidenceSequencePreflightReport(result) {
@@ -222,7 +261,7 @@ export function formatGovernLiveEvidenceSequencePreflightReport(result) {
 function blockedResultForInvalidArgs(invalidArgs) {
   return {
     findingCount: invalidArgs.length,
-    findings: [`unsupported_args:${invalidArgs.join(",")}`],
+    findings: [`unsupported_args_count:${invalidArgs.length}`],
     liveEvidenceSequencePreflightState: "Blocked",
     missingApprovalInputCount: 0,
     proofState: "Fail",
