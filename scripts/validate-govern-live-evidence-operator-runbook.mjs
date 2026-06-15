@@ -23,6 +23,7 @@ import { validateReleaseReadinessSummary } from "./validate-release-readiness-su
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultRunbookPath = "ops/mullu-govern-live-evidence-operator-runbook.md";
 const allowedArgs = new Set(["--json"]);
 
@@ -47,8 +48,34 @@ const requiredRunbookTerms = [
   "STATUS:",
 ];
 
-function readUtf8(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+function blockedResult(finding) {
+  return {
+    findingCount: 1,
+    findings: [finding],
+    missingApprovalInputCount: 0,
+    operatorRunbookState: "Blocked",
+    proofState: "Fail",
+    publicWriteRouteAllowed: false,
+    readyForLiveEvidence: false,
+    solverOutcome: "GovernanceBlocked",
+  };
+}
+
+function readUtf8Result(relativePath, findingPrefix) {
+  if (typeof relativePath !== "string" || relativePath.trim() === "") {
+    return { content: "", finding: `${findingPrefix}_path_invalid` };
+  }
+
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", finding: `${findingPrefix}_path_outside_repo` };
+  }
+
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), finding: "" };
+  } catch {
+    return { content: "", finding: `${findingPrefix}_unreadable` };
+  }
 }
 
 function lineValue(content, key) {
@@ -164,8 +191,14 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
 }
 
 export function collectGovernLiveEvidenceOperatorRunbookEvidence(relativePath = defaultRunbookPath) {
-  const approvalPacket = readUtf8("ops/mullu-govern-public-beta-approval-packet.md");
-  const runbook = readUtf8(relativePath);
+  const approvalPacketResult = readUtf8Result("ops/mullu-govern-public-beta-approval-packet.md", "approval_packet");
+  const runbookResult = readUtf8Result(relativePath, "operator_runbook");
+  const firstFinding = [approvalPacketResult, runbookResult]
+    .find((result) => result.finding)?.finding ?? "";
+  if (firstFinding) return { blockedResult: blockedResult(firstFinding) };
+
+  const approvalPacket = approvalPacketResult.content;
+  const runbook = runbookResult.content;
   return {
     approvalPacket,
     approvalPacketResult: validateGovernPublicBetaApprovalPacket(),
@@ -183,9 +216,9 @@ export function collectGovernLiveEvidenceOperatorRunbookEvidence(relativePath = 
 }
 
 export function validateGovernLiveEvidenceOperatorRunbook(relativePath = defaultRunbookPath) {
-  return validateGovernLiveEvidenceOperatorRunbookEvidence(
-    collectGovernLiveEvidenceOperatorRunbookEvidence(relativePath),
-  );
+  const evidence = collectGovernLiveEvidenceOperatorRunbookEvidence(relativePath);
+  if (evidence.blockedResult) return evidence.blockedResult;
+  return validateGovernLiveEvidenceOperatorRunbookEvidence(evidence);
 }
 
 export function formatGovernLiveEvidenceOperatorRunbookReport(result) {
@@ -209,7 +242,7 @@ export function formatGovernLiveEvidenceOperatorRunbookReport(result) {
 function blockedResultForInvalidArgs(invalidArgs) {
   return {
     findingCount: invalidArgs.length,
-    findings: [`unsupported_args:${invalidArgs.join(",")}`],
+    findings: [`unsupported_args_count:${invalidArgs.length}`],
     missingApprovalInputCount: 0,
     operatorRunbookState: "Blocked",
     proofState: "Fail",
