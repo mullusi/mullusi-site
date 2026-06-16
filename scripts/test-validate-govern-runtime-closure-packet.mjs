@@ -220,8 +220,31 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_runtime_closure_packet=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsideResult = validateGovernRuntimeClosurePacket(path.join("..", "private-runtime-closure-packet.md"));
+  const outsideReport = formatGovernRuntimeClosurePacketReport(outsideResult);
+
+  assert.equal(outsideResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(outsideResult.proofState, "Fail");
+  assert.equal(outsideResult.runtimeWitnessClosureState, "Blocked");
+  assert.equal(outsideResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(outsideResult.findings, ["runtime_closure_packet_path_outside_repo"]);
+  assert.doesNotMatch(outsideReport, /private-runtime-closure-packet/);
+
+  const unreadableResult = validateGovernRuntimeClosurePacket(path.join("ops", "runtime-witness", "missing-private-runtime-closure-packet.md"));
+  const unreadableReport = formatGovernRuntimeClosurePacketReport(unreadableResult);
+
+  assert.equal(unreadableResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadableResult.proofState, "Fail");
+  assert.equal(unreadableResult.runtimeWitnessClosureState, "Blocked");
+  assert.equal(unreadableResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(unreadableResult.findings, ["runtime_closure_packet_unreadable"]);
+  assert.doesNotMatch(unreadableReport, /missing-private-runtime-closure-packet/);
 }
 
 testCurrentGovernRuntimeClosurePacketPasses();
@@ -231,5 +254,6 @@ testSyntheticApprovalPacketRouteExposureFailsClosed();
 testSyntheticWriteRouteAggregateFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern runtime closure packet validator tests passed");
