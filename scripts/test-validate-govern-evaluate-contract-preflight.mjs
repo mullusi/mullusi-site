@@ -177,8 +177,31 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_evaluate_contract_preflight=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsideResult = validateGovernEvaluateContractPreflight(path.join("..", "private-contract-preflight.md"));
+  const outsideReport = formatGovernEvaluateContractPreflightReport(outsideResult);
+
+  assert.equal(outsideResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(outsideResult.proofState, "Fail");
+  assert.equal(outsideResult.contractPreflightState, "Blocked");
+  assert.equal(outsideResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(outsideResult.findings, ["evaluate_contract_preflight_path_outside_repo"]);
+  assert.doesNotMatch(outsideReport, /private-contract-preflight/);
+
+  const unreadableResult = validateGovernEvaluateContractPreflight(path.join("ops", "missing-private-contract-preflight.md"));
+  const unreadableReport = formatGovernEvaluateContractPreflightReport(unreadableResult);
+
+  assert.equal(unreadableResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadableResult.proofState, "Fail");
+  assert.equal(unreadableResult.contractPreflightState, "Blocked");
+  assert.equal(unreadableResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(unreadableResult.findings, ["evaluate_contract_preflight_unreadable"]);
+  assert.doesNotMatch(unreadableReport, /missing-private-contract-preflight/);
 }
 
 testCurrentContractPreflightPasses();
@@ -186,5 +209,6 @@ testSyntheticUnboundedContractFailsClosed();
 testSyntheticFilledExecutionRefFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern evaluate contract preflight validator tests passed");
