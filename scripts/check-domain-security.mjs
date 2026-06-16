@@ -229,7 +229,7 @@ async function runCli() {
   const unsupported = unsupportedOptions(args);
   const allowHardeningGaps = args.includes("--allow-hardening-gaps");
   if (unsupported.length > 0) {
-    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args:${unsupported.join(",")}`);
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args_count:${unsupported.length}`);
     process.exitCode = 1;
     return;
   }

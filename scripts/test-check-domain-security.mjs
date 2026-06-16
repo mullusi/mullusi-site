@@ -110,7 +110,8 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
   assert.equal(result.stderr, "");
   assert.match(result.stdout, /verdict=GovernanceBlocked/);
   assert.match(result.stdout, /proof_state=Fail/);
-  assert.match(result.stdout, /error=unsupported_args:--unexpected/);
+  assert.match(result.stdout, /error=unsupported_args_count:1/);
+  assert.doesNotMatch(result.stdout, /--unexpected/);
 }
 
 testAllDomainSecurityControlsPass();
