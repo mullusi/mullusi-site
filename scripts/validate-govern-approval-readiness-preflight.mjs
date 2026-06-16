@@ -25,6 +25,7 @@ import { validateGovernRuntimeClosurePacket } from "./validate-govern-runtime-cl
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultWitnessPath = "ops/mullu-govern-approval-readiness-preflight.md";
 const allowedArgs = new Set(["--json"]);
 
@@ -50,8 +51,34 @@ const requiredWitnessTerms = [
   "STATUS:",
 ];
 
-function readUtf8(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+function blockedResult(finding) {
+  return {
+    approvalReadinessPreflightState: "Blocked",
+    findingCount: 1,
+    findings: [finding],
+    missingApprovalInputCount: 0,
+    proofState: "Fail",
+    publicWriteRouteAllowed: false,
+    readyForApproval: false,
+    solverOutcome: "GovernanceBlocked",
+  };
+}
+
+function readUtf8Result(relativePath, findingPrefix) {
+  if (typeof relativePath !== "string" || relativePath.trim() === "") {
+    return { content: "", finding: `${findingPrefix}_path_invalid` };
+  }
+
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", finding: `${findingPrefix}_path_outside_repo` };
+  }
+
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), finding: "" };
+  } catch {
+    return { content: "", finding: `${findingPrefix}_unreadable` };
+  }
 }
 
 function lineValue(content, key) {
@@ -146,11 +173,18 @@ export function validateGovernApprovalReadinessPreflightEvidence(evidence) {
 }
 
 export function collectGovernApprovalReadinessPreflightEvidence(relativePath = defaultWitnessPath) {
-  const witness = readUtf8(relativePath);
+  const witnessResult = readUtf8Result(relativePath, "approval_readiness_preflight");
+  const approvalPacketResult = readUtf8Result("ops/mullu-govern-public-beta-approval-packet.md", "approval_packet");
+  const firstFinding = [witnessResult, approvalPacketResult]
+    .find((result) => result.finding)?.finding ?? "";
+  if (firstFinding) return { blockedResult: blockedResult(firstFinding) };
+
+  const witness = witnessResult.content;
+  const approvalPacket = approvalPacketResult.content;
   return {
-    approvalPacket: readUtf8("ops/mullu-govern-public-beta-approval-packet.md"),
+    approvalPacket,
     privateValueScanSources: {
-      approvalPacket: readUtf8("ops/mullu-govern-public-beta-approval-packet.md"),
+      approvalPacket,
       witness,
     },
     validatorResults: aggregateValidatorResults(),
@@ -159,9 +193,9 @@ export function collectGovernApprovalReadinessPreflightEvidence(relativePath = d
 }
 
 export function validateGovernApprovalReadinessPreflight(relativePath = defaultWitnessPath) {
-  return validateGovernApprovalReadinessPreflightEvidence(
-    collectGovernApprovalReadinessPreflightEvidence(relativePath),
-  );
+  const evidence = collectGovernApprovalReadinessPreflightEvidence(relativePath);
+  if (evidence.blockedResult) return evidence.blockedResult;
+  return validateGovernApprovalReadinessPreflightEvidence(evidence);
 }
 
 export function formatGovernApprovalReadinessPreflightReport(result) {
@@ -188,7 +222,7 @@ function main() {
     const result = {
       approvalReadinessPreflightState: "Blocked",
       findingCount: invalidArgs.length,
-      findings: [`unsupported_args:${invalidArgs.join(",")}`],
+      findings: [`unsupported_args_count:${invalidArgs.length}`],
       missingApprovalInputCount: 0,
       proofState: "Fail",
       publicWriteRouteAllowed: false,
