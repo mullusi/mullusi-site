@@ -198,8 +198,31 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_evaluate_write_route_decision=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsideResult = validateGovernEvaluateWriteRouteDecision(path.join("..", "private-write-route-decision.md"));
+  const outsideReport = formatGovernEvaluateWriteRouteDecisionReport(outsideResult);
+
+  assert.equal(outsideResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(outsideResult.proofState, "Fail");
+  assert.equal(outsideResult.decisionState, "Blocked");
+  assert.equal(outsideResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(outsideResult.findings, ["evaluate_write_route_decision_path_outside_repo"]);
+  assert.doesNotMatch(outsideReport, /private-write-route-decision/);
+
+  const unreadableResult = validateGovernEvaluateWriteRouteDecision(path.join("ops", "missing-private-write-route-decision.md"));
+  const unreadableReport = formatGovernEvaluateWriteRouteDecisionReport(unreadableResult);
+
+  assert.equal(unreadableResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadableResult.proofState, "Fail");
+  assert.equal(unreadableResult.decisionState, "Blocked");
+  assert.equal(unreadableResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(unreadableResult.findings, ["evaluate_write_route_decision_unreadable"]);
+  assert.doesNotMatch(unreadableReport, /missing-private-write-route-decision/);
 }
 
 testCurrentGovernEvaluateWriteRouteDecisionPasses();
@@ -208,5 +231,6 @@ testSyntheticPrivacyRetentionActivationFailsClosed();
 testSyntheticRuntimeRegistryPromotionFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern evaluate write-route decision validator tests passed");
