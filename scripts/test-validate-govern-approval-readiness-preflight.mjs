@@ -196,8 +196,26 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_approval_readiness_preflight=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsidePath = path.join("..", "private-approval-readiness.md");
+  const outside = validateGovernApprovalReadinessPreflight(outsidePath);
+
+  assert.equal(outside.solverOutcome, "GovernanceBlocked");
+  assert.equal(outside.proofState, "Fail");
+  assert.equal(outside.approvalReadinessPreflightState, "Blocked");
+  assert.deepEqual(outside.findings, ["approval_readiness_preflight_path_outside_repo"]);
+  assert.doesNotMatch(formatGovernApprovalReadinessPreflightReport(outside), /private-approval-readiness/);
+
+  const unreadable = validateGovernApprovalReadinessPreflight(path.join("ops", "missing-private-approval-readiness.md"));
+  assert.equal(unreadable.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadable.proofState, "Fail");
+  assert.deepEqual(unreadable.findings, ["approval_readiness_preflight_unreadable"]);
+  assert.doesNotMatch(formatGovernApprovalReadinessPreflightReport(unreadable), /missing-private-approval-readiness/);
 }
 
 testCurrentApprovalReadinessPreflightPasses();
@@ -207,5 +225,6 @@ testSyntheticRouteRuntimeAggregateFailureFailsClosed();
 testSyntheticWriteRouteOpenFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern approval-readiness preflight validator tests passed");
