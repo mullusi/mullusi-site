@@ -15,6 +15,7 @@ import {
   evaluateDeploymentIntegrityEvidence,
   formatResult,
   governedHashPaths,
+  publicErrorCode,
   publicFileContentHash,
 } from "./check-live-deployment-integrity.mjs";
 
@@ -218,7 +219,23 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
   assert.equal(result.status, 1);
   assert.match(result.stdout, /verdict=GovernanceBlocked/);
   assert.match(result.stdout, /proof_state=Fail/);
-  assert.match(result.stdout, /error=unsupported_args:--unexpected/);
+  assert.match(result.stdout, /error=unsupported_args_count:1/);
+  assert.doesNotMatch(result.stdout, /--unexpected/);
+}
+
+function testPublicErrorCodeRedactsRawExceptionValues() {
+  const timeout = publicErrorCode(new Error("request_timeout:https://mullusi.com/status.json"));
+  const host = publicErrorCode(new Error("target_host_invalid:private.example.internal"));
+  const transform = publicErrorCode(new Error("cloudflare_email_decode_mismatch:hello@mullusi.com:private@example.com"));
+  const network = publicErrorCode(new Error("getaddrinfo ENOTFOUND private.example.internal"));
+  const fallback = publicErrorCode(new Error("unexpected private path D:\\secret\\status.json"));
+
+  assert.equal(timeout, "live_deployment_integrity_request_timeout");
+  assert.equal(host, "live_deployment_integrity_target_host_invalid");
+  assert.equal(transform, "live_deployment_integrity_edge_transform_invalid");
+  assert.equal(network, "live_deployment_integrity_network_unavailable");
+  assert.equal(fallback, "live_deployment_integrity_unavailable");
+  assert.doesNotMatch([timeout, host, transform, network, fallback].join("\n"), /mullusi\.com|private|secret|hello@/);
 }
 
 testCanonicalHashesIgnoreJsonMetaContentHash();
@@ -232,5 +249,6 @@ testUnexpectedOrInvalidHashPathBlocks();
 testUnexpectedLiveHashPathAwaitsEvidence();
 testMissingGovernedHashAwaitsEvidence();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
+testPublicErrorCodeRedactsRawExceptionValues();
 
 console.log("live deployment integrity tests passed");

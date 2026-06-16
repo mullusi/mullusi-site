@@ -396,6 +396,29 @@ function usage() {
   ].join("\n");
 }
 
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("request_timeout:")) {
+    return "live_deployment_integrity_request_timeout";
+  }
+  if (message.startsWith("target_protocol_invalid:")) {
+    return "live_deployment_integrity_target_protocol_invalid";
+  }
+  if (message.startsWith("target_host_invalid:")) {
+    return "live_deployment_integrity_target_host_invalid";
+  }
+  if (message.startsWith("cloudflare_email_")) {
+    return "live_deployment_integrity_edge_transform_invalid";
+  }
+  if (/ENOTFOUND|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN/.test(message)) {
+    return "live_deployment_integrity_network_unavailable";
+  }
+  if (error instanceof SyntaxError) {
+    return "live_deployment_integrity_live_status_json_invalid";
+  }
+  return "live_deployment_integrity_unavailable";
+}
+
 async function runCli() {
   const args = process.argv.slice(2);
   if (args.includes("--help") || args.includes("-h")) {
@@ -404,7 +427,7 @@ async function runCli() {
   }
   const invalidOptions = unsupportedOptions(args);
   if (invalidOptions.length > 0) {
-    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args:${invalidOptions.join(",")}`);
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args_count:${invalidOptions.length}`);
     process.exit(1);
     return;
   }
@@ -418,8 +441,7 @@ async function runCli() {
       process.exit(1);
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.log(`verdict=AwaitingEvidence\nproof_state=Unknown\nlive_deployment_integrity_state=AwaitingEvidence\nerror=${message}\nraw_response_bodies=not_recorded\nraw_response_headers=not_recorded`);
+    console.log(`verdict=AwaitingEvidence\nproof_state=Unknown\nlive_deployment_integrity_state=AwaitingEvidence\nerror=${publicErrorCode(error)}\nraw_response_bodies=not_recorded\nraw_response_headers=not_recorded`);
     if (!args.includes("--allow-pending")) process.exit(1);
   }
 }
