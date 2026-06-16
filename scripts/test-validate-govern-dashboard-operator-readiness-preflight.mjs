@@ -144,8 +144,31 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_dashboard_operator_readiness_preflight=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsideResult = validateGovernDashboardOperatorReadinessPreflight(path.join("..", "private-dashboard-readiness.md"));
+  const outsideReport = formatGovernDashboardOperatorReadinessPreflightReport(outsideResult);
+
+  assert.equal(outsideResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(outsideResult.proofState, "Fail");
+  assert.equal(outsideResult.dashboardOperatorReadinessPreflightState, "Blocked");
+  assert.equal(outsideResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(outsideResult.findings, ["dashboard_operator_readiness_preflight_path_outside_repo"]);
+  assert.doesNotMatch(outsideReport, /private-dashboard-readiness/);
+
+  const unreadableResult = validateGovernDashboardOperatorReadinessPreflight(path.join("ops", "missing-private-dashboard-readiness.md"));
+  const unreadableReport = formatGovernDashboardOperatorReadinessPreflightReport(unreadableResult);
+
+  assert.equal(unreadableResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadableResult.proofState, "Fail");
+  assert.equal(unreadableResult.dashboardOperatorReadinessPreflightState, "Blocked");
+  assert.equal(unreadableResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(unreadableResult.findings, ["dashboard_operator_readiness_preflight_unreadable"]);
+  assert.doesNotMatch(unreadableReport, /missing-private-dashboard-readiness/);
 }
 
 testCurrentDashboardOperatorReadinessPreflightPasses();
@@ -154,5 +177,6 @@ testSyntheticUnblockedDashboardClaimFailsClosed();
 testSyntheticApprovalRefFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern dashboard operator-readiness preflight validator tests passed");
