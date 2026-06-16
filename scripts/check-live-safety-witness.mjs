@@ -12,6 +12,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultArtifactDirectory = "live-safety-witness";
 const requiredArtifactFiles = [
   "run-metadata.txt",
@@ -336,7 +337,7 @@ export function evaluateLiveSafetyWitnessArtifact(artifactDirectory) {
       liveSafetyWitnessState: "GovernanceBlocked",
       artifactDirectory: resolvedDirectory,
       artifactFileCount: 0,
-      findings: [`artifact_directory_missing:${artifactDirectory}`],
+      findings: ["artifact_directory_missing"],
     };
   }
 
@@ -373,6 +374,17 @@ export function evaluateLiveSafetyWitnessArtifact(artifactDirectory) {
   };
 }
 
+function publicArtifactDirectoryLabel(artifactDirectory) {
+  const resolvedDirectory = path.resolve(artifactDirectory);
+  if (resolvedDirectory === repoRoot) {
+    return ".";
+  }
+  if (resolvedDirectory.startsWith(repoRootPrefix)) {
+    return path.relative(repoRoot, resolvedDirectory).replaceAll(path.sep, "/");
+  }
+  return "external_artifact_directory";
+}
+
 export function formatResult(result) {
   const findingLines = result.findings.length === 0
     ? ["finding=none"]
@@ -381,7 +393,7 @@ export function formatResult(result) {
     `verdict=${result.verdict}`,
     `proof_state=${result.proofState}`,
     `live_safety_witness_state=${result.liveSafetyWitnessState}`,
-    `artifact_directory=${result.artifactDirectory}`,
+    `artifact_directory=${publicArtifactDirectoryLabel(result.artifactDirectory)}`,
     `artifact_file_count=${result.artifactFileCount}`,
     ...findingLines,
   ].join("\n");
@@ -395,7 +407,7 @@ function runCli() {
   const args = process.argv.slice(2);
   const unsupported = unsupportedOptions(args);
   if (unsupported.length > 0) {
-    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args:${unsupported.join(",")}`);
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args_count:${unsupported.length}`);
     process.exit(1);
     return;
   }
