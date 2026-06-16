@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import {
   evaluateSecurityHeaderEvidence,
   formatResult,
+  publicErrorCode,
   validateTargetUrl,
 } from "./check-live-security-headers.mjs";
 
@@ -116,7 +117,7 @@ function testStatusAndRequestErrorsBlock() {
   assert.equal(result.verdict, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.ok(result.findings.includes("target_status_invalid:https://mullusi.com/:503"));
-  assert.ok(result.findings.includes("target_request_error:https://mullusi.com/security/:request_timeout:https://mullusi.com/security/"));
+  assert.ok(result.findings.includes("target_request_error:https://mullusi.com/security/:live_security_headers_request_timeout"));
 }
 
 function testTargetValidationBlocksUnsafeTargets() {
@@ -135,7 +136,23 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
   assert.equal(result.stderr, "");
   assert.match(result.stdout, /verdict=GovernanceBlocked/);
   assert.match(result.stdout, /proof_state=Fail/);
-  assert.match(result.stdout, /error=unsupported_args:--unexpected/);
+  assert.match(result.stdout, /error=unsupported_args_count:1/);
+  assert.doesNotMatch(result.stdout, /--unexpected/);
+}
+
+function testPublicErrorCodeRedactsRawExceptionValues() {
+  const timeout = publicErrorCode(new Error("request_timeout:https://mullusi.com/security/"));
+  const host = publicErrorCode(new Error("target_host_invalid:private.example.internal"));
+  const url = publicErrorCode(new Error("target_url_invalid:not a private url"));
+  const network = publicErrorCode(new Error("getaddrinfo ENOTFOUND private.example.internal"));
+  const fallback = publicErrorCode(new Error("unexpected private path D:\\secret\\headers.txt"));
+
+  assert.equal(timeout, "live_security_headers_request_timeout");
+  assert.equal(host, "live_security_headers_target_host_invalid");
+  assert.equal(url, "live_security_headers_target_url_invalid");
+  assert.equal(network, "live_security_headers_network_unavailable");
+  assert.equal(fallback, "live_security_headers_unavailable");
+  assert.doesNotMatch([timeout, host, url, network, fallback].join("\n"), /mullusi\.com|private|secret|headers\.txt/);
 }
 
 testAllSecurityHeadersPass();
@@ -145,5 +162,6 @@ testRequiredHeaderTermMissingBlocks();
 testStatusAndRequestErrorsBlock();
 testTargetValidationBlocksUnsafeTargets();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
+testPublicErrorCodeRedactsRawExceptionValues();
 
 console.log("live security header tests passed");

@@ -116,6 +116,29 @@ export function validateTargetUrl(targetUrl) {
   return parsedUrl.toString();
 }
 
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("live_security_headers_")) {
+    return message;
+  }
+  if (message.startsWith("request_timeout:")) {
+    return "live_security_headers_request_timeout";
+  }
+  if (message.startsWith("target_url_invalid:")) {
+    return "live_security_headers_target_url_invalid";
+  }
+  if (message.startsWith("target_protocol_invalid:")) {
+    return "live_security_headers_target_protocol_invalid";
+  }
+  if (message.startsWith("target_host_invalid:")) {
+    return "live_security_headers_target_host_invalid";
+  }
+  if (/ENOTFOUND|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN/.test(message)) {
+    return "live_security_headers_network_unavailable";
+  }
+  return "live_security_headers_unavailable";
+}
+
 function requestHead(targetUrl) {
   const safeUrl = validateTargetUrl(targetUrl);
   return new Promise((resolve, reject) => {
@@ -157,7 +180,7 @@ export function evaluateSecurityHeaderEvidence(records, rules = expectedHeaderRu
 
   for (const record of records) {
     if (record.error) {
-      findings.push(`target_request_error:${record.targetUrl}:${record.error}`);
+      findings.push(`target_request_error:${record.targetUrl}:${publicErrorCode(record.error)}`);
       targetResults.push({ targetUrl: record.targetUrl, statusCode: "", passed: false, headerResults: [] });
       continue;
     }
@@ -227,7 +250,7 @@ async function collectEvidence(targetUrls = defaultTargets) {
         targetUrl,
         statusCode: "",
         headers: {},
-        error: error instanceof Error ? error.message : String(error),
+        error: publicErrorCode(error),
       };
     }
   }));
@@ -243,7 +266,7 @@ async function runCli() {
   const unsupported = unsupportedOptions(args);
   const allowPending = args.includes("--allow-pending");
   if (unsupported.length > 0) {
-    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args:${unsupported.join(",")}`);
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args_count:${unsupported.length}`);
     process.exitCode = allowPending ? 0 : 1;
     return;
   }
@@ -258,7 +281,7 @@ async function runCli() {
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   runCli().catch((error) => {
-    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=${error instanceof Error ? error.message : String(error)}`);
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=${publicErrorCode(error)}`);
     process.exitCode = 1;
   });
 }
