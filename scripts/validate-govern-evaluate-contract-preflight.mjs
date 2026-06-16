@@ -13,6 +13,7 @@ import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contra
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultWitnessPath = "ops/mullu-govern-evaluate-contract-preflight.md";
 const contractPath = "contracts/govern/evaluate.schema.json";
 const allowedArgs = new Set(["--json"]);
@@ -52,8 +53,40 @@ const requiredWitnessTerms = [
   "STATUS:",
 ];
 
+function blockedResult(finding) {
+  return {
+    contractPreflightState: "Blocked",
+    findingCount: 1,
+    findings: [finding],
+    proofState: "Fail",
+    publicWriteRouteAllowed: false,
+    solverOutcome: "GovernanceBlocked",
+  };
+}
+
+function readUtf8Result(relativePath, findingPrefix) {
+  if (typeof relativePath !== "string" || relativePath.trim() === "") {
+    return { content: "", finding: `${findingPrefix}_path_invalid` };
+  }
+
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", finding: `${findingPrefix}_path_outside_repo` };
+  }
+
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), finding: "" };
+  } catch {
+    return { content: "", finding: `${findingPrefix}_unreadable` };
+  }
+}
+
 function readUtf8(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+  const result = readUtf8Result(relativePath, "evaluate_contract_evidence");
+  if (result.finding) {
+    throw new Error(result.finding);
+  }
+  return result.content;
 }
 
 function readJson(relativePath) {
@@ -174,6 +207,11 @@ export function collectGovernEvaluateContractPreflightEvidence(relativePath = de
 }
 
 export function validateGovernEvaluateContractPreflight(relativePath = defaultWitnessPath) {
+  const witnessRead = readUtf8Result(relativePath, "evaluate_contract_preflight");
+  if (witnessRead.finding) {
+    return blockedResult(witnessRead.finding);
+  }
+
   return validateGovernEvaluateContractPreflightEvidence(collectGovernEvaluateContractPreflightEvidence(relativePath));
 }
 
@@ -200,7 +238,7 @@ function main() {
     const result = {
       contractPreflightState: "Blocked",
       findingCount: invalidArgs.length,
-      findings: [`unsupported_args:${invalidArgs.join(",")}`],
+      findings: [`unsupported_args_count:${invalidArgs.length}`],
       proofState: "Fail",
       publicWriteRouteAllowed: false,
       solverOutcome: "GovernanceBlocked",
