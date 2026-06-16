@@ -9,7 +9,12 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { classifyHeaders, classifyResponse, validateTargetUrl } from "./check-website-origin.mjs";
+import {
+  classifyHeaders,
+  classifyResponse,
+  publicErrorCode,
+  validateTargetUrl,
+} from "./check-website-origin.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(scriptPath);
@@ -332,7 +337,8 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
   assert.equal(result.stderr, "");
   assert.match(result.stdout, /verdict=UnsupportedArgument/);
   assert.match(result.stdout, /proof_state=Fail/);
-  assert.match(result.stdout, /error=unsupported_args:--unexpected/);
+  assert.match(result.stdout, /error=unsupported_args_count:1/);
+  assert.doesNotMatch(result.stdout, /--unexpected/);
 }
 
 function testCliRejectsUnsupportedArgumentAsJson() {
@@ -343,7 +349,23 @@ function testCliRejectsUnsupportedArgumentAsJson() {
   assert.equal(result.stderr, "");
   assert.equal(body[0].verdict, "UnsupportedArgument");
   assert.equal(body[0].proof_state, "Fail");
-  assert.equal(body[0].error, "unsupported_args:--unexpected");
+  assert.equal(body[0].error, "unsupported_args_count:1");
+  assert.equal(JSON.stringify(body).includes("--unexpected"), false);
+}
+
+function testPublicErrorCodeRedactsRawExceptionValues() {
+  const timeout = publicErrorCode(new Error("request_timeout:https://mullusi.com/assets/app.js"));
+  const host = publicErrorCode(new Error("target_host_invalid:private.example.internal"));
+  const route = publicErrorCode(new Error("target_www_route_invalid:https://www.mullusi.com/private/"));
+  const network = publicErrorCode(new Error("getaddrinfo ENOTFOUND private.example.internal"));
+  const fallback = publicErrorCode(new Error("unexpected private path D:\\secret\\origin.txt"));
+
+  assert.equal(timeout, "origin_check_request_timeout");
+  assert.equal(host, "origin_check_target_host_invalid");
+  assert.equal(route, "origin_check_target_www_route_invalid");
+  assert.equal(network, "origin_check_network_unavailable");
+  assert.equal(fallback, "origin_check_unavailable");
+  assert.doesNotMatch([timeout, host, route, network, fallback].join("\n"), /mullusi\.com|private|secret|origin\.txt/);
 }
 
 testGithubPagesOriginClassification();
@@ -366,4 +388,5 @@ testTargetUrlValidationBlocksNonHttpsRoute();
 testTargetUrlValidationBlocksExternalHost();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testCliRejectsUnsupportedArgumentAsJson();
+testPublicErrorCodeRedactsRawExceptionValues();
 console.log("website origin classification tests passed");
