@@ -139,8 +139,31 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_support_readiness=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsideResult = validateGovernSupportReadiness(path.join("..", "private-support-readiness.md"));
+  const outsideReport = formatGovernSupportReadinessReport(outsideResult);
+
+  assert.equal(outsideResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(outsideResult.proofState, "Fail");
+  assert.equal(outsideResult.supportReadinessState, "Blocked");
+  assert.equal(outsideResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(outsideResult.findings, ["support_readiness_path_outside_repo"]);
+  assert.doesNotMatch(outsideReport, /private-support-readiness/);
+
+  const unreadableResult = validateGovernSupportReadiness(path.join("ops", "missing-private-support-readiness.md"));
+  const unreadableReport = formatGovernSupportReadinessReport(unreadableResult);
+
+  assert.equal(unreadableResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadableResult.proofState, "Fail");
+  assert.equal(unreadableResult.supportReadinessState, "Blocked");
+  assert.equal(unreadableResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(unreadableResult.findings, ["support_readiness_unreadable"]);
+  assert.doesNotMatch(unreadableReport, /missing-private-support-readiness/);
 }
 
 testCurrentSupportReadinessPasses();
@@ -148,5 +171,6 @@ testSyntheticMissingSupportContactFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testSyntheticMalformedSupportRefFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern support readiness validator tests passed");
