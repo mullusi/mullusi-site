@@ -11,12 +11,16 @@ This file is the public-safe go/no-go map for the Mullusi website and product
 release boundary. It prevents a closed static website witness from being
 misread as a product/runtime release witness.
 
-Observed on 2026-06-14:
+Observed on 2026-06-16 after private deploy-source PR #96:
 
 ```text
 website_static_deployment_integrity=AwaitingEvidence
 live_status_manifest=Pass
 local_status_manifest_match=AwaitingEvidence
+publicMirrorMode=governance-boundary
+byteParityWithPrivateDeploySource=false
+privateDeploySourceAuthoritative=true
+publicReleaseArtifactApproved=false
 api_exposure_state=SolvedVerified
 api_dns_publication_allowed=true
 api_production_readiness_state=ReadyForDns
@@ -35,7 +39,8 @@ private_recovery_values=not_read
 
 | Surface | Current state | Evidence file | Release decision |
 | --- | --- | --- | --- |
-| Static website parity | AwaitingEvidence | `ops/live-deployment-integrity-witness.md` | Keep public; port mirror state to private deploy source, then rerun strict local-match checker |
+| Static website publication | SolvedVerified | private deploy-source PR #96, Cloudflare deploy workflow, live safety workflow | Keep public; live site is deployed from controlled private source |
+| Public mirror byte parity | Intentional non-parity | `ops/live-deployment-integrity-witness.md` | Do not copy private deployed source into the public mirror unless a governed public release artifact is approved |
 | Public visibility | SolvedVerified | `ops/public-visibility-witness.md` | Keep public and monitor regional visibility |
 | Security headers | SolvedVerified | `ops/security-header-witness.md` | Keep current Cloudflare header policy |
 | API DNS exposure | SolvedVerified | `ops/api-exposure-witness.md` | Keep live and monitor |
@@ -60,19 +65,20 @@ domain_hardening_mutation_allowed=true
 
 The static website may remain public because live manifest readback, live
 content hashes, route sentinels, visibility, security headers, and
-domain-security readback pass. Current local/live status-manifest parity remains
-`AwaitingEvidence`, so the current repository state must not be described as
-fully deployed until parity closes. The current parity gap is bounded to the
-public mirror -> private deploy source handoff unless later evidence proves a
-different release boundary. Product/runtime release remains blocked because
-product-specific service health, privacy, contract, rollback, and runtime
+domain-security readback pass through the controlled private deploy source.
+Current public-mirror/live status-manifest parity remains `AwaitingEvidence`,
+and that non-parity is intentional: this repository is a public governance
+mirror, not the authoritative live deploy source. The mirror must not receive a
+private-source byte copy unless Mullusi approves and publishes a separate public
+release artifact. Product/runtime release remains blocked because
+product-specific service health, privacy, contract, rollback, SDK, and runtime
 witness evidence are still open.
 
 ## Next-Action Order
 
-1. Port the current validated public mirror state to the private deploy source
-   through `docs/mirror-to-deploy-port-runbook.md`, publish it, then rerun
-   `node scripts/check-live-deployment-integrity.mjs --require-local-match`.
+1. Preserve the public mirror as a governance-boundary mirror. Do not force
+   byte parity with the private deploy source without an approved public release
+   artifact.
 2. Keep the API gateway live witness monitored through the exposure gate and
    control-plane deployment witness.
 3. Select one product runtime witness candidate and prepare the product-status
@@ -88,6 +94,7 @@ witness evidence are still open.
 | Edge case | Required response |
 | --- | --- |
 | Static website passes but runtime witnesses remain open | Report website as `SolvedVerified`; report product/runtime release as `AwaitingEvidence` |
+| Public mirror does not match private deployed source | Report `byteParityWithPrivateDeploySource=false` by design; do not copy private source into the mirror |
 | `api` DNS appears while `api_dns_publication_allowed=false` | Enter `SafeHalt`; remove only `api` DNS and preserve apex/www/email |
 | Domain hardening evidence regresses | Return mutation permissions to false and rerun the preflight |
 | Private recovery inventory is missing from Git | Treat as expected blocker; do not commit private locations or codes |
@@ -95,6 +102,6 @@ witness evidence are still open.
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: static website, API gateway, and product runtime boundaries separated; domain mutation remains bounded; no private values recorded
-  Open issues: product runtime witnesses
-  Next action: close static website parity through the mirror-to-deploy handoff, then prepare one product runtime witness closure packet
+  Self-attested invariants: static website, API gateway, public mirror, private deploy source, and product runtime boundaries separated; domain mutation remains bounded; no private values recorded
+  Open issues: product runtime witnesses, runtime API closure, dashboard, sandbox, metrics, SDK, and proof-stamp witnesses
+  Next action: keep public mirror non-parity documented, then prepare one product runtime witness closure packet when runtime evidence is available
