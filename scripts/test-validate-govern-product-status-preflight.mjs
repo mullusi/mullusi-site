@@ -230,8 +230,31 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_product_status_preflight=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsideResult = validateGovernProductStatusPreflight(path.join("..", "private-product-status-preflight.md"));
+  const outsideReport = formatGovernProductStatusPreflightReport(outsideResult);
+
+  assert.equal(outsideResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(outsideResult.proofState, "Fail");
+  assert.equal(outsideResult.productStatusPreflightState, "Blocked");
+  assert.equal(outsideResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(outsideResult.findings, ["product_status_preflight_path_outside_repo"]);
+  assert.doesNotMatch(outsideReport, /private-product-status-preflight/);
+
+  const unreadableResult = validateGovernProductStatusPreflight(path.join("ops", "missing-private-product-status-preflight.md"));
+  const unreadableReport = formatGovernProductStatusPreflightReport(unreadableResult);
+
+  assert.equal(unreadableResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadableResult.proofState, "Fail");
+  assert.equal(unreadableResult.productStatusPreflightState, "Blocked");
+  assert.equal(unreadableResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(unreadableResult.findings, ["product_status_preflight_unreadable"]);
+  assert.doesNotMatch(unreadableReport, /missing-private-product-status-preflight/);
 }
 
 testCurrentProductStatusPreflightPasses();
@@ -241,5 +264,6 @@ testSyntheticInvalidPromotionPathFailsClosed();
 testSyntheticAggregateValidatorFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern product-status preflight validator tests passed");
