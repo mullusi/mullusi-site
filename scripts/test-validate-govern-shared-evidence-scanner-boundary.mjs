@@ -59,7 +59,8 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_shared_evidence_scanner_boundary=GovernanceBlocked/);
 }
 
