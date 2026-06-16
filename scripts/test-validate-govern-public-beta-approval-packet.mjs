@@ -164,8 +164,26 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_public_beta_approval_packet=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsidePath = path.join("..", "private-approval-packet.md");
+  const outside = validateGovernPublicBetaApprovalPacket(outsidePath);
+
+  assert.equal(outside.solverOutcome, "GovernanceBlocked");
+  assert.equal(outside.proofState, "Fail");
+  assert.equal(outside.packetState, "Unknown");
+  assert.deepEqual(outside.findings, ["approval_packet_path_outside_repo"]);
+  assert.doesNotMatch(formatApprovalPacketReport(outside), /private-approval-packet/);
+
+  const unreadable = validateGovernPublicBetaApprovalPacket(path.join("ops", "missing-private-approval-packet.md"));
+  assert.equal(unreadable.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadable.proofState, "Fail");
+  assert.deepEqual(unreadable.findings, ["approval_packet_unreadable"]);
+  assert.doesNotMatch(formatApprovalPacketReport(unreadable), /missing-private-approval-packet/);
 }
 
 testCurrentPacketPassesAsNonOperative();
@@ -174,5 +192,6 @@ testAggregateDecisionAndRuntimeFailuresBlockApprovalPacket();
 testSecretShapedAllowedRefFailsClosed();
 testMalformedAllowedRefFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern public-beta approval packet validator tests passed");
