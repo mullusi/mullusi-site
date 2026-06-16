@@ -133,7 +133,26 @@ function testCliRejectsUnsupportedArgument() {
 
   assert.equal(result.status, 1);
   assert.equal(result.stderr, "");
-  assert.match(result.stdout, /error=unsupported_args:--unexpected/);
+  assert.match(result.stdout, /error=unsupported_args_count:1/);
+  assert.doesNotMatch(result.stdout, /--unexpected/);
+}
+
+function testCliRejectsOutsideRepoPathWithoutEcho() {
+  const result = runPreflightCli(["--path=../private-domain-security-preflight.md"]);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stderr, "");
+  assert.match(result.stdout, /error=domain_hardening_preflight_path_outside_repo/);
+  assert.doesNotMatch(result.stdout, /private-domain-security-preflight/);
+}
+
+function testCliRejectsUnreadablePathWithoutEcho() {
+  const result = runPreflightCli(["--path=ops/missing-private-domain-security-preflight.md"]);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stderr, "");
+  assert.match(result.stdout, /error=domain_hardening_preflight_unreadable/);
+  assert.doesNotMatch(result.stdout, /missing-private-domain-security-preflight/);
 }
 
 testBlockedFixtureIsExpectedState();
@@ -144,5 +163,7 @@ testBoundaryViolationFails();
 testCliRequireReadyPassesForCurrentPreflight();
 testCliExpectBlockedFailsForCurrentPreflight();
 testCliRejectsUnsupportedArgument();
+testCliRejectsOutsideRepoPathWithoutEcho();
+testCliRejectsUnreadablePathWithoutEcho();
 
 console.log("domain hardening preflight tests passed");

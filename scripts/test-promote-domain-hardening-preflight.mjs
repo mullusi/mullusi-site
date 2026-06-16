@@ -8,7 +8,6 @@ Invariants: tests do not promote the real preflight permanently and never provid
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -75,7 +74,9 @@ function runCheck(preflightPath, args = []) {
 }
 
 function withPreflightFixture(testFn) {
-  const fixtureDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-domain-preflight-"));
+  const fixtureRoot = path.join(repoRoot, ".tmp");
+  fs.mkdirSync(fixtureRoot, { recursive: true });
+  const fixtureDirectory = fs.mkdtempSync(path.join(fixtureRoot, "mullusi-domain-preflight-"));
   const preflightPath = path.join(fixtureDirectory, "domain-security-preflight.md");
   const before = blockedPreflightFixture();
   fs.writeFileSync(preflightPath, before, "utf8");

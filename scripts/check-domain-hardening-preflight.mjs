@@ -12,6 +12,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const allowedOptions = new Set(["--require-ready", "--expect-blocked"]);
 
 const requiredEvidenceKeys = [
@@ -166,11 +167,23 @@ function unsupportedOptions(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedOptions.has(arg) && !arg.startsWith("--path="));
 }
 
+function readPreflightPathResult(relativePath) {
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", error: "domain_hardening_preflight_path_outside_repo" };
+  }
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), error: "" };
+  } catch {
+    return { content: "", error: "domain_hardening_preflight_unreadable" };
+  }
+}
+
 function runCli() {
   const args = process.argv.slice(2);
   const unsupported = unsupportedOptions(args);
   if (unsupported.length > 0) {
-    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args:${unsupported.join(",")}`);
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args_count:${unsupported.length}`);
     process.exitCode = 1;
     return;
   }
@@ -178,8 +191,13 @@ function runCli() {
   const requireReady = args.includes("--require-ready");
   const expectBlocked = args.includes("--expect-blocked");
   const pathArg = args.find((arg) => arg.startsWith("--path="));
-  const preflightPath = path.resolve(repoRoot, pathArg ? pathArg.slice("--path=".length) : "ops/domain-security-preflight.md");
-  const content = fs.readFileSync(preflightPath, "utf8");
+  const preflightRead = readPreflightPathResult(pathArg ? pathArg.slice("--path=".length) : "ops/domain-security-preflight.md");
+  if (preflightRead.error) {
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=${preflightRead.error}`);
+    process.exitCode = 1;
+    return;
+  }
+  const content = preflightRead.content;
   const result = evaluateDomainHardeningPreflight(content);
   console.log(formatResult(result));
 
