@@ -174,8 +174,31 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_privacy_retention_preflight=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsideResult = validateGovernPrivacyRetentionPreflight(path.join("..", "private-privacy-retention-preflight.md"));
+  const outsideReport = formatGovernPrivacyRetentionPreflightReport(outsideResult);
+
+  assert.equal(outsideResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(outsideResult.proofState, "Fail");
+  assert.equal(outsideResult.privacyRetentionPreflightState, "Blocked");
+  assert.equal(outsideResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(outsideResult.findings, ["privacy_retention_preflight_path_outside_repo"]);
+  assert.doesNotMatch(outsideReport, /private-privacy-retention-preflight/);
+
+  const unreadableResult = validateGovernPrivacyRetentionPreflight(path.join("ops", "missing-private-privacy-retention-preflight.md"));
+  const unreadableReport = formatGovernPrivacyRetentionPreflightReport(unreadableResult);
+
+  assert.equal(unreadableResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadableResult.proofState, "Fail");
+  assert.equal(unreadableResult.privacyRetentionPreflightState, "Blocked");
+  assert.equal(unreadableResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(unreadableResult.findings, ["privacy_retention_preflight_unreadable"]);
+  assert.doesNotMatch(unreadableReport, /missing-private-privacy-retention-preflight/);
 }
 
 testCurrentPrivacyRetentionPreflightPasses();
@@ -184,5 +207,6 @@ testSyntheticActivatedRetentionFailsClosed();
 testSyntheticApprovalRefsFailClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern privacy-retention preflight validator tests passed");
