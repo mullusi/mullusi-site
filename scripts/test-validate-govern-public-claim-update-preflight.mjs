@@ -251,8 +251,31 @@ function testCliJsonAndUnsupportedArgs() {
 
   const invalid = runValidator(["--unknown"]);
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stdout, /unsupported_args:--unknown/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--unknown/);
   assert.match(invalid.stdout, /govern_public_claim_update_preflight=GovernanceBlocked/);
+}
+
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsideResult = validateGovernPublicClaimUpdatePreflight(path.join("..", "private-public-claim-preflight.md"));
+  const outsideReport = formatGovernPublicClaimUpdatePreflightReport(outsideResult);
+
+  assert.equal(outsideResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(outsideResult.proofState, "Fail");
+  assert.equal(outsideResult.publicClaimUpdatePreflightState, "Blocked");
+  assert.equal(outsideResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(outsideResult.findings, ["public_claim_update_preflight_path_outside_repo"]);
+  assert.doesNotMatch(outsideReport, /private-public-claim-preflight/);
+
+  const unreadableResult = validateGovernPublicClaimUpdatePreflight(path.join("ops", "missing-private-public-claim-preflight.md"));
+  const unreadableReport = formatGovernPublicClaimUpdatePreflightReport(unreadableResult);
+
+  assert.equal(unreadableResult.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadableResult.proofState, "Fail");
+  assert.equal(unreadableResult.publicClaimUpdatePreflightState, "Blocked");
+  assert.equal(unreadableResult.publicWriteRouteAllowed, false);
+  assert.deepEqual(unreadableResult.findings, ["public_claim_update_preflight_unreadable"]);
+  assert.doesNotMatch(unreadableReport, /missing-private-public-claim-preflight/);
 }
 
 testCurrentPublicClaimUpdatePreflightPasses();
@@ -262,5 +285,6 @@ testSyntheticApprovalRefFailsClosed();
 testSyntheticAggregateProductStatusFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("govern public-claim update preflight validator tests passed");
