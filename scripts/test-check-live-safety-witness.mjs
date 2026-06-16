@@ -206,6 +206,8 @@ function testPassingArtifactValidates() {
   assert.equal(result.proofState, "Pass");
   assert.equal(result.liveSafetyWitnessState, "SolvedVerified");
   assert.equal(result.artifactFileCount, 10);
+  assert.match(formatted, /artifact_directory=external_artifact_directory/);
+  assert.equal(formatted.includes(fixtureDirectory), false);
   assert.match(formatted, /finding=none/);
 }
 
@@ -292,6 +294,19 @@ function testBoundaryViolationBlocks() {
   assert.ok(result.findings.some((finding) => finding.startsWith("artifact_boundary_invalid:website-origin.txt")));
 }
 
+function testMissingArtifactDirectoryDoesNotEchoPath() {
+  const missingDirectory = path.join(os.tmpdir(), "mullusi-live-safety-missing-private-path");
+  const result = evaluateLiveSafetyWitnessArtifact(missingDirectory);
+  const formatted = formatResult(result);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.ok(result.findings.includes("artifact_directory_missing"));
+  assert.match(formatted, /artifact_directory=external_artifact_directory/);
+  assert.match(formatted, /finding=artifact_directory_missing/);
+  assert.equal(formatted.includes(missingDirectory), false);
+}
+
 function testWebsiteOriginMissingPathQueryRedirectBlocks() {
   const fixtureDirectory = createFixture({
     "website-origin.txt": [
@@ -363,7 +378,8 @@ function testCliRejectsUnsupportedArgument() {
 
   assert.equal(result.status, 1);
   assert.match(result.stdout, /verdict=GovernanceBlocked/);
-  assert.match(result.stdout, /error=unsupported_args:--unexpected/);
+  assert.match(result.stdout, /error=unsupported_args_count:1/);
+  assert.doesNotMatch(result.stdout, /--unexpected/);
 }
 
 testPassingArtifactValidates();
@@ -372,6 +388,7 @@ testDeploymentIntegrityEvidenceErrorIsAllowed();
 testMissingArtifactFileBlocks();
 testFailedProbeBlocks();
 testBoundaryViolationBlocks();
+testMissingArtifactDirectoryDoesNotEchoPath();
 testWebsiteOriginMissingPathQueryRedirectBlocks();
 testWebsiteOriginPendingWwwRedirectBlocks();
 testCliRejectsUnsupportedArgument();

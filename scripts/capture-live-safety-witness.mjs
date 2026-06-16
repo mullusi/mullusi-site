@@ -202,7 +202,7 @@ function runCli() {
   }
   const unsupported = args.filter((arg) => arg.startsWith("--"));
   if (unsupported.length > 0) {
-    console.log(`capture_state=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args:${unsupported.join(",")}`);
+    console.log(`capture_state=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args_count:${unsupported.length}`);
     process.exit(1);
     return;
   }
