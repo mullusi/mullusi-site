@@ -53,6 +53,32 @@ function printCliFailure({ verdict, proofState, error, jsonOutput }) {
   console.log(`verdict=${verdict}\nproof_state=${proofState}\nerror=${error}`);
 }
 
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("origin_check_")) {
+    return message;
+  }
+  if (message.startsWith("request_timeout:")) {
+    return "origin_check_request_timeout";
+  }
+  if (message.startsWith("target_url_invalid:")) {
+    return "origin_check_target_url_invalid";
+  }
+  if (message.startsWith("target_protocol_invalid:")) {
+    return "origin_check_target_protocol_invalid";
+  }
+  if (message.startsWith("target_host_invalid:")) {
+    return "origin_check_target_host_invalid";
+  }
+  if (message.startsWith("target_www_route_invalid:")) {
+    return "origin_check_target_www_route_invalid";
+  }
+  if (/ENOTFOUND|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN/.test(message)) {
+    return "origin_check_network_unavailable";
+  }
+  return "origin_check_unavailable";
+}
+
 export function validateTargetUrl(targetUrl) {
   let parsedUrl;
   try {
@@ -285,7 +311,7 @@ async function runCli() {
     printCliFailure({
       verdict: "UnsupportedArgument",
       proofState: "Fail",
-      error: `unsupported_args:${invalidOptions.join(",")}`,
+      error: `unsupported_args_count:${invalidOptions.length}`,
       jsonOutput,
     });
     process.exit(1);
@@ -297,8 +323,7 @@ async function runCli() {
   try {
     targetUrls = (targets.length > 0 ? targets : defaultTargets).map(validateTargetUrl);
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    printCliFailure({ verdict: "TargetRejected", proofState: "Fail", error: message, jsonOutput });
+    printCliFailure({ verdict: "TargetRejected", proofState: "Fail", error: publicErrorCode(error), jsonOutput });
     if (!allowPending) {
       process.exit(1);
     }
@@ -314,7 +339,7 @@ async function runCli() {
     } catch (error) {
       results.push({
         targetUrl,
-        error: error instanceof Error ? error.message : String(error),
+        error: publicErrorCode(error),
         classification: {
           verdict: "OriginCheckError",
           proofState: "Fail",
