@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-15",
+    "updated": "2026-06-16",
     "count": 7
   },
   "items": [
     {
-      "title": "Your ePub Is fine",
-      "url": "https://andreklein.net/your-epub-is-fine-kobo-disagrees-blame-adobe/",
-      "source": "andreklein.net",
-      "points": 767,
-      "comments": 251,
-      "date": "2026-06-14"
-    },
-    {
-      "title": "Show HN: Kage – Shadow any website to a single binary for offline viewing",
-      "url": "https://github.com/tamnd/kage",
-      "source": "github.com",
-      "points": 622,
-      "comments": 121,
-      "date": "2026-06-14"
-    },
-    {
-      "title": "Curl will not accept vulnerability reports during July 2026",
-      "url": "https://daniel.haxx.se/blog/2026/06/15/curl-summer-of-bliss/",
-      "source": "daniel.haxx.se",
-      "points": 598,
-      "comments": 231,
+      "title": "A backdoor in a LinkedIn job offer",
+      "url": "https://roman.pt/posts/linkedin-backdoor/",
+      "source": "roman.pt",
+      "points": 1321,
+      "comments": 249,
       "date": "2026-06-15"
     },
     {
-      "title": "Cybersecurity researchers aren't happy about the guardrails on Anthropic's Fable",
-      "url": "https://techcrunch.com/2026/06/10/cybersecurity-researchers-arent-happy-about-the-guardrails-on-anthropics-fable/",
-      "source": "techcrunch.com",
-      "points": 587,
-      "comments": 523,
-      "date": "2026-06-10"
+      "title": "Iroh 1.0",
+      "url": "https://www.iroh.computer/blog/v1",
+      "source": "iroh.computer",
+      "points": 1264,
+      "comments": 384,
+      "date": "2026-06-15"
     },
     {
-      "title": "What the Fuck Happened to Nerds",
-      "url": "https://mrmarket.lol/what-the-fuck-happened-to-nerds/",
-      "source": "mrmarket.lol",
-      "points": 583,
-      "comments": 356,
+      "title": "Ask HN: Has anyone replaced Claude/GPT with a local model for daily coding?",
+      "url": "https://news.ycombinator.com/item?id=48542100",
+      "source": "news.ycombinator.com",
+      "points": 1108,
+      "comments": 477,
+      "date": "2026-06-15"
+    },
+    {
+      "title": "TinyWind: A pixel pirate sailing game with real wind physics (380k+ kms sailed)",
+      "url": "https://tinywind.io/",
+      "source": "tinywind.io",
+      "points": 902,
+      "comments": 161,
       "date": "2026-06-15"
     },
     {
       "title": "MiMo Code is now released and open-source",
       "url": "https://mimo.xiaomi.com/mimocode",
       "source": "mimo.xiaomi.com",
-      "points": 553,
-      "comments": 314,
+      "points": 554,
+      "comments": 315,
       "date": "2026-06-11"
     },
     {
-      "title": "Windows 11 users are tired of MS account requirements creeping into everything",
-      "url": "https://www.windowscentral.com/microsoft/windows-11/windows-11-users-are-tired-of-microsoft-account-requirements-and-workarounds",
-      "source": "windowscentral.com",
-      "points": 470,
-      "comments": 327,
-      "date": "2026-06-14"
+      "title": "Hetzner Price Adjustment",
+      "url": "https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/#cloud-servers",
+      "source": "docs.hetzner.com",
+      "points": 495,
+      "comments": 679,
+      "date": "2026-06-15"
+    },
+    {
+      "title": "Banned Book Library in a Wi-Fi Smart Light Bulb",
+      "url": "https://www.richardosgood.com/posts/banned-book-library/",
+      "source": "richardosgood.com",
+      "points": 457,
+      "comments": 249,
+      "date": "2026-06-15"
     }
   ]
 }
