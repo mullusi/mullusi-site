@@ -19,6 +19,7 @@ import { validateGovernRuntimeClosurePacket } from "./validate-govern-runtime-cl
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultPacketPath = "ops/mullu-govern-public-beta-approval-packet.md";
 const allowedArgs = new Set(["--json"]);
 
@@ -52,8 +53,34 @@ const requiredTerms = [
   "STATUS:",
 ];
 
-function readUtf8(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+function blockedResult(finding) {
+  return {
+    approvalState: "Unknown",
+    closedApprovalInputs: [],
+    findings: [finding],
+    missingApprovalInputs: [],
+    packetState: "Unknown",
+    proofState: "Fail",
+    publicWriteRouteAllowed: false,
+    solverOutcome: "GovernanceBlocked",
+  };
+}
+
+function readUtf8Result(relativePath) {
+  if (typeof relativePath !== "string" || relativePath.trim() === "") {
+    return { content: "", finding: "approval_packet_path_invalid" };
+  }
+
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", finding: "approval_packet_path_outside_repo" };
+  }
+
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), finding: "" };
+  } catch {
+    return { content: "", finding: "approval_packet_unreadable" };
+  }
 }
 
 function lineValue(content, key) {
@@ -179,7 +206,9 @@ export function validateApprovalPacketContent(content, context = {}) {
 }
 
 export function validateGovernPublicBetaApprovalPacket(relativePath = defaultPacketPath) {
-  return validateApprovalPacketContent(readUtf8(relativePath), {
+  const readResult = readUtf8Result(relativePath);
+  if (readResult.finding) return blockedResult(readResult.finding);
+  return validateApprovalPacketContent(readResult.content, {
     runtimeClosurePacket: validateGovernRuntimeClosurePacket(),
     writeRouteDecision: validateGovernEvaluateWriteRouteDecision(),
   });
@@ -207,7 +236,8 @@ function main() {
   if (invalidArgs.length > 0) {
     const result = {
       approvalState: "Unknown",
-      findings: [`unsupported_args:${invalidArgs.join(",")}`],
+      closedApprovalInputs: [],
+      findings: [`unsupported_args_count:${invalidArgs.length}`],
       missingApprovalInputs: [],
       packetState: "Unknown",
       proofState: "Fail",
