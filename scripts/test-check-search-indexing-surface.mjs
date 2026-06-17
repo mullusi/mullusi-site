@@ -6,6 +6,9 @@ Invariants: tests are deterministic, dependency-free, and fail closed when index
 */
 
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   compareSitemapEntries,
   evaluateRobotsResponse,
@@ -13,7 +16,13 @@ import {
   evaluateSearchIndexingEvidence,
   formatResult,
   parseSitemapEntries,
+  publicErrorCode,
 } from "./check-search-indexing-surface.mjs";
+
+const scriptPath = fileURLToPath(import.meta.url);
+const scriptsDir = path.dirname(scriptPath);
+const repoRoot = path.resolve(scriptsDir, "..");
+const checkerScript = path.join(scriptsDir, "check-search-indexing-surface.mjs");
 
 const localSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -34,6 +43,13 @@ function htmlResponse(url, canonicalUrl = url) {
     headers: { "content-type": "text/html; charset=utf-8" },
     body: `<html><head><link rel="canonical" href="${canonicalUrl}" /></head><body>Mullusi</body></html>`,
   };
+}
+
+function runChecker(args) {
+  return spawnSync(process.execPath, [checkerScript, ...args], {
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
 }
 
 function testSitemapComparisonDetectsDrift() {
@@ -142,8 +158,49 @@ function testEvidenceEvaluationProducesBlockingVerdict() {
   assert.match(formatted, /verdict=GovernanceBlocked/);
 }
 
+function testCliRejectsUnsupportedArgumentWithoutNetwork() {
+  const result = runChecker(["--unexpected"]);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stderr, "");
+  assert.match(result.stdout, /verdict=GovernanceBlocked/);
+  assert.match(result.stdout, /proof_state=Fail/);
+  assert.match(result.stdout, /error=unsupported_args_count:1/);
+  assert.doesNotMatch(result.stdout, /--unexpected/);
+}
+
+function testCliRejectsUnsupportedArgumentAsJson() {
+  const result = runChecker(["--json", "--unexpected"]);
+  const payload = JSON.parse(result.stdout);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stderr, "");
+  assert.equal(payload.verdict, "GovernanceBlocked");
+  assert.equal(payload.proof_state, "Fail");
+  assert.equal(payload.error, "unsupported_args_count:1");
+  assert.equal(JSON.stringify(payload).includes("--unexpected"), false);
+}
+
+function testPublicErrorCodeRedactsRawExceptionValues() {
+  const timeout = publicErrorCode(new Error("request_timeout:https://mullusi.com/sitemap.xml"));
+  const host = publicErrorCode(new Error("target_host_invalid:private.example.internal"));
+  const network = publicErrorCode(new Error("getaddrinfo ENOTFOUND private.example.internal"));
+  const invalidUrl = publicErrorCode(new Error("Invalid URL: private input"));
+  const fallback = publicErrorCode(new Error("unexpected private path D:\\secret\\sitemap.xml"));
+
+  assert.equal(timeout, "search_indexing_request_timeout");
+  assert.equal(host, "search_indexing_target_host_invalid");
+  assert.equal(network, "search_indexing_network_unavailable");
+  assert.equal(invalidUrl, "search_indexing_url_invalid");
+  assert.equal(fallback, "search_indexing_unavailable");
+  assert.doesNotMatch([timeout, host, network, invalidUrl, fallback].join("\n"), /mullusi\.com|private|secret|sitemap\.xml/);
+}
+
 testSitemapComparisonDetectsDrift();
 testRobotsEvaluationKeepsSearchAccessExplicit();
 testRouteEvaluationDetectsCanonicalAndIndexingBlockers();
 testEvidenceEvaluationProducesBlockingVerdict();
+testCliRejectsUnsupportedArgumentWithoutNetwork();
+testCliRejectsUnsupportedArgumentAsJson();
+testPublicErrorCodeRedactsRawExceptionValues();
 console.log("search indexing surface tests passed");

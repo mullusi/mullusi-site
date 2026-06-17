@@ -120,6 +120,29 @@ function routeUrlMatchesCanonical(routeUrl, canonicalUrl) {
   return route === `${canonical}/` || `${route}/` === canonical;
 }
 
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("search_indexing_")) {
+    return message;
+  }
+  if (message.startsWith("request_timeout:")) {
+    return "search_indexing_request_timeout";
+  }
+  if (message.startsWith("target_protocol_invalid:")) {
+    return "search_indexing_target_protocol_invalid";
+  }
+  if (message.startsWith("target_host_invalid:")) {
+    return "search_indexing_target_host_invalid";
+  }
+  if (/ENOTFOUND|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN/.test(message)) {
+    return "search_indexing_network_unavailable";
+  }
+  if (error instanceof SyntaxError || /Invalid URL/.test(message)) {
+    return "search_indexing_url_invalid";
+  }
+  return "search_indexing_unavailable";
+}
+
 export function evaluateRobotsResponse(response, expectedSitemapUrl) {
   const findings = [];
   const statusCode = response?.statusCode ?? 0;
@@ -308,7 +331,7 @@ async function runCli() {
   const allowPending = args.includes("--allow-pending");
   const invalidOptions = unsupportedOptions(args);
   if (invalidOptions.length > 0) {
-    const error = `unsupported_args:${invalidOptions.join(",")}`;
+    const error = `unsupported_args_count:${invalidOptions.length}`;
     if (jsonOutput) {
       console.log(JSON.stringify({ verdict: "GovernanceBlocked", proof_state: "Fail", error }, null, 2));
     } else {
@@ -336,11 +359,10 @@ async function runCli() {
       process.exit(1);
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
     if (jsonOutput) {
-      console.log(JSON.stringify({ verdict: "AwaitingEvidence", proof_state: "Unknown", error: message }, null, 2));
+      console.log(JSON.stringify({ verdict: "AwaitingEvidence", proof_state: "Unknown", error: publicErrorCode(error) }, null, 2));
     } else {
-      console.log(`verdict=AwaitingEvidence\nproof_state=Unknown\nerror=${message}`);
+      console.log(`verdict=AwaitingEvidence\nproof_state=Unknown\nerror=${publicErrorCode(error)}`);
     }
     if (!allowPending) {
       process.exit(1);
