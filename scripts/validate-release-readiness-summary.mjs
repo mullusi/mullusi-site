@@ -140,7 +140,7 @@ function main() {
   if (invalidArgs.length > 0) {
     const result = {
       findingCount: invalidArgs.length,
-      findings: [`unsupported_args:${invalidArgs.join(",")}`],
+      findings: [`unsupported_args_count:${invalidArgs.length}`],
       proofState: "Fail",
       publicProductReleaseAllowed: false,
       productRuntimeClaimsAllowed: false,
