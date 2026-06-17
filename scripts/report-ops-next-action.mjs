@@ -265,12 +265,12 @@ function runCli() {
         opsNextState: "GovernanceBlocked",
         solverOutcome: "GovernanceBlocked",
         proofState: "Fail",
-        error: `unsupported_args:${args.invalidArgs.join(",")}`,
+        error: `unsupported_args_count:${args.invalidArgs.length}`,
       }, null, 2));
       process.exit(1);
       return;
     }
-    console.log(`ops_next_state=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args:${args.invalidArgs.join(",")}`);
+    console.log(`ops_next_state=GovernanceBlocked\nproof_state=Fail\nerror=unsupported_args_count:${args.invalidArgs.length}`);
     process.exit(1);
     return;
   }

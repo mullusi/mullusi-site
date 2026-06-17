@@ -208,7 +208,8 @@ function testCliReportsCurrentStateAndRejectsUnsupportedArgs() {
   const invalid = runReporter(["--invalid"]);
   assert.equal(invalid.status, 1);
   assert.match(invalid.stdout, /ops_next_state=GovernanceBlocked/);
-  assert.match(invalid.stdout, /unsupported_args:--invalid/);
+  assert.match(invalid.stdout, /unsupported_args_count:1/);
+  assert.doesNotMatch(invalid.stdout, /--invalid/);
 }
 
 function testCliJsonModeReportsStructuredFailure() {
@@ -224,7 +225,8 @@ function testCliJsonModeReportsStructuredFailure() {
   assert.equal(invalid.status, 1);
   assert.equal(invalidPayload.opsNextState, "GovernanceBlocked");
   assert.equal(invalidPayload.proofState, "Fail");
-  assert.equal(invalidPayload.error, "unsupported_args:--invalid");
+  assert.equal(invalidPayload.error, "unsupported_args_count:1");
+  assert.doesNotMatch(invalid.stdout, /--invalid/);
 }
 
 testRecoveryBlockIsFirstPriority();
