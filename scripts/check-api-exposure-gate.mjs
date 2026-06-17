@@ -319,7 +319,7 @@ async function main() {
       dnsState: "NotRequested",
       dnsRecordCount: 0,
       httpsState: "NotRequested",
-      hardFindings: [`unsupported_args:${invalidOptions.join(",")}`],
+      hardFindings: [`unsupported_args_count:${invalidOptions.length}`],
       softFindings: [],
       blockers: [],
     };
