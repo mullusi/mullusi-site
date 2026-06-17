@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-16",
+    "updated": "2026-06-17",
     "count": 7
   },
   "items": [
     {
-      "title": "A backdoor in a LinkedIn job offer",
-      "url": "https://roman.pt/posts/linkedin-backdoor/",
-      "source": "roman.pt",
-      "points": 1321,
-      "comments": 249,
-      "date": "2026-06-15"
+      "title": "Running local models is good now",
+      "url": "https://vickiboykis.com/2026/06/15/running-local-models-is-good-now/",
+      "source": "vickiboykis.com",
+      "points": 1390,
+      "comments": 536,
+      "date": "2026-06-16"
     },
     {
-      "title": "Iroh 1.0",
-      "url": "https://www.iroh.computer/blog/v1",
-      "source": "iroh.computer",
-      "points": 1264,
-      "comments": 384,
-      "date": "2026-06-15"
+      "title": "SpaceX to buy Cursor for $60B",
+      "url": "https://www.reuters.com/legal/transactional/spacex-buy-anysphere-60-billion-2026-06-16/",
+      "source": "reuters.com",
+      "points": 1052,
+      "comments": 1553,
+      "date": "2026-06-16"
     },
     {
-      "title": "Ask HN: Has anyone replaced Claude/GPT with a local model for daily coding?",
-      "url": "https://news.ycombinator.com/item?id=48542100",
-      "source": "news.ycombinator.com",
-      "points": 1108,
-      "comments": 477,
-      "date": "2026-06-15"
+      "title": "GrapheneOS has been ported to Android 17",
+      "url": "https://discuss.grapheneos.org/d/36469-grapheneos-has-been-ported-to-android-17-and-official-releases-are-coming-soon",
+      "source": "discuss.grapheneos.org",
+      "points": 847,
+      "comments": 433,
+      "date": "2026-06-16"
     },
     {
-      "title": "TinyWind: A pixel pirate sailing game with real wind physics (380k+ kms sailed)",
-      "url": "https://tinywind.io/",
-      "source": "tinywind.io",
-      "points": 902,
-      "comments": 161,
-      "date": "2026-06-15"
+      "title": "Calvin and Hobbes and the price of integrity",
+      "url": "https://therepublicofletters.substack.com/p/calvin-and-hobbes-and-the-price-of",
+      "source": "therepublicofletters.substack.com",
+      "points": 467,
+      "comments": 198,
+      "date": "2026-06-16"
     },
     {
-      "title": "MiMo Code is now released and open-source",
-      "url": "https://mimo.xiaomi.com/mimocode",
-      "source": "mimo.xiaomi.com",
-      "points": 554,
-      "comments": 315,
-      "date": "2026-06-11"
+      "title": "TIL: You can make HTTP requests without curl using Bash /dev/TCP",
+      "url": "https://mareksuppa.com/til/bash-dev-tcp-http-without-curl/",
+      "source": "mareksuppa.com",
+      "points": 456,
+      "comments": 206,
+      "date": "2026-06-16"
     },
     {
-      "title": "Hetzner Price Adjustment",
-      "url": "https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/#cloud-servers",
-      "source": "docs.hetzner.com",
-      "points": 495,
-      "comments": 679,
-      "date": "2026-06-15"
+      "title": "Stop Using JWTs",
+      "url": "https://gist.github.com/samsch/0d1f3d3b4745d778f78b230cf6061452",
+      "source": "gist.github.com",
+      "points": 424,
+      "comments": 253,
+      "date": "2026-06-16"
     },
     {
-      "title": "Banned Book Library in a Wi-Fi Smart Light Bulb",
-      "url": "https://www.richardosgood.com/posts/banned-book-library/",
-      "source": "richardosgood.com",
-      "points": 457,
-      "comments": 249,
-      "date": "2026-06-15"
+      "title": "Humiliating IIS servers for fun and jail time",
+      "url": "https://mll.sh/humiliating-iis-servers-for-fun-and-jail-time/",
+      "source": "mll.sh",
+      "points": 295,
+      "comments": 68,
+      "date": "2026-06-16"
     }
   ]
 }
