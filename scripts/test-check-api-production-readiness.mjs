@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import {
   evaluateApiProductionReadinessEvidence,
   formatApiProductionReadinessResult,
+  publicErrorCode,
   readinessFlags,
   runtimeWitnessClosed,
 } from "./check-api-production-readiness.mjs";
@@ -231,7 +232,8 @@ function testCurrentCliRejectsUnsupportedArgs() {
   assert.equal(result.status, 1);
   assert.match(result.stdout, /^api_production_readiness_state=GovernanceBlocked$/m);
   assert.match(result.stdout, /^proof_state=Fail$/m);
-  assert.match(result.stdout, /^finding=unsupported_args:--unsupported$/m);
+  assert.match(result.stdout, /^finding=unsupported_args_count:1$/m);
+  assert.doesNotMatch(result.stdout, /--unsupported/);
 }
 
 function testOutputFilePersistsReadinessJson() {
@@ -256,7 +258,8 @@ function testJsonOutputFilePersistsGovernanceBlock() {
   assert.equal(result.status, 1);
   assert.equal(stdoutPayload.apiProductionReadinessState, "GovernanceBlocked");
   assert.equal(filePayload.proofState, "Fail");
-  assert.deepEqual(filePayload.hardFindings, ["unsupported_args:--unsupported"]);
+  assert.deepEqual(filePayload.hardFindings, ["unsupported_args_count:1"]);
+  assert.equal(JSON.stringify(filePayload).includes("--unsupported"), false);
 }
 
 function testEmptyOutputPathIsRejectedBeforeWrite() {
@@ -265,7 +268,21 @@ function testEmptyOutputPathIsRejectedBeforeWrite() {
 
   assert.equal(result.status, 1);
   assert.equal(payload.apiProductionReadinessState, "GovernanceBlocked");
-  assert.deepEqual(payload.hardFindings, ["unsupported_args:--output="]);
+  assert.deepEqual(payload.hardFindings, ["unsupported_args_count:1"]);
+  assert.equal(JSON.stringify(payload).includes("--output="), false);
+}
+
+function testPublicErrorCodeRedactsRawExceptionValues() {
+  const file = publicErrorCode(new Error("ENOENT: no such file or directory, open 'D:\\secret\\registry.json'"));
+  const json = publicErrorCode(new SyntaxError("Unexpected token in private JSON"));
+  const secret = publicErrorCode(new Error("postgres://user:password@private.example/db"));
+  const fallback = publicErrorCode(new Error("unexpected private path C:\\secret\\readiness.txt"));
+
+  assert.equal(file, "api_production_readiness_file_unavailable");
+  assert.equal(json, "api_production_readiness_json_invalid");
+  assert.equal(secret, "api_production_readiness_unavailable");
+  assert.equal(fallback, "api_production_readiness_unavailable");
+  assert.doesNotMatch([file, json, secret, fallback].join("\n"), /D:\\|C:\\|secret|private|postgres|password|registry\.json|readiness\.txt/i);
 }
 
 testReadyFixtureAllowsDns();
@@ -281,6 +298,7 @@ testCurrentCliRejectsUnsupportedArgs();
 testOutputFilePersistsReadinessJson();
 testJsonOutputFilePersistsGovernanceBlock();
 testEmptyOutputPathIsRejectedBeforeWrite();
+testPublicErrorCodeRedactsRawExceptionValues();
 
 fs.rmSync(tempDir, { recursive: true, force: true });
 

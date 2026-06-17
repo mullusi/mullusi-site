@@ -320,6 +320,23 @@ function printResult(result, args) {
   console.log(formatApiProductionReadinessResult(result));
 }
 
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("api_production_readiness_")) {
+    return message;
+  }
+  if (message.includes("ENOENT")) {
+    return "api_production_readiness_file_unavailable";
+  }
+  if (message.includes("JSON") || error instanceof SyntaxError) {
+    return "api_production_readiness_json_invalid";
+  }
+  if (/secret|token|password|credential|postgres|private|D:\\|C:\\/i.test(message)) {
+    return "api_production_readiness_unavailable";
+  }
+  return "api_production_readiness_unavailable";
+}
+
 function runCli() {
   const args = parseCliArgs(process.argv.slice(2));
   if (args.help) {
@@ -344,7 +361,7 @@ function runCli() {
       hostPathContract: "Unknown",
       readinessGateContract: "Unknown",
       secretBoundary: "Unknown",
-      hardFindings: [`unsupported_args:${args.invalidOptions.join(",")}`],
+      hardFindings: [`unsupported_args_count:${args.invalidOptions.length}`],
       blockers: [],
     };
     printResult(result, args);
@@ -364,7 +381,6 @@ function runCli() {
       process.exit(1);
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
     const result = {
       apiProductionReadinessState: "GovernanceBlocked",
       solverOutcome: "GovernanceBlocked",
@@ -382,7 +398,7 @@ function runCli() {
       hostPathContract: "Unknown",
       readinessGateContract: "Unknown",
       secretBoundary: "Unknown",
-      hardFindings: [`readiness_check_error:${message}`],
+      hardFindings: [`readiness_check_error:${publicErrorCode(error)}`],
       blockers: [],
     };
     printResult(result, args);
