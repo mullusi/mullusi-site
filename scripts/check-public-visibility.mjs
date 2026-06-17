@@ -267,6 +267,44 @@ function parseCheckHostResult(rawResult) {
   };
 }
 
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("public_visibility_")) {
+    return message;
+  }
+  if (message.startsWith("request_timeout:") || message.startsWith("timeout:")) {
+    return "public_visibility_request_timeout";
+  }
+  if (message.startsWith("target_url_invalid:")) {
+    return "public_visibility_target_url_invalid";
+  }
+  if (message.startsWith("target_protocol_invalid:")) {
+    return "public_visibility_target_protocol_invalid";
+  }
+  if (message.startsWith("target_host_invalid:")) {
+    return "public_visibility_target_host_invalid";
+  }
+  if (message.startsWith("json_status_invalid:")) {
+    return "public_visibility_json_status_invalid";
+  }
+  if (message.startsWith("json_parse_failed")) {
+    return "public_visibility_json_parse_failed";
+  }
+  if (message.startsWith("check_host_start_failed:")) {
+    return "public_visibility_check_host_start_failed";
+  }
+  if (message.startsWith("globalping_start_failed:")) {
+    return "public_visibility_globalping_start_failed";
+  }
+  if (/ENOTFOUND|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN/.test(message)) {
+    return "public_visibility_network_unavailable";
+  }
+  if (error instanceof SyntaxError || /Invalid URL/.test(message)) {
+    return "public_visibility_url_invalid";
+  }
+  return "public_visibility_unavailable";
+}
+
 export async function collectCheckHostEvidence({ targetUrl = "https://mullusi.com/", maxNodes = 6 } = {}) {
   const safeTargetUrl = validateHttpsTarget(targetUrl);
   const startUrl = `${checkHostApiBaseUrl}/check-http?host=${encodeURIComponent(safeTargetUrl)}&max_nodes=${encodeURIComponent(String(maxNodes))}`;
@@ -408,7 +446,7 @@ async function collectLiveEvidence({ includeCheckHost = false, includeGlobalping
       routeRecords.push({
         ...route,
         response: null,
-        error: error instanceof Error ? error.message : String(error),
+        error: publicErrorCode(error),
       });
     }
   }
@@ -421,7 +459,7 @@ async function collectLiveEvidence({ includeCheckHost = false, includeGlobalping
       externalProbeProvider = await collectCheckHostEvidence({ maxNodes: checkHostMaxNodes });
       externalProbeRecords = externalProbeProvider.records;
     } catch (error) {
-      externalProbeError = error instanceof Error ? error.message : String(error);
+      externalProbeError = publicErrorCode(error);
       externalProbeProvider = {
         ...checkHostProviderReference,
         requestId: "",
@@ -437,7 +475,7 @@ async function collectLiveEvidence({ includeCheckHost = false, includeGlobalping
       externalProbeRecords = externalProbeProvider.records;
       externalProbeError = "";
     } catch (error) {
-      externalProbeError = error instanceof Error ? error.message : String(error);
+      externalProbeError = publicErrorCode(error);
       externalProbeProvider = {
         ...globalpingProviderReference,
         requestId: "",
@@ -653,7 +691,7 @@ async function runCli() {
   const checkHostMaxNodes = Number.parseInt(checkHostMaxNodesArg, 10);
   const invalidOptions = unsupportedOptions(args);
   if (invalidOptions.length > 0) {
-    const error = `unsupported_args:${invalidOptions.join(",")}`;
+    const error = `unsupported_args_count:${invalidOptions.length}`;
     if (jsonOutput) {
       console.log(JSON.stringify({ verdict: "GovernanceBlocked", proof_state: "Fail", error }, null, 2));
     } else {
@@ -673,7 +711,7 @@ async function runCli() {
     return;
   }
   if (!Number.isInteger(checkHostMaxNodes) || checkHostMaxNodes < 1 || checkHostMaxNodes > 20) {
-    const error = `check_host_max_nodes_invalid:${checkHostMaxNodesArg}`;
+    const error = "check_host_max_nodes_invalid";
     if (jsonOutput) {
       console.log(JSON.stringify({ verdict: "GovernanceBlocked", proof_state: "Fail", error }, null, 2));
     } else {
@@ -710,11 +748,10 @@ async function runCli() {
       process.exit(1);
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
     if (jsonOutput) {
-      console.log(JSON.stringify({ verdict: "AwaitingEvidence", proof_state: "Unknown", error: message }, null, 2));
+      console.log(JSON.stringify({ verdict: "AwaitingEvidence", proof_state: "Unknown", error: publicErrorCode(error) }, null, 2));
     } else {
-      console.log(`verdict=AwaitingEvidence\nproof_state=Unknown\nerror=${message}`);
+      console.log(`verdict=AwaitingEvidence\nproof_state=Unknown\nerror=${publicErrorCode(error)}`);
     }
     if (!allowPending) {
       process.exit(1);

@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import {
   evaluatePublicVisibilityEvidence,
   formatResult,
+  publicErrorCode,
   validateHttpsTarget,
 } from "./check-public-visibility.mjs";
 
@@ -221,7 +222,20 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
   assert.equal(result.stderr, "");
   assert.match(result.stdout, /verdict=GovernanceBlocked/);
   assert.match(result.stdout, /proof_state=Fail/);
-  assert.match(result.stdout, /error=unsupported_args:--unexpected/);
+  assert.match(result.stdout, /error=unsupported_args_count:1/);
+  assert.doesNotMatch(result.stdout, /--unexpected/);
+}
+
+function testCliRejectsUnsupportedArgumentAsJson() {
+  const result = runVisibilityCli(["--json", "--unexpected"]);
+  const payload = JSON.parse(result.stdout);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stderr, "");
+  assert.equal(payload.verdict, "GovernanceBlocked");
+  assert.equal(payload.proof_state, "Fail");
+  assert.equal(payload.error, "unsupported_args_count:1");
+  assert.equal(JSON.stringify(payload).includes("--unexpected"), false);
 }
 
 function testCliRejectsInvalidExternalNodeLimitWithoutNetwork() {
@@ -231,7 +245,8 @@ function testCliRejectsInvalidExternalNodeLimitWithoutNetwork() {
   assert.equal(result.stderr, "");
   assert.match(result.stdout, /verdict=GovernanceBlocked/);
   assert.match(result.stdout, /proof_state=Fail/);
-  assert.match(result.stdout, /error=check_host_max_nodes_invalid:bad/);
+  assert.match(result.stdout, /error=check_host_max_nodes_invalid/);
+  assert.doesNotMatch(result.stdout, /bad/);
 }
 
 function testCliRejectsExternalProviderConflictWithoutNetwork() {
@@ -244,6 +259,30 @@ function testCliRejectsExternalProviderConflictWithoutNetwork() {
   assert.match(result.stdout, /error=external_provider_conflict:choose_one_provider/);
 }
 
+function testPublicErrorCodeRedactsRawExceptionValues() {
+  const timeout = publicErrorCode(new Error("request_timeout:https://mullusi.com/"));
+  const host = publicErrorCode(new Error("target_host_invalid:private.example.internal"));
+  const jsonStatus = publicErrorCode(new Error("json_status_invalid:429"));
+  const checkHost = publicErrorCode(new Error("check_host_start_failed:{\"request_id\":\"private\"}"));
+  const globalping = publicErrorCode(new Error("globalping_start_failed:{\"id\":\"private\"}"));
+  const network = publicErrorCode(new Error("getaddrinfo ENOTFOUND private.example.internal"));
+  const invalidUrl = publicErrorCode(new Error("Invalid URL: private input"));
+  const fallback = publicErrorCode(new Error("unexpected private path D:\\secret\\visibility.txt"));
+
+  assert.equal(timeout, "public_visibility_request_timeout");
+  assert.equal(host, "public_visibility_target_host_invalid");
+  assert.equal(jsonStatus, "public_visibility_json_status_invalid");
+  assert.equal(checkHost, "public_visibility_check_host_start_failed");
+  assert.equal(globalping, "public_visibility_globalping_start_failed");
+  assert.equal(network, "public_visibility_network_unavailable");
+  assert.equal(invalidUrl, "public_visibility_url_invalid");
+  assert.equal(fallback, "public_visibility_unavailable");
+  assert.doesNotMatch(
+    [timeout, host, jsonStatus, checkHost, globalping, network, invalidUrl, fallback].join("\n"),
+    /mullusi\.com|private|secret|visibility\.txt|429/,
+  );
+}
+
 testAllRequiredEvidencePassesWithGlobalBoundary();
 testDnsResolverFloorBlocksVisibilityClaim();
 testWwwRedirectMismatchBlocksVisibilityClaim();
@@ -254,6 +293,8 @@ testExternalRegionalProbeFloorBlocksExternalVisibility();
 testExternalProviderErrorKeepsBaseVisibilityBounded();
 testHttpsTargetValidationBlocksUnsafeTargets();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
+testCliRejectsUnsupportedArgumentAsJson();
 testCliRejectsInvalidExternalNodeLimitWithoutNetwork();
 testCliRejectsExternalProviderConflictWithoutNetwork();
+testPublicErrorCodeRedactsRawExceptionValues();
 console.log("public visibility gate tests passed");
