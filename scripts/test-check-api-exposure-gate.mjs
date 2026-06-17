@@ -234,7 +234,8 @@ function testCurrentCliRejectsUnsupportedArgs() {
   assert.equal(result.status, 1);
   assert.match(result.stdout, /^api_exposure_state=GovernanceBlocked$/m);
   assert.match(result.stdout, /^proof_state=Fail$/m);
-  assert.match(result.stdout, /^finding=unsupported_args:--unsupported$/m);
+  assert.match(result.stdout, /^finding=unsupported_args_count:1$/m);
+  assert.doesNotMatch(result.stdout, /--unsupported/);
 }
 
 testBlockedFixtureIsExpectedState();
