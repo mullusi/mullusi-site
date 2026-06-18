@@ -470,6 +470,17 @@ function formatResult(result) {
   ].join("\n");
 }
 
+export function publicCliErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/^unsupported_arg:/.test(message)) return "unsupported_arg";
+  if (/^target_exists:/.test(message)) return "target_exists";
+  if (/^runtime_witness_exists:/.test(message)) return "runtime_witness_exists";
+  if (/^path_boundary_violation:/.test(message)) return "path_boundary_violation";
+  if (/^api_method_invalid:/.test(message)) return "api_method_invalid";
+  if (/^[a-z_]+_(?:invalid|required)$/.test(message)) return message;
+  return "scaffold_product_unavailable";
+}
+
 function runCli() {
   try {
     const cliOptions = parseScaffoldArgs(process.argv.slice(2));
@@ -491,7 +502,7 @@ function runCli() {
       state: "DryRun",
     }));
   } catch (error) {
-    console.error(error instanceof Error ? error.message : String(error));
+    console.error(publicCliErrorCode(error));
     process.exit(1);
   }
 }
