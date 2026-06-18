@@ -162,7 +162,7 @@ function testPartialExternalRegionalProbeFailureStaysBounded() {
   assert.equal(result.externalMultiRegionVisibility, "SolvedUnverified");
   assert.equal(result.globalAllUsersClaim, "AwaitingEvidence");
   assert.equal(result.externalDistinctRegionPasses, 2);
-  assert.ok(result.externalFindings.includes("external_probe_failed:ir1.node.check-host.net:ir:Connect timeout"));
+  assert.ok(result.externalFindings.includes("external_probe_failed:ir1.node.check-host.net:ir:public_visibility_request_timeout"));
 }
 
 function testExternalRegionalProbeFloorBlocksExternalVisibility() {
@@ -177,7 +177,7 @@ function testExternalRegionalProbeFloorBlocksExternalVisibility() {
   assert.equal(result.externalMultiRegionVisibility, "GovernanceBlocked");
   assert.equal(result.externalDistinctRegionPasses, 1);
   assert.ok(result.externalFindings.includes("external_regional_passes_below_floor:1/2"));
-  assert.ok(result.externalFindings.includes("external_probe_failed:ir1.node.check-host.net:ir:Connect timeout"));
+  assert.ok(result.externalFindings.includes("external_probe_failed:ir1.node.check-host.net:ir:public_visibility_request_timeout"));
 }
 
 function testExternalProviderErrorKeepsBaseVisibilityBounded() {
@@ -201,9 +201,51 @@ function testExternalProviderErrorKeepsBaseVisibilityBounded() {
   assert.equal(result.externalMultiRegionVisibility, "AwaitingEvidence");
   assert.equal(result.globalAllUsersClaim, "AwaitingEvidence");
   assert.equal(result.externalProbeCount, 0);
-  assert.ok(result.externalFindings.includes("external_probe_provider_error:json_status_invalid:429"));
+  assert.ok(result.externalFindings.includes("external_probe_provider_error:public_visibility_json_status_invalid"));
   assert.match(formatted, /external_probe_provider=check-host\.net/);
-  assert.match(formatted, /external_probe_error=json_status_invalid:429/);
+  assert.match(formatted, /external_probe_error=public_visibility_json_status_invalid/);
+}
+
+function testEvaluatorAndFormatterRedactRawEvidenceErrors() {
+  const evidence = passingEvidence();
+  evidence.dnsRecords[0] = dnsRecord(
+    "mullusi.com",
+    "cloudflare",
+    true,
+    [],
+    [],
+    "A:getaddrinfo ENOTFOUND private.example.internal",
+  );
+  evidence.routeRecords[0] = routeRecord("https://mullusi.com/", "https://mullusi.com/", 0, "", {
+    finalUrl: "https://private.example.internal/path?trace=bounded",
+    tlsAuthorized: false,
+    tlsAuthorizationError: "private tls detail",
+  });
+  evidence.routeRecords[0].error = "target_host_invalid:private.example.internal";
+  evidence.externalProbeProvider = {
+    provider: "check-host.net",
+    providerApi: "https://check-host.net/about/api?lang=en",
+    targetUrl: "https://mullusi.com/",
+    requestId: "",
+    permanentLink: "",
+    maxNodes: 6,
+    error: "getaddrinfo ENOTFOUND private.example.internal",
+  };
+  evidence.externalProbeError = "getaddrinfo ENOTFOUND private.example.internal";
+  evidence.externalProbeRecords = [
+    { node: "ir1.node.check-host.net", countryCode: "ir", country: "Iran", passed: false, statusCode: "", error: "getaddrinfo ENOTFOUND private.example.internal" },
+  ];
+  const result = evaluatePublicVisibilityEvidence(evidence);
+  const formatted = formatResult(result, evidence);
+  const serialized = `${JSON.stringify(result)}\n${formatted}`;
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.ok(result.findings.includes("https_route_error:https://mullusi.com/:public_visibility_target_host_invalid"));
+  assert.ok(result.externalFindings.includes("external_probe_failed:ir1.node.check-host.net:ir:public_visibility_network_unavailable"));
+  assert.match(formatted, /dns_error=A:public_visibility_network_unavailable/);
+  assert.match(formatted, /route_error=public_visibility_target_host_invalid/);
+  assert.match(formatted, /external_error=public_visibility_network_unavailable/);
+  assert.doesNotMatch(serialized, /private\.example\.internal|trace=bounded|private tls detail/);
 }
 
 function testHttpsTargetValidationBlocksUnsafeTargets() {
@@ -291,6 +333,7 @@ testExternalRegionalProbePassesCloseExternalVisibilityOnly();
 testPartialExternalRegionalProbeFailureStaysBounded();
 testExternalRegionalProbeFloorBlocksExternalVisibility();
 testExternalProviderErrorKeepsBaseVisibilityBounded();
+testEvaluatorAndFormatterRedactRawEvidenceErrors();
 testHttpsTargetValidationBlocksUnsafeTargets();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testCliRejectsUnsupportedArgumentAsJson();
