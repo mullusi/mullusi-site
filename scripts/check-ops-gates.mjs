@@ -121,7 +121,7 @@ function evaluateRecoveryGate() {
 
 function runGateCheck() {
   if (!["--check", "--require-ready", "--expect-blocked"].includes(mode)) {
-    recordFailure(`unsupported_mode:${mode}`);
+    recordFailure("unsupported_mode_count:1");
   }
 
   const gateState = evaluateRecoveryGate();
