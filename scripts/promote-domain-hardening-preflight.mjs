@@ -113,10 +113,9 @@ function recordFailure(message) {
 
 function validateArgs() {
   const allowedFlags = new Set([...confirmationFlags.map((item) => item.flag), "--write", "--help", "-h"]);
-  for (const arg of args) {
-    if (!allowedFlags.has(arg)) {
-      recordFailure(`unsupported_flag:${arg}`);
-    }
+  const unsupportedFlags = [...args].filter((arg) => !allowedFlags.has(arg));
+  if (unsupportedFlags.length > 0) {
+    recordFailure(`unsupported_flag_count:${unsupportedFlags.length}`);
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(reviewDate)) {
     recordFailure(`invalid_review_date:${reviewDate}`);
