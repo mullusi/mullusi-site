@@ -6,7 +6,7 @@ Invariants: tests inspect command plans without executing external validation co
 */
 
 import assert from "node:assert/strict";
-import { checkpointSteps } from "./validate-checkpoint.mjs";
+import { checkpointSteps, publicStepErrorCode } from "./validate-checkpoint.mjs";
 
 function labels(options) {
   return checkpointSteps(options).map((step) => step.label);
@@ -164,8 +164,21 @@ function testCloudflareArtifactBoundaryHasLongBudget() {
   assert.equal(typeof step?.cwd, "string");
 }
 
+function testPublicStepErrorCodeRedactsRawExecutionDetails() {
+  const timeout = publicStepErrorCode(new Error("spawnSync node ETIMEDOUT after 60000ms"));
+  const missing = publicStepErrorCode(new Error("spawn C:\\secret\\node.exe ENOENT"));
+  const fallback = publicStepErrorCode(new Error("unexpected private execution failure"));
+  const joined = [timeout, missing, fallback].join("\n");
+
+  assert.equal(timeout, "step_timed_out");
+  assert.equal(missing, "step_command_unavailable");
+  assert.equal(fallback, "step_execution_unavailable");
+  assert.doesNotMatch(joined, /secret|private|node\.exe|60000|C:\\/);
+}
+
 testDefaultCheckpointSteps();
 testBackendStepIsOptIn();
 testCommandsDoNotUseShellWrappers();
 testCloudflareArtifactBoundaryHasLongBudget();
+testPublicStepErrorCodeRedactsRawExecutionDetails();
 console.log("checkpoint validation tests passed");
