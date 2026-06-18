@@ -2207,26 +2207,45 @@ html.menu-open body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
-  border: 1px solid var(--line);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 78%, transparent);
+  border-radius: 8px;
   background: var(--line);
-  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 24px 76px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent);
+  counter-reset: comparison-row;
+  isolation: isolate;
+}
+
+.oldway-grid::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--danger) 18%, transparent), transparent 44%, color-mix(in srgb, var(--accent) 26%, transparent));
+  opacity: 0.36;
 }
 
 .oldway-grid > div {
   position: relative;
+  display: grid;
+  align-content: center;
   min-width: 0;
-  min-height: 58px;
+  min-height: 64px;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--panel-soft) 92%, transparent), var(--panel-field)),
     var(--panel-soft);
-  padding: 16px 20px 16px 28px;
+  padding: 16px 20px 16px 36px;
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--ink-soft);
 }
 
 .oldway-grid .ow-head {
-  min-height: 48px;
+  min-height: 54px;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 90%, transparent), var(--panel-soft)),
     var(--panel-glass);
@@ -2237,13 +2256,33 @@ html.menu-open body {
   text-transform: uppercase;
 }
 
+.oldway-grid .ow-old,
+.oldway-grid .ow-new {
+  counter-increment: comparison-row 0;
+}
+
+.oldway-grid .ow-old {
+  counter-increment: comparison-row;
+}
+
+.oldway-grid .ow-old::after {
+  content: "0" counter(comparison-row);
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: color-mix(in srgb, var(--ink-dim) 58%, transparent);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
 .oldway-grid .ow-head::before,
 .oldway-grid .ow-old::before,
 .oldway-grid .ow-new::before {
   content: "";
   position: absolute;
   top: 18px;
-  left: 14px;
+  left: 16px;
   width: 7px;
   height: 7px;
   border: 1px solid currentColor;
@@ -2264,6 +2303,14 @@ html.menu-open body {
   color: var(--ink);
 }
 
+.oldway-grid .ow-head-old {
+  border-bottom: 1px solid color-mix(in srgb, var(--danger) 18%, transparent);
+}
+
+.oldway-grid .ow-head-new {
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
 .oldway-grid .ow-head-new::before,
 .oldway-grid .ow-new::before {
   background: currentColor;
@@ -2271,7 +2318,14 @@ html.menu-open body {
 }
 
 .oldway-grid .ow-old::before {
-  color: var(--line-bright);
+  color: color-mix(in srgb, var(--danger) 42%, var(--line-bright));
+}
+
+.oldway-grid .ow-new {
+  background:
+    radial-gradient(circle at 94% 16%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 72%, transparent), var(--panel-soft)),
+    var(--panel-soft);
 }
 
 .oldway-grid > div:nth-child(n+3):nth-child(4n+3),
@@ -2283,8 +2337,8 @@ html.menu-open body {
 
 @media (max-width: 680px) {
   .oldway-grid > div {
-    min-height: 64px;
-    padding: 15px 14px 15px 26px;
+    min-height: 62px;
+    padding: 15px 42px 15px 28px;
     font-size: 12px;
     line-height: 1.45;
   }
@@ -2298,6 +2352,12 @@ html.menu-open body {
   .oldway-grid .ow-old::before,
   .oldway-grid .ow-new::before {
     left: 11px;
+  }
+
+  .oldway-grid .ow-old::after {
+    top: 15px;
+    right: 12px;
+    font-size: 9px;
   }
 }
 
