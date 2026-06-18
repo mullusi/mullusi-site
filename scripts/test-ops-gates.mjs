@@ -57,7 +57,18 @@ function testUnsupportedModeFails() {
   const result = runGate(["--invalid-mode"]);
   assertEqual(result.status, 1, "invalid_mode_status");
   assertEqual(result.stdout, "", "invalid_mode_stdout_empty");
-  assertIncludes(result.stderr, "unsupported_mode:--invalid-mode", "invalid_mode_stderr");
+  assertIncludes(result.stderr, "unsupported_mode_count:1", "invalid_mode_stderr");
+}
+
+function testUnsupportedModeDoesNotEchoRawInput() {
+  const rawMode = "D:\\private\\unsupported-mode";
+  const result = runGate([rawMode]);
+  assertEqual(result.status, 1, "raw_mode_status");
+  assertEqual(result.stdout, "", "raw_mode_stdout_empty");
+  assertIncludes(result.stderr, "unsupported_mode_count:1", "raw_mode_stderr_code");
+  if (/private|D:\\|unsupported-mode/.test(result.stderr)) {
+    failures.push(`raw_mode_stderr_leaked=${result.stderr}`);
+  }
 }
 
 function runTests() {
@@ -65,6 +76,7 @@ function runTests() {
   testExpectBlockedFailsAfterRecoveryPromotion();
   testRequireReadyPassesAfterRecoveryPromotion();
   testUnsupportedModeFails();
+  testUnsupportedModeDoesNotEchoRawInput();
 
   if (failures.length > 0) {
     console.error(failures.join("\n"));
