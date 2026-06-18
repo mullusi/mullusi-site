@@ -11,7 +11,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { buildScaffoldPlan, parseScaffoldArgs, writeScaffoldPlan } from "./scaffold-product.mjs";
+import { buildScaffoldPlan, parseScaffoldArgs, publicCliErrorCode, writeScaffoldPlan } from "./scaffold-product.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -152,6 +152,81 @@ function testCliDryRunDoesNotWrite() {
   });
 }
 
+function testCliRedactsUnsupportedArgument() {
+  const result = spawnSync(process.execPath, [
+    scaffoldScriptPath,
+    "--unknown=value",
+  ], {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: false,
+  });
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.match(result.stderr, /unsupported_arg/);
+  assert.doesNotMatch(result.stderr, /--unknown=value/);
+}
+
+function testCliRedactsExistingTargetAndRuntimeWitness() {
+  withFixture((targetRoot) => {
+    writeJson(targetRoot, "products/mullu-world-modeling/product.manifest.json", {});
+    const targetResult = spawnSync(process.execPath, [
+      scaffoldScriptPath,
+      `--root=${targetRoot}`,
+      "--id=mullu-world-modeling",
+      "--name=Mullu World Modeling",
+      "--category=world-modeling",
+      "--write",
+    ], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      shell: false,
+    });
+
+    assert.equal(targetResult.status, 1);
+    assert.equal(targetResult.stdout, "");
+    assert.match(targetResult.stderr, /target_exists/);
+    assert.doesNotMatch(targetResult.stderr, /product\.manifest\.json/);
+  });
+
+  withFixture((witnessRoot) => {
+    const witnessResult = spawnSync(process.execPath, [
+      scaffoldScriptPath,
+      `--root=${witnessRoot}`,
+      "--id=mullu-world-modeling",
+      "--name=Mullu World Modeling",
+      "--category=world-modeling",
+      "--write",
+    ], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      shell: false,
+    });
+
+    assert.equal(witnessResult.status, 1);
+    assert.equal(witnessResult.stdout, "");
+    assert.match(witnessResult.stderr, /runtime_witness_exists/);
+    assert.doesNotMatch(witnessResult.stderr, /mullu-world-modeling/);
+  }, {
+    witnesses: [{ productId: "mullu-world-modeling" }],
+  });
+}
+
+function testPublicCliErrorCodeRedactsRawValues() {
+  const unsupported = publicCliErrorCode(new Error("unsupported_arg:--private=value"));
+  const target = publicCliErrorCode(new Error("target_exists:products/private/product.manifest.json"));
+  const witness = publicCliErrorCode(new Error("runtime_witness_exists:mullu-private"));
+  const fallback = publicCliErrorCode(new Error("unexpected private path C:\\secret\\manifest.json"));
+  const joined = [unsupported, target, witness, fallback].join("\n");
+
+  assert.equal(unsupported, "unsupported_arg");
+  assert.equal(target, "target_exists");
+  assert.equal(witness, "runtime_witness_exists");
+  assert.equal(fallback, "scaffold_product_unavailable");
+  assert.doesNotMatch(joined, /private|secret|manifest|mullu-private|C:\\/);
+}
+
 function testInvalidInputsBlock() {
   assertThrowsMessage(() => defaultPlan({ id: "Mullu Physics" }), "id_invalid:Mullu Physics");
   assertThrowsMessage(() => defaultPlan({ apiMethod: "PATCH" }), "api_method_invalid:PATCH");
@@ -164,5 +239,8 @@ testWriteCreatesFilesAndRuntimeWitness();
 testWriteBlocksExistingTargetBeforePartialWrite();
 testWriteBlocksDuplicateRuntimeWitnessBeforePartialWrite();
 testCliDryRunDoesNotWrite();
+testCliRedactsUnsupportedArgument();
+testCliRedactsExistingTargetAndRuntimeWitness();
+testPublicCliErrorCodeRedactsRawValues();
 testInvalidInputsBlock();
 console.log("product scaffold tests passed");
