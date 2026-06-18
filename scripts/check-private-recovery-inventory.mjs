@@ -49,6 +49,7 @@ function recordFailure(message) {
 }
 
 function validateArgs() {
+  let unsupportedArgCount = 0;
   for (const arg of args) {
     if (arg.startsWith("--path=")) {
       continue;
@@ -60,8 +61,11 @@ function validateArgs() {
       continue;
     }
     if (!supportedArgs.has(arg)) {
-      recordFailure(`unsupported_arg:${arg}`);
+      unsupportedArgCount += 1;
     }
+  }
+  if (unsupportedArgCount > 0) {
+    recordFailure(`unsupported_arg_count:${unsupportedArgCount}`);
   }
 }
 

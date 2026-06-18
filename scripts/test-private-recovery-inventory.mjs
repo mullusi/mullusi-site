@@ -167,6 +167,29 @@ function testEmptyOutputPathIsRejectedBeforeWrite() {
   assertEqual(result.stderr, "", "empty_output_stderr_empty");
 }
 
+function testUnsupportedArgDoesNotEchoRawInput() {
+  const rawArg = "--D:\\private\\flag";
+  const result = runChecker([rawArg]);
+
+  assertEqual(result.status, 1, "unsupported_arg_status");
+  assertEqual(result.stdout, "", "unsupported_arg_stdout_empty");
+  assertIncludes(result.stderr, "unsupported_arg_count:1", "unsupported_arg_stderr");
+  assertEqual(result.stderr.includes(rawArg), false, "unsupported_arg_raw_redacted");
+  assertEqual(/D:\\/.test(result.stderr), false, "unsupported_arg_path_redacted");
+}
+
+function testUnsupportedArgJsonDoesNotEchoRawInput() {
+  const rawArg = "--D:\\private\\flag";
+  const result = runChecker([rawArg, "--json"]);
+  const payload = JSON.parse(result.stdout);
+
+  assertEqual(result.status, 1, "unsupported_arg_json_status");
+  assertEqual(result.stderr, "", "unsupported_arg_json_stderr_empty");
+  assertEqual(payload.failures.includes("unsupported_arg_count:1"), true, "unsupported_arg_json_failures");
+  assertEqual(result.stdout.includes(rawArg), false, "unsupported_arg_json_raw_redacted");
+  assertEqual(/D:\\/.test(result.stdout), false, "unsupported_arg_json_path_redacted");
+}
+
 function runTests() {
   testBlockedFixtureReportsMissingFlags();
   testRequireReadyFailsForBlockedFixture();
@@ -177,6 +200,8 @@ function runTests() {
   testJsonOutputFilePersistsRequireReadyFailure();
   testJsonModeFailureDoesNotEmitTextDiagnostics();
   testEmptyOutputPathIsRejectedBeforeWrite();
+  testUnsupportedArgDoesNotEchoRawInput();
+  testUnsupportedArgJsonDoesNotEchoRawInput();
 
   fs.rmSync(tempDir, { recursive: true, force: true });
 
