@@ -134,13 +134,21 @@ export function createPreviewServer({ distDirectory = defaultDistDirectory } = {
   });
 }
 
-function parsePort(value) {
+export function parsePort(value) {
   if (value === undefined) return defaultPort;
   const port = Number(value);
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
     throw new Error(`invalid_port:${value}`);
   }
   return port;
+}
+
+export function publicPreviewErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("invalid_port:")) {
+    return "invalid_port";
+  }
+  return "local_preview_unavailable";
 }
 
 function main() {
@@ -168,5 +176,10 @@ function main() {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === scriptPath) {
-  main();
+  try {
+    main();
+  } catch (error) {
+    console.error(`local preview failed:${publicPreviewErrorCode(error)}`);
+    process.exitCode = 1;
+  }
 }
