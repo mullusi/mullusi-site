@@ -162,6 +162,39 @@ export function buildCloudflarePages(options = {}) {
   };
 }
 
+export function publicBuildErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("path_boundary_violation:")) {
+    return "path_boundary_violation";
+  }
+  if (message.startsWith("unsafe_output_directory:")) {
+    return "unsafe_output_directory";
+  }
+  if (message.startsWith("symbolic_link_forbidden:")) {
+    return "symbolic_link_forbidden";
+  }
+  if (message.startsWith("public_entry_missing:")) {
+    return "public_entry_missing";
+  }
+  if (message.startsWith("forbidden_output_entry_present:")) {
+    return "forbidden_output_entry_present";
+  }
+  return "cloudflare_pages_build_unavailable";
+}
+
+export function runBuildCloudflarePagesCli(options = {}) {
+  const stdout = options.stdout ?? process.stdout;
+  const stderr = options.stderr ?? process.stderr;
+  try {
+    buildCloudflarePages({ outputDirectory: options.outputDirectory, buildDate: options.buildDate });
+    stdout.write("cloudflare pages artifact ready\n");
+    return 0;
+  } catch (error) {
+    stderr.write(`cloudflare pages artifact failed:${publicBuildErrorCode(error)}\n`);
+    return 1;
+  }
+}
+
 // Stamp the deploy date into the built i18n dictionary so the homepage
 // "Last updated" line reflects when the artifact was actually published,
 // instead of a hardcoded date that silently goes stale. data/i18n.json is
@@ -188,6 +221,5 @@ function stampLastUpdated(outputDirectory, buildDate) {
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const result = buildCloudflarePages();
-  console.log(`cloudflare pages artifact ready:${path.relative(repoRoot, result.outputDirectory)}`);
+  process.exitCode = runBuildCloudflarePagesCli();
 }

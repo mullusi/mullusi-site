@@ -10,7 +10,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildCloudflarePages } from "./build-cloudflare-pages.mjs";
+import {
+  buildCloudflarePages,
+  publicBuildErrorCode,
+  runBuildCloudflarePagesCli,
+} from "./build-cloudflare-pages.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -152,8 +156,80 @@ function testBuildResultDoesNotExposeMutableRegistry() {
   }
 }
 
+function createWritableCapture() {
+  let capturedText = "";
+  return {
+    stream: {
+      write(chunk) {
+        capturedText += String(chunk);
+      },
+    },
+    text() {
+      return capturedText;
+    },
+  };
+}
+
+function testPublicBuildErrorCodeRedactsFailureDetails() {
+  const unsafeOutputDirectory = path.resolve(repoRoot, "..", "mullusi-pages-outside-test");
+
+  assert.equal(publicBuildErrorCode(new Error(`unsafe_output_directory:${unsafeOutputDirectory}`)), "unsafe_output_directory");
+  assert.equal(publicBuildErrorCode(new Error("path_boundary_violation:index.html:C:\\private\\repo\\index.html")), "path_boundary_violation");
+  assert.equal(publicBuildErrorCode(new Error("symbolic_link_forbidden:assets/private-link")), "symbolic_link_forbidden");
+  assert.equal(publicBuildErrorCode(new Error("public_entry_missing:private-entry")), "public_entry_missing");
+  assert.equal(publicBuildErrorCode(new Error("forbidden_output_entry_present:backend")), "forbidden_output_entry_present");
+  assert.equal(publicBuildErrorCode(new Error(`unexpected:${unsafeOutputDirectory}`)), "cloudflare_pages_build_unavailable");
+}
+
+function testCliFailureOutputRedactsUnsafeOutputPath() {
+  const unsafeOutputDirectory = path.resolve(repoRoot, "..", "mullusi-pages-outside-test");
+  const stdout = createWritableCapture();
+  const stderr = createWritableCapture();
+
+  const exitCode = runBuildCloudflarePagesCli({
+    outputDirectory: unsafeOutputDirectory,
+    stdout: stdout.stream,
+    stderr: stderr.stream,
+  });
+
+  assert.equal(exitCode, 1);
+  assert.equal(stdout.text(), "");
+  assert.equal(stderr.text(), "cloudflare pages artifact failed:unsafe_output_directory\n");
+  assert.doesNotMatch(stderr.text(), /mullusi-pages-outside-test/);
+  assert.doesNotMatch(stderr.text(), /D:\\|C:\\|\.\./);
+  assert.doesNotMatch(stderr.text(), /Error:|at\s/);
+  assert.equal(fs.existsSync(unsafeOutputDirectory), false);
+}
+
+function testCliSuccessOutputKeepsArtifactPathPrivate() {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-pages-cli-"));
+  const outputDirectory = path.join(tempRoot, "dist");
+  const stdout = createWritableCapture();
+  const stderr = createWritableCapture();
+  try {
+    const exitCode = runBuildCloudflarePagesCli({
+      outputDirectory,
+      buildDate: "2026-06-04T12:00:00Z",
+      stdout: stdout.stream,
+      stderr: stderr.stream,
+    });
+
+    assert.equal(exitCode, 0);
+    assert.equal(stdout.text(), "cloudflare pages artifact ready\n");
+    assert.equal(stderr.text(), "");
+    assert.doesNotMatch(stdout.text(), /mullusi-pages-cli-|D:\\|C:\\|dist/);
+    assertExists(outputDirectory, "index.html");
+    assertExists(outputDirectory, "_headers");
+  } finally {
+    fs.rmSync(tempRoot, { force: true, recursive: true });
+  }
+}
+
 testCloudflarePagesBuildArtifact();
 testBuildBlocksRepositoryRootOutput();
 testBuildBlocksSiblingRepositoryOutput();
 testBuildResultDoesNotExposeMutableRegistry();
+testPublicBuildErrorCodeRedactsFailureDetails();
+testCliFailureOutputRedactsUnsafeOutputPath();
+testCliSuccessOutputKeepsArtifactPathPrivate();
 console.log("cloudflare pages build test passed");
