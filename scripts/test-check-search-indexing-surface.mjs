@@ -117,6 +117,15 @@ function testRouteEvaluationDetectsCanonicalAndIndexingBlockers() {
   assert.ok(noindexFindings.includes("live_route_canonical_mismatch:https://mullusi.com/doctrine/:https://mullusi.com/wrong/"));
 }
 
+function testRouteEvaluationRedactsUnsafeCanonicalHref() {
+  const routeUrl = "https://mullusi.com/doctrine/";
+  const findings = evaluateRouteResponse(routeUrl, htmlResponse(routeUrl, "https://private.example.internal/path?trace=bounded"));
+  const serialized = JSON.stringify(findings);
+
+  assert.ok(findings.includes("live_route_canonical_mismatch:https://mullusi.com/doctrine/:redacted_url"));
+  assert.doesNotMatch(serialized, /private\.example\.internal|trace=bounded/);
+}
+
 function testEvidenceEvaluationProducesBlockingVerdict() {
   const routeResponses = new Map([
     ["https://mullusi.com/", htmlResponse("https://mullusi.com/")],
@@ -199,6 +208,7 @@ function testPublicErrorCodeRedactsRawExceptionValues() {
 testSitemapComparisonDetectsDrift();
 testRobotsEvaluationKeepsSearchAccessExplicit();
 testRouteEvaluationDetectsCanonicalAndIndexingBlockers();
+testRouteEvaluationRedactsUnsafeCanonicalHref();
 testEvidenceEvaluationProducesBlockingVerdict();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testCliRejectsUnsupportedArgumentAsJson();
