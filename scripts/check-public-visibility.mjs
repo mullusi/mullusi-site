@@ -275,6 +275,9 @@ export function publicErrorCode(error) {
   if (message.startsWith("request_timeout:") || message.startsWith("timeout:")) {
     return "public_visibility_request_timeout";
   }
+  if (/\btimeout\b/i.test(message)) {
+    return "public_visibility_request_timeout";
+  }
   if (message.startsWith("target_url_invalid:")) {
     return "public_visibility_target_url_invalid";
   }
@@ -303,6 +306,37 @@ export function publicErrorCode(error) {
     return "public_visibility_url_invalid";
   }
   return "public_visibility_unavailable";
+}
+
+function publicHttpsTargetLabel(targetUrl) {
+  if (!targetUrl) return "";
+  try {
+    return validateHttpsTarget(targetUrl);
+  } catch {
+    return "redacted_url";
+  }
+}
+
+function publicDnsErrorCode(error) {
+  if (!error) return "";
+  return String(error)
+    .split("|")
+    .filter((part) => part.length > 0)
+    .map((part) => {
+      const match = part.match(/^([A-Z]+):(.*)$/);
+      return match ? `${match[1]}:${publicErrorCode(match[2])}` : publicErrorCode(part);
+    })
+    .join("|");
+}
+
+function publicTlsAuthorizationError(error) {
+  if (!error) return "";
+  const message = String(error);
+  return /^[A-Z0-9_]+$/.test(message) ? message : publicErrorCode(message);
+}
+
+function publicOptionalErrorCode(error) {
+  return error ? publicErrorCode(error) : "";
 }
 
 export async function collectCheckHostEvidence({ targetUrl = "https://mullusi.com/", maxNodes = 6 } = {}) {
@@ -518,14 +552,15 @@ export function evaluatePublicVisibilityEvidence(evidence) {
     }
     for (const record of hostRecords) {
       if (record.publicResolver && record.error) {
-        findings.push(`dns_public_resolver_error:${host}:${record.resolver}:${record.error}`);
+        findings.push(`dns_public_resolver_error:${host}:${record.resolver}:${publicDnsErrorCode(record.error)}`);
       }
     }
   }
 
   for (const route of routeRecords) {
+    const routeTargetLabel = publicHttpsTargetLabel(route.targetUrl);
     if (route.error) {
-      findings.push(`https_route_error:${route.targetUrl}:${route.error}`);
+      findings.push(`https_route_error:${routeTargetLabel}:${publicErrorCode(route.error)}`);
       continue;
     }
     const response = route.response;
@@ -533,19 +568,19 @@ export function evaluatePublicVisibilityEvidence(evidence) {
     const redirectHistory = response?.redirectHistory ?? [];
     const firstRedirect = redirectHistory[0] ?? null;
     if (statusCode < 200 || statusCode >= 300) {
-      findings.push(`https_status_invalid:${route.targetUrl}:${statusCode}`);
+      findings.push(`https_status_invalid:${routeTargetLabel}:${statusCode}`);
     }
     if (response?.finalUrl !== route.expectedFinalUrl) {
-      findings.push(`https_final_url_mismatch:${route.targetUrl}:${response?.finalUrl ?? ""}`);
+      findings.push(`https_final_url_mismatch:${routeTargetLabel}:${publicHttpsTargetLabel(response?.finalUrl)}`);
     }
     if (redirectHistory.length !== route.expectedRedirectCount) {
-      findings.push(`https_redirect_count_mismatch:${route.targetUrl}:${redirectHistory.length}/${route.expectedRedirectCount}`);
+      findings.push(`https_redirect_count_mismatch:${routeTargetLabel}:${redirectHistory.length}/${route.expectedRedirectCount}`);
     }
     if ((firstRedirect?.statusCode ?? "") !== route.expectedFirstRedirectStatus) {
-      findings.push(`https_first_redirect_status_mismatch:${route.targetUrl}:${firstRedirect?.statusCode ?? ""}/${route.expectedFirstRedirectStatus}`);
+      findings.push(`https_first_redirect_status_mismatch:${routeTargetLabel}:${firstRedirect?.statusCode ?? ""}/${route.expectedFirstRedirectStatus}`);
     }
     if (response?.tlsAuthorized !== true) {
-      findings.push(`https_tls_not_authorized:${route.targetUrl}:${response?.tlsAuthorizationError ?? ""}`);
+      findings.push(`https_tls_not_authorized:${routeTargetLabel}:${publicTlsAuthorizationError(response?.tlsAuthorizationError)}`);
     }
   }
 
@@ -553,7 +588,7 @@ export function evaluatePublicVisibilityEvidence(evidence) {
   const externalPassRecords = externalProbeRecords.filter((record) => record.passed);
   const externalPassRegions = new Set(externalPassRecords.map((record) => record.countryCode || record.country || record.node));
   if (externalProbeRecords.length === 0 && externalProbeError) {
-    externalFindings.push(`external_probe_provider_error:${externalProbeError}`);
+    externalFindings.push(`external_probe_provider_error:${publicErrorCode(externalProbeError)}`);
   } else if (externalProbeRecords.length === 0) {
     externalFindings.push("external_probe_not_attached");
   } else {
@@ -562,7 +597,7 @@ export function evaluatePublicVisibilityEvidence(evidence) {
     }
     for (const record of externalProbeRecords) {
       if (!record.passed) {
-        externalFindings.push(`external_probe_failed:${record.node}:${record.countryCode}:${record.statusCode || record.error || "unknown"}`);
+        externalFindings.push(`external_probe_failed:${record.node}:${record.countryCode}:${record.statusCode || publicErrorCode(record.error || "unknown")}`);
       }
     }
   }
@@ -585,7 +620,7 @@ export function evaluatePublicVisibilityEvidence(evidence) {
     externalRegionalProbeFloor: regionalProbeFloor,
     externalProbeCount: externalProbeRecords.length,
     externalDistinctRegionPasses: externalPassRegions.size,
-    externalProbeError,
+    externalProbeError: publicOptionalErrorCode(externalProbeError),
     findings,
     externalFindings,
   };
@@ -604,23 +639,23 @@ export function formatResult(result, evidence) {
     `dns_public_resolver=${record.publicResolver ? "true" : "false"}`,
     `dns_a=${record.a.join(",")}`,
     `dns_aaaa=${record.aaaa.join(",")}`,
-    `dns_error=${record.error}`,
+    `dns_error=${publicDnsErrorCode(record.error)}`,
   ]);
   const routeLines = (evidence.routeRecords ?? []).flatMap((route) => {
     const response = route.response ?? {};
     const redirectHistory = response.redirectHistory ?? [];
     const firstRedirect = redirectHistory[0] ?? null;
     return [
-      `target=${route.targetUrl}`,
-      `expected_final_url=${route.expectedFinalUrl}`,
-      `final_url=${response.finalUrl ?? ""}`,
+      `target=${publicHttpsTargetLabel(route.targetUrl)}`,
+      `expected_final_url=${publicHttpsTargetLabel(route.expectedFinalUrl)}`,
+      `final_url=${publicHttpsTargetLabel(response.finalUrl)}`,
       `status=${response.statusCode ?? ""}`,
       `redirect_count=${redirectHistory.length}`,
       `expected_redirect_count=${route.expectedRedirectCount}`,
       `first_redirect_status=${firstRedirect?.statusCode ?? ""}`,
       `expected_first_redirect_status=${route.expectedFirstRedirectStatus}`,
       `tls_authorized=${response.tlsAuthorized === true ? "true" : "false"}`,
-      `route_error=${route.error ?? ""}`,
+      `route_error=${publicOptionalErrorCode(route.error)}`,
     ];
   });
   const provider = evidence.externalProbeProvider;
@@ -631,7 +666,7 @@ export function formatResult(result, evidence) {
     `external_probe_request_id=${provider.requestId}`,
     `external_probe_permanent_link=${provider.permanentLink}`,
     `external_probe_max_nodes=${provider.maxNodes}`,
-    `external_probe_error=${provider.error ?? ""}`,
+    `external_probe_error=${publicOptionalErrorCode(provider.error)}`,
   ] : [
     "external_probe_provider=",
     "external_probe_api=",
@@ -653,7 +688,7 @@ export function formatResult(result, evidence) {
     `external_message=${record.message}`,
     `external_elapsed_seconds=${record.elapsedSeconds}`,
     `external_resolved_ip=${record.resolvedIp}`,
-    `external_error=${record.error}`,
+    `external_error=${publicOptionalErrorCode(record.error)}`,
   ]);
   return [
     `verdict=${result.verdict}`,
