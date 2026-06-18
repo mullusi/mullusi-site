@@ -181,13 +181,24 @@ function runStep(step) {
   });
 }
 
+export function publicStepErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/ETIMEDOUT|timed?\s*out|timeout/i.test(message)) {
+    return "step_timed_out";
+  }
+  if (/ENOENT|not found|command/i.test(message)) {
+    return "step_command_unavailable";
+  }
+  return "step_execution_unavailable";
+}
+
 export function runCheckpoint(options = {}) {
   const failures = [];
   const steps = checkpointSteps(options);
   for (const step of steps) {
     const result = runStep(step);
     if (result.error) {
-      failures.push(`${step.label}:${result.error.message}`);
+      failures.push(`${step.label}:${publicStepErrorCode(result.error)}`);
       continue;
     }
     if (result.status !== 0) {
