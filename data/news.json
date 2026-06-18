@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-17",
+    "updated": "2026-06-18",
     "count": 7
   },
   "items": [
     {
-      "title": "Running local models is good now",
-      "url": "https://vickiboykis.com/2026/06/15/running-local-models-is-good-now/",
-      "source": "vickiboykis.com",
-      "points": 1390,
-      "comments": 536,
-      "date": "2026-06-16"
+      "title": "Lore – Open source version control system designed for scalability",
+      "url": "https://lore.org/",
+      "source": "lore.org",
+      "points": 1163,
+      "comments": 620,
+      "date": "2026-06-17"
     },
     {
-      "title": "SpaceX to buy Cursor for $60B",
-      "url": "https://www.reuters.com/legal/transactional/spacex-buy-anysphere-60-billion-2026-06-16/",
+      "title": "Midjourney Medical",
+      "url": "https://www.midjourney.com/medical/blogpost",
+      "source": "midjourney.com",
+      "points": 883,
+      "comments": 601,
+      "date": "2026-06-18"
+    },
+    {
+      "title": "US holds off blacklisting DeepSeek, more than 100 firms deemed security risks",
+      "url": "https://www.reuters.com/world/china/us-holds-off-blacklisting-chinas-deepseek-more-than-100-firms-deemed-security-2026-06-17/",
       "source": "reuters.com",
-      "points": 1052,
-      "comments": 1553,
+      "points": 472,
+      "comments": 519,
+      "date": "2026-06-17"
+    },
+    {
+      "title": "RFC 10008: The new HTTP Query Method",
+      "url": "https://www.rfc-editor.org/info/rfc10008/",
+      "source": "rfc-editor.org",
+      "points": 384,
+      "comments": 159,
+      "date": "2026-06-17"
+    },
+    {
+      "title": "How we run Firecracker VMs inside EC2 and start browsers in less than 1s",
+      "url": "https://browser-use.com/posts/firecracker-browser-infra",
+      "source": "browser-use.com",
+      "points": 289,
+      "comments": 186,
       "date": "2026-06-16"
     },
     {
-      "title": "GrapheneOS has been ported to Android 17",
-      "url": "https://discuss.grapheneos.org/d/36469-grapheneos-has-been-ported-to-android-17-and-official-releases-are-coming-soon",
-      "source": "discuss.grapheneos.org",
-      "points": 847,
-      "comments": 433,
-      "date": "2026-06-16"
+      "title": "Why thinking out loud with someone beats thinking alone",
+      "url": "https://www.thesignalist.io/s/the-dialogue-dividend/",
+      "source": "thesignalist.io",
+      "points": 284,
+      "comments": 124,
+      "date": "2026-06-17"
     },
     {
-      "title": "Calvin and Hobbes and the price of integrity",
-      "url": "https://therepublicofletters.substack.com/p/calvin-and-hobbes-and-the-price-of",
-      "source": "therepublicofletters.substack.com",
-      "points": 467,
-      "comments": 198,
-      "date": "2026-06-16"
-    },
-    {
-      "title": "TIL: You can make HTTP requests without curl using Bash /dev/TCP",
-      "url": "https://mareksuppa.com/til/bash-dev-tcp-http-without-curl/",
-      "source": "mareksuppa.com",
-      "points": 456,
-      "comments": 206,
-      "date": "2026-06-16"
-    },
-    {
-      "title": "Stop Using JWTs",
-      "url": "https://gist.github.com/samsch/0d1f3d3b4745d778f78b230cf6061452",
-      "source": "gist.github.com",
-      "points": 424,
-      "comments": 253,
-      "date": "2026-06-16"
-    },
-    {
-      "title": "Humiliating IIS servers for fun and jail time",
-      "url": "https://mll.sh/humiliating-iis-servers-for-fun-and-jail-time/",
-      "source": "mll.sh",
-      "points": 295,
-      "comments": 68,
-      "date": "2026-06-16"
+      "title": "Local Qwen isn't a worse Opus, it's a different tool",
+      "url": "https://blog.alexellis.io/local-ai-is-not-opus/",
+      "source": "blog.alexellis.io",
+      "points": 263,
+      "comments": 128,
+      "date": "2026-06-18"
     }
   ]
 }
