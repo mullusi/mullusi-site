@@ -120,6 +120,23 @@ function testStatusAndRequestErrorsBlock() {
   assert.ok(result.findings.includes("target_request_error:https://mullusi.com/security/:live_security_headers_request_timeout"));
 }
 
+function testRequestErrorRedactsUnsafeTargetLabel() {
+  const records = [
+    {
+      targetUrl: "https://private.example.internal/status",
+      error: new Error("target_host_invalid:private.example.internal"),
+    },
+  ];
+  const result = evaluateSecurityHeaderEvidence(records);
+  const serialized = JSON.stringify(result);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.targetResults[0].targetUrl, "redacted_target");
+  assert.ok(result.findings.includes("target_request_error:redacted_target:live_security_headers_target_host_invalid"));
+  assert.doesNotMatch(serialized, /private\.example\.internal/);
+}
+
 function testTargetValidationBlocksUnsafeTargets() {
   const validTarget = validateTargetUrl("https://mullusi.com/status/");
 
@@ -160,6 +177,7 @@ testMissingContentSecurityPolicyBlocks();
 testHeaderValueMismatchBlocks();
 testRequiredHeaderTermMissingBlocks();
 testStatusAndRequestErrorsBlock();
+testRequestErrorRedactsUnsafeTargetLabel();
 testTargetValidationBlocksUnsafeTargets();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testPublicErrorCodeRedactsRawExceptionValues();

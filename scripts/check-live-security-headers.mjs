@@ -139,6 +139,14 @@ export function publicErrorCode(error) {
   return "live_security_headers_unavailable";
 }
 
+function publicTargetLabel(targetUrl) {
+  try {
+    return validateTargetUrl(targetUrl);
+  } catch {
+    return "redacted_target";
+  }
+}
+
 function requestHead(targetUrl) {
   const safeUrl = validateTargetUrl(targetUrl);
   return new Promise((resolve, reject) => {
@@ -180,8 +188,9 @@ export function evaluateSecurityHeaderEvidence(records, rules = expectedHeaderRu
 
   for (const record of records) {
     if (record.error) {
-      findings.push(`target_request_error:${record.targetUrl}:${publicErrorCode(record.error)}`);
-      targetResults.push({ targetUrl: record.targetUrl, statusCode: "", passed: false, headerResults: [] });
+      const targetLabel = publicTargetLabel(record.targetUrl);
+      findings.push(`target_request_error:${targetLabel}:${publicErrorCode(record.error)}`);
+      targetResults.push({ targetUrl: targetLabel, statusCode: "", passed: false, headerResults: [] });
       continue;
     }
 
