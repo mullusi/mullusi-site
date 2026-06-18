@@ -140,7 +140,17 @@ function testInvalidDateFails() {
   const result = runPromote([...requiredFlags, "--date=05-22-2026"]);
   assertEqual(result.status, 1, "invalid_date_status");
   assertEqual(result.stdout, "", "invalid_date_stdout_empty");
-  assertIncludes(result.stderr, "invalid_review_date:05-22-2026", "invalid_date_stderr");
+  assertIncludes(result.stderr, "invalid_review_date", "invalid_date_stderr");
+  assertEqual(result.stderr.includes("05-22-2026"), false, "invalid_date_redacted");
+}
+
+function testInvalidDateDoesNotEchoPathShapedInput() {
+  const rawDate = "D:\\private\\date";
+  const result = runPromote([...requiredFlags, `--date=${rawDate}`]);
+  assertEqual(result.status, 1, "invalid_path_date_status");
+  assertEqual(result.stdout, "", "invalid_path_date_stdout_empty");
+  assertIncludes(result.stderr, "invalid_review_date", "invalid_path_date_stderr");
+  assertEqual(/D:\\/.test(result.stderr), false, "invalid_path_date_redacted");
 }
 
 function runTests() {
@@ -150,6 +160,7 @@ function runTests() {
   testWriteRequiresReadyPrivateInventory();
   testUnsupportedFlagFails();
   testInvalidDateFails();
+  testInvalidDateDoesNotEchoPathShapedInput();
 
   if (failures.length > 0) {
     console.error(failures.join("\n"));
