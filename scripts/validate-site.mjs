@@ -200,6 +200,7 @@ const requiredFiles = [
   "scripts/test-www-canonical-redirect-gate.mjs",
   "scripts/verify-registry-repos.mjs",
   "scripts/test-verify-registry-repos.mjs",
+  "scripts/test-generate-platform-errors.mjs",
   "scripts/check-ops-gates.mjs",
   "scripts/test-ops-gates.mjs",
   "scripts/promote-recovery-witness.mjs",
