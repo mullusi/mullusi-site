@@ -194,6 +194,29 @@ function testInvalidDateDoesNotEchoPathShapedInput() {
   });
 }
 
+function testOutsidePreflightPathDoesNotEchoRawInput() {
+  const rawPath = path.resolve(repoRoot, "..", "private-domain-security-preflight.md");
+  const result = runPromote(rawPath, ["--active-cloudflare-ca-set"]);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.match(result.stderr, /preflight_path_outside_repo/);
+  assert.equal(result.stderr.includes(rawPath), false);
+  assert.doesNotMatch(result.stderr, /private-domain-security-preflight\.md/);
+  assert.doesNotMatch(result.stderr, /Error:|at\s/);
+}
+
+function testMissingPreflightPathDoesNotEchoRawInput() {
+  const missingPath = path.join(repoRoot, ".tmp", "missing-domain-preflight.md");
+  const result = runPromote(missingPath, ["--active-cloudflare-ca-set"]);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.match(result.stderr, /preflight_file_unreadable/);
+  assert.doesNotMatch(result.stderr, /missing-domain-preflight\.md/);
+  assert.doesNotMatch(result.stderr, /Error:|at\s/);
+}
+
 testDryRunWithoutFlagsDoesNotModifyPreflight();
 testDryRunWithFlagsDoesNotModifyPreflight();
 testPartialWritePromotesOnlyEvidenceAndDerivedPermissions();
@@ -201,5 +224,7 @@ testFullWritePromotesReadyState();
 testUnsupportedFlagFails();
 testInvalidDateFails();
 testInvalidDateDoesNotEchoPathShapedInput();
+testOutsidePreflightPathDoesNotEchoRawInput();
+testMissingPreflightPathDoesNotEchoRawInput();
 
 console.log("domain hardening preflight promotion tests passed");

@@ -94,6 +94,11 @@ const helpMode = args.has("--help") || args.has("-h");
 const failures = [];
 const hasEvidencePromotion = confirmationFlags.some((item) => args.has(item.flag));
 
+function isPathInsideRepo(absolutePath) {
+  const relation = path.relative(repoRoot, absolutePath);
+  return relation !== "" && !relation.startsWith("..") && !path.isAbsolute(relation);
+}
+
 function usage() {
   return [
     "Usage:",
@@ -119,6 +124,12 @@ function validateArgs() {
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(reviewDate)) {
     recordFailure("invalid_review_date");
+  }
+  if (pathArg && pathArg.slice("--path=".length).trim().length === 0) {
+    recordFailure("preflight_path_invalid");
+  }
+  if (!isPathInsideRepo(preflightPath)) {
+    recordFailure("preflight_path_outside_repo");
   }
 }
 
@@ -211,6 +222,11 @@ function runPromotion() {
     process.exit(1);
   }
 
+  if (!fs.existsSync(preflightPath) || !fs.statSync(preflightPath).isFile()) {
+    console.error([usage(), "", "preflight_file_unreadable"].join("\n"));
+    process.exit(1);
+  }
+
   const originalContent = fs.readFileSync(preflightPath, "utf8");
   const nextContent = nextPreflightContent(originalContent);
   if (nextContent === originalContent) {
@@ -237,4 +253,16 @@ function runPromotion() {
   console.log(`domain_hardening_preflight_promoted=true write=true review_date=${reviewDate}`);
 }
 
-runPromotion();
+export function publicPromotionErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.startsWith("preflight_key_missing:")) return "preflight_key_missing";
+  if (/ENOENT|EACCES|EPERM|EISDIR/.test(message)) return "preflight_file_unreadable";
+  return "domain_hardening_preflight_promotion_unavailable";
+}
+
+try {
+  runPromotion();
+} catch (error) {
+  console.error(`domain_hardening_preflight_promotion_failed:${publicPromotionErrorCode(error)}`);
+  process.exit(1);
+}
