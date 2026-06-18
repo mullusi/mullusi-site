@@ -134,6 +134,7 @@ function testDefaultCheckpointSteps() {
     "runtime witnesses",
     "generated platform drift",
     "Cloudflare artifact boundary",
+    "registry source boundary tests",
     "registry source boundary",
   ]);
 }

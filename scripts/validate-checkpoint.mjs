@@ -163,6 +163,7 @@ export function checkpointSteps(options = {}) {
     nodeStep("runtime witnesses", ["scripts/validate-runtime-witnesses.mjs"]),
     nodeStep("generated platform drift", ["scripts/generate-platform.mjs", "--check"]),
     nodeStep("Cloudflare artifact boundary", ["scripts/test-build-cloudflare-pages.mjs"], 180_000),
+    nodeStep("registry source boundary tests", ["scripts/test-verify-registry-repos.mjs"]),
     nodeStep("registry source boundary", ["scripts/verify-registry-repos.mjs"]),
   ];
   if (includeBackend) steps.push(backendStep());
