@@ -9,8 +9,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { buildCloudflarePages } from "./build-cloudflare-pages.mjs";
-import { resolveStaticResponse } from "./serve-local-preview.mjs";
+import { parsePort, publicPreviewErrorCode, resolveStaticResponse } from "./serve-local-preview.mjs";
+
+const previewScript = path.join(process.cwd(), "scripts", "serve-local-preview.mjs");
 
 function makeArtifact() {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-preview-"));
@@ -84,9 +87,39 @@ function testMalformedPathReturnsBadRequest() {
   }
 }
 
+function testPortParserRejectsUnsafeValuesWithInternalDetail() {
+  assert.equal(parsePort(undefined), 4173);
+  assert.equal(parsePort("8080"), 8080);
+  assert.throws(() => parsePort("0"), /invalid_port:0/);
+  assert.throws(() => parsePort("65536"), /invalid_port:65536/);
+  assert.throws(() => parsePort("D:\\private\\port"), /invalid_port:D:\\private\\port/);
+}
+
+function testPublicPreviewErrorCodeRedactsInvalidPortValue() {
+  assert.equal(publicPreviewErrorCode(new Error("invalid_port:D:\\private\\port")), "invalid_port");
+  assert.equal(publicPreviewErrorCode(new Error("unexpected:D:\\private\\port")), "local_preview_unavailable");
+}
+
+function testCliInvalidPortOutputRedactsValueAndStack() {
+  const invalidPortValue = "D:\\private\\port";
+  const result = spawnSync(process.execPath, [previewScript, "--no-build", "--port", invalidPortValue], {
+    cwd: process.cwd(),
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.equal(result.stderr, "local preview failed:invalid_port\n");
+  assert.doesNotMatch(result.stderr, /private|D:\\|invalid_port:D/);
+  assert.doesNotMatch(result.stderr, /Error:|at\s/);
+}
+
 testExistingRouteResolvesIndex();
 testExtensionlessRouteResolvesRouteIndex();
 testMissingRouteReturnsBranded404();
 testTraversalIsBlocked();
 testMalformedPathReturnsBadRequest();
+testPortParserRejectsUnsafeValuesWithInternalDetail();
+testPublicPreviewErrorCodeRedactsInvalidPortValue();
+testCliInvalidPortOutputRedactsValueAndStack();
 console.log("local preview server tests passed");
