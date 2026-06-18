@@ -58,7 +58,7 @@ function parseClock(value) {
   if (!value) return new Date();
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) {
-    throw new Error(`now_invalid:${value}`);
+    throw new Error("now_invalid");
   }
   return parsed;
 }
@@ -198,29 +198,38 @@ function parseArgs(args) {
     } else if (arg.startsWith("--now=")) {
       options.now = parseClock(arg.slice("--now=".length));
     } else {
-      throw new Error(`unsupported_arg:${arg}`);
+      throw new Error("unsupported_arg_count:1");
     }
   }
   return options;
 }
 
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/^(path_outside_repo|path_not_security_txt|now_invalid|unsupported_arg_count:\d+)$/.test(message)) {
+    return message;
+  }
+  if (/ENOENT|EACCES|EPERM|file|directory|open/i.test(message)) {
+    return "security_txt_file_unavailable";
+  }
+  return "security_txt_check_unavailable";
+}
+
 function runCli() {
-  let options;
   try {
-    options = parseArgs(process.argv.slice(2));
+    const options = parseArgs(process.argv.slice(2));
+    if (options.help) {
+      console.log(usage());
+      return;
+    }
+    const content = fs.readFileSync(options.path, "utf8");
+    const result = evaluateSecurityTxtContent(content, { now: options.now });
+    console.log(formatResult(result));
+    if (result.proofState !== "Pass") process.exitCode = 1;
   } catch (error) {
-    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=${error instanceof Error ? error.message : String(error)}`);
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=${publicErrorCode(error)}`);
     process.exitCode = 1;
-    return;
   }
-  if (options.help) {
-    console.log(usage());
-    return;
-  }
-  const content = fs.readFileSync(options.path, "utf8");
-  const result = evaluateSecurityTxtContent(content, { now: options.now });
-  console.log(formatResult(result));
-  if (result.proofState !== "Pass") process.exitCode = 1;
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
