@@ -147,6 +147,7 @@ export function checkpointSteps(options = {}) {
     nodeStep("search indexing surface tests", ["scripts/test-check-search-indexing-surface.mjs"]),
     nodeStep("website origin classification tests", ["scripts/test-check-website-origin.mjs"]),
     nodeStep("public visibility gate tests", ["scripts/test-check-public-visibility.mjs"]),
+    nodeStep("news fetch error tests", ["scripts/test-fetch-news-errors.mjs"]),
     nodeStep("live safety witness capture tests", ["scripts/test-capture-live-safety-witness.mjs"]),
     nodeStep("live safety witness artifact tests", ["scripts/test-check-live-safety-witness.mjs"]),
     nodeStep("security txt metadata", ["scripts/check-security-txt.mjs"]),

@@ -180,6 +180,7 @@ const requiredFiles = [
   "scripts/test-check-website-origin.mjs",
   "scripts/check-public-visibility.mjs",
   "scripts/test-check-public-visibility.mjs",
+  "scripts/test-fetch-news-errors.mjs",
   "scripts/capture-live-safety-witness.mjs",
   "scripts/test-capture-live-safety-witness.mjs",
   "scripts/check-live-safety-witness.mjs",

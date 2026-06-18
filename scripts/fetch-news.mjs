@@ -7,7 +7,7 @@ Invariants: output is HTTPS-only, deterministic, capped, and never overwritten w
 
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -72,6 +72,21 @@ function safeUrl(rawUrl, objectId) {
   return { url: parsed.toString(), source: parsed.hostname.replace(/^www\./, "") };
 }
 
+export function publicNewsErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  const name = error instanceof Error ? error.name : "";
+  if (/ENOENT|EACCES|EPERM|file|directory|open|[A-Z]:\\|private|secret/i.test(message)) {
+    return "news_file_unavailable";
+  }
+  if (/AbortError|timeout|timed?\s*out/i.test(`${name}:${message}`)) {
+    return "news_request_timeout";
+  }
+  if (/fetch|network|ECONNRESET|ENOTFOUND|EAI_AGAIN|ETIMEDOUT|socket/i.test(message)) {
+    return "news_fetch_unavailable";
+  }
+  return "news_refresh_unavailable";
+}
+
 async function fetchHits(label, params) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -87,7 +102,7 @@ async function fetchHits(label, params) {
     const body = await response.json();
     return Array.isArray(body.hits) ? body.hits : [];
   } catch (error) {
-    console.warn(`fetch_error:${label}:${error.message}`);
+    console.warn(`fetch_error:${label}:${publicNewsErrorCode(error)}`);
     return [];
   } finally {
     clearTimeout(timer);
@@ -200,7 +215,9 @@ async function refreshNews() {
   console.log(`news_refresh_written:${ranked.length}_items`);
 }
 
-refreshNews().catch((error) => {
-  console.error(`news_refresh_failed:${error.message}`);
-  process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  refreshNews().catch((error) => {
+    console.error(`news_refresh_failed:${publicNewsErrorCode(error)}`);
+    process.exit(1);
+  });
+}
