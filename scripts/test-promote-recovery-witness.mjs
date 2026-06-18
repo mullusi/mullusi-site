@@ -132,7 +132,8 @@ function testUnsupportedFlagFails() {
   const result = runPromote([...requiredFlags, "--unsafe", "--date=2026-05-22"]);
   assertEqual(result.status, 1, "unsupported_flag_status");
   assertEqual(result.stdout, "", "unsupported_flag_stdout_empty");
-  assertIncludes(result.stderr, "unsupported_flag:--unsafe", "unsupported_flag_stderr");
+  assertIncludes(result.stderr, "unsupported_flag_count:1", "unsupported_flag_stderr");
+  assertEqual(result.stderr.includes("--unsafe"), false, "unsupported_flag_redacted");
 }
 
 function testInvalidDateFails() {
