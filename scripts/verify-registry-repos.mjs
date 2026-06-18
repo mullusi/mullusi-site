@@ -7,7 +7,7 @@ Invariants: public registry records must not expose private repository slugs or 
 
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -19,11 +19,36 @@ function recordFailure(message) {
   failures.push(message);
 }
 
+export function publicReadErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (error instanceof SyntaxError) {
+    return "json_invalid";
+  }
+  if (/ENOENT|EACCES|EPERM|file|directory|open/i.test(message)) {
+    return "file_unavailable";
+  }
+  if (/[A-Z]:\\|private|secret/i.test(message)) {
+    return "read_unavailable";
+  }
+  if (/json|parse|syntax/i.test(message)) {
+    return "json_invalid";
+  }
+  return "read_unavailable";
+}
+
+export function publicRegistryBoundaryError(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/^[a-z0-9_.]+_(?:read_failed|not_array):[a-z_]+$/i.test(message) || /^[a-z0-9_.]+_not_array$/i.test(message)) {
+    return message;
+  }
+  return "registry_boundary_unavailable";
+}
+
 function readJson(filePath, label) {
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf8"));
   } catch (error) {
-    throw new Error(`${label}_read_failed:${error.message}`);
+    throw new Error(`${label}_read_failed:${publicReadErrorCode(error)}`);
   }
 }
 
@@ -152,9 +177,11 @@ function verifyRegistryBoundary() {
   console.log(`registry boundary verification passed: ${systems.length} public surfaces, ${productRegistry.length} homepage product records, ${manifestCandidates.length} manifest candidates, ${futureDomains.length} staged domains`);
 }
 
-try {
-  verifyRegistryBoundary();
-} catch (error) {
-  console.error(`registry_boundary_verification_failed:${error.message}`);
-  process.exit(1);
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try {
+    verifyRegistryBoundary();
+  } catch (error) {
+    console.error(`registry_boundary_verification_failed:${publicRegistryBoundaryError(error)}`);
+    process.exit(1);
+  }
 }
