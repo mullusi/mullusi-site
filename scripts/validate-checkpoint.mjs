@@ -161,6 +161,7 @@ export function checkpointSteps(options = {}) {
     nodeStep("static site validation", ["scripts/validate-site.mjs"]),
     nodeStep("product manifests", ["scripts/validate-manifests.mjs"]),
     nodeStep("runtime witnesses", ["scripts/validate-runtime-witnesses.mjs"]),
+    nodeStep("generated platform error tests", ["scripts/test-generate-platform-errors.mjs"]),
     nodeStep("generated platform drift", ["scripts/generate-platform.mjs", "--check"]),
     nodeStep("Cloudflare artifact boundary", ["scripts/test-build-cloudflare-pages.mjs"], 180_000),
     nodeStep("registry source boundary tests", ["scripts/test-verify-registry-repos.mjs"]),

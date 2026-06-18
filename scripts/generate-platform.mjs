@@ -135,6 +135,26 @@ function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(targetPath, "utf8"));
 }
 
+export function publicJsonReadErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/^path_boundary_violation:/i.test(message)) {
+    return "path_boundary_violation";
+  }
+  if (error instanceof SyntaxError) {
+    return "json_invalid";
+  }
+  if (/ENOENT|EACCES|EPERM|file|directory|open/i.test(message)) {
+    return "file_unavailable";
+  }
+  if (/[A-Z]:\\|private|secret/i.test(message)) {
+    return "read_unavailable";
+  }
+  if (/json|parse|syntax/i.test(message)) {
+    return "json_invalid";
+  }
+  return "read_unavailable";
+}
+
 function exists(relativePath) {
   return fs.existsSync(assertInsideRepo(relativePath));
 }
@@ -232,7 +252,7 @@ function validateJsonObjectFile(relativePath, label, failures) {
     }
     return parsed;
   } catch (error) {
-    failures.push(`referenced_json_invalid:${label}:${relativePath}:${error.message}`);
+    failures.push(`referenced_json_invalid:${label}:${relativePath}:${publicJsonReadErrorCode(error)}`);
     return null;
   }
 }
@@ -667,7 +687,7 @@ function validateRuntimeWitnessRegistry(manifests, failures) {
   try {
     registry = readRuntimeWitnessRegistry();
   } catch (error) {
-    failures.push(`runtime_witness_registry_read_failed:${runtimeWitnessRegistryPath}:${error.message}`);
+    failures.push(`runtime_witness_registry_read_failed:${runtimeWitnessRegistryPath}:${publicJsonReadErrorCode(error)}`);
     return new Map();
   }
 
@@ -1037,7 +1057,7 @@ export function readProductManifests() {
       validateManifestShape(relativePath, manifest, failures);
       return { relativePath, manifest };
     } catch (error) {
-      failures.push(`manifest_read_failed:${relativePath}:${error.message}`);
+      failures.push(`manifest_read_failed:${relativePath}:${publicJsonReadErrorCode(error)}`);
       return { relativePath, manifest: null };
     }
   });

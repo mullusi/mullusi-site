@@ -132,6 +132,7 @@ function testDefaultCheckpointSteps() {
     "static site validation",
     "product manifests",
     "runtime witnesses",
+    "generated platform error tests",
     "generated platform drift",
     "Cloudflare artifact boundary",
     "registry source boundary tests",
