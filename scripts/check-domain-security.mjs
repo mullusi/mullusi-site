@@ -224,6 +224,17 @@ function unsupportedOptions(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedOptions.has(arg));
 }
 
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/timeout|ETIMEDOUT|ECONNRESET|ENOTFOUND|EAI_AGAIN|network|request/i.test(message)) {
+    return "domain_security_network_unavailable";
+  }
+  if (/json|parse|syntax/i.test(message)) {
+    return "domain_security_response_invalid";
+  }
+  return "domain_security_check_unavailable";
+}
+
 async function runCli() {
   const args = process.argv.slice(2);
   const unsupported = unsupportedOptions(args);
@@ -245,7 +256,7 @@ async function runCli() {
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   runCli().catch((error) => {
-    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=${error instanceof Error ? error.message : String(error)}`);
+    console.log(`verdict=GovernanceBlocked\nproof_state=Fail\nerror=${publicErrorCode(error)}`);
     process.exitCode = 1;
   });
 }
