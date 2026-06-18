@@ -4003,22 +4003,81 @@ html.menu-open body {
   overflow-wrap: anywhere;
 }
 
+#govern-cloud {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 30%),
+    radial-gradient(circle at 82% 10%, color-mix(in srgb, var(--accent-warm) 10%, transparent), transparent 26%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 74%, transparent), var(--bg));
+}
+
+#govern-cloud::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.34;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--line-bright) 68%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--line-bright) 68%, transparent) 1px, transparent 1px);
+  background-position: center top;
+  background-size: 72px 72px;
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 76%, transparent);
+}
+
+#govern-cloud .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+#govern-cloud .sec-head {
+  position: relative;
+  max-width: 880px;
+  padding-bottom: 20px;
+}
+
+#govern-cloud .sec-head::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: min(420px, 72vw);
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-warm), transparent);
+  opacity: 0.78;
+}
+
 [data-service-tiers],
 [data-api-contracts] {
-  gap: 1px;
-  border: 1px solid var(--line);
-  background: var(--line);
+  gap: 10px;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 76%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 62%, transparent), color-mix(in srgb, var(--panel-soft) 86%, transparent)),
+    var(--panel-soft);
+  padding: 10px;
+}
+
+[data-service-tiers] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  counter-reset: service-tier;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.18);
 }
 
 [data-service-tiers] .service,
 [data-api-contracts] .service {
   position: relative;
   overflow: hidden;
-  border: 0;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 68%, transparent);
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 90%, transparent), var(--panel-soft)),
+    linear-gradient(145deg, color-mix(in srgb, var(--accent-deep) 9%, transparent), transparent 42%),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 92%, transparent), color-mix(in srgb, var(--panel-soft) 92%, transparent)),
     var(--panel-glass);
   padding: 24px 22px;
+}
+
+[data-service-tiers] .service {
+  min-height: 250px;
 }
 
 [data-service-tiers] .service::before,
@@ -4030,10 +4089,28 @@ html.menu-open body {
   left: 18px;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--accent-deep), transparent);
-  opacity: 0.62;
+  opacity: 0.66;
 }
 
-[data-service-tiers] .service:nth-child(2)::before,
+[data-service-tiers] .service::after {
+  counter-increment: service-tier;
+  content: "0" counter(service-tier);
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  color: color-mix(in srgb, var(--accent) 42%, transparent);
+  font-family: var(--mono);
+  font-size: 42px;
+  line-height: 1;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+[data-service-tiers] .service:nth-child(2n)::before {
+  background: linear-gradient(90deg, transparent, var(--accent-warm), transparent);
+}
+
+[data-service-tiers] .service:nth-child(3n)::before,
 [data-api-contracts] .service::before {
   background: linear-gradient(90deg, transparent, var(--accent-warm), var(--accent), transparent);
   opacity: 0.86;
@@ -4043,6 +4120,16 @@ html.menu-open body {
 [data-api-contracts] .service > * {
   position: relative;
   z-index: 1;
+}
+
+[data-service-tiers] .service h3,
+[data-api-contracts] .service h3 {
+  font-size: 20px;
+}
+
+[data-service-tiers] .service p,
+[data-api-contracts] .service p {
+  color: var(--ink-soft);
 }
 
 [data-service-tiers] .service dl,
@@ -4056,39 +4143,75 @@ html.menu-open body {
 [data-service-tiers] .service dl div,
 [data-api-contracts] .service dl div {
   border-left: 0;
-  background: var(--panel-field);
+  background: color-mix(in srgb, var(--panel-field) 90%, transparent);
   padding: 10px 12px;
 }
 
 [data-api-contracts] {
-  margin-top: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 14px;
 }
 
 [data-api-contracts] .service {
-  min-height: 310px;
+  min-height: 250px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+[data-api-contracts] .service:first-child {
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 0.86fr) minmax(280px, 1.14fr);
+  column-gap: 24px;
+}
+
+[data-api-contracts] .service .badge,
+[data-api-contracts] .service h3,
+[data-api-contracts] .service code,
+[data-api-contracts] .service p {
+  grid-column: 1;
+}
+
+[data-api-contracts] .service dl {
+  grid-column: 1;
+  grid-row: auto;
+}
+
+[data-api-contracts] .service:first-child dl {
+  grid-column: 2;
+  grid-row: 1 / span 5;
+  align-self: stretch;
+  margin-top: 0;
 }
 
 [data-api-contracts] .service code {
-  background: var(--panel-field);
+  width: 100%;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent),
+    var(--panel-field);
   font-family: var(--mono);
   letter-spacing: 0.02em;
+  padding: 12px 14px;
 }
 
 .eval-wrap {
-  margin-top: 16px;
+  margin-top: 14px;
 }
 
 .eval-card {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(300px, 1.18fr);
+  gap: 16px 24px;
+  align-items: start;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid color-mix(in srgb, var(--line-bright) 72%, transparent);
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 90%, transparent), var(--panel-soft)),
+    linear-gradient(135deg, color-mix(in srgb, var(--danger) 8%, transparent), transparent 30%),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 90%, transparent), color-mix(in srgb, var(--panel-soft) 94%, transparent)),
     var(--panel-glass);
-  padding: 26px;
+  padding: clamp(20px, 3vw, 28px);
 }
 
 .eval-card::before {
@@ -4109,6 +4232,7 @@ html.menu-open body {
 
 .eval-head {
   display: flex;
+  grid-column: 1 / -1;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -4120,10 +4244,12 @@ html.menu-open body {
 }
 
 .eval-card h3 {
+  grid-column: 1;
   font-size: 18px;
 }
 
 .eval-disclaimer {
+  grid-column: 1;
   border-left: 2px solid var(--accent-deep);
   background: var(--panel-field);
   padding: 10px 12px;
@@ -4134,11 +4260,14 @@ html.menu-open body {
 }
 
 .eval-req {
+  grid-column: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid var(--line);
-  background: var(--panel-field);
+  border: 1px solid color-mix(in srgb, var(--line-bright) 66%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent),
+    var(--panel-field);
   padding: 12px;
 }
 
@@ -4160,10 +4289,13 @@ html.menu-open body {
 }
 
 .eval-summary {
+  grid-column: 2;
   font-size: 13px;
+  line-height: 1.7;
 }
 
 .eval-steps {
+  grid-column: 2;
   display: grid;
   gap: 1px;
   border: 1px solid var(--line);
@@ -4204,6 +4336,15 @@ html.menu-open body {
 }
 
 @media (max-width: 680px) {
+  .eval-card {
+    grid-template-columns: 1fr;
+  }
+
+  .eval-summary,
+  .eval-steps {
+    grid-column: 1;
+  }
+
   .eval-steps > div {
     grid-template-columns: 1fr;
     gap: 4px;
@@ -4579,6 +4720,39 @@ html.menu-open body {
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--accent-deep), transparent);
   opacity: 0.7;
+}
+
+.diagram[data-flow-diagram] {
+  margin-top: 14px;
+  border-color: color-mix(in srgb, var(--line-bright) 72%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent 38%),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 84%, transparent), color-mix(in srgb, var(--panel-soft) 92%, transparent)),
+    var(--panel-glass);
+  padding: 16px 18px 18px;
+}
+
+.diagram[data-flow-diagram]::before {
+  background: linear-gradient(90deg, transparent, var(--accent), var(--accent-warm), transparent);
+  opacity: 0.84;
+}
+
+.diagram[data-flow-diagram] .diagram-svg {
+  max-width: 1000px;
+}
+
+.diagram[data-flow-diagram] .dg-node rect {
+  rx: 0;
+  fill: color-mix(in srgb, var(--panel-field) 92%, transparent);
+}
+
+.diagram[data-flow-diagram] .dg-node.is-terminal rect {
+  fill: color-mix(in srgb, var(--accent) 8%, var(--panel-field));
+  stroke: var(--accent);
+}
+
+.diagram[data-flow-diagram] .dg-label {
+  font-size: 14px;
 }
 
 .diagram[data-boundary-map] {
@@ -5553,6 +5727,35 @@ html.menu-open body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  [data-service-tiers] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  [data-api-contracts] .service {
+    grid-template-columns: 1fr;
+  }
+
+  [data-api-contracts] .service:first-child {
+    grid-template-columns: 1fr;
+  }
+
+  [data-api-contracts] .service .badge,
+  [data-api-contracts] .service h3,
+  [data-api-contracts] .service code,
+  [data-api-contracts] .service p,
+  [data-api-contracts] .service dl {
+    grid-column: 1;
+  }
+
+  [data-api-contracts] .service dl {
+    grid-row: auto;
+  }
+
+  [data-api-contracts] .service:first-child dl {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
   .engines {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -5633,6 +5836,18 @@ html.menu-open body {
 
   .wrap {
     padding-inline: 20px;
+  }
+
+  [data-service-tiers],
+  [data-api-contracts] {
+    grid-template-columns: 1fr;
+    padding: 8px;
+  }
+
+  [data-service-tiers] .service,
+  [data-api-contracts] .service {
+    min-height: 0;
+    padding: 20px 18px;
   }
 
   .site-nav .wrap {
