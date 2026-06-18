@@ -438,7 +438,8 @@ function testCliRejectsEmptyFixturePath() {
 
   assert.equal(result.status, 1);
   assert.equal(result.stdout, "");
-  assert.match(result.stderr, /cli_file_unreadable:<empty>/);
+  assert.match(result.stderr, /cli_file_unreadable/);
+  assert.doesNotMatch(result.stderr, /<empty>/);
 }
 
 function testCliRejectsMissingFixturePath() {
@@ -446,7 +447,8 @@ function testCliRejectsMissingFixturePath() {
 
   assert.equal(result.status, 1);
   assert.equal(result.stdout, "");
-  assert.match(result.stderr, /cli_file_unreadable:ops\/missing-www-witness\.md/);
+  assert.match(result.stderr, /cli_file_unreadable/);
+  assert.doesNotMatch(result.stderr, /missing-www-witness/);
 }
 
 testReadyWhenSourceRuleAndApexWitnessPass();
