@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import {
   evaluateDomainSecurityEvidence,
   formatResult,
+  publicErrorCode,
 } from "./check-domain-security.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
@@ -114,10 +115,25 @@ function testCliRejectsUnsupportedArgumentWithoutNetwork() {
   assert.doesNotMatch(result.stdout, /--unexpected/);
 }
 
+function testPublicErrorCodeRedactsRawExceptionValues() {
+  const timeout = publicErrorCode(new Error("request_timeout:_dmarc.mullusi.com:TXT"));
+  const network = publicErrorCode(new Error("ENOTFOUND private.resolver.local"));
+  const response = publicErrorCode(new SyntaxError("Unexpected token in DNS JSON"));
+  const fallback = publicErrorCode(new Error("unexpected local path C:\\secret\\dns.txt"));
+  const joined = [timeout, network, response, fallback].join("\n");
+
+  assert.equal(timeout, "domain_security_network_unavailable");
+  assert.equal(network, "domain_security_network_unavailable");
+  assert.equal(response, "domain_security_response_invalid");
+  assert.equal(fallback, "domain_security_check_unavailable");
+  assert.doesNotMatch(joined, /_dmarc|private|resolver|secret|dns\.txt|mullusi\.com|TXT/);
+}
+
 testAllDomainSecurityControlsPass();
 testCurrentHardeningGapsRemainAwaitingEvidence();
 testMissingBaseControlsBlock();
 testInvalidDmarcPolicyBlocks();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
+testPublicErrorCodeRedactsRawExceptionValues();
 
 console.log("domain security tests passed");
