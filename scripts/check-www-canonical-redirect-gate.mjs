@@ -31,7 +31,7 @@ const witnessTargets = [
 function readCliFile(filePath) {
   const resolvedPath = path.isAbsolute(filePath) ? filePath : path.join(repoRoot, filePath);
   if (!filePath || !fs.existsSync(resolvedPath) || !fs.statSync(resolvedPath).isFile()) {
-    throw new Error(`cli_file_unreadable:${filePath || "<empty>"}`);
+    throw new Error("cli_file_unreadable");
   }
   return fs.readFileSync(resolvedPath, "utf8");
 }
@@ -44,6 +44,14 @@ function cliValue(args, name, defaultValue) {
 
 function unsupportedArgs(args) {
   return args.filter((arg) => arg !== "--allow-pending" && !arg.startsWith("--redirects-file=") && !arg.startsWith("--witness-file="));
+}
+
+export function publicErrorCode(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/^unsupported_args_count=\d+$/.test(message) || message === "cli_file_unreadable") {
+    return message;
+  }
+  return "www_canonical_gate_unavailable";
 }
 
 function normalizeWitnessBlock(block) {
@@ -183,7 +191,7 @@ function runCli() {
       process.exit(1);
     }
   } catch (error) {
-    console.error(error instanceof Error ? error.message : String(error));
+    console.error(publicErrorCode(error));
     process.exit(1);
   }
 }
