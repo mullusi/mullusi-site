@@ -118,6 +118,7 @@ function testDefaultCheckpointSteps() {
     "search indexing surface tests",
     "website origin classification tests",
     "public visibility gate tests",
+    "news fetch error tests",
     "live safety witness capture tests",
     "live safety witness artifact tests",
     "security txt metadata",
