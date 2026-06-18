@@ -429,7 +429,8 @@ function testCliRejectsUnsupportedArgument() {
 
   assert.equal(result.status, 1);
   assert.equal(result.stdout, "");
-  assert.match(result.stderr, /unsupported_args=--unexpected/);
+  assert.match(result.stderr, /unsupported_args_count=1/);
+  assert.doesNotMatch(result.stderr, /--unexpected/);
 }
 
 function testCliRejectsEmptyFixturePath() {
