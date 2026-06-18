@@ -36,8 +36,8 @@ function fixtureHashes(overrides = {}) {
   ]));
 }
 
-function fixtureStatusJson(hashes = fixtureHashes()) {
-  return JSON.stringify({ site: "mullusi.com", public_state: "Published", content_hashes: hashes });
+function fixtureStatusJson(hashes = fixtureHashes(), overrides = {}) {
+  return JSON.stringify({ site: "mullusi.com", public_state: "Published", content_hashes: hashes, ...overrides });
 }
 
 function fixtureEvidence({ liveHashes = fixtureHashes(), localHashes = liveHashes, fileOverrides = {} } = {}) {
@@ -183,10 +183,28 @@ function testLocalManifestMismatchAwaitsEvidenceOnly() {
 
 function testUnexpectedOrInvalidHashPathBlocks() {
   const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({ liveHashes: { ...fixtureHashes(), "../private.txt": "sha256:abc" } }));
+  const serialized = JSON.stringify(result);
 
   assert.equal(result.verdict, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
-  assert.ok(result.hardFindings.includes("live_status_hash_path_invalid:../private.txt"));
+  assert.ok(result.hardFindings.includes("live_status_hash_path_invalid:redacted_path"));
+  assert.doesNotMatch(serialized, /\.\.\/private\.txt/);
+}
+
+function testInvalidStatusValuesAreRedacted() {
+  const evidence = fixtureEvidence();
+  evidence.liveStatusResponse.body = fixtureStatusJson(fixtureHashes(), {
+    site: "private.example.internal",
+    public_state: "secret-draft",
+  });
+  const result = evaluateDeploymentIntegrityEvidence(evidence);
+  const serialized = JSON.stringify(result);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.ok(result.hardFindings.includes("live_status_site_invalid:redacted_value"));
+  assert.ok(result.hardFindings.includes("live_status_public_state_invalid:redacted_value"));
+  assert.doesNotMatch(serialized, /private\.example\.internal|secret-draft/);
 }
 
 function testUnexpectedLiveHashPathAwaitsEvidence() {
@@ -246,6 +264,7 @@ testCloudflareTransformWithContentDriftBlocks();
 testRouteSentinelDriftBlocks();
 testLocalManifestMismatchAwaitsEvidenceOnly();
 testUnexpectedOrInvalidHashPathBlocks();
+testInvalidStatusValuesAreRedacted();
 testUnexpectedLiveHashPathAwaitsEvidence();
 testMissingGovernedHashAwaitsEvidence();
 testCliRejectsUnsupportedArgumentWithoutNetwork();

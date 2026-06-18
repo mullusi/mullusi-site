@@ -125,6 +125,14 @@ function isValidGovernedHashPath(relativePath) {
   return !relativePath.split("/").some((segment) => segment === "" || segment === "." || segment === "..");
 }
 
+function publicStatusValueLabel(value) {
+  return typeof value === "string" && value.length > 0 ? "redacted_value" : "missing";
+}
+
+function publicHashPathLabel(relativePath) {
+  return isValidGovernedHashPath(relativePath) ? relativePath : "redacted_path";
+}
+
 function livePathForGovernedFile(relativePath) {
   return relativePath === "index.html" ? "/" : `/${relativePath}`;
 }
@@ -222,8 +230,8 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
   const governedPathSet = new Set(governedHashPaths);
   const routeSentinelResults = [];
 
-  if (liveStatus.site !== "mullusi.com") hardFindings.push(`live_status_site_invalid:${liveStatus.site || ""}`);
-  if (liveStatus.public_state !== "Published") hardFindings.push(`live_status_public_state_invalid:${liveStatus.public_state || ""}`);
+  if (liveStatus.site !== "mullusi.com") hardFindings.push(`live_status_site_invalid:${publicStatusValueLabel(liveStatus.site)}`);
+  if (liveStatus.public_state !== "Published") hardFindings.push(`live_status_public_state_invalid:${publicStatusValueLabel(liveStatus.public_state)}`);
 
   for (const relativePath of governedHashPaths) {
     if (!liveHashes[relativePath]) softFindings.push(`live_status_hash_missing:${relativePath}`);
@@ -232,7 +240,7 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
   const liveHashPaths = Object.keys(liveHashes);
   for (const relativePath of liveHashPaths) {
     if (!isValidGovernedHashPath(relativePath)) {
-      hardFindings.push(`live_status_hash_path_invalid:${relativePath}`);
+      hardFindings.push(`live_status_hash_path_invalid:${publicHashPathLabel(relativePath)}`);
       continue;
     }
     if (!governedPathSet.has(relativePath)) softFindings.push(`live_status_hash_path_unexpected:${relativePath}`);
