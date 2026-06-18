@@ -112,12 +112,26 @@ function routeUrlMatchesCanonical(routeUrl, canonicalUrl) {
   if (!canonicalUrl) {
     return false;
   }
-  const route = normalizeUrlForComparison(routeUrl);
-  const canonical = normalizeUrlForComparison(canonicalUrl);
+  let route;
+  let canonical;
+  try {
+    route = normalizeUrlForComparison(routeUrl);
+    canonical = normalizeUrlForComparison(canonicalUrl);
+  } catch {
+    return false;
+  }
   if (route === canonical) {
     return true;
   }
   return route === `${canonical}/` || `${route}/` === canonical;
+}
+
+function publicCanonicalHrefLabel(canonicalHref) {
+  try {
+    return validateTargetUrl(canonicalHref);
+  } catch {
+    return "redacted_url";
+  }
 }
 
 export function publicErrorCode(error) {
@@ -199,7 +213,7 @@ export function evaluateRouteResponse(routeUrl, response) {
     if (!canonicalHref) {
       findings.push(`live_route_canonical_missing:${routeUrl}`);
     } else if (!routeUrlMatchesCanonical(routeUrl, canonicalHref)) {
-      findings.push(`live_route_canonical_mismatch:${routeUrl}:${canonicalHref}`);
+      findings.push(`live_route_canonical_mismatch:${routeUrl}:${publicCanonicalHrefLabel(canonicalHref)}`);
     }
   }
 
