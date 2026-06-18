@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import {
   evaluateSecurityTxtContent,
   formatResult,
+  publicErrorCode,
 } from "./check-security-txt.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
@@ -134,7 +135,8 @@ function testCliRejectsUnsupportedArguments() {
   assert.equal(result.status, 1);
   assert.equal(result.stderr, "");
   assert.match(result.stdout, /^verdict=GovernanceBlocked$/m);
-  assert.match(result.stdout, /^error=unsupported_arg:--unsafe$/m);
+  assert.match(result.stdout, /^error=unsupported_arg_count:1$/m);
+  assert.doesNotMatch(result.stdout, /--unsafe/);
   assert.equal(outsidePathResult.status, 1);
   assert.equal(outsidePathResult.stderr, "");
   assert.match(outsidePathResult.stdout, /^error=path_outside_repo$/m);
@@ -143,11 +145,37 @@ function testCliRejectsUnsupportedArguments() {
   assert.match(wrongFileNameResult.stdout, /^error=path_not_security_txt$/m);
 }
 
+function testCliRedactsInvalidClockAndMissingFile() {
+  const invalidClock = runChecker(["--now=private-clock-value"]);
+  const missingFile = runChecker(["--path=missing/security.txt"]);
+
+  assert.equal(invalidClock.status, 1);
+  assert.equal(invalidClock.stderr, "");
+  assert.match(invalidClock.stdout, /^error=now_invalid$/m);
+  assert.doesNotMatch(invalidClock.stdout, /private-clock-value/);
+  assert.equal(missingFile.status, 1);
+  assert.equal(missingFile.stderr, "");
+  assert.match(missingFile.stdout, /^error=security_txt_file_unavailable$/m);
+  assert.doesNotMatch(missingFile.stdout, /missing|security\.txt/);
+}
+
+function testPublicErrorCodeRedactsRawExceptionValues() {
+  const file = publicErrorCode(new Error("ENOENT: no such file or directory, open 'C:\\secret\\security.txt'"));
+  const fallback = publicErrorCode(new Error("unexpected private value"));
+  const joined = [file, fallback].join("\n");
+
+  assert.equal(file, "security_txt_file_unavailable");
+  assert.equal(fallback, "security_txt_check_unavailable");
+  assert.doesNotMatch(joined, /secret|private|security\.txt/);
+}
+
 testValidSecurityTxtPasses();
 testMissingRequiredFieldsBlock();
 testExpirationBoundsBlock();
 testDuplicateExpiresAndMalformedLinesBlock();
 testCliUsesExplicitClockAndPath();
 testCliRejectsUnsupportedArguments();
+testCliRedactsInvalidClockAndMissingFile();
+testPublicErrorCodeRedactsRawExceptionValues();
 
 console.log("security.txt tests passed");
