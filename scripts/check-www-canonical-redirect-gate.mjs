@@ -169,7 +169,7 @@ function runCli() {
   try {
     const invalidArgs = unsupportedArgs(args);
     if (invalidArgs.length > 0) {
-      throw new Error(`unsupported_args=${invalidArgs.join(",")}`);
+      throw new Error(`unsupported_args_count=${invalidArgs.length}`);
     }
     const allowPending = args.includes("--allow-pending");
     const redirectsFile = cliValue(args, "--redirects-file", "_redirects");
