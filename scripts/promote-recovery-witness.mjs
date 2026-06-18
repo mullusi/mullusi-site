@@ -56,7 +56,7 @@ function validateArgs() {
     recordFailure(`unsupported_flag_count:${unsupportedFlags.length}`);
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(reviewDate)) {
-    recordFailure(`invalid_review_date:${reviewDate}`);
+    recordFailure("invalid_review_date");
   }
   if (inventoryPathArg && inventoryPath.trim().length === 0) {
     recordFailure("inventory_path_empty");

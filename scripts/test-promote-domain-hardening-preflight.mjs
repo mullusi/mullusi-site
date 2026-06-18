@@ -174,7 +174,22 @@ function testInvalidDateFails() {
 
     assert.equal(result.status, 1);
     assert.equal(result.stdout, "");
-    assert.match(result.stderr, /invalid_review_date:05-24-2026/);
+    assert.match(result.stderr, /invalid_review_date/);
+    assert.doesNotMatch(result.stderr, /05-24-2026/);
+    assert.equal(after, before);
+  });
+}
+
+function testInvalidDateDoesNotEchoPathShapedInput() {
+  withPreflightFixture((before, preflightPath) => {
+    const rawDate = "D:\\private\\date";
+    const result = runPromote(preflightPath, ["--active-cloudflare-ca-set", `--date=${rawDate}`]);
+    const after = fs.readFileSync(preflightPath, "utf8");
+
+    assert.equal(result.status, 1);
+    assert.equal(result.stdout, "");
+    assert.match(result.stderr, /invalid_review_date/);
+    assert.doesNotMatch(result.stderr, /private|D:\\/);
     assert.equal(after, before);
   });
 }
@@ -185,5 +200,6 @@ testPartialWritePromotesOnlyEvidenceAndDerivedPermissions();
 testFullWritePromotesReadyState();
 testUnsupportedFlagFails();
 testInvalidDateFails();
+testInvalidDateDoesNotEchoPathShapedInput();
 
 console.log("domain hardening preflight promotion tests passed");
