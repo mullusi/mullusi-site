@@ -122,12 +122,45 @@ function testSyntheticMalformedSupportRefFailsClosed() {
     approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=ops/mullu-govern-support-readiness.md\n",
   });
   const result = validateGovernSupportReadinessEvidence(evidence);
+  const report = formatGovernSupportReadinessReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
-  assert.match(result.findings.join("\n"), /approval_packet_support_readiness_ref_invalid:ops\/mullu-govern-support-readiness.md/);
+  assert.match(result.findings.join("\n"), /approval_packet_support_readiness_ref_invalid:redacted_value/);
   assert.match(result.findings.join("\n"), /approval_packet_support_readiness_ref_invalid:evidence_ref_family_not_allowed/);
+  assert.doesNotMatch(report, /ops\/mullu-govern-support-readiness/);
+}
+
+function testSyntheticMissingWitnessTermUsesPublicLabel() {
+  const evidence = validEvidence({
+    witness: validEvidence().witness.replace("external_ticketing_system=not_claimed", ""),
+  });
+  evidence.privateValueScanSources.witness = evidence.witness;
+  const result = validateGovernSupportReadinessEvidence(evidence);
+  const report = formatGovernSupportReadinessReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_witness_term_missing:external_ticketing_system/);
+  assert.doesNotMatch(report, /external_ticketing_system=not_claimed/);
+}
+
+function testSyntheticUnsafeSupportValuesAreRedacted() {
+  const evidence = validEvidence({
+    approvalPacket: "public_write_route_allowed=false\nsupport_readiness_ref=ghp_abcdefghijklmnopqrstuvwxyz123456\n",
+    manifest: { ownership: { supportEmail: "private-support@example.internal" } },
+  });
+  const result = validateGovernSupportReadinessEvidence(evidence);
+  const report = formatGovernSupportReadinessReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /manifest_support_email_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_packet_support_readiness_ref_invalid:redacted_value/);
+  assert.doesNotMatch(report, /ghp_/);
+  assert.doesNotMatch(report, /private-support/);
+  assert.doesNotMatch(report, /example\.internal/);
 }
 
 function testCliJsonAndUnsupportedArgs() {
@@ -170,6 +203,8 @@ testCurrentSupportReadinessPasses();
 testSyntheticMissingSupportContactFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testSyntheticMalformedSupportRefFailsClosed();
+testSyntheticMissingWitnessTermUsesPublicLabel();
+testSyntheticUnsafeSupportValuesAreRedacted();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
 
