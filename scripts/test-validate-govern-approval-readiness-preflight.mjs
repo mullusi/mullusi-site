@@ -118,7 +118,22 @@ function testSyntheticOperatorApprovalRefFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.readyForApproval, false);
-  assert.match(result.findings.join("\n"), /approval_input_must_remain_missing:operator_approval_ref/);
+  assert.match(result.findings.join("\n"), /approval_input_must_remain_missing:operator_approval_ref:redacted_value/);
+  assert.doesNotMatch(formatGovernApprovalReadinessPreflightReport(result), /operator\/ready/);
+}
+
+function testSyntheticMissingWitnessTermUsesPublicLabel() {
+  const evidence = validEvidence({
+    witness: validEvidence().witness.replace("provider_values_recorded=false", ""),
+  });
+  evidence.privateValueScanSources.witness = evidence.witness;
+  const result = validateGovernApprovalReadinessPreflightEvidence(evidence);
+  const report = formatGovernApprovalReadinessPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_witness_term_missing:provider_values_recorded/);
+  assert.doesNotMatch(report, /provider_values_recorded=false/);
 }
 
 function testSyntheticAggregateFailureFailsClosed() {
@@ -172,6 +187,31 @@ function testSyntheticWriteRouteOpenFailsClosed() {
   assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:true/);
 }
 
+function testSyntheticUnsafeApprovalPacketValuesAreRedacted() {
+  const evidence = validEvidence({
+    approvalPacket: [
+      "packet_state=https://private.example.internal",
+      "approval_state=private-approved-state",
+      "public_write_route_allowed=private-route-open",
+      "operator_approval_ref=ghp_abcdefghijklmnopqrstuvwxyz123456",
+      ...requiredLiveEvidenceApprovalKeys.filter((key) => key !== "operator_approval_ref").map((key) => `${key}=missing`),
+    ].join("\n"),
+  });
+  const result = validateGovernApprovalReadinessPreflightEvidence(evidence);
+  const report = formatGovernApprovalReadinessPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /approval_input_must_remain_missing:operator_approval_ref:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_packet_state_must_remain_awaiting:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_state_must_remain_not_approved:redacted_value/);
+  assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:redacted_value/);
+  assert.doesNotMatch(report, /ghp_/);
+  assert.doesNotMatch(report, /private-approved-state/);
+  assert.doesNotMatch(report, /private-route-open/);
+  assert.doesNotMatch(report, /private\.example\.internal/);
+}
+
 function testSyntheticSecretPatternFailsClosed() {
   const evidence = validEvidence({
     privateValueScanSources: {
@@ -220,9 +260,11 @@ function testPathBoundaryFailsClosedWithoutEcho() {
 
 testCurrentApprovalReadinessPreflightPasses();
 testSyntheticOperatorApprovalRefFailsClosed();
+testSyntheticMissingWitnessTermUsesPublicLabel();
 testSyntheticAggregateFailureFailsClosed();
 testSyntheticRouteRuntimeAggregateFailureFailsClosed();
 testSyntheticWriteRouteOpenFailsClosed();
+testSyntheticUnsafeApprovalPacketValuesAreRedacted();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
