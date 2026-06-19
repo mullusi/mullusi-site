@@ -21,34 +21,37 @@ const defaultChecklistPath = "ops/mullu-govern-live-evidence-ref-collection-chec
 const allowedArgs = new Set(["--json"]);
 
 const requiredChecklistTerms = [
-  "collection_checklist_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  "ready_for_live_evidence=false",
-  "public_write_route_allowed=false",
-  "intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json",
-  "intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
-  "secret_values_allowed=false",
-  "raw_payloads_allowed=false",
-  "provider_values_allowed=false",
-  "STATUS:",
+  { id: "collection_checklist_state", text: "collection_checklist_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "ready_for_live_evidence", text: "ready_for_live_evidence=false" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "intake_template", text: "intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json" },
+  {
+    id: "intake_validator",
+    text: "intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
+  },
+  { id: "secret_values_allowed", text: "secret_values_allowed=false" },
+  { id: "raw_payloads_allowed", text: "raw_payloads_allowed=false" },
+  { id: "provider_values_allowed", text: "provider_values_allowed=false" },
+  { id: "status_block", text: "STATUS:" },
 ];
 
 const requiredStopTerms = [
-  "private_value_must_not_enter_public_ref",
-  "raw_payload_must_not_enter_public_ref",
-  "ref_grammar_invalid",
-  "approval_packet_not_ready",
+  { id: "private_value_stop", text: "private_value_must_not_enter_public_ref" },
+  { id: "raw_payload_stop", text: "raw_payload_must_not_enter_public_ref" },
+  { id: "ref_grammar_stop", text: "ref_grammar_invalid" },
+  { id: "approval_packet_stop", text: "approval_packet_not_ready" },
 ];
 
 const requiredForbiddenValueTerms = [
-  "secret",
-  "token",
-  "raw payload",
-  "authorization headers",
-  "account ids",
-  "provider host values",
-  "database URLs",
+  { id: "secret", text: "secret" },
+  { id: "token", text: "token" },
+  { id: "raw_payload", text: "raw payload" },
+  { id: "authorization_headers", text: "authorization headers" },
+  { id: "account_ids", text: "account ids" },
+  { id: "provider_host_values", text: "provider host values" },
+  { id: "database_urls", text: "database URLs" },
 ];
 
 function blockedResult(finding) {
@@ -87,7 +90,7 @@ export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklis
   const findings = [];
 
   for (const term of requiredChecklistTerms) {
-    if (!checklist.includes(term)) findings.push(`required_checklist_term_missing:${term}`);
+    if (!checklist.includes(term.text)) findings.push(`required_checklist_term_missing:${term.id}`);
   }
 
   for (const key of requiredLiveEvidenceApprovalKeys) {
@@ -97,11 +100,11 @@ export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklis
   }
 
   for (const term of requiredStopTerms) {
-    if (!checklist.includes(term)) findings.push(`required_stop_condition_missing:${term}`);
+    if (!checklist.includes(term.text)) findings.push(`required_stop_condition_missing:${term.id}`);
   }
 
   for (const term of requiredForbiddenValueTerms) {
-    if (!checklist.includes(term)) findings.push(`required_forbidden_value_term_missing:${term}`);
+    if (!checklist.includes(term.text)) findings.push(`required_forbidden_value_term_missing:${term.id}`);
   }
 
   findings.push(...scanForbiddenEvidencePatterns("collectionChecklist", checklist));
