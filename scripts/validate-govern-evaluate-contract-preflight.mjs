@@ -33,25 +33,41 @@ const expectedOutputs = [
 ];
 
 const requiredWitnessTerms = [
-  "contract_preflight_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  "public_write_route_allowed=false",
-  "contract_execution_allowed=false",
-  "api_contract_test_ref=missing",
-  "route_publication_action=none",
-  "dns_mutation=none",
-  "runtime_mutation=none",
-  "secret_rotation_required=false",
-  "raw_request_body_recorded=false",
-  "raw_response_body_recorded=false",
-  "accepted_case_execution=AwaitingEvidence",
-  "rejected_case_execution=AwaitingEvidence",
-  "malformed_case_execution=AwaitingEvidence",
-  "unauthorized_case_execution=AwaitingEvidence",
-  "rate_limited_case_execution=AwaitingEvidence",
-  "STATUS:",
+  { id: "contract_preflight_state", text: "contract_preflight_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "contract_execution_allowed", text: "contract_execution_allowed=false" },
+  { id: "api_contract_test_ref", text: "api_contract_test_ref=missing" },
+  { id: "route_publication_action", text: "route_publication_action=none" },
+  { id: "dns_mutation", text: "dns_mutation=none" },
+  { id: "runtime_mutation", text: "runtime_mutation=none" },
+  { id: "secret_rotation_required", text: "secret_rotation_required=false" },
+  { id: "raw_request_body_recorded", text: "raw_request_body_recorded=false" },
+  { id: "raw_response_body_recorded", text: "raw_response_body_recorded=false" },
+  { id: "accepted_case_execution", text: "accepted_case_execution=AwaitingEvidence" },
+  { id: "rejected_case_execution", text: "rejected_case_execution=AwaitingEvidence" },
+  { id: "malformed_case_execution", text: "malformed_case_execution=AwaitingEvidence" },
+  { id: "unauthorized_case_execution", text: "unauthorized_case_execution=AwaitingEvidence" },
+  { id: "rate_limited_case_execution", text: "rate_limited_case_execution=AwaitingEvidence" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const publicContractAllowedScalars = new Set([
+  "missing",
+  "false",
+  "true",
+  "none",
+  "AwaitingEvidence",
+  "SolvedVerified",
+  "GovernanceBlocked",
+  "Pass",
+  "Fail",
+  contractPath,
+  "https://mullusi.com/contracts/govern/evaluate.schema.json",
+  "1.0.0",
+  "no_raw_secret_or_unapproved_user_data",
+]);
 
 function blockedResult(finding) {
   return {
@@ -102,6 +118,17 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
+export function publicEvaluateContractScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  if (typeof value === "boolean") return `boolean:${value ? "true" : "false"}`;
+  if (typeof value === "string" && publicContractAllowedScalars.has(value)) return value;
+  if (typeof value === "string") return "redacted_value";
+  if (typeof value === "number") return "number";
+  if (Array.isArray(value)) return "array";
+  if (typeof value === "object") return "object";
+  return typeof value;
+}
+
 function sameValues(observed, expected) {
   return Array.isArray(observed)
     && observed.length === expected.length
@@ -112,7 +139,7 @@ export function validateGovernEvaluateContractPreflightEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredWitnessTerms) {
-    if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
+    if (!evidence.witness.includes(term.text)) findings.push(`required_witness_term_missing:${term.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -124,11 +151,11 @@ export function validateGovernEvaluateContractPreflightEvidence(evidence) {
   ));
   if (!route) findings.push("manifest_evaluate_route_missing");
   if (route?.contract !== contractPath) {
-    findings.push(`manifest_contract_ref_invalid:${route?.contract || "missing"}`);
+    findings.push(`manifest_contract_ref_invalid:${publicEvaluateContractScalarLabel(route?.contract)}`);
   }
 
   if (evidence.contract?.$id !== "https://mullusi.com/contracts/govern/evaluate.schema.json") {
-    findings.push(`contract_id_invalid:${evidence.contract?.$id || "missing"}`);
+    findings.push(`contract_id_invalid:${publicEvaluateContractScalarLabel(evidence.contract?.$id)}`);
   }
   if (evidence.contract?.additionalProperties !== false) {
     findings.push("contract_root_additional_properties_must_be_false");
@@ -141,13 +168,13 @@ export function validateGovernEvaluateContractPreflightEvidence(evidence) {
 
   const properties = evidence.contract?.properties || {};
   if (properties.schema_version?.const !== "1.0.0") {
-    findings.push(`contract_schema_version_const_invalid:${properties.schema_version?.const || "missing"}`);
+    findings.push(`contract_schema_version_const_invalid:${publicEvaluateContractScalarLabel(properties.schema_version?.const)}`);
   }
   if (properties.trace_required?.const !== true) {
     findings.push("contract_trace_required_const_invalid");
   }
   if (properties.privacy_acknowledgement?.const !== "no_raw_secret_or_unapproved_user_data") {
-    findings.push(`contract_privacy_acknowledgement_invalid:${properties.privacy_acknowledgement?.const || "missing"}`);
+    findings.push(`contract_privacy_acknowledgement_invalid:${publicEvaluateContractScalarLabel(properties.privacy_acknowledgement?.const)}`);
   }
 
   const action = properties.action || {};
@@ -158,13 +185,13 @@ export function validateGovernEvaluateContractPreflightEvidence(evidence) {
     findings.push("contract_action_kind_enum_invalid");
   }
   if (action.properties?.summary?.maxLength !== 2000) {
-    findings.push(`contract_summary_max_length_invalid:${action.properties?.summary?.maxLength || "missing"}`);
+    findings.push(`contract_summary_max_length_invalid:${publicEvaluateContractScalarLabel(action.properties?.summary?.maxLength)}`);
   }
   if (properties.constraints?.maxItems !== 20) {
-    findings.push(`contract_constraints_max_items_invalid:${properties.constraints?.maxItems || "missing"}`);
+    findings.push(`contract_constraints_max_items_invalid:${publicEvaluateContractScalarLabel(properties.constraints?.maxItems)}`);
   }
   if (properties.constraints?.items?.maxLength !== 500) {
-    findings.push(`contract_constraints_item_max_length_invalid:${properties.constraints?.items?.maxLength || "missing"}`);
+    findings.push(`contract_constraints_item_max_length_invalid:${publicEvaluateContractScalarLabel(properties.constraints?.items?.maxLength)}`);
   }
   if (!sameValues(properties.requested_outputs?.items?.enum, expectedOutputs)) {
     findings.push("contract_requested_outputs_enum_invalid");
@@ -177,7 +204,7 @@ export function validateGovernEvaluateContractPreflightEvidence(evidence) {
     findings.push("approval_packet_write_route_not_blocked");
   }
   if (lineValue(evidence.approvalPacket, "api_contract_test_ref") !== "missing") {
-    findings.push(`approval_packet_api_contract_test_ref_must_remain_missing:${lineValue(evidence.approvalPacket, "api_contract_test_ref") || "missing"}`);
+    findings.push(`approval_packet_api_contract_test_ref_must_remain_missing:${publicEvaluateContractScalarLabel(lineValue(evidence.approvalPacket, "api_contract_test_ref"))}`);
   }
 
   return {

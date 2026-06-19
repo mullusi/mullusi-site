@@ -146,11 +146,76 @@ function testSyntheticFilledExecutionRefFailsClosed() {
     approvalPacket: "public_write_route_allowed=false\napi_contract_test_ref=ops/live-contract-test.md\n",
   });
   const result = validateGovernEvaluateContractPreflightEvidence(evidence);
+  const report = formatGovernEvaluateContractPreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
-  assert.match(result.findings.join("\n"), /approval_packet_api_contract_test_ref_must_remain_missing/);
+  assert.match(result.findings.join("\n"), /approval_packet_api_contract_test_ref_must_remain_missing:redacted_value/);
+  assert.doesNotMatch(report, /live-contract-test/);
+}
+
+function testSyntheticMissingWitnessTermUsesPublicLabel() {
+  const evidence = validEvidence({
+    witness: validEvidence().witness.replace("raw_request_body_recorded=false", ""),
+  });
+  evidence.privateValueScanSources.witness = evidence.witness;
+  const result = validateGovernEvaluateContractPreflightEvidence(evidence);
+  const report = formatGovernEvaluateContractPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_witness_term_missing:raw_request_body_recorded/);
+  assert.doesNotMatch(report, /raw_request_body_recorded=false/);
+}
+
+function testSyntheticUnsafeContractValuesAreRedacted() {
+  const evidence = validEvidence({
+    contract: validContract({
+      $id: "https://private.example.internal/contracts/evaluate.schema.json",
+      properties: {
+        ...validContract().properties,
+        schema_version: { const: "private-version-2026" },
+        privacy_acknowledgement: { const: "private-policy-value" },
+        action: {
+          ...validContract().properties.action,
+          properties: {
+            ...validContract().properties.action.properties,
+            summary: { maxLength: "private-summary-length" },
+          },
+        },
+        constraints: { maxItems: "private-max-items", items: { maxLength: "private-item-length" } },
+      },
+    }),
+    manifest: {
+      api: {
+        routes: [{
+          method: "POST",
+          path: "/v1/govern/evaluate",
+          contract: "private/contracts/evaluate.schema.json",
+        }],
+      },
+    },
+  });
+  const result = validateGovernEvaluateContractPreflightEvidence(evidence);
+  const report = formatGovernEvaluateContractPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /manifest_contract_ref_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /contract_id_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /contract_schema_version_const_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /contract_privacy_acknowledgement_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /contract_summary_max_length_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /contract_constraints_max_items_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /contract_constraints_item_max_length_invalid:redacted_value/);
+  assert.doesNotMatch(report, /private\.example\.internal/);
+  assert.doesNotMatch(report, /private-version-2026/);
+  assert.doesNotMatch(report, /private-policy-value/);
+  assert.doesNotMatch(report, /private-summary-length/);
+  assert.doesNotMatch(report, /private-max-items/);
+  assert.doesNotMatch(report, /private-item-length/);
+  assert.doesNotMatch(report, /private\/contracts/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -207,6 +272,8 @@ function testPathBoundaryFailsClosedWithoutEcho() {
 testCurrentContractPreflightPasses();
 testSyntheticUnboundedContractFailsClosed();
 testSyntheticFilledExecutionRefFailsClosed();
+testSyntheticMissingWitnessTermUsesPublicLabel();
+testSyntheticUnsafeContractValuesAreRedacted();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
