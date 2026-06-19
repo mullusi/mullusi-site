@@ -143,7 +143,8 @@ function testSyntheticMissingCollectionChecklistFailsClosed() {
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
-  assert.match(result.findings.join("\n"), /required_runbook_term_missing:live_evidence_ref_collection_checklist=ops\/mullu-govern-live-evidence-ref-collection-checklist.md/);
+  assert.match(result.findings.join("\n"), /required_runbook_term_missing:live_evidence_ref_collection_checklist/);
+  assert.doesNotMatch(formatGovernLiveEvidenceOperatorRunbookReport(result), /mullu-govern-live-evidence-ref-collection-checklist\.md/);
 }
 
 function testSyntheticApprovalPacketFilledRefFailsClosed() {
@@ -160,7 +161,30 @@ function testSyntheticApprovalPacketFilledRefFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.missingApprovalInputCount, 7);
-  assert.match(result.findings.join("\n"), /approval_packet_ref_must_remain_missing:operator_approval_ref/);
+  assert.match(result.findings.join("\n"), /approval_packet_ref_must_remain_missing:operator_approval_ref:redacted_value/);
+  assert.doesNotMatch(formatGovernLiveEvidenceOperatorRunbookReport(result), /operator-approved/);
+}
+
+function testSyntheticUnsafeApprovalPacketValuesAreRedacted() {
+  const evidence = validEvidence({
+    approvalPacket: [
+      "approval_state=private-approved-state",
+      "public_write_route_allowed=https://private.example.internal",
+      "operator_approval_ref=ghp_abcdefghijklmnopqrstuvwxyz123456",
+      ...requiredLiveEvidenceApprovalKeys.filter((key) => key !== "operator_approval_ref").map((key) => `${key}=missing`),
+    ].join("\n"),
+  });
+  const result = validateGovernLiveEvidenceOperatorRunbookEvidence(evidence);
+  const report = formatGovernLiveEvidenceOperatorRunbookReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /approval_packet_ref_must_remain_missing:operator_approval_ref:redacted_value/);
+  assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_state_must_remain_not_approved:redacted_value/);
+  assert.doesNotMatch(report, /ghp_/);
+  assert.doesNotMatch(report, /private-approved-state/);
+  assert.doesNotMatch(report, /private\.example\.internal/);
 }
 
 function testSyntheticSequencePreflightFailureFailsClosed() {
@@ -309,6 +333,7 @@ testCurrentRunbookPasses();
 testSyntheticMissingApprovalKeyFailsClosed();
 testSyntheticMissingCollectionChecklistFailsClosed();
 testSyntheticApprovalPacketFilledRefFailsClosed();
+testSyntheticUnsafeApprovalPacketValuesAreRedacted();
 testSyntheticSequencePreflightFailureFailsClosed();
 testSyntheticApprovalAggregateFailureFailsClosed();
 testSyntheticIntakeFailureFailsClosed();

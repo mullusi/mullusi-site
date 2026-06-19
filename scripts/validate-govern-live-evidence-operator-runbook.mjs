@@ -28,25 +28,57 @@ const defaultRunbookPath = "ops/mullu-govern-live-evidence-operator-runbook.md";
 const allowedArgs = new Set(["--json"]);
 
 const requiredRunbookTerms = [
-  "operator_runbook_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  "ready_for_live_evidence=false",
-  "public_write_route_allowed=false",
-  "approval_packet=ops/mullu-govern-public-beta-approval-packet.md",
-  "approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md",
-  "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
-  "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
-  "live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collection-checklist.md",
-  "sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md",
-  "runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md",
-  "safe_local_command=node scripts/validate-govern-live-evidence-sequence-preflight.mjs",
-  "secret_values_allowed=false",
-  "raw_request_bodies_allowed=false",
-  "raw_response_bodies_allowed=false",
-  "provider_values_allowed=false",
-  "STATUS:",
+  { id: "operator_runbook_state", text: "operator_runbook_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "ready_for_live_evidence", text: "ready_for_live_evidence=false" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "approval_packet", text: "approval_packet=ops/mullu-govern-public-beta-approval-packet.md" },
+  {
+    id: "approval_readiness_preflight",
+    text: "approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md",
+  },
+  {
+    id: "live_evidence_ref_intake",
+    text: "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
+  },
+  {
+    id: "live_evidence_ref_intake_command",
+    text: "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
+  },
+  {
+    id: "live_evidence_ref_collection_checklist",
+    text: "live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collection-checklist.md",
+  },
+  {
+    id: "sequence_preflight",
+    text: "sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md",
+  },
+  {
+    id: "runtime_witness_packet",
+    text: "runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md",
+  },
+  {
+    id: "safe_local_command",
+    text: "safe_local_command=node scripts/validate-govern-live-evidence-sequence-preflight.mjs",
+  },
+  { id: "secret_values_allowed", text: "secret_values_allowed=false" },
+  { id: "raw_request_bodies_allowed", text: "raw_request_bodies_allowed=false" },
+  { id: "raw_response_bodies_allowed", text: "raw_response_bodies_allowed=false" },
+  { id: "provider_values_allowed", text: "provider_values_allowed=false" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const publicRunbookAllowedScalars = new Set([
+  "missing",
+  "false",
+  "true",
+  "NotApproved",
+  "SolvedVerified",
+  "GovernanceBlocked",
+  "Pass",
+  "Fail",
+]);
 
 function blockedResult(finding) {
   return {
@@ -87,11 +119,22 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
+export function publicOperatorRunbookScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  if (typeof value === "boolean") return `boolean:${value ? "true" : "false"}`;
+  if (typeof value === "string" && publicRunbookAllowedScalars.has(value)) return value;
+  if (typeof value === "string") return "redacted_value";
+  if (typeof value === "number") return "number";
+  if (Array.isArray(value)) return "array";
+  if (typeof value === "object") return "object";
+  return typeof value;
+}
+
 export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredRunbookTerms) {
-    if (!evidence.runbook.includes(term)) findings.push(`required_runbook_term_missing:${term}`);
+    if (!evidence.runbook.includes(term.text)) findings.push(`required_runbook_term_missing:${term.id}`);
   }
 
   for (const key of requiredLiveEvidenceApprovalKeys) {
@@ -99,7 +142,7 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
       findings.push(`required_approval_key_missing_from_table:${key}`);
     }
     if (lineValue(evidence.approvalPacket, key) !== "missing") {
-      findings.push(`approval_packet_ref_must_remain_missing:${key}:${lineValue(evidence.approvalPacket, key) || "missing"}`);
+      findings.push(`approval_packet_ref_must_remain_missing:${key}:${publicOperatorRunbookScalarLabel(lineValue(evidence.approvalPacket, key))}`);
     }
   }
 
@@ -112,43 +155,43 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
   }
 
   if (lineValue(evidence.approvalPacket, "public_write_route_allowed") !== "false") {
-    findings.push(`public_write_route_allowed_must_remain_false:${lineValue(evidence.approvalPacket, "public_write_route_allowed") || "missing"}`);
+    findings.push(`public_write_route_allowed_must_remain_false:${publicOperatorRunbookScalarLabel(lineValue(evidence.approvalPacket, "public_write_route_allowed"))}`);
   }
   if (lineValue(evidence.approvalPacket, "approval_state") !== "NotApproved") {
-    findings.push(`approval_state_must_remain_not_approved:${lineValue(evidence.approvalPacket, "approval_state") || "missing"}`);
+    findings.push(`approval_state_must_remain_not_approved:${publicOperatorRunbookScalarLabel(lineValue(evidence.approvalPacket, "approval_state"))}`);
   }
   if (evidence.approvalPacketResult?.solverOutcome !== "SolvedVerified") {
-    findings.push(`approval_packet_not_solved:${evidence.approvalPacketResult?.solverOutcome || "missing"}`);
+    findings.push(`approval_packet_not_solved:${publicOperatorRunbookScalarLabel(evidence.approvalPacketResult?.solverOutcome)}`);
   }
   if (evidence.approvalPacketResult?.proofState !== "Pass") {
-    findings.push(`approval_packet_proof_not_pass:${evidence.approvalPacketResult?.proofState || "missing"}`);
+    findings.push(`approval_packet_proof_not_pass:${publicOperatorRunbookScalarLabel(evidence.approvalPacketResult?.proofState)}`);
   }
   if (evidence.approvalPacketResult?.publicWriteRouteAllowed !== false) {
     findings.push("approval_packet_public_route_not_blocked");
   }
   if (evidence.approvalReadinessResult?.solverOutcome !== "SolvedVerified") {
-    findings.push(`approval_readiness_not_solved:${evidence.approvalReadinessResult?.solverOutcome || "missing"}`);
+    findings.push(`approval_readiness_not_solved:${publicOperatorRunbookScalarLabel(evidence.approvalReadinessResult?.solverOutcome)}`);
   }
   if (evidence.approvalReadinessResult?.proofState !== "Pass") {
-    findings.push(`approval_readiness_proof_not_pass:${evidence.approvalReadinessResult?.proofState || "missing"}`);
+    findings.push(`approval_readiness_proof_not_pass:${publicOperatorRunbookScalarLabel(evidence.approvalReadinessResult?.proofState)}`);
   }
   if (evidence.approvalReadinessResult?.readyForApproval !== false) {
     findings.push("approval_readiness_ready_for_approval_must_remain_false");
   }
   if (evidence.sequencePreflightResult?.solverOutcome !== "SolvedVerified") {
-    findings.push(`sequence_preflight_not_solved:${evidence.sequencePreflightResult?.solverOutcome || "missing"}`);
+    findings.push(`sequence_preflight_not_solved:${publicOperatorRunbookScalarLabel(evidence.sequencePreflightResult?.solverOutcome)}`);
   }
   if (evidence.sequencePreflightResult?.proofState !== "Pass") {
-    findings.push(`sequence_preflight_proof_not_pass:${evidence.sequencePreflightResult?.proofState || "missing"}`);
+    findings.push(`sequence_preflight_proof_not_pass:${publicOperatorRunbookScalarLabel(evidence.sequencePreflightResult?.proofState)}`);
   }
   if (evidence.sequencePreflightResult?.readyForLiveEvidence !== false) {
     findings.push("sequence_preflight_ready_for_live_evidence_must_remain_false");
   }
   if (evidence.intakeResult?.solverOutcome !== "SolvedVerified") {
-    findings.push(`live_evidence_ref_intake_not_solved:${evidence.intakeResult?.solverOutcome || "missing"}`);
+    findings.push(`live_evidence_ref_intake_not_solved:${publicOperatorRunbookScalarLabel(evidence.intakeResult?.solverOutcome)}`);
   }
   if (evidence.intakeResult?.proofState !== "Pass") {
-    findings.push(`live_evidence_ref_intake_proof_not_pass:${evidence.intakeResult?.proofState || "missing"}`);
+    findings.push(`live_evidence_ref_intake_proof_not_pass:${publicOperatorRunbookScalarLabel(evidence.intakeResult?.proofState)}`);
   }
   if (evidence.intakeResult?.readyForLiveEvidence !== false) {
     findings.push("live_evidence_ref_intake_ready_for_live_evidence_must_remain_false");
@@ -157,19 +200,19 @@ export function validateGovernLiveEvidenceOperatorRunbookEvidence(evidence) {
     findings.push("live_evidence_ref_intake_require_complete_must_remain_false");
   }
   if (evidence.collectionChecklistResult?.solverOutcome !== "SolvedVerified") {
-    findings.push(`live_evidence_ref_collection_checklist_not_solved:${evidence.collectionChecklistResult?.solverOutcome || "missing"}`);
+    findings.push(`live_evidence_ref_collection_checklist_not_solved:${publicOperatorRunbookScalarLabel(evidence.collectionChecklistResult?.solverOutcome)}`);
   }
   if (evidence.collectionChecklistResult?.proofState !== "Pass") {
-    findings.push(`live_evidence_ref_collection_checklist_proof_not_pass:${evidence.collectionChecklistResult?.proofState || "missing"}`);
+    findings.push(`live_evidence_ref_collection_checklist_proof_not_pass:${publicOperatorRunbookScalarLabel(evidence.collectionChecklistResult?.proofState)}`);
   }
   if (evidence.collectionChecklistResult?.readyForLiveEvidence !== false) {
     findings.push("live_evidence_ref_collection_checklist_ready_for_live_evidence_must_remain_false");
   }
   if (evidence.releaseReadinessResult?.solverOutcome !== "SolvedVerified") {
-    findings.push(`release_readiness_summary_not_solved:${evidence.releaseReadinessResult?.solverOutcome || "missing"}`);
+    findings.push(`release_readiness_summary_not_solved:${publicOperatorRunbookScalarLabel(evidence.releaseReadinessResult?.solverOutcome)}`);
   }
   if (evidence.releaseReadinessResult?.proofState !== "Pass") {
-    findings.push(`release_readiness_summary_proof_not_pass:${evidence.releaseReadinessResult?.proofState || "missing"}`);
+    findings.push(`release_readiness_summary_proof_not_pass:${publicOperatorRunbookScalarLabel(evidence.releaseReadinessResult?.proofState)}`);
   }
   if (evidence.releaseReadinessResult?.productRuntimeClaimsAllowed !== false) {
     findings.push("release_readiness_product_runtime_claims_must_remain_false");
