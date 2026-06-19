@@ -23,22 +23,37 @@ const supportEmail = "support@mullusi.com";
 const supportReadinessRef = "site:ops/mullu-govern-support-readiness.md";
 
 const requiredWitnessTerms = [
-  "support_readiness_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  "public_write_route_allowed=false",
-  "support_contact=support@mullusi.com",
-  "contact_route=/contact/",
-  "privacy_contact=support@mullusi.com",
-  "responsible_disclosure_route=/responsible-disclosure/",
-  "route_publication_action=none",
-  "dns_mutation=none",
-  "runtime_mutation=none",
-  "secret_rotation_required=false",
-  "customer_sla=not_published",
-  "external_ticketing_system=not_claimed",
-  "STATUS:",
+  { id: "support_readiness_state", text: "support_readiness_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "support_contact", text: "support_contact=support@mullusi.com" },
+  { id: "contact_route", text: "contact_route=/contact/" },
+  { id: "privacy_contact", text: "privacy_contact=support@mullusi.com" },
+  { id: "responsible_disclosure_route", text: "responsible_disclosure_route=/responsible-disclosure/" },
+  { id: "route_publication_action", text: "route_publication_action=none" },
+  { id: "dns_mutation", text: "dns_mutation=none" },
+  { id: "runtime_mutation", text: "runtime_mutation=none" },
+  { id: "secret_rotation_required", text: "secret_rotation_required=false" },
+  { id: "customer_sla", text: "customer_sla=not_published" },
+  { id: "external_ticketing_system", text: "external_ticketing_system=not_claimed" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const publicSupportAllowedScalars = new Set([
+  "missing",
+  "false",
+  "true",
+  "none",
+  "Ready",
+  "Blocked",
+  "SolvedVerified",
+  "GovernanceBlocked",
+  "Pass",
+  "Fail",
+  supportEmail,
+  supportReadinessRef,
+]);
 
 function blockedResult(finding) {
   return {
@@ -90,11 +105,22 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
+export function publicSupportReadinessScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  if (typeof value === "boolean") return `boolean:${value ? "true" : "false"}`;
+  if (typeof value === "string" && publicSupportAllowedScalars.has(value)) return value;
+  if (typeof value === "string") return "redacted_value";
+  if (typeof value === "number") return "number";
+  if (Array.isArray(value)) return "array";
+  if (typeof value === "object") return "object";
+  return typeof value;
+}
+
 export function validateGovernSupportReadinessEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredWitnessTerms) {
-    if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
+    if (!evidence.witness.includes(term.text)) findings.push(`required_witness_term_missing:${term.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -102,7 +128,7 @@ export function validateGovernSupportReadinessEvidence(evidence) {
   }
 
   if (evidence.manifest?.ownership?.supportEmail !== supportEmail) {
-    findings.push(`manifest_support_email_invalid:${evidence.manifest?.ownership?.supportEmail || "missing"}`);
+    findings.push(`manifest_support_email_invalid:${publicSupportReadinessScalarLabel(evidence.manifest?.ownership?.supportEmail)}`);
   }
   if (!evidence.contactPage.includes(`mailto:${supportEmail}`) || !evidence.contactPage.includes(supportEmail)) {
     findings.push("contact_route_support_mailto_missing");
@@ -124,7 +150,7 @@ export function validateGovernSupportReadinessEvidence(evidence) {
   }
   const observedSupportReadinessRef = lineValue(evidence.approvalPacket, "support_readiness_ref");
   if (observedSupportReadinessRef !== supportReadinessRef) {
-    findings.push(`approval_packet_support_readiness_ref_invalid:${lineValue(evidence.approvalPacket, "support_readiness_ref") || "missing"}`);
+    findings.push(`approval_packet_support_readiness_ref_invalid:${publicSupportReadinessScalarLabel(observedSupportReadinessRef)}`);
   }
   const supportRefResult = validatePublicSafeEvidenceRef(observedSupportReadinessRef);
   for (const refFinding of supportRefResult.findings) {
