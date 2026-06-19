@@ -138,7 +138,7 @@ function testSyntheticProductClaimAllowanceFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.productClaimsAllowed, true);
-  assert.match(result.findings.join("\n"), /required_packet_term_missing:product_claims_allowed=false/);
+  assert.match(result.findings.join("\n"), /required_packet_term_missing:product_claims_allowed/);
   assert.match(result.findings.join("\n"), /product_claims_allowed_must_remain_false:true/);
 }
 
@@ -156,7 +156,7 @@ function testSyntheticRuntimeRegistryPromotionFailsClosed() {
   assert.equal(result.proofState, "Fail");
   assert.equal(result.runtimeWitnessClosureAllowed, false);
   assert.match(result.findings.join("\n"), /runtime_registry_proof_state_must_remain_awaiting:SolvedVerified/);
-  assert.match(result.findings.join("\n"), /runtime_registry_runtime_state_must_remain_private_only:production-ready/);
+  assert.match(result.findings.join("\n"), /runtime_registry_runtime_state_must_remain_private_only:redacted_value/);
   assert.match(result.findings.join("\n"), /runtime_registry_public_exposure_must_remain_blocked/);
 }
 
@@ -169,8 +169,8 @@ function testSyntheticApprovalPacketRouteExposureFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, true);
-  assert.match(result.findings.join("\n"), /approval_packet_state_must_remain_awaiting:ReadyForApproval/);
-  assert.match(result.findings.join("\n"), /approval_state_must_remain_not_approved:Approved/);
+  assert.match(result.findings.join("\n"), /approval_packet_state_must_remain_awaiting:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_state_must_remain_not_approved:redacted_value/);
   assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:true/);
 }
 
@@ -190,6 +190,45 @@ function testSyntheticWriteRouteAggregateFailureFailsClosed() {
   assert.match(result.findings.join("\n"), /write_route_decision_not_solved:GovernanceBlocked/);
   assert.match(result.findings.join("\n"), /write_route_decision_proof_not_pass:Fail/);
   assert.match(result.findings.join("\n"), /write_route_decision_public_route_not_blocked/);
+}
+
+function testSyntheticUnsafeRuntimeClosureValuesUsePublicLabels() {
+  const evidence = validEvidence({
+    approvalPacket: "packet_state=private-packet-state\napproval_state=private-approval-state\npublic_write_route_allowed=private-route-value\n",
+    liveEvidenceSequence: "ready_for_live_evidence=private-live-state\n",
+    manifest: {
+      presentation: { registryStatus: "private-registry-status" },
+      status: "private-manifest-status",
+    },
+    packet: validPacket({
+      product_claims_allowed: "private-claims-value",
+      runtime_witness_closure_allowed: "private-closure-value",
+      runtime_witness_registry_state: "private-runtime-registry-state",
+    }),
+    runtimeRegistry: validRuntimeRegistry({
+      proofState: "private-proof-state",
+      publicExposure: { allowed: true, state: "private-exposure-state" },
+      rollback: { state: "private-rollback-state" },
+      runtimeState: "private-runtime-state",
+    }),
+    writeRouteDecision: passingWriteRouteDecision({
+      proofState: "private-proof-state",
+      solverOutcome: "private-solver-outcome",
+    }),
+  });
+  const result = validateGovernRuntimeClosurePacketEvidence(evidence);
+  const report = formatGovernRuntimeClosurePacketReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(report, /runtime_registry_proof_state_must_remain_awaiting:redacted_value/);
+  assert.match(report, /manifest_status_must_remain_limited_preview:redacted_value/);
+  assert.match(report, /runtime_witness_closure_allowed_must_remain_false:redacted_value/);
+  assert.match(report, /write_route_decision_not_solved:redacted_value/);
+  assert.doesNotMatch(report, /private-packet-state/);
+  assert.doesNotMatch(report, /private-approval-state/);
+  assert.doesNotMatch(report, /private-runtime-state/);
+  assert.doesNotMatch(report, /private-solver-outcome/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -252,6 +291,7 @@ testSyntheticProductClaimAllowanceFailsClosed();
 testSyntheticRuntimeRegistryPromotionFailsClosed();
 testSyntheticApprovalPacketRouteExposureFailsClosed();
 testSyntheticWriteRouteAggregateFailureFailsClosed();
+testSyntheticUnsafeRuntimeClosureValuesUsePublicLabels();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();

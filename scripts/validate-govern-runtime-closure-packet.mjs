@@ -20,41 +20,70 @@ const allowedArgs = new Set(["--json"]);
 const productId = "mullu-govern";
 
 const requiredPacketTerms = [
-  "Mullu Govern Runtime Witness Closure Packet",
-  "product_id=mullu-govern",
-  "packet_state=AwaitingEvidence",
-  "candidate_state=SelectedNotPromoted",
-  "api_gateway_exposure_state=SolvedVerified",
-  "product_status=limited-preview",
-  "product_registry_status=awaiting-evidence",
-  "runtime_witness_registry_state=AwaitingEvidence",
-  "runtime_witness_closure_allowed=false",
-  "product_claims_allowed=false",
-  "write_route_decision=ops/mullu-govern-evaluate-write-route-decision.md",
-  "public_beta_approval_packet=ops/mullu-govern-public-beta-approval-packet.md",
-  "POST /v1/govern/evaluate",
-  "product write route intentionally not published",
-  "responses, signatures, provider host data, database URLs, headers, and secrets",
-  "Product manifest status | public-beta or production before public exposure | preflight Ready; current limited-preview",
-  "Runtime witness proofState | SolvedVerified | AwaitingEvidence",
-  "Runtime state | public-witness-ready or production-ready | private-only",
-  "Public exposure | allowed | blocked",
-  "Operator approval readiness | approval packet organized without approval | preflight Ready; approval NotApproved",
-  "Live evidence sequence | collection order explicit without live action | preflight Ready; live evidence collection blocked",
-  "Public-beta approval packet | ReadyForApproval or stronger | AwaitingEvidence in `ops/mullu-govern-public-beta-approval-packet.md`",
-  "STATUS:",
+  { id: "title", text: "Mullu Govern Runtime Witness Closure Packet" },
+  { id: "product_id", text: "product_id=mullu-govern" },
+  { id: "packet_state", text: "packet_state=AwaitingEvidence" },
+  { id: "candidate_state", text: "candidate_state=SelectedNotPromoted" },
+  { id: "api_gateway_exposure_state", text: "api_gateway_exposure_state=SolvedVerified" },
+  { id: "product_status", text: "product_status=limited-preview" },
+  { id: "product_registry_status", text: "product_registry_status=awaiting-evidence" },
+  { id: "runtime_witness_registry_state", text: "runtime_witness_registry_state=AwaitingEvidence" },
+  { id: "runtime_witness_closure_allowed", text: "runtime_witness_closure_allowed=false" },
+  { id: "product_claims_allowed", text: "product_claims_allowed=false" },
+  { id: "write_route_decision", text: "write_route_decision=ops/mullu-govern-evaluate-write-route-decision.md" },
+  { id: "public_beta_approval_packet", text: "public_beta_approval_packet=ops/mullu-govern-public-beta-approval-packet.md" },
+  { id: "evaluate_route", text: "POST /v1/govern/evaluate" },
+  { id: "route_not_published", text: "product write route intentionally not published" },
+  { id: "private_values_excluded", text: "responses, signatures, provider host data, database URLs, headers, and secrets" },
+  { id: "manifest_status_row", text: "Product manifest status | public-beta or production before public exposure | preflight Ready; current limited-preview" },
+  { id: "runtime_proof_state_row", text: "Runtime witness proofState | SolvedVerified | AwaitingEvidence" },
+  { id: "runtime_state_row", text: "Runtime state | public-witness-ready or production-ready | private-only" },
+  { id: "public_exposure_row", text: "Public exposure | allowed | blocked" },
+  { id: "operator_approval_row", text: "Operator approval readiness | approval packet organized without approval | preflight Ready; approval NotApproved" },
+  { id: "live_evidence_sequence_row", text: "Live evidence sequence | collection order explicit without live action | preflight Ready; live evidence collection blocked" },
+  { id: "public_beta_approval_row", text: "Public-beta approval packet | ReadyForApproval or stronger | AwaitingEvidence in `ops/mullu-govern-public-beta-approval-packet.md`" },
+  { id: "status_block", text: "STATUS:" },
 ];
 
 const expectedBlockers = [
-  "blocker=product_status_promotion_approval_missing",
-  "blocker=product_evaluate_write_route_approval_missing",
-  "blocker=product_api_contract_live_execution_not_published",
-  "blocker=product_privacy_boundary_not_verified",
-  "blocker=product_retention_boundary_not_verified",
-  "blocker=dashboard_operator_readiness_evidence_missing",
-  "blocker=public_claim_update_evidence_missing",
-  "blocker=runtime_witness_registry_not_closed",
+  { id: "product_status_promotion_approval_missing", text: "blocker=product_status_promotion_approval_missing" },
+  { id: "product_evaluate_write_route_approval_missing", text: "blocker=product_evaluate_write_route_approval_missing" },
+  { id: "product_api_contract_live_execution_not_published", text: "blocker=product_api_contract_live_execution_not_published" },
+  { id: "product_privacy_boundary_not_verified", text: "blocker=product_privacy_boundary_not_verified" },
+  { id: "product_retention_boundary_not_verified", text: "blocker=product_retention_boundary_not_verified" },
+  { id: "dashboard_operator_readiness_evidence_missing", text: "blocker=dashboard_operator_readiness_evidence_missing" },
+  { id: "public_claim_update_evidence_missing", text: "blocker=public_claim_update_evidence_missing" },
+  { id: "runtime_witness_registry_not_closed", text: "blocker=runtime_witness_registry_not_closed" },
 ];
+
+const publicRuntimeClosureAllowedScalars = new Set([
+  "AwaitingEvidence",
+  "Blocked",
+  "Fail",
+  "GovernanceBlocked",
+  "NotApproved",
+  "Pass",
+  "Ready",
+  "SelectedNotPromoted",
+  "SolvedVerified",
+  "awaiting-evidence",
+  "blocked",
+  "false",
+  "limited-preview",
+  "missing",
+  "mullu-govern",
+  "none",
+  "private-only",
+  "true",
+]);
+
+function publicRuntimeClosureScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  const scalar = String(value);
+  if (publicRuntimeClosureAllowedScalars.has(scalar)) return scalar;
+  if (/^\d+$/.test(scalar)) return "number";
+  return "redacted_value";
+}
 
 function blockedResult(finding) {
   return {
@@ -116,11 +145,11 @@ export function validateGovernRuntimeClosurePacketEvidence(evidence) {
   const runtimeWitness = findRuntimeWitness(evidence.runtimeRegistry);
 
   for (const term of requiredPacketTerms) {
-    if (!evidence.packet.includes(term)) findings.push(`required_packet_term_missing:${term}`);
+    if (!evidence.packet.includes(term.text)) findings.push(`required_packet_term_missing:${term.id}`);
   }
 
   for (const blocker of expectedBlockers) {
-    if (!evidence.packet.includes(blocker)) findings.push(`runtime_blocker_missing:${blocker}`);
+    if (!evidence.packet.includes(blocker.text)) findings.push(`runtime_blocker_missing:${blocker.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -131,56 +160,56 @@ export function validateGovernRuntimeClosurePacketEvidence(evidence) {
     findings.push("runtime_registry_mullu_govern_witness_missing");
   } else {
     if (runtimeWitness.proofState !== "AwaitingEvidence") {
-      findings.push(`runtime_registry_proof_state_must_remain_awaiting:${runtimeWitness.proofState || "missing"}`);
+      findings.push(`runtime_registry_proof_state_must_remain_awaiting:${publicRuntimeClosureScalarLabel(runtimeWitness.proofState)}`);
     }
     if (runtimeWitness.runtimeState !== "private-only") {
-      findings.push(`runtime_registry_runtime_state_must_remain_private_only:${runtimeWitness.runtimeState || "missing"}`);
+      findings.push(`runtime_registry_runtime_state_must_remain_private_only:${publicRuntimeClosureScalarLabel(runtimeWitness.runtimeState)}`);
     }
     if (runtimeWitness.publicExposure?.allowed !== false) {
       findings.push("runtime_registry_public_exposure_must_remain_blocked");
     }
     if (runtimeWitness.publicExposure?.state !== "blocked") {
-      findings.push(`runtime_registry_public_exposure_state_must_remain_blocked:${runtimeWitness.publicExposure?.state || "missing"}`);
+      findings.push(`runtime_registry_public_exposure_state_must_remain_blocked:${publicRuntimeClosureScalarLabel(runtimeWitness.publicExposure?.state)}`);
     }
     if (runtimeWitness.rollback?.state !== "Ready") {
-      findings.push(`runtime_registry_rollback_state_must_remain_ready:${runtimeWitness.rollback?.state || "missing"}`);
+      findings.push(`runtime_registry_rollback_state_must_remain_ready:${publicRuntimeClosureScalarLabel(runtimeWitness.rollback?.state)}`);
     }
   }
 
   if (evidence.manifest?.status !== "limited-preview") {
-    findings.push(`manifest_status_must_remain_limited_preview:${evidence.manifest?.status || "missing"}`);
+    findings.push(`manifest_status_must_remain_limited_preview:${publicRuntimeClosureScalarLabel(evidence.manifest?.status)}`);
   }
   if (evidence.manifest?.presentation?.registryStatus !== "awaiting-evidence") {
-    findings.push(`manifest_registry_status_must_remain_awaiting:${evidence.manifest?.presentation?.registryStatus || "missing"}`);
+    findings.push(`manifest_registry_status_must_remain_awaiting:${publicRuntimeClosureScalarLabel(evidence.manifest?.presentation?.registryStatus)}`);
   }
 
   if (lineValue(evidence.packet, "runtime_witness_closure_allowed") !== "false") {
-    findings.push(`runtime_witness_closure_allowed_must_remain_false:${lineValue(evidence.packet, "runtime_witness_closure_allowed") || "missing"}`);
+    findings.push(`runtime_witness_closure_allowed_must_remain_false:${publicRuntimeClosureScalarLabel(lineValue(evidence.packet, "runtime_witness_closure_allowed"))}`);
   }
   if (lineValue(evidence.packet, "product_claims_allowed") !== "false") {
-    findings.push(`product_claims_allowed_must_remain_false:${lineValue(evidence.packet, "product_claims_allowed") || "missing"}`);
+    findings.push(`product_claims_allowed_must_remain_false:${publicRuntimeClosureScalarLabel(lineValue(evidence.packet, "product_claims_allowed"))}`);
   }
   if (lineValue(evidence.packet, "runtime_witness_registry_state") !== "AwaitingEvidence") {
-    findings.push(`packet_runtime_registry_state_must_remain_awaiting:${lineValue(evidence.packet, "runtime_witness_registry_state") || "missing"}`);
+    findings.push(`packet_runtime_registry_state_must_remain_awaiting:${publicRuntimeClosureScalarLabel(lineValue(evidence.packet, "runtime_witness_registry_state"))}`);
   }
 
   if (lineValue(evidence.approvalPacket, "packet_state") !== "AwaitingEvidence") {
-    findings.push(`approval_packet_state_must_remain_awaiting:${lineValue(evidence.approvalPacket, "packet_state") || "missing"}`);
+    findings.push(`approval_packet_state_must_remain_awaiting:${publicRuntimeClosureScalarLabel(lineValue(evidence.approvalPacket, "packet_state"))}`);
   }
   if (lineValue(evidence.approvalPacket, "approval_state") !== "NotApproved") {
-    findings.push(`approval_state_must_remain_not_approved:${lineValue(evidence.approvalPacket, "approval_state") || "missing"}`);
+    findings.push(`approval_state_must_remain_not_approved:${publicRuntimeClosureScalarLabel(lineValue(evidence.approvalPacket, "approval_state"))}`);
   }
   if (lineValue(evidence.approvalPacket, "public_write_route_allowed") !== "false") {
-    findings.push(`public_write_route_allowed_must_remain_false:${lineValue(evidence.approvalPacket, "public_write_route_allowed") || "missing"}`);
+    findings.push(`public_write_route_allowed_must_remain_false:${publicRuntimeClosureScalarLabel(lineValue(evidence.approvalPacket, "public_write_route_allowed"))}`);
   }
   if (lineValue(evidence.liveEvidenceSequence, "ready_for_live_evidence") !== "false") {
-    findings.push(`live_evidence_sequence_must_remain_not_ready:${lineValue(evidence.liveEvidenceSequence, "ready_for_live_evidence") || "missing"}`);
+    findings.push(`live_evidence_sequence_must_remain_not_ready:${publicRuntimeClosureScalarLabel(lineValue(evidence.liveEvidenceSequence, "ready_for_live_evidence"))}`);
   }
   if (evidence.writeRouteDecision?.solverOutcome !== "SolvedVerified") {
-    findings.push(`write_route_decision_not_solved:${evidence.writeRouteDecision?.solverOutcome || "missing"}`);
+    findings.push(`write_route_decision_not_solved:${publicRuntimeClosureScalarLabel(evidence.writeRouteDecision?.solverOutcome)}`);
   }
   if (evidence.writeRouteDecision?.proofState !== "Pass") {
-    findings.push(`write_route_decision_proof_not_pass:${evidence.writeRouteDecision?.proofState || "missing"}`);
+    findings.push(`write_route_decision_proof_not_pass:${publicRuntimeClosureScalarLabel(evidence.writeRouteDecision?.proofState)}`);
   }
   if (evidence.writeRouteDecision?.publicWriteRouteAllowed !== false) {
     findings.push("write_route_decision_public_route_not_blocked");
