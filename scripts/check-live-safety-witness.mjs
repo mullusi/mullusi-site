@@ -80,6 +80,27 @@ function lineValue(block, key) {
   return match?.[1]?.trim() ?? "";
 }
 
+function publicUrlValueLabel(value) {
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol === "https:" && ["mullusi.com", "www.mullusi.com"].includes(parsed.hostname)) {
+      return parsed.toString();
+    }
+  } catch {
+    // Fall through to the redacted label.
+  }
+  return "redacted_url";
+}
+
+function publicWitnessValueLabel(key, value) {
+  if (!value) return "<empty>";
+  if (/(?:^|_)url$/.test(key)) return publicUrlValueLabel(value);
+  if (/^(?:redirect_count|first_redirect_status|status|verdict|proof_state)$/.test(key) && /^[A-Za-z0-9_.:-]+$/.test(value)) {
+    return value;
+  }
+  return "redacted_value";
+}
+
 function requireSingleWitnessBlock(findings, fileName, content, targetUrl) {
   const blocks = witnessBlocksForTarget(content, targetUrl);
   if (blocks.length !== 1) {
@@ -92,7 +113,7 @@ function requireSingleWitnessBlock(findings, fileName, content, targetUrl) {
 function requireWitnessValue(findings, fileName, block, targetUrl, key, expectedValue) {
   const value = lineValue(block, key);
   if (value !== expectedValue) {
-    findings.push(`artifact_witness_value_invalid:${fileName}:${targetUrl}:${key}:${value || "<empty>"}`);
+    findings.push(`artifact_witness_value_invalid:${fileName}:${targetUrl}:${key}:${publicWitnessValueLabel(key, value)}`);
   }
 }
 
@@ -117,7 +138,7 @@ function validateRunMetadata(findings, content) {
   }
   const observedAt = content.match(/^observed_at=([^\s]+)$/m)?.[1] ?? "";
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(observedAt)) {
-    findings.push(`artifact_observed_at_invalid:${observedAt}`);
+    findings.push(`artifact_observed_at_invalid:${observedAt ? "redacted_value" : "missing"}`);
   }
 }
 

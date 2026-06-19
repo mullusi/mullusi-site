@@ -373,6 +373,44 @@ function testWebsiteOriginPendingWwwRedirectBlocks() {
   assert.ok(result.findings.includes("artifact_website_origin_redirect_pending"));
 }
 
+function testWebsiteOriginUnsafeWitnessValuesAreRedacted() {
+  const fixtureDirectory = createFixture({
+    "website-origin.txt": [
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
+      "target=https://www.mullusi.com/",
+      "final_url=https://private.example.internal/path?trace=bounded",
+      "status=200",
+      "redirect_count=1",
+      "first_redirect_status=301",
+      "first_redirect_url=https://private.example.internal/redirect",
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
+      "",
+      "target=https://www.mullusi.com/proof/?gate=www-canonical",
+      "final_url=https://mullusi.com/proof/?gate=www-canonical",
+      "status=200",
+      "redirect_count=1",
+      "first_redirect_status=301",
+      "first_redirect_url=https://mullusi.com/proof/?gate=www-canonical",
+      "verdict=CloudflareOriginCandidate",
+      "proof_state=Pass",
+      "target=https://mullusi.com/.well-known/security.txt",
+      "github_request=",
+      "fastly_request=",
+      "served_by=",
+      "via=",
+    ].join("\n"),
+  });
+  const result = evaluateLiveSafetyWitnessArtifact(fixtureDirectory);
+  const serialized = JSON.stringify(result);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.ok(result.findings.includes("artifact_witness_value_invalid:website-origin.txt:https://www.mullusi.com/:final_url:redacted_url"));
+  assert.ok(result.findings.includes("artifact_witness_value_invalid:website-origin.txt:https://www.mullusi.com/:first_redirect_url:redacted_url"));
+  assert.doesNotMatch(serialized, /private\.example\.internal|trace=bounded/);
+}
+
 function testCliRejectsUnsupportedArgument() {
   const result = runChecker(["--unexpected"]);
 
@@ -391,5 +429,6 @@ testBoundaryViolationBlocks();
 testMissingArtifactDirectoryDoesNotEchoPath();
 testWebsiteOriginMissingPathQueryRedirectBlocks();
 testWebsiteOriginPendingWwwRedirectBlocks();
+testWebsiteOriginUnsafeWitnessValuesAreRedacted();
 testCliRejectsUnsupportedArgument();
 console.log("live safety witness artifact tests passed");
