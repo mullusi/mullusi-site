@@ -7,6 +7,8 @@ Invariants: tests use synthetic errors only; they never read private registry so
 
 import assert from "node:assert/strict";
 import {
+  publicRegistryHrefLabel,
+  publicRegistryScalarLabel,
   publicReadErrorCode,
   publicRegistryBoundaryError,
 } from "./verify-registry-repos.mjs";
@@ -35,7 +37,24 @@ function testPublicRegistryBoundaryErrorAllowsOnlyBoundedCategories() {
   assert.doesNotMatch(joined, /secret|public-surfaces|C:\\/);
 }
 
+function testPublicRegistryLabelsRedactUnsafeValues() {
+  const publicHref = publicRegistryHrefLabel("https://dashboard.mullusi.com/status");
+  const privateHref = publicRegistryHrefLabel("https://github.com/private/repo?trace=bounded");
+  const missingHref = publicRegistryHrefLabel("");
+  const safeScalar = publicRegistryScalarLabel("private-source");
+  const unsafeScalar = publicRegistryScalarLabel("private/repo trace");
+  const joined = [publicHref, privateHref, missingHref, safeScalar, unsafeScalar].join("\n");
+
+  assert.equal(publicHref, "https://dashboard.mullusi.com/status");
+  assert.equal(privateHref, "redacted_url");
+  assert.equal(missingHref, "missing");
+  assert.equal(safeScalar, "private-source");
+  assert.equal(unsafeScalar, "redacted_value");
+  assert.doesNotMatch(joined, /github\.com|private\/repo|trace=bounded/);
+}
+
 testPublicReadErrorCodeRedactsRawExceptionValues();
 testPublicRegistryBoundaryErrorAllowsOnlyBoundedCategories();
+testPublicRegistryLabelsRedactUnsafeValues();
 
 console.log("registry boundary verifier tests passed");

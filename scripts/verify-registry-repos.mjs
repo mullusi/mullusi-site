@@ -19,6 +19,23 @@ function recordFailure(message) {
   failures.push(message);
 }
 
+export function publicRegistryHrefLabel(value) {
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol === "https:" && /^(?:[a-z0-9.-]+\.)?mullusi\.com$/i.test(parsed.hostname)) {
+      return parsed.toString();
+    }
+  } catch {
+    // Fall through to the redacted label.
+  }
+  return value ? "redacted_url" : "missing";
+}
+
+export function publicRegistryScalarLabel(value) {
+  if (typeof value !== "string" || value.length === 0) return "missing";
+  return /^[A-Za-z0-9_.:-]{1,80}$/.test(value) ? value : "redacted_value";
+}
+
 export function publicReadErrorCode(error) {
   const message = error instanceof Error ? error.message : String(error);
   if (error instanceof SyntaxError) {
@@ -72,13 +89,13 @@ function verifySystems(systems) {
       recordFailure(`${label}.repo_forbidden`);
     }
     if (typeof system.href !== "string" || !/^https:\/\/(?:[a-z0-9.-]+\.)?mullusi\.com(?:\/.*)?$/.test(system.href)) {
-      recordFailure(`${label}.href_invalid:${system.href}`);
+      recordFailure(`${label}.href_invalid:${publicRegistryHrefLabel(system.href)}`);
     }
     if (system.sourceState !== "private-source" && system.sourceState !== "public-release") {
-      recordFailure(`${label}.source_state_invalid:${system.sourceState}`);
+      recordFailure(`${label}.source_state_invalid:${publicRegistryScalarLabel(system.sourceState)}`);
     }
     if (seenHrefs.has(system.href)) {
-      recordFailure(`${label}.href_duplicate:${system.href}`);
+      recordFailure(`${label}.href_duplicate:${publicRegistryHrefLabel(system.href)}`);
     }
     seenHrefs.add(system.href);
   }
@@ -95,10 +112,10 @@ function verifyProductRegistry(products) {
       recordFailure(`${label}.source_boundary_missing`);
     }
     if (/github\.com\//i.test(product.sourceBoundary || "")) {
-      recordFailure(`${label}.source_boundary_public_repo_forbidden:${product.name}`);
+      recordFailure(`${label}.source_boundary_public_repo_forbidden`);
     }
     if (seenNames.has(product.name)) {
-      recordFailure(`${label}.name_duplicate:${product.name}`);
+      recordFailure(`${label}.name_duplicate`);
     }
     seenNames.add(product.name);
   }
@@ -112,13 +129,13 @@ function verifyManifestCandidates(candidates) {
       recordFailure(`${label}.repo_forbidden`);
     }
     if (hasRepositorySlug([candidate.id, candidate.name, candidate.summary].join(" "))) {
-      recordFailure(`${label}.repo_reference_forbidden:${candidate.id || index}`);
+      recordFailure(`${label}.repo_reference_forbidden`);
     }
     if (typeof candidate.publicExposureAllowed !== "boolean") {
       recordFailure(`${label}.public_exposure_allowed_not_boolean`);
     }
     if (seenIds.has(candidate.id)) {
-      recordFailure(`${label}.id_duplicate:${candidate.id}`);
+      recordFailure(`${label}.id_duplicate`);
     }
     seenIds.add(candidate.id);
   }
@@ -135,7 +152,7 @@ function verifyFutureDomains(futureDomains) {
       recordFailure(`${label}.release_boundary_missing`);
     }
     if (seenSlugs.has(domain.slug)) {
-      recordFailure(`${label}.slug_duplicate:${domain.slug}`);
+      recordFailure(`${label}.slug_duplicate`);
     }
     seenSlugs.add(domain.slug);
   }
@@ -146,10 +163,10 @@ function verifyPrivateIncubation(privateIncubation) {
     const label = `privateIncubation.${index}`;
     const publicText = [item.name, item.summary, item.publishGate].join(" ");
     if (hasRepositorySlug(publicText)) {
-      recordFailure(`${label}.repo_reference_forbidden:${item.name}`);
+      recordFailure(`${label}.repo_reference_forbidden`);
     }
     if (item.visibility !== "private") {
-      recordFailure(`${label}.visibility_invalid:${item.visibility}`);
+      recordFailure(`${label}.visibility_invalid:${publicRegistryScalarLabel(item.visibility)}`);
     }
   }
 }
