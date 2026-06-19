@@ -103,11 +103,49 @@ function testAggregateDecisionAndRuntimeFailuresBlockApprovalPacket() {
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
   assert.match(result.findings.join("\n"), /write_route_decision_not_solved:GovernanceBlocked/);
-  assert.match(result.findings.join("\n"), /write_route_decision_must_remain_keep_blocked:Approve/);
+  assert.match(result.findings.join("\n"), /write_route_decision_must_remain_keep_blocked:redacted_value/);
   assert.match(result.findings.join("\n"), /write_route_decision_public_route_not_blocked/);
   assert.match(result.findings.join("\n"), /runtime_closure_packet_not_solved:GovernanceBlocked/);
   assert.match(result.findings.join("\n"), /runtime_closure_packet_closure_not_blocked/);
   assert.match(result.findings.join("\n"), /runtime_closure_packet_product_claims_not_blocked/);
+}
+
+function testUnsafePacketAndAggregateValuesUsePublicLabels() {
+  const packet = validPacketContent()
+    .replace("packet_state=AwaitingEvidence", "packet_state=private-packet-state")
+    .replace("approval_state=NotApproved", "approval_state=private-approval-state")
+    .replace("route_publication_action=none", "route_publication_action=private-route-action")
+    .replace("dns_mutation=none", "dns_mutation=private-dns-action")
+    .replace("runtime_mutation=none", "runtime_mutation=private-runtime-action")
+    .replace("secret_rotation_required=false", "secret_rotation_required=private-secret-action");
+  const result = validateApprovalPacketContent(packet, {
+    runtimeClosurePacket: {
+      productClaimsAllowed: false,
+      proofState: "private-runtime-proof",
+      runtimeWitnessClosureAllowed: false,
+      solverOutcome: "private-runtime-outcome",
+    },
+    writeRouteDecision: {
+      decisionState: "private-decision-state",
+      proofState: "private-write-proof",
+      publicWriteRouteAllowed: false,
+      solverOutcome: "private-write-outcome",
+    },
+  });
+  const report = formatApprovalPacketReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.packetState, "redacted_value");
+  assert.equal(result.approvalState, "redacted_value");
+  assert.match(report, /packet_state_must_remain_awaiting_evidence:redacted_value/);
+  assert.match(report, /write_route_decision_not_solved:redacted_value/);
+  assert.match(report, /runtime_closure_packet_not_solved:redacted_value/);
+  assert.doesNotMatch(report, /private-packet-state/);
+  assert.doesNotMatch(report, /private-approval-state/);
+  assert.doesNotMatch(report, /private-route-action/);
+  assert.doesNotMatch(report, /private-write-outcome/);
+  assert.doesNotMatch(report, /private-runtime-outcome/);
 }
 
 function testSecretShapedAllowedRefFailsClosed() {
@@ -189,6 +227,7 @@ function testPathBoundaryFailsClosedWithoutEcho() {
 testCurrentPacketPassesAsNonOperative();
 testOnlyRollbackEvidenceRefIsAllowed();
 testAggregateDecisionAndRuntimeFailuresBlockApprovalPacket();
+testUnsafePacketAndAggregateValuesUsePublicLabels();
 testSecretShapedAllowedRefFailsClosed();
 testMalformedAllowedRefFailsClosed();
 testCliJsonAndUnsupportedArgs();
