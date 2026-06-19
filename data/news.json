@@ -3,64 +3,64 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-18",
+    "updated": "2026-06-19",
     "count": 7
   },
   "items": [
     {
-      "title": "Lore – Open source version control system designed for scalability",
-      "url": "https://lore.org/",
-      "source": "lore.org",
-      "points": 1163,
-      "comments": 620,
-      "date": "2026-06-17"
-    },
-    {
-      "title": "Midjourney Medical",
-      "url": "https://www.midjourney.com/medical/blogpost",
-      "source": "midjourney.com",
-      "points": 883,
-      "comments": 601,
+      "title": "I found 10k GitHub repositories distributing Trojan malware",
+      "url": "https://orchidfiles.com/github-repositories-distributing-malware/",
+      "source": "orchidfiles.com",
+      "points": 831,
+      "comments": 215,
       "date": "2026-06-18"
     },
     {
-      "title": "US holds off blacklisting DeepSeek, more than 100 firms deemed security risks",
-      "url": "https://www.reuters.com/world/china/us-holds-off-blacklisting-chinas-deepseek-more-than-100-firms-deemed-security-2026-06-17/",
-      "source": "reuters.com",
-      "points": 472,
-      "comments": 519,
-      "date": "2026-06-17"
+      "title": ".gitignore Isn't the only way to ignore files in Git",
+      "url": "https://nelson.cloud/.gitignore-isnt-the-only-way-to-ignore-files-in-git/",
+      "source": "nelson.cloud",
+      "points": 446,
+      "comments": 137,
+      "date": "2026-06-18"
     },
     {
-      "title": "RFC 10008: The new HTTP Query Method",
-      "url": "https://www.rfc-editor.org/info/rfc10008/",
-      "source": "rfc-editor.org",
-      "points": 384,
-      "comments": 159,
-      "date": "2026-06-17"
+      "title": "CS 6120: Advanced Compilers: The Self-Guided Online Course (2020)",
+      "url": "https://www.cs.cornell.edu/courses/cs6120/2025fa/self-guided/",
+      "source": "cs.cornell.edu",
+      "points": 382,
+      "comments": 53,
+      "date": "2026-06-18"
     },
     {
-      "title": "How we run Firecracker VMs inside EC2 and start browsers in less than 1s",
-      "url": "https://browser-use.com/posts/firecracker-browser-infra",
-      "source": "browser-use.com",
-      "points": 289,
-      "comments": 186,
-      "date": "2026-06-16"
+      "title": "Show HN: Are You in the Weights?",
+      "url": "https://www.intheweights.com/",
+      "source": "intheweights.com",
+      "points": 373,
+      "comments": 217,
+      "date": "2026-06-18"
     },
     {
-      "title": "Why thinking out loud with someone beats thinking alone",
-      "url": "https://www.thesignalist.io/s/the-dialogue-dividend/",
-      "source": "thesignalist.io",
-      "points": 284,
-      "comments": 124,
-      "date": "2026-06-17"
+      "title": "Ubiquiti: Enterprise NAS, Built on ZFS",
+      "url": "https://blog.ui.com/article/introducing-enterprise-nas",
+      "source": "blog.ui.com",
+      "points": 354,
+      "comments": 302,
+      "date": "2026-06-18"
     },
     {
-      "title": "Local Qwen isn't a worse Opus, it's a different tool",
-      "url": "https://blog.alexellis.io/local-ai-is-not-opus/",
-      "source": "blog.alexellis.io",
-      "points": 263,
-      "comments": 128,
+      "title": "Hospitals and universities repurposing drugs at lower cost",
+      "url": "https://www.kcl.ac.uk/news/hospitals-and-universities-repurposing-drugs-at-90-lower-cost",
+      "source": "kcl.ac.uk",
+      "points": 317,
+      "comments": 144,
+      "date": "2026-06-18"
+    },
+    {
+      "title": "Modos Color Monitor Pushes E-Paper Displays Further",
+      "url": "https://spectrum.ieee.org/modos-e-paper-monitor",
+      "source": "spectrum.ieee.org",
+      "points": 294,
+      "comments": 70,
       "date": "2026-06-18"
     }
   ]
