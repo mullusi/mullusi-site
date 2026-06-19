@@ -136,16 +136,18 @@ function testSyntheticPromotionFailsClosed() {
   const evidence = validEvidence({
     manifest: {
       ...validEvidence().manifest,
-      status: "public-beta",
+      status: "private-promoted-status",
     },
   });
   const result = validateGovernProductStatusPreflightEvidence(evidence);
+  const report = formatGovernProductStatusPreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.productStatusPreflightState, "Blocked");
-  assert.equal(result.manifestStatus, "public-beta");
-  assert.match(result.findings.join("\n"), /manifest_status_must_remain_limited_preview:public-beta/);
+  assert.equal(result.manifestStatus, "redacted_value");
+  assert.match(result.findings.join("\n"), /manifest_status_must_remain_limited_preview:redacted_value/);
+  assert.doesNotMatch(report, /private-promoted-status/);
 }
 
 function testSyntheticApprovalRefFailsClosed() {
@@ -158,11 +160,13 @@ function testSyntheticApprovalRefFailsClosed() {
     ].join("\n"),
   });
   const result = validateGovernProductStatusPreflightEvidence(evidence);
+  const report = formatGovernProductStatusPreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
-  assert.match(result.findings.join("\n"), /approval_packet_product_status_promotion_ref_must_remain_missing/);
+  assert.match(result.findings.join("\n"), /approval_packet_product_status_promotion_ref_must_remain_missing:redacted_value/);
+  assert.doesNotMatch(report, /product-status-approved/);
 }
 
 function testSyntheticInvalidPromotionPathFailsClosed() {
@@ -180,7 +184,66 @@ function testSyntheticInvalidPromotionPathFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.productStatusPreflightState, "Blocked");
-  assert.match(result.findings.join("\n"), /manifest_promotion_path_invalid:limited-preview>production/);
+  assert.match(result.findings.join("\n"), /manifest_promotion_path_invalid:redacted_value/);
+  assert.doesNotMatch(formatGovernProductStatusPreflightReport(result), /limited-preview>production/);
+}
+
+function testSyntheticMissingWitnessTermUsesPublicLabel() {
+  const evidence = validEvidence({
+    witness: validEvidence().witness.replace("public_beta_claim_allowed=false", ""),
+  });
+  evidence.privateValueScanSources.witness = evidence.witness;
+  const result = validateGovernProductStatusPreflightEvidence(evidence);
+  const report = formatGovernProductStatusPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_witness_term_missing:public_beta_claim_allowed/);
+  assert.doesNotMatch(report, /public_beta_claim_allowed=false/);
+}
+
+function testSyntheticUnsafeProductStatusValuesAreRedacted() {
+  const evidence = validEvidence({
+    approvalPacket: [
+      "public_write_route_allowed=false",
+      "product_status_current=private-current-status",
+      "product_status_target=private-target-status",
+      "product_status_promotion_ref=ghp_abcdefghijklmnopqrstuvwxyz123456",
+    ].join("\n"),
+    manifest: {
+      ...validEvidence().manifest,
+      id: "private-product-id",
+      api: {
+        exposure: "private-exposure",
+        routes: [{ method: "POST", path: "/v1/govern/evaluate" }],
+      },
+    },
+    validatorResults: solvedAggregateValidatorResults({
+      writeRouteDecision: {
+        proofState: "Pass",
+        publicWriteRouteAllowed: false,
+        routePublicationAction: "publish-private-route",
+        solverOutcome: "SolvedVerified",
+      },
+    }),
+  });
+  const result = validateGovernProductStatusPreflightEvidence(evidence);
+  const report = formatGovernProductStatusPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /manifest_id_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /manifest_api_exposure_must_remain_planned:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_packet_product_status_current_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_packet_product_status_target_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_packet_product_status_promotion_ref_must_remain_missing:redacted_value/);
+  assert.match(result.findings.join("\n"), /write_route_decision_route_publication_action_must_remain_none:redacted_value/);
+  assert.doesNotMatch(report, /private-product-id/);
+  assert.doesNotMatch(report, /private-exposure/);
+  assert.doesNotMatch(report, /private-current-status/);
+  assert.doesNotMatch(report, /private-target-status/);
+  assert.doesNotMatch(report, /ghp_/);
+  assert.doesNotMatch(report, /publish-private-route/);
 }
 
 function testSyntheticAggregateValidatorFailureFailsClosed() {
@@ -261,6 +324,8 @@ testCurrentProductStatusPreflightPasses();
 testSyntheticPromotionFailsClosed();
 testSyntheticApprovalRefFailsClosed();
 testSyntheticInvalidPromotionPathFailsClosed();
+testSyntheticMissingWitnessTermUsesPublicLabel();
+testSyntheticUnsafeProductStatusValuesAreRedacted();
 testSyntheticAggregateValidatorFailureFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();

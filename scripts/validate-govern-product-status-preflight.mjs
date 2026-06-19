@@ -40,21 +40,36 @@ const requiredReleaseGates = [
 ];
 
 const requiredWitnessTerms = [
-  "product_status_preflight_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  "product_status_current=limited-preview",
-  "product_status_target=public-beta",
-  "product_status_promotion_allowed=false",
-  "product_status_promotion_ref=missing",
-  "public_write_route_allowed=false",
-  "route_publication_action=none",
-  "dns_mutation=none",
-  "runtime_mutation=none",
-  "secret_rotation_required=false",
-  "public_beta_claim_allowed=false",
-  "STATUS:",
+  { id: "product_status_preflight_state", text: "product_status_preflight_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "product_status_current", text: "product_status_current=limited-preview" },
+  { id: "product_status_target", text: "product_status_target=public-beta" },
+  { id: "product_status_promotion_allowed", text: "product_status_promotion_allowed=false" },
+  { id: "product_status_promotion_ref", text: "product_status_promotion_ref=missing" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "route_publication_action", text: "route_publication_action=none" },
+  { id: "dns_mutation", text: "dns_mutation=none" },
+  { id: "runtime_mutation", text: "runtime_mutation=none" },
+  { id: "secret_rotation_required", text: "secret_rotation_required=false" },
+  { id: "public_beta_claim_allowed", text: "public_beta_claim_allowed=false" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const publicProductStatusAllowedScalars = new Set([
+  "missing",
+  "false",
+  "true",
+  "none",
+  "mullu-govern",
+  "limited-preview",
+  "public-beta",
+  "planned",
+  "SolvedVerified",
+  "GovernanceBlocked",
+  "Pass",
+  "Fail",
+]);
 
 function blockedResult(finding) {
   return {
@@ -106,6 +121,17 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
+export function publicProductStatusScalarLabel(value) {
+  if (value === undefined || value === null || value === "" || value === "Unknown") return "missing";
+  if (typeof value === "boolean") return `boolean:${value ? "true" : "false"}`;
+  if (typeof value === "string" && publicProductStatusAllowedScalars.has(value)) return value;
+  if (typeof value === "string") return "redacted_value";
+  if (typeof value === "number") return "number";
+  if (Array.isArray(value)) return "array";
+  if (typeof value === "object") return "object";
+  return typeof value;
+}
+
 function sameOrderedValues(observed, expected) {
   return Array.isArray(observed)
     && observed.length === expected.length
@@ -128,7 +154,7 @@ export function validateGovernProductStatusPreflightEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredWitnessTerms) {
-    if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
+    if (!evidence.witness.includes(term.text)) findings.push(`required_witness_term_missing:${term.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -136,13 +162,13 @@ export function validateGovernProductStatusPreflightEvidence(evidence) {
   }
 
   if (evidence.manifest?.id !== "mullu-govern") {
-    findings.push(`manifest_id_invalid:${evidence.manifest?.id || "missing"}`);
+    findings.push(`manifest_id_invalid:${publicProductStatusScalarLabel(evidence.manifest?.id)}`);
   }
   if (evidence.manifest?.status !== "limited-preview") {
-    findings.push(`manifest_status_must_remain_limited_preview:${evidence.manifest?.status || "missing"}`);
+    findings.push(`manifest_status_must_remain_limited_preview:${publicProductStatusScalarLabel(evidence.manifest?.status)}`);
   }
   if (!sameOrderedValues(evidence.manifest?.releaseGate?.promotionPath, expectedPromotionPath)) {
-    findings.push(`manifest_promotion_path_invalid:${Array.isArray(evidence.manifest?.releaseGate?.promotionPath) ? evidence.manifest.releaseGate.promotionPath.join(">") : "missing"}`);
+    findings.push(`manifest_promotion_path_invalid:${Array.isArray(evidence.manifest?.releaseGate?.promotionPath) ? "redacted_value" : "missing"}`);
   }
   if (!includesAll(evidence.manifest?.releaseGate?.required, requiredReleaseGates)) {
     findings.push("manifest_required_release_gates_incomplete");
@@ -153,20 +179,20 @@ export function validateGovernProductStatusPreflightEvidence(evidence) {
   ));
   if (!route) findings.push("manifest_evaluate_route_missing");
   if (evidence.manifest?.api?.exposure !== "planned") {
-    findings.push(`manifest_api_exposure_must_remain_planned:${evidence.manifest?.api?.exposure || "missing"}`);
+    findings.push(`manifest_api_exposure_must_remain_planned:${publicProductStatusScalarLabel(evidence.manifest?.api?.exposure)}`);
   }
 
   if (!evidence.approvalPacket.includes("public_write_route_allowed=false")) {
     findings.push("approval_packet_write_route_not_blocked");
   }
   if (lineValue(evidence.approvalPacket, "product_status_current") !== "limited-preview") {
-    findings.push(`approval_packet_product_status_current_invalid:${lineValue(evidence.approvalPacket, "product_status_current") || "missing"}`);
+    findings.push(`approval_packet_product_status_current_invalid:${publicProductStatusScalarLabel(lineValue(evidence.approvalPacket, "product_status_current"))}`);
   }
   if (lineValue(evidence.approvalPacket, "product_status_target") !== "public-beta") {
-    findings.push(`approval_packet_product_status_target_invalid:${lineValue(evidence.approvalPacket, "product_status_target") || "missing"}`);
+    findings.push(`approval_packet_product_status_target_invalid:${publicProductStatusScalarLabel(lineValue(evidence.approvalPacket, "product_status_target"))}`);
   }
   if (lineValue(evidence.approvalPacket, "product_status_promotion_ref") !== "missing") {
-    findings.push(`approval_packet_product_status_promotion_ref_must_remain_missing:${lineValue(evidence.approvalPacket, "product_status_promotion_ref") || "missing"}`);
+    findings.push(`approval_packet_product_status_promotion_ref_must_remain_missing:${publicProductStatusScalarLabel(lineValue(evidence.approvalPacket, "product_status_promotion_ref"))}`);
   }
 
   const expectedPassResults = {
@@ -177,11 +203,11 @@ export function validateGovernProductStatusPreflightEvidence(evidence) {
   for (const [name, expectedOutcome] of Object.entries(expectedPassResults)) {
     const observed = evidence.validatorResults?.[name]?.solverOutcome;
     if (observed !== expectedOutcome) {
-      findings.push(`aggregate_validator_not_solved:${name}:${observed || "missing"}`);
+      findings.push(`aggregate_validator_not_solved:${name}:${publicProductStatusScalarLabel(observed)}`);
     }
     const proofState = evidence.validatorResults?.[name]?.proofState;
     if (proofState !== "Pass") {
-      findings.push(`aggregate_validator_proof_not_pass:${name}:${proofState || "missing"}`);
+      findings.push(`aggregate_validator_proof_not_pass:${name}:${publicProductStatusScalarLabel(proofState)}`);
     }
   }
   const missingApprovalInputCount = evidence.validatorResults?.approvalPacket?.missingApprovalInputs?.length ?? 0;
@@ -204,13 +230,13 @@ export function validateGovernProductStatusPreflightEvidence(evidence) {
     findings.push("write_route_decision_public_route_not_blocked");
   }
   if (evidence.validatorResults?.writeRouteDecision?.routePublicationAction !== "none") {
-    findings.push(`write_route_decision_route_publication_action_must_remain_none:${evidence.validatorResults?.writeRouteDecision?.routePublicationAction || "missing"}`);
+    findings.push(`write_route_decision_route_publication_action_must_remain_none:${publicProductStatusScalarLabel(evidence.validatorResults?.writeRouteDecision?.routePublicationAction)}`);
   }
 
   return {
     findingCount: findings.length,
     findings,
-    manifestStatus: evidence.manifest?.status || "Unknown",
+    manifestStatus: publicProductStatusScalarLabel(evidence.manifest?.status),
     productStatusPreflightState: findings.length === 0 ? "Ready" : "Blocked",
     proofState: findings.length === 0 ? "Pass" : "Fail",
     publicWriteRouteAllowed: evidence.approvalPacket.includes("public_write_route_allowed=true"),
