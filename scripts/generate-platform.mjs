@@ -221,6 +221,23 @@ function validateRoute(value, label, failures) {
   }
 }
 
+export function publicGeneratedHrefLabel(value) {
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol === "https:" && /^(?:[a-z0-9.-]+\.)?mullusi\.com$/i.test(parsed.hostname)) {
+      return parsed.toString();
+    }
+  } catch {
+    // Fall through to the redacted label.
+  }
+  return value ? "redacted_url" : "missing";
+}
+
+export function publicGeneratedScalarLabel(value) {
+  if (typeof value !== "string" || value.length === 0) return "missing";
+  return /^[A-Za-z0-9_.:-]{1,80}$/.test(value) ? value : "redacted_value";
+}
+
 function validateDocsRoute(value, label, failures) {
   if (!/^(https:\/\/docs\.mullusi\.com\/[a-z0-9/_-]+(?:\.html)?|private)$/.test(value)) {
     failures.push(`docs_route_invalid:${label}:${value}`);
@@ -514,29 +531,29 @@ function validateManualPublicSurfaceRegistry(failures) {
       failures.push(`manual_public_surface_system_object_required:${index}`);
       return;
     }
-    const name = requireString(failures, system.name, `${label}.name`);
+    requireString(failures, system.name, `${label}.name`);
     const href = requireString(failures, system.href, `${label}.href`);
     requireString(failures, system.category, `${label}.category`);
     const status = requireString(failures, system.status, `${label}.status`);
     const sourceState = requireString(failures, system.sourceState, `${label}.sourceState`);
     requireString(failures, system.summary, `${label}.summary`);
     if (!allowedSystemStatuses.has(status)) {
-      failures.push(`manual_public_surface_system_status_invalid:${name}:${status}`);
+      failures.push(`manual_public_surface_system_status_invalid:${label}:${publicGeneratedScalarLabel(status)}`);
     }
     if (!/^https:\/\/(?:[a-z0-9.-]+\.)?mullusi\.com(?:\/.*)?$/.test(href)) {
-      failures.push(`manual_public_surface_system_href_invalid:${name}:${href}`);
+      failures.push(`manual_public_surface_system_href_invalid:${label}:${publicGeneratedHrefLabel(href)}`);
     }
     if (!["private-source", "public-release"].includes(sourceState)) {
-      failures.push(`manual_public_surface_system_source_state_invalid:${name}:${sourceState}`);
+      failures.push(`manual_public_surface_system_source_state_invalid:${label}:${publicGeneratedScalarLabel(sourceState)}`);
     }
     if (Object.prototype.hasOwnProperty.call(system, "repo")) {
-      failures.push(`manual_public_surface_system_repo_forbidden:${name}`);
+      failures.push(`manual_public_surface_system_repo_forbidden:${label}`);
     }
     if (!Array.isArray(system.tags) || system.tags.length === 0) {
-      failures.push(`manual_public_surface_system_tags_missing:${name}`);
+      failures.push(`manual_public_surface_system_tags_missing:${label}`);
     }
     if (seenSystemHrefs.has(href)) {
-      failures.push(`manual_public_surface_system_href_duplicate:${href}`);
+      failures.push(`manual_public_surface_system_href_duplicate:${publicGeneratedHrefLabel(href)}`);
     }
     seenSystemHrefs.add(href);
   });
@@ -549,19 +566,19 @@ function validateManualPublicSurfaceRegistry(failures) {
       failures.push(`manual_public_surface_future_domain_object_required:${index}`);
       return;
     }
-    const name = requireString(failures, domain.name, `${label}.name`);
+    requireString(failures, domain.name, `${label}.name`);
     const slug = requireString(failures, domain.slug, `${label}.slug`);
     const status = requireString(failures, domain.status, `${label}.status`);
     requireString(failures, domain.releaseBoundary, `${label}.releaseBoundary`);
     requireString(failures, domain.summary, `${label}.summary`);
     if (!allowedFutureStatuses.has(status)) {
-      failures.push(`manual_public_surface_future_domain_status_invalid:${name}:${status}`);
+      failures.push(`manual_public_surface_future_domain_status_invalid:${label}:${publicGeneratedScalarLabel(status)}`);
     }
     if (Object.prototype.hasOwnProperty.call(domain, "plannedRepo")) {
-      failures.push(`manual_public_surface_future_domain_repo_forbidden:${name}`);
+      failures.push(`manual_public_surface_future_domain_repo_forbidden:${label}`);
     }
     if (seenSlugs.has(slug)) {
-      failures.push(`manual_public_surface_future_domain_slug_duplicate:${slug}`);
+      failures.push(`manual_public_surface_future_domain_slug_duplicate`);
     }
     seenSlugs.add(slug);
   });
@@ -577,11 +594,11 @@ function validateManualPublicSurfaceRegistry(failures) {
       failures.push(`manual_public_surface_private_incubation_object_required:${index}`);
       return;
     }
-    const name = requireString(failures, item.name, `${label}.name`);
+    requireString(failures, item.name, `${label}.name`);
     requireString(failures, item.summary, `${label}.summary`);
     requireString(failures, item.publishGate, `${label}.publishGate`);
     if (item.visibility !== "private") {
-      failures.push(`manual_public_surface_private_incubation_visibility_invalid:${name}:${item.visibility}`);
+      failures.push(`manual_public_surface_private_incubation_visibility_invalid:${label}:${publicGeneratedScalarLabel(item.visibility)}`);
     }
   });
 }

@@ -6,7 +6,11 @@ Invariants: tests use synthetic errors only; they never read secrets, private re
 */
 
 import assert from "node:assert/strict";
-import { publicJsonReadErrorCode } from "./generate-platform.mjs";
+import {
+  publicGeneratedHrefLabel,
+  publicGeneratedScalarLabel,
+  publicJsonReadErrorCode,
+} from "./generate-platform.mjs";
 
 function testPublicJsonReadErrorCodeRedactsRawValues() {
   const boundary = publicJsonReadErrorCode(new Error("path_boundary_violation:../private/registry.json"));
@@ -22,6 +26,23 @@ function testPublicJsonReadErrorCodeRedactsRawValues() {
   assert.doesNotMatch(joined, /private|secret|manifest|registry|C:\\|D:\\/);
 }
 
+function testGeneratedRegistryLabelsRedactUnsafeValues() {
+  const publicHref = publicGeneratedHrefLabel("https://mullusi.com/status/");
+  const unsafeHref = publicGeneratedHrefLabel("https://github.com/private/repo?trace=bounded");
+  const missingHref = publicGeneratedHrefLabel("");
+  const safeScalar = publicGeneratedScalarLabel("public-release");
+  const unsafeScalar = publicGeneratedScalarLabel("private/repo trace");
+  const joined = [publicHref, unsafeHref, missingHref, safeScalar, unsafeScalar].join("\n");
+
+  assert.equal(publicHref, "https://mullusi.com/status/");
+  assert.equal(unsafeHref, "redacted_url");
+  assert.equal(missingHref, "missing");
+  assert.equal(safeScalar, "public-release");
+  assert.equal(unsafeScalar, "redacted_value");
+  assert.doesNotMatch(joined, /github\.com|private\/repo|trace=bounded/);
+}
+
 testPublicJsonReadErrorCodeRedactsRawValues();
+testGeneratedRegistryLabelsRedactUnsafeValues();
 
 console.log("generate platform error tests passed");
