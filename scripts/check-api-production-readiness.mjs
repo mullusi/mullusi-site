@@ -90,13 +90,18 @@ function validateSecretBoundary(hardFindings, namedDocuments) {
   }
 }
 
+export function publicReadinessScalarLabel(value) {
+  if (typeof value !== "string" || value.length === 0) return "missing";
+  return /^[A-Za-z0-9_.:-]{1,80}$/.test(value) ? value : "redacted_value";
+}
+
 function validateRuntimeWitnessRegistry(hardFindings, registry) {
   if (!isPlainObject(registry)) {
     hardFindings.push("runtime_witness_registry_object_required");
     return { witnessCount: 0, closedWitnessCount: 0, blockedWitnessCount: 0 };
   }
   if (registry.authority !== "mullusi-runtime-witness-authority") {
-    hardFindings.push(`runtime_witness_authority_invalid:${registry.authority ?? ""}`);
+    hardFindings.push(`runtime_witness_authority_invalid:${publicReadinessScalarLabel(registry.authority)}`);
   }
   const witnesses = Array.isArray(registry.witnesses) ? registry.witnesses : [];
   if (witnesses.length === 0) hardFindings.push("runtime_witness_rows_required");
@@ -107,7 +112,7 @@ function validateRuntimeWitnessRegistry(hardFindings, registry) {
       hardFindings.push("runtime_witness_row_object_required");
       continue;
     }
-    const productId = typeof witness.productId === "string" ? witness.productId : "unknown";
+    const productId = publicReadinessScalarLabel(witness.productId);
     if (witness.controlPlane?.required !== true) {
       hardFindings.push(`runtime_witness_control_plane_required_missing:${productId}`);
     }
@@ -190,10 +195,10 @@ export function evaluateApiProductionReadinessEvidence(evidence) {
   const recoveryState = lineValue(recoveryWitness, "recovery_witness_state");
   const apiProvisioningAllowed = lineValue(recoveryWitness, "api_provisioning_allowed");
   if (!["AwaitingEvidence", "ReadyForProvisioning"].includes(recoveryState)) {
-    hardFindings.push(`recovery_witness_state_invalid:${recoveryState}`);
+    hardFindings.push(`recovery_witness_state_invalid:${publicReadinessScalarLabel(recoveryState)}`);
   }
   if (!["false", "true"].includes(apiProvisioningAllowed)) {
-    hardFindings.push(`api_provisioning_allowed_invalid:${apiProvisioningAllowed}`);
+    hardFindings.push(`api_provisioning_allowed_invalid:${publicReadinessScalarLabel(apiProvisioningAllowed)}`);
   }
   if (recoveryState !== "ReadyForProvisioning" || apiProvisioningAllowed !== "true") {
     blockers.push("recovery_witness_not_ready");
@@ -230,7 +235,9 @@ export function evaluateApiProductionReadinessEvidence(evidence) {
     recoveryGate: recoveryState === "ReadyForProvisioning" && apiProvisioningAllowed === "true"
       ? "ReadyForProvisioning"
       : "Blocked",
-    recoveryWitnessState: recoveryState,
+    recoveryWitnessState: ["AwaitingEvidence", "ReadyForProvisioning"].includes(recoveryState)
+      ? recoveryState
+      : publicReadinessScalarLabel(recoveryState),
     apiProvisioningAllowed: apiProvisioningAllowed === "true",
     manualEvidenceReady: missingReadinessEvidence.length === 0,
     manualEvidenceMissing: missingReadinessEvidence,

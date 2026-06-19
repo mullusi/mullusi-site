@@ -32,6 +32,11 @@ function lineValue(content, key) {
   return match?.[1] ?? "";
 }
 
+export function publicExposureScalarLabel(value) {
+  if (typeof value !== "string" || value.length === 0) return "missing";
+  return /^[A-Za-z0-9_.:-]{1,80}$/.test(value) ? value : "redacted_value";
+}
+
 function unsupportedOptions(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedOptions.has(arg));
 }
@@ -165,19 +170,19 @@ export function evaluateApiExposureEvidence({ documentState, liveState }) {
   const blockers = [];
 
   if (!allowedRecoveryStates.has(documentState.recoveryWitnessState)) {
-    hardFindings.push(`recovery_witness_state_invalid:${documentState.recoveryWitnessState}`);
+    hardFindings.push(`recovery_witness_state_invalid:${publicExposureScalarLabel(documentState.recoveryWitnessState)}`);
   }
   if (!["false", "true"].includes(documentState.recoveryApiProvisioningAllowed)) {
-    hardFindings.push(`api_provisioning_allowed_invalid:${documentState.recoveryApiProvisioningAllowed}`);
+    hardFindings.push(`api_provisioning_allowed_invalid:${publicExposureScalarLabel(documentState.recoveryApiProvisioningAllowed)}`);
   }
   if (!allowedExposureStates.has(documentState.exposureState)) {
-    hardFindings.push(`api_exposure_state_invalid:${documentState.exposureState}`);
+    hardFindings.push(`api_exposure_state_invalid:${publicExposureScalarLabel(documentState.exposureState)}`);
   }
   if (!["false", "true"].includes(documentState.dnsPublicationAllowed)) {
-    hardFindings.push(`api_dns_publication_allowed_invalid:${documentState.dnsPublicationAllowed}`);
+    hardFindings.push(`api_dns_publication_allowed_invalid:${publicExposureScalarLabel(documentState.dnsPublicationAllowed)}`);
   }
   if (!allowedRuntimeStates.has(documentState.runtimePublicState)) {
-    hardFindings.push(`api_runtime_public_state_invalid:${documentState.runtimePublicState}`);
+    hardFindings.push(`api_runtime_public_state_invalid:${publicExposureScalarLabel(documentState.runtimePublicState)}`);
   }
   if (documentState.exposureRecoveryState !== documentState.recoveryWitnessState) {
     hardFindings.push("api_exposure_recovery_state_mismatch");
@@ -247,11 +252,17 @@ export function evaluateApiExposureEvidence({ documentState, liveState }) {
     ready,
     readyForDns,
     solvedVerified,
-    recoveryWitnessState: documentState.recoveryWitnessState,
+    recoveryWitnessState: allowedRecoveryStates.has(documentState.recoveryWitnessState)
+      ? documentState.recoveryWitnessState
+      : publicExposureScalarLabel(documentState.recoveryWitnessState),
     apiProvisioningAllowed: documentState.recoveryApiProvisioningAllowed === "true",
-    configuredExposureState: documentState.exposureState,
+    configuredExposureState: allowedExposureStates.has(documentState.exposureState)
+      ? documentState.exposureState
+      : publicExposureScalarLabel(documentState.exposureState),
     configuredDnsAllowed: dnsAllowed,
-    runtimePublicState: documentState.runtimePublicState,
+    runtimePublicState: allowedRuntimeStates.has(documentState.runtimePublicState)
+      ? documentState.runtimePublicState
+      : publicExposureScalarLabel(documentState.runtimePublicState),
     dnsState: liveState.dnsState,
     dnsRecordCount: liveState.dnsRecordCount,
     httpsState: liveState.httpsState,
