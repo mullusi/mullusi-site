@@ -79,7 +79,23 @@ function testSyntheticMissingStopConditionFailsClosed() {
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
-  assert.match(result.findings.join("\n"), /required_stop_condition_missing:approval_packet_not_ready/);
+  assert.match(result.findings.join("\n"), /required_stop_condition_missing:approval_packet_stop/);
+  assert.doesNotMatch(formatGovernLiveEvidenceRefCollectionChecklistReport(result), /approval_packet_not_ready/);
+}
+
+function testMissingChecklistTermsUsePublicLabels() {
+  const checklist = validChecklist().replace(
+    "intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
+    "",
+  );
+  const result = validateGovernLiveEvidenceRefCollectionChecklistContent(checklist);
+  const report = formatGovernLiveEvidenceRefCollectionChecklistReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_checklist_term_missing:intake_validator/);
+  assert.doesNotMatch(report, /validate-govern-live-evidence-ref-intake/);
+  assert.doesNotMatch(report, /--require-complete/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -126,6 +142,7 @@ function testPathBoundaryFailsClosedWithoutEcho() {
 testCurrentChecklistPasses();
 testSyntheticMissingApprovalRowFailsClosed();
 testSyntheticMissingStopConditionFailsClosed();
+testMissingChecklistTermsUsePublicLabels();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
