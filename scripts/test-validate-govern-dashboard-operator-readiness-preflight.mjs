@@ -82,15 +82,18 @@ function testSyntheticDashboardRouteMismatchFailsClosed() {
   const evidence = validEvidence({
     manifest: {
       ...validEvidence().manifest,
-      surfaces: { dashboardRoute: "https://dashboard.mullusi.com/wrong" },
+      surfaces: { dashboardRoute: "https://private.example.internal/govern" },
     },
   });
   const result = validateGovernDashboardOperatorReadinessPreflightEvidence(evidence);
+  const report = formatGovernDashboardOperatorReadinessPreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.dashboardOperatorReadinessPreflightState, "Blocked");
-  assert.match(result.findings.join("\n"), /manifest_dashboard_route_invalid/);
+  assert.equal(result.dashboardRoute, "redacted_value");
+  assert.match(result.findings.join("\n"), /manifest_dashboard_route_invalid:redacted_value/);
+  assert.doesNotMatch(report, /private\.example\.internal/);
 }
 
 function testSyntheticUnblockedDashboardClaimFailsClosed() {
@@ -113,10 +116,48 @@ function testSyntheticApprovalRefFailsClosed() {
     approvalPacket: "public_write_route_allowed=false\ndashboard_operator_readiness_ref=ops/dashboard-ready.md\n",
   });
   const result = validateGovernDashboardOperatorReadinessPreflightEvidence(evidence);
+  const report = formatGovernDashboardOperatorReadinessPreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
-  assert.match(result.findings.join("\n"), /approval_packet_dashboard_operator_readiness_ref_must_remain_missing/);
+  assert.match(result.findings.join("\n"), /approval_packet_dashboard_operator_readiness_ref_must_remain_missing:redacted_value/);
+  assert.doesNotMatch(report, /dashboard-ready/);
+}
+
+function testSyntheticMissingWitnessTermUsesPublicLabel() {
+  const evidence = validEvidence({
+    witness: validEvidence().witness.replace("provider_dashboard_values_recorded=false", ""),
+  });
+  evidence.privateValueScanSources.witness = evidence.witness;
+  const result = validateGovernDashboardOperatorReadinessPreflightEvidence(evidence);
+  const report = formatGovernDashboardOperatorReadinessPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_witness_term_missing:provider_dashboard_values_recorded/);
+  assert.doesNotMatch(report, /provider_dashboard_values_recorded=false/);
+}
+
+function testSyntheticUnsafeManifestValuesAreRedacted() {
+  const evidence = validEvidence({
+    manifest: {
+      ...validEvidence().manifest,
+      id: "private-product-id",
+      api: { exposure: "private-exposure" },
+      surfaces: { dashboardRoute: "https://private.example.internal/govern" },
+    },
+  });
+  const result = validateGovernDashboardOperatorReadinessPreflightEvidence(evidence);
+  const report = formatGovernDashboardOperatorReadinessPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /manifest_id_invalid:redacted_value/);
+  assert.match(result.findings.join("\n"), /manifest_api_exposure_must_remain_planned:redacted_value/);
+  assert.match(result.findings.join("\n"), /manifest_dashboard_route_invalid:redacted_value/);
+  assert.doesNotMatch(report, /private-product-id/);
+  assert.doesNotMatch(report, /private-exposure/);
+  assert.doesNotMatch(report, /private\.example\.internal/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -175,6 +216,8 @@ testCurrentDashboardOperatorReadinessPreflightPasses();
 testSyntheticDashboardRouteMismatchFailsClosed();
 testSyntheticUnblockedDashboardClaimFailsClosed();
 testSyntheticApprovalRefFailsClosed();
+testSyntheticMissingWitnessTermUsesPublicLabel();
+testSyntheticUnsafeManifestValuesAreRedacted();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();

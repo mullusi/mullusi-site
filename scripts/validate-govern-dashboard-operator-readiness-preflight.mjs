@@ -19,22 +19,35 @@ const allowedArgs = new Set(["--json"]);
 const dashboardRoute = "https://dashboard.mullusi.com/govern";
 
 const requiredWitnessTerms = [
-  "dashboard_operator_readiness_preflight_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  `dashboard_route=${dashboardRoute}`,
-  "dashboard_route_reserved=true",
-  "dashboard_live_claim_allowed=false",
-  "dashboard_operator_readiness_ref=missing",
-  "public_write_route_allowed=false",
-  "route_publication_action=none",
-  "dns_mutation=none",
-  "runtime_mutation=none",
-  "dashboard_auth_mutation=none",
-  "secret_rotation_required=false",
-  "provider_dashboard_values_recorded=false",
-  "STATUS:",
+  { id: "dashboard_operator_readiness_preflight_state", text: "dashboard_operator_readiness_preflight_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "dashboard_route", text: `dashboard_route=${dashboardRoute}` },
+  { id: "dashboard_route_reserved", text: "dashboard_route_reserved=true" },
+  { id: "dashboard_live_claim_allowed", text: "dashboard_live_claim_allowed=false" },
+  { id: "dashboard_operator_readiness_ref", text: "dashboard_operator_readiness_ref=missing" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "route_publication_action", text: "route_publication_action=none" },
+  { id: "dns_mutation", text: "dns_mutation=none" },
+  { id: "runtime_mutation", text: "runtime_mutation=none" },
+  { id: "dashboard_auth_mutation", text: "dashboard_auth_mutation=none" },
+  { id: "secret_rotation_required", text: "secret_rotation_required=false" },
+  { id: "provider_dashboard_values_recorded", text: "provider_dashboard_values_recorded=false" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const publicDashboardAllowedScalars = new Set([
+  "missing",
+  "false",
+  "true",
+  "planned",
+  "mullu-govern",
+  "SolvedVerified",
+  "GovernanceBlocked",
+  "Pass",
+  "Fail",
+  dashboardRoute,
+]);
 
 function blockedResult(finding) {
   return {
@@ -86,11 +99,22 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
+export function publicDashboardReadinessScalarLabel(value) {
+  if (value === undefined || value === null || value === "" || value === "Unknown") return "missing";
+  if (typeof value === "boolean") return `boolean:${value ? "true" : "false"}`;
+  if (typeof value === "string" && publicDashboardAllowedScalars.has(value)) return value;
+  if (typeof value === "string") return "redacted_value";
+  if (typeof value === "number") return "number";
+  if (Array.isArray(value)) return "array";
+  if (typeof value === "object") return "object";
+  return typeof value;
+}
+
 export function validateGovernDashboardOperatorReadinessPreflightEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredWitnessTerms) {
-    if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
+    if (!evidence.witness.includes(term.text)) findings.push(`required_witness_term_missing:${term.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -98,29 +122,29 @@ export function validateGovernDashboardOperatorReadinessPreflightEvidence(eviden
   }
 
   if (evidence.manifest?.id !== "mullu-govern") {
-    findings.push(`manifest_id_invalid:${evidence.manifest?.id || "missing"}`);
+    findings.push(`manifest_id_invalid:${publicDashboardReadinessScalarLabel(evidence.manifest?.id)}`);
   }
   if (evidence.manifest?.surfaces?.dashboardRoute !== dashboardRoute) {
-    findings.push(`manifest_dashboard_route_invalid:${evidence.manifest?.surfaces?.dashboardRoute || "missing"}`);
+    findings.push(`manifest_dashboard_route_invalid:${publicDashboardReadinessScalarLabel(evidence.manifest?.surfaces?.dashboardRoute)}`);
   }
   if (!Array.isArray(evidence.manifest?.proof?.claimsBlockedUntilVerified)
     || !evidence.manifest.proof.claimsBlockedUntilVerified.includes("dashboard operator readiness")) {
     findings.push("manifest_dashboard_operator_readiness_claim_not_blocked");
   }
   if (evidence.manifest?.api?.exposure !== "planned") {
-    findings.push(`manifest_api_exposure_must_remain_planned:${evidence.manifest?.api?.exposure || "missing"}`);
+    findings.push(`manifest_api_exposure_must_remain_planned:${publicDashboardReadinessScalarLabel(evidence.manifest?.api?.exposure)}`);
   }
 
   if (!evidence.approvalPacket.includes("public_write_route_allowed=false")) {
     findings.push("approval_packet_write_route_not_blocked");
   }
   if (lineValue(evidence.approvalPacket, "dashboard_operator_readiness_ref") !== "missing") {
-    findings.push(`approval_packet_dashboard_operator_readiness_ref_must_remain_missing:${lineValue(evidence.approvalPacket, "dashboard_operator_readiness_ref") || "missing"}`);
+    findings.push(`approval_packet_dashboard_operator_readiness_ref_must_remain_missing:${publicDashboardReadinessScalarLabel(lineValue(evidence.approvalPacket, "dashboard_operator_readiness_ref"))}`);
   }
 
   return {
     dashboardOperatorReadinessPreflightState: findings.length === 0 ? "Ready" : "Blocked",
-    dashboardRoute: evidence.manifest?.surfaces?.dashboardRoute || "Unknown",
+    dashboardRoute: publicDashboardReadinessScalarLabel(evidence.manifest?.surfaces?.dashboardRoute),
     findingCount: findings.length,
     findings,
     proofState: findings.length === 0 ? "Pass" : "Fail",
