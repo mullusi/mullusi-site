@@ -30,26 +30,39 @@ const defaultWitnessPath = "ops/mullu-govern-approval-readiness-preflight.md";
 const allowedArgs = new Set(["--json"]);
 
 const requiredWitnessTerms = [
-  "approval_readiness_preflight_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  "packet_state=AwaitingEvidence",
-  "approval_state=NotApproved",
-  "operator_approval_ref=missing",
-  "ready_for_approval=false",
-  "public_write_route_allowed=false",
-  "route_publication_action=none",
-  "dns_mutation=none",
-  "runtime_mutation=none",
-  "dashboard_auth_mutation=none",
-  "privacy_activation_allowed=false",
-  "retention_activation_allowed=false",
-  "product_status_promotion_allowed=false",
-  "public_claim_update_allowed=false",
-  "secret_rotation_required=false",
-  "provider_values_recorded=false",
-  "STATUS:",
+  { id: "approval_readiness_preflight_state", text: "approval_readiness_preflight_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "packet_state", text: "packet_state=AwaitingEvidence" },
+  { id: "approval_state", text: "approval_state=NotApproved" },
+  { id: "operator_approval_ref", text: "operator_approval_ref=missing" },
+  { id: "ready_for_approval", text: "ready_for_approval=false" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "route_publication_action", text: "route_publication_action=none" },
+  { id: "dns_mutation", text: "dns_mutation=none" },
+  { id: "runtime_mutation", text: "runtime_mutation=none" },
+  { id: "dashboard_auth_mutation", text: "dashboard_auth_mutation=none" },
+  { id: "privacy_activation_allowed", text: "privacy_activation_allowed=false" },
+  { id: "retention_activation_allowed", text: "retention_activation_allowed=false" },
+  { id: "product_status_promotion_allowed", text: "product_status_promotion_allowed=false" },
+  { id: "public_claim_update_allowed", text: "public_claim_update_allowed=false" },
+  { id: "secret_rotation_required", text: "secret_rotation_required=false" },
+  { id: "provider_values_recorded", text: "provider_values_recorded=false" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const publicApprovalReadinessAllowedScalars = new Set([
+  "missing",
+  "false",
+  "true",
+  "none",
+  "AwaitingEvidence",
+  "NotApproved",
+  "SolvedVerified",
+  "GovernanceBlocked",
+  "Pass",
+  "Fail",
+]);
 
 function blockedResult(finding) {
   return {
@@ -90,6 +103,17 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
+export function publicApprovalReadinessScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  if (typeof value === "boolean") return `boolean:${value ? "true" : "false"}`;
+  if (typeof value === "string" && publicApprovalReadinessAllowedScalars.has(value)) return value;
+  if (typeof value === "string") return "redacted_value";
+  if (typeof value === "number") return "number";
+  if (Array.isArray(value)) return "array";
+  if (typeof value === "object") return "object";
+  return typeof value;
+}
+
 function aggregateValidatorResults() {
   return {
     approvalPacket: validateGovernPublicBetaApprovalPacket(),
@@ -108,7 +132,7 @@ export function validateGovernApprovalReadinessPreflightEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredWitnessTerms) {
-    if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
+    if (!evidence.witness.includes(term.text)) findings.push(`required_witness_term_missing:${term.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -117,17 +141,17 @@ export function validateGovernApprovalReadinessPreflightEvidence(evidence) {
 
   for (const key of requiredLiveEvidenceApprovalKeys) {
     const value = lineValue(evidence.approvalPacket, key);
-    if (value !== "missing") findings.push(`approval_input_must_remain_missing:${key}:${value || "missing"}`);
+    if (value !== "missing") findings.push(`approval_input_must_remain_missing:${key}:${publicApprovalReadinessScalarLabel(value)}`);
   }
 
   if (lineValue(evidence.approvalPacket, "packet_state") !== "AwaitingEvidence") {
-    findings.push(`approval_packet_state_must_remain_awaiting:${lineValue(evidence.approvalPacket, "packet_state") || "missing"}`);
+    findings.push(`approval_packet_state_must_remain_awaiting:${publicApprovalReadinessScalarLabel(lineValue(evidence.approvalPacket, "packet_state"))}`);
   }
   if (lineValue(evidence.approvalPacket, "approval_state") !== "NotApproved") {
-    findings.push(`approval_state_must_remain_not_approved:${lineValue(evidence.approvalPacket, "approval_state") || "missing"}`);
+    findings.push(`approval_state_must_remain_not_approved:${publicApprovalReadinessScalarLabel(lineValue(evidence.approvalPacket, "approval_state"))}`);
   }
   if (lineValue(evidence.approvalPacket, "public_write_route_allowed") !== "false") {
-    findings.push(`public_write_route_allowed_must_remain_false:${lineValue(evidence.approvalPacket, "public_write_route_allowed") || "missing"}`);
+    findings.push(`public_write_route_allowed_must_remain_false:${publicApprovalReadinessScalarLabel(lineValue(evidence.approvalPacket, "public_write_route_allowed"))}`);
   }
 
   const expectedPassResults = {
@@ -144,11 +168,11 @@ export function validateGovernApprovalReadinessPreflightEvidence(evidence) {
   for (const [name, expectedOutcome] of Object.entries(expectedPassResults)) {
     const observed = evidence.validatorResults[name]?.solverOutcome;
     if (observed !== expectedOutcome) {
-      findings.push(`aggregate_validator_not_solved:${name}:${observed || "missing"}`);
+      findings.push(`aggregate_validator_not_solved:${name}:${publicApprovalReadinessScalarLabel(observed)}`);
     }
     const proofState = evidence.validatorResults[name]?.proofState;
     if (proofState !== "Pass") {
-      findings.push(`aggregate_validator_proof_not_pass:${name}:${proofState || "missing"}`);
+      findings.push(`aggregate_validator_proof_not_pass:${name}:${publicApprovalReadinessScalarLabel(proofState)}`);
     }
   }
 
