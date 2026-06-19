@@ -13,6 +13,7 @@ import {
   evaluateApiExposureEvidence,
   formatResult,
   parseApiExposureDocuments,
+  publicExposureScalarLabel,
 } from "./check-api-exposure-gate.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
@@ -238,6 +239,40 @@ function testCurrentCliRejectsUnsupportedArgs() {
   assert.doesNotMatch(result.stdout, /--unsupported/);
 }
 
+function testInvalidExposureStateValuesAreRedacted() {
+  const result = evaluateApiExposureEvidence({
+    documentState: documentState({
+      recovery: {
+        state: "private/recovery-state",
+        allowed: "postgres://user:password@private.example/db",
+      },
+      exposure: {
+        exposureState: "private/exposure-state",
+        dnsAllowed: "private/dns-flag",
+        runtimeState: "private/runtime-state",
+        recoveryState: "private/recovery-state",
+        provisioningAllowed: "postgres://user:password@private.example/db",
+      },
+    }),
+    liveState: liveState(),
+  });
+  const formatted = formatResult(result);
+  const serialized = `${JSON.stringify(result)}\n${formatted}`;
+
+  assert.ok(result.hardFindings.includes("recovery_witness_state_invalid:redacted_value"));
+  assert.ok(result.hardFindings.includes("api_provisioning_allowed_invalid:redacted_value"));
+  assert.ok(result.hardFindings.includes("api_exposure_state_invalid:redacted_value"));
+  assert.ok(result.hardFindings.includes("api_dns_publication_allowed_invalid:redacted_value"));
+  assert.ok(result.hardFindings.includes("api_runtime_public_state_invalid:redacted_value"));
+  assert.doesNotMatch(serialized, /private\/|postgres|password|private\.example/);
+}
+
+function testPublicExposureScalarLabelRedactsUnsafeValues() {
+  assert.equal(publicExposureScalarLabel("SolvedVerified"), "SolvedVerified");
+  assert.equal(publicExposureScalarLabel("private/exposure state"), "redacted_value");
+  assert.equal(publicExposureScalarLabel(""), "missing");
+}
+
 testBlockedFixtureIsExpectedState();
 testReadyFixturePassesBeforeDnsPublication();
 testReadyFixtureWithDnsPresentAwaitsPostDnsWitness();
@@ -248,5 +283,7 @@ testDocumentMismatchFails();
 testCurrentCliDefaultsAwaitRuntimeEvidence();
 testCurrentCliRequireReadyFailsClosed();
 testCurrentCliRejectsUnsupportedArgs();
+testInvalidExposureStateValuesAreRedacted();
+testPublicExposureScalarLabelRedactsUnsafeValues();
 
 console.log("api exposure gate tests passed");

@@ -15,6 +15,7 @@ import {
   evaluateApiProductionReadinessEvidence,
   formatApiProductionReadinessResult,
   publicErrorCode,
+  publicReadinessScalarLabel,
   readinessFlags,
   runtimeWitnessClosed,
 } from "./check-api-production-readiness.mjs";
@@ -285,6 +286,31 @@ function testPublicErrorCodeRedactsRawExceptionValues() {
   assert.doesNotMatch([file, json, secret, fallback].join("\n"), /D:\\|C:\\|secret|private|postgres|password|registry\.json|readiness\.txt/i);
 }
 
+function testInvalidReadinessStateValuesAreRedacted() {
+  const evidence = fixtureEvidence({
+    recoveryState: "private/recovery-state",
+    allowed: "postgres://user:password@private.example/db",
+    witnesses: [closedWitness("private/product-repo")],
+  });
+  evidence.runtimeWitnessRegistry.authority = "private/authority-ref";
+  evidence.runtimeWitnessRegistry.witnesses[0].rollback.path = "private/rollback-path";
+  const result = evaluateApiProductionReadinessEvidence(evidence);
+  const formatted = formatApiProductionReadinessResult(result);
+  const serialized = `${JSON.stringify(result)}\n${formatted}`;
+
+  assert.ok(result.hardFindings.includes("runtime_witness_authority_invalid:redacted_value"));
+  assert.ok(result.hardFindings.includes("recovery_witness_state_invalid:redacted_value"));
+  assert.ok(result.hardFindings.includes("api_provisioning_allowed_invalid:redacted_value"));
+  assert.ok(result.hardFindings.includes("runtime_witness_rollback_path_invalid:redacted_value"));
+  assert.doesNotMatch(serialized, /private\/|postgres|password|private\.example/);
+}
+
+function testPublicReadinessScalarLabelRedactsUnsafeValues() {
+  assert.equal(publicReadinessScalarLabel("ReadyForProvisioning"), "ReadyForProvisioning");
+  assert.equal(publicReadinessScalarLabel("private/recovery state"), "redacted_value");
+  assert.equal(publicReadinessScalarLabel(""), "missing");
+}
+
 testReadyFixtureAllowsDns();
 testMissingManualEvidenceAwaitsEvidence();
 testRecoveryBlockDominatesReadiness();
@@ -299,6 +325,8 @@ testOutputFilePersistsReadinessJson();
 testJsonOutputFilePersistsGovernanceBlock();
 testEmptyOutputPathIsRejectedBeforeWrite();
 testPublicErrorCodeRedactsRawExceptionValues();
+testInvalidReadinessStateValuesAreRedacted();
+testPublicReadinessScalarLabelRedactsUnsafeValues();
 
 fs.rmSync(tempDir, { recursive: true, force: true });
 
