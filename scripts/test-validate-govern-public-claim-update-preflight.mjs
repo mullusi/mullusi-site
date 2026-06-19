@@ -198,11 +198,13 @@ function testSyntheticApprovalRefFailsClosed() {
     approvalPacket: "public_write_route_allowed=false\npublic_claim_update_ref=ops/public-claim-ready.md\n",
   });
   const result = validateGovernPublicClaimUpdatePreflightEvidence(evidence);
+  const report = formatGovernPublicClaimUpdatePreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
-  assert.match(result.findings.join("\n"), /approval_packet_public_claim_update_ref_must_remain_missing/);
+  assert.match(result.findings.join("\n"), /approval_packet_public_claim_update_ref_must_remain_missing:redacted_value/);
+  assert.doesNotMatch(report, /ops\/public-claim-ready/);
 }
 
 function testSyntheticAggregateProductStatusFailureFailsClosed() {
@@ -223,6 +225,75 @@ function testSyntheticAggregateProductStatusFailureFailsClosed() {
   assert.equal(result.publicClaimUpdatePreflightState, "Blocked");
   assert.match(result.findings.join("\n"), /aggregate_validator_not_solved:productStatusPreflight:GovernanceBlocked/);
   assert.match(result.findings.join("\n"), /product_status_preflight_public_write_route_not_blocked/);
+}
+
+function testSyntheticUnsafePublicClaimValuesUsePublicLabels() {
+  const privateClaimId = "private.product.claim";
+  const evidence = validEvidence({
+    claimRegistry: {
+      claims: [{
+        claimId: privateClaimId,
+        productId: "mullu-govern",
+        publicRenderAllowed: true,
+        renderDecision: "private-render-decision",
+        runtimeWitnessClosed: true,
+      }],
+      renderableClaims: [],
+    },
+    manifest: {
+      id: "private-product-id",
+      status: "private-status",
+      proof: {
+        claimsAllowed: [],
+        claimsBlockedUntilVerified: [
+          "production runtime witness closure",
+          "public proof stamp issuance",
+          "dashboard operator readiness",
+        ],
+      },
+    },
+    productsRegistry: {
+      products: [{
+        id: "mullu-govern",
+        publicExposureAllowed: true,
+        releaseGateState: "private-release-gate",
+        status: "private-generated-status",
+      }],
+    },
+    proof: {
+      productId: "private-proof-product",
+      proofState: "private-proof-state",
+      claimsAllowed: [],
+      claimBindings: [{
+        claimId: privateClaimId,
+        proofState: "private-proof-state",
+        renderDecision: "private-render-decision",
+        state: "private-claim-state",
+      }],
+    },
+    validatorResults: solvedAggregateValidatorResults({
+      writeRouteDecision: {
+        proofState: "private-proof-state",
+        publicWriteRouteAllowed: false,
+        routePublicationAction: "private-route-action",
+        solverOutcome: "SolvedVerified",
+      },
+    }),
+  });
+  const result = validateGovernPublicClaimUpdatePreflightEvidence(evidence);
+  const report = formatGovernPublicClaimUpdatePreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(report, /manifest_id_invalid:redacted_value/);
+  assert.match(report, /proof_claim_bindings_invalid:list_length:1/);
+  assert.match(report, /generated_claim_public_render_must_remain_false:redacted_value/);
+  assert.match(report, /write_route_decision_route_publication_action_must_remain_none:redacted_value/);
+  assert.doesNotMatch(report, /private-product-id/);
+  assert.doesNotMatch(report, /private-proof-product/);
+  assert.doesNotMatch(report, /private-proof-state/);
+  assert.doesNotMatch(report, /private.product.claim/);
+  assert.doesNotMatch(report, /private-route-action/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -283,6 +354,7 @@ testSyntheticRenderableClaimFailsClosed();
 testSyntheticAllowedProofClaimFailsClosed();
 testSyntheticApprovalRefFailsClosed();
 testSyntheticAggregateProductStatusFailureFailsClosed();
+testSyntheticUnsafePublicClaimValuesUsePublicLabels();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();

@@ -28,23 +28,61 @@ const expectedBlockedClaims = [
 ];
 
 const requiredWitnessTerms = [
-  "public_claim_update_preflight_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  "product_status_current=limited-preview",
-  "public_claim_update_allowed=false",
-  "public_claim_update_ref=missing",
-  "public_beta_claim_allowed=false",
-  "renderable_claim_count=0",
-  "govern_blocked_claim_count=3",
-  "public_write_route_allowed=false",
-  "route_publication_action=none",
-  "dns_mutation=none",
-  "runtime_mutation=none",
-  "secret_rotation_required=false",
-  "provider_values_recorded=false",
-  "STATUS:",
+  { id: "public_claim_update_preflight_state", text: "public_claim_update_preflight_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "product_status_current", text: "product_status_current=limited-preview" },
+  { id: "public_claim_update_allowed", text: "public_claim_update_allowed=false" },
+  { id: "public_claim_update_ref", text: "public_claim_update_ref=missing" },
+  { id: "public_beta_claim_allowed", text: "public_beta_claim_allowed=false" },
+  { id: "renderable_claim_count", text: "renderable_claim_count=0" },
+  { id: "govern_blocked_claim_count", text: "govern_blocked_claim_count=3" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "route_publication_action", text: "route_publication_action=none" },
+  { id: "dns_mutation", text: "dns_mutation=none" },
+  { id: "runtime_mutation", text: "runtime_mutation=none" },
+  { id: "secret_rotation_required", text: "secret_rotation_required=false" },
+  { id: "provider_values_recorded", text: "provider_values_recorded=false" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const publicClaimUpdateAllowedScalars = new Set([
+  "0",
+  "3",
+  "8",
+  "AwaitingEvidence",
+  "Blocked",
+  "Fail",
+  "GovernanceBlocked",
+  "Pass",
+  "Ready",
+  "SolvedVerified",
+  "block",
+  "blocked",
+  "false",
+  "limited-preview",
+  "missing",
+  "mullu-govern",
+  "none",
+  "true",
+  ...expectedBlockedClaims,
+]);
+
+function publicClaimUpdateScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  const scalar = String(value);
+  if (publicClaimUpdateAllowedScalars.has(scalar)) return scalar;
+  if (/^\d+$/.test(scalar)) return "number";
+  return "redacted_value";
+}
+
+function publicClaimUpdateListLabel(values) {
+  if (!Array.isArray(values) || values.length === 0) return "missing";
+  if (values.every((value) => publicClaimUpdateAllowedScalars.has(String(value)))) {
+    return values.join(",");
+  }
+  return `list_length:${values.length}`;
+}
 
 function blockedResult(finding) {
   return {
@@ -124,7 +162,7 @@ export function validateGovernPublicClaimUpdatePreflightEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredWitnessTerms) {
-    if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
+    if (!evidence.witness.includes(term.text)) findings.push(`required_witness_term_missing:${term.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -135,10 +173,10 @@ export function validateGovernPublicClaimUpdatePreflightEvidence(evidence) {
     findings.push("public_claim_gate_invariant_missing");
   }
   if (evidence.manifest?.id !== "mullu-govern") {
-    findings.push(`manifest_id_invalid:${evidence.manifest?.id || "missing"}`);
+    findings.push(`manifest_id_invalid:${publicClaimUpdateScalarLabel(evidence.manifest?.id)}`);
   }
   if (evidence.manifest?.status !== "limited-preview") {
-    findings.push(`manifest_status_must_remain_limited_preview:${evidence.manifest?.status || "missing"}`);
+    findings.push(`manifest_status_must_remain_limited_preview:${publicClaimUpdateScalarLabel(evidence.manifest?.status)}`);
   }
   if (!Array.isArray(evidence.manifest?.proof?.claimsAllowed) || evidence.manifest.proof.claimsAllowed.length !== 0) {
     findings.push("manifest_claims_allowed_must_remain_empty");
@@ -152,34 +190,34 @@ export function validateGovernPublicClaimUpdatePreflightEvidence(evidence) {
   }
 
   if (evidence.proof?.productId !== "mullu-govern") {
-    findings.push(`proof_product_id_invalid:${evidence.proof?.productId || "missing"}`);
+    findings.push(`proof_product_id_invalid:${publicClaimUpdateScalarLabel(evidence.proof?.productId)}`);
   }
   if (evidence.proof?.proofState !== "AwaitingEvidence") {
-    findings.push(`proof_state_must_remain_awaiting_evidence:${evidence.proof?.proofState || "missing"}`);
+    findings.push(`proof_state_must_remain_awaiting_evidence:${publicClaimUpdateScalarLabel(evidence.proof?.proofState)}`);
   }
   if (!Array.isArray(evidence.proof?.claimsAllowed) || evidence.proof.claimsAllowed.length !== 0) {
     findings.push("proof_claims_allowed_must_remain_empty");
   }
   const proofClaimIds = (evidence.proof?.claimBindings || []).map((claim) => claim.claimId);
   if (!sameSet(proofClaimIds, expectedBlockedClaims)) {
-    findings.push(`proof_claim_bindings_invalid:${proofClaimIds.join(",") || "missing"}`);
+    findings.push(`proof_claim_bindings_invalid:${publicClaimUpdateListLabel(proofClaimIds)}`);
   }
   for (const claim of evidence.proof?.claimBindings || []) {
-    if (claim.state !== "blocked") findings.push(`proof_claim_state_must_remain_blocked:${claim.claimId || "missing"}`);
-    if (claim.renderDecision !== "block") findings.push(`proof_claim_render_decision_must_remain_block:${claim.claimId || "missing"}`);
-    if (claim.proofState !== "AwaitingEvidence") findings.push(`proof_claim_proof_state_must_remain_awaiting:${claim.claimId || "missing"}`);
+    if (claim.state !== "blocked") findings.push(`proof_claim_state_must_remain_blocked:${publicClaimUpdateScalarLabel(claim.claimId)}`);
+    if (claim.renderDecision !== "block") findings.push(`proof_claim_render_decision_must_remain_block:${publicClaimUpdateScalarLabel(claim.claimId)}`);
+    if (claim.proofState !== "AwaitingEvidence") findings.push(`proof_claim_proof_state_must_remain_awaiting:${publicClaimUpdateScalarLabel(claim.claimId)}`);
   }
 
   const productRecord = governGeneratedProduct(evidence.productsRegistry);
   if (!productRecord) findings.push("generated_product_record_missing:mullu-govern");
   if (productRecord?.status !== "limited-preview") {
-    findings.push(`generated_product_status_must_remain_limited_preview:${productRecord?.status || "missing"}`);
+    findings.push(`generated_product_status_must_remain_limited_preview:${publicClaimUpdateScalarLabel(productRecord?.status)}`);
   }
   if (productRecord?.publicExposureAllowed !== false) {
-    findings.push(`generated_product_public_exposure_must_remain_false:${productRecord?.publicExposureAllowed}`);
+    findings.push(`generated_product_public_exposure_must_remain_false:${publicClaimUpdateScalarLabel(productRecord?.publicExposureAllowed)}`);
   }
   if (productRecord?.releaseGateState !== "blocked") {
-    findings.push(`generated_product_release_gate_must_remain_blocked:${productRecord?.releaseGateState || "missing"}`);
+    findings.push(`generated_product_release_gate_must_remain_blocked:${publicClaimUpdateScalarLabel(productRecord?.releaseGateState)}`);
   }
 
   const renderableClaims = evidence.claimRegistry?.renderableClaims || [];
@@ -189,19 +227,19 @@ export function validateGovernPublicClaimUpdatePreflightEvidence(evidence) {
   const generatedClaims = governGeneratedClaims(evidence.claimRegistry);
   const generatedClaimIds = generatedClaims.map((claim) => claim.claimId);
   if (!sameSet(generatedClaimIds, expectedBlockedClaims)) {
-    findings.push(`generated_govern_claims_invalid:${generatedClaimIds.join(",") || "missing"}`);
+    findings.push(`generated_govern_claims_invalid:${publicClaimUpdateListLabel(generatedClaimIds)}`);
   }
   for (const claim of generatedClaims) {
-    if (claim.publicRenderAllowed !== false) findings.push(`generated_claim_public_render_must_remain_false:${claim.claimId}`);
-    if (claim.renderDecision !== "block") findings.push(`generated_claim_render_decision_must_remain_block:${claim.claimId}`);
-    if (claim.runtimeWitnessClosed !== false) findings.push(`generated_claim_runtime_witness_must_remain_open:${claim.claimId}`);
+    if (claim.publicRenderAllowed !== false) findings.push(`generated_claim_public_render_must_remain_false:${publicClaimUpdateScalarLabel(claim.claimId)}`);
+    if (claim.renderDecision !== "block") findings.push(`generated_claim_render_decision_must_remain_block:${publicClaimUpdateScalarLabel(claim.claimId)}`);
+    if (claim.runtimeWitnessClosed !== false) findings.push(`generated_claim_runtime_witness_must_remain_open:${publicClaimUpdateScalarLabel(claim.claimId)}`);
   }
 
   if (!evidence.approvalPacket.includes("public_write_route_allowed=false")) {
     findings.push("approval_packet_write_route_not_blocked");
   }
   if (lineValue(evidence.approvalPacket, "public_claim_update_ref") !== "missing") {
-    findings.push(`approval_packet_public_claim_update_ref_must_remain_missing:${lineValue(evidence.approvalPacket, "public_claim_update_ref") || "missing"}`);
+    findings.push(`approval_packet_public_claim_update_ref_must_remain_missing:${publicClaimUpdateScalarLabel(lineValue(evidence.approvalPacket, "public_claim_update_ref"))}`);
   }
 
   const expectedPassResults = {
@@ -213,11 +251,11 @@ export function validateGovernPublicClaimUpdatePreflightEvidence(evidence) {
   for (const [name, expectedOutcome] of Object.entries(expectedPassResults)) {
     const observed = evidence.validatorResults?.[name]?.solverOutcome;
     if (observed !== expectedOutcome) {
-      findings.push(`aggregate_validator_not_solved:${name}:${observed || "missing"}`);
+      findings.push(`aggregate_validator_not_solved:${name}:${publicClaimUpdateScalarLabel(observed)}`);
     }
     const proofState = evidence.validatorResults?.[name]?.proofState;
     if (proofState !== "Pass") {
-      findings.push(`aggregate_validator_proof_not_pass:${name}:${proofState || "missing"}`);
+      findings.push(`aggregate_validator_proof_not_pass:${name}:${publicClaimUpdateScalarLabel(proofState)}`);
     }
   }
   const missingApprovalInputCount = evidence.validatorResults?.approvalPacket?.missingApprovalInputs?.length ?? 0;
@@ -228,7 +266,7 @@ export function validateGovernPublicClaimUpdatePreflightEvidence(evidence) {
     findings.push("approval_packet_public_write_route_not_blocked");
   }
   if (evidence.validatorResults?.productStatusPreflight?.productStatusPreflightState !== "Ready") {
-    findings.push(`product_status_preflight_must_remain_ready:${evidence.validatorResults?.productStatusPreflight?.productStatusPreflightState || "missing"}`);
+    findings.push(`product_status_preflight_must_remain_ready:${publicClaimUpdateScalarLabel(evidence.validatorResults?.productStatusPreflight?.productStatusPreflightState)}`);
   }
   if (evidence.validatorResults?.productStatusPreflight?.publicWriteRouteAllowed !== false) {
     findings.push("product_status_preflight_public_write_route_not_blocked");
@@ -246,7 +284,7 @@ export function validateGovernPublicClaimUpdatePreflightEvidence(evidence) {
     findings.push("write_route_decision_public_route_not_blocked");
   }
   if (evidence.validatorResults?.writeRouteDecision?.routePublicationAction !== "none") {
-    findings.push(`write_route_decision_route_publication_action_must_remain_none:${evidence.validatorResults?.writeRouteDecision?.routePublicationAction || "missing"}`);
+    findings.push(`write_route_decision_route_publication_action_must_remain_none:${publicClaimUpdateScalarLabel(evidence.validatorResults?.writeRouteDecision?.routePublicationAction)}`);
   }
 
   return {
