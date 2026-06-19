@@ -141,7 +141,39 @@ function testSyntheticApprovalRefFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.readyForLiveEvidence, false);
-  assert.match(result.findings.join("\n"), /approval_input_must_remain_missing:api_contract_test_ref/);
+  assert.match(result.findings.join("\n"), /approval_input_must_remain_missing:api_contract_test_ref:redacted_value/);
+  assert.doesNotMatch(formatGovernLiveEvidenceSequencePreflightReport(result), /api-contract\/ready/);
+}
+
+function testSyntheticWitnessRefFailsClosedWithoutEcho() {
+  const evidence = validEvidence({
+    witness: validEvidence().witness.replace("runtime_witness_ref=missing", "runtime_witness_ref=approval://runtime/private-ready"),
+  });
+  evidence.privateValueScanSources.witness = evidence.witness;
+  const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
+  const report = formatGovernLiveEvidenceSequencePreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /witness_sequence_ref_must_remain_missing:runtime_witness_ref:redacted_value/);
+  assert.doesNotMatch(report, /runtime\/private-ready/);
+}
+
+function testSyntheticMissingWitnessTermUsesPublicLabel() {
+  const evidence = validEvidence({
+    witness: validEvidence().witness.replace(
+      "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
+      "",
+    ),
+  });
+  evidence.privateValueScanSources.witness = evidence.witness;
+  const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
+  const report = formatGovernLiveEvidenceSequencePreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_witness_term_missing:live_evidence_ref_intake_command/);
+  assert.doesNotMatch(report, /validate-govern-live-evidence-ref-intake/);
 }
 
 function testSyntheticRuntimeBlockerMissingFailsClosed() {
@@ -190,6 +222,40 @@ function testSyntheticWriteRouteOpenFailsClosed() {
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, true);
   assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:true/);
+}
+
+function testSyntheticUnsafeApprovalPacketValuesAreRedacted() {
+  const evidence = validEvidence({
+    approvalPacket: [
+      "packet_state=https://private.example.internal",
+      "approval_state=private-approved-state",
+      "public_write_route_allowed=private-route-open",
+      "route_publication_action=publish-private-route",
+      "dns_mutation=private-dns-change",
+      "runtime_mutation=private-runtime-change",
+      "operator_approval_ref=ghp_abcdefghijklmnopqrstuvwxyz123456",
+      ...requiredLiveEvidenceApprovalKeys.filter((key) => key !== "operator_approval_ref").map((key) => `${key}=missing`),
+    ].join("\n"),
+  });
+  const result = validateGovernLiveEvidenceSequencePreflightEvidence(evidence);
+  const report = formatGovernLiveEvidenceSequencePreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /approval_input_must_remain_missing:operator_approval_ref:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_packet_state_must_remain_awaiting:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_state_must_remain_not_approved:redacted_value/);
+  assert.match(result.findings.join("\n"), /public_write_route_allowed_must_remain_false:redacted_value/);
+  assert.match(result.findings.join("\n"), /route_publication_action_must_remain_none:redacted_value/);
+  assert.match(result.findings.join("\n"), /dns_mutation_must_remain_none:redacted_value/);
+  assert.match(result.findings.join("\n"), /runtime_mutation_must_remain_none:redacted_value/);
+  assert.doesNotMatch(report, /ghp_/);
+  assert.doesNotMatch(report, /private-approved-state/);
+  assert.doesNotMatch(report, /private-route-open/);
+  assert.doesNotMatch(report, /publish-private-route/);
+  assert.doesNotMatch(report, /private-dns-change/);
+  assert.doesNotMatch(report, /private-runtime-change/);
+  assert.doesNotMatch(report, /private\.example\.internal/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -241,9 +307,12 @@ function testPathBoundaryFailsClosedWithoutEcho() {
 
 testCurrentSequencePreflightPasses();
 testSyntheticApprovalRefFailsClosed();
+testSyntheticWitnessRefFailsClosedWithoutEcho();
+testSyntheticMissingWitnessTermUsesPublicLabel();
 testSyntheticRuntimeBlockerMissingFailsClosed();
 testSyntheticAggregateFailureFailsClosed();
 testSyntheticWriteRouteOpenFailsClosed();
+testSyntheticUnsafeApprovalPacketValuesAreRedacted();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
