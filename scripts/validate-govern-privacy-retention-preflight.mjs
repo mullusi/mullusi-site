@@ -26,23 +26,52 @@ const expectedDataClasses = [
 ];
 
 const requiredWitnessTerms = [
-  "privacy_retention_preflight_state=Ready",
-  "solver_outcome=SolvedVerified",
-  "proof_state=Pass",
-  "public_write_route_allowed=false",
-  "collection_state_current=not-active",
-  "retention_state_current=not-active",
-  "privacy_activation_allowed=false",
-  "retention_activation_allowed=false",
-  "route_publication_action=none",
-  "dns_mutation=none",
-  "runtime_mutation=none",
-  "secret_rotation_required=false",
-  "raw_user_data_recorded=false",
-  "privacy_activation_ref=missing",
-  "retention_activation_ref=missing",
-  "STATUS:",
+  { id: "privacy_retention_preflight_state", text: "privacy_retention_preflight_state=Ready" },
+  { id: "solver_outcome", text: "solver_outcome=SolvedVerified" },
+  { id: "proof_state", text: "proof_state=Pass" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "collection_state_current", text: "collection_state_current=not-active" },
+  { id: "retention_state_current", text: "retention_state_current=not-active" },
+  { id: "privacy_activation_allowed", text: "privacy_activation_allowed=false" },
+  { id: "retention_activation_allowed", text: "retention_activation_allowed=false" },
+  { id: "route_publication_action", text: "route_publication_action=none" },
+  { id: "dns_mutation", text: "dns_mutation=none" },
+  { id: "runtime_mutation", text: "runtime_mutation=none" },
+  { id: "secret_rotation_required", text: "secret_rotation_required=false" },
+  { id: "raw_user_data_recorded", text: "raw_user_data_recorded=false" },
+  { id: "privacy_activation_ref", text: "privacy_activation_ref=missing" },
+  { id: "retention_activation_ref", text: "retention_activation_ref=missing" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const publicPrivacyRetentionAllowedScalars = new Set([
+  "0",
+  "Unknown",
+  "false",
+  "true",
+  "missing",
+  "not-active",
+  "none",
+  "mullu-govern",
+  "privacy/govern.retention.json",
+  ...expectedDataClasses,
+]);
+
+function publicPrivacyRetentionScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  const scalar = String(value);
+  if (publicPrivacyRetentionAllowedScalars.has(scalar)) return scalar;
+  if (/^\d+$/.test(scalar)) return "number";
+  return "redacted_value";
+}
+
+function publicPrivacyRetentionListLabel(values) {
+  if (!Array.isArray(values)) return "missing";
+  if (values.every((value) => publicPrivacyRetentionAllowedScalars.has(String(value)))) {
+    return values.join(",");
+  }
+  return `list_length:${values.length}`;
+}
 
 function blockedResult(finding) {
   return {
@@ -105,7 +134,7 @@ export function validateGovernPrivacyRetentionPreflightEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredWitnessTerms) {
-    if (!evidence.witness.includes(term)) findings.push(`required_witness_term_missing:${term}`);
+    if (!evidence.witness.includes(term.text)) findings.push(`required_witness_term_missing:${term.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -118,34 +147,34 @@ export function validateGovernPrivacyRetentionPreflightEvidence(evidence) {
   const retentionClasses = retentionRows.map((row) => row.dataClass);
 
   if (!sameOrderedValues(manifestClasses, expectedDataClasses)) {
-    findings.push(`manifest_data_classes_invalid:${Array.isArray(manifestClasses) ? manifestClasses.join(",") : "missing"}`);
+    findings.push(`manifest_data_classes_invalid:${publicPrivacyRetentionListLabel(manifestClasses)}`);
   }
   if (!sameOrderedValues(policyClasses, expectedDataClasses)) {
-    findings.push(`policy_data_classes_invalid:${Array.isArray(policyClasses) ? policyClasses.join(",") : "missing"}`);
+    findings.push(`policy_data_classes_invalid:${publicPrivacyRetentionListLabel(policyClasses)}`);
   }
   if (!sameOrderedValues(retentionClasses, expectedDataClasses)) {
-    findings.push(`retention_data_classes_invalid:${retentionClasses.length > 0 ? retentionClasses.join(",") : "missing"}`);
+    findings.push(`retention_data_classes_invalid:${publicPrivacyRetentionListLabel(retentionClasses)}`);
   }
 
   if (evidence.policy?.productId !== "mullu-govern") {
-    findings.push(`policy_product_id_invalid:${evidence.policy?.productId || "missing"}`);
+    findings.push(`policy_product_id_invalid:${publicPrivacyRetentionScalarLabel(evidence.policy?.productId)}`);
   }
   if (evidence.retention?.productId !== "mullu-govern") {
-    findings.push(`retention_product_id_invalid:${evidence.retention?.productId || "missing"}`);
+    findings.push(`retention_product_id_invalid:${publicPrivacyRetentionScalarLabel(evidence.retention?.productId)}`);
   }
   if (evidence.policy?.retentionPolicy !== "privacy/govern.retention.json") {
-    findings.push(`policy_retention_ref_invalid:${evidence.policy?.retentionPolicy || "missing"}`);
+    findings.push(`policy_retention_ref_invalid:${publicPrivacyRetentionScalarLabel(evidence.policy?.retentionPolicy)}`);
   }
   if (evidence.policy?.collectionState !== "not-active") {
-    findings.push(`policy_collection_state_must_remain_not_active:${evidence.policy?.collectionState || "missing"}`);
+    findings.push(`policy_collection_state_must_remain_not_active:${publicPrivacyRetentionScalarLabel(evidence.policy?.collectionState)}`);
   }
 
   for (const row of retentionRows) {
     if (row.state !== "not-active") {
-      findings.push(`retention_state_must_remain_not_active:${row.dataClass || "missing"}`);
+      findings.push(`retention_state_must_remain_not_active:${publicPrivacyRetentionScalarLabel(row.dataClass)}`);
     }
     if (row.maximumDays !== 0) {
-      findings.push(`retention_maximum_days_must_remain_zero:${row.dataClass || "missing"}:${row.maximumDays}`);
+      findings.push(`retention_maximum_days_must_remain_zero:${publicPrivacyRetentionScalarLabel(row.dataClass)}:${publicPrivacyRetentionScalarLabel(row.maximumDays)}`);
     }
   }
 
@@ -153,10 +182,10 @@ export function validateGovernPrivacyRetentionPreflightEvidence(evidence) {
     findings.push("approval_packet_write_route_not_blocked");
   }
   if (lineValue(evidence.approvalPacket, "privacy_activation_ref") !== "missing") {
-    findings.push(`approval_packet_privacy_activation_ref_must_remain_missing:${lineValue(evidence.approvalPacket, "privacy_activation_ref") || "missing"}`);
+    findings.push(`approval_packet_privacy_activation_ref_must_remain_missing:${publicPrivacyRetentionScalarLabel(lineValue(evidence.approvalPacket, "privacy_activation_ref"))}`);
   }
   if (lineValue(evidence.approvalPacket, "retention_activation_ref") !== "missing") {
-    findings.push(`approval_packet_retention_activation_ref_must_remain_missing:${lineValue(evidence.approvalPacket, "retention_activation_ref") || "missing"}`);
+    findings.push(`approval_packet_retention_activation_ref_must_remain_missing:${publicPrivacyRetentionScalarLabel(lineValue(evidence.approvalPacket, "retention_activation_ref"))}`);
   }
 
   return {
@@ -165,7 +194,7 @@ export function validateGovernPrivacyRetentionPreflightEvidence(evidence) {
     proofState: findings.length === 0 ? "Pass" : "Fail",
     publicWriteRouteAllowed: evidence.approvalPacket.includes("public_write_route_allowed=true"),
     solverOutcome: findings.length === 0 ? "SolvedVerified" : "GovernanceBlocked",
-    collectionState: evidence.policy?.collectionState || "Unknown",
+    collectionState: publicPrivacyRetentionScalarLabel(evidence.policy?.collectionState || "Unknown"),
     privacyRetentionPreflightState: findings.length === 0 ? "Ready" : "Blocked",
     retentionInactiveRowCount: retentionRows.filter((row) => row.state === "not-active" && row.maximumDays === 0).length,
   };

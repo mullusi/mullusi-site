@@ -106,11 +106,13 @@ function testSyntheticActivatedPrivacyFailsClosed() {
     },
   });
   const result = validateGovernPrivacyRetentionPreflightEvidence(evidence);
+  const report = formatGovernPrivacyRetentionPreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.privacyRetentionPreflightState, "Blocked");
-  assert.match(result.findings.join("\n"), /policy_collection_state_must_remain_not_active:limited-preview/);
+  assert.match(result.findings.join("\n"), /policy_collection_state_must_remain_not_active:redacted_value/);
+  assert.doesNotMatch(report, /limited-preview/);
 }
 
 function testSyntheticActivatedRetentionFailsClosed() {
@@ -125,12 +127,14 @@ function testSyntheticActivatedRetentionFailsClosed() {
     },
   });
   const result = validateGovernPrivacyRetentionPreflightEvidence(evidence);
+  const report = formatGovernPrivacyRetentionPreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
   assert.match(result.findings.join("\n"), /retention_state_must_remain_not_active:policy_records/);
-  assert.match(result.findings.join("\n"), /retention_maximum_days_must_remain_zero:policy_records:90/);
+  assert.match(result.findings.join("\n"), /retention_maximum_days_must_remain_zero:policy_records:number/);
+  assert.doesNotMatch(report, /:90/);
 }
 
 function testSyntheticApprovalRefsFailClosed() {
@@ -142,11 +146,72 @@ function testSyntheticApprovalRefsFailClosed() {
     ].join("\n"),
   });
   const result = validateGovernPrivacyRetentionPreflightEvidence(evidence);
+  const report = formatGovernPrivacyRetentionPreflightReport(result);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
-  assert.match(result.findings.join("\n"), /approval_packet_privacy_activation_ref_must_remain_missing/);
-  assert.match(result.findings.join("\n"), /approval_packet_retention_activation_ref_must_remain_missing/);
+  assert.match(result.findings.join("\n"), /approval_packet_privacy_activation_ref_must_remain_missing:redacted_value/);
+  assert.match(result.findings.join("\n"), /approval_packet_retention_activation_ref_must_remain_missing:redacted_value/);
+  assert.doesNotMatch(report, /ops\/active-privacy/);
+  assert.doesNotMatch(report, /ops\/active-retention/);
+}
+
+function testSyntheticMissingWitnessTermUsesPublicId() {
+  const evidence = validEvidence({
+    witness: [
+      "solver_outcome=SolvedVerified",
+      "proof_state=Pass",
+      "public_write_route_allowed=false",
+      "collection_state_current=not-active",
+      "retention_state_current=not-active",
+      "privacy_activation_allowed=false",
+      "retention_activation_allowed=false",
+      "route_publication_action=none",
+      "dns_mutation=none",
+      "runtime_mutation=none",
+      "secret_rotation_required=false",
+      "raw_user_data_recorded=false",
+      "privacy_activation_ref=missing",
+      "retention_activation_ref=missing",
+      "STATUS:",
+    ].join("\n"),
+  });
+  const result = validateGovernPrivacyRetentionPreflightEvidence(evidence);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_witness_term_missing:privacy_retention_preflight_state/);
+  assert.doesNotMatch(result.findings.join("\n"), /privacy_retention_preflight_state=Ready/);
+}
+
+function testSyntheticUnsafePolicyValuesUsePublicLabels() {
+  const evidence = validEvidence({
+    manifest: { data: { classes: ["policy_records", "private_data_class"] } },
+    policy: {
+      productId: "private-product-id",
+      dataClasses: ["policy_records", "private_policy_class"],
+      retentionPolicy: "private/retention/path.json",
+      collectionState: "private-collection-state",
+    },
+    retention: {
+      productId: "private-product-id",
+      retention: [
+        { dataClass: "private_data_class", state: "private-retention-state", maximumDays: 777 },
+      ],
+    },
+  });
+  const result = validateGovernPrivacyRetentionPreflightEvidence(evidence);
+  const report = formatGovernPrivacyRetentionPreflightReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(report, /manifest_data_classes_invalid:list_length:2/);
+  assert.match(report, /policy_product_id_invalid:redacted_value/);
+  assert.match(report, /retention_state_must_remain_not_active:redacted_value/);
+  assert.doesNotMatch(report, /private-product-id/);
+  assert.doesNotMatch(report, /private_data_class/);
+  assert.doesNotMatch(report, /private-retention-state/);
+  assert.doesNotMatch(report, /777/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -205,6 +270,8 @@ testCurrentPrivacyRetentionPreflightPasses();
 testSyntheticActivatedPrivacyFailsClosed();
 testSyntheticActivatedRetentionFailsClosed();
 testSyntheticApprovalRefsFailClosed();
+testSyntheticMissingWitnessTermUsesPublicId();
+testSyntheticUnsafePolicyValuesUsePublicLabels();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
