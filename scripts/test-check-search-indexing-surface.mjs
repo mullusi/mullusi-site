@@ -74,6 +74,25 @@ function testSitemapComparisonDetectsDrift() {
   assert.ok(findings.includes("live_sitemap_loc_untracked:https://mullusi.com/old/"));
 }
 
+function testSitemapComparisonRedactsUnsafeLocAndLastmod() {
+  const findings = compareSitemapEntries(
+    [
+      { loc: "https://private.example.internal/page", lastmod: "private-local-date" },
+      { loc: "https://private.example.internal/stale", lastmod: "private-local-date" },
+    ],
+    [
+      { loc: "https://private.example.internal/old", lastmod: "private-live-date" },
+      { loc: "https://private.example.internal/stale", lastmod: "private-live-date" },
+    ],
+  );
+  const serialized = JSON.stringify(findings);
+
+  assert.ok(findings.includes("live_sitemap_loc_missing:redacted_url"));
+  assert.ok(findings.includes("live_sitemap_lastmod_stale:redacted_url:local=redacted_value:live=redacted_value"));
+  assert.ok(findings.includes("live_sitemap_loc_untracked:redacted_url"));
+  assert.doesNotMatch(serialized, /private\.example\.internal|private-local-date|private-live-date/);
+}
+
 function testRobotsEvaluationKeepsSearchAccessExplicit() {
   const validFindings = evaluateRobotsResponse({
     statusCode: 200,
@@ -124,6 +143,30 @@ function testRouteEvaluationRedactsUnsafeCanonicalHref() {
 
   assert.ok(findings.includes("live_route_canonical_mismatch:https://mullusi.com/doctrine/:redacted_url"));
   assert.doesNotMatch(serialized, /private\.example\.internal|trace=bounded/);
+}
+
+function testRouteEvaluationRedactsUnsafeRouteAndFinalUrls() {
+  const routeUrl = "https://private.example.internal/private-route";
+  const statusFindings = evaluateRouteResponse(routeUrl, {
+    finalUrl: routeUrl,
+    statusCode: 503,
+    headers: { "content-type": "text/html" },
+    body: "<html></html>",
+  });
+  const finalUrlFindings = evaluateRouteResponse(routeUrl, {
+    finalUrl: "https://private.example.internal/private-final",
+    statusCode: 200,
+    headers: { "content-type": "text/html", "x-robots-tag": "noindex" },
+    body: '<html><head><meta name="robots" content="noindex"><link rel="canonical" href="https://private.example.internal/private-canonical" /></head></html>',
+  });
+  const serialized = JSON.stringify([...statusFindings, ...finalUrlFindings]);
+
+  assert.ok(statusFindings.includes("live_route_status_invalid:redacted_url:503"));
+  assert.ok(finalUrlFindings.includes("live_route_final_url_mismatch:redacted_url:redacted_url"));
+  assert.ok(finalUrlFindings.includes("live_route_x_robots_noindex:redacted_url"));
+  assert.ok(finalUrlFindings.includes("live_route_meta_noindex:redacted_url"));
+  assert.ok(finalUrlFindings.includes("live_route_canonical_mismatch:redacted_url:redacted_url"));
+  assert.doesNotMatch(serialized, /private\.example\.internal|private-route|private-final|private-canonical/);
 }
 
 function testEvidenceEvaluationProducesBlockingVerdict() {
@@ -206,9 +249,11 @@ function testPublicErrorCodeRedactsRawExceptionValues() {
 }
 
 testSitemapComparisonDetectsDrift();
+testSitemapComparisonRedactsUnsafeLocAndLastmod();
 testRobotsEvaluationKeepsSearchAccessExplicit();
 testRouteEvaluationDetectsCanonicalAndIndexingBlockers();
 testRouteEvaluationRedactsUnsafeCanonicalHref();
+testRouteEvaluationRedactsUnsafeRouteAndFinalUrls();
 testEvidenceEvaluationProducesBlockingVerdict();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testCliRejectsUnsupportedArgumentAsJson();
