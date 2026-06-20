@@ -112,6 +112,24 @@ function testBoundaryViolationFails() {
   assert.ok(result.findings.includes("preflight_boundary_invalid:private_key"));
 }
 
+function testUnsafeStateValuesUsePublicLabels() {
+  const fixture = blockedFixture()
+    .replace("domain_hardening_preflight=GovernanceBlocked", "domain_hardening_preflight=private-preflight-state")
+    .replace("active_cloudflare_ca_set=AwaitingEvidence", "active_cloudflare_ca_set=private-evidence-state")
+    .replace("manual_caa_allowed=false", "manual_caa_allowed=private-permission-state");
+  const result = evaluateDomainHardeningPreflight(fixture);
+  const formatted = formatResult(result);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.ok(result.findings.includes("preflight_state_invalid:redacted_value"));
+  assert.ok(result.findings.includes("evidence_state_invalid:active_cloudflare_ca_set:redacted_value"));
+  assert.ok(result.findings.includes("permission_state_invalid:manual_caa_allowed:redacted_value"));
+  assert.doesNotMatch(formatted, /private-preflight-state/);
+  assert.doesNotMatch(formatted, /private-evidence-state/);
+  assert.doesNotMatch(formatted, /private-permission-state/);
+}
+
 function testCliRequireReadyPassesForCurrentPreflight() {
   const result = runPreflightCli(["--require-ready"]);
 
@@ -160,6 +178,7 @@ testReadyFixturePasses();
 testPermissionWithoutEvidenceBlocks();
 testSolvedWithoutEvidenceFails();
 testBoundaryViolationFails();
+testUnsafeStateValuesUsePublicLabels();
 testCliRequireReadyPassesForCurrentPreflight();
 testCliExpectBlockedFailsForCurrentPreflight();
 testCliRejectsUnsupportedArgument();
