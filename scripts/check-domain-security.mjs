@@ -86,6 +86,10 @@ function hasDmarcReportAddress(dmarcRecord) {
   return /(?:^|;\s*)rua\s*=\s*mailto:/i.test(dmarcRecord);
 }
 
+function publicDmarcPolicyLabel(policy) {
+  return ["none", "quarantine", "reject", "missing"].includes(policy) ? policy : "redacted_value";
+}
+
 export function evaluateDomainSecurityEvidence(evidence) {
   const findings = [];
   const blockers = [];
@@ -142,7 +146,7 @@ export function evaluateDomainSecurityEvidence(evidence) {
     spfState: spfRecord ? "Pass" : "Fail",
     spfEnforcement: spfRecord && recordContainsHardFail(spfRecord) ? "Pass" : "AwaitingEvidence",
     dmarcState: dmarcRecord ? "Pass" : "Fail",
-    dmarcPolicy: policy || "missing",
+    dmarcPolicy: publicDmarcPolicyLabel(policy || "missing"),
     dmarcEnforcement: ["quarantine", "reject"].includes(policy) ? "Pass" : "AwaitingEvidence",
     knownGoogleDkimSelectorState: googleDkimRecords.length > 0 ? "Pass" : "AwaitingEvidence",
     mtaStsState: mtaStsRecords.some((record) => /^v=STSv1\b/i.test(record)) ? "Pass" : "AwaitingEvidence",

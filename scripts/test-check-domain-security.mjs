@@ -96,12 +96,16 @@ function testMissingBaseControlsBlock() {
 
 function testInvalidDmarcPolicyBlocks() {
   const result = evaluateDomainSecurityEvidence(passingEvidence({
-    dmarcRecords: ["v=DMARC1; p=monitor; rua=mailto:dmarc@mullusi.com"],
+    dmarcRecords: ["v=DMARC1; p=private-policy; rua=mailto:dmarc@mullusi.com"],
   }));
+  const formatted = formatResult(result);
+  const serialized = JSON.stringify(result);
 
   assert.equal(result.verdict, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
+  assert.equal(result.dmarcPolicy, "redacted_value");
   assert.ok(result.blockers.includes("dmarc_policy_invalid"));
+  assert.doesNotMatch(`${formatted}\n${serialized}`, /private-policy/);
 }
 
 function testCliRejectsUnsupportedArgumentWithoutNetwork() {
