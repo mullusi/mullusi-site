@@ -133,6 +133,10 @@ function publicHashPathLabel(relativePath) {
   return isValidGovernedHashPath(relativePath) ? relativePath : "redacted_path";
 }
 
+function publicKnownHashPathLabel(relativePath, governedPathSet) {
+  return isValidGovernedHashPath(relativePath) && governedPathSet.has(relativePath) ? relativePath : "redacted_path";
+}
+
 function livePathForGovernedFile(relativePath) {
   return relativePath === "index.html" ? "/" : `/${relativePath}`;
 }
@@ -243,24 +247,25 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
       hardFindings.push(`live_status_hash_path_invalid:${publicHashPathLabel(relativePath)}`);
       continue;
     }
-    if (!governedPathSet.has(relativePath)) softFindings.push(`live_status_hash_path_unexpected:${relativePath}`);
+    if (!governedPathSet.has(relativePath)) softFindings.push(`live_status_hash_path_unexpected:${publicKnownHashPathLabel(relativePath, governedPathSet)}`);
   }
 
   for (const relativePath of liveHashPaths) {
     if (!liveHashes[relativePath] || !isValidGovernedHashPath(relativePath)) continue;
+    const publicRelativePath = publicKnownHashPathLabel(relativePath, governedPathSet);
     const response = evidence.liveFileResponses?.get(relativePath);
     const statusCode = response?.statusCode ?? 0;
     if (statusCode < 200 || statusCode >= 300) {
-      hardFindings.push(`live_file_status_invalid:${relativePath}:${statusCode}`);
+      hardFindings.push(`live_file_status_invalid:${publicRelativePath}:${statusCode}`);
       continue;
     }
     const expectedFinalUrl = `${defaultBaseUrl}${livePathForGovernedFile(relativePath)}`;
     if (response.finalUrl && response.finalUrl !== expectedFinalUrl) {
-      hardFindings.push(`live_file_final_url_mismatch:${relativePath}`);
+      hardFindings.push(`live_file_final_url_mismatch:${publicRelativePath}`);
     }
     const responseBody = response.body ?? "";
-    const edgeTransformFinding = `live_html_edge_transform_observed:${relativePath}`;
-    const edgeTransformUnverifiedFinding = `live_html_edge_transform_unverified:${relativePath}`;
+    const edgeTransformFinding = `live_html_edge_transform_observed:${publicRelativePath}`;
+    const edgeTransformUnverifiedFinding = `live_html_edge_transform_unverified:${publicRelativePath}`;
     const edgeTransformSeen = relativePath === "index.html" && hasKnownCloudflareHtmlTransform(responseBody);
     try {
       const actualHash = publicFileContentHash(relativePath, responseBody);
@@ -268,7 +273,7 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
         if (edgeTransformSeen && !hardFindings.includes(edgeTransformUnverifiedFinding)) {
           hardFindings.push(edgeTransformUnverifiedFinding);
         }
-        hardFindings.push(`live_content_hash_mismatch:${relativePath}`);
+        hardFindings.push(`live_content_hash_mismatch:${publicRelativePath}`);
       } else if (edgeTransformSeen && !acceptedFindings.includes(edgeTransformFinding)) {
         acceptedFindings.push(edgeTransformFinding);
       }
@@ -276,7 +281,7 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
       if (edgeTransformSeen && !hardFindings.includes(edgeTransformUnverifiedFinding)) {
         hardFindings.push(edgeTransformUnverifiedFinding);
       }
-      hardFindings.push(`live_content_hash_unreadable:${relativePath}`);
+      hardFindings.push(`live_content_hash_unreadable:${publicRelativePath}`);
     }
   }
 
