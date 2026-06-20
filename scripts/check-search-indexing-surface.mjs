@@ -71,6 +71,18 @@ function sitemapEntryMap(entries) {
   return new Map(entries.map((entry) => [entry.loc, entry]));
 }
 
+function publicSearchTargetLabel(targetUrl) {
+  try {
+    return validateTargetUrl(targetUrl);
+  } catch {
+    return "redacted_url";
+  }
+}
+
+function publicSearchLastmodLabel(lastmod) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(lastmod) ? lastmod : "redacted_value";
+}
+
 export function compareSitemapEntries(localEntries, liveEntries) {
   const findings = [];
   const localByLoc = sitemapEntryMap(localEntries);
@@ -79,17 +91,17 @@ export function compareSitemapEntries(localEntries, liveEntries) {
   for (const localEntry of localEntries) {
     const liveEntry = liveByLoc.get(localEntry.loc);
     if (!liveEntry) {
-      findings.push(`live_sitemap_loc_missing:${localEntry.loc}`);
+      findings.push(`live_sitemap_loc_missing:${publicSearchTargetLabel(localEntry.loc)}`);
       continue;
     }
     if (localEntry.lastmod && liveEntry.lastmod && localEntry.lastmod !== liveEntry.lastmod) {
-      findings.push(`live_sitemap_lastmod_stale:${localEntry.loc}:local=${localEntry.lastmod}:live=${liveEntry.lastmod}`);
+      findings.push(`live_sitemap_lastmod_stale:${publicSearchTargetLabel(localEntry.loc)}:local=${publicSearchLastmodLabel(localEntry.lastmod)}:live=${publicSearchLastmodLabel(liveEntry.lastmod)}`);
     }
   }
 
   for (const liveEntry of liveEntries) {
     if (!localByLoc.has(liveEntry.loc)) {
-      findings.push(`live_sitemap_loc_untracked:${liveEntry.loc}`);
+      findings.push(`live_sitemap_loc_untracked:${publicSearchTargetLabel(liveEntry.loc)}`);
     }
   }
 
@@ -127,11 +139,7 @@ function routeUrlMatchesCanonical(routeUrl, canonicalUrl) {
 }
 
 function publicCanonicalHrefLabel(canonicalHref) {
-  try {
-    return validateTargetUrl(canonicalHref);
-  } catch {
-    return "redacted_url";
-  }
+  return publicSearchTargetLabel(canonicalHref);
 }
 
 export function publicErrorCode(error) {
@@ -179,7 +187,7 @@ export function evaluateRobotsResponse(response, expectedSitemapUrl) {
     findings.push("robots_allow_root_missing");
   }
   if (!body.includes(`Sitemap: ${expectedSitemapUrl}`)) {
-    findings.push(`robots_sitemap_missing:${expectedSitemapUrl}`);
+    findings.push(`robots_sitemap_missing:${publicSearchTargetLabel(expectedSitemapUrl)}`);
   }
   if (hasWildcardDisallowRoot && !hasAllowRoot) {
     findings.push("robots_wildcard_disallow_root");
@@ -190,30 +198,31 @@ export function evaluateRobotsResponse(response, expectedSitemapUrl) {
 
 export function evaluateRouteResponse(routeUrl, response) {
   const findings = [];
+  const routeLabel = publicSearchTargetLabel(routeUrl);
   const statusCode = response?.statusCode ?? 0;
   const headers = normalizedHeaders(response?.headers);
   const contentType = headers["content-type"] ?? "";
   const body = response?.body ?? "";
 
   if (statusCode < 200 || statusCode >= 300) {
-    findings.push(`live_route_status_invalid:${routeUrl}:${statusCode}`);
+    findings.push(`live_route_status_invalid:${routeLabel}:${statusCode}`);
     return findings;
   }
   if (response.finalUrl && normalizeUrlForComparison(response.finalUrl) !== normalizeUrlForComparison(routeUrl)) {
-    findings.push(`live_route_final_url_mismatch:${routeUrl}:${response.finalUrl}`);
+    findings.push(`live_route_final_url_mismatch:${routeLabel}:${publicSearchTargetLabel(response.finalUrl)}`);
   }
   if (hasNoindexDirective(headers["x-robots-tag"] ?? "")) {
-    findings.push(`live_route_x_robots_noindex:${routeUrl}`);
+    findings.push(`live_route_x_robots_noindex:${routeLabel}`);
   }
   if (/text\/html/i.test(contentType)) {
     if (/<meta\b[^>]*name=["']robots["'][^>]*content=["'][^"']*\bnoindex\b/i.test(body)) {
-      findings.push(`live_route_meta_noindex:${routeUrl}`);
+      findings.push(`live_route_meta_noindex:${routeLabel}`);
     }
     const canonicalHref = canonicalHrefForHtml(body);
     if (!canonicalHref) {
-      findings.push(`live_route_canonical_missing:${routeUrl}`);
+      findings.push(`live_route_canonical_missing:${routeLabel}`);
     } else if (!routeUrlMatchesCanonical(routeUrl, canonicalHref)) {
-      findings.push(`live_route_canonical_mismatch:${routeUrl}:${publicCanonicalHrefLabel(canonicalHref)}`);
+      findings.push(`live_route_canonical_mismatch:${routeLabel}:${publicCanonicalHrefLabel(canonicalHref)}`);
     }
   }
 
