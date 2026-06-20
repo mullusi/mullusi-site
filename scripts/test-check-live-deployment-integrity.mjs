@@ -213,11 +213,30 @@ function testUnexpectedLiveHashPathAwaitsEvidence() {
     "data/products.json": publicFileContentHash("data/products.json", fixtureFileContent("data/products.json")),
   };
   const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({ liveHashes }));
+  const serialized = JSON.stringify(result);
 
   assert.equal(result.verdict, "AwaitingEvidence");
   assert.equal(result.proofState, "Unknown");
   assert.equal(result.liveContentHashes, "Pass");
-  assert.ok(result.softFindings.includes("live_status_hash_path_unexpected:data/products.json"));
+  assert.ok(result.softFindings.includes("live_status_hash_path_unexpected:redacted_path"));
+  assert.doesNotMatch(serialized, /data\/products\.json/);
+}
+
+function testUnexpectedLiveHashPathFileFailureIsRedacted() {
+  const liveHashes = {
+    ...fixtureHashes(),
+    "data/products.json": publicFileContentHash("data/products.json", fixtureFileContent("data/products.json")),
+  };
+  const evidence = fixtureEvidence({ liveHashes });
+  evidence.liveFileResponses.delete("data/products.json");
+  const result = evaluateDeploymentIntegrityEvidence(evidence);
+  const serialized = JSON.stringify(result);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.ok(result.softFindings.includes("live_status_hash_path_unexpected:redacted_path"));
+  assert.ok(result.hardFindings.includes("live_file_status_invalid:redacted_path:0"));
+  assert.doesNotMatch(serialized, /data\/products\.json/);
 }
 
 function testMissingGovernedHashAwaitsEvidence() {
@@ -266,6 +285,7 @@ testLocalManifestMismatchAwaitsEvidenceOnly();
 testUnexpectedOrInvalidHashPathBlocks();
 testInvalidStatusValuesAreRedacted();
 testUnexpectedLiveHashPathAwaitsEvidence();
+testUnexpectedLiveHashPathFileFailureIsRedacted();
 testMissingGovernedHashAwaitsEvidence();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testPublicErrorCodeRedactsRawExceptionValues();
