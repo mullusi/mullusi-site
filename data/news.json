@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-19",
+    "updated": "2026-06-20",
     "count": 7
   },
   "items": [
     {
-      "title": "I found 10k GitHub repositories distributing Trojan malware",
-      "url": "https://orchidfiles.com/github-repositories-distributing-malware/",
-      "source": "orchidfiles.com",
-      "points": 831,
-      "comments": 215,
+      "title": "Hyundai buys Boston Dynamics",
+      "url": "https://startupfortune.com/hyundai-takes-full-control-of-boston-dynamics-as-softbank-exits-for-325-million/",
+      "source": "startupfortune.com",
+      "points": 836,
+      "comments": 363,
+      "date": "2026-06-19"
+    },
+    {
+      "title": "Project Valhalla, Explained: How a Decade of Work Arrives in JDK 28",
+      "url": "https://www.jvm-weekly.com/p/project-valhalla-explained-how-a",
+      "source": "jvm-weekly.com",
+      "points": 596,
+      "comments": 373,
+      "date": "2026-06-19"
+    },
+    {
+      "title": "There are no instances in ATProto",
+      "url": "https://overreacted.io/there-are-no-instances-in-atproto/",
+      "source": "overreacted.io",
+      "points": 454,
+      "comments": 228,
+      "date": "2026-06-19"
+    },
+    {
+      "title": "The AirPods Effect",
+      "url": "https://www.theescapenewsletter.com/p/the-airpods-effect",
+      "source": "theescapenewsletter.com",
+      "points": 414,
+      "comments": 722,
       "date": "2026-06-18"
     },
     {
-      "title": ".gitignore Isn't the only way to ignore files in Git",
-      "url": "https://nelson.cloud/.gitignore-isnt-the-only-way-to-ignore-files-in-git/",
-      "source": "nelson.cloud",
-      "points": 446,
-      "comments": 137,
-      "date": "2026-06-18"
+      "title": "Bobby Prince, composer for Doom, Wolfenstein 3D, and Duke Nukem 3D, has died",
+      "url": "https://www.legacy.com/legacy/robert-bobby-prince-lll",
+      "source": "legacy.com",
+      "points": 381,
+      "comments": 42,
+      "date": "2026-06-19"
     },
     {
-      "title": "CS 6120: Advanced Compilers: The Self-Guided Online Course (2020)",
-      "url": "https://www.cs.cornell.edu/courses/cs6120/2025fa/self-guided/",
-      "source": "cs.cornell.edu",
-      "points": 382,
-      "comments": 53,
-      "date": "2026-06-18"
+      "title": "Court Records Should Be Free",
+      "url": "https://www.eff.org/deeplinks/2026/06/court-records-should-be-free",
+      "source": "eff.org",
+      "points": 379,
+      "comments": 82,
+      "date": "2026-06-19"
     },
     {
-      "title": "Show HN: Are You in the Weights?",
-      "url": "https://www.intheweights.com/",
-      "source": "intheweights.com",
-      "points": 373,
-      "comments": 217,
-      "date": "2026-06-18"
-    },
-    {
-      "title": "Ubiquiti: Enterprise NAS, Built on ZFS",
-      "url": "https://blog.ui.com/article/introducing-enterprise-nas",
-      "source": "blog.ui.com",
-      "points": 354,
-      "comments": 302,
-      "date": "2026-06-18"
-    },
-    {
-      "title": "Hospitals and universities repurposing drugs at lower cost",
-      "url": "https://www.kcl.ac.uk/news/hospitals-and-universities-repurposing-drugs-at-90-lower-cost",
-      "source": "kcl.ac.uk",
-      "points": 317,
-      "comments": 144,
-      "date": "2026-06-18"
-    },
-    {
-      "title": "Modos Color Monitor Pushes E-Paper Displays Further",
-      "url": "https://spectrum.ieee.org/modos-e-paper-monitor",
-      "source": "spectrum.ieee.org",
-      "points": 294,
-      "comments": 70,
-      "date": "2026-06-18"
+      "title": "How many of the 170k English words do you know?",
+      "url": "https://vocabowl-870366514258.us-west1.run.app/",
+      "source": "vocabowl-870366514258.us-west1.run.app",
+      "points": 378,
+      "comments": 465,
+      "date": "2026-06-19"
     }
   ]
 }
