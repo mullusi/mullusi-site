@@ -19,30 +19,66 @@ const allowedArgs = new Set(["--json"]);
 const productId = "mullu-govern";
 
 const requiredDecisionTerms = [
-  "Mullu Govern Evaluate Write Route Decision",
-  "product_id=mullu-govern",
-  "route=POST /v1/govern/evaluate",
-  "decision_state=KeepBlocked",
-  "solver_outcome=AwaitingEvidence",
-  "proof_state=Unknown",
-  "public_write_route_allowed=false",
-  "product_status=limited-preview",
-  "api_gateway_exposure_state=SolvedVerified",
-  "runtime_witness_closure_allowed=false",
-  "approval_packet=ops/mullu-govern-public-beta-approval-packet.md",
-  "Public route guard | route remains closed before approval | `POST /v1/govern/evaluate` returns 404 | pass",
-  "Runtime witness | `SolvedVerified` for product runtime | `AwaitingEvidence` | block",
-  "Operator approval | explicit public write-route approval ref | missing | block",
-  "approval_ref=none",
-  "route_publication_action=none",
-  "dns_mutation=none",
-  "secret_rotation_required=false",
-  "rollback_triggered=false",
-  "rollback_action=remove /v1/govern/evaluate from the public gateway allowlist",
-  "preserve_routes=/v1/health,/v1/version",
-  "preserve_dns=api.mullusi.com",
-  "STATUS:",
+  { id: "title", text: "Mullu Govern Evaluate Write Route Decision" },
+  { id: "product_id", text: "product_id=mullu-govern" },
+  { id: "route", text: "route=POST /v1/govern/evaluate" },
+  { id: "decision_state", text: "decision_state=KeepBlocked" },
+  { id: "solver_outcome", text: "solver_outcome=AwaitingEvidence" },
+  { id: "proof_state", text: "proof_state=Unknown" },
+  { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
+  { id: "product_status", text: "product_status=limited-preview" },
+  { id: "api_gateway_exposure_state", text: "api_gateway_exposure_state=SolvedVerified" },
+  { id: "runtime_witness_closure_allowed", text: "runtime_witness_closure_allowed=false" },
+  { id: "approval_packet", text: "approval_packet=ops/mullu-govern-public-beta-approval-packet.md" },
+  { id: "public_route_guard_row", text: "Public route guard | route remains closed before approval | `POST /v1/govern/evaluate` returns 404 | pass" },
+  { id: "runtime_witness_row", text: "Runtime witness | `SolvedVerified` for product runtime | `AwaitingEvidence` | block" },
+  { id: "operator_approval_row", text: "Operator approval | explicit public write-route approval ref | missing | block" },
+  { id: "approval_ref", text: "approval_ref=none" },
+  { id: "route_publication_action", text: "route_publication_action=none" },
+  { id: "dns_mutation", text: "dns_mutation=none" },
+  { id: "secret_rotation_required", text: "secret_rotation_required=false" },
+  { id: "rollback_triggered", text: "rollback_triggered=false" },
+  { id: "rollback_action", text: "rollback_action=remove /v1/govern/evaluate from the public gateway allowlist" },
+  { id: "preserve_routes", text: "preserve_routes=/v1/health,/v1/version" },
+  { id: "preserve_dns", text: "preserve_dns=api.mullusi.com" },
+  { id: "status_block", text: "STATUS:" },
 ];
+
+const expectedDataClasses = [
+  "policy_records",
+  "evaluations",
+  "traces",
+  "proof_stamps",
+  "audit_events",
+];
+
+const publicWriteRouteDecisionAllowedScalars = new Set([
+  "AwaitingEvidence",
+  "Blocked",
+  "Fail",
+  "GovernanceBlocked",
+  "KeepBlocked",
+  "NotApproved",
+  "Pass",
+  "SolvedVerified",
+  "Unknown",
+  "false",
+  "limited-preview",
+  "missing",
+  "none",
+  "not-active",
+  "planned",
+  "true",
+  ...expectedDataClasses,
+]);
+
+function publicWriteRouteDecisionScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  const scalar = String(value);
+  if (publicWriteRouteDecisionAllowedScalars.has(scalar)) return scalar;
+  if (/^\d+$/.test(scalar)) return "number";
+  return "redacted_value";
+}
 
 function blockedResult(finding) {
   return {
@@ -104,7 +140,7 @@ export function validateGovernEvaluateWriteRouteDecisionEvidence(evidence) {
   const runtimeWitness = findRuntimeWitness(evidence.runtimeRegistry);
 
   for (const term of requiredDecisionTerms) {
-    if (!evidence.decisionRecord.includes(term)) findings.push(`required_decision_term_missing:${term}`);
+    if (!evidence.decisionRecord.includes(term.text)) findings.push(`required_decision_term_missing:${term.id}`);
   }
 
   for (const [source, content] of Object.entries(evidence.privateValueScanSources)) {
@@ -112,45 +148,45 @@ export function validateGovernEvaluateWriteRouteDecisionEvidence(evidence) {
   }
 
   if (lineValue(evidence.decisionRecord, "decision_state") !== "KeepBlocked") {
-    findings.push(`decision_state_must_remain_keep_blocked:${lineValue(evidence.decisionRecord, "decision_state") || "missing"}`);
+    findings.push(`decision_state_must_remain_keep_blocked:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "decision_state"))}`);
   }
   if (lineValue(evidence.decisionRecord, "public_write_route_allowed") !== "false") {
-    findings.push(`decision_public_write_route_allowed_must_remain_false:${lineValue(evidence.decisionRecord, "public_write_route_allowed") || "missing"}`);
+    findings.push(`decision_public_write_route_allowed_must_remain_false:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "public_write_route_allowed"))}`);
   }
   if (lineValue(evidence.decisionRecord, "runtime_witness_closure_allowed") !== "false") {
-    findings.push(`decision_runtime_witness_closure_allowed_must_remain_false:${lineValue(evidence.decisionRecord, "runtime_witness_closure_allowed") || "missing"}`);
+    findings.push(`decision_runtime_witness_closure_allowed_must_remain_false:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "runtime_witness_closure_allowed"))}`);
   }
   if (lineValue(evidence.decisionRecord, "product_status") !== "limited-preview") {
-    findings.push(`decision_product_status_must_remain_limited_preview:${lineValue(evidence.decisionRecord, "product_status") || "missing"}`);
+    findings.push(`decision_product_status_must_remain_limited_preview:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "product_status"))}`);
   }
   if (lineValue(evidence.decisionRecord, "route_publication_action") !== "none") {
-    findings.push(`route_publication_action_must_remain_none:${lineValue(evidence.decisionRecord, "route_publication_action") || "missing"}`);
+    findings.push(`route_publication_action_must_remain_none:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "route_publication_action"))}`);
   }
   if (lineValue(evidence.decisionRecord, "dns_mutation") !== "none") {
-    findings.push(`dns_mutation_must_remain_none:${lineValue(evidence.decisionRecord, "dns_mutation") || "missing"}`);
+    findings.push(`dns_mutation_must_remain_none:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "dns_mutation"))}`);
   }
   if (lineValue(evidence.decisionRecord, "secret_rotation_required") !== "false") {
-    findings.push(`secret_rotation_required_must_remain_false:${lineValue(evidence.decisionRecord, "secret_rotation_required") || "missing"}`);
+    findings.push(`secret_rotation_required_must_remain_false:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "secret_rotation_required"))}`);
   }
   if (lineValue(evidence.decisionRecord, "rollback_triggered") !== "false") {
-    findings.push(`rollback_triggered_must_remain_false:${lineValue(evidence.decisionRecord, "rollback_triggered") || "missing"}`);
+    findings.push(`rollback_triggered_must_remain_false:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "rollback_triggered"))}`);
   }
 
   if (evidence.manifest?.status !== "limited-preview") {
-    findings.push(`manifest_status_must_remain_limited_preview:${evidence.manifest?.status || "missing"}`);
+    findings.push(`manifest_status_must_remain_limited_preview:${publicWriteRouteDecisionScalarLabel(evidence.manifest?.status)}`);
   }
   if (evidence.manifest?.api?.exposure !== "planned") {
-    findings.push(`manifest_api_exposure_must_remain_planned:${evidence.manifest?.api?.exposure || "missing"}`);
+    findings.push(`manifest_api_exposure_must_remain_planned:${publicWriteRouteDecisionScalarLabel(evidence.manifest?.api?.exposure)}`);
   }
   if (evidence.privacyPolicy?.collectionState !== "not-active") {
-    findings.push(`privacy_collection_state_must_remain_not_active:${evidence.privacyPolicy?.collectionState || "missing"}`);
+    findings.push(`privacy_collection_state_must_remain_not_active:${publicWriteRouteDecisionScalarLabel(evidence.privacyPolicy?.collectionState)}`);
   }
   for (const row of evidence.retentionPolicy?.retention || []) {
     if (row.state !== "not-active") {
-      findings.push(`retention_state_must_remain_not_active:${row.dataClass || "unknown"}:${row.state || "missing"}`);
+      findings.push(`retention_state_must_remain_not_active:${publicWriteRouteDecisionScalarLabel(row.dataClass)}:${publicWriteRouteDecisionScalarLabel(row.state)}`);
     }
     if (row.maximumDays !== 0) {
-      findings.push(`retention_maximum_days_must_remain_zero:${row.dataClass || "unknown"}:${row.maximumDays}`);
+      findings.push(`retention_maximum_days_must_remain_zero:${publicWriteRouteDecisionScalarLabel(row.dataClass)}:${publicWriteRouteDecisionScalarLabel(row.maximumDays)}`);
     }
   }
 
@@ -158,7 +194,7 @@ export function validateGovernEvaluateWriteRouteDecisionEvidence(evidence) {
     findings.push("runtime_registry_mullu_govern_witness_missing");
   } else {
     if (runtimeWitness.proofState !== "AwaitingEvidence") {
-      findings.push(`runtime_registry_proof_state_must_remain_awaiting:${runtimeWitness.proofState || "missing"}`);
+      findings.push(`runtime_registry_proof_state_must_remain_awaiting:${publicWriteRouteDecisionScalarLabel(runtimeWitness.proofState)}`);
     }
     if (runtimeWitness.publicExposure?.allowed !== false) {
       findings.push("runtime_registry_public_exposure_must_remain_blocked");
@@ -166,23 +202,23 @@ export function validateGovernEvaluateWriteRouteDecisionEvidence(evidence) {
   }
 
   if (lineValue(evidence.approvalPacket, "packet_state") !== "AwaitingEvidence") {
-    findings.push(`approval_packet_state_must_remain_awaiting:${lineValue(evidence.approvalPacket, "packet_state") || "missing"}`);
+    findings.push(`approval_packet_state_must_remain_awaiting:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.approvalPacket, "packet_state"))}`);
   }
   if (lineValue(evidence.approvalPacket, "approval_state") !== "NotApproved") {
-    findings.push(`approval_state_must_remain_not_approved:${lineValue(evidence.approvalPacket, "approval_state") || "missing"}`);
+    findings.push(`approval_state_must_remain_not_approved:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.approvalPacket, "approval_state"))}`);
   }
   if (lineValue(evidence.approvalPacket, "public_write_route_allowed") !== "false") {
-    findings.push(`approval_public_write_route_allowed_must_remain_false:${lineValue(evidence.approvalPacket, "public_write_route_allowed") || "missing"}`);
+    findings.push(`approval_public_write_route_allowed_must_remain_false:${publicWriteRouteDecisionScalarLabel(lineValue(evidence.approvalPacket, "public_write_route_allowed"))}`);
   }
 
   return {
-    decisionState: lineValue(evidence.decisionRecord, "decision_state") || "Unknown",
+    decisionState: publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "decision_state") || "Unknown"),
     findingCount: findings.length,
     findings,
-    productStatus: lineValue(evidence.decisionRecord, "product_status") || "Unknown",
+    productStatus: publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "product_status") || "Unknown"),
     proofState: findings.length === 0 ? "Pass" : "Fail",
     publicWriteRouteAllowed: lineValue(evidence.decisionRecord, "public_write_route_allowed") === "true",
-    routePublicationAction: lineValue(evidence.decisionRecord, "route_publication_action") || "unknown",
+    routePublicationAction: publicWriteRouteDecisionScalarLabel(lineValue(evidence.decisionRecord, "route_publication_action") || "Unknown"),
     solverOutcome: findings.length === 0 ? "SolvedVerified" : "GovernanceBlocked",
   };
 }

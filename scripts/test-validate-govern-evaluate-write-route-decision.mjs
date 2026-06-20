@@ -135,8 +135,8 @@ function testSyntheticRouteExposureFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, true);
-  assert.match(result.findings.join("\n"), /required_decision_term_missing:decision_state=KeepBlocked/);
-  assert.match(result.findings.join("\n"), /decision_state_must_remain_keep_blocked:Approve/);
+  assert.match(result.findings.join("\n"), /required_decision_term_missing:decision_state/);
+  assert.match(result.findings.join("\n"), /decision_state_must_remain_keep_blocked:redacted_value/);
   assert.match(result.findings.join("\n"), /decision_public_write_route_allowed_must_remain_false:true/);
 }
 
@@ -150,9 +150,9 @@ function testSyntheticPrivacyRetentionActivationFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicWriteRouteAllowed, false);
-  assert.match(result.findings.join("\n"), /privacy_collection_state_must_remain_not_active:active/);
-  assert.match(result.findings.join("\n"), /retention_state_must_remain_not_active:policy_records:active/);
-  assert.match(result.findings.join("\n"), /retention_maximum_days_must_remain_zero:policy_records:365/);
+  assert.match(result.findings.join("\n"), /privacy_collection_state_must_remain_not_active:redacted_value/);
+  assert.match(result.findings.join("\n"), /retention_state_must_remain_not_active:policy_records:redacted_value/);
+  assert.match(result.findings.join("\n"), /retention_maximum_days_must_remain_zero:policy_records:number/);
 }
 
 function testSyntheticRuntimeRegistryPromotionFailsClosed() {
@@ -169,6 +169,53 @@ function testSyntheticRuntimeRegistryPromotionFailsClosed() {
   assert.equal(result.publicWriteRouteAllowed, false);
   assert.match(result.findings.join("\n"), /runtime_registry_proof_state_must_remain_awaiting:SolvedVerified/);
   assert.match(result.findings.join("\n"), /runtime_registry_public_exposure_must_remain_blocked/);
+}
+
+function testSyntheticUnsafeWriteRouteValuesUsePublicLabels() {
+  const evidence = validEvidence({
+    approvalPacket: "packet_state=private-packet-state\napproval_state=private-approval-state\npublic_write_route_allowed=private-route-value\n",
+    decisionRecord: validDecisionRecord({
+      decision_state: "private-decision-state",
+      public_write_route_allowed: "private-public-write",
+      product_status: "private-product-status",
+      runtime_witness_closure_allowed: "private-runtime-closure",
+      route_publication_action: "private-route-action",
+      dns_mutation: "private-dns-action",
+      secret_rotation_required: "private-secret-rotation",
+      rollback_triggered: "private-rollback-state",
+    }),
+    manifest: {
+      api: { exposure: "private-api-exposure" },
+      status: "private-manifest-status",
+    },
+    privacyPolicy: { collectionState: "private-collection-state" },
+    retentionPolicy: validRetentionPolicy({
+      dataClass: "private-data-class",
+      state: "private-retention-state",
+      maximumDays: 777,
+    }),
+    runtimeRegistry: validRuntimeRegistry({
+      proofState: "private-proof-state",
+      publicExposure: { allowed: true },
+    }),
+  });
+  const result = validateGovernEvaluateWriteRouteDecisionEvidence(evidence);
+  const report = formatGovernEvaluateWriteRouteDecisionReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.decisionState, "redacted_value");
+  assert.equal(result.productStatus, "redacted_value");
+  assert.equal(result.routePublicationAction, "redacted_value");
+  assert.match(report, /decision_state_must_remain_keep_blocked:redacted_value/);
+  assert.match(report, /retention_state_must_remain_not_active:redacted_value:redacted_value/);
+  assert.match(report, /retention_maximum_days_must_remain_zero:redacted_value:number/);
+  assert.match(report, /approval_packet_state_must_remain_awaiting:redacted_value/);
+  assert.doesNotMatch(report, /private-decision-state/);
+  assert.doesNotMatch(report, /private-product-status/);
+  assert.doesNotMatch(report, /private-data-class/);
+  assert.doesNotMatch(report, /private-route-action/);
+  assert.doesNotMatch(report, /777/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -229,6 +276,7 @@ testCurrentGovernEvaluateWriteRouteDecisionPasses();
 testSyntheticRouteExposureFailsClosed();
 testSyntheticPrivacyRetentionActivationFailsClosed();
 testSyntheticRuntimeRegistryPromotionFailsClosed();
+testSyntheticUnsafeWriteRouteValuesUsePublicLabels();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
