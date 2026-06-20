@@ -137,6 +137,24 @@ function testRequestErrorRedactsUnsafeTargetLabel() {
   assert.doesNotMatch(serialized, /private\.example\.internal/);
 }
 
+function testStatusAndHeaderFailuresRedactUnsafeTargetLabel() {
+  const records = [
+    targetRecord("https://private.example.internal/status", {
+      statusCode: 503,
+      headers: passingHeaders({ "content-security-policy": "" }),
+    }),
+  ];
+  const result = evaluateSecurityHeaderEvidence(records);
+  const formatted = formatResult(result);
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.targetResults[0].targetUrl, "redacted_target");
+  assert.ok(result.findings.includes("target_status_invalid:redacted_target:503"));
+  assert.ok(result.findings.includes("header_missing:content-security-policy:redacted_target"));
+  assert.doesNotMatch(formatted, /private\.example\.internal/);
+}
+
 function testTargetValidationBlocksUnsafeTargets() {
   const validTarget = validateTargetUrl("https://mullusi.com/status/");
 
@@ -178,6 +196,7 @@ testHeaderValueMismatchBlocks();
 testRequiredHeaderTermMissingBlocks();
 testStatusAndRequestErrorsBlock();
 testRequestErrorRedactsUnsafeTargetLabel();
+testStatusAndHeaderFailuresRedactUnsafeTargetLabel();
 testTargetValidationBlocksUnsafeTargets();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testPublicErrorCodeRedactsRawExceptionValues();

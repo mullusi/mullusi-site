@@ -195,16 +195,17 @@ export function evaluateSecurityHeaderEvidence(records, rules = expectedHeaderRu
     }
 
     const statusCode = record.statusCode ?? 0;
+    const targetLabel = publicTargetLabel(record.targetUrl);
     const headerResults = rules.map((rule) => evaluateHeaderRule(record.headers ?? {}, rule));
     const failedHeaderResults = headerResults.filter((result) => !result.passed);
     if (statusCode < 200 || statusCode >= 300) {
-      findings.push(`target_status_invalid:${record.targetUrl}:${statusCode}`);
+      findings.push(`target_status_invalid:${targetLabel}:${statusCode}`);
     }
     for (const result of failedHeaderResults) {
-      findings.push(`${result.finding}:${record.targetUrl}`);
+      findings.push(`${result.finding}:${targetLabel}`);
     }
     targetResults.push({
-      targetUrl: record.targetUrl,
+      targetUrl: targetLabel,
       statusCode,
       passed: statusCode >= 200 && statusCode < 300 && failedHeaderResults.length === 0,
       headerResults,
