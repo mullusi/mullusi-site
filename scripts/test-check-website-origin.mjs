@@ -12,8 +12,10 @@ import { fileURLToPath } from "node:url";
 import {
   classifyHeaders,
   classifyResponse,
+  formatReport,
   publicErrorCode,
   validateTargetUrl,
+  witnessRecord,
 } from "./check-website-origin.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
@@ -368,6 +370,38 @@ function testPublicErrorCodeRedactsRawExceptionValues() {
   assert.doesNotMatch([timeout, host, route, network, fallback].join("\n"), /mullusi\.com|private|secret|origin\.txt/);
 }
 
+function testOriginReportRedactsPrivateResponseUrls() {
+  const classification = {
+    verdict: "CanonicalRedirectPending",
+    proofState: "Unknown",
+    summary: "Synthetic private URL fixture.",
+  };
+  const response = {
+    finalUrl: "https://private.example.invalid/final?private_id=hidden",
+    statusCode: 200,
+    headers: {
+      server: "cloudflare",
+    },
+    redirectHistory: [
+      {
+        to: "https://mullusi.com/private/?auth=hidden",
+        statusCode: 302,
+      },
+    ],
+  };
+  const report = formatReport("https://mullusi.com/private/?auth=hidden", response, classification);
+  const record = witnessRecord("https://mullusi.com/private/?auth=hidden", response, classification);
+  const serialized = JSON.stringify(record);
+
+  assert.match(report, /^target=redacted_url$/m);
+  assert.match(report, /^final_url=redacted_url$/m);
+  assert.match(report, /^first_redirect_url=redacted_url$/m);
+  assert.equal(record.target, "redacted_url");
+  assert.equal(record.final_url, "redacted_url");
+  assert.equal(record.first_redirect_url, "redacted_url");
+  assert.doesNotMatch(`${report}\n${serialized}`, /private\.example\.invalid|private_id=hidden|auth=hidden/);
+}
+
 testGithubPagesOriginClassification();
 testCloudflareOriginCandidateClassification();
 testUnknownOriginClassification();
@@ -389,4 +423,5 @@ testTargetUrlValidationBlocksExternalHost();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testCliRejectsUnsupportedArgumentAsJson();
 testPublicErrorCodeRedactsRawExceptionValues();
+testOriginReportRedactsPrivateResponseUrls();
 console.log("website origin classification tests passed");
