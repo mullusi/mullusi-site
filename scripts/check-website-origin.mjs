@@ -53,6 +53,22 @@ function printCliFailure({ verdict, proofState, error, jsonOutput }) {
   console.log(`verdict=${verdict}\nproof_state=${proofState}\nerror=${error}`);
 }
 
+function publicMullusiUrlLabel(value) {
+  if (!value) {
+    return "";
+  }
+  try {
+    const parsedUrl = new URL(value);
+    const hasPrivateQueryKey = Array.from(parsedUrl.searchParams.keys()).some((key) => /token|secret|key|auth|account|credential|password/i.test(key));
+    if (parsedUrl.protocol === "https:" && allowedTargetHostnames.has(parsedUrl.hostname) && !hasPrivateQueryKey) {
+      return parsedUrl.toString();
+    }
+  } catch {
+    return "redacted_url";
+  }
+  return "redacted_url";
+}
+
 export function publicErrorCode(error) {
   const message = error instanceof Error ? error.message : String(error);
   if (message.startsWith("origin_check_")) {
@@ -256,16 +272,16 @@ function requestHead(url, redirectBudget = 5, redirectHistory = []) {
   });
 }
 
-function formatReport(targetUrl, response, classification) {
+export function formatReport(targetUrl, response, classification) {
   const normalized = normalizedHeaders(response.headers);
   const firstRedirect = response.redirectHistory?.[0] ?? null;
   const evidence = [
-    `target=${targetUrl}`,
-    `final_url=${response.finalUrl}`,
+    `target=${publicMullusiUrlLabel(targetUrl)}`,
+    `final_url=${publicMullusiUrlLabel(response.finalUrl)}`,
     `status=${response.statusCode}`,
     `redirect_count=${response.redirectHistory?.length ?? 0}`,
     `first_redirect_status=${firstRedirect?.statusCode ?? ""}`,
-    `first_redirect_url=${firstRedirect?.to ?? ""}`,
+    `first_redirect_url=${publicMullusiUrlLabel(firstRedirect?.to ?? "")}`,
     `server=${normalized.server ?? ""}`,
     `cf_ray=${normalized["cf-ray"] ?? ""}`,
     `github_request=${normalized["x-github-request-id"] ?? ""}`,
@@ -281,19 +297,19 @@ function formatReport(targetUrl, response, classification) {
   ].join("\n");
 }
 
-function witnessRecord(targetUrl, response, classification) {
+export function witnessRecord(targetUrl, response, classification) {
   const normalized = normalizedHeaders(response.headers);
   const firstRedirect = response.redirectHistory?.[0] ?? null;
   return {
     verdict: classification.verdict,
     proof_state: classification.proofState,
     summary: classification.summary,
-    target: targetUrl,
-    final_url: response.finalUrl,
+    target: publicMullusiUrlLabel(targetUrl),
+    final_url: publicMullusiUrlLabel(response.finalUrl),
     status: response.statusCode,
     redirect_count: response.redirectHistory?.length ?? 0,
     first_redirect_status: firstRedirect?.statusCode ?? "",
-    first_redirect_url: firstRedirect?.to ?? "",
+    first_redirect_url: publicMullusiUrlLabel(firstRedirect?.to ?? ""),
     server: normalized.server ?? "",
     cf_ray: normalized["cf-ray"] ?? "",
     github_request: normalized["x-github-request-id"] ?? "",
@@ -360,7 +376,7 @@ async function runCli() {
             return {
               verdict: result.classification.verdict,
               proof_state: result.classification.proofState,
-              target: result.targetUrl,
+              target: publicMullusiUrlLabel(result.targetUrl),
               error: result.error,
             };
           }
@@ -375,7 +391,7 @@ async function runCli() {
       results
         .map((result) => {
           if (result.error) {
-            return [`verdict=${result.classification.verdict}`, `proof_state=${result.classification.proofState}`, `target=${result.targetUrl}`, `error=${result.error}`].join("\n");
+            return [`verdict=${result.classification.verdict}`, `proof_state=${result.classification.proofState}`, `target=${publicMullusiUrlLabel(result.targetUrl)}`, `error=${result.error}`].join("\n");
           }
           return formatReport(result.targetUrl, result.response, result.classification);
         })
