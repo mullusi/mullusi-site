@@ -53,6 +53,24 @@ const mutationPermissions = [
   },
 ];
 
+const publicDomainPreflightAllowedScalars = new Set([
+  "AwaitingEvidence",
+  "GovernanceBlocked",
+  "Pass",
+  "SolvedVerified",
+  "false",
+  "missing",
+  "true",
+]);
+
+function publicDomainPreflightScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  const scalar = String(value);
+  if (publicDomainPreflightAllowedScalars.has(scalar)) return scalar;
+  if (/^\d+$/.test(scalar)) return "number";
+  return "redacted_value";
+}
+
 function lineValue(content, key) {
   const match = content.match(new RegExp(`^${key}=([^\\s]+)$`, "m"));
   return match?.[1] ?? "";
@@ -84,7 +102,7 @@ export function evaluateDomainHardeningPreflight(content) {
     const value = lineValue(content, key);
     evidence[key] = value;
     if (!["Pass", "AwaitingEvidence"].includes(value)) {
-      findings.push(`evidence_state_invalid:${key}:${value || "missing"}`);
+      findings.push(`evidence_state_invalid:${key}:${publicDomainPreflightScalarLabel(value)}`);
     }
   }
 
@@ -93,7 +111,7 @@ export function evaluateDomainHardeningPreflight(content) {
     const value = lineValue(content, permission.key);
     permissions[permission.key] = value;
     if (!["true", "false"].includes(value)) {
-      findings.push(`permission_state_invalid:${permission.key}:${value || "missing"}`);
+      findings.push(`permission_state_invalid:${permission.key}:${publicDomainPreflightScalarLabel(value)}`);
       continue;
     }
     const dependenciesPass = permission.dependencies.every((dependency) => evidence[dependency] === "Pass");
@@ -109,7 +127,7 @@ export function evaluateDomainHardeningPreflight(content) {
   const allPermissionsTrue = mutationPermissions.every((permission) => permissions[permission.key] === "true");
   const declaredState = lineValue(content, "domain_hardening_preflight");
   if (!["GovernanceBlocked", "SolvedVerified"].includes(declaredState)) {
-    findings.push(`preflight_state_invalid:${declaredState || "missing"}`);
+    findings.push(`preflight_state_invalid:${publicDomainPreflightScalarLabel(declaredState)}`);
   }
   if (declaredState === "SolvedVerified" && !(allEvidencePass && allPermissionsTrue)) {
     findings.push("preflight_solved_without_required_evidence");
@@ -147,10 +165,10 @@ export function formatResult(result) {
     `domain_hardening_preflight=${result.preflightState}`,
   ];
   for (const key of requiredEvidenceKeys) {
-    lines.push(`${key}=${result.evidence[key]}`);
+    lines.push(`${key}=${publicDomainPreflightScalarLabel(result.evidence[key])}`);
   }
   for (const permission of mutationPermissions) {
-    lines.push(`${permission.key}=${result.permissions[permission.key]}`);
+    lines.push(`${permission.key}=${publicDomainPreflightScalarLabel(result.permissions[permission.key])}`);
   }
   if (result.findings.length === 0) {
     lines.push("finding=none");
