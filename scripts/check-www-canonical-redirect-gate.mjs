@@ -74,6 +74,29 @@ function lineValue(block, key) {
   return match?.[1]?.trim() ?? "";
 }
 
+function publicCanonicalUrlLabel(value) {
+  if (!value) {
+    return "";
+  }
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol === "https:" && ["mullusi.com", "www.mullusi.com"].includes(parsed.hostname)) {
+      return parsed.toString();
+    }
+  } catch {
+    return "redacted_url";
+  }
+  return "redacted_url";
+}
+
+function publicScalarLabel(value) {
+  const stringValue = String(value ?? "");
+  if (!stringValue) {
+    return "";
+  }
+  return /^[A-Za-z0-9_.:-]{1,80}$/.test(stringValue) ? stringValue : "redacted_value";
+}
+
 function hasExactRedirectRule(redirects, rule) {
   return redirects
     .split(/\r?\n/)
@@ -94,20 +117,21 @@ export function evaluateWwwCanonicalRedirectGate({ redirects, witness }) {
     const firstRedirectUrl = lineValue(block, "first_redirect_url");
     const verdict = lineValue(block, "verdict");
     const proofState = lineValue(block, "proof_state");
+    const ready = witnessBlockCount === "1" && finalUrl === expectedFinalUrl && status === "200" && redirectCount === expectedRedirectCount && firstRedirectStatus === expectedFirstRedirectStatus && firstRedirectUrl === expectedFinalUrl && verdict === "CloudflareOriginCandidate" && proofState === "Pass";
     return {
-      targetUrl,
-      expectedFinalUrl,
+      targetUrl: publicCanonicalUrlLabel(targetUrl),
+      expectedFinalUrl: publicCanonicalUrlLabel(expectedFinalUrl),
       expectedRedirectCount,
       expectedFirstRedirectStatus,
       witnessBlockCount,
-      finalUrl,
-      status,
-      redirectCount,
-      firstRedirectStatus,
-      firstRedirectUrl,
-      verdict,
-      proofState,
-      ready: witnessBlockCount === "1" && finalUrl === expectedFinalUrl && status === "200" && redirectCount === expectedRedirectCount && firstRedirectStatus === expectedFirstRedirectStatus && firstRedirectUrl === expectedFinalUrl && verdict === "CloudflareOriginCandidate" && proofState === "Pass",
+      finalUrl: publicCanonicalUrlLabel(finalUrl),
+      status: publicScalarLabel(status),
+      redirectCount: publicScalarLabel(redirectCount),
+      firstRedirectStatus: publicScalarLabel(firstRedirectStatus),
+      firstRedirectUrl: publicCanonicalUrlLabel(firstRedirectUrl),
+      verdict: publicScalarLabel(verdict),
+      proofState: publicScalarLabel(proofState),
+      ready,
     };
   });
   const rootResult = targetResults[0];

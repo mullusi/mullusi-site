@@ -344,6 +344,40 @@ ${witness({
   assert.equal(result.targetResults[1].ready, false);
 }
 
+function testPrivateWitnessValuesAreRedactedFromEvidence() {
+  const privateFinalUrl = "https://internal.example.invalid/proof/?private_id=hidden";
+  const privateRedirectUrl = "https://private.example.invalid/redirect?account=hidden";
+  const result = evaluateWwwCanonicalRedirectGate({
+    redirects: redirectRule,
+    witness: `${witness({
+      finalUrl: privateFinalUrl,
+      verdict: "CanonicalRedirectPending/private-tenant",
+      proofState: "Unknown(account-hidden)",
+      firstRedirectStatus: "302",
+      firstRedirectUrl: privateRedirectUrl,
+    })}
+
+${witness({
+      targetUrl: pathQueryTarget,
+      finalUrl: "https://mullusi.com/proof/?gate=www-canonical",
+      verdict: "CloudflareOriginCandidate",
+      proofState: "Pass",
+      firstRedirectStatus: "301",
+      firstRedirectUrl: "https://mullusi.com/proof/?gate=www-canonical",
+    })}`,
+  });
+  const formatted = formatResult(result);
+  const serialized = JSON.stringify(result);
+
+  assert.equal(result.state, "AwaitingEvidence");
+  assert.equal(result.finalUrl, "redacted_url");
+  assert.equal(result.targetResults[0].firstRedirectUrl, "redacted_url");
+  assert.equal(result.targetResults[0].verdict, "redacted_value");
+  assert.equal(result.targetResults[0].proofState, "redacted_value");
+  assert.doesNotMatch(formatted, /internal\.example\.invalid|private\.example\.invalid|private_id|account-hidden|private-tenant/);
+  assert.doesNotMatch(serialized, /internal\.example\.invalid|private\.example\.invalid|private_id|account-hidden|private-tenant/);
+}
+
 function testFormattedResultIncludesPerTargetStatusAndReadiness() {
   const result = evaluateWwwCanonicalRedirectGate({
     redirects: redirectRule,
@@ -463,6 +497,7 @@ testMissingPermanentRedirectStatusBlocksClosure();
 testTemporaryRedirectStatusBlocksClosure();
 testMultiHopRedirectCountBlocksClosure();
 testPathQueryMismatchBlocksClosure();
+testPrivateWitnessValuesAreRedactedFromEvidence();
 testFormattedResultIncludesPerTargetStatusAndReadiness();
 testCliBlocksPendingFixtureWithoutAllowPending();
 testCliAllowsPendingFixtureWithAllowPending();
