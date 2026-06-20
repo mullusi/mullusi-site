@@ -339,6 +339,31 @@ function publicOptionalErrorCode(error) {
   return error ? publicErrorCode(error) : "";
 }
 
+function publicExternalProbeScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "";
+  const scalar = String(value);
+  return /^[A-Za-z0-9_.:-]{1,80}$/.test(scalar) ? scalar : "redacted_value";
+}
+
+function publicExternalProbeUrlLabel(value) {
+  if (!value) return "";
+  try {
+    const parsed = new URL(value);
+    if (["check-host.net", "api.globalping.io", "mullusi.com", "www.mullusi.com"].includes(parsed.hostname)) {
+      return parsed.toString();
+    }
+  } catch {
+    // Fall through to the redacted label.
+  }
+  return "redacted_url";
+}
+
+function publicExternalProbeStatusLabel(value) {
+  if (value === undefined || value === null || value === "") return "";
+  const scalar = String(value);
+  return /^\d{3}$/.test(scalar) ? scalar : publicErrorCode(scalar);
+}
+
 export async function collectCheckHostEvidence({ targetUrl = "https://mullusi.com/", maxNodes = 6 } = {}) {
   const safeTargetUrl = validateHttpsTarget(targetUrl);
   const startUrl = `${checkHostApiBaseUrl}/check-http?host=${encodeURIComponent(safeTargetUrl)}&max_nodes=${encodeURIComponent(String(maxNodes))}`;
@@ -597,7 +622,7 @@ export function evaluatePublicVisibilityEvidence(evidence) {
     }
     for (const record of externalProbeRecords) {
       if (!record.passed) {
-        externalFindings.push(`external_probe_failed:${record.node}:${record.countryCode}:${record.statusCode || publicErrorCode(record.error || "unknown")}`);
+        externalFindings.push(`external_probe_failed:${publicExternalProbeScalarLabel(record.node)}:${publicExternalProbeScalarLabel(record.countryCode)}:${publicExternalProbeStatusLabel(record.statusCode) || publicErrorCode(record.error || "unknown")}`);
       }
     }
   }
@@ -660,12 +685,12 @@ export function formatResult(result, evidence) {
   });
   const provider = evidence.externalProbeProvider;
   const externalProviderLines = provider ? [
-    `external_probe_provider=${provider.provider}`,
-    `external_probe_api=${provider.providerApi}`,
-    `external_probe_target=${provider.targetUrl}`,
-    `external_probe_request_id=${provider.requestId}`,
-    `external_probe_permanent_link=${provider.permanentLink}`,
-    `external_probe_max_nodes=${provider.maxNodes}`,
+    `external_probe_provider=${publicExternalProbeScalarLabel(provider.provider)}`,
+    `external_probe_api=${publicExternalProbeUrlLabel(provider.providerApi)}`,
+    `external_probe_target=${publicHttpsTargetLabel(provider.targetUrl)}`,
+    `external_probe_request_id=${publicExternalProbeScalarLabel(provider.requestId)}`,
+    `external_probe_permanent_link=${publicExternalProbeUrlLabel(provider.permanentLink)}`,
+    `external_probe_max_nodes=${publicExternalProbeScalarLabel(provider.maxNodes)}`,
     `external_probe_error=${publicOptionalErrorCode(provider.error)}`,
   ] : [
     "external_probe_provider=",
@@ -677,17 +702,17 @@ export function formatResult(result, evidence) {
     "external_probe_error=",
   ];
   const externalProbeLines = (evidence.externalProbeRecords ?? []).flatMap((record) => [
-    `external_node=${record.node}`,
-    `external_country_code=${record.countryCode}`,
-    `external_country=${record.country}`,
-    `external_city=${record.city}`,
-    `external_asn=${record.asn}`,
+    `external_node=${publicExternalProbeScalarLabel(record.node)}`,
+    `external_country_code=${publicExternalProbeScalarLabel(record.countryCode)}`,
+    `external_country=${publicExternalProbeScalarLabel(record.country)}`,
+    `external_city=${publicExternalProbeScalarLabel(record.city)}`,
+    `external_asn=${publicExternalProbeScalarLabel(record.asn)}`,
     `external_passed=${record.passed ? "true" : "false"}`,
     `external_pending=${record.pending ? "true" : "false"}`,
-    `external_status=${record.statusCode}`,
-    `external_message=${record.message}`,
-    `external_elapsed_seconds=${record.elapsedSeconds}`,
-    `external_resolved_ip=${record.resolvedIp}`,
+    `external_status=${publicExternalProbeStatusLabel(record.statusCode)}`,
+    `external_message=${publicOptionalErrorCode(record.message)}`,
+    `external_elapsed_seconds=${publicExternalProbeScalarLabel(record.elapsedSeconds)}`,
+    `external_resolved_ip=${record.resolvedIp ? "redacted_value" : ""}`,
     `external_error=${publicOptionalErrorCode(record.error)}`,
   ]);
   return [

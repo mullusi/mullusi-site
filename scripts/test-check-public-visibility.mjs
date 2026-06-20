@@ -248,6 +248,49 @@ function testEvaluatorAndFormatterRedactRawEvidenceErrors() {
   assert.doesNotMatch(serialized, /private\.example\.internal|trace=bounded|private tls detail/);
 }
 
+function testExternalProbeMetadataRedactsUnsafeValues() {
+  const evidence = passingEvidence();
+  evidence.externalProbeProvider = {
+    provider: "private provider",
+    providerApi: "https://private.example.internal/api?trace=bounded",
+    targetUrl: "https://private.example.internal/",
+    requestId: "private request id",
+    permanentLink: "https://private.example.internal/result",
+    maxNodes: "six nodes",
+    error: "",
+  };
+  evidence.externalProbeRecords = [
+    {
+      node: "private node name",
+      countryCode: "private code",
+      country: "Private Country",
+      city: "Private City",
+      asn: "AS private",
+      passed: false,
+      pending: false,
+      statusCode: "private status",
+      message: "private message detail",
+      elapsedSeconds: "10 seconds",
+      resolvedIp: "10.0.0.1",
+      error: "getaddrinfo ENOTFOUND private.example.internal",
+    },
+  ];
+  const result = evaluatePublicVisibilityEvidence(evidence);
+  const formatted = formatResult(result, evidence);
+  const serialized = `${JSON.stringify(result)}\n${formatted}`;
+
+  assert.equal(result.verdict, "SolvedVerified");
+  assert.equal(result.externalMultiRegionVisibility, "GovernanceBlocked");
+  assert.ok(result.externalFindings.includes("external_probe_failed:redacted_value:redacted_value:public_visibility_unavailable"));
+  assert.match(formatted, /external_probe_provider=redacted_value/);
+  assert.match(formatted, /external_probe_api=redacted_url/);
+  assert.match(formatted, /external_probe_target=redacted_url/);
+  assert.match(formatted, /external_probe_request_id=redacted_value/);
+  assert.match(formatted, /external_probe_permanent_link=redacted_url/);
+  assert.match(formatted, /external_resolved_ip=redacted_value/);
+  assert.doesNotMatch(serialized, /private\.example\.internal|private provider|private node name|Private Country|Private City|10\.0\.0\.1|trace=bounded/);
+}
+
 function testHttpsTargetValidationBlocksUnsafeTargets() {
   const validTarget = validateHttpsTarget("https://mullusi.com/status/");
 
@@ -334,6 +377,7 @@ testPartialExternalRegionalProbeFailureStaysBounded();
 testExternalRegionalProbeFloorBlocksExternalVisibility();
 testExternalProviderErrorKeepsBaseVisibilityBounded();
 testEvaluatorAndFormatterRedactRawEvidenceErrors();
+testExternalProbeMetadataRedactsUnsafeValues();
 testHttpsTargetValidationBlocksUnsafeTargets();
 testCliRejectsUnsupportedArgumentWithoutNetwork();
 testCliRejectsUnsupportedArgumentAsJson();
