@@ -22,28 +22,28 @@ const defaultSummaryPath = "ops/release-readiness-summary.md";
 const allowedArgs = new Set(["--json"]);
 
 const requiredSummaryTerms = [
-  "Release Readiness Summary",
-  "website_static_deployment_integrity=AwaitingEvidence",
-  "live_status_manifest=Pass",
-  "local_status_manifest_match=AwaitingEvidence",
-  "api_exposure_state=SolvedVerified",
-  "api_dns_publication_allowed=true",
-  "api_production_readiness_state=ReadyForDns",
-  "product_runtime_release_witness=AwaitingEvidence",
-  "product_runtime_claims_allowed=false",
-  "public_product_release_allowed=false",
-  "recovery_witness_state=ReadyForProvisioning",
-  "api_provisioning_allowed=true",
-  "domain_security_state=SolvedVerified",
-  "domain_hardening_preflight=SolvedVerified",
-  "static_website_public=true",
-  "product_runtime_release=false",
-  "api_gateway_public=true",
-  "runtime_claims_allowed=false",
-  "domain_hardening_mutation_allowed=true",
-  "raw_secret_values=not_recorded",
-  "private_recovery_values=not_read",
-  "STATUS:",
+  { id: "title", text: "Release Readiness Summary" },
+  { id: "website_static_deployment_integrity", text: "website_static_deployment_integrity=AwaitingEvidence" },
+  { id: "live_status_manifest", text: "live_status_manifest=Pass" },
+  { id: "local_status_manifest_match", text: "local_status_manifest_match=AwaitingEvidence" },
+  { id: "api_exposure_state", text: "api_exposure_state=SolvedVerified" },
+  { id: "api_dns_publication_allowed", text: "api_dns_publication_allowed=true" },
+  { id: "api_production_readiness_state", text: "api_production_readiness_state=ReadyForDns" },
+  { id: "product_runtime_release_witness", text: "product_runtime_release_witness=AwaitingEvidence" },
+  { id: "product_runtime_claims_allowed", text: "product_runtime_claims_allowed=false" },
+  { id: "public_product_release_allowed", text: "public_product_release_allowed=false" },
+  { id: "recovery_witness_state", text: "recovery_witness_state=ReadyForProvisioning" },
+  { id: "api_provisioning_allowed", text: "api_provisioning_allowed=true" },
+  { id: "domain_security_state", text: "domain_security_state=SolvedVerified" },
+  { id: "domain_hardening_preflight", text: "domain_hardening_preflight=SolvedVerified" },
+  { id: "static_website_public", text: "static_website_public=true" },
+  { id: "product_runtime_release", text: "product_runtime_release=false" },
+  { id: "api_gateway_public", text: "api_gateway_public=true" },
+  { id: "runtime_claims_allowed", text: "runtime_claims_allowed=false" },
+  { id: "domain_hardening_mutation_allowed", text: "domain_hardening_mutation_allowed=true" },
+  { id: "raw_secret_values", text: "raw_secret_values=not_recorded" },
+  { id: "private_recovery_values", text: "private_recovery_values=not_read" },
+  { id: "status_block", text: "STATUS:" },
 ];
 
 const reporterMirrorKeys = [
@@ -56,6 +56,30 @@ const reporterMirrorKeys = [
   "api_provisioning_allowed",
   "domain_hardening_preflight",
 ];
+
+const publicReleaseReadinessAllowedScalars = new Set([
+  "AwaitingEvidence",
+  "Blocked",
+  "GovernanceBlocked",
+  "Pass",
+  "Ready",
+  "ReadyForDns",
+  "ReadyForProvisioning",
+  "SolvedVerified",
+  "false",
+  "missing",
+  "not_read",
+  "not_recorded",
+  "true",
+]);
+
+function publicReleaseReadinessScalarLabel(value) {
+  if (value === undefined || value === null || value === "") return "missing";
+  const scalar = String(value);
+  if (publicReleaseReadinessAllowedScalars.has(scalar)) return scalar;
+  if (/^\d+$/.test(scalar)) return "number";
+  return "redacted_value";
+}
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
@@ -74,7 +98,7 @@ export function validateReleaseReadinessSummaryEvidence(evidence) {
   const findings = [];
 
   for (const term of requiredSummaryTerms) {
-    if (!evidence.summary.includes(term)) findings.push(`required_summary_term_missing:${term}`);
+    if (!evidence.summary.includes(term.text)) findings.push(`required_summary_term_missing:${term.id}`);
   }
 
   findings.push(...scanForbiddenEvidencePatterns("releaseReadinessSummary", evidence.summary));
@@ -83,7 +107,7 @@ export function validateReleaseReadinessSummaryEvidence(evidence) {
     const summaryValue = lineValue(evidence.summary, key);
     const reporterValue = lineValue(evidence.opsNextReport, key);
     if (summaryValue !== reporterValue) {
-      findings.push(`ops_report_mirror_mismatch:${key}:${summaryValue || "missing"}:${reporterValue || "missing"}`);
+      findings.push(`ops_report_mirror_mismatch:${key}:${publicReleaseReadinessScalarLabel(summaryValue)}:${publicReleaseReadinessScalarLabel(reporterValue)}`);
     }
   }
 

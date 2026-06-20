@@ -132,7 +132,7 @@ function testSyntheticMissingProductClaimDenialFailsClosed() {
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.productRuntimeClaimsAllowed, true);
-  assert.match(result.findings.join("\n"), /required_summary_term_missing:product_runtime_claims_allowed=false/);
+  assert.match(result.findings.join("\n"), /required_summary_term_missing:product_runtime_claims_allowed/);
   assert.match(result.findings.join("\n"), /ops_report_mirror_mismatch:product_runtime_claims_allowed:true:false/);
 }
 
@@ -146,6 +146,22 @@ function testSyntheticOpsReportMismatchFailsClosed() {
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicProductReleaseAllowed, false);
   assert.match(result.findings.join("\n"), /ops_report_mirror_mismatch:api_production_readiness_state:ReadyForDns:AwaitingEvidence/);
+}
+
+function testSyntheticUnsafeMirrorValuesUsePublicLabels() {
+  const evidence = validEvidence({
+    opsNextReport: validOpsNextReport({ api_production_readiness_state: "private-reporter-state" }),
+    summary: validSummary({ api_production_readiness_state: "private-summary-state" }),
+  });
+  const result = validateReleaseReadinessSummaryEvidence(evidence);
+  const report = formatReleaseReadinessSummaryReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_summary_term_missing:api_production_readiness_state/);
+  assert.match(result.findings.join("\n"), /ops_report_mirror_mismatch:api_production_readiness_state:redacted_value:redacted_value/);
+  assert.doesNotMatch(report, /private-summary-state/);
+  assert.doesNotMatch(report, /private-reporter-state/);
 }
 
 function testSyntheticSecretPatternFailsClosed() {
@@ -178,6 +194,7 @@ function testCliJsonAndUnsupportedArgs() {
 testCurrentReleaseReadinessSummaryPasses();
 testSyntheticMissingProductClaimDenialFailsClosed();
 testSyntheticOpsReportMismatchFailsClosed();
+testSyntheticUnsafeMirrorValuesUsePublicLabels();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 
