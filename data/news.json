@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-20",
+    "updated": "2026-06-21",
     "count": 7
   },
   "items": [
     {
-      "title": "Hyundai buys Boston Dynamics",
-      "url": "https://startupfortune.com/hyundai-takes-full-control-of-boston-dynamics-as-softbank-exits-for-325-million/",
-      "source": "startupfortune.com",
-      "points": 836,
-      "comments": 363,
-      "date": "2026-06-19"
+      "title": "Loupe – A iOS app that raises awareness about what native apps can see",
+      "url": "https://github.com/mysk-research/loupe",
+      "source": "github.com",
+      "points": 324,
+      "comments": 122,
+      "date": "2026-06-20"
     },
     {
-      "title": "Project Valhalla, Explained: How a Decade of Work Arrives in JDK 28",
-      "url": "https://www.jvm-weekly.com/p/project-valhalla-explained-how-a",
-      "source": "jvm-weekly.com",
-      "points": 596,
-      "comments": 373,
-      "date": "2026-06-19"
+      "title": "SMPTE Makes Its Standards Freely Accessible",
+      "url": "https://www.smpte.org/blog/smpte-makes-its-standards-freely-accessible-openingstandards-library-to-the-global-media-technology-community",
+      "source": "smpte.org",
+      "points": 266,
+      "comments": 86,
+      "date": "2026-06-20"
     },
     {
-      "title": "There are no instances in ATProto",
-      "url": "https://overreacted.io/there-are-no-instances-in-atproto/",
-      "source": "overreacted.io",
-      "points": 454,
-      "comments": 228,
-      "date": "2026-06-19"
+      "title": "DOS Game \"F-15 Strike Eagle II\" reversing project needs DOS test pilots",
+      "url": "https://neuviemeporte.github.io/f15-se2/2026/06/20/needyou.html",
+      "source": "neuviemeporte.github.io",
+      "points": 259,
+      "comments": 68,
+      "date": "2026-06-20"
     },
     {
-      "title": "The AirPods Effect",
-      "url": "https://www.theescapenewsletter.com/p/the-airpods-effect",
-      "source": "theescapenewsletter.com",
-      "points": 414,
-      "comments": 722,
-      "date": "2026-06-18"
+      "title": "Renting a sewing machine from the library",
+      "url": "https://www.bbc.com/future/article/20260618-the-weird-and-wonderful-libraries-of-finland",
+      "source": "bbc.com",
+      "points": 244,
+      "comments": 136,
+      "date": "2026-06-20"
     },
     {
-      "title": "Bobby Prince, composer for Doom, Wolfenstein 3D, and Duke Nukem 3D, has died",
-      "url": "https://www.legacy.com/legacy/robert-bobby-prince-lll",
-      "source": "legacy.com",
-      "points": 381,
-      "comments": 42,
-      "date": "2026-06-19"
+      "title": "Slow breathing modulates brain function and risk behavior",
+      "url": "https://www.cell.com/neuron/fulltext/S0896-6273(26)00339-9",
+      "source": "cell.com",
+      "points": 224,
+      "comments": 59,
+      "date": "2026-06-20"
     },
     {
-      "title": "Court Records Should Be Free",
-      "url": "https://www.eff.org/deeplinks/2026/06/court-records-should-be-free",
-      "source": "eff.org",
-      "points": 379,
-      "comments": 82,
-      "date": "2026-06-19"
+      "title": "Developers don't understand CORS (2019)",
+      "url": "https://fosterelli.co/developers-dont-understand-cors",
+      "source": "fosterelli.co",
+      "points": 223,
+      "comments": 133,
+      "date": "2026-06-21"
     },
     {
-      "title": "How many of the 170k English words do you know?",
-      "url": "https://vocabowl-870366514258.us-west1.run.app/",
-      "source": "vocabowl-870366514258.us-west1.run.app",
-      "points": 378,
-      "comments": 465,
-      "date": "2026-06-19"
+      "title": "Your brain was never designed for this much bad news",
+      "url": "https://www.sciencedaily.com/releases/2026/06/260614012006.htm",
+      "source": "sciencedaily.com",
+      "points": 223,
+      "comments": 166,
+      "date": "2026-06-21"
     }
   ]
 }
