@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-21",
+    "updated": "2026-06-22",
     "count": 7
   },
   "items": [
     {
-      "title": "Loupe – A iOS app that raises awareness about what native apps can see",
-      "url": "https://github.com/mysk-research/loupe",
-      "source": "github.com",
-      "points": 324,
-      "comments": 122,
-      "date": "2026-06-20"
-    },
-    {
-      "title": "SMPTE Makes Its Standards Freely Accessible",
-      "url": "https://www.smpte.org/blog/smpte-makes-its-standards-freely-accessible-openingstandards-library-to-the-global-media-technology-community",
-      "source": "smpte.org",
-      "points": 266,
-      "comments": 86,
-      "date": "2026-06-20"
-    },
-    {
-      "title": "DOS Game \"F-15 Strike Eagle II\" reversing project needs DOS test pilots",
-      "url": "https://neuviemeporte.github.io/f15-se2/2026/06/20/needyou.html",
-      "source": "neuviemeporte.github.io",
-      "points": 259,
-      "comments": 68,
-      "date": "2026-06-20"
-    },
-    {
-      "title": "Renting a sewing machine from the library",
-      "url": "https://www.bbc.com/future/article/20260618-the-weird-and-wonderful-libraries-of-finland",
-      "source": "bbc.com",
-      "points": 244,
-      "comments": 136,
-      "date": "2026-06-20"
-    },
-    {
-      "title": "Slow breathing modulates brain function and risk behavior",
-      "url": "https://www.cell.com/neuron/fulltext/S0896-6273(26)00339-9",
-      "source": "cell.com",
-      "points": 224,
-      "comments": 59,
-      "date": "2026-06-20"
-    },
-    {
-      "title": "Developers don't understand CORS (2019)",
-      "url": "https://fosterelli.co/developers-dont-understand-cors",
-      "source": "fosterelli.co",
-      "points": 223,
-      "comments": 133,
+      "title": "Did my old job only exist because of fraud?",
+      "url": "https://david.newgas.net/did-my-old-job-only-exist-because-of-fraud/",
+      "source": "david.newgas.net",
+      "points": 674,
+      "comments": 294,
       "date": "2026-06-21"
     },
     {
-      "title": "Your brain was never designed for this much bad news",
-      "url": "https://www.sciencedaily.com/releases/2026/06/260614012006.htm",
-      "source": "sciencedaily.com",
-      "points": 223,
-      "comments": 166,
+      "title": "Deno Desktop",
+      "url": "https://docs.deno.com/runtime/desktop/",
+      "source": "docs.deno.com",
+      "points": 662,
+      "comments": 249,
+      "date": "2026-06-22"
+    },
+    {
+      "title": "Help I accidentally a wigglegram",
+      "url": "https://lmao.center/blog/wiggle-accidents/",
+      "source": "lmao.center",
+      "points": 363,
+      "comments": 77,
+      "date": "2026-06-20"
+    },
+    {
+      "title": "Danish privacy activist Lars Andersen raided by police",
+      "url": "https://twitter.com/LarsAnders1620/status/2068208864747540516#m",
+      "source": "twitter.com",
+      "points": 321,
+      "comments": 275,
+      "date": "2026-06-22"
+    },
+    {
+      "title": "There is minimal downside to switching to open models",
+      "url": "https://www.marble.onl/posts/cancel_claude.html",
+      "source": "marble.onl",
+      "points": 292,
+      "comments": 247,
       "date": "2026-06-21"
+    },
+    {
+      "title": "Everything is logarithms",
+      "url": "https://alexkritchevsky.com/2026/05/25/everything-is-logarithms.html",
+      "source": "alexkritchevsky.com",
+      "points": 254,
+      "comments": 54,
+      "date": "2026-06-21"
+    },
+    {
+      "title": "GLM 5.2 vs. Opus",
+      "url": "https://techstackups.com/comparisons/glm-5.2-vs-opus/",
+      "source": "techstackups.com",
+      "points": 247,
+      "comments": 191,
+      "date": "2026-06-22"
     }
   ]
 }
