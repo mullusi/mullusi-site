@@ -3,64 +3,64 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-22",
+    "updated": "2026-06-23",
     "count": 7
   },
   "items": [
     {
-      "title": "Did my old job only exist because of fraud?",
-      "url": "https://david.newgas.net/did-my-old-job-only-exist-because-of-fraud/",
-      "source": "david.newgas.net",
-      "points": 674,
-      "comments": 294,
-      "date": "2026-06-21"
-    },
-    {
-      "title": "Deno Desktop",
-      "url": "https://docs.deno.com/runtime/desktop/",
-      "source": "docs.deno.com",
-      "points": 662,
-      "comments": 249,
+      "title": "Steam Machine launches today",
+      "url": "https://store.steampowered.com/news/group/45479024/view/685257114654870245",
+      "source": "store.steampowered.com",
+      "points": 1643,
+      "comments": 1411,
       "date": "2026-06-22"
     },
     {
       "title": "Help I accidentally a wigglegram",
       "url": "https://lmao.center/blog/wiggle-accidents/",
       "source": "lmao.center",
-      "points": 363,
-      "comments": 77,
+      "points": 536,
+      "comments": 124,
       "date": "2026-06-20"
     },
     {
-      "title": "Danish privacy activist Lars Andersen raided by police",
-      "url": "https://twitter.com/LarsAnders1620/status/2068208864747540516#m",
-      "source": "twitter.com",
-      "points": 321,
-      "comments": 275,
+      "title": "Canada plans 'nuclear renaissance' with up to 10 reactors built by 2040",
+      "url": "https://www.cbc.ca/news/politics/federal-nuclear-strategy-9.7244509",
+      "source": "cbc.ca",
+      "points": 499,
+      "comments": 343,
       "date": "2026-06-22"
     },
     {
-      "title": "There is minimal downside to switching to open models",
-      "url": "https://www.marble.onl/posts/cancel_claude.html",
-      "source": "marble.onl",
-      "points": 292,
-      "comments": 247,
+      "title": "GLM-5.2 – How to Run Locally",
+      "url": "https://unsloth.ai/docs/models/glm-5.2",
+      "source": "unsloth.ai",
+      "points": 419,
+      "comments": 184,
+      "date": "2026-06-22"
+    },
+    {
+      "title": "Polymarket has flooded social media with deceptive videos by paid creators",
+      "url": "https://www.wsj.com/business/media/polymarket-social-media-bets-prediction-market-441cdeb5?st=HhTZY2",
+      "source": "wsj.com",
+      "points": 349,
+      "comments": 263,
       "date": "2026-06-21"
     },
     {
-      "title": "Everything is logarithms",
-      "url": "https://alexkritchevsky.com/2026/05/25/everything-is-logarithms.html",
-      "source": "alexkritchevsky.com",
-      "points": 254,
-      "comments": 54,
-      "date": "2026-06-21"
+      "title": "My Mathematical Regression",
+      "url": "https://blog.dahl.dev/posts/my-mathematical-regression/",
+      "source": "blog.dahl.dev",
+      "points": 315,
+      "comments": 116,
+      "date": "2026-06-19"
     },
     {
-      "title": "GLM 5.2 vs. Opus",
-      "url": "https://techstackups.com/comparisons/glm-5.2-vs-opus/",
-      "source": "techstackups.com",
-      "points": 247,
-      "comments": 191,
+      "title": "Moebius: 0.2B image inpainting model with 10B-level performance",
+      "url": "https://hustvl.github.io/Moebius/",
+      "source": "hustvl.github.io",
+      "points": 300,
+      "comments": 71,
       "date": "2026-06-22"
     }
   ]
