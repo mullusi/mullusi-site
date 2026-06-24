@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-23",
+    "updated": "2026-06-24",
     "count": 7
   },
   "items": [
     {
-      "title": "Steam Machine launches today",
-      "url": "https://store.steampowered.com/news/group/45479024/view/685257114654870245",
-      "source": "store.steampowered.com",
-      "points": 1643,
-      "comments": 1411,
-      "date": "2026-06-22"
+      "title": "FUTO Swipe – A new swipe typing model",
+      "url": "https://swipe.futo.tech/",
+      "source": "swipe.futo.tech",
+      "points": 569,
+      "comments": 191,
+      "date": "2026-06-23"
     },
     {
-      "title": "Help I accidentally a wigglegram",
-      "url": "https://lmao.center/blog/wiggle-accidents/",
-      "source": "lmao.center",
-      "points": 536,
-      "comments": 124,
-      "date": "2026-06-20"
+      "title": "Fired by Google for creating the Google workspace CLI",
+      "url": "https://twitter.com/JPoehnelt/status/2069482265953087602",
+      "source": "twitter.com",
+      "points": 561,
+      "comments": 333,
+      "date": "2026-06-23"
     },
     {
-      "title": "Canada plans 'nuclear renaissance' with up to 10 reactors built by 2040",
-      "url": "https://www.cbc.ca/news/politics/federal-nuclear-strategy-9.7244509",
-      "source": "cbc.ca",
-      "points": 499,
-      "comments": 343,
-      "date": "2026-06-22"
+      "title": "Jerry's Map",
+      "url": "https://news.ycombinator.com/item?id=48649435",
+      "source": "news.ycombinator.com",
+      "points": 488,
+      "comments": 55,
+      "date": "2026-06-23"
     },
     {
-      "title": "GLM-5.2 – How to Run Locally",
-      "url": "https://unsloth.ai/docs/models/glm-5.2",
-      "source": "unsloth.ai",
-      "points": 419,
-      "comments": 184,
-      "date": "2026-06-22"
+      "title": "In memory of the man who put red and green squiggles under words",
+      "url": "https://devblogs.microsoft.com/oldnewthing/20260622-00/?p=112451",
+      "source": "devblogs.microsoft.com",
+      "points": 417,
+      "comments": 68,
+      "date": "2026-06-23"
     },
     {
-      "title": "Polymarket has flooded social media with deceptive videos by paid creators",
-      "url": "https://www.wsj.com/business/media/polymarket-social-media-bets-prediction-market-441cdeb5?st=HhTZY2",
-      "source": "wsj.com",
-      "points": 349,
-      "comments": 263,
+      "title": "Show HN: TikZ Editor – WYSIWYG editor for figures in LaTeX",
+      "url": "https://tikz.dev/editor/",
+      "source": "tikz.dev",
+      "points": 401,
+      "comments": 73,
+      "date": "2026-06-23"
+    },
+    {
+      "title": "Printing Gaussian Splats",
+      "url": "https://www.patreon.com/DanyBittel/posts/printing-splats-161333338",
+      "source": "patreon.com",
+      "points": 321,
+      "comments": 36,
       "date": "2026-06-21"
     },
     {
-      "title": "My Mathematical Regression",
-      "url": "https://blog.dahl.dev/posts/my-mathematical-regression/",
-      "source": "blog.dahl.dev",
-      "points": 315,
-      "comments": 116,
-      "date": "2026-06-19"
-    },
-    {
-      "title": "Moebius: 0.2B image inpainting model with 10B-level performance",
-      "url": "https://hustvl.github.io/Moebius/",
-      "source": "hustvl.github.io",
-      "points": 300,
-      "comments": 71,
-      "date": "2026-06-22"
+      "title": "The worthlessness of Vitamin D is mildly exaggerated",
+      "url": "https://dynomight.net/vitamin-d/",
+      "source": "dynomight.net",
+      "points": 307,
+      "comments": 223,
+      "date": "2026-06-23"
     }
   ]
 }
