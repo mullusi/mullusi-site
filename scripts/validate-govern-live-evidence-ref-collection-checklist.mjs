@@ -7,6 +7,7 @@ Test contract: run node scripts/test-validate-govern-live-evidence-ref-collectio
 */
 
 import fs from "node:fs";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
@@ -102,6 +103,21 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
+function trackedLocalIntakeFiles() {
+  const result = spawnSync("git", ["ls-files", "--", "ops/*.local.json"], {
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
+  if (result.status !== 0) return { files: [], finding: "git_ls_files_failed" };
+  return {
+    files: result.stdout
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean),
+    finding: "",
+  };
+}
+
 export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklist, options = {}) {
   const findings = [];
 
@@ -133,6 +149,12 @@ export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklis
     }
   }
 
+  if (Array.isArray(options.trackedLocalIntakeFiles)) {
+    if (options.trackedLocalIntakeFiles.length > 0) {
+      findings.push("local_intake_file_must_not_be_tracked");
+    }
+  }
+
   return {
     checklistState: findings.length === 0 ? "Ready" : "Blocked",
     findingCount: findings.length,
@@ -148,8 +170,11 @@ export function validateGovernLiveEvidenceRefCollectionChecklist(relativePath = 
   if (readResult.finding) return blockedResult(readResult.finding);
   const gitignoreResult = readUtf8Result(".gitignore");
   if (gitignoreResult.finding) return blockedResult("gitignore_unreadable");
+  const trackedFiles = trackedLocalIntakeFiles();
+  if (trackedFiles.finding) return blockedResult(trackedFiles.finding);
   return validateGovernLiveEvidenceRefCollectionChecklistContent(readResult.content, {
     gitignoreContent: gitignoreResult.content,
+    trackedLocalIntakeFiles: trackedFiles.files,
   });
 }
 
