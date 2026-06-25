@@ -47,7 +47,7 @@ function testValidatorCarriesDoctrineWordingGate() {
     "status_website_publication_scope_missing",
     "homepage_last_updated_datetime_mismatch",
     "i18n_last_updated_am_mojibake",
-    "Mullusi is preparing a governed foundation for high-risk symbolic work.",
+    "Mullusi builds symbolic intelligence work systems for teams that need planning, approvals, evidence, and controlled execution in one operating layer.",
     "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
     "Static website published; product runtime release witnesses AwaitingEvidence.",
     "Mullusi Contact - Foundation Questions",
@@ -76,7 +76,7 @@ function testPublicSurfacesCarryHardenedDoctrineTerms() {
     [
       "index.html",
       [
-        "Mullusi is preparing a governed foundation for high-risk symbolic work.",
+        "Mullusi builds symbolic intelligence work systems for teams that need planning, approvals, evidence, and controlled execution in one operating layer.",
         "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
         "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
         "output-derived actions become proposals first",
@@ -167,7 +167,7 @@ function testDoctrineNavigationIsTranslated() {
   assert.ok(i18n.strings["nav.doctrine"].am.length > 0);
   assert.equal(
     i18n.strings["hero.title"].en,
-    "Mullusi is preparing a governed foundation for high-risk symbolic work.",
+    "Mullusi builds symbolic intelligence work systems for teams that need review, records, and controlled execution.",
   );
 }
 
