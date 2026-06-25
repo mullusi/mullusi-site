@@ -36,6 +36,7 @@ function validChecklist() {
     "ready_for_live_evidence=false",
     "public_write_route_allowed=false",
     "intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json",
+    "local_intake_working_file=ops/mullu-govern-live-evidence-ref-intake.local.json",
     "intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
     "static_website_integrity=SolvedVerified",
     "api_exposure_probe=2026-06-25:SolvedVerified",
@@ -106,6 +107,16 @@ function testMissingChecklistTermsUsePublicLabels() {
   assert.doesNotMatch(report, /--require-complete/);
 }
 
+function testMissingLocalIntakeIgnoreFailsClosed() {
+  const result = validateGovernLiveEvidenceRefCollectionChecklistContent(validChecklist(), {
+    gitignoreContent: "",
+  });
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /required_gitignore_term_missing:local_intake_json/);
+}
+
 function testSyntheticSecretPatternFailsClosed() {
   const checklist = `${validChecklist()}\nAuthorization: Bearer abcdefghijklmnopqrstuvwxyz123456`;
   const result = validateGovernLiveEvidenceRefCollectionChecklistContent(checklist);
@@ -151,6 +162,7 @@ testCurrentChecklistPasses();
 testSyntheticMissingApprovalRowFailsClosed();
 testSyntheticMissingStopConditionFailsClosed();
 testMissingChecklistTermsUsePublicLabels();
+testMissingLocalIntakeIgnoreFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
