@@ -16,7 +16,7 @@ no_gateway_runtime_evidence -> no_api_dns
 The public website, docs, email, DNSSEC, and Cloudflare baseline must remain
 untouched while this gate is executed.
 
-Observed on 2026-06-14:
+Observed on 2026-06-25:
 
 ```text
 command=node scripts/check-api-production-readiness.mjs --require-ready --production-image-published --runtime-host-ready --managed-postgres-ready --schema-applied --production-secrets-stored --deploy-env-ready --release-preflight-ready --persistence-ready --host-firewall-configured --tls-certificate-ready --rollback-path-defined --private-runtime-witness-ready --dns-authority-ready

@@ -33,7 +33,7 @@ dns_mutation=none
 runtime_mutation=none
 secret_rotation_required=false
 provider_values_recorded=false
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 The public claim registry is generated from product manifests, proof records,

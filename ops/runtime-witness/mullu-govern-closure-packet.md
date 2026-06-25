@@ -103,7 +103,7 @@ remains blocked until every live/effect-bearing evidence ref is supplied.
 
 ## Public-Safe Live Observations
 
-Observed from public `https://api.mullusi.com` probes on 2026-06-14:
+Observed from public `https://api.mullusi.com` probes on 2026-06-25:
 
 | Endpoint | HTTP state | Public-safe result |
 | --- | --- | --- |

@@ -31,7 +31,7 @@ dns_mutation=none
 runtime_mutation=none
 secret_rotation_required=false
 public_beta_claim_allowed=false
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 The manifest already contains the allowed promotion path:

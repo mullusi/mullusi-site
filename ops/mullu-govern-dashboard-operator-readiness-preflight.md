@@ -32,7 +32,7 @@ runtime_mutation=none
 dashboard_auth_mutation=none
 secret_rotation_required=false
 provider_dashboard_values_recorded=false
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 The product manifest reserves the operator dashboard route, and the proof

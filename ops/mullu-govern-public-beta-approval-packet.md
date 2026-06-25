@@ -28,7 +28,7 @@ product_status_target=public-beta
 current_decision=KeepBlocked
 decision_record=ops/mullu-govern-evaluate-write-route-decision.md
 runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 The public API gateway is verified, but this packet does not approve the
