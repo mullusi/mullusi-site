@@ -34,10 +34,14 @@ product_status_promotion_allowed=false
 public_claim_update_allowed=false
 runtime_witness_update_allowed=false
 provider_values_recorded=false
+static_website_integrity=SolvedVerified
+api_exposure_probe=2026-06-25:SolvedVerified
+complete_mode_current_state=GovernanceBlocked
+complete_mode_blocker_count=8
 operator_runbook=ops/mullu-govern-live-evidence-operator-runbook.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 The repository-local preflights are organized, but live evidence collection is
@@ -76,6 +80,28 @@ dashboard_operator_readiness_ref=missing
 api_contract_test_ref=missing
 public_claim_update_ref=missing
 runtime_witness_ref=missing
+```
+
+Complete-mode validation currently blocks on those same eight refs:
+
+```text
+command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
+govern_live_evidence_ref_intake=GovernanceBlocked
+proof_state=Fail
+ready_for_live_evidence=false
+require_complete=true
+missing_approval_input_count=8
+finding=approval_ref_required:operator_approval_ref
+finding=approval_ref_required:product_status_promotion_ref
+finding=approval_ref_required:privacy_activation_ref
+finding=approval_ref_required:retention_activation_ref
+finding=approval_ref_required:dashboard_operator_readiness_ref
+finding=approval_ref_required:api_contract_test_ref
+finding=approval_ref_required:public_claim_update_ref
+finding=approval_ref_required:runtime_witness_ref
+secret_values=not_read
+provider_values=not_read
+raw_payloads=not_read
 ```
 
 Rollback and support evidence are already present in the approval packet, but

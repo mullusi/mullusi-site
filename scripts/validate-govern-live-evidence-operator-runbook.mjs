@@ -62,10 +62,21 @@ const requiredRunbookTerms = [
     id: "safe_local_command",
     text: "safe_local_command=node scripts/validate-govern-live-evidence-sequence-preflight.mjs",
   },
+  { id: "static_website_integrity", text: "static_website_integrity=SolvedVerified" },
+  { id: "api_exposure_probe", text: "api_exposure_probe=2026-06-25:SolvedVerified" },
+  { id: "complete_mode_current_state", text: "complete_mode_current_state=GovernanceBlocked" },
+  { id: "complete_mode_blocker_count", text: "complete_mode_blocker_count=8" },
+  {
+    id: "complete_mode_command",
+    text: "command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
+  },
+  { id: "complete_mode_requires_operator_ref", text: "finding=approval_ref_required:operator_approval_ref" },
+  { id: "complete_mode_requires_runtime_ref", text: "finding=approval_ref_required:runtime_witness_ref" },
   { id: "secret_values_allowed", text: "secret_values_allowed=false" },
   { id: "raw_request_bodies_allowed", text: "raw_request_bodies_allowed=false" },
   { id: "raw_response_bodies_allowed", text: "raw_response_bodies_allowed=false" },
   { id: "provider_values_allowed", text: "provider_values_allowed=false" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-25" },
   { id: "status_block", text: "STATUS:" },
 ];
 
