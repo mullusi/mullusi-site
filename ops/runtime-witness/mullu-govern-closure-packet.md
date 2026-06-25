@@ -27,8 +27,48 @@ runtime_witness_closure_allowed=false
 product_claims_allowed=false
 write_route_decision=ops/mullu-govern-evaluate-write-route-decision.md
 public_beta_approval_packet=ops/mullu-govern-public-beta-approval-packet.md
-last_reviewed=2026-06-14
+static_deployment_witness=ops/live-deployment-integrity-witness.md
+static_website_integrity=SolvedVerified
+api_exposure_probe=2026-06-25:SolvedVerified
+last_reviewed=2026-06-25
 ```
+
+## 2026-06-25 Review Update
+
+The static website deployment witness is closed:
+
+```text
+static_deployment_witness=ops/live-deployment-integrity-witness.md
+static_website_integrity=SolvedVerified
+static_website_integrity_source=mullusi-site#240
+```
+
+This removes the static website as a blocker for preparing product runtime
+evidence. It does not promote Mullu Govern from `limited-preview`, publish
+`POST /v1/govern/evaluate`, activate privacy or retention policy, claim
+dashboard readiness, or update `ops/runtime-witness/registry.json`.
+
+Public-safe API gateway exposure was refreshed on 2026-06-25:
+
+```text
+command=node scripts/check-api-exposure-gate.mjs --live --require-ready
+api_exposure_state=SolvedVerified
+verdict=SolvedVerified
+proof_state=Pass
+api_dns_publication_allowed=true
+api_runtime_public_state=SolvedVerified
+dns_probe_state=Present
+https_probe_state=Reachable
+finding=none
+soft_finding=none
+blocker=none
+raw_host_values=not_recorded
+secret_values=not_read
+private_recovery_values=not_read
+```
+
+The gateway evidence confirms transport reachability only. Product runtime
+closure still requires the approval-bound evidence refs listed below.
 
 The shared API gateway is live and witnessed. The Mullu Govern product runtime
 witness is not closed because closure would require a product-status promotion
@@ -86,6 +126,7 @@ The registry closure rule requires all of the following:
 
 | Gate | Required state | Current state |
 | --- | --- | --- |
+| Static website integrity | SolvedVerified before product runtime evidence is prepared | SolvedVerified via `ops/live-deployment-integrity-witness.md` |
 | Product manifest status | public-beta or production before public exposure | preflight Ready; current limited-preview |
 | Runtime witness proofState | SolvedVerified | AwaitingEvidence |
 | Runtime state | public-witness-ready or production-ready | private-only |
@@ -131,11 +172,13 @@ blocker=runtime_witness_registry_not_closed
 6. Follow `ops/mullu-govern-live-evidence-sequence-preflight.md` before any
    live evidence collection or product status update.
 7. Record bounded public claim update evidence before emitting public-beta copy.
-8. Only after those pass, update `ops/runtime-witness/registry.json` in a
+8. Fill the ignored local intake file with the eight public-safe evidence refs
+   and validate it with `node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete`.
+9. Only after those pass, update `ops/runtime-witness/registry.json` in a
    separate PR and rerun `node scripts/validate-runtime-witnesses.mjs`.
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
+  Self-attested invariants: static website witness closed but not reused as product runtime evidence, API gateway witness separated from product runtime witness, product status promotion not bypassed, public-safe evidence only, no raw secret or host values recorded
   Open issues: public-beta approval evidence, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator readiness, public claim update evidence, product-status promotion approval
-  Next action: keep the Mullu Govern public evaluate write route blocked unless the approval packet closes every gate
+  Next action: complete and validate the ignored live evidence ref intake before any approval-packet PR
