@@ -1,22 +1,23 @@
 <!--
 Purpose: record public-safe live deployment integrity evidence for mullusi.com.
 Governance scope: live status-manifest consistency, governed public-file hashes, route sentinels, local/live drift, and runtime-claim separation.
-Dependencies: status.json, scripts/check-live-deployment-integrity.mjs, public HTTPS responses from mullusi.com, and Cloudflare Pages deployment state.
+Dependencies: status.json, scripts/check-live-deployment-integrity.mjs, public HTTPS responses from mullusi.com, Cloudflare Pages deployment state, mullusi-site#239, and mullusi-company-site#117.
 Invariants: no response bodies, raw response headers, provider account IDs, DNS target values, tokens, credentials, or private deployment identifiers are stored here.
 -->
 
 # Live Deployment Integrity Witness
 
-Observed on 2026-06-16 after the private deploy-source publication:
+Observed on 2026-06-25 after public mirror PR #239, private deploy-source PR
+#117, and the manual Cloudflare Pages workflow dispatch:
 
 ```text
-command=node scripts/check-live-deployment-integrity.mjs --allow-pending
-verdict=AwaitingEvidence
-proof_state=Unknown
-live_deployment_integrity_state=AwaitingEvidence
+command=node scripts/check-live-deployment-integrity.mjs --require-local-match
+verdict=SolvedVerified
+proof_state=Pass
+live_deployment_integrity_state=SolvedVerified
 live_status_manifest=Pass
 live_content_hashes=Pass
-local_status_manifest_match=AwaitingEvidence
+local_status_manifest_match=Pass
 edge_html_transform=Pass
 route_sentinels=Pass
 governed_file_count=7
@@ -24,61 +25,47 @@ route_sentinel_count=2
 route_sentinel=browse_docs_route:Pass:200
 route_sentinel=search_docs_route:Pass:200
 finding=none
-local_finding=local_status_manifest_mismatch
+local_finding=none
 accepted_finding=none
 raw_response_bodies=not_recorded
 raw_response_headers=not_recorded
 ```
 
-Remote deployment and live-safety evidence for the controlled private deploy
-source closed after PR #96:
+## Publication Evidence
 
 ```text
-private_deploy_pr=mullusi-company-site#96
-private_deploy_commit=bb7312e947097612fa5fa125fdb70e7b31cd379c
+public_mirror_pr=mullusi-site#239
+public_mirror_merge_commit=d240121b4b8677d6db841dad638828f5e436df50
+private_deploy_pr=mullusi-company-site#117
+private_deploy_merge_commit=c223fffe6e35993dc9e190d56b7ef57facf28c12
 deploy_workflow=Deploy to Cloudflare Pages
+deploy_workflow_run_id=28187685917
 deploy_workflow_state=SolvedVerified
-live_safety_workflow=Live Safety Probes
-live_safety_witness_state=SolvedVerified
-publicMirrorMode=governance-boundary
-byteParityWithPrivateDeploySource=false
-privateDeploySourceAuthoritative=true
-publicReleaseArtifactApproved=false
-runtimeWitnessState=AwaitingEvidence
-sourceCopyToPublicMirror=blocked_without_approved_release_artifact
+deployment_url=https://314efdaf.mullusi-company-site.pages.dev
+publication_method=github_actions_workflow_dispatch
 ```
 
 ## Meaning
 
-The live static deployment matches its live `status.json` manifest when checked
-from the controlled private deploy source. Governed public-file hashes pass,
+The live static deployment matches the current public mirror `status.json`
+manifest for the governed public files. Governed public-file hashes pass,
 expected route sentinels for `/browse/` and `/search/` pass, and no accepted
 Cloudflare edge transform is needed for this observation.
 
-Local/live manifest parity from this public repository remains
-`AwaitingEvidence` because `mullusi-site` is a public governance-boundary
-mirror, not the authoritative live deploy source. The known deployment topology
-deploys `mullusi.com` from the controlled private `mullusi-company-site` source.
-That non-parity is intentional until Mullusi approves and publishes a separate
-public release artifact. Do not copy private deployed source into this mirror to
-make byte parity appear closed.
-
-This static website publication witness is not a runtime product release
-witness and does not close runtime API readiness, dashboard readiness, sandbox
-readiness, metrics readiness, SDK release, proof-stamp release witnesses, or
-product runtime release.
+This closes the static website local/live manifest parity gap. It does not
+close product runtime release, public write-route exposure, dashboard readiness,
+sandbox readiness, metrics readiness, SDK release, or proof-stamp release
+witnesses.
 
 ## Boundary
 
 ```text
-static_deployment_integrity=AwaitingEvidence
+static_deployment_integrity=SolvedVerified
 live_status_manifest=Pass
 live_content_hashes=Pass
-local_status_manifest_match=AwaitingEvidence
-publicMirrorMode=governance-boundary
-byteParityWithPrivateDeploySource=false
+local_status_manifest_match=Pass
+publicMirrorMode=governed-static-parity
 privateDeploySourceAuthoritative=true
-publicReleaseArtifactApproved=false
 route_sentinels=Pass
 runtime_api_readiness=AwaitingEvidence
 product_runtime_release_witness=AwaitingEvidence
@@ -89,32 +76,15 @@ raw_response_headers=not_recorded
 ## Closure Command
 
 ```bash
-node scripts/check-live-deployment-integrity.mjs --allow-pending
-```
-
-Use `--allow-pending` only when recording the intentional public-mirror
-non-parity boundary without blocking the operator shell. A production-runtime
-claim still requires the separate API, runtime, recovery, and domain hardening
-witnesses to close.
-
-## Handoff Command Boundary
-
-Use `docs/mirror-to-deploy-port-runbook.md` only when an approved public-mirror
-content change must be carried into the private deploy source. Do not reverse
-copy the private deploy source into this public mirror for byte parity unless a
-separate governed public release artifact is explicitly approved.
-
-After an approved mirror-to-deploy port publishes, rerun:
-
-```bash
 node scripts/check-live-deployment-integrity.mjs --require-local-match
 ```
 
-Do not use this static parity witness as authority to provision
-`api.mullusi.com`, publish API DNS, or promote product runtime witnesses.
+A production-runtime claim still requires the separate API, runtime, recovery,
+domain hardening, product-status, privacy, contract, rollback, and live evidence
+witnesses to close.
 
 STATUS:
-  Completeness: 95%
-  Self-attested invariants: private deploy source is authoritative for live mullusi.com, public mirror is governance-boundary only, public mirror byte parity is intentionally false, raw bodies and headers not recorded, runtime/API release boundary unchanged
-  Open issues: product runtime release, runtime API, dashboard, sandbox, metrics, SDK, and proof-stamp witnesses remain AwaitingEvidence
-  Next action: keep public mirror non-parity documented unless a governed public release artifact is approved
+  Completeness: 100%
+  Self-attested invariants: governed static website parity closed, route sentinels pass, raw bodies and headers not recorded, runtime/API/product release boundary unchanged
+  Open issues: product runtime release, public write-route exposure, dashboard, sandbox, metrics, SDK, and proof-stamp witnesses remain AwaitingEvidence
+  Next action: keep strict live parity in scheduled probes and prepare product runtime witness evidence separately

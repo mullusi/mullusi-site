@@ -23,9 +23,9 @@ const allowedArgs = new Set(["--json"]);
 
 const requiredSummaryTerms = [
   { id: "title", text: "Release Readiness Summary" },
-  { id: "website_static_deployment_integrity", text: "website_static_deployment_integrity=AwaitingEvidence" },
+  { id: "website_static_deployment_integrity", text: "website_static_deployment_integrity=SolvedVerified" },
   { id: "live_status_manifest", text: "live_status_manifest=Pass" },
-  { id: "local_status_manifest_match", text: "local_status_manifest_match=AwaitingEvidence" },
+  { id: "local_status_manifest_match", text: "local_status_manifest_match=Pass" },
   { id: "api_exposure_state", text: "api_exposure_state=SolvedVerified" },
   { id: "api_dns_publication_allowed", text: "api_dns_publication_allowed=true" },
   { id: "api_production_readiness_state", text: "api_production_readiness_state=ReadyForDns" },
@@ -37,6 +37,7 @@ const requiredSummaryTerms = [
   { id: "domain_security_state", text: "domain_security_state=SolvedVerified" },
   { id: "domain_hardening_preflight", text: "domain_hardening_preflight=SolvedVerified" },
   { id: "static_website_public", text: "static_website_public=true" },
+  { id: "static_website_integrity", text: "static_website_integrity=SolvedVerified" },
   { id: "product_runtime_release", text: "product_runtime_release=false" },
   { id: "api_gateway_public", text: "api_gateway_public=true" },
   { id: "runtime_claims_allowed", text: "runtime_claims_allowed=false" },
