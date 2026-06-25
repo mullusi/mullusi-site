@@ -2474,7 +2474,34 @@ html.menu-open body {
 }
 
 #repos {
+  position: relative;
+  overflow: hidden;
   padding-bottom: 58px;
+  background:
+    radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 62%, var(--bg)), var(--bg));
+}
+
+#repos::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.24;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--line-bright) 58%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--line-bright) 58%, transparent) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+}
+
+#repos .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+#repos .sec-head {
+  max-width: 880px;
 }
 
 #roadmap {
@@ -5306,8 +5333,9 @@ html.menu-open body {
   gap: 16px;
   align-items: end;
   margin-bottom: 18px;
-  border: 1px solid var(--line);
+  border: 1px solid color-mix(in srgb, var(--line-bright) 74%, transparent);
   background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-deep) 7%, transparent), transparent 46%),
     linear-gradient(180deg, color-mix(in srgb, var(--panel-field) 72%, transparent), transparent),
     var(--panel-soft);
   padding: 16px;
@@ -5327,7 +5355,9 @@ html.menu-open body {
   width: 100%;
   min-height: 44px;
   border: 1px solid color-mix(in srgb, var(--line-bright) 66%, var(--line));
-  background: var(--bg-raise);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent),
+    var(--bg-raise);
   color: var(--ink);
   padding: 0 14px;
   outline: 0;
@@ -5348,7 +5378,9 @@ html.menu-open body {
 .filter-button {
   min-width: 44px;
   min-height: 44px;
-  background: var(--panel-glass);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 88%, transparent), var(--panel-soft)),
+    var(--panel-glass);
   color: var(--ink-soft);
 }
 
@@ -5361,26 +5393,43 @@ html.menu-open body {
 .repo-stats {
   max-width: none;
   margin-top: 0;
-  margin-bottom: 28px;
-  border: 1px solid var(--line);
-  background: var(--line);
+  margin-bottom: 18px;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 74%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 48%, transparent), color-mix(in srgb, var(--panel-soft) 82%, transparent)),
+    var(--line);
   gap: 1px;
 }
 
 .repo-stats > div {
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 90%, transparent), var(--panel-soft)),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 92%, transparent), var(--panel-soft)),
     var(--panel-glass);
 }
 
+.repo-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 74%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 52%, transparent), color-mix(in srgb, var(--panel-soft) 86%, transparent)),
+    var(--panel-soft);
+  padding: 10px;
+}
+
 .repo-card {
-  min-height: 280px;
+  min-height: 244px;
   position: relative;
   overflow: hidden;
+  border-color: color-mix(in srgb, var(--line-bright) 68%, transparent);
   background:
     linear-gradient(145deg, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent 48%),
     linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 88%, transparent), var(--panel-soft)),
     var(--panel-glass);
+}
+
+.repo-card:only-child {
+  grid-column: 1 / -1;
 }
 
 .repo-card::before {
@@ -5414,8 +5463,10 @@ html.menu-open body {
 
 .repo-name {
   align-self: flex-start;
-  border: 1px solid var(--line);
-  background: var(--panel-field);
+  border: 1px solid color-mix(in srgb, var(--line-bright) 66%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-deep) 8%, transparent), transparent),
+    var(--panel-field);
   color: var(--ink-dim);
   padding: 5px 7px;
   font-family: var(--mono);
@@ -5426,9 +5477,11 @@ html.menu-open body {
 
 .repo-card p {
   flex: 1;
+  border-top: 1px solid var(--line);
   color: var(--ink-soft);
   font-size: 12.5px;
   line-height: 1.6;
+  padding-top: 12px;
 }
 
 .repo-handoff {
