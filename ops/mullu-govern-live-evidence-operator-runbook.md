@@ -25,6 +25,7 @@ public_write_route_allowed=false
 approval_packet=ops/mullu-govern-public-beta-approval-packet.md
 approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
+local_live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake.local.json
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
 live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collection-checklist.md
 sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md
@@ -97,16 +98,34 @@ public_product_release_allowed=false
 2. Run `node scripts/validate-govern-approval-readiness-preflight.mjs`.
 3. Run `node scripts/validate-govern-live-evidence-sequence-preflight.mjs`.
 4. Confirm every current live evidence ref is still `missing`.
-5. Use `ops/mullu-govern-live-evidence-ref-collection-checklist.md` to
+5. Copy the committed template into the ignored local working intake:
+
+```powershell
+Copy-Item ops/mullu-govern-live-evidence-ref-intake-template.json ops/mullu-govern-live-evidence-ref-intake.local.json
+```
+
+6. Validate the ignored local working intake before and after editing:
+
+```powershell
+node scripts/validate-govern-live-evidence-ref-intake.mjs --path=ops/mullu-govern-live-evidence-ref-intake.local.json
+node scripts/validate-govern-live-evidence-ref-intake.mjs --path=ops/mullu-govern-live-evidence-ref-intake.local.json --require-complete
+```
+
+The first command may pass while refs remain `missing`. The second command must
+block until all eight public-safe refs are present. Do not copy local refs back
+into the committed template or approval packet until `--require-complete`
+passes.
+
+7. Use `ops/mullu-govern-live-evidence-ref-collection-checklist.md` to
    collect only public-safe ref identifiers for the required inputs.
-6. Do not paste secrets, database URLs, raw headers, raw request bodies, raw
+8. Do not paste secrets, database URLs, raw headers, raw request bodies, raw
    response bodies, provider host values, billing details, or account ids.
-7. Update the approval packet only in a separate PR that validates the exact
+9. Update the approval packet only in a separate PR that validates the exact
    refs supplied.
-8. Keep `POST /v1/govern/evaluate` blocked until the approval packet changes
+10. Keep `POST /v1/govern/evaluate` blocked until the approval packet changes
    to `ReadyForApproval` or stronger and then receives explicit operator
    approval.
-9. Update `ops/runtime-witness/registry.json` only after product status,
+11. Update `ops/runtime-witness/registry.json` only after product status,
    privacy, retention, dashboard, API contract, public claim, and runtime
    evidence refs are closed.
 
@@ -127,6 +146,6 @@ if public_write_route_allowed != true:
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: operator steps are explicit, refs remain public-safe pointers only, route remains blocked, no raw secret/provider/payload values recorded
+  Self-attested invariants: operator steps are explicit, refs remain public-safe pointers only, local intake is ignored, route remains blocked, no raw secret/provider/payload values recorded
   Open issues: eight live evidence refs remain missing
   Next action: use this runbook when the operator is ready to supply public-safe evidence refs in a separate approval PR
