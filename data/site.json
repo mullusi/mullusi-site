@@ -3,7 +3,7 @@
     "name": "Mullusi",
     "version": "2026.05.site-content",
     "purpose": "Structured public website content for Mullusi.",
-    "content_hash": "sha256:a2dbc158d9241db1b1bac0f661ab31436e219ddf0bcbc73ff5f09dc0f2e75f28"
+    "content_hash": "sha256:53068856545bbfa786a25e25b05b340b1751459b766bc44b0577ff5e7271f8e1"
   },
   "platformLayers": [
     {
@@ -242,7 +242,7 @@
     "am": {
       "label": "Foundation Sequence",
       "title": "Build the spine before broad product services.",
-      "summary": "The platform becomes stable when the public map, docs, source boundary, edge gate, control-plane skeleton, API health, identity layer, and first governed product arrive in order."
+      "summary": "The platform becomes stable when the public map, docs, source boundary, edge gate, review-plane skeleton, API health, identity layer, and first governed product arrive in order."
     }
   },
   "productQuestions": [

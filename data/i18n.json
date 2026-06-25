@@ -179,7 +179,7 @@
       "am": "የተፈረሙ የምስክር መዳረሻዎች"
     },
     "hero.title": {
-      "en": "Mullusi is preparing a governed foundation for high-risk symbolic work.",
+      "en": "Mullusi builds symbolic intelligence work systems for teams that need review, records, and controlled execution.",
       "am": "ሙሉሲ ከፍተኛ-ስጋት ያላቸውን የምልክታዊ ብልህነት እና የሶፍትዌር ድርጊቶች ከመፈጸማቸው በፊት ያስተዳድራል።"
     },
     "hero.lead": {
@@ -195,7 +195,7 @@
       "am": "የሙሉ ሙከራ ሜዳ ይሞክሩ"
     },
     "hero.ctaPilot": {
-      "en": "Request Governed Pilot",
+      "en": "Pilot Status",
       "am": "የሚተዳደር ሙከራ ይጠይቁ"
     },
     "hero.doctrineStatus": {
@@ -731,7 +731,7 @@
       "am": "No matching product records"
     },
     "product.emptyBody": {
-      "en": "Choose another product status to inspect the governed registry.",
+      "en": "Choose another product status to inspect the product registry.",
       "am": "Choose another product status to inspect the governed registry."
     },
     "product.routesAria": {
@@ -919,7 +919,7 @@
       "am": "መገናኛ"
     },
     "footer.law": {
-      "en": "Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.",
+      "en": "Mullusi - symbolic intelligence work systems.",
       "am": "ምልክቶች አቶማዊ ናቸው። ትርጉም ዝምድናዊ ነው። መሻገር ይተዳደራል። ፍርድ ይገኛል።"
     },
     "footer.rights": {
@@ -1143,7 +1143,7 @@
       "am": "Mullu activity is being recorded"
     },
     "activity.emptyBody": {
-      "en": "Product updates and platform activity will appear here after the next governed release note.",
+      "en": "Product updates and platform activity will appear here after the next release note.",
       "am": "Product updates and platform activity will appear here after the next governed release note."
     },
     "metrics.tag": {
@@ -1167,11 +1167,11 @@
       "am": "የተሰማሩ ይፋዊ ገጾች"
     },
     "metrics.products": {
-      "en": "Governed product records",
+      "en": "Product records",
       "am": "Governed product records"
     },
     "metrics.routes": {
-      "en": "Governed public routes",
+      "en": "Public routes",
       "am": "የሚተዳደሩ ይፋዊ መንገዶች"
     },
     "metrics.contracts": {
