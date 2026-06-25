@@ -3643,6 +3643,10 @@ function validateI18n() {
     for (const lang of ["en", "am"]) {
       if (typeof entry?.[lang] !== "string" || entry[lang].trim().length === 0) {
         recordFailure(`i18n_translation_missing:${key}:${lang}`);
+        continue;
+      }
+      if (lang === "am" && /(?:\?{2,}|\uFFFD|[\u00C0-\u00FF]{2,})/.test(entry[lang])) {
+        recordFailure(`i18n_am_text_corrupt:${key}`);
       }
     }
   }
