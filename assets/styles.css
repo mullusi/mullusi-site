@@ -4983,20 +4983,58 @@ html.menu-open body {
   border-top-color: var(--ink-dim);
 }
 
+#sciences {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 16%, color-mix(in srgb, var(--accent-warm) 9%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 64%, var(--bg)), var(--bg));
+}
+
+#sciences::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  pointer-events: none;
+  background-image:
+    linear-gradient(120deg, color-mix(in srgb, var(--line-bright) 58%, transparent) 1px, transparent 1px),
+    linear-gradient(60deg, color-mix(in srgb, var(--line-bright) 42%, transparent) 1px, transparent 1px);
+  background-size: 112px 112px;
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+}
+
+#sciences .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+#sciences .sec-head {
+  max-width: 880px;
+}
+
 .engines {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
   overflow: visible;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 74%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 58%, transparent), color-mix(in srgb, var(--panel-soft) 86%, transparent)),
+    var(--panel-soft);
+  padding: 10px;
+  counter-reset: science-engine;
 }
 
 .eng-sym {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   place-items: center;
   margin-bottom: 14px;
   border: 1px solid color-mix(in srgb, var(--line-bright) 72%, transparent);
-  background: var(--panel-field);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-field) 88%, transparent), var(--panel-soft)),
+    var(--panel-field);
   color: var(--accent-deep);
   font-family: var(--mono);
   font-size: 18px;
@@ -5010,9 +5048,11 @@ html.menu-open body {
   align-self: flex-start;
   min-height: 28px;
   margin-top: auto;
-  border: 1px solid var(--line);
-  background: var(--panel-field);
-  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 68%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-deep) 8%, transparent), transparent),
+    var(--panel-field);
+  padding: 6px 8px;
   font-family: var(--mono);
   font-size: 9.5px;
   letter-spacing: 0.04em;
@@ -5024,8 +5064,10 @@ html.menu-open body {
   grid-column: 1 / -1;
   border-color: color-mix(in srgb, var(--accent-deep) 70%, var(--line));
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--accent-deep) 12%, transparent), transparent 58%),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-deep) 14%, transparent), transparent 56%),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 94%, transparent), color-mix(in srgb, var(--panel-soft) 94%, transparent)),
     var(--panel-glass);
+  min-height: 150px;
 }
 
 .eng-bridge .st,
@@ -5037,14 +5079,15 @@ html.menu-open body {
   position: relative;
   display: flex;
   min-width: 0;
-  min-height: 178px;
+  min-height: 206px;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid color-mix(in srgb, var(--line-bright) 68%, transparent);
   background:
+    linear-gradient(150deg, color-mix(in srgb, var(--accent-deep) 7%, transparent), transparent 42%),
     linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 88%, transparent), var(--panel-soft)),
     var(--panel-glass);
-  padding: 20px 16px;
+  padding: 22px 18px;
 }
 
 .eng::before {
@@ -5059,7 +5102,28 @@ html.menu-open body {
   pointer-events: none;
 }
 
+.eng::after {
+  counter-increment: science-engine;
+  content: "stage " counter(science-engine, decimal-leading-zero);
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  color: color-mix(in srgb, var(--accent) 44%, transparent);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  opacity: 0.38;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+.eng-bridge::after {
+  content: "bridge layer";
+  color: color-mix(in srgb, var(--accent-warm) 56%, transparent);
+}
+
 .eng:hover {
+  border-color: var(--line-bright);
   background:
     linear-gradient(145deg, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent 52%),
     var(--hover-panel);
@@ -5068,6 +5132,12 @@ html.menu-open body {
 .eng .st {
   margin-bottom: 16px;
   color: var(--ink-dim);
+}
+
+.eng h3 {
+  max-width: 18ch;
+  font-size: 18px;
+  line-height: 1.18;
 }
 
 .eng.active .st {
