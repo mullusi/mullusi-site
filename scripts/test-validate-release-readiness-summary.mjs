@@ -29,9 +29,9 @@ function runValidator(args = []) {
 
 function validSummary(overrides = {}) {
   const values = {
-    website_static_deployment_integrity: "AwaitingEvidence",
+    website_static_deployment_integrity: "SolvedVerified",
     live_status_manifest: "Pass",
-    local_status_manifest_match: "AwaitingEvidence",
+    local_status_manifest_match: "Pass",
     api_exposure_state: "SolvedVerified",
     api_dns_publication_allowed: "true",
     api_production_readiness_state: "ReadyForDns",
@@ -45,6 +45,7 @@ function validSummary(overrides = {}) {
     raw_secret_values: "not_recorded",
     private_recovery_values: "not_read",
     static_website_public: "true",
+    static_website_integrity: "SolvedVerified",
     product_runtime_release: "false",
     api_dns_publication_allowed_rule: "true",
     api_gateway_public: "true",
@@ -74,6 +75,7 @@ function validSummary(overrides = {}) {
     "```",
     "```text",
     `static_website_public=${values.static_website_public}`,
+    `static_website_integrity=${values.static_website_integrity}`,
     `product_runtime_release=${values.product_runtime_release}`,
     `api_dns_publication_allowed=${values.api_dns_publication_allowed_rule}`,
     `api_gateway_public=${values.api_gateway_public}`,
