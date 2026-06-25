@@ -117,6 +117,17 @@ function testMissingLocalIntakeIgnoreFailsClosed() {
   assert.match(result.findings.join("\n"), /required_gitignore_term_missing:local_intake_json/);
 }
 
+function testTrackedLocalIntakeFailsClosed() {
+  const result = validateGovernLiveEvidenceRefCollectionChecklistContent(validChecklist(), {
+    gitignoreContent: "ops/*.local.json\n",
+    trackedLocalIntakeFiles: ["ops/mullu-govern-live-evidence-ref-intake.local.json"],
+  });
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(result.findings.join("\n"), /local_intake_file_must_not_be_tracked/);
+}
+
 function testSyntheticSecretPatternFailsClosed() {
   const checklist = `${validChecklist()}\nAuthorization: Bearer abcdefghijklmnopqrstuvwxyz123456`;
   const result = validateGovernLiveEvidenceRefCollectionChecklistContent(checklist);
@@ -163,6 +174,7 @@ testSyntheticMissingApprovalRowFailsClosed();
 testSyntheticMissingStopConditionFailsClosed();
 testMissingChecklistTermsUsePublicLabels();
 testMissingLocalIntakeIgnoreFailsClosed();
+testTrackedLocalIntakeFailsClosed();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
 testPathBoundaryFailsClosedWithoutEcho();
