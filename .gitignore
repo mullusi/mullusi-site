@@ -152,6 +152,7 @@ vite.config.ts.timestamp-*
 
 # Local Codex/Claude worktree snapshots
 .claude/
+.tmp/
 
 # Local Cloudflare Wrangler cache/state
 .wrangler/
