@@ -31,11 +31,15 @@ live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collec
 sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md
 runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md
 safe_local_command=node scripts/validate-govern-live-evidence-sequence-preflight.mjs
+static_website_integrity=SolvedVerified
+api_exposure_probe=2026-06-25:SolvedVerified
+complete_mode_current_state=GovernanceBlocked
+complete_mode_blocker_count=8
 secret_values_allowed=false
 raw_request_bodies_allowed=false
 raw_response_bodies_allowed=false
 provider_values_allowed=false
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 ## Evidence Ref Contract
@@ -91,6 +95,34 @@ ready_for_live_evidence=false
 product_runtime_claims_allowed=false
 public_product_release_allowed=false
 ```
+
+## Current Complete-Mode Intake Block
+
+Observed on 2026-06-25:
+
+```text
+command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
+govern_live_evidence_ref_intake=GovernanceBlocked
+proof_state=Fail
+ready_for_live_evidence=false
+require_complete=true
+missing_approval_input_count=8
+finding=approval_ref_required:operator_approval_ref
+finding=approval_ref_required:product_status_promotion_ref
+finding=approval_ref_required:privacy_activation_ref
+finding=approval_ref_required:retention_activation_ref
+finding=approval_ref_required:dashboard_operator_readiness_ref
+finding=approval_ref_required:api_contract_test_ref
+finding=approval_ref_required:public_claim_update_ref
+finding=approval_ref_required:runtime_witness_ref
+secret_values=not_read
+provider_values=not_read
+raw_payloads=not_read
+```
+
+Static website integrity and API gateway exposure are no longer blockers for
+preparing the ref intake. They are not product runtime evidence and do not
+authorize route publication.
 
 ## Operator Steps
 

@@ -25,10 +25,14 @@ public_write_route_allowed=false
 intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json
 local_intake_working_file=ops/mullu-govern-live-evidence-ref-intake.local.json
 intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
+static_website_integrity=SolvedVerified
+api_exposure_probe=2026-06-25:SolvedVerified
+complete_mode_current_state=GovernanceBlocked
+complete_mode_blocker_count=8
 secret_values_allowed=false
 raw_payloads_allowed=false
 provider_values_allowed=false
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 ## Ref Checklist
@@ -43,6 +47,33 @@ last_reviewed=2026-06-14
 | `api_contract_test_ref` | `github:actions/runs/NNN:govern-evaluate-contract-live` | live contract test run after approval | raw request bodies, raw response bodies, authorization headers | `missing` |
 | `public_claim_update_ref` | `github:pull/NNN:govern-public-claim-update` | bounded public copy/status PR | overclaims, unsupported product runtime claims | `missing` |
 | `runtime_witness_ref` | `github:pull/NNN:runtime-witness-govern-closure` | runtime witness closure after all prior refs exist | provider host values, database URLs, tokens, raw logs | `missing` |
+
+## Complete-Mode Blocker Snapshot
+
+Observed on 2026-06-25:
+
+```text
+command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
+govern_live_evidence_ref_intake=GovernanceBlocked
+proof_state=Fail
+ready_for_live_evidence=false
+require_complete=true
+missing_approval_input_count=8
+finding=approval_ref_required:operator_approval_ref
+finding=approval_ref_required:product_status_promotion_ref
+finding=approval_ref_required:privacy_activation_ref
+finding=approval_ref_required:retention_activation_ref
+finding=approval_ref_required:dashboard_operator_readiness_ref
+finding=approval_ref_required:api_contract_test_ref
+finding=approval_ref_required:public_claim_update_ref
+finding=approval_ref_required:runtime_witness_ref
+secret_values=not_read
+provider_values=not_read
+raw_payloads=not_read
+```
+
+Do not replace `missing` values in the committed template. Use only the ignored
+local working intake until complete-mode validation passes.
 
 ## Fill Order
 
