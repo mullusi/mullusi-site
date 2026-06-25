@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-Purpose: public Mullusi news route for frontier signal items, product activity, and release-note visibility.
+Purpose: public Mullusi news route for product updates, research notes, and release-note visibility.
 Governance scope: homepage section migration, public feed rendering, activity link boundaries, and explicit feed load errors.
 Dependencies: /assets/styles.css, /assets/runtime/page-runtime.js, /assets/runtime/preference-runtime.js, /assets/runtime/substrate-runtime.js, /assets/runtime/homepage-lifecycle-plan.js, /assets/runtime/homepage-controller.js, /assets/registry/homepage-registry.js, /assets/render/site-content.js, /assets/render/public-surface-registry.js, /assets/render/product-registry.js, /assets/render/news-activity.js, /assets/runtime/homepage-context.js, /assets/app.js, /data/news.json, and /data/site.json.
 Invariants: feed text is escaped, activity links remain Mullusi-bounded, and missing feed data renders an explicit error state.
@@ -12,12 +12,12 @@ Invariants: feed text is escaped, activity links remain Mullusi-bounded, and mis
   <meta name="google" content="notranslate" />
   <meta name="theme-color" content="#050609" />
   <title>News - Mullusi</title>
-  <meta name="description" content="Mullusi frontier signal route: daily ranked technology and research links, Mullu activity, and platform release notes." />
+  <meta name="description" content="Mullusi updates: product progress, research notes, platform release notes, and selected technology signals." />
   <link rel="canonical" href="https://mullusi.com/news/" />
   <meta property="og:site_name" content="Mullusi" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="News - Mullusi" />
-  <meta property="og:description" content="Daily frontier signal and Mullusi product activity in one public route." />
+  <meta property="og:description" content="Product progress, research notes, platform release notes, and selected technology signals from Mullusi." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mullusi.com/news/" />
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
@@ -61,7 +61,7 @@ Invariants: feed text is escaped, activity links remain Mullusi-bounded, and mis
         <a href="/#start" data-i18n="nav.start">Start</a>
         <a href="/mullu/" data-i18n="nav.mullu">Mullu</a>
         <a href="/proof/" data-i18n="nav.proof">Proof</a>
-        <a href="/about/" data-i18n="governance.profileTitle">Architect note</a>
+        <a href="/about/">About</a>
         <a href="/surfaces/" data-i18n="nav.repos">Surfaces</a>
       </div>
       <div class="nav-cta">
@@ -75,9 +75,9 @@ Invariants: feed text is escaped, activity links remain Mullusi-bounded, and mis
     <section class="band tier-primary" id="news" aria-labelledby="news-title">
       <div class="wrap">
         <div class="sec-head">
-          <div class="tag" data-i18n="news.tag">Frontier Signal</div>
-          <h1 id="news-title" data-i18n="news.title">Frontier signal</h1>
-          <p data-i18n="news.body">A daily ranked digest of notable technology, science breakthroughs, and research releases, followed by Mullu product activity and platform release notes.</p>
+          <div class="tag" data-i18n="news.tag">Updates</div>
+          <h1 id="news-title" data-i18n="news.title">Product and research updates</h1>
+          <p data-i18n="news.body">Product progress, research notes, platform release notes, and selected technology signals connected to Mullusi.</p>
         </div>
         <div class="news-feed reveal" data-news>
           <noscript>
@@ -94,9 +94,9 @@ Invariants: feed text is escaped, activity links remain Mullusi-bounded, and mis
 
     <section class="cta" aria-labelledby="news-cta-title">
       <div class="wrap">
-        <div class="tag center-tag" data-i18n="evidence.tag">Evidence Plane</div>
-        <h2 id="news-cta-title" data-i18n="evidence.title">Evidence plane</h2>
-        <p data-i18n="evidence.body">Every page answers the same questions: what exists, where it lives, how it is governed, what remains planned, and whether runtime witness evidence is closed.</p>
+        <div class="tag center-tag">Status</div>
+        <h2 id="news-cta-title">Check what is public now.</h2>
+        <p>Use Status for the current public route state, or Proof for the technical runtime boundary.</p>
         <div class="cta-actions">
           <a href="/proof/" class="btn btn-solid" data-i18n="hero.reviewProof">Review proof boundary</a>
           <a href="/status/" class="btn" data-i18n="footer.learn">Status</a>
@@ -108,7 +108,7 @@ Invariants: feed text is escaped, activity links remain Mullusi-bounded, and mis
   <footer class="site-footer">
     <div class="wrap">
       <div class="foot-base">
-        <span class="law" data-i18n="footer.law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</span>
+        <span class="law">Mullusi - symbolic intelligence work systems.</span>
         <span data-i18n="footer.rights">&copy; 2026 Mullusi - All rights reserved.</span>
       </div>
       <p class="foot-meter" data-visit-meter aria-label="This visit count is stored only in your browser and is not site-wide analytics." data-i18n-attr="aria-label:footer.meterAria"></p>
