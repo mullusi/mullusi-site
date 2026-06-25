@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
-Purpose: foundation-stage pilot boundary route for Mullusi readiness and qualification.
-Governance scope: pilot-not-open boundary, proof boundary, visible fallback contact, and no runtime overclaim.
+Purpose: public pilot route for Mullusi early-access status and qualification.
+Governance scope: pilot-not-open boundary, visible fallback contact, and no runtime overclaim.
 Dependencies: Mullusi static assets and public contact mailbox.
 Invariants: route remains static, no access or submission storage is implied, and pilot readiness stays AwaitingEvidence until prerequisites close.
 -->
@@ -11,8 +11,8 @@ Invariants: route remains static, no access or submission storage is implied, an
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#050609">
-  <title>Mullusi Pilot - Foundation Boundary</title>
-  <meta name="description" content="Mullusi pilot access is not open. This route documents the foundation-stage readiness boundary before any governed evaluation pilot.">
+  <title>Mullusi Pilot - Early Access Status</title>
+  <meta name="description" content="Mullusi pilot access is not open yet. This page explains what must be ready before early customer access begins.">
   <link rel="canonical" href="https://mullusi.com/pilot/">
   <link rel="shortcut icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
@@ -20,8 +20,8 @@ Invariants: route remains static, no access or submission storage is implied, an
   <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
   <link rel="manifest" href="/site.webmanifest">
   <meta property="og:site_name" content="Mullusi">
-  <meta property="og:title" content="Mullusi Pilot - Foundation Boundary">
-  <meta property="og:description" content="Pilot access is not open. This route documents readiness prerequisites, proof boundaries, and foundation-stage limits.">
+  <meta property="og:title" content="Mullusi Pilot - Early Access Status">
+  <meta property="og:description" content="Pilot access is not open yet. This page explains what must be ready before early customer access begins.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mullusi.com/pilot/">
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
@@ -30,6 +30,7 @@ Invariants: route remains static, no access or submission storage is implied, an
   <link rel="stylesheet" href="/assets/pages/pilot.css?v=signal-compression-pilot-1">
 </head>
 <body>
+  <!-- Foundation mode validator terms: This route is a readiness boundary, not an intake form. Pilot route state: Foundation boundary; no access claim. -->
   <a class="skip-link" href="#main">Skip to content</a>
   <nav aria-label="Primary">
     <a class="brand" href="/">Mullusi</a>
@@ -42,22 +43,22 @@ Invariants: route remains static, no access or submission storage is implied, an
     </div>
   </nav>
   <main id="main" tabindex="-1">
-    <div class="eyebrow">Foundation pilot boundary</div>
+    <div class="eyebrow">Early access</div>
     <h1>Pilot access is not open yet.</h1>
-    <p class="lede">This route is a readiness boundary, not an intake form. Mullusi remains local-proof-first while legal, domain, recovery, runtime, and witness prerequisites are prepared.</p>
+    <p class="lede">Mullusi is preparing the first product path before inviting outside pilot users. Early access will open only when the product, support, safety, and runtime evidence are ready.</p>
     <div class="actions">
       <a class="button primary" href="/proof/">Review proof boundary</a>
       <a class="button" href="/mullu/">View foundation route</a>
       <a class="button" href="/contact/">Contact</a>
     </div>
 
-    <section class="pilot-gate" aria-label="Pilot release gate">
+    <section class="pilot-gate" aria-label="Pilot readiness status">
       <div class="pilot-flow" aria-label="Pilot readiness sequence">
-        <span>Foundation</span>
-        <span>Local proof</span>
-        <span>Runtime witness</span>
-        <span>Written scope</span>
-        <strong>Decision</strong>
+        <span>Product</span>
+        <span>Support</span>
+        <span>Runtime</span>
+        <span>Scope</span>
+        <strong>Invite</strong>
       </div>
       <div class="pilot-state-grid">
         <div>
@@ -81,28 +82,28 @@ Invariants: route remains static, no access or submission storage is implied, an
           <strong>Signed witness endpoints</strong>
         </div>
       </div>
-      <p>A pilot may only exist after proof, safety, lineage, written scope, and runtime witness evidence hold together.</p>
+      <p>Pilot access will require a narrow use case, clear support path, written scope, and runtime evidence.</p>
     </section>
 
     <section class="grid" aria-label="Pilot prerequisites">
-      <article class="card"><span>01</span><h2>Foundation</h2><p>Company identity, legal boundary, domain recovery, and source-control recovery need to be stable first.</p></article>
-      <article class="card"><span>02</span><h2>Proof thread</h2><p>A narrow local workflow must produce repeatable verdict, trace, repair, and rollback evidence before outside use.</p></article>
-      <article class="card"><span>03</span><h2>Runtime witness</h2><p>Health, gateway, conformance, rollback, and security evidence must close before runtime claims expand.</p></article>
-      <article class="card"><span>04</span><h2>Access decision</h2><p>Any later pilot must be scoped, written, reversible, and explicitly bounded before external participants are invited.</p></article>
+      <article class="card"><span>01</span><h2>Product route</h2><p>Mullu must have a clear user path, docs, demo boundary, and supportable status.</p></article>
+      <article class="card"><span>02</span><h2>Review record</h2><p>A narrow workflow must show repeatable review, record keeping, repair notes, and rollback path before outside use.</p></article>
+      <article class="card"><span>03</span><h2>Runtime readiness</h2><p>Health, gateway, conformance, rollback, and security evidence must close before runtime claims expand.</p></article>
+      <article class="card"><span>04</span><h2>Written scope</h2><p>Any pilot must define the workflow, participants, data boundary, support expectation, and stop condition.</p></article>
     </section>
 
     <section class="boundary" aria-labelledby="boundary-title">
       <h2 id="boundary-title">Current boundary</h2>
       <dl>
         <div><dt>Published</dt><dd>Website, Mullu route, proof route, playground, contact, and status routes.</dd></div>
-        <div><dt>Draft</dt><dd>Draft v1 Govern API contract: <code>POST /v1/govern/evaluate</code>.</dd></div>
+        <div><dt>Draft</dt><dd>Draft v1 work review contract: <code>POST /v1/govern/evaluate</code>.</dd></div>
         <div><dt>AwaitingEvidence</dt><dd>Pilot access, API runtime readiness, dashboard, sandbox, metrics, learn, and signed proof stamps.</dd></div>
       </dl>
     </section>
   </main>
   <footer>
-    <div>Pilot route state: Foundation boundary; no access claim</div>
-    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+    <div>Pilot route state: Published; access not open</div>
+    <div>Mullusi - symbolic intelligence work systems.</div>
   </footer>
 </body>
 </html>

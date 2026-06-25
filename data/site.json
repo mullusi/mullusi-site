@@ -3,7 +3,7 @@
     "name": "Mullusi",
     "version": "2026.05.site-content",
     "purpose": "Structured public website content for Mullusi.",
-    "content_hash": "sha256:48308060d102ba1106b351f1d0db74706fdaec0a1cf8f31c17b7a5745c32952b"
+    "content_hash": "sha256:a2dbc158d9241db1b1bac0f661ab31436e219ddf0bcbc73ff5f09dc0f2e75f28"
   },
   "platformLayers": [
     {
@@ -160,24 +160,24 @@
   ],
   "requestFlow": {
     "label": "Request Flow",
-    "title": "A product request always crosses the control plane.",
-    "summary": "Human and machine requests enter through public surfaces, pass governance, create a job, run a private product service, store outputs, record a trace, and return only safe results.",
+    "title": "A work request moves through one clear path.",
+    "summary": "A visitor or workspace sends a request, the system checks the state, routes the job, records what happened, and returns a result people can inspect.",
     "steps": [
       "User surface",
       "API gateway",
-      "Control plane checks",
+      "Review checks",
       "Job registry",
       "Product service",
-      "Storage and audit",
+      "Storage and record",
       "Result surface"
     ],
     "guards": [
       "identity",
       "product access",
-      "policy",
+      "approval",
       "cost limit",
       "data class",
-      "audit trace"
+      "record"
     ],
     "am": {
       "label": "Request Flow",
@@ -187,8 +187,8 @@
   },
   "platformBuildSequence": {
     "label": "Foundation Sequence",
-    "title": "Build the spine before broad product services.",
-    "summary": "The platform becomes stable when the public map, docs, source boundary, edge gate, control-plane skeleton, API health, identity layer, and first governed product arrive in order.",
+    "title": "Build the public product path first.",
+    "summary": "Mullusi becomes easier to understand when the website, docs, product route, API health, operator surface, and first Mullu workflow arrive in order.",
     "steps": [
       {
         "phase": "01",
@@ -200,7 +200,7 @@
         "phase": "02",
         "name": "Docs route",
         "status": "public knowledge",
-        "reason": "architecture, API contracts, governance rules, and developer guides"
+        "reason": "product explanation, API notes, developer guides, and proof status"
       },
       {
         "phase": "03",
@@ -217,8 +217,8 @@
       {
         "phase": "05",
         "name": "Control-plane skeleton",
-        "status": "governance spine",
-        "reason": "product registry, permissions, policy checks, job registry, and audit logs"
+        "status": "work control",
+        "reason": "product registry, permissions, review checks, job registry, and work records"
       },
       {
         "phase": "06",
@@ -236,7 +236,7 @@
         "phase": "08",
         "name": "First governed product",
         "status": "release candidate",
-        "reason": "Mullu route connected to registry, policy, evidence, and docs"
+        "reason": "Mullu route connected to product copy, proof status, and docs"
       }
     ],
     "am": {
@@ -261,7 +261,7 @@
     {
       "label": "Identity",
       "title": "Immutable public boundary",
-      "summary": "Mullusi is presented as one governed system across website, docs, release evidence, sandbox, metrics, and public contact paths.",
+      "summary": "Mullusi keeps its public identity, product route, docs, status, and contact paths connected.",
       "am": {
         "label": "ማንነት",
         "title": "የማይለወጥ ይፋዊ ወሰን",
@@ -269,9 +269,9 @@
       }
     },
     {
-      "label": "Governance",
-      "title": "Claims tied to evidence",
-      "summary": "Public claims are separated into the deployed website, private incubation, planned domains, and operational interfaces.",
+      "label": "Status",
+      "title": "Clear public state",
+      "summary": "Visitors can see what is live, what is staged, and what remains AwaitingEvidence.",
       "am": {
         "label": "አስተዳደር",
         "title": "የይገባኛል ጥያቄዎች ከማስረጃ ጋር የተሳሰሩ",
@@ -281,7 +281,7 @@
     {
       "label": "Structure",
       "title": "Content is data-backed",
-      "summary": "Deployment card, staged domain engines, interface links, proof lanes, and roadmap stages are modeled as structured records.",
+      "summary": "Product pages, demos, docs, proof status, and release stages are kept as structured records.",
       "am": {
         "label": "መዋቅር",
         "title": "ይዘት በውሂብ የተደገፈ ነው",
@@ -291,7 +291,7 @@
     {
       "label": "Evolution",
       "title": "Expansion without redesign",
-      "summary": "New public surfaces and domains enter the public site only after their release boundary is verified.",
+      "summary": "New public surfaces enter the site when their route, docs, status, and support path are ready.",
       "am": {
         "label": "ዝግመተ ለውጥ",
         "title": "ያለ ድጋሚ ንድፍ መስፋፋት",
@@ -314,10 +314,10 @@
   ],
   "services": [
     {
-      "name": "Mullusi Govern Cloud",
+      "name": "Mullusi Work Cloud",
       "delivery": "hosted service",
       "status": "primary offer",
-      "summary": "Hosted symbolic governance for constraint evaluation, causal verdicts, proof states, and append-only trace records.",
+      "summary": "Hosted symbolic intelligence service for reviewing proposed work, preserving the record, and returning an inspectable result.",
       "proofSurface": "api.mullusi.com",
       "am": {
         "name": "ሙሉሲ Govern Cloud",
@@ -330,7 +330,7 @@
       "name": "Developer Packages",
       "delivery": "npm package",
       "status": "access layer",
-      "summary": "Client SDK, CLI, and local validators that submit governed requests to Mullusi services without becoming the paid service itself.",
+      "summary": "Client SDK, CLI, and local validators for connecting work systems to Mullusi services.",
       "proofSurface": "docs.mullusi.com",
       "am": {
         "name": "የአበልጻጊ ጥቅሎች",
@@ -343,7 +343,7 @@
       "name": "Mullusi Dashboard",
       "delivery": "web workspace",
       "status": "operator surface",
-      "summary": "Project control, trace review, proof stamps, violations, usage, teams, and release witness visibility.",
+      "summary": "Workspace for projects, reviews, usage, teams, status, and operator visibility.",
       "proofSurface": "dashboard.mullusi.com",
       "am": {
         "name": "ሙሉሲ ዳሽቦርድ",
@@ -356,7 +356,7 @@
       "name": "Mullu Inspect Service",
       "delivery": "hosted inspection",
       "status": "diagnostic offer",
-      "summary": "Website, API, source-boundary, and workflow inspection that reports structural gaps, missing evidence, and unstable public claims.",
+      "summary": "Inspection service for websites, APIs, and workflows that need clearer status, evidence, and repair notes.",
       "proofSurface": "sandbox.mullusi.com",
       "am": {
         "name": "የሙሉ ምርመራ አገልግሎት",
@@ -382,7 +382,7 @@
       "name": "Enterprise Mullusi",
       "delivery": "private deployment boundary",
       "status": "contract offer",
-      "summary": "Planned private deployment boundary with custom governance rules, audit export, and support limits after release evidence closes.",
+      "summary": "Planned private deployment option for teams that need custom rules, exportable records, and support limits after release evidence closes.",
       "proofSurface": "dashboard.mullusi.com",
       "am": {
         "name": "የድርጅት ሙሉሲ",
@@ -398,7 +398,7 @@
       "audience": "developers and researchers",
       "status": "starter",
       "priceSignal": "foundation examples",
-      "summary": "Demonstrate the verdict-trace loop: explore the SDK, CLI, sandbox examples, public docs, and local proof examples.",
+      "summary": "Explore the SDK, CLI, sandbox examples, public docs, and local proof examples.",
       "am": {
         "name": "ነጻ",
         "audience": "አበልጻጊዎችና ተመራማሪዎች",
@@ -412,7 +412,7 @@
       "audience": "builders and solo operators",
       "status": "paid",
       "priceSignal": "monthly usage plan",
-      "summary": "Prepare governance for developer workflows: planned higher evaluation limits, persistent traces, project history, proof stamp review, and dashboard workspace control.",
+      "summary": "Includes planned higher evaluation limits, persistent records, project history, proof stamp review, and dashboard workspace control.",
       "am": {
         "name": "Pro",
         "audience": "ገንቢዎችና ብቸኛ አንቀሳቃሾች",
@@ -426,7 +426,7 @@
       "audience": "small technical teams",
       "status": "paid",
       "priceSignal": "seat plus usage plan",
-      "summary": "Shared projects, team trace review, role boundaries, audit export, environment separation, and release witness records.",
+      "summary": "Shared projects, team review, role boundaries, record export, environment separation, and release status.",
       "am": {
         "name": "ቡድን",
         "audience": "አነስተኛ ቴክኒካል ቡድኖች",
@@ -440,7 +440,7 @@
       "audience": "regulated or private deployment planning",
       "status": "contract",
       "priceSignal": "custom agreement",
-      "summary": "Plan high-consequence governance with full audit lineage: private deployment boundary, custom governance rules, support limits, and compliance evidence exports after release evidence closes.",
+      "summary": "Plan high-consequence work with private deployment boundaries, custom rules, support limits, and compliance exports after release evidence closes.",
       "am": {
         "name": "ድርጅት",
         "audience": "ቁጥጥር የሚደረግባቸው ወይም የግል ስምሪቶች",
@@ -468,7 +468,7 @@
       "audience": "one high-risk workflow",
       "status": "engagement",
       "priceSignal": "scoped pilot agreement",
-      "summary": "Apply Mullusi to one high-risk workflow with declared evidence boundaries, a governed verdict-trace loop, and a defined rollback path.",
+      "summary": "Apply Mullusi to one important workflow with declared evidence boundaries, review records, and a defined rollback path.",
       "am": {
         "name": "የሚተዳደር ሙከራ",
         "audience": "አንድ ከፍተኛ-ስጋት የሥራ ፍሰት",
@@ -480,13 +480,13 @@
   ],
   "apiContracts": [
     {
-      "name": "Govern Evaluation",
+      "name": "Work Review",
       "route": "POST /v1/govern/evaluate",
       "host": "api.mullusi.com",
       "status": "draft v1",
       "input": "project, action, symbols, constraints, context",
-      "output": "verdict, proof state, violations, trace reference, repair actions, storage state, proof stamp eligibility",
-      "summary": "Evaluates a proposed action or system state against Mullusi governance constraints and records a causal trace.",
+      "output": "status, proof state, issues, trace reference, repair actions, storage state, proof stamp eligibility",
+      "summary": "Reviews a proposed action or system state, returns status and reason, and records the trace.",
       "am": {
         "name": "Govern ግምገማ",
         "status": "ኮር v1",
@@ -501,8 +501,8 @@
       "host": "api.mullusi.com",
       "status": "draft v1",
       "input": "evaluation reference and authorized project context",
-      "output": "ordered phase deltas, blocked phase, judgments, and append-only lineage records",
-      "summary": "Returns the evidence path behind a verdict so users can inspect cause, constraint, and repair state.",
+      "output": "ordered phase deltas, blocked phase, decisions, and append-only lineage records",
+      "summary": "Returns the evidence path behind a result so users can inspect cause, limits, and repair state.",
       "am": {
         "name": "የዱካ ማውጣት",
         "status": "ኮር v1",
@@ -624,12 +624,12 @@
   ],
   "evaluationExample": {
     "label": "Worked Example",
-    "title": "What a governed evaluation looks like.",
+    "title": "What a work review looks like.",
     "disclaimer": "Illustrative only. Not a live endpoint. Runtime stays AwaitingEvidence until witness endpoints publish signed evidence.",
     "route": "POST /v1/govern/evaluate",
     "request": "{ project, action: \"deploy gateway\", symbols: [Σ, Λ], constraints: [budget, policy, causality], context }",
     "verdict": "BLOCK",
-    "summary": "An ordinary pipeline would run the action and report failure afterward. A governed evaluation refuses the unsafe transition before execution and emits a verifiable record of why.",
+    "summary": "An ordinary pipeline may run the action and explain failure afterward. Mullusi reviews the proposed action first and returns a record people can inspect.",
     "steps": [
       {
         "k": "Verdict",
@@ -1578,19 +1578,19 @@
   },
   "useCases": {
     "label": "Use Cases",
-    "title": "Where a governed evaluation earns its keep.",
+    "title": "Where Mullusi fits.",
     "items": [
       {
-        "title": "Audit trail for an autonomous agent",
-        "body": "Record every decision, constraint check, and tool call as an immutable, append-only trace you can replay later."
+        "title": "Operations that need review",
+        "body": "Turn a proposed action into a visible plan, review it, and preserve the decision record."
       },
       {
-        "title": "Compliance gate for a financial workflow",
-        "body": "Prove a transaction satisfied every internal policy before it executes — not after it fails."
+        "title": "Financial or policy-sensitive workflows",
+        "body": "Check approval, policy, and evidence before a transaction or operational step is treated as complete."
       },
       {
-        "title": "Reproducibility proof for a research result",
-        "body": "Capture the exact symbols, constraints, and lineage so a result can be re-verified independently."
+        "title": "Research and technical review",
+        "body": "Keep the inputs, review notes, and result path inspectable so another person can understand the decision."
       }
     ],
     "am": {
@@ -1615,12 +1615,12 @@
   "mulluActivity": {
     "label": "Mullu Activity",
     "title": "Mullu related news and activity",
-    "summary": "Internal activity records for the Mullu product path, platform spine, proof boundary, and release gates.",
+    "summary": "Product updates and public-site activity for the Mullu product path, platform overview, proof status, and release path.",
     "updated": "2026-05-21",
     "items": [
       {
         "title": "Platform map promoted to the public site",
-        "body": "mullusi.com now presents Mullusi as company, governed platform, and product ecosystem instead of one isolated website.",
+        "body": "mullusi.com now presents Mullusi as a company, product route, platform overview, and proof-status surface instead of one isolated website.",
         "status": "live surface",
         "scope": "Public Surface",
         "surface": "mullusi.com",
@@ -1629,7 +1629,7 @@
       },
       {
         "title": "Mullusi Product Registry added",
-        "body": "The registry now tracks product classification, source boundary, runtime type, data type, API path, docs path, release gate, and failure mode.",
+        "body": "The registry now tracks product category, public route, runtime state, API path, docs path, release status, and support boundary.",
         "status": "registry",
         "scope": "Product Registry",
         "surface": "data/generated/products.json",
@@ -1637,10 +1637,10 @@
         "date": "2026-05-21"
       },
       {
-        "title": "Control plane spine clarified",
-        "body": "The public map now separates public surfaces, user surfaces, API surface, control plane, product services, storage, runtime infrastructure, and development layer.",
+        "title": "Platform overview clarified",
+        "body": "The public map now separates the website, product route, API path, operator surface, product services, storage, runtime infrastructure, and development layer.",
         "status": "architecture",
-        "scope": "Control Plane",
+        "scope": "Platform",
         "surface": "#platform",
         "href": "#platform",
         "date": "2026-05-21"
