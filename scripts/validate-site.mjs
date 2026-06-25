@@ -3650,6 +3650,24 @@ function validateI18n() {
       }
     }
   }
+  const highVisibilityAmharicKeys = [
+    "nav.platform",
+    "nav.doctrine",
+    "nav.repos",
+    "nav.contact",
+    "hero.viewPlatform",
+    "hero.footRepo",
+    "platform.tag",
+    "platform.title",
+    "platform.body",
+    "platform.plain",
+  ];
+  for (const key of highVisibilityAmharicKeys) {
+    const amharicText = strings?.[key]?.am || "";
+    if (!/[\u1200-\u137F]/.test(amharicText)) {
+      recordFailure(`i18n_high_visibility_am_missing_ethiopic:${key}`);
+    }
+  }
 
   const referencedKeys = new Set();
   for (const htmlFile of publicHtmlFiles) {
