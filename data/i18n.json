@@ -28,7 +28,7 @@
     },
     "nav.platform": {
       "en": "Platform",
-      "am": "Platform"
+      "am": "መድረክ"
     },
     "nav.architecture": {
       "en": "Architecture",
@@ -56,7 +56,7 @@
     },
     "nav.doctrine": {
       "en": "Doctrine",
-      "am": "Doctrine"
+      "am": "መርህ"
     },
     "nav.sciences": {
       "en": "Engines",
@@ -64,11 +64,11 @@
     },
     "nav.repos": {
       "en": "Surfaces",
-      "am": "Surfaces"
+      "am": "ይፋዊ ገጾች"
     },
     "nav.contact": {
       "en": "Contact",
-      "am": "Contact"
+      "am": "መገናኛ"
     },
     "nav.docs": {
       "en": "Docs",
@@ -364,7 +364,7 @@
     },
     "hero.viewPlatform": {
       "en": "View platform map",
-      "am": "View platform map"
+      "am": "የመድረክ ካርታ ይመልከቱ"
     },
     "hero.reviewProof": {
       "en": "View Foundation Route",
@@ -384,7 +384,7 @@
     },
     "hero.footRepo": {
       "en": "Deployed public surface",
-      "am": "Deployed public surface"
+      "am": "የተሰማራ ይፋዊ ገጽ"
     },
     "hero.footRuntime": {
       "en": "Runtime evidence",
@@ -476,19 +476,19 @@
     },
     "platform.tag": {
       "en": "Platform",
-      "am": "Platform Spine"
+      "am": "መድረክ"
     },
     "platform.title": {
       "en": "One work layer, several surfaces",
-      "am": "Company, platform, products"
+      "am": "አንድ የሥራ ሽፋን፣ ብዙ ገጾች"
     },
     "platform.body": {
       "en": "Mullusi brings the website, Mullu product route, API path, dashboard, docs, and proof status into one understandable product architecture.",
-      "am": "Mullusi is layered: public surfaces route users, the control plane governs actions, product services execute privately, storage preserves memory, Cloudflare protects the edge, and GitHub remains the source factory."
+      "am": "ሙሉሲ ድረ-ገጹን፣ የሙሉ የምርት መንገድን፣ API መንገድን፣ ዳሽቦርድን፣ ሰነዶችንና የማረጋገጫ ሁኔታን በአንድ የሚገባ የምርት አርክቴክቸር ያያይዛል።"
     },
     "platform.plain": {
       "en": "In plain terms: the website explains the offer, Mullu is the product route, the dashboard is the operator surface, and the API is the execution path.",
-      "am": "In plain terms: the website shows the city map; the dashboard is the control room; the API is the machine road; the control plane is the government."
+      "am": "በቀላል አነጋገር፦ ድረ-ገጹ አቅርቦቱን ያሳያል፣ ሙሉ የምርት መንገድ ነው፣ ዳሽቦርዱ የኦፕሬተር ገጽ ነው፣ API የአፈጻጸም መንገድ ነው።"
     },
     "platform.governs": {
       "en": "Governs",
