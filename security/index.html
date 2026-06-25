@@ -11,8 +11,8 @@ Invariants: controls are stated only when implemented on the static site; runtim
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#050609">
-  <title>Mullusi Security - Public Trust Boundary</title>
-  <meta name="description" content="Security boundary for Mullusi public routes, browser controls, disclosure contact, and runtime AwaitingEvidence state.">
+  <title>Mullusi Security</title>
+  <meta name="description" content="Security information for Mullusi public routes, browser controls, disclosure contact, and runtime status.">
   <link rel="canonical" href="https://mullusi.com/security/">
   <link rel="shortcut icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
@@ -20,8 +20,8 @@ Invariants: controls are stated only when implemented on the static site; runtim
   <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
   <link rel="manifest" href="/site.webmanifest">
   <meta property="og:site_name" content="Mullusi">
-  <meta property="og:title" content="Mullusi Security - Public Trust Boundary">
-  <meta property="og:description" content="Implemented browser controls, disclosure contact, and runtime evidence limits for Mullusi public routes.">
+  <meta property="og:title" content="Mullusi Security">
+  <meta property="og:description" content="Implemented browser controls, disclosure contact, and runtime status for Mullusi public routes.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mullusi.com/security/">
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
@@ -41,9 +41,9 @@ Invariants: controls are stated only when implemented on the static site; runtim
     </div>
   </nav>
   <main id="main" tabindex="-1">
-    <div class="eyebrow">Public security boundary</div>
+    <div class="eyebrow">Security</div>
     <h1>Security.</h1>
-    <p class="lede">This page states the security controls that apply to the static Mullusi public website. Runtime gateway, dashboard, sandbox, and metrics security remain AwaitingEvidence until those surfaces publish signed witnesses.</p>
+    <p class="lede">This page summarizes the controls that apply to the static Mullusi public website and explains how to report a suspected issue.</p>
     <div class="actions">
       <a class="button primary" href="/responsible-disclosure/">Report a vulnerability</a>
       <a class="button" href="/.well-known/security.txt">Open security.txt</a>
@@ -65,7 +65,7 @@ Invariants: controls are stated only when implemented on the static site; runtim
         <div><span>API security</span><strong>AwaitingEvidence</strong></div>
         <div><span>Disclosure route</span><strong>Published</strong></div>
       </div>
-      <p>Security claims here bind to the public static site. Runtime gateway and operator surfaces require signed witness evidence before public closure.</p>
+      <p>These controls apply to the public static site. Runtime gateway and operator surfaces are not presented as live public services yet.</p>
     </section>
 
     <section class="control-grid" aria-label="Implemented security controls">
@@ -94,7 +94,7 @@ Invariants: controls are stated only when implemented on the static site; runtim
           <tr><th>Surface</th><th>State</th><th>Security boundary</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>mullusi.com</code></td><td>Published</td><td>Static public website with governed headers and no live account session.</td></tr>
+          <tr><td><code>mullusi.com</code></td><td>Published</td><td>Static public website with security headers and no live account session.</td></tr>
           <tr><td><code>docs.mullusi.com</code></td><td>Published externally</td><td>Docs are linked as a public knowledge surface; this repository does not own its response headers.</td></tr>
           <tr><td><code>api.mullusi.com</code></td><td>AwaitingEvidence</td><td>Runtime security requires health, gateway witness, and conformance evidence before public claim closure.</td></tr>
           <tr><td><code>dashboard.mullusi.com</code></td><td>Reserved</td><td>Authenticated operator surface; not linked as live from this public site.</td></tr>
