@@ -4777,7 +4777,7 @@ function validateDoctrineWordingContract() {
     {
       file: "index.html",
       terms: [
-        "Mullusi is preparing a governed foundation for high-risk symbolic work.",
+        "Mullusi builds symbolic intelligence work systems for teams that need planning, approvals, evidence, and controlled execution in one operating layer.",
         "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
         "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
         "output-derived actions become proposals first",
