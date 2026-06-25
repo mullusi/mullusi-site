@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-24",
+    "updated": "2026-06-25",
     "count": 7
   },
   "items": [
     {
-      "title": "FUTO Swipe – A new swipe typing model",
-      "url": "https://swipe.futo.tech/",
-      "source": "swipe.futo.tech",
-      "points": 569,
-      "comments": 191,
+      "title": "OpenAI unveils its first custom chip, built by Broadcom",
+      "url": "https://techcrunch.com/2026/06/24/openai-unveils-its-first-custom-chip-built-by-broadcom/",
+      "source": "techcrunch.com",
+      "points": 714,
+      "comments": 402,
+      "date": "2026-06-24"
+    },
+    {
+      "title": "45°C cooling design cuts data center water use to near zero",
+      "url": "https://blogs.nvidia.com/blog/liquid-cooling-ai-factories/",
+      "source": "blogs.nvidia.com",
+      "points": 347,
+      "comments": 242,
+      "date": "2026-06-24"
+    },
+    {
+      "title": "Half-Life 2 in a Browser",
+      "url": "https://hl2.slqnt.dev/",
+      "source": "hl2.slqnt.dev",
+      "points": 284,
+      "comments": 101,
+      "date": "2026-06-25"
+    },
+    {
+      "title": "The Xteink X4 E-Ink Reader",
+      "url": "https://blog.omgmog.net/post/xteink-x4-e-ink-reader/",
+      "source": "blog.omgmog.net",
+      "points": 262,
+      "comments": 149,
+      "date": "2026-06-24"
+    },
+    {
+      "title": "Blogging can just be stating the obvious",
+      "url": "https://blog.jim-nielsen.com/2026/blogging-stating-the-obvious/",
+      "source": "blog.jim-nielsen.com",
+      "points": 248,
+      "comments": 87,
+      "date": "2026-06-24"
+    },
+    {
+      "title": "GLM-5.2 is a step change for open agents",
+      "url": "https://www.interconnects.ai/p/glm-52-is-the-step-change-for-open",
+      "source": "interconnects.ai",
+      "points": 247,
+      "comments": 146,
       "date": "2026-06-23"
     },
     {
-      "title": "Fired by Google for creating the Google workspace CLI",
-      "url": "https://twitter.com/JPoehnelt/status/2069482265953087602",
-      "source": "twitter.com",
-      "points": 561,
-      "comments": 333,
-      "date": "2026-06-23"
-    },
-    {
-      "title": "Jerry's Map",
-      "url": "https://news.ycombinator.com/item?id=48649435",
-      "source": "news.ycombinator.com",
-      "points": 488,
-      "comments": 55,
-      "date": "2026-06-23"
-    },
-    {
-      "title": "In memory of the man who put red and green squiggles under words",
-      "url": "https://devblogs.microsoft.com/oldnewthing/20260622-00/?p=112451",
-      "source": "devblogs.microsoft.com",
-      "points": 417,
+      "title": "Show HN: Nub – A Bun-like all-in-one toolkit for Node.js",
+      "url": "https://github.com/nubjs/nub",
+      "source": "github.com",
+      "points": 245,
       "comments": 68,
-      "date": "2026-06-23"
-    },
-    {
-      "title": "Show HN: TikZ Editor – WYSIWYG editor for figures in LaTeX",
-      "url": "https://tikz.dev/editor/",
-      "source": "tikz.dev",
-      "points": 401,
-      "comments": 73,
-      "date": "2026-06-23"
-    },
-    {
-      "title": "Printing Gaussian Splats",
-      "url": "https://www.patreon.com/DanyBittel/posts/printing-splats-161333338",
-      "source": "patreon.com",
-      "points": 321,
-      "comments": 36,
-      "date": "2026-06-21"
-    },
-    {
-      "title": "The worthlessness of Vitamin D is mildly exaggerated",
-      "url": "https://dynomight.net/vitamin-d/",
-      "source": "dynomight.net",
-      "points": 307,
-      "comments": 223,
-      "date": "2026-06-23"
+      "date": "2026-06-24"
     }
   ]
 }
