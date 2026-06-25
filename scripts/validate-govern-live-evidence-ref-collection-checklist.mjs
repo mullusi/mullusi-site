@@ -27,6 +27,7 @@ const requiredChecklistTerms = [
   { id: "ready_for_live_evidence", text: "ready_for_live_evidence=false" },
   { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
   { id: "intake_template", text: "intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json" },
+  { id: "local_intake_working_file", text: "local_intake_working_file=ops/mullu-govern-live-evidence-ref-intake.local.json" },
   {
     id: "intake_validator",
     text: "intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
@@ -65,6 +66,10 @@ const requiredForbiddenValueTerms = [
   { id: "database_urls", text: "database URLs" },
 ];
 
+const requiredGitignoreTerms = [
+  { id: "local_intake_json", text: "ops/*.local.json" },
+];
+
 function blockedResult(finding) {
   return {
     checklistState: "Blocked",
@@ -97,7 +102,7 @@ function unsupportedArgs(args) {
   return args.filter((arg) => arg.startsWith("--") && !allowedArgs.has(arg));
 }
 
-export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklist) {
+export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklist, options = {}) {
   const findings = [];
 
   for (const term of requiredChecklistTerms) {
@@ -120,6 +125,14 @@ export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklis
 
   findings.push(...scanForbiddenEvidencePatterns("collectionChecklist", checklist));
 
+  if (typeof options.gitignoreContent === "string") {
+    for (const term of requiredGitignoreTerms) {
+      if (!options.gitignoreContent.includes(term.text)) {
+        findings.push(`required_gitignore_term_missing:${term.id}`);
+      }
+    }
+  }
+
   return {
     checklistState: findings.length === 0 ? "Ready" : "Blocked",
     findingCount: findings.length,
@@ -133,7 +146,11 @@ export function validateGovernLiveEvidenceRefCollectionChecklistContent(checklis
 export function validateGovernLiveEvidenceRefCollectionChecklist(relativePath = defaultChecklistPath) {
   const readResult = readUtf8Result(relativePath);
   if (readResult.finding) return blockedResult(readResult.finding);
-  return validateGovernLiveEvidenceRefCollectionChecklistContent(readResult.content);
+  const gitignoreResult = readUtf8Result(".gitignore");
+  if (gitignoreResult.finding) return blockedResult("gitignore_unreadable");
+  return validateGovernLiveEvidenceRefCollectionChecklistContent(readResult.content, {
+    gitignoreContent: gitignoreResult.content,
+  });
 }
 
 export function formatGovernLiveEvidenceRefCollectionChecklistReport(result) {
