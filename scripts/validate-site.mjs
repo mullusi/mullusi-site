@@ -3744,12 +3744,13 @@ function validateIndexDesignContract() {
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
   const assetVersion = "2026.05.platform.29";
+  const cssVersion = "2026.06.home.30";
   const fragmentVersion = "2026.06.fragment.6";
   const eyeHelperVersion = "2026.06.helper.2";
 
   if (
     !html.includes(`/assets/fragment-bootstrap.js?v=${fragmentVersion}`) ||
-    !html.includes(`assets/styles.css?v=${assetVersion}`) ||
+    !html.includes(`assets/styles.css?v=${cssVersion}`) ||
     !html.includes(`/assets/helper/mullu-eye-helper-v3.bundle.css?v=${eyeHelperVersion}`) ||
     !html.includes(`assets/runtime/page-runtime.js?v=${assetVersion}`) ||
     !html.includes(`assets/runtime/preference-runtime.js?v=${assetVersion}`) ||
