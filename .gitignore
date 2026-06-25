@@ -162,3 +162,7 @@ ops/MULLUSI_INFRASTRUCTURE_ROOT.private.md
 ops/*RECOVERY*.private.md
 ops/*recovery*.private.md
 ops/recovery-inventory.private.md
+
+# Local approval/evidence intake working files
+ops/*.local.json
+ops/*.private.json

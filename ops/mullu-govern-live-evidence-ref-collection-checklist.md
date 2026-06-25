@@ -23,6 +23,7 @@ proof_state=Pass
 ready_for_live_evidence=false
 public_write_route_allowed=false
 intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json
+local_intake_working_file=ops/mullu-govern-live-evidence-ref-intake.local.json
 intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
 secret_values_allowed=false
 raw_payloads_allowed=false
@@ -46,8 +47,12 @@ last_reviewed=2026-06-14
 ## Fill Order
 
 1. Keep every value in `ops/mullu-govern-live-evidence-ref-intake-template.json` as `missing` until the corresponding public-safe ref exists.
-2. Replace only the exact `approval_refs` value for the ref being supplied.
-3. Leave these flags unchanged:
+2. Copy the template into `ops/mullu-govern-live-evidence-ref-intake.local.json`.
+   This local working file is ignored by Git and may be used while refs are
+   incomplete.
+3. Replace only the exact `approval_refs` value for the ref being supplied in
+   the ignored local working file.
+4. Leave these flags unchanged:
 
 ```text
 ready_for_live_evidence=false
@@ -57,13 +62,13 @@ raw_payloads_allowed=false
 provider_values_allowed=false
 ```
 
-4. Validate the completed intake before any approval-packet edit:
+5. Validate the local working intake before any approval-packet edit:
 
 ```powershell
-node scripts\validate-govern-live-evidence-ref-intake.mjs --require-complete
+node scripts\validate-govern-live-evidence-ref-intake.mjs --path=ops/mullu-govern-live-evidence-ref-intake.local.json --require-complete
 ```
 
-5. If validation fails, do not edit the approval packet.
+6. If validation fails, do not edit the committed template or approval packet.
 
 ## Stop Conditions
 
@@ -80,6 +85,6 @@ if any_required_ref == missing:
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: checklist is non-operative, all refs remain missing until public-safe evidence exists, route remains blocked, no raw secret/provider/payload values recorded
+  Self-attested invariants: checklist is non-operative, local intake remains ignored until complete, all refs remain missing until public-safe evidence exists, route remains blocked, no raw secret/provider/payload values recorded
   Open issues: eight live evidence refs remain missing
-  Next action: fill the intake template only with public-safe refs, then validate with --require-complete before any approval-packet PR
+  Next action: fill the ignored local working intake only with public-safe refs, then validate with --require-complete before any approval-packet PR
