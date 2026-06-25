@@ -72,7 +72,7 @@ Then run generation and checkpoint validation. The scaffold starts private-incub
 
 ## Current Operator State
 
-As of 2026-06-14, the current public-safe operator state is:
+As of 2026-06-25, the current public-safe operator state is:
 
 ```text
 recovery_witness_state=ReadyForProvisioning

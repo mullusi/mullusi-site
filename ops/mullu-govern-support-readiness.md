@@ -30,7 +30,7 @@ route_publication_action=none
 dns_mutation=none
 runtime_mutation=none
 secret_rotation_required=false
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 ## Evidence Ledger

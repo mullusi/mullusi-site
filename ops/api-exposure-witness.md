@@ -21,7 +21,7 @@ api_dns_publication_allowed=true
 api_runtime_public_state=SolvedVerified
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 The exposure state is `SolvedVerified` for the API gateway after pre-DNS
@@ -29,7 +29,7 @@ evidence passed, DNS was present, and the public HTTPS health probe was
 reachable. This file does not promote product runtime witnesses; it only records
 the public-safe API gateway exposure boundary.
 
-Observed on 2026-06-14:
+Observed on 2026-06-25:
 
 ```text
 command=node scripts/check-api-exposure-gate.mjs --live --require-ready
@@ -40,6 +40,7 @@ recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
 api_runtime_public_state=SolvedVerified
 dns_probe_state=Present
+dns_record_count=5
 https_probe_state=Reachable
 blocker=none
 raw_host_values=not_recorded

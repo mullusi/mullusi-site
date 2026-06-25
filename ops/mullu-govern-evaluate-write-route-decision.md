@@ -26,7 +26,7 @@ product_status=limited-preview
 api_gateway_exposure_state=SolvedVerified
 runtime_witness_closure_allowed=false
 approval_packet=ops/mullu-govern-public-beta-approval-packet.md
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 The API gateway is public and witnessed. The product write route is a separate

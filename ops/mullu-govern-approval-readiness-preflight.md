@@ -36,7 +36,7 @@ product_status_promotion_allowed=false
 public_claim_update_allowed=false
 secret_rotation_required=false
 provider_values_recorded=false
-last_reviewed=2026-06-14
+last_reviewed=2026-06-25
 ```
 
 The packet is structurally organized, but it is not ready for approval because
