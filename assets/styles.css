@@ -6699,6 +6699,10 @@ html.menu-open body {
   position: relative;
   overflow: hidden;
   min-height: 328px;
+  box-shadow:
+    0 32px 110px rgba(0, 0, 0, 0.28),
+    0 0 0 1px color-mix(in srgb, var(--accent) 7%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 9%, transparent);
   animation: claim-core-enter 1400ms ease-out both;
 }
 
@@ -6730,20 +6734,22 @@ html.menu-open body {
   left: 18px;
   z-index: 3;
   display: grid;
-  width: min(36%, 210px);
-  min-width: 178px;
-  min-height: 142px;
+  width: min(40%, 236px);
+  min-width: 190px;
+  min-height: 156px;
   overflow: hidden;
-  padding: 12px 14px 11px;
+  padding: 14px 16px 13px;
   border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
   border-radius: 8px;
   background:
-    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--accent-warm) 24%, transparent), transparent 34%),
-    radial-gradient(circle at 16% 86%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 38%),
-    linear-gradient(135deg, color-mix(in srgb, var(--bg) 76%, transparent), color-mix(in srgb, var(--panel-glass) 92%, transparent)),
+    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--accent-warm) 30%, transparent), transparent 34%),
+    radial-gradient(circle at 16% 86%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 38%),
+    linear-gradient(135deg, color-mix(in srgb, var(--bg) 70%, transparent), color-mix(in srgb, var(--panel-glass) 94%, transparent)),
     repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 11%, transparent) 0 1px, transparent 1px 15px);
   box-shadow:
-    0 30px 90px rgba(0, 0, 0, 0.34),
+    0 32px 96px rgba(0, 0, 0, 0.38),
+    10px 12px 0 color-mix(in srgb, var(--accent) 5%, transparent),
+    -8px -8px 0 color-mix(in srgb, var(--accent-warm) 4%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--ink) 12%, transparent),
     inset 0 -1px 0 color-mix(in srgb, var(--accent) 12%, transparent);
   backdrop-filter: blur(14px);
@@ -6767,6 +6773,8 @@ html.menu-open body {
   border: 1px solid color-mix(in srgb, var(--accent-warm) 34%, transparent);
   border-radius: 6px;
   background:
+    radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--accent) 16%, transparent) 0 2px, transparent 3px),
+    radial-gradient(circle at 74% 76%, color-mix(in srgb, var(--accent-warm) 18%, transparent) 0 2px, transparent 3px),
     linear-gradient(90deg, color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 1px),
     linear-gradient(0deg, color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px);
   background-size: 34px 34px;
@@ -6788,6 +6796,7 @@ html.menu-open body {
   border-color: color-mix(in srgb, var(--accent) 62%, var(--line-bright));
   box-shadow:
     0 34px 92px rgba(0, 0, 0, 0.38),
+    12px 14px 0 color-mix(in srgb, var(--accent) 6%, transparent),
     0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--ink) 14%, transparent);
   transform: translateY(-1px);
@@ -6809,21 +6818,29 @@ html.menu-open body {
   position: relative;
   z-index: 3;
   display: inline-block;
-  margin: 8px 0 7px;
+  margin: 9px 0 8px;
   color: transparent;
   background:
-    linear-gradient(115deg, color-mix(in srgb, var(--ink) 22%, var(--accent)) 0%, var(--accent) 34%, color-mix(in srgb, var(--accent-warm) 72%, var(--accent)) 68%, color-mix(in srgb, var(--ink) 18%, var(--accent)) 100%);
+    linear-gradient(115deg, color-mix(in srgb, var(--ink) 24%, var(--accent)) 0%, var(--accent) 30%, color-mix(in srgb, var(--accent-warm) 78%, var(--accent)) 62%, color-mix(in srgb, var(--ink) 18%, var(--accent)) 100%),
+    linear-gradient(92deg, transparent 0 28%, color-mix(in srgb, var(--ink) 84%, transparent) 44%, transparent 60%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 16%, transparent) 0 1px, transparent 1px 7px);
+  background-size: auto, 180px 100%, auto;
+  background-position: 0 0, -180px 0, 0 0;
   background-clip: text;
   -webkit-background-clip: text;
   font-family: var(--serif);
-  font-size: 58px;
+  font-size: 64px;
   font-weight: 400;
   letter-spacing: 0;
   line-height: 0.82;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 18%, transparent));
   text-shadow:
     0 0 18px color-mix(in srgb, var(--accent) 22%, transparent),
     0 18px 34px rgba(0, 0, 0, 0.38);
-  transition: transform 180ms ease;
+  animation: mullu-identity-word-shine 6200ms ease-in-out 1200ms infinite;
+  transition:
+    filter 180ms ease,
+    transform 180ms ease;
 }
 
 .mullu-identity-word::before,
@@ -6836,19 +6853,20 @@ html.menu-open body {
 
 .mullu-identity-word::before {
   color: color-mix(in srgb, var(--accent-warm) 54%, transparent);
-  transform: translate(3px, -2px);
+  transform: translate(4px, -3px);
   clip-path: inset(0 0 62% 0);
   opacity: 0.66;
 }
 
 .mullu-identity-word::after {
-  color: color-mix(in srgb, var(--ink) 30%, transparent);
-  transform: translate(-3px, 3px);
+  color: color-mix(in srgb, var(--accent-deep) 38%, transparent);
+  transform: translate(-4px, 4px);
   clip-path: inset(58% 0 0 0);
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .mullu-identity-signal:hover .mullu-identity-word {
+  filter: drop-shadow(0 0 24px color-mix(in srgb, var(--accent) 30%, transparent));
   transform: translateY(-1px);
 }
 
@@ -7406,6 +7424,19 @@ html.menu-open body {
   }
 }
 
+@keyframes mullu-identity-word-shine {
+  0%,
+  38%,
+  100% {
+    background-position: 0 0, -180px 0, 0 0;
+  }
+
+  54%,
+  68% {
+    background-position: 0 0, 180px 0, 0 0;
+  }
+}
+
 @keyframes mullu-identity-bars {
   0%,
   100% {
@@ -7524,7 +7555,7 @@ html.menu-open body {
   .mullu-identity-signal {
     top: 8px;
     left: 8px;
-    width: min(42%, 154px);
+    width: min(44%, 162px);
     min-width: 0;
     min-height: 120px;
     padding: 8px;
@@ -7538,7 +7569,7 @@ html.menu-open body {
 
   .mullu-identity-word {
     margin: 6px 0 5px;
-    font-size: 34px;
+    font-size: 36px;
   }
 
   .mullu-identity-routing {
@@ -7678,6 +7709,7 @@ html.menu-open body {
   .claim-lens-core,
   .claim-lens-core::after,
   .mullu-identity-signal::after,
+  .mullu-identity-word,
   .mullu-identity-thread,
   .mullu-identity-bars i {
     animation: none !important;

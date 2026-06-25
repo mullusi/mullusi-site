@@ -3744,7 +3744,7 @@ function validateIndexDesignContract() {
   const dictionaryText = JSON.stringify(dictionary?.strings ?? {});
   const symbolFontPath = "assets/fonts/noto-sans-symbols-2-math.woff2";
   const assetVersion = "2026.05.platform.29";
-  const cssVersion = "2026.06.home.30";
+  const cssVersion = "2026.06.home.31";
   const fragmentVersion = "2026.06.fragment.6";
   const eyeHelperVersion = "2026.06.helper.2";
 
