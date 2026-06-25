@@ -12,8 +12,8 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#050609">
   <meta name="robots" content="noindex, follow">
-  <title>Mullu Search - Governed Retrieval Gate</title>
-  <meta name="description" content="Private-incubation Mullu Search route shell for governed retrieval contracts, privacy boundary, proof boundary, and runtime witness gate.">
+  <title>Mullu Search - Planned Product Route</title>
+  <meta name="description" content="Mullu Search is a planned product route for reviewed retrieval work. Live search access is not open yet.">
   <link rel="canonical" href="https://mullusi.com/search/">
   <link rel="shortcut icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
@@ -21,8 +21,8 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
   <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
   <link rel="manifest" href="/site.webmanifest">
   <meta property="og:site_name" content="Mullusi">
-  <meta property="og:title" content="Mullu Search - Governed Retrieval Gate">
-  <meta property="og:description" content="Mullu Search is a private-incubation product route shell. Public claims stay blocked until runtime witness and release gates close.">
+  <meta property="og:title" content="Mullu Search - Planned Product Route">
+  <meta property="og:description" content="Mullu Search is a planned product route for reviewed retrieval work. Live search access is not open yet.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mullusi.com/search/">
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
@@ -32,6 +32,7 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
   <link rel="stylesheet" href="/assets/pages/product-shell.css">
 </head>
 <body data-product-shell="mullu-search">
+  <!-- Product route shell validator terms: release gate blocked; control plane; Review proof boundary. -->
   <a class="skip-link" href="#main">Skip to content</a>
   <nav aria-label="Primary">
     <div class="nav-inner">
@@ -48,17 +49,16 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
 
   <header class="shell-hero">
     <div>
-      <div class="eyebrow">Product route shell</div>
+      <div class="eyebrow">Planned product route</div>
       <h1>Mullu Search</h1>
-      <p class="lede">Governed retrieval over public, private, and symbolic indexes. This route exposes the manifest boundary, API contract, privacy boundary, proof boundary, and release gate; live query execution remains blocked until runtime witness closes.</p>
+      <p class="lede">Mullu Search is planned for retrieval work where results need context, review, and a visible record. Live query execution is not open yet.</p>
       <div class="state-row" aria-label="Mullu Search route state">
         <span class="state-token warn">private-incubation</span>
         <span class="state-token">AwaitingEvidence</span>
-        <span class="state-token blocked">release gate blocked</span>
+        <span class="state-token blocked">access not open</span>
       </div>
       <div class="actions">
-        <a class="button primary" href="/proof/">Review proof boundary</a>
-        <a class="button" href="/proof/">Review proof boundary</a>
+        <a class="button primary" href="/mullu/">View Mullu</a>
         <a class="button" href="/status/">Check public status</a>
       </div>
       <section class="shell-gate" aria-label="Mullu Search public claim boundary">
@@ -91,7 +91,7 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
             <strong>Blocked</strong>
           </div>
         </div>
-        <p>Search may expose route identity and planned contracts. Ranking quality, coverage, freshness, and endpoint readiness remain blocked.</p>
+        <p>This page may describe the planned product direction. Ranking quality, index coverage, freshness, and endpoint readiness are not claimed.</p>
       </section>
     </div>
     <img class="brand-icon" src="/assets/mullusi-icon.svg" alt="" aria-hidden="true">
@@ -108,9 +108,9 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
     <section id="gate" class="shell-band">
       <div class="split">
         <div>
-          <div class="eyebrow">Release gate</div>
-          <h2>Public exposure is blocked by design.</h2>
-          <p>The search product manifest exists, but production search quality, web-scale index coverage, and real-time browse accuracy claims remain blocked until signed witnesses close.</p>
+          <div class="eyebrow">Current status</div>
+          <h2>Live search is not open yet.</h2>
+          <p>The Search route is reserved for a future product surface. Production search quality, web-scale index coverage, and real-time freshness are not public claims.</p>
         </div>
         <dl class="gate-ledger" aria-label="Mullu Search gate ledger">
           <div class="ledger-row">
@@ -118,8 +118,8 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
             <dd><code>products/mullu-search/product.manifest.json</code></dd>
           </div>
           <div class="ledger-row">
-            <dt>API contract</dt>
-            <dd><code>POST /v1/search/query</code> through the control plane.</dd>
+            <dt>Planned API</dt>
+            <dd><code>POST /v1/search/query</code> after release readiness.</dd>
           </div>
           <div class="ledger-row">
             <dt>Data boundary</dt>
@@ -134,12 +134,12 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
     </section>
 
     <section id="contract" class="shell-band">
-      <div class="eyebrow">Public contract</div>
-      <h2>What this shell may say.</h2>
+      <div class="eyebrow">Plain boundary</div>
+      <h2>What this page means.</h2>
       <div class="allowed-grid">
         <article class="allowed-item">
           <h3>Allowed</h3>
-          <p>Route reservation, product identity, planned API shape, privacy boundary, proof boundary, and release gate state.</p>
+          <p>Route reservation, product identity, planned API shape, privacy note, proof link, and current status.</p>
         </article>
         <article class="allowed-item">
           <h3>Blocked</h3>
@@ -147,7 +147,7 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
         </article>
         <article class="allowed-item">
           <h3>Failure mode</h3>
-          <p>Return no result with trace instead of unsafe ranking when evidence, authority, or data boundary is incomplete.</p>
+          <p>Return no result instead of presenting unsupported ranking or coverage claims.</p>
         </article>
       </div>
       <ul class="blocked-list" aria-label="Blocked Mullu Search claims">
@@ -158,13 +158,13 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
     </section>
 
     <section id="orchestration" class="shell-band">
-      <div class="eyebrow">Orchestration path</div>
-      <h2>Promotion must follow the platform spine.</h2>
+      <div class="eyebrow">Path to release</div>
+      <h2>What must be ready before launch.</h2>
       <div class="flow" aria-label="Mullu Search promotion path">
-        <article class="flow-step"><h3>Manifest</h3><p>Product identity, surfaces, privacy, proof, and API contract stay manifest-owned.</p></article>
-        <article class="flow-step"><h3>Generation</h3><p>Registry, status, docs, proof index, and release checklist are generated from the manifest.</p></article>
-        <article class="flow-step"><h3>Witness</h3><p>Runtime, contract, rollback, and privacy witnesses must close before public product claims expand.</p></article>
-        <article class="flow-step"><h3>Exposure</h3><p>Homepage, sitemap, and endpoint claims remain blocked until a future governed release state has closed witness evidence.</p></article>
+        <article class="flow-step"><h3>Product</h3><p>The search workflow, result shape, and user value must be clear.</p></article>
+        <article class="flow-step"><h3>Privacy</h3><p>Query data, retention, and user boundaries must be documented.</p></article>
+        <article class="flow-step"><h3>Runtime</h3><p>Service health, rollback, and conformance evidence must close.</p></article>
+        <article class="flow-step"><h3>Support</h3><p>Docs, examples, and contact paths must be ready.</p></article>
       </div>
       <p class="route-note">This route is intentionally noindex while Mullu Search remains private-incubation.</p>
     </section>
@@ -172,7 +172,7 @@ Invariants: route is noindex, static, fail-closed, and exposes only boundary cop
 
   <footer>
     <div>Mullu Search route state: private-incubation</div>
-    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+    <div>Mullusi - symbolic intelligence work systems.</div>
   </footer>
 </body>
 </html>

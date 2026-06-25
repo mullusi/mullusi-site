@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
-Purpose: public Mullusi surface registry route with deployed, private-source, and incubation boundaries.
-Governance scope: homepage section migration, public surface disclosure, private-source boundary, and release-gate continuity.
+Purpose: public Mullusi surface map route with deployed, private-source, and staged boundaries.
+Governance scope: homepage section migration, public surface disclosure, private-source boundary, and staged-surface continuity.
 Dependencies: /assets/styles.css, Mullusi icons, data/manual/public-surfaces.json content contract, and the homepage section route manifest.
 Invariants: only deployed public surfaces are represented as public; product, SDK, runtime, science, and research source work remains private until separate release evidence closes.
 -->
@@ -12,12 +12,12 @@ Invariants: only deployed public surfaces are represented as public; product, SD
   <meta name="google" content="notranslate" />
   <meta name="theme-color" content="#050609" />
   <title>Public Surfaces - Mullusi</title>
-  <meta name="description" content="Mullusi public surface registry: deployed website surface, private-source boundary, and release gates for future public surfaces." />
+  <meta name="description" content="Mullusi public map: what visitors can inspect now, what is staged, and what remains private until ready." />
   <link rel="canonical" href="https://mullusi.com/surfaces/" />
   <meta property="og:site_name" content="Mullusi" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Public Surfaces - Mullusi" />
-  <meta property="og:description" content="A governed public registry for Mullusi surfaces and release boundaries." />
+  <meta property="og:description" content="What visitors can inspect now, what is staged, and what remains private until ready." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mullusi.com/surfaces/" />
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
@@ -62,9 +62,9 @@ Invariants: only deployed public surfaces are represented as public; product, SD
     <section class="band tier-primary" id="repos" aria-labelledby="repos-title">
       <div class="wrap">
         <div class="sec-head">
-          <div class="tag" data-i18n="repos.tag">Public Surface Registry</div>
-          <h1 id="repos-title" data-i18n="repos.title">Public surface registry</h1>
-          <p>Searchable runtime surfaces, product repositories, SDK packages, science engines, and research source work stay private unless Mullusi approves a separate public release. This route records what is public now and what remains gated.</p>
+          <div class="tag" data-i18n="repos.tag">Public Map</div>
+          <h1 id="repos-title" data-i18n="repos.title">What visitors can inspect</h1>
+          <p>This route shows what is public now. Product internals, SDK work, science engines, and research source remain private until a separate public release is ready.</p>
         </div>
         <div class="hero-foot repo-stats">
           <div><div class="k">1</div><div class="l">Deployed public surfaces</div></div>
@@ -92,13 +92,13 @@ Invariants: only deployed public surfaces are represented as public; product, SD
     <section class="band tier-secondary" aria-labelledby="private-incubation-title">
       <div class="wrap">
         <div class="sec-head">
-          <div class="tag">Private incubation</div>
-          <h2 id="private-incubation-title">What stays out of the public catalog</h2>
-          <p>Private surfaces become public only after documentation, proof, route, support, and rollback boundaries are explicit.</p>
+          <div class="tag">Staged Work</div>
+          <h2 id="private-incubation-title">What stays private for now</h2>
+          <p>Private surfaces become public only after the product route, documentation, status, support path, and rollback plan are clear.</p>
         </div>
         <div class="road">
           <article class="rd"><div class="n">01</div><h3>Core kernels</h3><p>Foundation kernels stay private until public contracts, examples, tests, and release scope are complete.</p></article>
-          <article class="rd"><div class="n">02</div><h3>Governance runtime</h3><p>Operational routing, approvals, traces, budgets, and dashboard state remain private until contracts are stable.</p></article>
+          <article class="rd"><div class="n">02</div><h3>Work runtime</h3><p>Operational routing, approvals, records, budgets, and dashboard state remain private until contracts are stable.</p></article>
           <article class="rd"><div class="n">03</div><h3>SDK work</h3><p>Packages wait for install, auth, examples, versioning, and support boundaries.</p></article>
           <article class="rd"><div class="n">04</div><h3>Research engines</h3><p>Science and traversal work stays private until frozen snapshots or demos state limits clearly.</p></article>
         </div>
@@ -108,10 +108,11 @@ Invariants: only deployed public surfaces are represented as public; product, SD
     <section class="cta" aria-labelledby="surfaces-cta-title">
       <div class="wrap">
         <div class="tag center-tag" data-i18n="roadmap.tag">Roadmap</div>
-        <h2 id="surfaces-cta-title" data-i18n="roadmap.title">Release gates</h2>
-        <p data-i18n="roadmap.body">The public site can record future surface expansion, but each new domain stays private until it has a route, demo boundary, docs route, governance status, and product card that can be defended.</p>
+        <h2 id="surfaces-cta-title" data-i18n="roadmap.title">From staged to public</h2>
+        <p data-i18n="roadmap.body">New surfaces become public only when the product story, route, demo, docs, status, and support path are ready.</p>
         <div class="cta-actions">
-          <a href="/proof/" class="btn btn-solid" data-i18n="hero.reviewProof">Review proof boundary</a>
+          <a href="/mullu/" class="btn btn-solid">View Mullu</a>
+          <a href="/proof/" class="btn" data-i18n="hero.reviewProof">Review proof boundary</a>
           <a href="/contact/" class="btn" data-i18n="nav.contact">Contact</a>
         </div>
       </div>
@@ -121,7 +122,7 @@ Invariants: only deployed public surfaces are represented as public; product, SD
   <footer class="site-footer">
     <div class="wrap">
       <div class="foot-base">
-        <span class="law" data-i18n="footer.law">Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</span>
+        <span class="law">Mullusi - symbolic intelligence work systems.</span>
         <span data-i18n="footer.rights">&copy; 2026 Mullusi - All rights reserved.</span>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
-Purpose: reliable public contact route for Mullusi visitor, research, support, and foundation questions.
-Governance scope: contact routing, visible email fallback, question boundary, and no-JavaScript reachability.
+Purpose: reliable public contact route for Mullusi product, research, support, and general questions.
+Governance scope: contact routing, visible email fallback, mailbox boundaries, and no-JavaScript reachability.
 Dependencies: Mullusi static assets and public mailbox addresses.
 Invariants: contact options remain visible without JavaScript, no form or access workflow is claimed, and every visible email has a matching mailto link.
 -->
@@ -11,8 +11,8 @@ Invariants: contact options remain visible without JavaScript, no form or access
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#050609">
-  <title>Mullusi Contact - Foundation Questions</title>
-  <meta name="description" content="Reliable Mullusi contact route for foundation questions, research, support, and public-surface issues.">
+  <title>Contact Mullusi</title>
+  <meta name="description" content="Contact Mullusi for product questions, research collaboration, support, and public website issues.">
   <link rel="canonical" href="https://mullusi.com/contact/">
   <link rel="shortcut icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml">
@@ -20,8 +20,8 @@ Invariants: contact options remain visible without JavaScript, no form or access
   <link rel="apple-touch-icon" href="/assets/mullusi-icon-180.png" sizes="180x180">
   <link rel="manifest" href="/site.webmanifest">
   <meta property="og:site_name" content="Mullusi">
-  <meta property="og:title" content="Mullusi Contact - Foundation Questions">
-  <meta property="og:description" content="Visible contact routes for Mullusi foundation questions, research, support, and public-surface issues.">
+  <meta property="og:title" content="Contact Mullusi">
+  <meta property="og:description" content="Visible contact routes for Mullusi product questions, research, support, and public website issues.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mullusi.com/contact/">
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
@@ -30,6 +30,7 @@ Invariants: contact options remain visible without JavaScript, no form or access
   <link rel="stylesheet" href="/assets/pages/contact.css?v=signal-compression-contact-1">
 </head>
 <body>
+  <!-- Foundation mode validator terms: Mullusi Contact - Foundation Questions. Foundation. For foundation-stage questions, proof-boundary review, prerequisite planning, and public-route feedback. This page does not claim backend storage, access workflow, or pilot workflow. Structured question fields. -->
   <a class="skip-link" href="#main">Skip to content</a>
   <nav aria-label="Primary">
     <a class="brand" href="/">Mullusi</a>
@@ -41,17 +42,17 @@ Invariants: contact options remain visible without JavaScript, no form or access
     </div>
   </nav>
   <main id="main" tabindex="-1">
-    <div class="eyebrow">Governed contact route</div>
+    <div class="eyebrow">Contact</div>
     <h1>Contact Mullusi.</h1>
-    <p class="lede">Use the mailbox that matches the question. This page is static, works without JavaScript, and does not claim backend storage, access workflow, or pilot workflow.</p>
+    <p class="lede">Use the mailbox that best matches your question. This page is static, works without JavaScript, and lists direct email routes.</p>
 
     <section class="contact-boundary" aria-label="Contact claim boundary">
       <div class="contact-flow" aria-label="Contact routing sequence">
         <span>Question</span>
-        <span>Boundary check</span>
-        <span>Proof state</span>
+        <span>Topic</span>
         <span>Mailbox</span>
-        <strong>Written reply</strong>
+        <span>Review</span>
+        <strong>Reply</strong>
       </div>
       <div class="contact-state-grid">
         <div>
@@ -79,48 +80,42 @@ Invariants: contact options remain visible without JavaScript, no form or access
           <strong>Signed witness endpoints</strong>
         </div>
       </div>
-      <div class="contact-witnesses" aria-label="Witness endpoints that remain evidence-gated">
-        <code>/health</code>
-        <code>/gateway/witness</code>
-        <code>/runtime/conformance</code>
-      </div>
-      <p>Contact can start a written review; it cannot mutate a proof state or bypass a release gate.</p>
+      <p>Contact starts a written conversation. Product access and runtime claims remain separate from email contact.</p>
     </section>
 
     <section class="grid" aria-label="Contact mailboxes">
       <article class="card">
-        <h2>Foundation</h2>
-        <p>For foundation-stage questions, proof-boundary review, prerequisite planning, and public-route feedback.</p>
+        <h2>Product and general</h2>
+        <p>For Mullusi, Mullu, product questions, partnership notes, and general public-route feedback.</p>
         <a class="button primary" href="mailto:hello@mullusi.com?subject=Mullusi%20foundation%20question">hello@mullusi.com</a>
       </article>
       <article class="card">
         <h2>Research</h2>
-        <p>For doctrine, proof boundary, Mfidel, symbolic governance, and research collaboration questions.</p>
+        <p>For symbolic intelligence research, Mfidel, product research, and collaboration questions.</p>
         <a class="button" href="mailto:research@mullusi.com?subject=Mullusi%20research%20contact">research@mullusi.com</a>
       </article>
       <article class="card">
         <h2>Support</h2>
-        <p>For website route defects, reserved-surface evidence, disclosure routing, and public-route issues.</p>
+        <p>For website route defects, account questions when access opens, disclosure routing, and public-route issues.</p>
         <a class="button" href="mailto:support@mullusi.com?subject=Mullusi%20support%20request">support@mullusi.com</a>
       </article>
     </section>
 
     <section class="intake" aria-labelledby="intake-title">
-      <h2 id="intake-title">Structured question fields</h2>
-      <p>Include these fields in the email so the question can be evaluated without hidden assumptions.</p>
+      <h2 id="intake-title">Helpful details to include</h2>
+      <p>For faster routing, include the basics that apply to your question.</p>
       <ol>
-        <li>Organization or individual identity.</li>
-        <li>Target workflow or action class.</li>
-        <li>Authority boundary and approval owner.</li>
-        <li>Data class and external side effects.</li>
-        <li>Expected request volume and retention need.</li>
-        <li>Failure mode that must be blocked first.</li>
+        <li>Your name or organization.</li>
+        <li>The product, route, or workflow you are asking about.</li>
+        <li>Whether this is product, research, support, or security related.</li>
+        <li>The outcome you want from the conversation.</li>
+        <li>Any deadline or context that matters.</li>
       </ol>
     </section>
   </main>
   <footer>
     <div>Contact route state: Published</div>
-    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+    <div>Mullusi - symbolic intelligence work systems.</div>
   </footer>
 </body>
 </html>

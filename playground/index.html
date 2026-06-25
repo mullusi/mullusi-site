@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate" />
   <meta name="theme-color" content="#050609" />
-  <title>Mullusi Playground - Simulated Govern Evaluation</title>
-  <meta name="description" content="A static, simulated Mullusi govern evaluation. Runs entirely in your browser. Not a live endpoint and not a proof stamp.">
+  <title>Mullusi Playground - Browser Demo</title>
+  <meta name="description" content="A static Mullusi browser demo that shows the shape of a reviewed work result. It is not a live endpoint and not a proof stamp.">
   <link rel="canonical" href="https://mullusi.com/playground/" />
   <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml" />
@@ -15,8 +15,8 @@
   <link rel="manifest" href="/site.webmanifest" />
   <meta property="og:site_name" content="Mullusi" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="Mullusi Playground - Simulated Govern Evaluation" />
-  <meta property="og:description" content="A static, simulated Mullusi govern evaluation. Runs entirely in your browser. Not a live endpoint and not a proof stamp." />
+  <meta property="og:title" content="Mullusi Playground - Browser Demo" />
+  <meta property="og:description" content="A static Mullusi browser demo that shows the shape of a reviewed work result. It is not a live endpoint and not a proof stamp." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mullusi.com/playground/" />
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
@@ -45,21 +45,21 @@
 
   <header>
     <div>
-      <div class="eyebrow">Simulated Playground</div>
-      <h1>See the shape of a verdict.</h1>
+      <div class="eyebrow">Browser demo</div>
+      <h1>See the shape of a reviewed result.</h1>
     </div>
     <p class="lede">
-      This page runs a deterministic mock of a governed evaluation entirely
-      in your browser. It contacts no server, issues no proof stamp, and is
-      not the runtime service. It exists only to make the output shape tangible
-      while the runtime stays AwaitingEvidence.
+      This page runs a deterministic mock entirely in your browser. It contacts
+      no server, issues no proof stamp, and is not the runtime service. It
+      exists only to make the output shape tangible while the runtime stays
+      AwaitingEvidence.
     </p>
     <section class="playground-gate" aria-label="Playground claim boundary">
       <div class="playground-flow" aria-label="Simulator boundary sequence">
         <span>Input</span>
         <span>Browser mock</span>
-        <span>Constraint check</span>
-        <span>Simulated verdict</span>
+        <span>Review check</span>
+        <span>Simulated result</span>
         <strong>No proof stamp</strong>
       </div>
       <div class="playground-state-grid">
@@ -84,9 +84,9 @@
           <strong>Illustrative only</strong>
         </div>
       </div>
-      <p>The playground shows output shape only. It is not a runtime endpoint, release witness, or verification surface.</p>
+      <p>The playground shows output shape only. It is not a runtime endpoint or verification surface.</p>
     </section>
-    <p class="sim-banner">Simulated evaluation surface; proof stamps remain unavailable.</p>
+    <p class="sim-banner">Browser-only demo; proof stamps remain unavailable.</p>
   </header>
 
   <main id="main" tabindex="-1">
@@ -99,7 +99,7 @@
     </noscript>
 
     <section>
-      <h2>Simulate a govern evaluation.</h2>
+      <h2>Simulate a reviewed work result.</h2>
       <form id="sim-form">
         <label>
           Action
@@ -122,14 +122,14 @@
           <input id="lineage" type="checkbox" />
           Declare lineage for this effect
         </label>
-        <button type="submit">Simulate govern evaluation</button>
+        <button type="submit">Simulate review</button>
       </form>
 
       <div class="result" id="result" hidden aria-live="polite">
         <span class="verdict" id="verdict"></span>
         <pre id="payload"></pre>
         <div>
-          <div class="eyebrow trace-eyebrow">Simulated trace</div>
+          <div class="eyebrow trace-eyebrow">Simulated record</div>
           <ul class="trace" id="trace"></ul>
         </div>
         <p class="sim-banner" id="result-banner">Simulated - not a live proof stamp. The runtime service remains AwaitingEvidence.</p>
@@ -139,7 +139,7 @@
 
   <footer>
     <div>Mullusi playground</div>
-    <div>Symbols are atomic. Meaning is relational. Traversal is governed. Judgment is earned.</div>
+    <div>Mullusi - symbolic intelligence work systems.</div>
   </footer>
 
   <script defer src="/assets/pages/playground-simulator.js"></script>
