@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-25",
+    "updated": "2026-06-26",
     "count": 7
   },
   "items": [
     {
-      "title": "OpenAI unveils its first custom chip, built by Broadcom",
-      "url": "https://techcrunch.com/2026/06/24/openai-unveils-its-first-custom-chip-built-by-broadcom/",
-      "source": "techcrunch.com",
-      "points": 714,
-      "comments": 402,
-      "date": "2026-06-24"
-    },
-    {
-      "title": "45°C cooling design cuts data center water use to near zero",
-      "url": "https://blogs.nvidia.com/blog/liquid-cooling-ai-factories/",
-      "source": "blogs.nvidia.com",
-      "points": 347,
-      "comments": 242,
-      "date": "2026-06-24"
-    },
-    {
-      "title": "Half-Life 2 in a Browser",
-      "url": "https://hl2.slqnt.dev/",
-      "source": "hl2.slqnt.dev",
-      "points": 284,
-      "comments": 101,
+      "title": "An entire Herculaneum scroll has been read for the first time",
+      "url": "https://scrollprize.org/firstscroll",
+      "source": "scrollprize.org",
+      "points": 1332,
+      "comments": 283,
       "date": "2026-06-25"
     },
     {
-      "title": "The Xteink X4 E-Ink Reader",
-      "url": "https://blog.omgmog.net/post/xteink-x4-e-ink-reader/",
-      "source": "blog.omgmog.net",
-      "points": 262,
-      "comments": 149,
-      "date": "2026-06-24"
+      "title": "Om Malik has died",
+      "url": "https://om.co/2026/06/24/1966-2026/",
+      "source": "om.co",
+      "points": 929,
+      "comments": 111,
+      "date": "2026-06-25"
     },
     {
-      "title": "Blogging can just be stating the obvious",
-      "url": "https://blog.jim-nielsen.com/2026/blogging-stating-the-obvious/",
-      "source": "blog.jim-nielsen.com",
-      "points": 248,
-      "comments": 87,
-      "date": "2026-06-24"
+      "title": "The 'papers, please' era of the internet will decimate your privacy",
+      "url": "https://expression.fire.org/p/the-papers-please-era-of-the-internet",
+      "source": "expression.fire.org",
+      "points": 752,
+      "comments": 351,
+      "date": "2026-06-25"
     },
     {
-      "title": "GLM-5.2 is a step change for open agents",
-      "url": "https://www.interconnects.ai/p/glm-52-is-the-step-change-for-open",
-      "source": "interconnects.ai",
-      "points": 247,
-      "comments": 146,
-      "date": "2026-06-23"
+      "title": "Apple raises prices of MacBooks, iPads",
+      "url": "https://www.reuters.com/world/asia-pacific/apple-raises-prices-macbooks-ipads-memory-costs-skyrocket-2026-06-25/",
+      "source": "reuters.com",
+      "points": 739,
+      "comments": 1060,
+      "date": "2026-06-25"
     },
     {
-      "title": "Show HN: Nub – A Bun-like all-in-one toolkit for Node.js",
-      "url": "https://github.com/nubjs/nub",
-      "source": "github.com",
-      "points": 245,
-      "comments": 68,
-      "date": "2026-06-24"
+      "title": "Oxide computer 3D rack guided tour",
+      "url": "https://explorer.oxide.computer/",
+      "source": "explorer.oxide.computer",
+      "points": 377,
+      "comments": 154,
+      "date": "2026-06-22"
+    },
+    {
+      "title": "Hey Nico, you didn't vibe code your data room but stole it from Papermark",
+      "url": "https://twitter.com/mfts0/status/2070080422482977095",
+      "source": "twitter.com",
+      "points": 370,
+      "comments": 150,
+      "date": "2026-06-25"
+    },
+    {
+      "title": "IBM debuts sub-1 nanometer chip technology",
+      "url": "https://newsroom.ibm.com/2026-06-25-ibm-debuts-worlds-first-sub-1-nanometer-chip-technology",
+      "source": "newsroom.ibm.com",
+      "points": 326,
+      "comments": 175,
+      "date": "2026-06-25"
     }
   ]
 }
