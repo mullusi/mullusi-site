@@ -28,6 +28,7 @@ const requiredFiles = [
   "proof/index.html",
   "playground/index.html",
   "contact/index.html",
+  "portfolio/index.html",
   "pilot/index.html",
   "status/index.html",
   "security/index.html",
@@ -244,6 +245,7 @@ const publicHtmlFiles = [
   "proof/index.html",
   "playground/index.html",
   "contact/index.html",
+  "portfolio/index.html",
   "pilot/index.html",
   "status/index.html",
   "security/index.html",
@@ -529,6 +531,7 @@ function validateCloudflarePagesArtifact() {
     "news",
     "sciences",
     "surfaces",
+    "portfolio",
     "pilot",
     "playground",
     "proof",
@@ -600,6 +603,7 @@ function validateCloudflarePagesArtifact() {
     "proof/index.html",
     "playground/index.html",
     "contact/index.html",
+    "portfolio/index.html",
     "pilot/index.html",
     "status/index.html",
     "security/index.html",
@@ -1696,7 +1700,7 @@ function validateStatusJson() {
       recordFailure("i18n_last_updated_am_mojibake");
     }
   }
-  const requiredPublishedRoutes = ["/search/", "/browse/", "/contact/", "/pilot/", "/status/", "/security/", "/privacy/", "/terms/", "/acceptable-use/", "/responsible-disclosure/"];
+  const requiredPublishedRoutes = ["/search/", "/browse/", "/contact/", "/portfolio/", "/pilot/", "/status/", "/security/", "/privacy/", "/terms/", "/acceptable-use/", "/responsible-disclosure/"];
   if (!Array.isArray(status.published_routes) || requiredPublishedRoutes.some((route) => !status.published_routes.includes(route))) {
     recordFailure("status_published_routes_missing_public_trust_routes");
   }
@@ -5478,6 +5482,7 @@ function validateHeadContract() {
     { file: "proof/index.html", url: "https://mullusi.com/proof/" },
     { file: "playground/index.html", url: "https://mullusi.com/playground/" },
     { file: "contact/index.html", url: "https://mullusi.com/contact/" },
+    { file: "portfolio/index.html", url: "https://mullusi.com/portfolio/", ogType: "profile", image: "https://mullusi.com/assets/tamirat-profile.jpg" },
     { file: "pilot/index.html", url: "https://mullusi.com/pilot/" },
     { file: "status/index.html", url: "https://mullusi.com/status/" },
     { file: "security/index.html", url: "https://mullusi.com/security/" },
@@ -5486,7 +5491,7 @@ function validateHeadContract() {
     { file: "acceptable-use/index.html", url: "https://mullusi.com/acceptable-use/" },
     { file: "responsible-disclosure/index.html", url: "https://mullusi.com/responsible-disclosure/" },
   ];
-  for (const { file, url } of routes) {
+  for (const { file, url, ogType = "website", image = ogImage } of routes) {
     const html = readUtf8(file);
     const checks = [
       [/<meta\s+charset=/i, "charset"],
@@ -5496,11 +5501,11 @@ function validateHeadContract() {
       [`<link rel="canonical" href="${url}"`, "canonical"],
       [`<meta property="og:title" content="`, "og:title"],
       [`<meta property="og:description" content="`, "og:description"],
-      [`<meta property="og:type" content="website"`, "og:type"],
+      [`<meta property="og:type" content="${ogType}"`, "og:type"],
       [`<meta property="og:url" content="${url}"`, "og:url"],
-      [`<meta property="og:image" content="${ogImage}"`, "og:image"],
+      [`<meta property="og:image" content="${image}"`, "og:image"],
       [`<meta name="twitter:card" content="`, "twitter:card"],
-      [`<meta name="twitter:image" content="${ogImage}"`, "twitter:image"],
+      [`<meta name="twitter:image" content="${image}"`, "twitter:image"],
     ];
     for (const [matcher, label] of checks) {
       const present = matcher instanceof RegExp ? matcher.test(html) : html.includes(matcher);

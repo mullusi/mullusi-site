@@ -135,19 +135,19 @@
       "am": "የሙሉሲ ስራ መድረክ"
     },
     "activeHero.statusLive": {
-      "en": "Public website: live",
+      "en": "Product route: live",
       "am": "ይፋዊ ድር ጣቢያ፦ ቀጥታ"
     },
     "activeHero.title": {
-      "en": "Work software that knows what it is allowed to do.",
+      "en": "Work software that reviews actions before they run.",
       "am": "ምን ማድረግ እንደተፈቀደለት የሚያውቅ የስራ ሶፍትዌር።"
     },
     "activeHero.lead": {
-      "en": "Mullusi builds symbolic intelligence systems for teams that need planning, approvals, evidence, and controlled execution in one operating layer.",
+      "en": "Mullusi helps teams plan work, review proposed actions, keep evidence, and execute only when the state is clear.",
       "am": "ሙሉሲ እቅድ፣ ፍቃድ፣ ማስረጃ፣ እና ቁጥጥር ያለው አፈፃፀም በአንድ የስራ ንብርብር ለሚፈልጉ ቡድኖች የምልክታዊ ብልህነት ሥርዓቶችን ይገነባል።"
     },
     "activeHero.plain": {
-      "en": "Start with a work assistant, preview what it will do, route approvals, and keep proof of the decision before any action is treated as complete.",
+      "en": "Start with Mullu: preview the plan, route approval, keep the record, and know what remains open.",
       "am": "በስራ ረዳት ይጀምሩ፣ የሚያደርገውን አስቀድመው ይመልከቱ፣ ፍቃዶችን ያስተላልፉ፣ እና ማንኛውም እርምጃ እንደተጠናቀቀ ከመቆጠሩ በፊት የውሳኔውን ማስረጃ ይጠብቁ።"
     },
     "activeHero.snapshotAria": {
@@ -171,27 +171,27 @@
       "am": "እቅድ፣ ግምገማ፣ አፈፃፀም"
     },
     "activeHero.trustK": {
-      "en": "Trust layer",
+      "en": "Review",
       "am": "የእምነት ንብርብር"
     },
     "activeHero.trustV": {
-      "en": "Proof boundary visible",
+      "en": "Human approval path",
       "am": "የማረጋገጫ ወሰን ይታያል"
     },
     "activeHero.runtimeK": {
-      "en": "Runtime",
+      "en": "Status",
       "am": "አፈፃፀም"
     },
     "activeHero.runtimeV": {
-      "en": "AwaitingEvidence",
+      "en": "Proof status open",
       "am": "AwaitingEvidence"
     },
     "activeHero.ctaProduct": {
-      "en": "Explore the Product",
+      "en": "View Mullu",
       "am": "ምርቱን ይመልከቱ"
     },
     "activeHero.ctaProof": {
-      "en": "See Proof Status",
+      "en": "See proof status",
       "am": "የማረጋገጫ ሁኔታን ይመልከቱ"
     },
     "activeHero.lastUpdated": {
@@ -199,15 +199,15 @@
       "am": "ይፋዊ ሁኔታ 2026-06-09 ተዘምኗል"
     },
     "activeHero.machineAria": {
-      "en": "Governed Claim Lens",
+      "en": "Mullu workflow preview",
       "am": "በአስተዳደር የተገዛ የይገባኛል መነጽር"
     },
     "activeHero.machineKicker": {
-      "en": "Product route",
+      "en": "Product workflow",
       "am": "የምርት መንገድ"
     },
     "activeHero.machineRule": {
-      "en": "plan -> review -> execute",
+      "en": "plan -> review -> record",
       "am": "እቅድ -> ግምገማ -> አፈፃፀም"
     },
     "hero.tag": {
@@ -479,11 +479,11 @@
       "am": "ከዚህ ይጀምሩ"
     },
     "start.title": {
-      "en": "Choose the surface",
+      "en": "Start with the right surface",
       "am": "ገጹን ይምረጡ"
     },
     "start.body": {
-      "en": "Start with the product, try a preview, check proof status, or read the platform overview.",
+      "en": "Open the product route, check public status, try a preview, or read the platform overview.",
       "am": "የመጀመሪያ ጉብኝት በፍጥነት መመራት አለበት፦ ምርት፣ ማረጋገጫ፣ sandbox፣ ወይም ይፋዊ መዋቅር።"
     },
     "start.mullu.k": {
@@ -555,7 +555,7 @@
       "am": "ይህን ጣቢያ እንዴት ማንበብ እንደሚገባ"
     },
     "boundary.body": {
-      "en": "Public pages show what visitors can inspect now. Product runtime, API, dashboard, sandbox, and metrics stay clearly marked until their public evidence is ready.",
+      "en": "The homepage explains the offer. Deeper routes carry architecture, proof status, public surfaces, and staged domain details.",
       "am": "ቀጥታ ገጾች በቀጥታ ተያይዘዋል። የተዘጋጁ ሞተሮች የመንገድ ካርታ መዝገቦች ናቸው። ማሳያዎች የታሰበውን የግምገማ ቅርጽ ያሳያሉ፣ ነገር ግን የማረጋገጫ መንገዱ የተፈረመ የምስክር ማስረጃ እስኪያትም ድረስ runtime የይገባኛል ጥያቄዎች አይደሉም።"
     },
     "platform.tag": {
@@ -563,15 +563,15 @@
       "am": "መድረክ"
     },
     "platform.title": {
-      "en": "One work layer, several surfaces",
+      "en": "One work layer, clear surfaces",
       "am": "አንድ የሥራ ሽፋን፣ ብዙ ገጾች"
     },
     "platform.body": {
-      "en": "Mullusi brings the website, Mullu product route, API path, dashboard, docs, and proof status into one understandable product architecture.",
+      "en": "Mullusi connects the product route, API path, dashboard, docs, and public status into one understandable work system.",
       "am": "ሙሉሲ ድረ-ገጹን፣ የሙሉ የምርት መንገድን፣ API መንገድን፣ ዳሽቦርድን፣ ሰነዶችንና የማረጋገጫ ሁኔታን በአንድ የሚገባ የምርት አርክቴክቸር ያያይዛል።"
     },
     "platform.plain": {
-      "en": "In plain terms: the website explains the offer, Mullu is the product route, the dashboard is the operator surface, and the API is the execution path.",
+      "en": "In plain terms: Mullu is the product route, the dashboard is the operator surface, the API is the execution path, and proof status shows what is ready.",
       "am": "በቀላል አነጋገር፦ ድረ-ገጹ አቅርቦቱን ያሳያል፣ ሙሉ የምርት መንገድ ነው፣ ዳሽቦርዱ የኦፕሬተር ገጽ ነው፣ API የአፈጻጸም መንገድ ነው።"
     },
     "platform.governs": {
@@ -747,15 +747,15 @@
       "am": "የምርት ግራፍ"
     },
     "products.title": {
-      "en": "The product path",
+      "en": "Start with Mullu",
       "am": "ሙሉ ዋናው ምርት ነው። ሌሎች ሞተሮች የማረጋገጫ ወሰናቸው እስኪዘጋጅ ድረስ ተዘጋጅተው ይቆያሉ"
     },
     "products.body": {
-      "en": "Mullu is the first public product route. Other product families remain staged until their route, docs, demo, and proof status are ready.",
+      "en": "Mullu is the first public product route: a work assistant for planning, review, approval, records, and controlled execution.",
       "am": "ይፋዊው ጣቢያ አሁን የሙሉሲ ጃንጥላን፣ የሙሉ የምርት መንገድንና የማረጋገጫ ወሰንን ይለያል። የምርት-ቅርጽ ያለው runtime፣ SDK፣ ሳይንስ፣ ቋንቋና የበይነገጽ ሥራ የመለቀቅ በሮች እስኪሟሉ ድረስ የግል ሆኖ ይቆያል።"
     },
     "products.plain": {
-      "en": "In plain terms: start with Mullu; everything else becomes public only when it has a clear surface and supportable status.",
+      "en": "In plain terms: the company site now leads with one product path; other domains stay staged until their route and support path are ready.",
       "am": "በቀላል አነጋገር፦ ሙሉ መጀመሪያ ይፋዊ የምርት መንገድ ነው፤ ሌሎች ሞተሮች ለማረጋገጫ ዝግጁ የመለቀቅ በሮችን ይጠብቃሉ።"
     },
     "products.pg1.title": {
@@ -967,11 +967,11 @@
       "am": "መስፋፋት"
     },
     "cta.title": {
-      "en": "Start with the product path",
+      "en": "Start with Mullu",
       "am": "ሪፖዚቶሪን የምርት ማስረጃ ከተዘጋጀ በኋላ ብቻ ያሳድጉ"
     },
     "cta.body": {
-      "en": "Mullu is the first public product route. New domains become public only when the product story, demo, docs, status, and support path are ready.",
+      "en": "Open the product route first. Proof status, architecture, and staged domains remain available for deeper review.",
       "am": "እያንዳንዱ አዲስ ጎራ ሪፖው፣ የማሳያ መንገዱ፣ የሰነድ መንገዱ፣ የአስተዳደር ሁኔታውና የመለቀቅ ወሰኑ ሲረጋገጡ ከግል ማብሰያ ወደ ይፋዊ ገጽ ሊሸጋገር ይችላል። ሙሉ በሙሉሲ ጃንጥላ ሥር የመጀመሪያው የምርት መንገድ ሆኖ ይቆያል።"
     },
     "cta.contactResearch": {
@@ -1139,7 +1139,7 @@
       "am": "በቀላል አነጋገር፦ እዚህ የተገለጸ ከሆነ የት እንደሚኖርና እንዴት እንደሚተዳደር ማረጋገጥ ትችላለህ።"
     },
     "govern.plain": {
-      "en": "In plain terms: send a proposed action, get back a reviewed result and the reason for it.",
+      "en": "In plain terms: Mullusi helps teams know what happened, why it happened, and what still needs review.",
       "am": "በቀላል አነጋገር፦ ድርጊት ላክ፣ ፍርድ፣ ምክንያቱን፣ የኦዲት ዱካና የማረጋገጫ ማህተም ተቀበል።"
     },
     "status.live": {
