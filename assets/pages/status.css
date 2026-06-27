@@ -14,6 +14,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       --muted: #99a0b4;
       --accent: #5ce6c4;
       --warm: #e8b15c;
+      --blue: #8ab4ff;
       --danger: #ff8aa8;
       --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
       --serif: Georgia, "Times New Roman", serif;
@@ -21,7 +22,10 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: radial-gradient(circle at 70% 0%, rgba(143, 240, 192, 0.1), transparent 35%), var(--bg);
+      background:
+        radial-gradient(circle at 70% 0%, rgba(92, 230, 196, 0.12), transparent 34%),
+        radial-gradient(circle at 0% 8%, rgba(138, 180, 255, 0.11), transparent 30%),
+        linear-gradient(180deg, #050609 0%, #080a10 42%, #050609 100%);
       color: var(--ink);
       font: 15px/1.65 var(--mono);
     }
@@ -95,13 +99,64 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       gap: 12px;
       margin-top: 24px;
     }
+    .status-snapshot {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 24px;
+      padding: 18px;
+      border: 1px solid rgba(138, 180, 255, 0.24);
+      background:
+        linear-gradient(135deg, rgba(138, 180, 255, 0.09), transparent 42%),
+        rgba(6, 8, 14, 0.72);
+    }
+    .snapshot-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+    .snapshot-copy h2 {
+      max-width: 16ch;
+      margin-top: 10px;
+      font-size: 34px;
+    }
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      min-width: 0;
+    }
+    .snapshot-grid div {
+      display: grid;
+      align-content: space-between;
+      min-height: 92px;
+      padding: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .snapshot-grid span {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .snapshot-grid strong {
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
     .status-boundary {
       display: grid;
       gap: 12px;
       margin-top: 22px;
       padding: 14px;
       border: 1px solid rgba(92, 230, 196, 0.2);
-      background: rgba(255, 255, 255, 0.025);
+      background:
+        linear-gradient(135deg, rgba(92, 230, 196, 0.08), transparent 42%),
+        rgba(255, 255, 255, 0.025);
     }
     .status-flow {
       display: grid;
@@ -169,6 +224,17 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       background: rgba(17, 20, 15, 0.86);
       padding: 18px;
     }
+    .status-card {
+      min-width: 0;
+      min-height: 205px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+        rgba(17, 20, 15, 0.86);
+    }
+    .status-card h2 {
+      font-size: 28px;
+      overflow-wrap: anywhere;
+    }
     .state {
       display: inline-flex;
       border: 1px solid var(--line);
@@ -224,6 +290,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       text-decoration: none;
       font-size: 12px;
       letter-spacing: 0.05em;
+      overflow-wrap: anywhere;
     }
     footer {
       display: flex;
@@ -236,6 +303,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
     @media (max-width: 880px) {
       .status-grid { grid-template-columns: 1fr; }
+      .status-snapshot { grid-template-columns: 1fr; }
       .status-state-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 700px) {
@@ -243,6 +311,16 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       main { padding-top: 22px; }
       h1 { font-size: 38px; }
       h2 { font-size: 30px; }
+      .snapshot-copy h2 {
+        max-width: none;
+        font-size: 28px;
+      }
+      .snapshot-grid {
+        grid-template-columns: 1fr;
+      }
+      .snapshot-grid div {
+        min-height: 74px;
+      }
       .lede {
         font-size: 14px;
         line-height: 1.45;
