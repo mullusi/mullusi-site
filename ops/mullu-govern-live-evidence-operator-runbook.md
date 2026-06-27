@@ -27,6 +27,7 @@ approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
 local_live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake.local.json
 live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
+live_evidence_ref_status_command=node scripts/report-govern-live-evidence-ref-status.mjs
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
 live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collection-checklist.md
 sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md
@@ -41,6 +42,40 @@ raw_request_bodies_allowed=false
 raw_response_bodies_allowed=false
 provider_values_allowed=false
 last_reviewed=2026-06-27
+```
+
+## 2026-06-27 Status Refresh
+
+The live evidence ref status reporter still returns `AwaitingEvidence` and
+does not find invalid public-safe refs:
+
+```text
+command=node scripts/report-govern-live-evidence-ref-status.mjs
+govern_live_evidence_ref_status=AwaitingEvidence
+proof_state=Unknown
+missing_ref_count=8
+local_guard_missing_count=8
+invalid_ref_count=0
+finding_count=0
+secret_values=not_read
+provider_values=not_read
+raw_payloads=not_read
+```
+
+The operator request emitter still asks for the same eight public-safe refs and
+keeps the write route blocked:
+
+```text
+command=node scripts/emit-govern-live-evidence-operator-request.mjs
+govern_live_evidence_operator_request=AwaitingEvidence
+proof_state=Unknown
+missing_ref_count=8
+invalid_ref_count=0
+public_write_route_allowed=false
+next_action=supply_public_safe_refs_in_ignored_local_intake
+secret_values=not_read
+provider_values=not_read
+raw_payloads=not_read
 ```
 
 ## Evidence Ref Contract
