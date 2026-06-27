@@ -6627,11 +6627,11 @@ html.menu-open body {
 }
 
 .claim-lens-copy h1 {
-  max-width: 100%;
+  max-width: 11ch;
   margin: 16px 0 18px;
-  font-size: 42px;
+  font-size: 76px;
   letter-spacing: 0;
-  line-height: 1;
+  line-height: 0.92;
 }
 
 .claim-lens-copy .lead {
@@ -6734,27 +6734,29 @@ html.menu-open body {
   left: 18px;
   z-index: 3;
   display: grid;
-  width: min(40%, 236px);
-  min-width: 190px;
-  min-height: 156px;
+  width: min(48%, 306px);
+  min-width: 220px;
+  min-height: 192px;
   overflow: hidden;
-  padding: 14px 16px 13px;
+  padding: 16px 18px 14px;
   border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
   border-radius: 8px;
   background:
+    conic-gradient(from 225deg at 32% 42%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 28%, color-mix(in srgb, var(--accent-warm) 18%, transparent) 42%, transparent 66%, color-mix(in srgb, var(--accent) 16%, transparent)),
     radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--accent-warm) 30%, transparent), transparent 34%),
     radial-gradient(circle at 16% 86%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 38%),
     linear-gradient(135deg, color-mix(in srgb, var(--bg) 70%, transparent), color-mix(in srgb, var(--panel-glass) 94%, transparent)),
     repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 11%, transparent) 0 1px, transparent 1px 15px);
   box-shadow:
     0 32px 96px rgba(0, 0, 0, 0.38),
-    10px 12px 0 color-mix(in srgb, var(--accent) 5%, transparent),
-    -8px -8px 0 color-mix(in srgb, var(--accent-warm) 4%, transparent),
+    14px 16px 0 color-mix(in srgb, var(--accent) 5%, transparent),
+    -10px -10px 0 color-mix(in srgb, var(--accent-warm) 4%, transparent),
+    0 0 56px color-mix(in srgb, var(--accent) 12%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--ink) 12%, transparent),
     inset 0 -1px 0 color-mix(in srgb, var(--accent) 12%, transparent);
   backdrop-filter: blur(14px);
   isolation: isolate;
-  transform: translateZ(0);
+  transform: translateZ(0) rotate(-1deg);
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease,
@@ -6799,7 +6801,7 @@ html.menu-open body {
     12px 14px 0 color-mix(in srgb, var(--accent) 6%, transparent),
     0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--ink) 14%, transparent);
-  transform: translateY(-1px);
+  transform: translateY(-2px) rotate(-0.5deg);
 }
 
 .mullu-identity-kicker,
@@ -6818,25 +6820,25 @@ html.menu-open body {
   position: relative;
   z-index: 3;
   display: inline-block;
-  margin: 9px 0 8px;
+  margin: 12px 0 10px;
   color: transparent;
   background:
-    linear-gradient(115deg, color-mix(in srgb, var(--ink) 24%, var(--accent)) 0%, var(--accent) 30%, color-mix(in srgb, var(--accent-warm) 78%, var(--accent)) 62%, color-mix(in srgb, var(--ink) 18%, var(--accent)) 100%),
-    linear-gradient(92deg, transparent 0 28%, color-mix(in srgb, var(--ink) 84%, transparent) 44%, transparent 60%),
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 16%, transparent) 0 1px, transparent 1px 7px);
-  background-size: auto, 180px 100%, auto;
-  background-position: 0 0, -180px 0, 0 0;
+    linear-gradient(118deg, color-mix(in srgb, var(--ink) 30%, var(--accent)) 0%, var(--accent) 28%, color-mix(in srgb, var(--accent-warm) 90%, var(--accent)) 62%, color-mix(in srgb, var(--ink) 38%, var(--accent)) 100%),
+    linear-gradient(92deg, transparent 0 28%, color-mix(in srgb, var(--ink) 92%, transparent) 44%, transparent 60%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 18%, transparent) 0 1px, transparent 1px 8px);
+  background-size: auto, 220px 100%, auto;
+  background-position: 0 0, -220px 0, 0 0;
   background-clip: text;
   -webkit-background-clip: text;
-  font-family: var(--serif);
-  font-size: 64px;
-  font-weight: 400;
+  font-family: var(--sans);
+  font-size: 94px;
+  font-weight: 800;
   letter-spacing: 0;
-  line-height: 0.82;
-  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 18%, transparent));
+  line-height: 0.76;
+  filter: drop-shadow(0 0 24px color-mix(in srgb, var(--accent) 24%, transparent));
   text-shadow:
-    0 0 18px color-mix(in srgb, var(--accent) 22%, transparent),
-    0 18px 34px rgba(0, 0, 0, 0.38);
+    0 0 22px color-mix(in srgb, var(--accent) 24%, transparent),
+    0 22px 42px rgba(0, 0, 0, 0.42);
   animation: mullu-identity-word-shine 6200ms ease-in-out 1200ms infinite;
   transition:
     filter 180ms ease,
@@ -6852,17 +6854,17 @@ html.menu-open body {
 }
 
 .mullu-identity-word::before {
-  color: color-mix(in srgb, var(--accent-warm) 54%, transparent);
-  transform: translate(4px, -3px);
-  clip-path: inset(0 0 62% 0);
-  opacity: 0.66;
+  color: color-mix(in srgb, var(--accent-warm) 62%, transparent);
+  transform: translate(5px, -4px);
+  clip-path: polygon(0 0, 100% 0, 100% 46%, 0 58%);
+  opacity: 0.72;
 }
 
 .mullu-identity-word::after {
-  color: color-mix(in srgb, var(--accent-deep) 38%, transparent);
-  transform: translate(-4px, 4px);
-  clip-path: inset(58% 0 0 0);
-  opacity: 0.7;
+  color: color-mix(in srgb, var(--accent-deep) 46%, transparent);
+  transform: translate(-5px, 5px);
+  clip-path: polygon(0 54%, 100% 44%, 100% 100%, 0 100%);
+  opacity: 0.76;
 }
 
 .mullu-identity-signal:hover .mullu-identity-word {
@@ -6878,6 +6880,7 @@ html.menu-open body {
   position: absolute;
   inset: 0;
   z-index: 2;
+  opacity: 0.78;
   pointer-events: none;
 }
 
@@ -6892,10 +6895,10 @@ html.menu-open body {
   border: 1px solid color-mix(in srgb, var(--line-bright) 72%, transparent);
   border-radius: 999px;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--bg) 72%, transparent), color-mix(in srgb, var(--panel-soft) 92%, transparent));
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 88%, transparent), color-mix(in srgb, var(--panel-soft) 96%, transparent));
   color: var(--ink-soft);
   font-family: var(--mono);
-  font-size: 7.5px;
+  font-size: 7px;
   letter-spacing: 0.1em;
   line-height: 1;
   padding: 6px 7px 6px 12px;
@@ -6920,13 +6923,13 @@ html.menu-open body {
 }
 
 .mullu-identity-node-claim {
-  top: 52px;
-  left: 9px;
+  top: 64px;
+  left: 12px;
 }
 
 .mullu-identity-node-proof {
-  top: 38px;
-  right: 9px;
+  top: 48px;
+  right: 12px;
   border-color: color-mix(in srgb, var(--accent-warm) 44%, var(--line-bright));
 }
 
@@ -6936,8 +6939,8 @@ html.menu-open body {
 }
 
 .mullu-identity-node-witness {
-  right: 11px;
-  bottom: 28px;
+  right: 14px;
+  bottom: 34px;
 }
 
 .mullu-identity-thread {
@@ -6951,24 +6954,24 @@ html.menu-open body {
 }
 
 .mullu-identity-thread-a {
-  top: 50px;
-  left: 52px;
-  width: 104px;
+  top: 62px;
+  left: 56px;
+  width: 140px;
   transform: rotate(-7deg);
 }
 
 .mullu-identity-thread-b {
-  top: 72px;
-  right: 38px;
-  width: 76px;
+  top: 86px;
+  right: 42px;
+  width: 96px;
   transform: rotate(149deg);
   animation-delay: 420ms;
 }
 
 .mullu-identity-thread-c {
-  right: 40px;
-  bottom: 52px;
-  width: 88px;
+  right: 44px;
+  bottom: 64px;
+  width: 114px;
   transform: rotate(181deg);
   animation-delay: 840ms;
 }
@@ -7471,7 +7474,7 @@ html.menu-open body {
 
   .claim-lens-copy h1 {
     max-width: 16ch;
-    font-size: 50px;
+    font-size: 58px;
   }
 
   .claim-lens-snapshot {
@@ -7502,7 +7505,7 @@ html.menu-open body {
 
   .claim-lens-copy h1 {
     margin: 8px 0 10px;
-    font-size: 27px;
+    font-size: 35px;
     line-height: 1.02;
   }
 
