@@ -139,16 +139,16 @@
       "am": "የምርት መንገድ፦ ቀጥታ"
     },
     "activeHero.title": {
-      "en": "Work software that reviews actions before they run.",
-      "am": "ስራዎች ከመፈጸማቸው በፊት የሚገመግም የስራ ሶፍትዌር።"
+      "en": "Plan complex work without losing control.",
+      "am": "ውስብስብ ስራን ቁጥጥር ሳያጡ ያቅዱ።"
     },
     "activeHero.lead": {
       "en": "Mullusi helps teams plan work, review proposed actions, keep evidence, and execute only when the state is clear.",
       "am": "ሙሉሲ ቡድኖች ስራን እንዲያቅዱ፣ የታቀዱ እርምጃዎችን እንዲገመግሙ፣ ማስረጃ እንዲያቆዩ፣ እና ሁኔታው ግልጽ ሲሆን ብቻ እንዲፈጽሙ ይረዳል።"
     },
     "activeHero.plain": {
-      "en": "Start with Mullu: preview the plan, route approval, keep the record, and know what remains open.",
-      "am": "በሙሉ ይጀምሩ፦ እቅዱን አስቀድመው ይመልከቱ፣ ፍቃድን ያስተላልፉ፣ መዝገቡን ያቆዩ፣ እና የቀረውን ይወቁ።"
+      "en": "Turn intent into a plan, review the next action, keep the decision record, and move work forward with human authority intact.",
+      "am": "ዓላማን ወደ እቅድ ይቀይሩ፣ ቀጣዩን እርምጃ ይገምግሙ፣ የውሳኔ መዝገቡን ያቆዩ፣ እና የሰው ስልጣን ተጠብቆ ስራውን ወደፊት ያንቀሳቅሱ።"
     },
     "activeHero.snapshotAria": {
       "en": "Current Mullusi public state",
@@ -163,36 +163,36 @@
       "am": "የሙሉ መሠረት መንገድ"
     },
     "activeHero.offerK": {
-      "en": "Offer",
-      "am": "አቅርቦት"
+      "en": "Use case",
+      "am": "የአጠቃቀም ጉዳይ"
     },
     "activeHero.offerV": {
-      "en": "Plan, review, execute",
-      "am": "እቅድ፣ ግምገማ፣ አፈፃፀም"
+      "en": "Plan, review, record",
+      "am": "እቅድ፣ ግምገማ፣ መዝገብ"
     },
     "activeHero.trustK": {
-      "en": "Review",
-      "am": "ግምገማ"
-    },
-    "activeHero.trustV": {
-      "en": "Human approval path",
-      "am": "የሰው ፍቃድ መንገድ"
-    },
-    "activeHero.runtimeK": {
       "en": "Status",
       "am": "ሁኔታ"
     },
+    "activeHero.trustV": {
+      "en": "Website live",
+      "am": "ድር ጣቢያው ቀጥታ ነው"
+    },
+    "activeHero.runtimeK": {
+      "en": "Access",
+      "am": "መዳረሻ"
+    },
     "activeHero.runtimeV": {
-      "en": "Proof status open",
-      "am": "የማረጋገጫ ሁኔታ ክፍት"
+      "en": "Product runtime staged",
+      "am": "የምርት አፈጻጸም ተዘጋጅቷል"
     },
     "activeHero.ctaProduct": {
-      "en": "View Mullu",
-      "am": "ምርቱን ይመልከቱ"
+      "en": "Explore Mullu",
+      "am": "ሙሉን ይመልከቱ"
     },
     "activeHero.ctaProof": {
-      "en": "See proof status",
-      "am": "የማረጋገጫ ሁኔታን ይመልከቱ"
+      "en": "Check Status",
+      "am": "ሁኔታውን ይመልከቱ"
     },
     "activeHero.lastUpdated": {
       "en": "Public state updated 2026-06-09",
