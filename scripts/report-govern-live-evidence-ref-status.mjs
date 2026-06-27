@@ -21,7 +21,7 @@ const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultIntakePath = "ops/mullu-govern-live-evidence-ref-intake-template.json";
 const allowedArgs = new Set(["--help", "-h", "--json"]);
 
-const refEvidencePlan = Object.freeze({
+export const governLiveEvidenceRefPlan = Object.freeze({
   operator_approval_ref: {
     guardPath: "ops/mullu-govern-approval-readiness-preflight.md",
     acceptedShape: "approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved",
@@ -149,7 +149,7 @@ export function analyzeGovernLiveEvidenceRefStatusContent(content, guardContents
 
   const refs = [];
   for (const key of requiredLiveEvidenceApprovalKeys) {
-    const plan = refEvidencePlan[key];
+    const plan = governLiveEvidenceRefPlan[key];
     const value = approvalRefs?.[key] ?? "missing";
     const validation = validatePublicSafeEvidenceRef(value, { allowMissing: true });
     const guardContent = guardContents[plan.guardPath] ?? "";
@@ -211,7 +211,7 @@ export function collectGovernLiveEvidenceRefStatus(relativePath = defaultIntakeP
   }
 
   const guardContents = {};
-  for (const plan of Object.values(refEvidencePlan)) {
+  for (const plan of Object.values(governLiveEvidenceRefPlan)) {
     if (guardContents[plan.guardPath] !== undefined) continue;
     const guardRead = readUtf8(plan.guardPath);
     guardContents[plan.guardPath] = guardRead.content;

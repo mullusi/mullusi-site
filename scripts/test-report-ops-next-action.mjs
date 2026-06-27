@@ -124,6 +124,7 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   assert.equal(decision.approvalPacketPath, "ops/mullu-govern-public-beta-approval-packet.md");
   assert.equal(decision.liveEvidenceRefIntakePath, "ops/mullu-govern-live-evidence-ref-intake-template.json");
   assert.equal(decision.liveEvidenceLocalIntakeSetupCommand, "node scripts/init-govern-live-evidence-local-intake.mjs");
+  assert.equal(decision.liveEvidenceOperatorRequestCommand, "node scripts/emit-govern-live-evidence-operator-request.mjs");
   assert.equal(decision.liveEvidenceRefIntakeCommand, "node scripts/validate-govern-live-evidence-ref-intake.mjs");
   assert.equal(decision.liveEvidenceRefStatusCommand, "node scripts/report-govern-live-evidence-ref-status.mjs");
   assert.equal(decision.liveEvidenceRefChecklistPath, "ops/mullu-govern-live-evidence-ref-collection-checklist.md");
@@ -135,9 +136,11 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   const payload = formatOpsNextJson(solvedApiExposureEvidence(), decision);
   assert.match(report, /product_live_evidence_ref_checklist=ops\/mullu-govern-live-evidence-ref-collection-checklist.md/);
   assert.match(report, /product_live_evidence_local_intake_setup_command=node scripts\/init-govern-live-evidence-local-intake.mjs/);
+  assert.match(report, /product_live_evidence_operator_request_command=node scripts\/emit-govern-live-evidence-operator-request.mjs/);
   assert.match(report, /product_live_evidence_ref_status_command=node scripts\/report-govern-live-evidence-ref-status.mjs/);
   assert.equal(payload.productLiveEvidenceRefChecklist, "ops/mullu-govern-live-evidence-ref-collection-checklist.md");
   assert.equal(payload.productLiveEvidenceLocalIntakeSetupCommand, "node scripts/init-govern-live-evidence-local-intake.mjs");
+  assert.equal(payload.productLiveEvidenceOperatorRequestCommand, "node scripts/emit-govern-live-evidence-operator-request.mjs");
   assert.equal(payload.productLiveEvidenceRefStatusCommand, "node scripts/report-govern-live-evidence-ref-status.mjs");
   assert.match(decision.manualEvidenceBoundary, /live evidence sequence refs/);
   assert.match(decision.manualEvidenceBoundary, /product status promotion approval/);
@@ -168,6 +171,7 @@ function testFormattedReportStaysPublicSafe() {
   assert.match(report, /product_public_beta_approval_packet=none/);
   assert.match(report, /product_live_evidence_ref_intake=none/);
   assert.match(report, /product_live_evidence_local_intake_setup_command=none/);
+  assert.match(report, /product_live_evidence_operator_request_command=none/);
   assert.match(report, /product_live_evidence_ref_intake_command=none/);
   assert.match(report, /product_live_evidence_ref_status_command=none/);
   assert.match(report, /product_live_evidence_ref_checklist=none/);
@@ -199,6 +203,7 @@ function testFormattedJsonStaysPublicSafeAndStructured() {
   assert.equal(payload.productPublicBetaApprovalPacket, "none");
   assert.equal(payload.productLiveEvidenceRefIntake, "none");
   assert.equal(payload.productLiveEvidenceLocalIntakeSetupCommand, "none");
+  assert.equal(payload.productLiveEvidenceOperatorRequestCommand, "none");
   assert.equal(payload.productLiveEvidenceRefIntakeCommand, "none");
   assert.equal(payload.productLiveEvidenceRefStatusCommand, "none");
   assert.equal(payload.productLiveEvidenceRefChecklist, "none");
