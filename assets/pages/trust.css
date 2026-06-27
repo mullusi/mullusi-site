@@ -15,6 +15,7 @@ Invariants: no secrets, no runtime proof claims, no JavaScript dependency, no in
   --muted: #99a0b4;
   --accent: #5ce6c4;
   --warm: #e8b15c;
+  --blue: #8ab4ff;
   --warn: #f0d28f;
   --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   --serif: Georgia, "Times New Roman", serif;
@@ -28,8 +29,9 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 12% 0%, rgba(143, 240, 192, 0.12), transparent 32%),
-    linear-gradient(180deg, #050609 0%, #0d1018 100%);
+    radial-gradient(circle at 12% 0%, rgba(92, 230, 196, 0.14), transparent 30%),
+    radial-gradient(circle at 92% 6%, rgba(138, 180, 255, 0.12), transparent 28%),
+    linear-gradient(180deg, #050609 0%, #080a10 44%, #050609 100%);
   color: var(--ink);
   font: 15px/1.65 var(--mono);
 }
@@ -167,6 +169,8 @@ code {
   text-decoration: none;
   font-size: 12px;
   letter-spacing: 0.05em;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .button.primary {
@@ -187,7 +191,9 @@ code {
   margin-top: 24px;
   padding: 14px;
   border: 1px solid rgba(92, 230, 196, 0.2);
-  background: rgba(255, 255, 255, 0.025);
+  background:
+    linear-gradient(135deg, rgba(92, 230, 196, 0.08), transparent 42%),
+    rgba(255, 255, 255, 0.025);
 }
 
 .trust-flow {
@@ -265,23 +271,53 @@ code {
 .control-card,
 .notice {
   border: 1px solid var(--line);
-  background: rgba(17, 19, 15, 0.86);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+    rgba(17, 19, 15, 0.86);
   padding: 20px;
 }
 
 .policy-card,
 .control-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
   min-height: 100%;
+}
+
+.policy-card h2,
+.control-card h2,
+.panel h2 {
+  font-size: 31px;
+  overflow-wrap: anywhere;
+}
+
+.policy-card h2,
+.control-card h2 {
+  color: var(--ink);
+}
+
+.policy-card h2::before,
+.control-card h2::before {
+  content: "";
+  display: block;
+  width: 34px;
+  height: 1px;
+  margin-bottom: 14px;
+  background: var(--accent);
 }
 
 .policy-card p,
 .control-card p {
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .notice {
   margin-top: 18px;
-  background: rgba(240, 210, 143, 0.08);
+  background:
+    linear-gradient(135deg, rgba(240, 210, 143, 0.1), transparent 42%),
+    rgba(17, 19, 15, 0.86);
 }
 
 .notice strong {
@@ -308,6 +344,7 @@ table {
   border-collapse: collapse;
   table-layout: fixed;
   margin-top: 16px;
+  background: rgba(0, 0, 0, 0.12);
 }
 
 th,
@@ -340,6 +377,10 @@ footer {
   font-size: 13px;
 }
 
+.footer-links {
+  padding-bottom: 2px;
+}
+
 @media (max-width: 760px) {
   nav {
     align-items: flex-start;
@@ -365,6 +406,12 @@ footer {
     font-size: 11px;
     text-align: center;
     white-space: normal;
+  }
+
+  .policy-card h2,
+  .control-card h2,
+  .panel h2 {
+    font-size: 28px;
   }
 
   .lede {
@@ -437,5 +484,10 @@ footer {
 
   h2 {
     font-size: 30px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
   }
 }
