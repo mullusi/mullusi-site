@@ -65,14 +65,18 @@ Invariants: no network access, no live runtime claim, invalid actions are blocke
 
   function renderResult(result) {
     const verdictElement = document.getElementById("verdict");
+    const reasonElement = document.getElementById("reason");
+    const traceRefElement = document.getElementById("trace-ref");
     const payloadElement = document.getElementById("payload");
     const resultElement = document.getElementById("result");
-    if (!verdictElement || !payloadElement || !resultElement) {
+    if (!verdictElement || !reasonElement || !traceRefElement || !payloadElement || !resultElement) {
       throw new Error("Playground result markup is incomplete.");
     }
 
     verdictElement.textContent = result.payload.verdict;
-    verdictElement.className = `verdict ${result.payload.verdict}`;
+    verdictElement.className = result.payload.verdict;
+    reasonElement.textContent = result.payload.reason;
+    traceRefElement.textContent = result.payload.trace_ref;
     payloadElement.textContent = JSON.stringify(result.payload, null, 2);
     renderTrace(result.trace);
     resultElement.hidden = false;
