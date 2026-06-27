@@ -124,6 +124,7 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   assert.equal(decision.approvalPacketPath, "ops/mullu-govern-public-beta-approval-packet.md");
   assert.equal(decision.liveEvidenceRefIntakePath, "ops/mullu-govern-live-evidence-ref-intake-template.json");
   assert.equal(decision.liveEvidenceRefIntakeCommand, "node scripts/validate-govern-live-evidence-ref-intake.mjs");
+  assert.equal(decision.liveEvidenceRefStatusCommand, "node scripts/report-govern-live-evidence-ref-status.mjs");
   assert.equal(decision.liveEvidenceRefChecklistPath, "ops/mullu-govern-live-evidence-ref-collection-checklist.md");
   assert.equal(decision.operatorRunbookPath, "ops/mullu-govern-live-evidence-operator-runbook.md");
   assert.equal(decision.sequencePreflightPath, "ops/mullu-govern-live-evidence-sequence-preflight.md");
@@ -132,7 +133,9 @@ function testSolvedApiExposureMovesToProductRuntimeWitness() {
   const report = formatOpsNextReport(solvedApiExposureEvidence(), decision);
   const payload = formatOpsNextJson(solvedApiExposureEvidence(), decision);
   assert.match(report, /product_live_evidence_ref_checklist=ops\/mullu-govern-live-evidence-ref-collection-checklist.md/);
+  assert.match(report, /product_live_evidence_ref_status_command=node scripts\/report-govern-live-evidence-ref-status.mjs/);
   assert.equal(payload.productLiveEvidenceRefChecklist, "ops/mullu-govern-live-evidence-ref-collection-checklist.md");
+  assert.equal(payload.productLiveEvidenceRefStatusCommand, "node scripts/report-govern-live-evidence-ref-status.mjs");
   assert.match(decision.manualEvidenceBoundary, /live evidence sequence refs/);
   assert.match(decision.manualEvidenceBoundary, /product status promotion approval/);
   assert.match(decision.manualEvidenceBoundary, /privacy activation approval/);
@@ -162,6 +165,7 @@ function testFormattedReportStaysPublicSafe() {
   assert.match(report, /product_public_beta_approval_packet=none/);
   assert.match(report, /product_live_evidence_ref_intake=none/);
   assert.match(report, /product_live_evidence_ref_intake_command=none/);
+  assert.match(report, /product_live_evidence_ref_status_command=none/);
   assert.match(report, /product_live_evidence_ref_checklist=none/);
   assert.match(report, /product_live_evidence_operator_runbook=none/);
   assert.match(report, /product_live_evidence_sequence_preflight=none/);
@@ -191,6 +195,7 @@ function testFormattedJsonStaysPublicSafeAndStructured() {
   assert.equal(payload.productPublicBetaApprovalPacket, "none");
   assert.equal(payload.productLiveEvidenceRefIntake, "none");
   assert.equal(payload.productLiveEvidenceRefIntakeCommand, "none");
+  assert.equal(payload.productLiveEvidenceRefStatusCommand, "none");
   assert.equal(payload.productLiveEvidenceRefChecklist, "none");
   assert.equal(payload.productLiveEvidenceOperatorRunbook, "none");
   assert.equal(payload.productLiveEvidenceSequencePreflight, "none");
