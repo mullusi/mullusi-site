@@ -179,6 +179,7 @@ function testPublicBuildErrorCodeRedactsFailureDetails() {
   assert.equal(publicBuildErrorCode(new Error("symbolic_link_forbidden:assets/private-link")), "symbolic_link_forbidden");
   assert.equal(publicBuildErrorCode(new Error("public_entry_missing:private-entry")), "public_entry_missing");
   assert.equal(publicBuildErrorCode(new Error("forbidden_output_entry_present:backend")), "forbidden_output_entry_present");
+  assert.equal(publicBuildErrorCode(Object.assign(new Error("EBUSY: resource busy or locked, rmdir 'dist'"), { code: "EBUSY" })), "output_directory_busy");
   assert.equal(publicBuildErrorCode(new Error(`unexpected:${unsafeOutputDirectory}`)), "cloudflare_pages_build_unavailable");
 }
 

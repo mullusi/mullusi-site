@@ -7723,3 +7723,165 @@ html.menu-open body {
     content: none;
   }
 }
+
+/* Portfolio route: scoped public founder surface, route-contract first. */
+.portfolio-hero {
+  overflow: hidden;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.76fr);
+  gap: clamp(24px, 4vw, 54px);
+  align-items: center;
+}
+
+.portfolio-grid-compact {
+  align-items: start;
+}
+
+.portfolio-copy {
+  max-width: 760px;
+}
+
+.portfolio-copy h1 {
+  margin: 14px 0 18px;
+  font-size: 72px;
+  line-height: 0.94;
+  letter-spacing: 0;
+}
+
+.portfolio-copy p,
+.portfolio-section-head p {
+  max-width: 680px;
+  color: var(--muted);
+}
+
+.portfolio-actions,
+.portfolio-system-grid,
+.portfolio-ledger,
+.portfolio-card-copy {
+  display: grid;
+  gap: 12px;
+}
+
+.portfolio-actions {
+  grid-template-columns: repeat(3, max-content);
+  margin-top: 26px;
+}
+
+.portfolio-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.portfolio-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0 46%, rgba(255,255,255,0.12) 48%, transparent 50% 100%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 18px);
+  opacity: 0.18;
+}
+
+.portfolio-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  background: #0b0d12;
+}
+
+.portfolio-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+.portfolio-card-copy {
+  position: relative;
+  padding: clamp(18px, 3vw, 26px);
+}
+
+.portfolio-card-copy h2,
+.portfolio-section-head h2,
+.portfolio-grid-compact h2 {
+  margin: 8px 0 12px;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.portfolio-system-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.portfolio-system-grid article,
+.portfolio-ledger div {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  background: rgba(255,255,255,0.045);
+}
+
+.portfolio-system-grid span,
+.portfolio-ledger span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.portfolio-system-grid strong,
+.portfolio-ledger strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.portfolio-system-grid p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.portfolio-contact .cta-actions {
+  grid-template-columns: repeat(4, max-content);
+}
+
+@media (max-width: 980px) {
+  .portfolio-grid,
+  .portfolio-system-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-actions,
+  .portfolio-contact .cta-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-actions .btn,
+  .portfolio-contact .btn {
+    width: 100%;
+  }
+
+  .portfolio-copy h1 {
+    font-size: 44px;
+  }
+
+  .portfolio-card-copy h2,
+  .portfolio-section-head h2,
+  .portfolio-grid-compact h2 {
+    font-size: 32px;
+  }
+}

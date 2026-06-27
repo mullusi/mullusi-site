@@ -180,6 +180,9 @@ export function publicBuildErrorCode(error) {
   if (message.startsWith("forbidden_output_entry_present:")) {
     return "forbidden_output_entry_present";
   }
+  if (error && typeof error === "object" && "code" in error && error.code === "EBUSY") {
+    return "output_directory_busy";
+  }
   return "cloudflare_pages_build_unavailable";
 }
 

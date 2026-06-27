@@ -3789,7 +3789,7 @@ function validateIndexDesignContract() {
   const assetVersion = "2026.05.platform.29";
   const cssVersion = "2026.06.home.31";
   const fragmentVersion = "2026.06.fragment.6";
-  const eyeHelperVersion = "2026.06.helper.2";
+  const eyeHelperVersion = "2026.06.helper.3";
 
   if (
     !html.includes(`/assets/fragment-bootstrap.js?v=${fragmentVersion}`) ||
@@ -5516,6 +5516,45 @@ function validateHeadContract() {
   }
 }
 
+function validatePortfolioRouteContract() {
+  const html = readUtf8("portfolio/index.html");
+  const requiredTerms = [
+    "<h1 id=\"portfolio-title\">Tamirat Lulie Wubie builds Mullusi as a governed work platform.</h1>",
+    "src=\"/assets/tamirat-profile.jpg\"",
+    "alt=\"Tamirat Lulie Wubie at a laptop\"",
+    "data-mullu-helper=\"Explain Tamirat Lulie Wubie's public portfolio boundary",
+    "data-mullu-helper=\"Explain the founder profile evidence",
+    "data-mullu-helper=\"Explain the public Mullusi systems",
+    "data-mullu-helper=\"Explain the portfolio focus boundaries",
+    "data-mullu-helper=\"Explain the portfolio contact options",
+    "deeper runtime surfaces remain gated until their evidence closes",
+    "API, dashboard, sandbox, metrics, and learning surfaces are reserved",
+    "Public portfolio route restored and bound to validation",
+    "mailto:tamirat@mullusi.com",
+    "mailto:research@mullusi.com",
+    "mailto:hello@mullusi.com",
+    "mailto:support@mullusi.com",
+    "/assets/helper/mullu-eye-helper-v3.bundle.css?v=2026.06.helper.3",
+    "/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.3",
+    "/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.3",
+    "/assets/pages/route-preferences.js",
+  ];
+  for (const term of requiredTerms) {
+    if (!html.includes(term)) {
+      recordFailure(`portfolio_route_contract_missing:${term}`);
+    }
+  }
+  if (html.indexOf("/assets/helper/mullu-eye-helper-v3.bundle.js") > html.indexOf("/assets/helper/mullu-eye-helper-v3.install.js")) {
+    recordFailure("portfolio_eye_helper_install_before_bundle");
+  }
+  if (/<script(?![^>]*\bsrc=)/i.test(html)) {
+    recordFailure("portfolio_inline_executable_script_present");
+  }
+  if (!/<a href="\/portfolio\/" aria-current="page">Portfolio<\/a>/.test(html)) {
+    recordFailure("portfolio_current_nav_missing");
+  }
+}
+
 function validateSecondaryRouteScriptBoundaries() {
   const routePreferences = readUtf8("assets/pages/route-preferences.js");
   const mulluHtml = readUtf8("mullu/index.html");
@@ -5604,6 +5643,7 @@ function runValidation() {
   validateI18n();
   validateHomepageSectionRouteManifest();
   validateIndexDesignContract();
+  validatePortfolioRouteContract();
   validateSecondaryRouteScriptBoundaries();
   validateProofPageContract();
   validateDoctrinePageContract();

@@ -136,19 +136,19 @@
     },
     "activeHero.statusLive": {
       "en": "Product route: live",
-      "am": "ይፋዊ ድር ጣቢያ፦ ቀጥታ"
+      "am": "የምርት መንገድ፦ ቀጥታ"
     },
     "activeHero.title": {
       "en": "Work software that reviews actions before they run.",
-      "am": "ምን ማድረግ እንደተፈቀደለት የሚያውቅ የስራ ሶፍትዌር።"
+      "am": "ስራዎች ከመፈጸማቸው በፊት የሚገመግም የስራ ሶፍትዌር።"
     },
     "activeHero.lead": {
       "en": "Mullusi helps teams plan work, review proposed actions, keep evidence, and execute only when the state is clear.",
-      "am": "ሙሉሲ እቅድ፣ ፍቃድ፣ ማስረጃ፣ እና ቁጥጥር ያለው አፈፃፀም በአንድ የስራ ንብርብር ለሚፈልጉ ቡድኖች የምልክታዊ ብልህነት ሥርዓቶችን ይገነባል።"
+      "am": "ሙሉሲ ቡድኖች ስራን እንዲያቅዱ፣ የታቀዱ እርምጃዎችን እንዲገመግሙ፣ ማስረጃ እንዲያቆዩ፣ እና ሁኔታው ግልጽ ሲሆን ብቻ እንዲፈጽሙ ይረዳል።"
     },
     "activeHero.plain": {
       "en": "Start with Mullu: preview the plan, route approval, keep the record, and know what remains open.",
-      "am": "በስራ ረዳት ይጀምሩ፣ የሚያደርገውን አስቀድመው ይመልከቱ፣ ፍቃዶችን ያስተላልፉ፣ እና ማንኛውም እርምጃ እንደተጠናቀቀ ከመቆጠሩ በፊት የውሳኔውን ማስረጃ ይጠብቁ።"
+      "am": "በሙሉ ይጀምሩ፦ እቅዱን አስቀድመው ይመልከቱ፣ ፍቃድን ያስተላልፉ፣ መዝገቡን ያቆዩ፣ እና የቀረውን ይወቁ።"
     },
     "activeHero.snapshotAria": {
       "en": "Current Mullusi public state",
@@ -172,19 +172,19 @@
     },
     "activeHero.trustK": {
       "en": "Review",
-      "am": "የእምነት ንብርብር"
+      "am": "ግምገማ"
     },
     "activeHero.trustV": {
       "en": "Human approval path",
-      "am": "የማረጋገጫ ወሰን ይታያል"
+      "am": "የሰው ፍቃድ መንገድ"
     },
     "activeHero.runtimeK": {
       "en": "Status",
-      "am": "አፈፃፀም"
+      "am": "ሁኔታ"
     },
     "activeHero.runtimeV": {
       "en": "Proof status open",
-      "am": "AwaitingEvidence"
+      "am": "የማረጋገጫ ሁኔታ ክፍት"
     },
     "activeHero.ctaProduct": {
       "en": "View Mullu",
@@ -200,15 +200,15 @@
     },
     "activeHero.machineAria": {
       "en": "Mullu workflow preview",
-      "am": "በአስተዳደር የተገዛ የይገባኛል መነጽር"
+      "am": "የሙሉ የስራ ፍሰት ቅድመ እይታ"
     },
     "activeHero.machineKicker": {
       "en": "Product workflow",
-      "am": "የምርት መንገድ"
+      "am": "የምርት የስራ ፍሰት"
     },
     "activeHero.machineRule": {
       "en": "plan -> review -> record",
-      "am": "እቅድ -> ግምገማ -> አፈፃፀም"
+      "am": "እቅድ -> ግምገማ -> መዝገብ"
     },
     "hero.tag": {
       "en": "Foundation before launch.",
