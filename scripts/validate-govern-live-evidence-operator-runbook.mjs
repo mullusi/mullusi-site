@@ -43,6 +43,10 @@ const requiredRunbookTerms = [
     text: "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
   },
   {
+    id: "live_evidence_operator_request_command",
+    text: "live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs",
+  },
+  {
     id: "live_evidence_ref_intake_command",
     text: "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
   },
@@ -76,7 +80,7 @@ const requiredRunbookTerms = [
   { id: "raw_request_bodies_allowed", text: "raw_request_bodies_allowed=false" },
   { id: "raw_response_bodies_allowed", text: "raw_response_bodies_allowed=false" },
   { id: "provider_values_allowed", text: "provider_values_allowed=false" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-25" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-27" },
   { id: "status_block", text: "STATUS:" },
 ];
 

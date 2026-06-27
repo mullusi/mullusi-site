@@ -30,6 +30,10 @@ const requiredChecklistTerms = [
   { id: "intake_template", text: "intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json" },
   { id: "local_intake_working_file", text: "local_intake_working_file=ops/mullu-govern-live-evidence-ref-intake.local.json" },
   {
+    id: "operator_request_command",
+    text: "operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs",
+  },
+  {
     id: "intake_validator",
     text: "intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
   },
@@ -46,7 +50,7 @@ const requiredChecklistTerms = [
   { id: "secret_values_allowed", text: "secret_values_allowed=false" },
   { id: "raw_payloads_allowed", text: "raw_payloads_allowed=false" },
   { id: "provider_values_allowed", text: "provider_values_allowed=false" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-25" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-27" },
   { id: "status_block", text: "STATUS:" },
 ];
 
