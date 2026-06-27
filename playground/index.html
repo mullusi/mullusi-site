@@ -27,7 +27,7 @@
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
   <meta name="twitter:image:alt" content="Mullusi" />
   <script src="/assets/theme-bootstrap.js"></script>
-  <link rel="stylesheet" href="/assets/pages/playground.css?v=signal-compression-playground-1">
+  <link rel="stylesheet" href="/assets/pages/playground.css?v=signal-compression-playground-2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -99,34 +99,63 @@
     </noscript>
 
     <section>
-      <h2>Simulate a reviewed work result.</h2>
-      <form id="sim-form">
-        <label>
-          Action
-          <select id="action">
-            <option value="transfer_funds">transfer_funds</option>
-            <option value="read_balance">read_balance</option>
-            <option value="deploy_gateway">deploy_gateway</option>
-            <option value="purge_ledger">purge_ledger</option>
-          </select>
-        </label>
-        <label>
-          Account balance
-          <input id="balance" type="number" value="100" min="0" step="1" inputmode="numeric" />
-        </label>
-        <label>
-          Amount
-          <input id="amount" type="number" value="150" min="0" step="1" inputmode="numeric" />
-        </label>
-        <label class="check">
-          <input id="lineage" type="checkbox" />
-          Declare lineage for this effect
-        </label>
-        <button type="submit">Simulate review</button>
-      </form>
+      <div class="sim-layout">
+        <div>
+          <div class="eyebrow">Interactive preview</div>
+          <h2>Simulate a reviewed work result.</h2>
+          <p class="lede">Choose a work action, set the effect size, and declare whether the action has lineage. The browser mock will show whether the proposed action can move forward.</p>
+        </div>
+        <form id="sim-form">
+          <label>
+            Action
+            <select id="action">
+              <option value="transfer_funds">transfer_funds</option>
+              <option value="read_balance">read_balance</option>
+              <option value="deploy_gateway">deploy_gateway</option>
+              <option value="purge_ledger">purge_ledger</option>
+            </select>
+          </label>
+          <label>
+            Account balance
+            <input id="balance" type="number" value="100" min="0" step="1" inputmode="numeric" />
+          </label>
+          <label>
+            Amount
+            <input id="amount" type="number" value="150" min="0" step="1" inputmode="numeric" />
+          </label>
+          <label class="check">
+            <input id="lineage" type="checkbox" />
+            Declare lineage for this effect
+          </label>
+          <button type="submit">Simulate review</button>
+        </form>
+      </div>
 
       <div class="result" id="result" hidden aria-live="polite">
-        <span class="verdict" id="verdict"></span>
+        <div class="result-console" aria-label="Simulated review console">
+          <div class="result-topbar">
+            <span>Simulated review</span>
+            <strong>No proof stamp</strong>
+          </div>
+          <div class="result-summary">
+            <div>
+              <span>Verdict</span>
+              <strong id="verdict"></strong>
+            </div>
+            <div>
+              <span>Reason</span>
+              <strong id="reason">Waiting for simulation</strong>
+            </div>
+            <div>
+              <span>Trace</span>
+              <strong id="trace-ref">not assigned</strong>
+            </div>
+            <div>
+              <span>Runtime</span>
+              <strong>AwaitingEvidence</strong>
+            </div>
+          </div>
+        </div>
         <pre id="payload"></pre>
         <div>
           <div class="eyebrow trace-eyebrow">Simulated record</div>
