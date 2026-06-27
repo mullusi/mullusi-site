@@ -3651,6 +3651,23 @@ function validateI18n() {
     }
   }
   const highVisibilityAmharicKeys = [
+    "activeHero.statusPlatform",
+    "activeHero.statusLive",
+    "activeHero.title",
+    "activeHero.lead",
+    "activeHero.plain",
+    "activeHero.productK",
+    "activeHero.productV",
+    "activeHero.offerK",
+    "activeHero.offerV",
+    "activeHero.trustK",
+    "activeHero.trustV",
+    "activeHero.runtimeK",
+    "activeHero.ctaProduct",
+    "activeHero.ctaProof",
+    "activeHero.lastUpdated",
+    "activeHero.machineKicker",
+    "activeHero.machineRule",
     "nav.platform",
     "nav.doctrine",
     "nav.repos",

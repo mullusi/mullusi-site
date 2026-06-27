@@ -126,6 +126,90 @@
       "en": "Switch to dark mode",
       "am": "ወደ ጨለማ ገጽታ ቀይር"
     },
+    "activeHero.statusAria": {
+      "en": "Homepage status",
+      "am": "የመነሻ ገጽ ሁኔታ"
+    },
+    "activeHero.statusPlatform": {
+      "en": "Mullusi work platform",
+      "am": "የሙሉሲ ስራ መድረክ"
+    },
+    "activeHero.statusLive": {
+      "en": "Public website: live",
+      "am": "ይፋዊ ድር ጣቢያ፦ ቀጥታ"
+    },
+    "activeHero.title": {
+      "en": "Work software that knows what it is allowed to do.",
+      "am": "ምን ማድረግ እንደተፈቀደለት የሚያውቅ የስራ ሶፍትዌር።"
+    },
+    "activeHero.lead": {
+      "en": "Mullusi builds symbolic intelligence systems for teams that need planning, approvals, evidence, and controlled execution in one operating layer.",
+      "am": "ሙሉሲ እቅድ፣ ፍቃድ፣ ማስረጃ፣ እና ቁጥጥር ያለው አፈፃፀም በአንድ የስራ ንብርብር ለሚፈልጉ ቡድኖች የምልክታዊ ብልህነት ሥርዓቶችን ይገነባል።"
+    },
+    "activeHero.plain": {
+      "en": "Start with a work assistant, preview what it will do, route approvals, and keep proof of the decision before any action is treated as complete.",
+      "am": "በስራ ረዳት ይጀምሩ፣ የሚያደርገውን አስቀድመው ይመልከቱ፣ ፍቃዶችን ያስተላልፉ፣ እና ማንኛውም እርምጃ እንደተጠናቀቀ ከመቆጠሩ በፊት የውሳኔውን ማስረጃ ይጠብቁ።"
+    },
+    "activeHero.snapshotAria": {
+      "en": "Current Mullusi public state",
+      "am": "የአሁኑ የሙሉሲ ይፋዊ ሁኔታ"
+    },
+    "activeHero.productK": {
+      "en": "Product",
+      "am": "ምርት"
+    },
+    "activeHero.productV": {
+      "en": "Mullu foundation route",
+      "am": "የሙሉ መሠረት መንገድ"
+    },
+    "activeHero.offerK": {
+      "en": "Offer",
+      "am": "አቅርቦት"
+    },
+    "activeHero.offerV": {
+      "en": "Plan, review, execute",
+      "am": "እቅድ፣ ግምገማ፣ አፈፃፀም"
+    },
+    "activeHero.trustK": {
+      "en": "Trust layer",
+      "am": "የእምነት ንብርብር"
+    },
+    "activeHero.trustV": {
+      "en": "Proof boundary visible",
+      "am": "የማረጋገጫ ወሰን ይታያል"
+    },
+    "activeHero.runtimeK": {
+      "en": "Runtime",
+      "am": "አፈፃፀም"
+    },
+    "activeHero.runtimeV": {
+      "en": "AwaitingEvidence",
+      "am": "AwaitingEvidence"
+    },
+    "activeHero.ctaProduct": {
+      "en": "Explore the Product",
+      "am": "ምርቱን ይመልከቱ"
+    },
+    "activeHero.ctaProof": {
+      "en": "See Proof Status",
+      "am": "የማረጋገጫ ሁኔታን ይመልከቱ"
+    },
+    "activeHero.lastUpdated": {
+      "en": "Public state updated 2026-06-09",
+      "am": "ይፋዊ ሁኔታ 2026-06-09 ተዘምኗል"
+    },
+    "activeHero.machineAria": {
+      "en": "Governed Claim Lens",
+      "am": "በአስተዳደር የተገዛ የይገባኛል መነጽር"
+    },
+    "activeHero.machineKicker": {
+      "en": "Product route",
+      "am": "የምርት መንገድ"
+    },
+    "activeHero.machineRule": {
+      "en": "plan -> review -> execute",
+      "am": "እቅድ -> ግምገማ -> አፈፃፀም"
+    },
     "hero.tag": {
       "en": "Foundation before launch.",
       "am": "ከድርጊት በፊት ማስረጃ።"
