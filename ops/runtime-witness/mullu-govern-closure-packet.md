@@ -63,6 +63,29 @@ write-route approval, privacy/retention activation, dashboard operator
 readiness, public claim update evidence, and registry promotion are completed
 in a separate governed change.
 
+## 2026-06-27 External Control-Plane Witness Bridge
+
+The Mullu control-plane release chain now has public-safe terminal evidence
+that can be referenced by a later product runtime closure request:
+
+```text
+control_plane_terminal_dns_ref=control-plane:pull/2312:terminal-evidence-dns-reconciliation
+control_plane_handoff_readiness_ref=control-plane:pull/2314:promotion-handoff-readiness-witness
+control_plane_general_agent_readiness=production-general-agent
+control_plane_promotion_validator=SolvedVerified
+control_plane_governed_runtime_validator=SolvedVerified
+website_product_runtime_closure_allowed=false
+product_claims_allowed=false
+public_write_route_allowed=false
+registry_promotion_allowed=false
+```
+
+These refs are candidate evidence for the future `runtime_witness_ref` lane.
+They do not replace the missing operator approval, product-status promotion,
+privacy activation, retention activation, dashboard operator-readiness, live
+API contract execution, or public-claim update refs. The website gate therefore
+continues to block product runtime closure and public product claims.
+
 ## 2026-06-25 Review Update
 
 The static website deployment witness is closed:
