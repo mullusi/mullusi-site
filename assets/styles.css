@@ -7835,12 +7835,13 @@ html.menu-open body {
 
 /* Portfolio route: scoped public founder surface, route-contract first. */
 .portfolio-hero {
-  overflow: hidden;
+  overflow: visible;
+  overflow-x: clip;
 }
 
 .portfolio-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.76fr);
+  grid-template-columns: 1fr;
   gap: clamp(24px, 4vw, 54px);
   align-items: center;
   width: 100%;
@@ -7859,7 +7860,7 @@ html.menu-open body {
 }
 
 .portfolio-copy {
-  max-width: 760px;
+  max-width: 100%;
 }
 
 .portfolio-copy h1 {
@@ -7890,6 +7891,7 @@ html.menu-open body {
 
 .portfolio-card {
   position: relative;
+  display: grid;
   grid-template-columns: minmax(128px, 42%) minmax(0, 1fr);
   width: 100%;
   contain: layout paint;
@@ -8041,7 +8043,7 @@ html.menu-open body {
   grid-template-columns: repeat(4, max-content);
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1440px) {
   .portfolio-grid {
     grid-template-columns: 1fr;
   }
