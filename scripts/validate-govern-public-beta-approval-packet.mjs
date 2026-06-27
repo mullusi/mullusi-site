@@ -45,6 +45,11 @@ const requiredTerms = [
   { id: "approval_state", text: "approval_state=NotApproved" },
   { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
   { id: "current_decision", text: "current_decision=KeepBlocked" },
+  {
+    id: "live_evidence_operator_request_command",
+    text: "live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs",
+  },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-27" },
   { id: "route_publication_action", text: "route_publication_action=none" },
   { id: "dns_mutation", text: "dns_mutation=none" },
   { id: "runtime_mutation", text: "runtime_mutation=none" },

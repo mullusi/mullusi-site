@@ -28,7 +28,8 @@ product_status_target=public-beta
 current_decision=KeepBlocked
 decision_record=ops/mullu-govern-evaluate-write-route-decision.md
 runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md
-last_reviewed=2026-06-25
+live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
+last_reviewed=2026-06-27
 ```
 
 The public API gateway is verified, but this packet does not approve the
@@ -73,6 +74,8 @@ public_claim_update_ref=missing
 
 No secret value, raw request body, raw response body, database URL, provider
 host value, account id, token, or private header may be used as an evidence ref.
+Use `node scripts/emit-govern-live-evidence-operator-request.mjs` to emit the
+public-safe request packet while those approval inputs remain missing.
 
 ## Publication Rule
 
