@@ -5517,8 +5517,8 @@ function validateHeadContract() {
 }
 
 function validatePortfolioRouteContract() {
-  const html = readUtf8("portfolio/index.html");
-  const css = readUtf8("assets/styles.css");
+  const html = canonicalText(readUtf8("portfolio/index.html"));
+  const css = canonicalText(readUtf8("assets/styles.css"));
   const requiredTerms = [
     "<h1 id=\"portfolio-title\">Tamirat Lulie Wubie builds Mullusi as a governed work platform.</h1>",
     "src=\"/assets/tamirat-profile.jpg\"",
@@ -5561,25 +5561,22 @@ function validatePortfolioRouteContract() {
   if (!/<a href="\/portfolio\/" aria-current="page">Portfolio<\/a>/.test(html)) {
     recordFailure("portfolio_current_nav_missing");
   }
-  const requiredCssTerms = [
-    ".portfolio-grid > *,",
-    "width: 100%;\n  max-width: 100%;",
-    ".portfolio-card-copy {",
-    ".portfolio-guide-grid {",
-    "contain: layout paint;",
-    "overflow-wrap: anywhere;",
-    "grid-template-columns: minmax(128px, 42%) minmax(0, 1fr);",
-    "@media (max-width: 1180px)",
-    ".portfolio-copy {\n    max-width: 100%;",
-    ".portfolio-guide-grid {\n    grid-template-columns: 1fr;",
-    "grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);",
-    "@media (max-width: 680px)",
-    ".portfolio-card {\n    grid-template-columns: 1fr;",
-    ".portfolio-photo {\n    max-width: 260px;",
+  const requiredCssPatterns = [
+    ["portfolio_hero_no_vertical_clip", /\.portfolio-hero\s*\{[^}]*overflow:\s*visible;[^}]*overflow-x:\s*clip;/s],
+    ["portfolio_grid_width_guard", /\.portfolio-grid\s*\{[^}]*grid-template-columns:\s*1fr;[^}]*width:\s*100%;[^}]*max-width:\s*100%;/s],
+    ["portfolio_shrink_guard", /\.portfolio-grid\s*>\s*\*,\s*\.portfolio-card,\s*\.portfolio-card-copy\s*\{[^}]*min-width:\s*0;[^}]*max-width:\s*100%;/s],
+    ["portfolio_card_columns", /\.portfolio-card\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(128px,\s*42%\)\s*minmax\(0,\s*1fr\);[^}]*width:\s*100%;[^}]*contain:\s*layout paint;/s],
+    ["portfolio_copy_wrap", /\.portfolio-card-copy\s*\{[^}]*overflow-wrap:\s*anywhere;/s],
+    ["portfolio_guide_grid", /\.portfolio-guide-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);/s],
+    ["portfolio_laptop_copy_width", /@media\s*\(max-width:\s*1440px\)\s*\{[\s\S]*?\.portfolio-copy\s*\{[^}]*max-width:\s*100%;/s],
+    ["portfolio_laptop_card_columns", /@media\s*\(max-width:\s*1440px\)\s*\{[\s\S]*?\.portfolio-card\s*\{[^}]*grid-template-columns:\s*minmax\(180px,\s*260px\)\s*minmax\(0,\s*1fr\);/s],
+    ["portfolio_tablet_grid_stack", /@media\s*\(max-width:\s*980px\)\s*\{[\s\S]*?\.portfolio-grid,\s*\.portfolio-system-grid,\s*\.portfolio-guide-grid\s*\{[^}]*grid-template-columns:\s*1fr;/s],
+    ["portfolio_mobile_card_stack", /@media\s*\(max-width:\s*680px\)\s*\{[\s\S]*?\.portfolio-card\s*\{[^}]*grid-template-columns:\s*1fr;/s],
+    ["portfolio_mobile_photo_limit", /@media\s*\(max-width:\s*680px\)\s*\{[\s\S]*?\.portfolio-photo\s*\{[^}]*max-width:\s*260px;/s],
   ];
-  for (const term of requiredCssTerms) {
-    if (!css.includes(term)) {
-      recordFailure(`portfolio_layout_guard_missing:${term}`);
+  for (const [label, pattern] of requiredCssPatterns) {
+    if (!pattern.test(css)) {
+      recordFailure(`portfolio_layout_guard_missing:${label}`);
     }
   }
 }
