@@ -40,8 +40,9 @@ complete_mode_current_state=GovernanceBlocked
 complete_mode_blocker_count=8
 operator_runbook=ops/mullu-govern-live-evidence-operator-runbook.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
+live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
-last_reviewed=2026-06-25
+last_reviewed=2026-06-27
 ```
 
 The repository-local preflights are organized, but live evidence collection is
@@ -111,6 +112,8 @@ Use `ops/mullu-govern-live-evidence-ref-intake-template.json` as the public-safe
 intake file and validate it with
 `node scripts/validate-govern-live-evidence-ref-intake.mjs` before replacing any
 `missing` value with an evidence ref. Use
+`node scripts/emit-govern-live-evidence-operator-request.mjs` to emit the
+public-safe request packet while refs are still missing. Use
 `ops/mullu-govern-live-evidence-operator-runbook.md` as the operator procedure.
 
 ## Denial Rules

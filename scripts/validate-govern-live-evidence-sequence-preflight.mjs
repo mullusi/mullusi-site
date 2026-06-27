@@ -68,6 +68,10 @@ const requiredWitnessTerms = [
     text: "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
   },
   {
+    id: "live_evidence_operator_request_command",
+    text: "live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs",
+  },
+  {
     id: "live_evidence_ref_intake_command",
     text: "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
   },
@@ -77,7 +81,7 @@ const requiredWitnessTerms = [
   },
   { id: "complete_mode_requires_operator_ref", text: "finding=approval_ref_required:operator_approval_ref" },
   { id: "complete_mode_requires_runtime_ref", text: "finding=approval_ref_required:runtime_witness_ref" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-25" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-27" },
   { id: "status_block", text: "STATUS:" },
 ];
 
