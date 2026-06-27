@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-26",
+    "updated": "2026-06-27",
     "count": 7
   },
   "items": [
     {
-      "title": "An entire Herculaneum scroll has been read for the first time",
-      "url": "https://scrollprize.org/firstscroll",
-      "source": "scrollprize.org",
-      "points": 1332,
-      "comments": 283,
-      "date": "2026-06-25"
+      "title": "U.S. government will decide who gets to use GPT-5.6",
+      "url": "https://www.washingtonpost.com/technology/2026/06/26/openai-says-us-government-will-vet-users-its-latest-ai-model/",
+      "source": "washingtonpost.com",
+      "points": 1037,
+      "comments": 1092,
+      "date": "2026-06-26"
     },
     {
-      "title": "Om Malik has died",
-      "url": "https://om.co/2026/06/24/1966-2026/",
-      "source": "om.co",
-      "points": 929,
-      "comments": 111,
-      "date": "2026-06-25"
+      "title": "Previewing GPT‑5.6 Sol: a next-generation model",
+      "url": "https://openai.com/index/previewing-gpt-5-6-sol/",
+      "source": "openai.com",
+      "points": 1012,
+      "comments": 638,
+      "date": "2026-06-26"
     },
     {
-      "title": "The 'papers, please' era of the internet will decimate your privacy",
-      "url": "https://expression.fire.org/p/the-papers-please-era-of-the-internet",
-      "source": "expression.fire.org",
-      "points": 752,
-      "comments": 351,
-      "date": "2026-06-25"
+      "title": "We can still stop California's 3D printer surveillance scheme",
+      "url": "https://www.eff.org/deeplinks/2026/06/we-can-still-stop-californias-3d-printer-surveillance-scheme",
+      "source": "eff.org",
+      "points": 403,
+      "comments": 134,
+      "date": "2026-06-26"
     },
     {
-      "title": "Apple raises prices of MacBooks, iPads",
-      "url": "https://www.reuters.com/world/asia-pacific/apple-raises-prices-macbooks-ipads-memory-costs-skyrocket-2026-06-25/",
-      "source": "reuters.com",
-      "points": 739,
-      "comments": 1060,
-      "date": "2026-06-25"
-    },
-    {
-      "title": "Oxide computer 3D rack guided tour",
-      "url": "https://explorer.oxide.computer/",
-      "source": "explorer.oxide.computer",
+      "title": "Om",
+      "url": "https://daringfireball.net/2026/06/om",
+      "source": "daringfireball.net",
       "points": 377,
-      "comments": 154,
-      "date": "2026-06-22"
+      "comments": 17,
+      "date": "2026-06-26"
     },
     {
-      "title": "Hey Nico, you didn't vibe code your data room but stole it from Papermark",
-      "url": "https://twitter.com/mfts0/status/2070080422482977095",
-      "source": "twitter.com",
-      "points": 370,
-      "comments": 150,
-      "date": "2026-06-25"
+      "title": "MicroVMs: Run isolated sandboxes with full lifecycle control",
+      "url": "https://aws.amazon.com/blogs/aws/run-isolated-sandboxes-with-full-lifecycle-control-aws-lambda-introduces-microvms/",
+      "source": "aws.amazon.com",
+      "points": 332,
+      "comments": 187,
+      "date": "2026-06-23"
     },
     {
-      "title": "IBM debuts sub-1 nanometer chip technology",
-      "url": "https://newsroom.ibm.com/2026-06-25-ibm-debuts-worlds-first-sub-1-nanometer-chip-technology",
-      "source": "newsroom.ibm.com",
-      "points": 326,
-      "comments": 175,
-      "date": "2026-06-25"
+      "title": "Ultrasound imaging of the brain",
+      "url": "https://alephneuro.com/blog/ultrasound-brain",
+      "source": "alephneuro.com",
+      "points": 284,
+      "comments": 114,
+      "date": "2026-06-26"
+    },
+    {
+      "title": "Why does kinetic energy increase quadratically, not linearly, with speed? (2011)",
+      "url": "https://physics.stackexchange.com/questions/535/why-does-kinetic-energy-increase-quadratically-not-linearly-with-speed",
+      "source": "physics.stackexchange.com",
+      "points": 240,
+      "comments": 119,
+      "date": "2026-06-26"
     }
   ]
 }
