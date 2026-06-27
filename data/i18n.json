@@ -139,15 +139,15 @@
       "am": "የምርት መንገድ፦ ቀጥታ"
     },
     "activeHero.title": {
-      "en": "Plan complex work without losing control.",
+      "en": "Govern work before it moves.",
       "am": "ውስብስብ ስራን ቁጥጥር ሳያጡ ያቅዱ።"
     },
     "activeHero.lead": {
-      "en": "Mullusi helps teams plan work, review proposed actions, keep evidence, and execute only when the state is clear.",
+      "en": "Mullu Govern turns a request into a plan, review path, approval state, and evidence record before execution.",
       "am": "ሙሉሲ ቡድኖች ስራን እንዲያቅዱ፣ የታቀዱ እርምጃዎችን እንዲገመግሙ፣ ማስረጃ እንዲያቆዩ፣ እና ሁኔታው ግልጽ ሲሆን ብቻ እንዲፈጽሙ ይረዳል።"
     },
     "activeHero.plain": {
-      "en": "Turn intent into a plan, review the next action, keep the decision record, and move work forward with human authority intact.",
+      "en": "Use it to see the next action, who must approve it, what evidence supports it, and what remains unresolved.",
       "am": "ዓላማን ወደ እቅድ ይቀይሩ፣ ቀጣዩን እርምጃ ይገምግሙ፣ የውሳኔ መዝገቡን ያቆዩ፣ እና የሰው ስልጣን ተጠብቆ ስራውን ወደፊት ያንቀሳቅሱ።"
     },
     "activeHero.snapshotAria": {
@@ -159,31 +159,31 @@
       "am": "ምርት"
     },
     "activeHero.productV": {
-      "en": "Mullu Govern foundation route",
+      "en": "Mullu Govern live route",
       "am": "የሙሉ መሠረት መንገድ"
     },
     "activeHero.offerK": {
-      "en": "Use case",
+      "en": "Offer",
       "am": "የአጠቃቀም ጉዳይ"
     },
     "activeHero.offerV": {
-      "en": "Plan, review, record",
+      "en": "Plan, review, approve, record",
       "am": "እቅድ፣ ግምገማ፣ መዝገብ"
     },
     "activeHero.trustK": {
-      "en": "Status",
+      "en": "Review",
       "am": "ሁኔታ"
     },
     "activeHero.trustV": {
-      "en": "Website live",
+      "en": "Human approval required",
       "am": "ድር ጣቢያው ቀጥታ ነው"
     },
     "activeHero.runtimeK": {
-      "en": "Access",
+      "en": "Status",
       "am": "መዳረሻ"
     },
     "activeHero.runtimeV": {
-      "en": "Product runtime staged",
+      "en": "Evidence boundary visible",
       "am": "የምርት አፈጻጸም ተዘጋጅቷል"
     },
     "activeHero.ctaProduct": {
@@ -207,7 +207,7 @@
       "am": "የምርት የስራ ፍሰት"
     },
     "activeHero.machineRule": {
-      "en": "plan -> review -> record",
+      "en": "intent -> plan -> approval -> record",
       "am": "እቅድ -> ግምገማ -> መዝገብ"
     },
     "hero.tag": {

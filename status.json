@@ -62,7 +62,7 @@
     }
   ],
   "content_hashes": {
-    "index.html": "sha256:be97e05acdbca7136649cc0f6cc9adb14f167f05ab330ef5532edc2f6be8f049",
+    "index.html": "sha256:aa90170c255861562ed528cb55a2573bdcafa088b522501a16bb3d4db84edacc",
     "data/site.json": "sha256:53068856545bbfa786a25e25b05b340b1751459b766bc44b0577ff5e7271f8e1",
     "data/generated/products.json": "sha256:e16956ef5d0615659475556263818039cde94b674ffcecf064c2161a66f26d97",
     "data/manual/public-surfaces.json": "sha256:fdd9f22b1ddbc30cbccb3dcbc42f003aed34732d65326480b4ecaa70184c50c4",
