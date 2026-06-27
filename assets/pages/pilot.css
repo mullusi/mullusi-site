@@ -14,13 +14,17 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       --muted: #99a0b4;
       --accent: #5ce6c4;
       --warm: #e8b15c;
+      --blue: #8ab4ff;
       --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
       --serif: Georgia, "Times New Roman", serif;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: linear-gradient(180deg, rgba(143, 240, 192, 0.08), transparent 36%), var(--bg);
+      background:
+        radial-gradient(circle at 14% 0%, rgba(92, 230, 196, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 8%, rgba(138, 180, 255, 0.11), transparent 28%),
+        linear-gradient(180deg, #050609 0%, #080a10 42%, #050609 100%);
       color: var(--ink);
       font: 15px/1.65 var(--mono);
     }
@@ -106,6 +110,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       text-decoration: none;
       font-size: 12px;
       letter-spacing: 0.05em;
+      overflow-wrap: anywhere;
     }
     .button.primary {
       background: var(--accent);
@@ -124,7 +129,9 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       margin-top: 22px;
       padding: 14px;
       border: 1px solid rgba(92, 230, 196, 0.2);
-      background: rgba(255, 255, 255, 0.025);
+      background:
+        linear-gradient(135deg, rgba(92, 230, 196, 0.08), transparent 42%),
+        rgba(255, 255, 255, 0.025);
     }
     .pilot-flow {
       display: grid;
@@ -187,10 +194,70 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       font-size: 13px;
       line-height: 1.45;
     }
+    .fit-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid rgba(138, 180, 255, 0.24);
+      background:
+        linear-gradient(135deg, rgba(138, 180, 255, 0.09), transparent 44%),
+        rgba(6, 8, 14, 0.72);
+    }
+    .fit-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+    .fit-copy h2 {
+      max-width: 16ch;
+      margin-top: 10px;
+      font-size: 34px;
+    }
+    .fit-copy p {
+      max-width: 54ch;
+      margin-bottom: 0;
+    }
+    .fit-checklist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      min-width: 0;
+    }
+    .fit-checklist div {
+      display: grid;
+      align-content: space-between;
+      min-height: 92px;
+      padding: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .fit-checklist span {
+      color: var(--warm);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .fit-checklist strong {
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
     .card, .boundary {
       border: 1px solid var(--line);
       background: rgba(17, 20, 15, 0.86);
       padding: 18px;
+    }
+    .card {
+      min-width: 0;
+      min-height: 230px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+        rgba(17, 20, 15, 0.86);
     }
     .card span {
       color: var(--warm);
@@ -232,6 +299,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
     @media (max-width: 860px) {
       .grid, .boundary dl { grid-template-columns: 1fr; }
+      .fit-panel { grid-template-columns: 1fr; }
       .pilot-state-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 700px) {
@@ -239,6 +307,19 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       main { padding-top: 22px; }
       h1 { font-size: 38px; }
       h2 { font-size: 30px; }
+      .fit-copy h2 {
+        max-width: none;
+        font-size: 28px;
+      }
+      .fit-checklist {
+        grid-template-columns: 1fr;
+      }
+      .fit-checklist div {
+        min-height: 72px;
+      }
+      .card {
+        min-height: 0;
+      }
       .lede {
         font-size: 14px;
         line-height: 1.45;
