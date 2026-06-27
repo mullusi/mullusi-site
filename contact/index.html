@@ -27,7 +27,7 @@ Invariants: contact options remain visible without JavaScript, no form or access
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:image" content="https://mullusi.com/assets/mullusi-icon-512.png">
-  <link rel="stylesheet" href="/assets/pages/contact.css?v=signal-compression-contact-1">
+  <link rel="stylesheet" href="/assets/pages/contact.css?v=signal-compression-contact-2">
 </head>
 <body>
   <!-- Foundation mode validator terms: Mullusi Contact - Foundation Questions. Foundation. For foundation-stage questions, proof-boundary review, prerequisite planning, and public-route feedback. This page does not claim backend storage, access workflow, or pilot workflow. Structured question fields. -->
@@ -44,7 +44,12 @@ Invariants: contact options remain visible without JavaScript, no form or access
   <main id="main" tabindex="-1">
     <div class="eyebrow">Contact</div>
     <h1>Contact Mullusi.</h1>
-    <p class="lede">Use the mailbox that best matches your question. This page is static, works without JavaScript, and lists direct email routes.</p>
+    <p class="lede">Use the mailbox that best matches your question. This page is static, works without JavaScript, and gives you a clear written route into product, research, support, and public-route conversations.</p>
+
+    <div class="hero-actions" aria-label="Primary contact actions">
+      <a class="button primary" href="mailto:hello@mullusi.com?subject=Mullusi%20foundation%20question">Start a product conversation</a>
+      <a class="button" href="#mailboxes">Choose a mailbox</a>
+    </div>
 
     <section class="contact-boundary" aria-label="Contact claim boundary">
       <div class="contact-flow" aria-label="Contact routing sequence">
@@ -83,18 +88,47 @@ Invariants: contact options remain visible without JavaScript, no form or access
       <p>Contact starts a written conversation. Product access and runtime claims remain separate from email contact.</p>
     </section>
 
-    <section class="grid" aria-label="Contact mailboxes">
+    <section class="intake-console" aria-labelledby="intake-preview-title">
+      <div class="intake-copy">
+        <div class="eyebrow">Intake preview</div>
+        <h2 id="intake-preview-title">Make the first message easy to route.</h2>
+        <p>A useful message has a topic, context, expected outcome, and timing boundary. Those fields help separate product, research, support, and public-route questions before any access workflow exists.</p>
+      </div>
+      <div class="intake-panel" aria-label="Suggested email structure">
+        <div class="intake-row">
+          <span>Topic</span>
+          <strong>Mullu Govern pilot question</strong>
+        </div>
+        <div class="intake-row">
+          <span>Context</span>
+          <strong>Workflow, proof boundary, or route issue</strong>
+        </div>
+        <div class="intake-row">
+          <span>Outcome</span>
+          <strong>Review, collaboration, support, or next step</strong>
+        </div>
+        <div class="intake-row">
+          <span>Timing</span>
+          <strong>Deadline if there is one</strong>
+        </div>
+      </div>
+    </section>
+
+    <section id="mailboxes" class="grid" aria-label="Contact mailboxes">
       <article class="card">
+        <span class="card-kicker">Product</span>
         <h2>Product and general</h2>
         <p>For Mullusi, Mullu, product questions, partnership notes, and general public-route feedback.</p>
         <a class="button primary" href="mailto:hello@mullusi.com?subject=Mullusi%20foundation%20question">hello@mullusi.com</a>
       </article>
       <article class="card">
+        <span class="card-kicker">Research</span>
         <h2>Research</h2>
         <p>For symbolic intelligence research, Mfidel, product research, and collaboration questions.</p>
         <a class="button" href="mailto:research@mullusi.com?subject=Mullusi%20research%20contact">research@mullusi.com</a>
       </article>
       <article class="card">
+        <span class="card-kicker">Support</span>
         <h2>Support</h2>
         <p>For website route defects, account questions when access opens, disclosure routing, and public-route issues.</p>
         <a class="button" href="mailto:support@mullusi.com?subject=Mullusi%20support%20request">support@mullusi.com</a>
