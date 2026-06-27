@@ -29,6 +29,7 @@ const publicEntries = [
   "proof",
   "playground",
   "contact",
+  "portfolio",
   "pilot",
   "status",
   "security",

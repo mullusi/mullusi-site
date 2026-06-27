@@ -48,6 +48,7 @@ function testCloudflarePagesBuildArtifact() {
       "proof/index.html",
       "playground/index.html",
       "contact/index.html",
+      "portfolio/index.html",
       "pilot/index.html",
       "status/index.html",
       "security/index.html",

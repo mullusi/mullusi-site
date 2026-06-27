@@ -7482,7 +7482,7 @@ html.menu-open body {
 @media (max-width: 620px) {
   .hero.claim-lens-hero {
     min-height: auto;
-    padding: 10px 0 8px;
+    padding: 18px 0 20px;
   }
 
   .hero .claim-lens {
@@ -7522,6 +7522,10 @@ html.menu-open body {
     min-height: 36px;
     padding: 0 10px;
     font-size: 10px;
+  }
+
+  .claim-lens-machine {
+    display: none;
   }
 
   .claim-lens-panel h2 {
