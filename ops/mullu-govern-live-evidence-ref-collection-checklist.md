@@ -24,6 +24,7 @@ ready_for_live_evidence=false
 public_write_route_allowed=false
 intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json
 local_intake_working_file=ops/mullu-govern-live-evidence-ref-intake.local.json
+operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
 intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
 static_website_integrity=SolvedVerified
 api_exposure_probe=2026-06-25:SolvedVerified
@@ -32,7 +33,7 @@ complete_mode_blocker_count=8
 secret_values_allowed=false
 raw_payloads_allowed=false
 provider_values_allowed=false
-last_reviewed=2026-06-25
+last_reviewed=2026-06-27
 ```
 
 ## Ref Checklist
@@ -100,6 +101,11 @@ node scripts\validate-govern-live-evidence-ref-intake.mjs --path=ops/mullu-gover
 ```
 
 6. If validation fails, do not edit the committed template or approval packet.
+7. Emit the public-safe operator request packet when refs are still missing:
+
+```powershell
+node scripts\emit-govern-live-evidence-operator-request.mjs --path=ops/mullu-govern-live-evidence-ref-intake.local.json
+```
 
 ## Stop Conditions
 

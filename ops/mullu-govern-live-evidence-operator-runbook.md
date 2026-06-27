@@ -26,6 +26,7 @@ approval_packet=ops/mullu-govern-public-beta-approval-packet.md
 approval_readiness_preflight=ops/mullu-govern-approval-readiness-preflight.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
 local_live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake.local.json
+live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
 live_evidence_ref_collection_checklist=ops/mullu-govern-live-evidence-ref-collection-checklist.md
 sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md
@@ -39,7 +40,7 @@ secret_values_allowed=false
 raw_request_bodies_allowed=false
 raw_response_bodies_allowed=false
 provider_values_allowed=false
-last_reviewed=2026-06-25
+last_reviewed=2026-06-27
 ```
 
 ## Evidence Ref Contract
@@ -148,16 +149,22 @@ block until all eight public-safe refs are present. Do not copy local refs back
 into the committed template or approval packet until `--require-complete`
 passes.
 
-7. Use `ops/mullu-govern-live-evidence-ref-collection-checklist.md` to
+7. Emit the public-safe operator request packet while refs are missing:
+
+```powershell
+node scripts/emit-govern-live-evidence-operator-request.mjs --path=ops/mullu-govern-live-evidence-ref-intake.local.json
+```
+
+8. Use `ops/mullu-govern-live-evidence-ref-collection-checklist.md` to
    collect only public-safe ref identifiers for the required inputs.
-8. Do not paste secrets, database URLs, raw headers, raw request bodies, raw
+9. Do not paste secrets, database URLs, raw headers, raw request bodies, raw
    response bodies, provider host values, billing details, or account ids.
-9. Update the approval packet only in a separate PR that validates the exact
+10. Update the approval packet only in a separate PR that validates the exact
    refs supplied.
-10. Keep `POST /v1/govern/evaluate` blocked until the approval packet changes
+11. Keep `POST /v1/govern/evaluate` blocked until the approval packet changes
    to `ReadyForApproval` or stronger and then receives explicit operator
    approval.
-11. Update `ops/runtime-witness/registry.json` only after product status,
+12. Update `ops/runtime-witness/registry.json` only after product status,
    privacy, retention, dashboard, API contract, public claim, and runtime
    evidence refs are closed.
 
