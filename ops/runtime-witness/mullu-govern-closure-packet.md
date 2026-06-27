@@ -30,8 +30,38 @@ public_beta_approval_packet=ops/mullu-govern-public-beta-approval-packet.md
 static_deployment_witness=ops/live-deployment-integrity-witness.md
 static_website_integrity=SolvedVerified
 api_exposure_probe=2026-06-25:SolvedVerified
-last_reviewed=2026-06-25
+live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
+last_reviewed=2026-06-27
 ```
+
+## 2026-06-27 Review Update
+
+Public-safe probes confirm the shared API gateway remains reachable and the
+gateway witness/conformance endpoints return current healthy evidence:
+
+```text
+command=curl https://api.mullusi.com/{health,gateway/witness,runtime/conformance}
+health_probe=Pass
+gateway_witness_probe=Pass
+runtime_conformance_probe=Pass
+api_exposure_state=SolvedVerified
+api_production_readiness_state=AwaitingEvidence
+runtime_witness_registry_state=Pass
+runtime_witness_closed_count=0
+runtime_witness_blocked_count=11
+runtime_witness_closure_allowed=false
+product_claims_allowed=false
+raw_response_bodies=not_recorded
+raw_response_headers=not_recorded
+secret_values=not_read
+```
+
+This refresh improves the transport and gateway evidence record, but it does
+not close the Mullu Govern product runtime witness. Product closure remains
+blocked until the approval-bound evidence refs, product-status promotion,
+write-route approval, privacy/retention activation, dashboard operator
+readiness, public claim update evidence, and registry promotion are completed
+in a separate governed change.
 
 ## 2026-06-25 Review Update
 
@@ -103,7 +133,8 @@ remains blocked until every live/effect-bearing evidence ref is supplied.
 
 ## Public-Safe Live Observations
 
-Observed from public `https://api.mullusi.com` probes on 2026-06-25:
+Observed from public `https://api.mullusi.com` probes on 2026-06-25 and
+refreshed on 2026-06-27:
 
 | Endpoint | HTTP state | Public-safe result |
 | --- | --- | --- |
