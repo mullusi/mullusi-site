@@ -36,7 +36,8 @@ product_status_promotion_allowed=false
 public_claim_update_allowed=false
 secret_rotation_required=false
 provider_values_recorded=false
-last_reviewed=2026-06-25
+live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
+last_reviewed=2026-06-27
 ```
 
 The packet is structurally organized, but it is not ready for approval because
@@ -80,6 +81,8 @@ public_claim_update_ref=missing
 if approval_readiness_preflight_state == Ready:
   allow_next_action("prepare_operator_approval_request")
   deny_publication(reason="approval_readiness_is_not_approval")
+if operator_approval_ref == missing:
+  require_request_packet(command="node scripts/emit-govern-live-evidence-operator-request.mjs")
 if operator_approval_ref == missing:
   deny_approval(reason="operator_approval_missing")
 if ready_for_approval == false:

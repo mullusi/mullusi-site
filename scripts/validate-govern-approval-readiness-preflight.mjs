@@ -48,6 +48,11 @@ const requiredWitnessTerms = [
   { id: "public_claim_update_allowed", text: "public_claim_update_allowed=false" },
   { id: "secret_rotation_required", text: "secret_rotation_required=false" },
   { id: "provider_values_recorded", text: "provider_values_recorded=false" },
+  {
+    id: "live_evidence_operator_request_command",
+    text: "live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs",
+  },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-27" },
   { id: "status_block", text: "STATUS:" },
 ];
 

@@ -56,6 +56,8 @@ function validEvidence(overrides = {}) {
     "public_claim_update_allowed=false",
     "secret_rotation_required=false",
     "provider_values_recorded=false",
+    "live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs",
+    "last_reviewed=2026-06-27",
     "STATUS:",
   ].join("\n");
   return {
