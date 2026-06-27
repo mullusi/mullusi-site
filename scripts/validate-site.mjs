@@ -5518,6 +5518,7 @@ function validateHeadContract() {
 
 function validatePortfolioRouteContract() {
   const html = readUtf8("portfolio/index.html");
+  const css = readUtf8("assets/styles.css");
   const requiredTerms = [
     "<h1 id=\"portfolio-title\">Tamirat Lulie Wubie builds Mullusi as a governed work platform.</h1>",
     "src=\"/assets/tamirat-profile.jpg\"",
@@ -5525,11 +5526,18 @@ function validatePortfolioRouteContract() {
     "data-mullu-helper=\"Explain Tamirat Lulie Wubie's public portfolio boundary",
     "data-mullu-helper=\"Explain the founder profile evidence",
     "data-mullu-helper=\"Explain the public Mullusi systems",
+    "data-mullu-helper=\"Explain the public guide modes",
     "data-mullu-helper=\"Explain the portfolio focus boundaries",
     "data-mullu-helper=\"Explain the portfolio contact options",
     "deeper runtime surfaces remain gated until their evidence closes",
     "API, dashboard, sandbox, metrics, and learning surfaces are reserved",
     "Public portfolio route restored and bound to validation",
+    "The eye helper should guide before it inspects.",
+    "Public Guide",
+    "Proof Lens",
+    "Builder Inspect",
+    "without exposing DOM packets",
+    "target packets, and receipts behind advanced use",
     "mailto:tamirat@mullusi.com",
     "mailto:research@mullusi.com",
     "mailto:hello@mullusi.com",
@@ -5552,6 +5560,27 @@ function validatePortfolioRouteContract() {
   }
   if (!/<a href="\/portfolio\/" aria-current="page">Portfolio<\/a>/.test(html)) {
     recordFailure("portfolio_current_nav_missing");
+  }
+  const requiredCssTerms = [
+    ".portfolio-grid > *,",
+    "width: 100%;\n  max-width: 100%;",
+    ".portfolio-card-copy {",
+    ".portfolio-guide-grid {",
+    "contain: layout paint;",
+    "overflow-wrap: anywhere;",
+    "grid-template-columns: minmax(128px, 42%) minmax(0, 1fr);",
+    "@media (max-width: 1180px)",
+    ".portfolio-copy {\n    max-width: 100%;",
+    ".portfolio-guide-grid {\n    grid-template-columns: 1fr;",
+    "grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);",
+    "@media (max-width: 680px)",
+    ".portfolio-card {\n    grid-template-columns: 1fr;",
+    ".portfolio-photo {\n    max-width: 260px;",
+  ];
+  for (const term of requiredCssTerms) {
+    if (!css.includes(term)) {
+      recordFailure(`portfolio_layout_guard_missing:${term}`);
+    }
   }
 }
 

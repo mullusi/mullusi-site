@@ -7843,6 +7843,15 @@ html.menu-open body {
   grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.76fr);
   gap: clamp(24px, 4vw, 54px);
   align-items: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.portfolio-grid > *,
+.portfolio-card,
+.portfolio-card-copy {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .portfolio-grid-compact {
@@ -7881,6 +7890,9 @@ html.menu-open body {
 
 .portfolio-card {
   position: relative;
+  grid-template-columns: minmax(128px, 42%) minmax(0, 1fr);
+  width: 100%;
+  contain: layout paint;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -7968,6 +7980,7 @@ html.menu-open body {
 .portfolio-card-copy {
   position: relative;
   padding: clamp(18px, 3vw, 26px);
+  overflow-wrap: anywhere;
 }
 
 .portfolio-card-copy h2,
@@ -7984,7 +7997,15 @@ html.menu-open body {
   margin-top: 24px;
 }
 
+.portfolio-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
 .portfolio-system-grid article,
+.portfolio-guide-grid article,
 .portfolio-ledger div {
   min-width: 0;
   border: 1px solid var(--line);
@@ -7994,6 +8015,7 @@ html.menu-open body {
 }
 
 .portfolio-system-grid span,
+.portfolio-guide-grid span,
 .portfolio-ledger span {
   display: block;
   margin-bottom: 8px;
@@ -8003,12 +8025,14 @@ html.menu-open body {
 }
 
 .portfolio-system-grid strong,
+.portfolio-guide-grid strong,
 .portfolio-ledger strong {
   display: block;
   overflow-wrap: anywhere;
 }
 
-.portfolio-system-grid p {
+.portfolio-system-grid p,
+.portfolio-guide-grid p {
   margin-bottom: 0;
   color: var(--muted);
 }
@@ -8017,9 +8041,24 @@ html.menu-open body {
   grid-template-columns: repeat(4, max-content);
 }
 
+@media (max-width: 1180px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-copy {
+    max-width: 100%;
+  }
+
+  .portfolio-card {
+    grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 980px) {
   .portfolio-grid,
-  .portfolio-system-grid {
+  .portfolio-system-grid,
+  .portfolio-guide-grid {
     grid-template-columns: 1fr;
   }
 
@@ -8041,6 +8080,16 @@ html.menu-open body {
   .portfolio-section-head h2,
   .portfolio-grid-compact h2 {
     font-size: 32px;
+  }
+}
+
+@media (max-width: 680px) {
+  .portfolio-card {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-photo {
+    max-width: 260px;
   }
 }
 
