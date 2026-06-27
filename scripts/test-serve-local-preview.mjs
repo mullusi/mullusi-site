@@ -48,6 +48,20 @@ function testExtensionlessRouteResolvesRouteIndex() {
   }
 }
 
+function testPortfolioRouteResolvesPublishedIndex() {
+  const { distDirectory, tempRoot } = makeArtifact();
+  try {
+    const result = resolveStaticResponse({ distDirectory, requestUrl: "/portfolio/?verify=preview-contract" });
+
+    assert.equal(result.statusCode, 200);
+    assert.equal(result.filePath, path.join(distDirectory, "portfolio", "index.html"));
+    assert.equal(result.contentType, "text/html; charset=utf-8");
+    assert.match(fs.readFileSync(result.filePath, "utf8"), /<title>Portfolio - Tamirat Lulie Wubie<\/title>/);
+  } finally {
+    fs.rmSync(tempRoot, { force: true, recursive: true });
+  }
+}
+
 function testMissingRouteReturnsBranded404() {
   const { distDirectory, tempRoot } = makeArtifact();
   try {
@@ -116,6 +130,7 @@ function testCliInvalidPortOutputRedactsValueAndStack() {
 
 testExistingRouteResolvesIndex();
 testExtensionlessRouteResolvesRouteIndex();
+testPortfolioRouteResolvesPublishedIndex();
 testMissingRouteReturnsBranded404();
 testTraversalIsBlocked();
 testMalformedPathReturnsBadRequest();
