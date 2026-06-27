@@ -71,11 +71,12 @@ function validEvidence(overrides = {}) {
     "complete_mode_current_state=GovernanceBlocked",
     "complete_mode_blocker_count=8",
     "live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json",
+    "live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs",
     "live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs",
     "command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
     "finding=approval_ref_required:operator_approval_ref",
     "finding=approval_ref_required:runtime_witness_ref",
-    "last_reviewed=2026-06-25",
+    "last_reviewed=2026-06-27",
     ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=missing`),
     "STATUS:",
   ].join("\n");
