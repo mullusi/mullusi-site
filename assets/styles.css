@@ -7792,6 +7792,55 @@ html.menu-open body {
   opacity: 0.18;
 }
 
+.portfolio-eye-signal {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(2, 22px);
+  gap: 7px;
+  align-items: center;
+  padding: 9px 10px;
+  border: 1px solid rgba(126, 247, 209, 0.34);
+  border-radius: 999px;
+  background: rgba(5, 8, 13, 0.78);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.34), 0 0 22px rgba(126, 247, 209, 0.11);
+  animation: portfolio-eye-shell 4.2s ease-in-out infinite;
+}
+
+.portfolio-eye-signal span {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 15px;
+  overflow: hidden;
+  border: 1px solid rgba(243, 255, 249, 0.52);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at calc(50% + var(--portfolio-eye-x, 0px)) 50%, #06110f 0 3px, #7ef7d1 4px 6px, transparent 7px),
+    linear-gradient(180deg, rgba(243, 255, 249, 0.92), rgba(126, 247, 209, 0.42));
+  animation: portfolio-eye-look 3.6s steps(1, end) infinite;
+}
+
+.portfolio-eye-signal span::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: #05080d;
+  transform: translateY(-110%);
+  animation: portfolio-eye-blink 5.8s ease-in-out infinite;
+}
+
+.portfolio-eye-signal span:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.portfolio-eye-signal span:nth-child(2)::after {
+  animation-delay: 0.08s;
+}
+
 .portfolio-photo {
   position: relative;
   aspect-ratio: 4 / 5;
@@ -7883,5 +7932,45 @@ html.menu-open body {
   .portfolio-section-head h2,
   .portfolio-grid-compact h2 {
     font-size: 32px;
+  }
+}
+
+@keyframes portfolio-eye-shell {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.34), 0 0 18px rgba(126, 247, 209, 0.1);
+  }
+  50% {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.38), 0 0 28px rgba(126, 247, 209, 0.18);
+  }
+}
+
+@keyframes portfolio-eye-look {
+  0%, 20% {
+    --portfolio-eye-x: -3px;
+  }
+  35%, 58% {
+    --portfolio-eye-x: 3px;
+  }
+  72%, 100% {
+    --portfolio-eye-x: 0px;
+  }
+}
+
+@keyframes portfolio-eye-blink {
+  0%, 42%, 46%, 100% {
+    transform: translateY(-110%);
+  }
+  44% {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-eye-signal,
+  .portfolio-eye-signal span,
+  .portfolio-eye-signal span::after {
+    animation: none !important;
   }
 }
