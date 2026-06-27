@@ -621,13 +621,25 @@ html.mullu-eye-helper-active [contenteditable="true"] {
 
 @media (max-width: 640px) {
   .mullu-eye-helper-dock {
-    right: 12px;
-    bottom: 12px;
-    max-width: calc(100vw - 24px);
+    right: 10px;
+    bottom: 10px;
+    gap: 0;
+    width: 52px;
+    min-width: 52px;
+    max-width: 52px;
+    height: 42px;
+    padding: 6px 5px;
+    justify-content: center;
   }
 
   .mullu-eye-helper-dock-label {
-    max-width: 150px;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   .mullu-eye-helper-toast {

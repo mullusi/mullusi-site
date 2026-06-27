@@ -21,9 +21,9 @@ function indexOfRequired(source, term) {
 }
 
 function testBootAndHomepageMetadataContract() {
-  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.bundle.css?v=2026.06.helper.2"));
-  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.2"));
-  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.2"));
+  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.bundle.css?v=2026.06.helper.3"));
+  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.3"));
+  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.3"));
   assert.ok(indexOfRequired(html, "/assets/helper/mullu-eye-helper-v3.bundle.js") < indexOfRequired(html, "/assets/helper/mullu-eye-helper-v3.install.js"));
   assert.ok(install.includes("activeByDefault: false"));
   assert.ok(install.includes("enabledOnCoarsePointer: false"));
