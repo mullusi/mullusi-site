@@ -8039,6 +8039,16 @@ html.menu-open body {
   color: var(--muted);
 }
 
+.portfolio-helper-fallback {
+  max-width: 760px;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+}
+
 .portfolio-contact .cta-actions {
   grid-template-columns: repeat(4, max-content);
 }
