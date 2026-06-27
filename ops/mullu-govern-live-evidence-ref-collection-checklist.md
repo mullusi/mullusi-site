@@ -25,6 +25,7 @@ public_write_route_allowed=false
 intake_template=ops/mullu-govern-live-evidence-ref-intake-template.json
 local_intake_working_file=ops/mullu-govern-live-evidence-ref-intake.local.json
 operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
+ref_status_command=node scripts/report-govern-live-evidence-ref-status.mjs
 intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
 static_website_integrity=SolvedVerified
 api_exposure_probe=2026-06-25:SolvedVerified
@@ -34,6 +35,23 @@ secret_values_allowed=false
 raw_payloads_allowed=false
 provider_values_allowed=false
 last_reviewed=2026-06-27
+```
+
+## 2026-06-27 Status Refresh
+
+Use the status reporter before editing the ignored local intake:
+
+```text
+command=node scripts/report-govern-live-evidence-ref-status.mjs
+govern_live_evidence_ref_status=AwaitingEvidence
+proof_state=Unknown
+missing_ref_count=8
+local_guard_missing_count=8
+invalid_ref_count=0
+finding_count=0
+secret_values=not_read
+provider_values=not_read
+raw_payloads=not_read
 ```
 
 ## Ref Checklist

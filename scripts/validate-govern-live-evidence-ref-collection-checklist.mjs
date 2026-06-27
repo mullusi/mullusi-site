@@ -34,6 +34,10 @@ const requiredChecklistTerms = [
     text: "operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs",
   },
   {
+    id: "ref_status_command",
+    text: "ref_status_command=node scripts/report-govern-live-evidence-ref-status.mjs",
+  },
+  {
     id: "intake_validator",
     text: "intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
   },
@@ -41,6 +45,14 @@ const requiredChecklistTerms = [
   { id: "api_exposure_probe", text: "api_exposure_probe=2026-06-25:SolvedVerified" },
   { id: "complete_mode_current_state", text: "complete_mode_current_state=GovernanceBlocked" },
   { id: "complete_mode_blocker_count", text: "complete_mode_blocker_count=8" },
+  {
+    id: "status_report_command",
+    text: "command=node scripts/report-govern-live-evidence-ref-status.mjs",
+  },
+  { id: "status_report_state", text: "govern_live_evidence_ref_status=AwaitingEvidence" },
+  { id: "status_missing_ref_count", text: "missing_ref_count=8" },
+  { id: "status_local_guard_missing_count", text: "local_guard_missing_count=8" },
+  { id: "status_invalid_ref_count", text: "invalid_ref_count=0" },
   {
     id: "complete_mode_command",
     text: "command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
