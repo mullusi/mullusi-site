@@ -131,7 +131,7 @@
       "am": "የመነሻ ገጽ ሁኔታ"
     },
     "activeHero.statusPlatform": {
-      "en": "Mullusi work platform",
+      "en": "Mullu Govern, by Mullusi",
       "am": "የሙሉሲ ስራ መድረክ"
     },
     "activeHero.statusLive": {
@@ -159,7 +159,7 @@
       "am": "ምርት"
     },
     "activeHero.productV": {
-      "en": "Mullu foundation route",
+      "en": "Mullu Govern foundation route",
       "am": "የሙሉ መሠረት መንገድ"
     },
     "activeHero.offerK": {
@@ -187,7 +187,7 @@
       "am": "የምርት አፈጻጸም ተዘጋጅቷል"
     },
     "activeHero.ctaProduct": {
-      "en": "Explore Mullu",
+      "en": "Explore Mullu Govern",
       "am": "ሙሉን ይመልከቱ"
     },
     "activeHero.ctaProof": {
@@ -199,7 +199,7 @@
       "am": "ይፋዊ ሁኔታ 2026-06-09 ተዘምኗል"
     },
     "activeHero.machineAria": {
-      "en": "Mullu workflow preview",
+      "en": "Mullu Govern workflow preview",
       "am": "የሙሉ የስራ ፍሰት ቅድመ እይታ"
     },
     "activeHero.machineKicker": {
@@ -435,7 +435,7 @@
       "am": "ሙሉ"
     },
     "hero.railMulluBody": {
-      "en": "Foundation-stage product route: local proof first, no customer access claim.",
+      "en": "Mullu Govern foundation route: local proof first, no customer access claim.",
       "am": "የግል ቤታ የምርት መንገድ ከማረጋገጫ-ወሰን ይዘት ጋር።"
     },
     "hero.railRuntimeLabel": {
@@ -571,7 +571,7 @@
       "am": "ሙሉሲ ድረ-ገጹን፣ የሙሉ የምርት መንገድን፣ API መንገድን፣ ዳሽቦርድን፣ ሰነዶችንና የማረጋገጫ ሁኔታን በአንድ የሚገባ የምርት አርክቴክቸር ያያይዛል።"
     },
     "platform.plain": {
-      "en": "In plain terms: Mullu is the product route, the dashboard is the operator surface, the API is the execution path, and proof status shows what is ready.",
+      "en": "In plain terms: Mullu Govern is the product route, Mullu is the suite family, the dashboard is the operator surface, the API is the execution path, and proof status shows what is ready.",
       "am": "በቀላል አነጋገር፦ ድረ-ገጹ አቅርቦቱን ያሳያል፣ ሙሉ የምርት መንገድ ነው፣ ዳሽቦርዱ የኦፕሬተር ገጽ ነው፣ API የአፈጻጸም መንገድ ነው።"
     },
     "platform.governs": {
@@ -615,7 +615,7 @@
       "am": "ሙሉሲ ጃንጥላው ነው። ሙሉ ምርቱ ነው። የRuntime ይፋ ማድረግ አሁንም AwaitingEvidence ላይ ነው"
     },
     "claim.body": {
-      "en": "The public website and Mullu foundation route are live. Runtime witness closure remains AwaitingEvidence until signed endpoints publish. Technical boundary: public foundation route first; witness closure preparation remains separate; public site can record future surface expansion.",
+      "en": "The public website and Mullu Govern foundation route are live. Runtime witness closure remains AwaitingEvidence until signed endpoints publish. Technical boundary: public foundation route first; witness closure preparation remains separate; public site can record future surface expansion.",
       "am": "ድረ-ገጹ የይፋዊ ኩባንያውንና የምርት መንገድ ወሰንን ያረጋግጣል። የስምሪት ምስክር መዳረሻዎች የተፈረመ ማስረጃ እስኪያትሙ ድረስ ቀጥታ የሚተዳደር runtime አይናገርም።"
     },
     "claim.ledger.mullusiV": {
@@ -623,7 +623,7 @@
       "am": "ኩባንያ፣ ምርምር፣ የአስተዳደር ሥልጣን፣ የመተማመኛ ወሰንና የይፋዊ ጎራ ባለቤት።"
     },
     "claim.ledger.mulluV": {
-      "en": "Foundation product route for symbolic intelligence work systems.",
+      "en": "Mullu Govern product route for governed symbolic intelligence work systems.",
       "am": "በሙሉሲ ሥር ለማስረጃ-የተደገፈ ምልክታዊ ሥራ የተዘጋጀ ዋናው የሚተዳደር ምርት።"
     },
     "claim.ledger.runtimeK": {
@@ -747,11 +747,11 @@
       "am": "የምርት ግራፍ"
     },
     "products.title": {
-      "en": "Start with Mullu",
+      "en": "Start with Mullu Govern",
       "am": "ሙሉ ዋናው ምርት ነው። ሌሎች ሞተሮች የማረጋገጫ ወሰናቸው እስኪዘጋጅ ድረስ ተዘጋጅተው ይቆያሉ"
     },
     "products.body": {
-      "en": "Mullu is the first public product route: a work assistant for planning, review, approval, records, and controlled execution.",
+      "en": "Mullu Govern is the first public product route: a governed symbolic work product for planning, review, approval, records, and controlled execution. Mullu remains the suite family.",
       "am": "ይፋዊው ጣቢያ አሁን የሙሉሲ ጃንጥላን፣ የሙሉ የምርት መንገድንና የማረጋገጫ ወሰንን ይለያል። የምርት-ቅርጽ ያለው runtime፣ SDK፣ ሳይንስ፣ ቋንቋና የበይነገጽ ሥራ የመለቀቅ በሮች እስኪሟሉ ድረስ የግል ሆኖ ይቆያል።"
     },
     "products.plain": {
@@ -763,7 +763,7 @@
       "am": "ሙሉ"
     },
     "products.pg1.body": {
-      "en": "Foundation product for planning, review, evidence, and controlled work execution.",
+      "en": "Foundation product for governed planning, review, evidence, approval, records, and controlled symbolic execution.",
       "am": "ለማስረጃ-የተደገፈ ሥራ፣ ለግል ቤታ መዳረሻ፣ ለምርት ገጾችና ለruntime-የተሳሰረ ምልክታዊ አፈጻጸም የተዘጋጀ ዋናው የሚተዳደር ምርት።"
     },
     "products.pg2.title": {
@@ -967,11 +967,11 @@
       "am": "መስፋፋት"
     },
     "cta.title": {
-      "en": "Start with Mullu",
+      "en": "Start with Mullu Govern",
       "am": "ሪፖዚቶሪን የምርት ማስረጃ ከተዘጋጀ በኋላ ብቻ ያሳድጉ"
     },
     "cta.body": {
-      "en": "Open the product route first. Proof status, architecture, and staged domains remain available for deeper review.",
+      "en": "Open the Mullu Govern product route first. Proof status, architecture, and staged domains remain available for deeper review.",
       "am": "እያንዳንዱ አዲስ ጎራ ሪፖው፣ የማሳያ መንገዱ፣ የሰነድ መንገዱ፣ የአስተዳደር ሁኔታውና የመለቀቅ ወሰኑ ሲረጋገጡ ከግል ማብሰያ ወደ ይፋዊ ገጽ ሊሸጋገር ይችላል። ሙሉ በሙሉሲ ጃንጥላ ሥር የመጀመሪያው የምርት መንገድ ሆኖ ይቆያል።"
     },
     "cta.contactResearch": {
