@@ -8055,7 +8055,7 @@ html.menu-open body {
 
 .portfolio-system-grid article,
 .portfolio-guide-grid article,
-.portfolio-ledger div {
+.portfolio-ledger article {
   min-width: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -8084,6 +8084,123 @@ html.menu-open body {
 .portfolio-guide-grid p {
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.portfolio-path {
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-path::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(38, 166, 154, 0.12), transparent 44%),
+    radial-gradient(circle at 78% 28%, rgba(255, 179, 71, 0.12), transparent 30%);
+  opacity: 0.76;
+}
+
+.portfolio-path .wrap {
+  position: relative;
+}
+
+.portfolio-path-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.portfolio-path-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025)),
+    var(--surface);
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.portfolio-path-rail {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portfolio-path-rail li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px 16px;
+  align-items: start;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(255,255,255,0.045);
+}
+
+.portfolio-path-rail li::after {
+  content: "";
+  position: absolute;
+  left: 39px;
+  bottom: -13px;
+  width: 1px;
+  height: 13px;
+  background: var(--line);
+}
+
+.portfolio-path-rail li:last-child::after {
+  content: none;
+}
+
+.portfolio-path-rail span {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 12px;
+  background: rgba(0,0,0,0.18);
+}
+
+.portfolio-path-rail strong,
+.portfolio-path-proof strong {
+  display: block;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.portfolio-path-rail p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.portfolio-path-proof {
+  margin-top: 16px;
+  border: 1px solid rgba(38, 166, 154, 0.28);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(38, 166, 154, 0.08);
+}
+
+.portfolio-path-proof span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .portfolio-helper-fallback {
@@ -8139,6 +8256,14 @@ html.menu-open body {
   .portfolio-section-head h2,
   .portfolio-grid-compact h2 {
     font-size: 32px;
+  }
+
+  .portfolio-path-actions {
+    display: grid;
+  }
+
+  .portfolio-path-actions .btn {
+    width: 100%;
   }
 }
 
