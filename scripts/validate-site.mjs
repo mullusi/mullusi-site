@@ -1309,11 +1309,11 @@ function validateSearchIndexingWitness() {
     "local_sitemap_loc_count=13",
     "finding=live_sitemap_loc_missing:https://mullusi.com/contact/",
     "finding=live_route_status_invalid:https://mullusi.com/contact/:404",
-    "command=npx.cmd --yes wrangler@latest pages deployment list --project-name mullusi-company-site",
+    "command=npx.cmd --yes wrangler@latest pages deployment list --project-name redacted_project",
     "deployment_result=production deployment observed",
-    "deployment_project=mullusi-company-site",
-    "deployment_id=d029563d-95a9-4c84-b2ba-d8f149706373",
-    "deployment_source=9a7f36a",
+    "deployment_project=redacted_project",
+    "deployment_id=redacted_value",
+    "deployment_source=redacted_value",
     "deployment_dirty=true",
     "trust_surface_deployment_visibility=SolvedVerified",
     "current_crawl_surface_state=SolvedVerified",
@@ -1433,7 +1433,7 @@ function validateSearchIndexingWitness() {
     }
   }
 
-  if (/account_id\s*=|billing_id\s*=|token\s*=|search_console_property\s*=|crawler_log\s*=/i.test(witness)) {
+  if (/account_id\s*=|billing_id\s*=|token\s*=|search_console_property\s*=|crawler_log\s*=|deployment_project=(?!redacted_project(?:\r?\n|$))\S+|deployment_id=(?!redacted_value(?:\r?\n|$))\S+|deployment_source=(?!redacted_value(?:\r?\n|$))\S+|--project-name\s+(?!redacted_project(?:\s|$))\S+/i.test(witness)) {
     recordFailure("search_indexing_witness_boundary_invalid");
   }
 }
@@ -5293,7 +5293,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/live-deployment-integrity-witness.md",
-      terms: ["Live Deployment Integrity Witness", "live_deployment_integrity_state=SolvedVerified", "live_status_manifest=Pass", "live_content_hashes=Pass", "local_status_manifest_match=Pass", "edge_html_transform=Pass", "local_finding=none", "public_mirror_pr=mullusi-site#239", "public_mirror_merge_commit=d240121b4b8677d6db841dad638828f5e436df50", "private_deploy_pr=mullusi-company-site#117", "private_deploy_merge_commit=c223fffe6e35993dc9e190d56b7ef57facf28c12", "deploy_workflow_run_id=28187685917", "deploy_workflow_state=SolvedVerified", "deployment_url=redacted_url", "publication_method=github_actions_workflow_dispatch", "publicMirrorMode=governed-static-parity", "privateDeploySourceAuthoritative=true", "route_sentinels=Pass", "raw_response_bodies=not_recorded", "runtime_api_readiness=AwaitingEvidence", "product_runtime_release_witness=AwaitingEvidence", "STATUS:"],
+      terms: ["Live Deployment Integrity Witness", "live_deployment_integrity_state=SolvedVerified", "live_status_manifest=Pass", "live_content_hashes=Pass", "local_status_manifest_match=Pass", "edge_html_transform=Pass", "local_finding=none", "public_mirror_pr=mullusi-site#239", "public_mirror_merge_commit=d240121b4b8677d6db841dad638828f5e436df50", "private_deploy_pr=redacted_ref", "private_deploy_merge_commit=redacted_value", "deploy_workflow_run_id=28187685917", "deploy_workflow_state=SolvedVerified", "deployment_url=redacted_url", "publication_method=github_actions_workflow_dispatch", "publicMirrorMode=governed-static-parity", "privateDeploySourceAuthoritative=true", "route_sentinels=Pass", "raw_response_bodies=not_recorded", "runtime_api_readiness=AwaitingEvidence", "product_runtime_release_witness=AwaitingEvidence", "STATUS:"],
     },
     {
       file: "ops/release-readiness-summary.md",
@@ -5348,6 +5348,9 @@ function validateOperatingGates() {
       recordFailure(`operating_gate_status_missing:${gate.file}`);
     }
     if (gate.file === "ops/live-deployment-integrity-witness.md" && /deployment_url=https:\/\/[^\s]+\.pages\.dev/i.test(content)) {
+      recordFailure("live_deployment_integrity_witness_boundary_invalid");
+    }
+    if (gate.file === "ops/live-deployment-integrity-witness.md" && /private_deploy_pr=(?!redacted_ref(?:\r?\n|$))\S+|private_deploy_merge_commit=(?!redacted_value(?:\r?\n|$))\S+/i.test(content)) {
       recordFailure("live_deployment_integrity_witness_boundary_invalid");
     }
   }
