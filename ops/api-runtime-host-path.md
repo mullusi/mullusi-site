@@ -42,15 +42,19 @@ backend deployment package.
 Do not create or route the public DNS record until these are true:
 
 ```text
-production_image_published=true
-managed_postgres_ready=true
-schema_applied=true
-production_secrets_stored=true
-deploy_env_check=ready
-release_preflight=ready
-host_firewall_configured=true
-tls_certificate_ready=true
-rollback_path_defined=true
+production_image_published=AwaitingEvidence
+runtime_host_ready=AwaitingEvidence
+managed_postgres_ready=AwaitingEvidence
+schema_applied=AwaitingEvidence
+production_secrets_stored=AwaitingEvidence
+deploy_env_check=AwaitingEvidence
+release_preflight=AwaitingEvidence
+persistence_check=AwaitingEvidence
+host_firewall_configured=AwaitingEvidence
+tls_certificate_ready=AwaitingEvidence
+rollback_path_defined=AwaitingEvidence
+private_runtime_witness_ready=AwaitingEvidence
+dns_authority_ready=AwaitingEvidence
 ```
 
 ## Host Layout

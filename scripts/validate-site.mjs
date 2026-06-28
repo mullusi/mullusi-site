@@ -5293,7 +5293,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/api-exposure-witness.md",
-      terms: ["API Exposure Witness", "api_exposure_state=SolvedVerified", "api_dns_publication_allowed=true", "api_runtime_public_state=SolvedVerified", "recovery_witness_state=ReadyForProvisioning", "api_provisioning_allowed=true", "node scripts/check-api-exposure-gate.mjs --live --require-ready", "STATUS:"],
+      terms: ["API Exposure Witness", "api_exposure_state=AwaitingEvidence", "api_dns_publication_allowed=false", "api_runtime_public_state=AwaitingEvidence", "recovery_witness_state=ReadyForProvisioning", "api_provisioning_allowed=true", "node scripts/check-api-exposure-gate.mjs", "STATUS:"],
     },
     {
       file: "ops/search-indexing-witness.md",
