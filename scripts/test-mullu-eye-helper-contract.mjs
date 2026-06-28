@@ -22,9 +22,9 @@ function indexOfRequired(source, term) {
 }
 
 function testBootAndHomepageMetadataContract() {
-  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.bundle.css?v=2026.06.helper.3"));
-  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.3"));
-  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.3"));
+  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.bundle.css?v=2026.06.helper.4"));
+  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.4"));
+  assert.ok(html.includes("/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.4"));
   assert.ok(indexOfRequired(html, "/assets/helper/mullu-eye-helper-v3.bundle.js") < indexOfRequired(html, "/assets/helper/mullu-eye-helper-v3.install.js"));
   assert.ok(install.includes("activeByDefault: false"));
   assert.ok(install.includes("enabledOnCoarsePointer: false"));
@@ -125,6 +125,20 @@ function testTargetPacketAndEvidenceContract() {
   assert.ok(bundle.includes("function stableHash"));
 }
 
+function testModeAwareGuideContract() {
+  assert.ok(bundle.includes("HELPER_MODES"));
+  assert.ok(bundle.includes("public-guide"));
+  assert.ok(bundle.includes("proof-lens"));
+  assert.ok(bundle.includes("builder-inspect"));
+  assert.ok(bundle.includes("function publicSummaryForPacket"));
+  assert.ok(bundle.includes("function proofSummaryForPacket"));
+  assert.ok(bundle.includes("function renderModeControls"));
+  assert.ok(bundle.includes("state.mode === \"builder-inspect\""));
+  assert.ok(bundle.includes("Switch to Builder Inspect for governed actions."));
+  assert.ok(css.includes(".mullu-eye-helper-modes"));
+  assert.ok(css.includes("button[aria-pressed=\"true\"]"));
+}
+
 function testAuthorityAndFailureGuards() {
   assert.ok(bundle.includes("input[type='password'], input[type='hidden']"));
   assert.ok(bundle.includes("if ((action?.risky || action?.requiresConfirmation) && state.confirmActionId !== actionId)"));
@@ -171,6 +185,7 @@ function testReadmeVerificationContract() {
 testBootAndHomepageMetadataContract();
 testInstallExecutionContract();
 testTargetPacketAndEvidenceContract();
+testModeAwareGuideContract();
 testAuthorityAndFailureGuards();
 testInteractionSurfaceContract();
 testVisualAndReducedMotionContract();
