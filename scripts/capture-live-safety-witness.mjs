@@ -14,6 +14,7 @@ import {
   evaluateLiveSafetyWitnessArtifact,
   formatResult as formatValidationResult,
 } from "./check-live-safety-witness.mjs";
+import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -137,6 +138,19 @@ function failureWitness(probe, result) {
   ].join("\n") + "\n";
 }
 
+function unsafeOutputWitness(probe, findingCount) {
+  return [
+    "verdict=GovernanceBlocked",
+    "proof_state=Fail",
+    `probe=${probe.name}`,
+    `artifact_file=${probe.fileName}`,
+    `error=probe_output_boundary_invalid:${findingCount}`,
+    "raw_probe_output=not_recorded",
+    "raw_response_bodies=not_recorded",
+    "raw_response_headers=not_recorded",
+  ].join("\n") + "\n";
+}
+
 export function captureLiveSafetyWitnessArtifact({
   artifactDirectory = defaultArtifactDirectory,
   env = process.env,
@@ -155,12 +169,20 @@ export function captureLiveSafetyWitnessArtifact({
   for (const probe of liveSafetyProbePlan()) {
     const { result, attemptCount } = runProbeWithRetries(probe, runner);
     const status = Number.isInteger(result.status) ? result.status : 1;
-    const output = status === 0 ? normalizedOutput(result.stdout || "") : failureWitness(probe, result);
+    const probeOutput = result.stdout || "";
+    const privateValueFindings = status === 0
+      ? scanForbiddenEvidencePatterns(probe.fileName, probeOutput)
+      : [];
+    const output = status === 0
+      ? privateValueFindings.length > 0
+        ? unsafeOutputWitness(probe, privateValueFindings.length)
+        : normalizedOutput(probeOutput)
+      : failureWitness(probe, result);
     fs.writeFileSync(path.join(resolvedDirectory, probe.fileName), output, "utf8");
     probeResults.push({
       name: probe.name,
       fileName: probe.fileName,
-      status,
+      status: privateValueFindings.length > 0 ? 1 : status,
       attemptCount,
     });
   }
