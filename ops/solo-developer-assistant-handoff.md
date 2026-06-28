@@ -79,9 +79,9 @@ recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
 domain_hardening_preflight=SolvedVerified
 domain_dns_mutation_allowed=true
-api_exposure_state=SolvedVerified
-api_dns_publication_allowed=true
-api_production_readiness_state=ReadyForDns
+api_exposure_state=AwaitingEvidence
+api_dns_publication_allowed=false
+api_production_readiness_state=AwaitingEvidence
 product_runtime_release_witness=AwaitingEvidence
 ```
 

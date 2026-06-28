@@ -13,6 +13,10 @@ import {
   collectLocalApiProductionEvidence,
   evaluateApiProductionReadinessEvidence,
 } from "./check-api-production-readiness.mjs";
+import {
+  collectLocalApiExposureDocuments,
+  evaluateApiExposureEvidence,
+} from "./check-api-exposure-gate.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -37,19 +41,6 @@ function lineValue(content, key) {
   return match?.[1] ?? "";
 }
 
-function booleanLineValue(content, key) {
-  const value = lineValue(content, key);
-  if (value === "true") return true;
-  if (value === "false") return false;
-  return undefined;
-}
-
-function declaredMissingEvidence(countText, fallbackMissingEvidence) {
-  const count = Number.parseInt(countText, 10);
-  if (!Number.isInteger(count) || count < 0) return fallbackMissingEvidence;
-  return Array.from({ length: count }, (_, index) => `declared_missing_${index + 1}`);
-}
-
 function publicStateValue(value) {
   const text = String(value ?? "Unknown").trim();
   return publicStateValues.has(text) ? text : "redacted_value";
@@ -67,20 +58,16 @@ function usage() {
 export function collectOpsNextEvidence() {
   const recoveryWitness = readUtf8("ops/recovery-completion-witness.md");
   const domainPreflight = readUtf8("ops/domain-security-preflight.md");
-  const apiExposureWitness = readUtf8("ops/api-exposure-witness.md");
-  const apiReadinessGate = readUtf8("ops/api-production-readiness-gate.md");
+  const evaluatedApiExposure = evaluateApiExposureEvidence({
+    documentState: collectLocalApiExposureDocuments(),
+    liveState: {
+      dnsState: "NotRequested",
+      dnsRecordCount: 0,
+      httpsState: "NotRequested",
+    },
+  });
   const evaluatedApiReadiness = evaluateApiProductionReadinessEvidence(collectLocalApiProductionEvidence());
-  const declaredDnsPublicationAllowed = booleanLineValue(apiReadinessGate, "api_dns_publication_allowed");
-  const apiReadiness = {
-    ...evaluatedApiReadiness,
-    apiProductionReadinessState: lineValue(apiReadinessGate, "api_production_readiness_state")
-      || evaluatedApiReadiness.apiProductionReadinessState,
-    apiDnsPublicationAllowed: declaredDnsPublicationAllowed ?? evaluatedApiReadiness.apiDnsPublicationAllowed,
-    manualEvidenceMissing: declaredMissingEvidence(
-      lineValue(apiReadinessGate, "manual_evidence_missing_count"),
-      evaluatedApiReadiness.manualEvidenceMissing,
-    ),
-  };
+  const apiReadiness = evaluatedApiReadiness;
 
   return {
     recoveryWitnessState: lineValue(recoveryWitness, "recovery_witness_state") || "Unknown",
@@ -92,9 +79,9 @@ export function collectOpsNextEvidence() {
     dmarcEnforcementAllowed: lineValue(domainPreflight, "dmarc_enforcement_allowed") === "true",
     mtaStsEnforceAllowed: lineValue(domainPreflight, "mta_sts_enforce_allowed") === "true",
     tlsRptPublicationAllowed: lineValue(domainPreflight, "tls_rpt_publication_allowed") === "true",
-    apiExposureState: lineValue(apiExposureWitness, "api_exposure_state") || "Unknown",
-    apiExposureDnsAllowed: lineValue(apiExposureWitness, "api_dns_publication_allowed") === "true",
-    apiRuntimePublicState: lineValue(apiExposureWitness, "api_runtime_public_state") || "Unknown",
+    apiExposureState: evaluatedApiExposure.apiExposureState,
+    apiExposureDnsAllowed: evaluatedApiExposure.apiDnsPublicationAllowed === true,
+    apiRuntimePublicState: evaluatedApiExposure.runtimePublicState,
     apiReadiness,
   };
 }
