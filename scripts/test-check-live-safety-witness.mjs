@@ -294,6 +294,37 @@ function testBoundaryViolationBlocks() {
   assert.ok(result.findings.some((finding) => finding.startsWith("artifact_boundary_invalid:website-origin.txt")));
 }
 
+function testSharedPrivateValueScannerBlocks() {
+  const fixtureDirectory = createFixture({
+    "deployment-integrity.txt": [
+      "verdict=SolvedVerified",
+      "proof_state=Pass",
+      "live_deployment_integrity_state=SolvedVerified",
+      "live_status_manifest=Pass",
+      "live_content_hashes=Pass",
+      "local_status_manifest_match=Pass",
+      "edge_html_transform=Pass",
+      "governed_file_count=7",
+      "finding=none",
+      "local_finding=none",
+      "accepted_finding=none",
+      "raw_response_bodies=not_recorded",
+      "raw_response_headers=not_recorded",
+      "Authorization: Bearer abcdefghijklmnopqrstuvwxyz123456",
+      "postgres://user:password@private.example/db",
+    ].join("\n"),
+  });
+  const result = evaluateLiveSafetyWitnessArtifact(fixtureDirectory);
+  const serialized = `${JSON.stringify(result)}\n${formatResult(result)}`;
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.ok(result.findings.includes("forbidden_private_value_pattern:deployment-integrity.txt:bearer_token"));
+  assert.ok(result.findings.includes("forbidden_private_value_pattern:deployment-integrity.txt:raw_header_authorization"));
+  assert.ok(result.findings.includes("forbidden_private_value_pattern:deployment-integrity.txt:postgres_url"));
+  assert.doesNotMatch(serialized, /abcdefghijklmnopqrstuvwxyz123456|postgres:\/\/user:password|private\.example/);
+}
+
 function testMissingArtifactDirectoryDoesNotEchoPath() {
   const missingDirectory = path.join(os.tmpdir(), "mullusi-live-safety-missing-private-path");
   const result = evaluateLiveSafetyWitnessArtifact(missingDirectory);
@@ -426,6 +457,7 @@ testDeploymentIntegrityEvidenceErrorIsAllowed();
 testMissingArtifactFileBlocks();
 testFailedProbeBlocks();
 testBoundaryViolationBlocks();
+testSharedPrivateValueScannerBlocks();
 testMissingArtifactDirectoryDoesNotEchoPath();
 testWebsiteOriginMissingPathQueryRedirectBlocks();
 testWebsiteOriginPendingWwwRedirectBlocks();
