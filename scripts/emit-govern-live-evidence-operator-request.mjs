@@ -62,6 +62,21 @@ function stableDate() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function publicIntakePathLabel(intakePath) {
+  if (intakePath === defaultTemplateIntakePath) return "template_intake";
+  if (typeof intakePath === "string") {
+    const resolvedPath = path.resolve(repoRoot, intakePath);
+    if (
+      resolvedPath !== repoRoot
+      && resolvedPath.startsWith(repoRootPrefix)
+      && intakePath.endsWith(".local.json")
+    ) {
+      return "local_intake";
+    }
+  }
+  return "redacted_path";
+}
+
 export function resolveGovernLiveEvidenceOperatorRequestIntakePath(
   localIntakePath = defaultLocalIntakePath,
   templateIntakePath = defaultTemplateIntakePath,
@@ -103,7 +118,7 @@ export function buildGovernLiveEvidenceOperatorRequest(statusResult, options = {
 
   return {
     generated_at_utc: options.generatedAtUtc || `${stableDate()}T00:00:00Z`,
-    intake_path: options.intakePath || resolveGovernLiveEvidenceOperatorRequestIntakePath(),
+    intake_path: publicIntakePathLabel(options.intakePath || resolveGovernLiveEvidenceOperatorRequestIntakePath()),
     invalid_ref_count: invalidRefs.length,
     missing_ref_count: missingRefs.length,
     next_action: missingRefs.length > 0
@@ -157,7 +172,7 @@ export function emitGovernLiveEvidenceOperatorRequest(options = {}) {
       return {
         packet: {
           generated_at_utc: options.generatedAtUtc || `${stableDate()}T00:00:00Z`,
-          intake_path: intakePath,
+          intake_path: publicIntakePathLabel(intakePath),
           invalid_ref_count: 0,
           missing_ref_count: 0,
           next_action: "select_public_safe_output_path",
