@@ -11,6 +11,7 @@ import crypto from "node:crypto";
 import https from "node:https";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -224,6 +225,8 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
   const acceptedFindings = [];
   const liveStatusCode = evidence.liveStatusResponse?.statusCode ?? 0;
   const liveStatusBody = evidence.liveStatusResponse?.body ?? "";
+  hardFindings.push(...scanForbiddenEvidencePatterns("liveStatus", liveStatusBody));
+  hardFindings.push(...scanForbiddenEvidencePatterns("localStatus", evidence.localStatusJson ?? ""));
   if (liveStatusCode < 200 || liveStatusCode >= 300) {
     hardFindings.push(`live_status_status_invalid:${liveStatusCode}`);
   }
@@ -264,6 +267,7 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
       hardFindings.push(`live_file_final_url_mismatch:${publicRelativePath}`);
     }
     const responseBody = response.body ?? "";
+    hardFindings.push(...scanForbiddenEvidencePatterns(`liveFile:${publicRelativePath}`, responseBody));
     const edgeTransformFinding = `live_html_edge_transform_observed:${publicRelativePath}`;
     const edgeTransformUnverifiedFinding = `live_html_edge_transform_unverified:${publicRelativePath}`;
     const edgeTransformSeen = relativePath === "index.html" && hasKnownCloudflareHtmlTransform(responseBody);
@@ -292,6 +296,7 @@ export function evaluateDeploymentIntegrityEvidence(evidence) {
     const statusCode = response?.statusCode ?? 0;
     const missingRequiredTerms = sentinel.requiredTerms.filter((term) => !(response?.body ?? "").includes(term));
     const presentForbiddenTerms = sentinel.forbiddenTerms.filter((term) => (response?.body ?? "").includes(term));
+    hardFindings.push(...scanForbiddenEvidencePatterns(`routeSentinel:${sentinel.id}`, response?.body ?? ""));
     let passed = true;
     if (statusCode < 200 || statusCode >= 300) {
       hardFindings.push(`route_sentinel_status_invalid:${sentinel.id}:${statusCode}`);
