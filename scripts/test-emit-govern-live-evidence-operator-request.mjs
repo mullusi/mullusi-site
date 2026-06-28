@@ -54,9 +54,12 @@ function testBuildsMissingRefRequests() {
   assert.equal(packet.solver_outcome, "AwaitingEvidence");
   assert.equal(packet.proof_state, "Unknown");
   assert.equal(packet.public_write_route_allowed, false);
+  assert.equal(packet.intake_path, "local_intake");
   assert.equal(packet.missing_ref_count, 2);
   assert.equal(packet.requests.length, 2);
   assert.match(report, /request=operator_approval_ref/);
+  assert.match(report, /^intake_path=local_intake$/m);
+  assert.doesNotMatch(report, /ops\/example\.local\.json/);
   assert.match(report, /accepted_shape=approval:\/\/mullu-govern\/live-evidence\/YYYY-MM-DD\/operator-approved/);
   assert.match(report, /secret_values=not_read/);
 }
@@ -83,6 +86,31 @@ function testMissingLocalIntakeFallsBackToCommittedTemplate() {
   assert.equal(resolvedPath, "ops/mullu-govern-live-evidence-ref-intake-template.json");
   assert.equal(resolvedPath.endsWith(".local.json"), false);
   assert.equal(fs.existsSync(path.join(repoRoot, resolvedPath)), true);
+}
+
+function testTemplateIntakePathIsLabeled() {
+  const packet = buildGovernLiveEvidenceOperatorRequest(statusResult([]), {
+    generatedAtUtc: "2026-06-27T00:00:00Z",
+    intakePath: "ops/mullu-govern-live-evidence-ref-intake-template.json",
+  });
+  const report = formatGovernLiveEvidenceOperatorRequest(packet);
+
+  assert.equal(packet.intake_path, "template_intake");
+  assert.match(report, /^intake_path=template_intake$/m);
+  assert.doesNotMatch(report, /mullu-govern-live-evidence-ref-intake-template/);
+}
+
+function testUnsafeIntakePathIsRedactedInPacket() {
+  const packet = buildGovernLiveEvidenceOperatorRequest(statusResult([]), {
+    generatedAtUtc: "2026-06-27T00:00:00Z",
+    intakePath: "../private-live-evidence.local.json",
+  });
+  const report = formatGovernLiveEvidenceOperatorRequest(packet);
+
+  assert.equal(packet.intake_path, "redacted_path");
+  assert.match(report, /^intake_path=redacted_path$/m);
+  assert.doesNotMatch(JSON.stringify(packet), /private-live-evidence/);
+  assert.doesNotMatch(report, /private-live-evidence/);
 }
 
 function testOutputIsConfined() {
@@ -120,6 +148,8 @@ function testCliAndUnsupportedArgs() {
 testBuildsMissingRefRequests();
 testCompleteStatusRequestsValidation();
 testMissingLocalIntakeFallsBackToCommittedTemplate();
+testTemplateIntakePathIsLabeled();
+testUnsafeIntakePathIsRedactedInPacket();
 testOutputIsConfined();
 testCliAndUnsupportedArgs();
 

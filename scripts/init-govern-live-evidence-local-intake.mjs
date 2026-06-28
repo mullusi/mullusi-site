@@ -63,6 +63,12 @@ function blockedResult(finding, targetPath = "not_written") {
   };
 }
 
+function publicLocalIntakeTargetLabel(targetPath) {
+  if (targetPath === "not_written") return "not_written";
+  if (typeof targetPath === "string" && targetPath.endsWith(".local.json")) return "local_intake";
+  return "redacted_path";
+}
+
 export function initializeGovernLiveEvidenceLocalIntake(options = {}) {
   const targetRelativePath = options.targetPath || defaultTargetPath;
   const resolvedTarget = safeResolve(targetRelativePath);
@@ -124,7 +130,7 @@ export function formatGovernLiveEvidenceLocalIntakeInitReport(result) {
     `govern_live_evidence_local_intake_init=${result.solverOutcome}`,
     `proof_state=${result.proofState}`,
     `initialized=${result.initialized ? "true" : "false"}`,
-    `target=${result.targetPath}`,
+    `target=${publicLocalIntakeTargetLabel(result.targetPath)}`,
     `missing_approval_input_count=${result.missingApprovalInputCount ?? 0}`,
     `finding_count=${result.findingCount}`,
     ...result.findings.map((finding) => `finding=${finding}`),

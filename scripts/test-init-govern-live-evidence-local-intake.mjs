@@ -43,8 +43,10 @@ function testInitializesIgnoredLocalFile() {
   assert.equal(result.initialized, true);
   assert.equal(result.missingApprovalInputCount, 8);
   assert.equal(fs.existsSync(fixtureAbsolutePath), true);
+  assert.match(report, /^target=local_intake$/m);
   assert.match(report, /secret_values=not_read/);
   assert.doesNotMatch(report, /postgres:\/\//i);
+  assert.doesNotMatch(report, /test-govern-live-evidence-ref-intake|\.tmp/);
   cleanup();
 }
 
@@ -79,7 +81,9 @@ function testCliOutputAndUnsupportedArgs() {
   const created = runInitializer([`--target=${fixturePath}`]);
   assert.equal(created.status, 0);
   assert.match(created.stdout, /govern_live_evidence_local_intake_init=SolvedVerified/);
+  assert.match(created.stdout, /^target=local_intake$/m);
   assert.match(created.stdout, /missing_approval_input_count=8/);
+  assert.doesNotMatch(created.stdout, /test-govern-live-evidence-ref-intake|\.tmp/);
 
   const blocked = runInitializer([`--target=${fixturePath}`]);
   assert.equal(blocked.status, 1);
