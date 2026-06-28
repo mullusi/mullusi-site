@@ -3,7 +3,7 @@
     "name": "Mullusi",
     "version": "2026.05.site-content",
     "purpose": "Structured public website content for Mullusi.",
-    "content_hash": "sha256:53068856545bbfa786a25e25b05b340b1751459b766bc44b0577ff5e7271f8e1"
+    "content_hash": "sha256:abed5214b2511cbbc59dc505e0d0ab55dac93f8b618783d7c292a663f4936338"
   },
   "platformLayers": [
     {
@@ -394,11 +394,11 @@
   ],
   "serviceTiers": [
     {
-      "name": "Free",
-      "audience": "developers and researchers",
-      "status": "starter",
-      "priceSignal": "foundation examples",
-      "summary": "Explore the SDK, CLI, sandbox examples, public docs, and local proof examples.",
+      "name": "Public docs",
+      "audience": "visitors and evaluators",
+      "status": "preview",
+      "priceSignal": "public routes",
+      "summary": "Explore product routes, status pages, public docs, and local review examples.",
       "am": {
         "name": "ነጻ",
         "audience": "አበልጻጊዎችና ተመራማሪዎች",
@@ -408,11 +408,11 @@
       }
     },
     {
-      "name": "Pro",
-      "audience": "builders and solo operators",
-      "status": "paid",
-      "priceSignal": "monthly usage plan",
-      "summary": "Includes planned higher evaluation limits, persistent records, project history, proof stamp review, and dashboard workspace control.",
+      "name": "Team workspace",
+      "audience": "builders and teams",
+      "status": "planned",
+      "priceSignal": "planned workspace access",
+      "summary": "Planned review history, persistent records, dashboard workspace control, and higher evaluation limits.",
       "am": {
         "name": "Pro",
         "audience": "ገንቢዎችና ብቸኛ አንቀሳቃሾች",
@@ -436,11 +436,11 @@
       }
     },
     {
-      "name": "Enterprise",
+      "name": "Private deployment",
       "audience": "regulated or private deployment planning",
-      "status": "contract",
-      "priceSignal": "custom agreement",
-      "summary": "Plan high-consequence work with private deployment boundaries, custom rules, support limits, and compliance exports after release evidence closes.",
+      "status": "enterprise planning",
+      "priceSignal": "custom planning",
+      "summary": "Planned private deployment path with custom review rules, support boundaries, and compliance exports after release evidence closes.",
       "am": {
         "name": "ድርጅት",
         "audience": "ቁጥጥር የሚደረግባቸው ወይም የግል ስምሪቶች",

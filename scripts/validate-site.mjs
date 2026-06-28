@@ -4995,11 +4995,11 @@ function validateFoundationModeBoundary() {
     [
       "data/site.json",
       [
-        "foundation examples",
-        "local proof examples",
-        "planned higher evaluation limits",
-        "proof stamp review",
-        "private deployment boundary",
+        "public routes",
+        "local review examples",
+        "planned workspace access",
+        "higher evaluation limits",
+        "Planned private deployment path",
         "after release evidence closes",
       ],
     ],

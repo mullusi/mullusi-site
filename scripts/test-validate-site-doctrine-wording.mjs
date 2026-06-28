@@ -58,7 +58,7 @@ function testValidatorCarriesDoctrineWordingGate() {
     "A practical operating layer for controlled work",
     "Turn a request into a clear next action",
     "Keep human judgment in the workflow",
-    "planned higher evaluation limits",
+    "higher evaluation limits",
     "customer-controlled deployment",
     "output-derived actions become proposals first",
     "return PublishableWithBoundary or GovernanceBlocked(reason)",
@@ -206,11 +206,11 @@ assertIncludes(readUtf8("acceptable-use/index.html"), "If a separate written run
 assertIncludes(readUtf8("acceptable-use/index.html"), "Runtime conduct terms: AwaitingEvidence until separate written approval.", "acceptable use foundation route");
 assertExcludes(readUtf8("acceptable-use/index.html"), "future governed runtime access", "acceptable use foundation route");
 assertExcludes(readUtf8("acceptable-use/index.html"), "When governed runtime access is granted", "acceptable use foundation route");
-assertIncludes(readUtf8("data/site.json"), "foundation examples", "site registry foundation boundary");
-assertIncludes(readUtf8("data/site.json"), "local proof examples", "site registry foundation boundary");
-assertIncludes(readUtf8("data/site.json"), "planned higher evaluation limits", "site registry foundation boundary");
-assertIncludes(readUtf8("data/site.json"), "proof stamp review", "site registry foundation boundary");
-assertIncludes(readUtf8("data/site.json"), "private deployment boundary", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "public routes", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "local review examples", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "planned workspace access", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "higher evaluation limits", "site registry foundation boundary");
+assertIncludes(readUtf8("data/site.json"), "Planned private deployment path", "site registry foundation boundary");
 assertIncludes(readUtf8("data/site.json"), "after release evidence closes", "site registry foundation boundary");
 assertExcludes(readUtf8("data/site.json"), "limited public access", "site registry foundation boundary");
 assertExcludes(readUtf8("data/site.json"), "small-volume hosted evaluations", "site registry foundation boundary");
