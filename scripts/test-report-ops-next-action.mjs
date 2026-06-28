@@ -36,6 +36,9 @@ function baseEvidence(overrides = {}) {
       manualEvidenceMissing: [],
       closedWitnessCount: 1,
     },
+    apiRuntimeManualEvidenceChecklist: {
+      apiRuntimeManualEvidenceChecklist: "SolvedVerified",
+    },
     ...overrides,
   };
 }
@@ -92,8 +95,12 @@ function testApiBlockFollowsDomainReadiness() {
   assert.equal(decision.opsNextState, "AwaitingEvidence");
   assert.equal(decision.nextAction, "close_private_api_runtime_evidence_before_dns");
   assert.equal(decision.blockedSurface, "api_runtime");
+  assert.equal(decision.safeLocalCommand, "node scripts/validate-api-runtime-manual-evidence-checklist.mjs && node scripts/check-api-production-readiness.mjs");
+  assert.equal(decision.apiRuntimeManualEvidenceChecklistPath, "ops/api-runtime-manual-evidence-checklist.md");
+  assert.equal(decision.apiRuntimeManualEvidenceChecklistCommand, "node scripts/validate-api-runtime-manual-evidence-checklist.mjs");
   assert.equal(decision.productRuntimeClaimsAllowed, false);
   assert.equal(decision.publicProductReleaseAllowed, false);
+  assert.match(decision.manualEvidenceBoundary, /public-safe checklist refs/);
 }
 
 function testReadyForDnsRequiresAllPriorGates() {
@@ -164,6 +171,9 @@ function testFormattedReportStaysPublicSafe() {
   assert.match(report, /ops_next_state=AwaitingEvidence/);
   assert.match(report, /domain_dns_mutation_allowed=false/);
   assert.match(report, /api_exposure_state=AwaitingEvidence/);
+  assert.match(report, /api_runtime_manual_evidence_checklist=/);
+  assert.match(report, /api_runtime_manual_evidence_checklist_path=none/);
+  assert.match(report, /api_runtime_manual_evidence_checklist_command=none/);
   assert.match(report, /product_runtime_claims_allowed=false/);
   assert.match(report, /public_product_release_allowed=false/);
   assert.match(report, /product_runtime_witness_packet=none/);
@@ -195,6 +205,9 @@ function testFormattedJsonStaysPublicSafeAndStructured() {
 
   assert.equal(payload.opsNextState, "AwaitingEvidence");
   assert.equal(payload.apiProductionReadinessState, "Blocked");
+  assert.equal(payload.apiRuntimeManualEvidenceChecklist, "SolvedVerified");
+  assert.equal(payload.apiRuntimeManualEvidenceChecklistPath, "ops/api-runtime-manual-evidence-checklist.md");
+  assert.equal(payload.apiRuntimeManualEvidenceChecklistCommand, "node scripts/validate-api-runtime-manual-evidence-checklist.mjs");
   assert.equal(payload.manualEvidenceMissingCount, 1);
   assert.equal(payload.productRuntimeClaimsAllowed, false);
   assert.equal(payload.publicProductReleaseAllowed, false);
@@ -219,6 +232,9 @@ function testUnexpectedStateValuesAreRedacted() {
     domainHardeningPreflight: "postgres://user:password@private.example/db",
     apiExposureState: "C:\\secret\\api-exposure.txt",
     apiRuntimePublicState: "private-runtime-host",
+    apiRuntimeManualEvidenceChecklist: {
+      apiRuntimeManualEvidenceChecklist: "D:\\private\\checklist.json",
+    },
     apiReadiness: {
       apiProductionReadinessState: "D:\\private\\readiness.json",
       apiDnsPublicationAllowed: false,
@@ -235,13 +251,15 @@ function testUnexpectedStateValuesAreRedacted() {
   assert.match(report, /api_exposure_state=redacted_value/);
   assert.match(report, /api_runtime_public_state=redacted_value/);
   assert.match(report, /api_production_readiness_state=redacted_value/);
+  assert.match(report, /api_runtime_manual_evidence_checklist=redacted_value/);
   assert.equal(payload.recoveryWitnessState, "redacted_value");
   assert.equal(payload.domainHardeningPreflight, "redacted_value");
   assert.equal(payload.apiExposureState, "redacted_value");
   assert.equal(payload.apiRuntimePublicState, "redacted_value");
   assert.equal(payload.apiProductionReadinessState, "redacted_value");
-  assert.doesNotMatch(report, /private\/recovery-state|postgres:\/\/user:password@private\.example\/db|C:\\secret\\api-exposure\.txt|private-runtime-host|D:\\private\\readiness\.json/i);
-  assert.doesNotMatch(JSON.stringify(payload), /private\/recovery-state|postgres:\/\/user:password@private\.example\/db|C:\\secret\\api-exposure\.txt|private-runtime-host|D:\\private\\readiness\.json/i);
+  assert.equal(payload.apiRuntimeManualEvidenceChecklist, "redacted_value");
+  assert.doesNotMatch(report, /private\/recovery-state|postgres:\/\/user:password@private\.example\/db|C:\\secret\\api-exposure\.txt|private-runtime-host|D:\\private\\readiness\.json|D:\\private\\checklist\.json/i);
+  assert.doesNotMatch(JSON.stringify(payload), /private\/recovery-state|postgres:\/\/user:password@private\.example\/db|C:\\secret\\api-exposure\.txt|private-runtime-host|D:\\private\\readiness\.json|D:\\private\\checklist\.json/i);
 }
 
 function testCliReportsCurrentStateAndRejectsUnsupportedArgs() {
@@ -250,6 +268,8 @@ function testCliReportsCurrentStateAndRejectsUnsupportedArgs() {
   assert.match(result.stdout, /ops_next_state=/);
   assert.match(result.stdout, /private_recovery_values=not_read/);
   assert.match(result.stdout, /host_addresses=not_recorded/);
+  assert.match(result.stdout, /api_runtime_manual_evidence_checklist=AwaitingEvidence/);
+  assert.match(result.stdout, /api_runtime_manual_evidence_checklist_path=ops\/api-runtime-manual-evidence-checklist\.md/);
 
   const invalid = runReporter(["--invalid"]);
   assert.equal(invalid.status, 1);
