@@ -47,14 +47,17 @@ function testValidatorCarriesDoctrineWordingGate() {
     "status_website_publication_scope_missing",
     "homepage_last_updated_datetime_mismatch",
     "i18n_last_updated_am_mojibake",
-    "Mullusi builds symbolic intelligence work systems for teams that need planning, approvals, evidence, and controlled execution in one operating layer.",
-    "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
+    "A work system for plans, approvals, and evidence.",
+    "Mullu Govern helps teams turn important requests into clear plans, reviewed actions, approval decisions, and durable records.",
+    "Preserve the decision trail so teams can inspect what happened, who approved it, and what remains unresolved.",
     "Static website published; product runtime release witnesses AwaitingEvidence.",
     "Mullusi Contact - Foundation Questions",
     "Structured question fields",
     "Pilot access is not open yet.",
     "foundation_mode_required_term_missing",
-    "public foundation route first",
+    "A practical operating layer for controlled work",
+    "Turn a request into a clear next action",
+    "Keep human judgment in the workflow",
     "planned higher evaluation limits",
     "customer-controlled deployment",
     "output-derived actions become proposals first",
@@ -76,12 +79,13 @@ function testPublicSurfacesCarryHardenedDoctrineTerms() {
     [
       "index.html",
       [
-        "Mullusi builds symbolic intelligence work systems for teams that need planning, approvals, evidence, and controlled execution in one operating layer.",
-        "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
-        "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
+        "A work system for plans, approvals, and evidence.",
+        "Mullu Govern helps teams turn important requests into clear plans, reviewed actions, approval decisions, and durable records.",
+        "Preserve the decision trail so teams can inspect what happened, who approved it, and what remains unresolved.",
         "output-derived actions become proposals first",
-        "public foundation route first",
-        "witness closure preparation",
+        "A practical operating layer for controlled work",
+        "Turn a request into a clear next action",
+        "Keep human judgment in the workflow",
         "foundation product path",
         "public site can record future surface expansion",
         'href="/doctrine/"',
@@ -166,8 +170,8 @@ function testDoctrineNavigationIsTranslated() {
   assert.equal(typeof i18n.strings["nav.doctrine"].am, "string");
   assert.ok(i18n.strings["nav.doctrine"].am.length > 0);
   assert.equal(
-    i18n.strings["hero.title"].en,
-    "Mullusi builds symbolic intelligence work systems for teams that need review, records, and controlled execution.",
+    i18n.strings["activeHero.title"].en,
+    "A work system for plans, approvals, and evidence.",
   );
 }
 
@@ -233,8 +237,8 @@ assertExcludes(readUtf8("proof/index.html"), "Live runtime witness", "proof runt
 assertExcludes(readUtf8("terms/index.html"), "Runtime access", "terms runtime boundary");
 assertExcludes(readUtf8("playground/index.html"), "live runtime remains", "playground runtime boundary");
 assertExcludes(readUtf8("data/site.json"), "live runtime availability", "sample response runtime boundary");
-assertIncludes(readUtf8("index.html"), 'datetime="2026-06-04"', "homepage source date boundary");
-assertIncludes(readUtf8("index.html"), "Last updated 2026-06-04", "homepage source date boundary");
-assertIncludes(readUtf8("data/i18n.json"), '"en": "Last updated 2026-06-04"', "i18n source date boundary");
-assertIncludes(readUtf8("data/i18n.json"), '"am": "የመጨረሻ ዝመና 2026-06-04"', "i18n source date boundary");
+assertIncludes(readUtf8("index.html"), 'datetime="2026-06-09"', "homepage source date boundary");
+assertIncludes(readUtf8("index.html"), "Public state updated 2026-06-09", "homepage source date boundary");
+assertIncludes(readUtf8("data/i18n.json"), '"en": "Public state updated 2026-06-09"', "i18n source date boundary");
+assertIncludes(readUtf8("data/i18n.json"), "2026-06-09", "i18n source date boundary");
 console.log("validate-site doctrine wording tests passed");
