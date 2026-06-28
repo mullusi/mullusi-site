@@ -139,15 +139,15 @@
       "am": "የምርት መንገድ፦ ቀጥታ"
     },
     "activeHero.title": {
-      "en": "Govern work before it moves.",
+      "en": "A work system for plans, approvals, and evidence.",
       "am": "ውስብስብ ስራን ቁጥጥር ሳያጡ ያቅዱ።"
     },
     "activeHero.lead": {
-      "en": "Mullu Govern turns a request into a plan, review path, approval state, and evidence record before execution.",
+      "en": "Mullu Govern helps teams turn important requests into clear plans, reviewed actions, approval decisions, and durable records.",
       "am": "ሙሉሲ ቡድኖች ስራን እንዲያቅዱ፣ የታቀዱ እርምጃዎችን እንዲገመግሙ፣ ማስረጃ እንዲያቆዩ፣ እና ሁኔታው ግልጽ ሲሆን ብቻ እንዲፈጽሙ ይረዳል።"
     },
     "activeHero.plain": {
-      "en": "Use it to see the next action, who must approve it, what evidence supports it, and what remains unresolved.",
+      "en": "Use it when work needs human judgment before execution, and when every decision needs a visible trail.",
       "am": "ዓላማን ወደ እቅድ ይቀይሩ፣ ቀጣዩን እርምጃ ይገምግሙ፣ የውሳኔ መዝገቡን ያቆዩ፣ እና የሰው ስልጣን ተጠብቆ ስራውን ወደፊት ያንቀሳቅሱ።"
     },
     "activeHero.snapshotAria": {
