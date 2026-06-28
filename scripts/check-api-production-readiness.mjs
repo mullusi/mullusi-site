@@ -9,6 +9,7 @@ Test contract: run node scripts/test-check-api-production-readiness.mjs.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -83,6 +84,7 @@ function assertDocumentIncludes(hardFindings, documentName, content, requiredPhr
 
 function validateSecretBoundary(hardFindings, namedDocuments) {
   for (const [documentName, content] of Object.entries(namedDocuments)) {
+    hardFindings.push(...scanForbiddenEvidencePatterns(documentName, content));
     for (const pattern of highSignalSecretPatterns) {
       if (pattern.test(content)) {
         hardFindings.push(`secret_like_value_present:${documentName}`);
