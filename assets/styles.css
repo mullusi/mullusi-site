@@ -5454,6 +5454,68 @@ html.menu-open body {
     var(--panel-glass);
 }
 
+.surface-boundary-map {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.surface-boundary-map article {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--line-bright) 62%, transparent);
+  border-radius: 8px;
+  padding: 18px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent-deep) 8%, transparent), transparent 48%),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-glass) 88%, transparent), var(--panel-soft)),
+    var(--panel-glass);
+}
+
+.surface-boundary-map article::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  opacity: 0.18;
+}
+
+.surface-boundary-map article > * {
+  position: relative;
+  z-index: 1;
+}
+
+.surface-boundary-map span {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 44%, var(--line));
+  border-radius: 50%;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 11px;
+  background: rgba(0,0,0,0.16);
+}
+
+.surface-boundary-map strong {
+  display: block;
+  color: var(--ink);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.surface-boundary-map p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
 .repo-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
@@ -6294,6 +6356,10 @@ html.menu-open body {
 
   #repos {
     padding-bottom: 44px;
+  }
+
+  .surface-boundary-map {
+    grid-template-columns: 1fr;
   }
 
   #roadmap {
