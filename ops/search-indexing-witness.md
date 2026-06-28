@@ -79,11 +79,11 @@ Observed on 2026-05-24 after the private production source was synced and the
 Cloudflare Pages artifact was deployed:
 
 ```text
-command=npx.cmd --yes wrangler@latest pages deployment list --project-name mullusi-company-site
+command=npx.cmd --yes wrangler@latest pages deployment list --project-name redacted_project
 deployment_result=production deployment observed
-deployment_project=mullusi-company-site
-deployment_id=d029563d-95a9-4c84-b2ba-d8f149706373
-deployment_source=9a7f36a
+deployment_project=redacted_project
+deployment_id=redacted_value
+deployment_source=redacted_value
 deployment_dirty=true
 command=node scripts/check-search-indexing-surface.mjs
 verdict=SolvedVerified

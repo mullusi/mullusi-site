@@ -1,7 +1,7 @@
 <!--
 Purpose: record public-safe live deployment integrity evidence for mullusi.com.
 Governance scope: live status-manifest consistency, governed public-file hashes, route sentinels, local/live drift, and runtime-claim separation.
-Dependencies: status.json, scripts/check-live-deployment-integrity.mjs, public HTTPS responses from mullusi.com, Cloudflare Pages deployment state, mullusi-site#239, and mullusi-company-site#117.
+Dependencies: status.json, scripts/check-live-deployment-integrity.mjs, public HTTPS responses from mullusi.com, Cloudflare Pages deployment state, public mirror evidence, and redacted private deploy-source evidence.
 Invariants: no response bodies, raw response headers, provider account IDs, DNS target values, tokens, credentials, or private deployment identifiers are stored here.
 -->
 
@@ -36,8 +36,8 @@ raw_response_headers=not_recorded
 ```text
 public_mirror_pr=mullusi-site#239
 public_mirror_merge_commit=d240121b4b8677d6db841dad638828f5e436df50
-private_deploy_pr=mullusi-company-site#117
-private_deploy_merge_commit=c223fffe6e35993dc9e190d56b7ef57facf28c12
+private_deploy_pr=redacted_ref
+private_deploy_merge_commit=redacted_value
 deploy_workflow=Deploy to Cloudflare Pages
 deploy_workflow_run_id=28187685917
 deploy_workflow_state=SolvedVerified
