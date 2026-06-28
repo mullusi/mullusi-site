@@ -213,6 +213,37 @@ function testFormattedJsonStaysPublicSafeAndStructured() {
   assert.equal(Object.hasOwn(payload, "apiReadiness"), false);
 }
 
+function testUnexpectedStateValuesAreRedacted() {
+  const evidence = baseEvidence({
+    recoveryWitnessState: "private/recovery-state",
+    domainHardeningPreflight: "postgres://user:password@private.example/db",
+    apiExposureState: "C:\\secret\\api-exposure.txt",
+    apiRuntimePublicState: "private-runtime-host",
+    apiReadiness: {
+      apiProductionReadinessState: "D:\\private\\readiness.json",
+      apiDnsPublicationAllowed: false,
+      manualEvidenceMissing: [],
+      closedWitnessCount: 0,
+    },
+  });
+  const decision = decideOpsNextAction(evidence);
+  const report = formatOpsNextReport(evidence, decision);
+  const payload = formatOpsNextJson(evidence, decision);
+
+  assert.match(report, /recovery_witness_state=redacted_value/);
+  assert.match(report, /domain_hardening_preflight=redacted_value/);
+  assert.match(report, /api_exposure_state=redacted_value/);
+  assert.match(report, /api_runtime_public_state=redacted_value/);
+  assert.match(report, /api_production_readiness_state=redacted_value/);
+  assert.equal(payload.recoveryWitnessState, "redacted_value");
+  assert.equal(payload.domainHardeningPreflight, "redacted_value");
+  assert.equal(payload.apiExposureState, "redacted_value");
+  assert.equal(payload.apiRuntimePublicState, "redacted_value");
+  assert.equal(payload.apiProductionReadinessState, "redacted_value");
+  assert.doesNotMatch(report, /private\/recovery-state|postgres:\/\/user:password@private\.example\/db|C:\\secret\\api-exposure\.txt|private-runtime-host|D:\\private\\readiness\.json/i);
+  assert.doesNotMatch(JSON.stringify(payload), /private\/recovery-state|postgres:\/\/user:password@private\.example\/db|C:\\secret\\api-exposure\.txt|private-runtime-host|D:\\private\\readiness\.json/i);
+}
+
 function testCliReportsCurrentStateAndRejectsUnsupportedArgs() {
   const result = runReporter();
   assert.equal(result.status, 0);
@@ -251,6 +282,7 @@ testReadyForDnsRequiresAllPriorGates();
 testSolvedApiExposureMovesToProductRuntimeWitness();
 testFormattedReportStaysPublicSafe();
 testFormattedJsonStaysPublicSafeAndStructured();
+testUnexpectedStateValuesAreRedacted();
 testCliReportsCurrentStateAndRejectsUnsupportedArgs();
 testCliJsonModeReportsStructuredFailure();
 

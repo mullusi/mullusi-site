@@ -17,6 +17,16 @@ import {
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
 const allowedArgs = new Set(["--help", "-h", "--json"]);
+const publicStateValues = new Set([
+  "AwaitingEvidence",
+  "Blocked",
+  "GovernanceBlocked",
+  "ReadyForDns",
+  "ReadyForProvisioning",
+  "SafeHalt",
+  "SolvedVerified",
+  "Unknown",
+]);
 
 function readUtf8(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
@@ -38,6 +48,11 @@ function declaredMissingEvidence(countText, fallbackMissingEvidence) {
   const count = Number.parseInt(countText, 10);
   if (!Number.isInteger(count) || count < 0) return fallbackMissingEvidence;
   return Array.from({ length: count }, (_, index) => `declared_missing_${index + 1}`);
+}
+
+function publicStateValue(value) {
+  const text = String(value ?? "Unknown").trim();
+  return publicStateValues.has(text) ? text : "redacted_value";
 }
 
 function usage() {
@@ -185,13 +200,13 @@ export function formatOpsNextReport(evidence, decision) {
     `product_live_evidence_ref_checklist=${decision.liveEvidenceRefChecklistPath || "none"}`,
     `product_live_evidence_operator_runbook=${decision.operatorRunbookPath || "none"}`,
     `product_live_evidence_sequence_preflight=${decision.sequencePreflightPath || "none"}`,
-    `recovery_witness_state=${evidence.recoveryWitnessState}`,
+    `recovery_witness_state=${publicStateValue(evidence.recoveryWitnessState)}`,
     `api_provisioning_allowed=${evidence.apiProvisioningAllowed ? "true" : "false"}`,
-    `domain_hardening_preflight=${evidence.domainHardeningPreflight}`,
+    `domain_hardening_preflight=${publicStateValue(evidence.domainHardeningPreflight)}`,
     `domain_dns_mutation_allowed=${domainDnsMutationAllowed ? "true" : "false"}`,
-    `api_exposure_state=${evidence.apiExposureState}`,
-    `api_runtime_public_state=${evidence.apiRuntimePublicState}`,
-    `api_production_readiness_state=${evidence.apiReadiness.apiProductionReadinessState}`,
+    `api_exposure_state=${publicStateValue(evidence.apiExposureState)}`,
+    `api_runtime_public_state=${publicStateValue(evidence.apiRuntimePublicState)}`,
+    `api_production_readiness_state=${publicStateValue(evidence.apiReadiness.apiProductionReadinessState)}`,
     `api_dns_publication_allowed=${evidence.apiReadiness.apiDnsPublicationAllowed ? "true" : "false"}`,
     `product_runtime_claims_allowed=${decision.productRuntimeClaimsAllowed === true ? "true" : "false"}`,
     `public_product_release_allowed=${decision.publicProductReleaseAllowed === true ? "true" : "false"}`,
@@ -233,13 +248,13 @@ export function formatOpsNextJson(evidence, decision) {
     productLiveEvidenceRefChecklist: decision.liveEvidenceRefChecklistPath || "none",
     productLiveEvidenceOperatorRunbook: decision.operatorRunbookPath || "none",
     productLiveEvidenceSequencePreflight: decision.sequencePreflightPath || "none",
-    recoveryWitnessState: evidence.recoveryWitnessState,
+    recoveryWitnessState: publicStateValue(evidence.recoveryWitnessState),
     apiProvisioningAllowed: evidence.apiProvisioningAllowed,
-    domainHardeningPreflight: evidence.domainHardeningPreflight,
+    domainHardeningPreflight: publicStateValue(evidence.domainHardeningPreflight),
     domainDnsMutationAllowed,
-    apiExposureState: evidence.apiExposureState,
-    apiRuntimePublicState: evidence.apiRuntimePublicState,
-    apiProductionReadinessState: evidence.apiReadiness.apiProductionReadinessState,
+    apiExposureState: publicStateValue(evidence.apiExposureState),
+    apiRuntimePublicState: publicStateValue(evidence.apiRuntimePublicState),
+    apiProductionReadinessState: publicStateValue(evidence.apiReadiness.apiProductionReadinessState),
     apiDnsPublicationAllowed: evidence.apiReadiness.apiDnsPublicationAllowed,
     productRuntimeClaimsAllowed: decision.productRuntimeClaimsAllowed === true,
     publicProductReleaseAllowed: decision.publicProductReleaseAllowed === true,
