@@ -20,6 +20,9 @@ import {
 import {
   evaluateApiRuntimeManualEvidenceChecklist,
 } from "./validate-api-runtime-manual-evidence-checklist.mjs";
+import {
+  validateApiRuntimeManualEvidenceIntake,
+} from "./validate-api-runtime-manual-evidence-intake.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -73,6 +76,7 @@ export function collectOpsNextEvidence() {
   const evaluatedManualEvidenceChecklist = evaluateApiRuntimeManualEvidenceChecklist(
     readUtf8("ops/api-runtime-manual-evidence-checklist.md"),
   );
+  const evaluatedManualEvidenceIntake = validateApiRuntimeManualEvidenceIntake();
   const apiReadiness = evaluatedApiReadiness;
 
   return {
@@ -89,6 +93,7 @@ export function collectOpsNextEvidence() {
     apiExposureDnsAllowed: evaluatedApiExposure.apiDnsPublicationAllowed === true,
     apiRuntimePublicState: evaluatedApiExposure.runtimePublicState,
     apiReadiness,
+    apiRuntimeManualEvidenceIntake: evaluatedManualEvidenceIntake,
     apiRuntimeManualEvidenceChecklist: evaluatedManualEvidenceChecklist,
   };
 }
@@ -127,10 +132,12 @@ export function decideOpsNextAction(evidence) {
       opsNextState: "AwaitingEvidence",
       nextAction: "close_private_api_runtime_evidence_before_dns",
       blockedSurface: "api_runtime",
-      safeLocalCommand: "node scripts/validate-api-runtime-manual-evidence-checklist.mjs && node scripts/check-api-production-readiness.mjs",
+      safeLocalCommand: "node scripts/validate-api-runtime-manual-evidence-intake.mjs && node scripts/validate-api-runtime-manual-evidence-checklist.mjs && node scripts/check-api-production-readiness.mjs",
+      apiRuntimeManualEvidenceIntakePath: "ops/api-runtime-manual-evidence-intake-template.json",
+      apiRuntimeManualEvidenceIntakeCommand: "node scripts/validate-api-runtime-manual-evidence-intake.mjs",
       apiRuntimeManualEvidenceChecklistPath: "ops/api-runtime-manual-evidence-checklist.md",
       apiRuntimeManualEvidenceChecklistCommand: "node scripts/validate-api-runtime-manual-evidence-checklist.mjs",
-      manualEvidenceBoundary: "public-safe checklist refs for runtime host, managed PostgreSQL, secret store, TLS, rollback path, private runtime witness, and DNS authority",
+      manualEvidenceBoundary: "public-safe intake and checklist refs for runtime host, managed PostgreSQL, secret store, TLS, rollback path, private runtime witness, and DNS authority",
       productRuntimeClaimsAllowed: false,
       publicProductReleaseAllowed: false,
     };
@@ -203,6 +210,9 @@ export function formatOpsNextReport(evidence, decision) {
     `api_exposure_state=${publicStateValue(evidence.apiExposureState)}`,
     `api_runtime_public_state=${publicStateValue(evidence.apiRuntimePublicState)}`,
     `api_production_readiness_state=${publicStateValue(evidence.apiReadiness.apiProductionReadinessState)}`,
+    `api_runtime_manual_evidence_intake=${publicStateValue(evidence.apiRuntimeManualEvidenceIntake?.apiRuntimeManualEvidenceIntake)}`,
+    `api_runtime_manual_evidence_intake_path=${decision.apiRuntimeManualEvidenceIntakePath || "none"}`,
+    `api_runtime_manual_evidence_intake_command=${decision.apiRuntimeManualEvidenceIntakeCommand || "none"}`,
     `api_runtime_manual_evidence_checklist=${publicStateValue(evidence.apiRuntimeManualEvidenceChecklist?.apiRuntimeManualEvidenceChecklist)}`,
     `api_runtime_manual_evidence_checklist_path=${decision.apiRuntimeManualEvidenceChecklistPath || "none"}`,
     `api_runtime_manual_evidence_checklist_command=${decision.apiRuntimeManualEvidenceChecklistCommand || "none"}`,
@@ -254,6 +264,9 @@ export function formatOpsNextJson(evidence, decision) {
     apiExposureState: publicStateValue(evidence.apiExposureState),
     apiRuntimePublicState: publicStateValue(evidence.apiRuntimePublicState),
     apiProductionReadinessState: publicStateValue(evidence.apiReadiness.apiProductionReadinessState),
+    apiRuntimeManualEvidenceIntake: publicStateValue(evidence.apiRuntimeManualEvidenceIntake?.apiRuntimeManualEvidenceIntake),
+    apiRuntimeManualEvidenceIntakePath: decision.apiRuntimeManualEvidenceIntakePath || "none",
+    apiRuntimeManualEvidenceIntakeCommand: decision.apiRuntimeManualEvidenceIntakeCommand || "none",
     apiRuntimeManualEvidenceChecklist: publicStateValue(evidence.apiRuntimeManualEvidenceChecklist?.apiRuntimeManualEvidenceChecklist),
     apiRuntimeManualEvidenceChecklistPath: decision.apiRuntimeManualEvidenceChecklistPath || "none",
     apiRuntimeManualEvidenceChecklistCommand: decision.apiRuntimeManualEvidenceChecklistCommand || "none",
