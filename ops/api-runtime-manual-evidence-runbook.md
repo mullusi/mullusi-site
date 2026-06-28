@@ -14,6 +14,8 @@ values in Git.
 Prepare proposed refs first in
 `ops/api-runtime-manual-evidence-intake-template.json`, then validate the JSON
 before touching the Markdown checklist.
+Use `node scripts/report-api-runtime-manual-evidence-next.mjs` to identify the
+next missing evidence item and accepted public-safe reference shapes.
 
 The current state remains:
 
@@ -84,6 +86,7 @@ evidence_item=<key> state=Pass public_safe_ref=<public-safe-ref> private_value_s
 4. Run:
 
 ```bash
+node scripts/report-api-runtime-manual-evidence-next.mjs
 node scripts/validate-api-runtime-manual-evidence-intake.mjs
 node scripts/validate-api-runtime-manual-evidence-checklist.mjs
 node scripts/check-api-production-readiness.mjs

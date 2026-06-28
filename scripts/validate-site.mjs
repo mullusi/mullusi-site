@@ -5296,7 +5296,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/api-runtime-manual-evidence-runbook.md",
-      terms: ["API Runtime Manual Evidence Runbook", "ops/api-runtime-manual-evidence-intake-template.json", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "node scripts/validate-api-runtime-manual-evidence-checklist.mjs", "node scripts/check-api-production-readiness.mjs", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "raw_headers=not_recorded", "raw_payloads=not_recorded", "STATUS:"],
+      terms: ["API Runtime Manual Evidence Runbook", "ops/api-runtime-manual-evidence-intake-template.json", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "node scripts/report-api-runtime-manual-evidence-next.mjs", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "node scripts/validate-api-runtime-manual-evidence-checklist.mjs", "node scripts/check-api-production-readiness.mjs", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "raw_headers=not_recorded", "raw_payloads=not_recorded", "STATUS:"],
     },
     {
       file: "ops/api-production-readiness-gate.md",
@@ -5401,6 +5401,8 @@ function validateRuntimeGateState() {
   const apiProductionCheckerTest = readUtf8("scripts/test-check-api-production-readiness.mjs");
   const apiRuntimeManualEvidenceChecklist = readUtf8("ops/api-runtime-manual-evidence-checklist.md");
   const apiRuntimeManualEvidenceIntakeTemplate = readUtf8("ops/api-runtime-manual-evidence-intake-template.json");
+  const apiRuntimeManualEvidenceNextReporter = readUtf8("scripts/report-api-runtime-manual-evidence-next.mjs");
+  const apiRuntimeManualEvidenceNextReporterTest = readUtf8("scripts/test-report-api-runtime-manual-evidence-next.mjs");
   const apiRuntimeManualEvidenceIntakeValidator = readUtf8("scripts/validate-api-runtime-manual-evidence-intake.mjs");
   const apiRuntimeManualEvidenceIntakeValidatorTest = readUtf8("scripts/test-validate-api-runtime-manual-evidence-intake.mjs");
   const apiRuntimeManualEvidenceValidator = readUtf8("scripts/validate-api-runtime-manual-evidence-checklist.mjs");
@@ -5539,6 +5541,30 @@ function validateRuntimeGateState() {
     }
     if (!apiRuntimeManualEvidenceIntakeTemplate.includes(`"${key}": "missing"`)) {
       recordFailure(`api_runtime_manual_evidence_intake_ref_missing:${key}`);
+    }
+  }
+  for (const term of [
+    "function evaluateApiRuntimeManualEvidenceNext",
+    "production_image_published",
+    "publish_versioned_api_image",
+    "accepted_ref_examples",
+    "next_evidence_key",
+    "ready_for_dns=${result.readyForDns",
+    "secret_values=not_read",
+  ]) {
+    if (!apiRuntimeManualEvidenceNextReporter.includes(term)) {
+      recordFailure(`api_runtime_manual_evidence_next_reporter_term_missing:${term}`);
+    }
+  }
+  for (const term of [
+    "testCurrentTemplateReportsProductionImageFirst",
+    "testReporterAdvancesToNextMissingKey",
+    "testCompleteIntakeReportsNone",
+    "testInvalidRefBlocksWithoutEcho",
+    "testUnsupportedArgsDoNotEchoRawArg",
+  ]) {
+    if (!apiRuntimeManualEvidenceNextReporterTest.includes(term)) {
+      recordFailure(`api_runtime_manual_evidence_next_reporter_test_term_missing:${term}`);
     }
   }
   for (const term of [
