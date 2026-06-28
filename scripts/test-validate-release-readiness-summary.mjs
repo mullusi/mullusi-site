@@ -32,9 +32,9 @@ function validSummary(overrides = {}) {
     website_static_deployment_integrity: "SolvedVerified",
     live_status_manifest: "Pass",
     local_status_manifest_match: "Pass",
-    api_exposure_state: "SolvedVerified",
-    api_dns_publication_allowed: "true",
-    api_production_readiness_state: "ReadyForDns",
+    api_exposure_state: "AwaitingEvidence",
+    api_dns_publication_allowed: "false",
+    api_production_readiness_state: "AwaitingEvidence",
     product_runtime_release_witness: "AwaitingEvidence",
     product_runtime_claims_allowed: "false",
     public_product_release_allowed: "false",
@@ -47,8 +47,8 @@ function validSummary(overrides = {}) {
     static_website_public: "true",
     static_website_integrity: "SolvedVerified",
     product_runtime_release: "false",
-    api_dns_publication_allowed_rule: "true",
-    api_gateway_public: "true",
+    api_dns_publication_allowed_rule: "false",
+    api_gateway_public: "false",
     runtime_claims_allowed: "false",
     domain_hardening_mutation_allowed: "true",
     ...overrides,
@@ -90,9 +90,9 @@ function validSummary(overrides = {}) {
 
 function validOpsNextReport(overrides = {}) {
   const values = {
-    api_exposure_state: "SolvedVerified",
-    api_dns_publication_allowed: "true",
-    api_production_readiness_state: "ReadyForDns",
+    api_exposure_state: "AwaitingEvidence",
+    api_dns_publication_allowed: "false",
+    api_production_readiness_state: "AwaitingEvidence",
     product_runtime_claims_allowed: "false",
     public_product_release_allowed: "false",
     recovery_witness_state: "ReadyForProvisioning",
@@ -140,14 +140,14 @@ function testSyntheticMissingProductClaimDenialFailsClosed() {
 
 function testSyntheticOpsReportMismatchFailsClosed() {
   const evidence = validEvidence({
-    opsNextReport: validOpsNextReport({ api_production_readiness_state: "AwaitingEvidence" }),
+    opsNextReport: validOpsNextReport({ api_production_readiness_state: "ReadyForDns" }),
   });
   const result = validateReleaseReadinessSummaryEvidence(evidence);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");
   assert.equal(result.proofState, "Fail");
   assert.equal(result.publicProductReleaseAllowed, false);
-  assert.match(result.findings.join("\n"), /ops_report_mirror_mismatch:api_production_readiness_state:ReadyForDns:AwaitingEvidence/);
+  assert.match(result.findings.join("\n"), /ops_report_mirror_mismatch:api_production_readiness_state:AwaitingEvidence:ReadyForDns/);
 }
 
 function testSyntheticUnsafeMirrorValuesUsePublicLabels() {
