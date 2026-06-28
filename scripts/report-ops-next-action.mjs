@@ -17,6 +17,9 @@ import {
   collectLocalApiExposureDocuments,
   evaluateApiExposureEvidence,
 } from "./check-api-exposure-gate.mjs";
+import {
+  evaluateApiRuntimeManualEvidenceChecklist,
+} from "./validate-api-runtime-manual-evidence-checklist.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -67,6 +70,9 @@ export function collectOpsNextEvidence() {
     },
   });
   const evaluatedApiReadiness = evaluateApiProductionReadinessEvidence(collectLocalApiProductionEvidence());
+  const evaluatedManualEvidenceChecklist = evaluateApiRuntimeManualEvidenceChecklist(
+    readUtf8("ops/api-runtime-manual-evidence-checklist.md"),
+  );
   const apiReadiness = evaluatedApiReadiness;
 
   return {
@@ -83,6 +89,7 @@ export function collectOpsNextEvidence() {
     apiExposureDnsAllowed: evaluatedApiExposure.apiDnsPublicationAllowed === true,
     apiRuntimePublicState: evaluatedApiExposure.runtimePublicState,
     apiReadiness,
+    apiRuntimeManualEvidenceChecklist: evaluatedManualEvidenceChecklist,
   };
 }
 
@@ -120,8 +127,10 @@ export function decideOpsNextAction(evidence) {
       opsNextState: "AwaitingEvidence",
       nextAction: "close_private_api_runtime_evidence_before_dns",
       blockedSurface: "api_runtime",
-      safeLocalCommand: "node scripts/check-api-production-readiness.mjs",
-      manualEvidenceBoundary: "runtime host, managed PostgreSQL, secret store, TLS, rollback path, private runtime witness, and DNS authority",
+      safeLocalCommand: "node scripts/validate-api-runtime-manual-evidence-checklist.mjs && node scripts/check-api-production-readiness.mjs",
+      apiRuntimeManualEvidenceChecklistPath: "ops/api-runtime-manual-evidence-checklist.md",
+      apiRuntimeManualEvidenceChecklistCommand: "node scripts/validate-api-runtime-manual-evidence-checklist.mjs",
+      manualEvidenceBoundary: "public-safe checklist refs for runtime host, managed PostgreSQL, secret store, TLS, rollback path, private runtime witness, and DNS authority",
       productRuntimeClaimsAllowed: false,
       publicProductReleaseAllowed: false,
     };
@@ -194,6 +203,9 @@ export function formatOpsNextReport(evidence, decision) {
     `api_exposure_state=${publicStateValue(evidence.apiExposureState)}`,
     `api_runtime_public_state=${publicStateValue(evidence.apiRuntimePublicState)}`,
     `api_production_readiness_state=${publicStateValue(evidence.apiReadiness.apiProductionReadinessState)}`,
+    `api_runtime_manual_evidence_checklist=${publicStateValue(evidence.apiRuntimeManualEvidenceChecklist?.apiRuntimeManualEvidenceChecklist)}`,
+    `api_runtime_manual_evidence_checklist_path=${decision.apiRuntimeManualEvidenceChecklistPath || "none"}`,
+    `api_runtime_manual_evidence_checklist_command=${decision.apiRuntimeManualEvidenceChecklistCommand || "none"}`,
     `api_dns_publication_allowed=${evidence.apiReadiness.apiDnsPublicationAllowed ? "true" : "false"}`,
     `product_runtime_claims_allowed=${decision.productRuntimeClaimsAllowed === true ? "true" : "false"}`,
     `public_product_release_allowed=${decision.publicProductReleaseAllowed === true ? "true" : "false"}`,
@@ -242,6 +254,9 @@ export function formatOpsNextJson(evidence, decision) {
     apiExposureState: publicStateValue(evidence.apiExposureState),
     apiRuntimePublicState: publicStateValue(evidence.apiRuntimePublicState),
     apiProductionReadinessState: publicStateValue(evidence.apiReadiness.apiProductionReadinessState),
+    apiRuntimeManualEvidenceChecklist: publicStateValue(evidence.apiRuntimeManualEvidenceChecklist?.apiRuntimeManualEvidenceChecklist),
+    apiRuntimeManualEvidenceChecklistPath: decision.apiRuntimeManualEvidenceChecklistPath || "none",
+    apiRuntimeManualEvidenceChecklistCommand: decision.apiRuntimeManualEvidenceChecklistCommand || "none",
     apiDnsPublicationAllowed: evidence.apiReadiness.apiDnsPublicationAllowed,
     productRuntimeClaimsAllowed: decision.productRuntimeClaimsAllowed === true,
     publicProductReleaseAllowed: decision.publicProductReleaseAllowed === true,
