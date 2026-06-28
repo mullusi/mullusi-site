@@ -137,6 +137,9 @@ function testModeAwareGuideContract() {
   assert.ok(bundle.includes("Switch to Builder Inspect for governed actions."));
   assert.ok(css.includes(".mullu-eye-helper-modes"));
   assert.ok(css.includes("button[aria-pressed=\"true\"]"));
+  assert.ok(css.includes('button[data-mode="public-guide"][aria-pressed="true"]'));
+  assert.ok(css.includes('button[data-mode="proof-lens"][aria-pressed="true"]'));
+  assert.ok(css.includes('button[data-mode="builder-inspect"][aria-pressed="true"]'));
 }
 
 function testAuthorityAndFailureGuards() {

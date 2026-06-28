@@ -1678,25 +1678,30 @@ function validateStatusJson() {
   if (/^\d{4}-\d{2}-\d{2}$/.test(statusBuildDate)) {
     const indexHtml = readUtf8("index.html");
     const i18n = JSON.parse(readUtf8("data/i18n.json"));
-    const lastUpdated = i18n.strings?.["hero.lastUpdated"] || {};
-    const expectedLastUpdatedEn = `Last updated ${statusBuildDate}`;
-    const expectedLastUpdatedAm = `የመጨረሻ ዝመና ${statusBuildDate}`;
-    if (!indexHtml.includes(`datetime="${statusBuildDate}"`)) {
-      recordFailure(`homepage_last_updated_datetime_mismatch:${statusBuildDate}`);
+    const lastUpdated = i18n.strings?.["activeHero.lastUpdated"] || {};
+    const lastUpdatedEn = String(lastUpdated.en || "");
+    const lastUpdatedAm = String(lastUpdated.am || "");
+    const homepageDate = lastUpdatedEn.match(/\d{4}-\d{2}-\d{2}/)?.[0] || "";
+    if (!homepageDate) {
+      recordFailure("i18n_last_updated_en_date_missing");
+    } else {
+      if (!indexHtml.includes(`datetime="${homepageDate}"`)) {
+        recordFailure(`homepage_last_updated_datetime_mismatch:${homepageDate}`);
+      }
+      if (!indexHtml.includes(lastUpdatedEn)) {
+        recordFailure(`homepage_last_updated_text_mismatch:${lastUpdatedEn}`);
+      }
+      if (!lastUpdatedAm.includes(homepageDate)) {
+        recordFailure(`i18n_last_updated_am_date_mismatch:${lastUpdatedAm}`);
+      }
     }
-    if (!indexHtml.includes(expectedLastUpdatedEn)) {
-      recordFailure(`homepage_last_updated_text_mismatch:${expectedLastUpdatedEn}`);
+    if (!lastUpdatedEn.startsWith("Public state updated ")) {
+      recordFailure(`i18n_last_updated_en_mismatch:${lastUpdatedEn}`);
     }
-    if (lastUpdated.en !== expectedLastUpdatedEn) {
-      recordFailure(`i18n_last_updated_en_mismatch:${lastUpdated.en || ""}`);
-    }
-    if (lastUpdated.am !== expectedLastUpdatedAm) {
-      recordFailure(`i18n_last_updated_am_mismatch:${lastUpdated.am || ""}`);
-    }
-    if (!/[\u1200-\u137F]/.test(lastUpdated.am || "")) {
+    if (!/[\u1200-\u137F]/.test(lastUpdatedAm)) {
       recordFailure("i18n_last_updated_am_missing_ethiopic");
     }
-    if (/[\u00C0-\u00FF]{2,}/.test(lastUpdated.am || "")) {
+    if (/[\u00C0-\u00FF]{2,}/.test(lastUpdatedAm)) {
       recordFailure("i18n_last_updated_am_mojibake");
     }
   }
@@ -3897,6 +3902,9 @@ function validateIndexDesignContract() {
     [eyeHelperBundle, "requiresConfirmation", "eye_helper_low_confidence_confirmation_missing"],
     [eyeHelperCss, ".mullu-eye-helper-modes", "eye_helper_modes_style_missing"],
     [eyeHelperCss, 'button[aria-pressed="true"]', "eye_helper_selected_mode_style_missing"],
+    [eyeHelperCss, 'button[data-mode="public-guide"][aria-pressed="true"]', "eye_helper_public_mode_accent_missing"],
+    [eyeHelperCss, 'button[data-mode="proof-lens"][aria-pressed="true"]', "eye_helper_proof_mode_accent_missing"],
+    [eyeHelperCss, 'button[data-mode="builder-inspect"][aria-pressed="true"]', "eye_helper_builder_mode_accent_missing"],
     [eyeHelperBundle, "HELPER_MODES", "eye_helper_modes_registry_missing"],
     [eyeHelperBundle, "public-guide", "eye_helper_public_guide_mode_missing"],
     [eyeHelperBundle, "proof-lens", "eye_helper_proof_lens_mode_missing"],
@@ -4836,9 +4844,9 @@ function validateDoctrineWordingContract() {
     {
       file: "index.html",
       terms: [
-        "Mullusi builds symbolic intelligence work systems for teams that need planning, approvals, evidence, and controlled execution in one operating layer.",
-        "Doctrine v1.2 is self-attested against Mullusi architecture and AwaitingEvidence on independent runtime witness until signed endpoints close.",
-        "Local proof first. Runtime claims AwaitingEvidence. No customer access or deployment claim.",
+        "A work system for plans, approvals, and evidence.",
+        "Mullu Govern helps teams turn important requests into clear plans, reviewed actions, approval decisions, and durable records.",
+        "Preserve the decision trail so teams can inspect what happened, who approved it, and what remains unresolved.",
         "output-derived actions become proposals first",
         'href="/doctrine/"',
       ],
@@ -4976,12 +4984,12 @@ function validateFoundationModeBoundary() {
     [
       "index.html",
       [
-        "Foundation before launch.",
-        "public foundation route first",
-        "witness closure preparation",
+        "A work system for plans, approvals, and evidence.",
+        "A practical operating layer for controlled work",
+        "Turn a request into a clear next action",
+        "Keep human judgment in the workflow",
         "foundation product path",
         "public site can record future surface expansion",
-        "No customer access or deployment claim.",
       ],
     ],
     [

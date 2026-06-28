@@ -352,6 +352,21 @@ html.mullu-eye-helper-target-section:not(.mullu-eye-helper-risky) .mullu-eye-hel
   background: rgba(126, 247, 209, 0.12);
 }
 
+.mullu-eye-helper-modes button[data-mode="public-guide"][aria-pressed="true"] {
+  border-color: rgba(126, 247, 209, 0.72);
+  background: rgba(126, 247, 209, 0.13);
+}
+
+.mullu-eye-helper-modes button[data-mode="proof-lens"][aria-pressed="true"] {
+  border-color: rgba(248, 213, 126, 0.72);
+  background: rgba(248, 213, 126, 0.12);
+}
+
+.mullu-eye-helper-modes button[data-mode="builder-inspect"][aria-pressed="true"] {
+  border-color: rgba(149, 174, 255, 0.72);
+  background: rgba(149, 174, 255, 0.12);
+}
+
 .mullu-eye-helper-modes button:focus-visible {
   outline: 2px solid var(--mullu-eye-helper-accent);
   outline-offset: 2px;
