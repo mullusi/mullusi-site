@@ -24,7 +24,7 @@ const scriptPath = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(scriptPath);
 const repoRoot = path.resolve(scriptsDir, "..");
 const readinessScript = path.join(scriptsDir, "check-api-production-readiness.mjs");
-const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mullusi-api-readiness-test-"));
+const tempDir = fs.mkdtempSync(path.join(repoRoot, ".tmp-api-readiness-test-"));
 
 function readyFlagMap(overrides = {}) {
   return Object.fromEntries(readinessFlags.map(({ key }) => [key, overrides[key] ?? true]));
@@ -273,6 +273,20 @@ function testEmptyOutputPathIsRejectedBeforeWrite() {
   assert.equal(JSON.stringify(payload).includes("--output="), false);
 }
 
+function testOutsideOutputPathIsRejectedBeforeWrite() {
+  const outsidePath = path.join(os.tmpdir(), "private-api-readiness-output.json");
+  if (fs.existsSync(outsidePath)) fs.rmSync(outsidePath, { force: true });
+  const result = runCli(["--json", `--output=${outsidePath}`]);
+  const payload = JSON.parse(result.stdout);
+
+  assert.equal(result.status, 1);
+  assert.equal(payload.apiProductionReadinessState, "GovernanceBlocked");
+  assert.deepEqual(payload.hardFindings, ["output_path_outside_repo"]);
+  assert.equal(fs.existsSync(outsidePath), false);
+  assert.equal(JSON.stringify(payload).includes(outsidePath), false);
+  assert.equal(JSON.stringify(payload).includes("private-api-readiness-output"), false);
+}
+
 function testPublicErrorCodeRedactsRawExceptionValues() {
   const file = publicErrorCode(new Error("ENOENT: no such file or directory, open 'D:\\secret\\registry.json'"));
   const json = publicErrorCode(new SyntaxError("Unexpected token in private JSON"));
@@ -324,6 +338,7 @@ testCurrentCliRejectsUnsupportedArgs();
 testOutputFilePersistsReadinessJson();
 testJsonOutputFilePersistsGovernanceBlock();
 testEmptyOutputPathIsRejectedBeforeWrite();
+testOutsideOutputPathIsRejectedBeforeWrite();
 testPublicErrorCodeRedactsRawExceptionValues();
 testInvalidReadinessStateValuesAreRedacted();
 testPublicReadinessScalarLabelRedactsUnsafeValues();

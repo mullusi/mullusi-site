@@ -12,6 +12,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 
 const readinessFlags = [
   { flag: "--production-image-published", key: "production_image_published" },
@@ -287,6 +288,10 @@ export function formatApiProductionReadinessResult(result) {
 function parseCliArgs(args) {
   const outputArg = args.find((arg) => arg.startsWith("--output="));
   const outputValue = outputArg ? outputArg.slice("--output=".length) : "";
+  const outputPath = outputValue ? path.resolve(repoRoot, outputValue) : "";
+  const outputPathError = outputPath && outputPath !== repoRoot && !outputPath.startsWith(repoRootPrefix)
+    ? "output_path_outside_repo"
+    : "";
   const invalidOptions = args.filter((arg) =>
     arg.startsWith("--")
     && !allowedCliOptions.has(arg)
@@ -296,7 +301,8 @@ function parseCliArgs(args) {
     invalidOptions,
     flagSet,
     outputJson: args.includes("--json"),
-    outputPath: outputValue ? path.resolve(repoRoot, outputValue) : "",
+    outputPath: outputPathError ? "" : outputPath,
+    outputPathError,
     requireReady: args.includes("--require-ready"),
     expectBlocked: args.includes("--expect-blocked"),
     help: args.includes("--help") || args.includes("-h"),
@@ -369,6 +375,31 @@ function runCli() {
       readinessGateContract: "Unknown",
       secretBoundary: "Unknown",
       hardFindings: [`unsupported_args_count:${args.invalidOptions.length}`],
+      blockers: [],
+    };
+    printResult(result, args);
+    process.exit(1);
+    return;
+  }
+  if (args.outputPathError) {
+    const result = {
+      apiProductionReadinessState: "GovernanceBlocked",
+      solverOutcome: "GovernanceBlocked",
+      proofState: "Fail",
+      apiDnsPublicationAllowed: false,
+      recoveryGate: "Unknown",
+      recoveryWitnessState: "",
+      apiProvisioningAllowed: false,
+      manualEvidenceReady: false,
+      manualEvidenceMissing: readinessFlags.map(({ key }) => key),
+      runtimeWitnessRegistry: "Unknown",
+      witnessCount: 0,
+      closedWitnessCount: 0,
+      blockedWitnessCount: 0,
+      hostPathContract: "Unknown",
+      readinessGateContract: "Unknown",
+      secretBoundary: "Unknown",
+      hardFindings: [args.outputPathError],
       blockers: [],
     };
     printResult(result, args);
