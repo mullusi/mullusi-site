@@ -295,6 +295,38 @@ function testFailedProbeIsCapturedWithoutLeakingStderr() {
   }
 }
 
+function testSuccessfulProbeWithUnsafeOutputIsNotRetained() {
+  const tempDirectory = createTempDirectory();
+  try {
+    const result = captureLiveSafetyWitnessArtifact({
+      artifactDirectory: tempDirectory,
+      now: new Date("2026-05-24T12:00:00Z"),
+      runner: (probe) => {
+        if (probe.fileName === "deployment-integrity.txt") {
+          return {
+            status: 0,
+            stdout: "verdict=SolvedVerified\nAuthorization: Bearer abcdefghijklmnopqrstuvwxyz123456\npostgres://user:password@private.example/db\n",
+            stderr: "",
+          };
+        }
+        return fixtureRunner(probe);
+      },
+    });
+    const deploymentIntegrityFile = fs.readFileSync(path.join(tempDirectory, "deployment-integrity.txt"), "utf8");
+    const formatted = formatCaptureResult(result);
+
+    assert.equal(result.validation.verdict, "GovernanceBlocked");
+    assert.equal(result.validation.proofState, "Fail");
+    assert.match(deploymentIntegrityFile, /^error=probe_output_boundary_invalid:3$/m);
+    assert.match(deploymentIntegrityFile, /^raw_probe_output=not_recorded$/m);
+    assert.doesNotMatch(deploymentIntegrityFile, /abcdefghijklmnopqrstuvwxyz123456|postgres:\/\/user:password|private\.example|Authorization: Bearer/);
+    assert.match(formatted, /failed_probe=deployment_integrity:1/);
+    assert.match(formatted, /capture_state=GovernanceBlocked/);
+  } finally {
+    removeTempDirectory(tempDirectory);
+  }
+}
+
 function testTransientProbeFailureRetriesBeforeCapture() {
   const tempDirectory = createTempDirectory();
   try {
@@ -336,6 +368,7 @@ testProbePlanHasStableBoundary();
 testMetadataUsesEnvAndSecondPrecisionTimestamp();
 testCaptureWritesAndValidatesArtifact();
 testFailedProbeIsCapturedWithoutLeakingStderr();
+testSuccessfulProbeWithUnsafeOutputIsNotRetained();
 testTransientProbeFailureRetriesBeforeCapture();
 testCliRejectsUnsupportedFlagsWithoutNetwork();
 
