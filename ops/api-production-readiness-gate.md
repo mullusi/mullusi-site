@@ -125,6 +125,8 @@ If any command blocks, do not create the DNS record.
 The public-safe aggregate reporter for this gate is:
 
 ```bash
+node scripts/validate-api-runtime-manual-evidence-checklist.mjs --require-ready
+
 node scripts/check-api-production-readiness.mjs --require-ready \
   --production-image-published \
   --runtime-host-ready \
@@ -140,6 +142,11 @@ node scripts/check-api-production-readiness.mjs --require-ready \
   --private-runtime-witness-ready \
   --dns-authority-ready
 ```
+
+The manual evidence checklist is `ops/api-runtime-manual-evidence-checklist.md`.
+It is the durable public-safe intake path for the 13 pre-DNS evidence items.
+Each item must be `state=Pass` with a public-safe reference before the
+aggregate reporter may be run with the matching evidence flag.
 
 The reporter records only boolean evidence presence and public-safe blocker
 names. It must not print host addresses, DNS target values, database URLs,
