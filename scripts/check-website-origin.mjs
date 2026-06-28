@@ -69,6 +69,10 @@ function publicMullusiUrlLabel(value) {
   return "redacted_url";
 }
 
+function publicHeaderPresenceLabel(value) {
+  return value ? "present" : "";
+}
+
 export function publicErrorCode(error) {
   const message = error instanceof Error ? error.message : String(error);
   if (message.startsWith("origin_check_")) {
@@ -282,12 +286,12 @@ export function formatReport(targetUrl, response, classification) {
     `redirect_count=${response.redirectHistory?.length ?? 0}`,
     `first_redirect_status=${firstRedirect?.statusCode ?? ""}`,
     `first_redirect_url=${publicMullusiUrlLabel(firstRedirect?.to ?? "")}`,
-    `server=${normalized.server ?? ""}`,
-    `cf_ray=${normalized["cf-ray"] ?? ""}`,
-    `github_request=${normalized["x-github-request-id"] ?? ""}`,
-    `fastly_request=${normalized["x-fastly-request-id"] ?? ""}`,
-    `served_by=${normalized["x-served-by"] ?? ""}`,
-    `via=${normalized.via ?? ""}`,
+    `server=${publicHeaderPresenceLabel(normalized.server)}`,
+    `cf_ray=${publicHeaderPresenceLabel(normalized["cf-ray"])}`,
+    `github_request=${publicHeaderPresenceLabel(normalized["x-github-request-id"])}`,
+    `fastly_request=${publicHeaderPresenceLabel(normalized["x-fastly-request-id"])}`,
+    `served_by=${publicHeaderPresenceLabel(normalized["x-served-by"])}`,
+    `via=${publicHeaderPresenceLabel(normalized.via)}`,
   ];
   return [
     `verdict=${classification.verdict}`,
@@ -310,12 +314,12 @@ export function witnessRecord(targetUrl, response, classification) {
     redirect_count: response.redirectHistory?.length ?? 0,
     first_redirect_status: firstRedirect?.statusCode ?? "",
     first_redirect_url: publicMullusiUrlLabel(firstRedirect?.to ?? ""),
-    server: normalized.server ?? "",
-    cf_ray: normalized["cf-ray"] ?? "",
-    github_request: normalized["x-github-request-id"] ?? "",
-    fastly_request: normalized["x-fastly-request-id"] ?? "",
-    served_by: normalized["x-served-by"] ?? "",
-    via: normalized.via ?? "",
+    server: publicHeaderPresenceLabel(normalized.server),
+    cf_ray: publicHeaderPresenceLabel(normalized["cf-ray"]),
+    github_request: publicHeaderPresenceLabel(normalized["x-github-request-id"]),
+    fastly_request: publicHeaderPresenceLabel(normalized["x-fastly-request-id"]),
+    served_by: publicHeaderPresenceLabel(normalized["x-served-by"]),
+    via: publicHeaderPresenceLabel(normalized.via),
   };
 }
 
