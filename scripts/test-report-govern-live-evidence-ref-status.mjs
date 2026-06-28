@@ -108,6 +108,25 @@ function testPrivatePatternIsRedacted() {
   assert.doesNotMatch(report, /ghp_abcdefghijklmnopqrstuvwxyz123456/);
 }
 
+function testInvalidNonSecretRefTextIsRedacted() {
+  const refs = {
+    ...completeRefs,
+    public_claim_update_ref: "ops/private.local.json",
+  };
+  const guards = {
+    ...completeRefs,
+    public_claim_update_ref: "local/private-approval-note",
+  };
+  const result = analyzeGovernLiveEvidenceRefStatusContent(intake(refs), guardContents(guards));
+  const report = formatGovernLiveEvidenceRefStatusReport(result);
+
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.match(report, /ref=public_claim_update_ref status=invalid current=redacted local_guard=redacted/);
+  assert.doesNotMatch(report, /ops\/private\.local\.json/);
+  assert.doesNotMatch(report, /local\/private-approval-note/);
+}
+
 function testCliCurrentTemplateAndUnsupportedArgs() {
   const current = runReporter([]);
   assert.equal(current.status, 0);
@@ -124,6 +143,7 @@ testMissingTemplateRefsReportAwaitingEvidence();
 testCompleteRefsStillRequireLocalActivationGuards();
 testCompleteRefsWithLocalGuardsPass();
 testPrivatePatternIsRedacted();
+testInvalidNonSecretRefTextIsRedacted();
 testCliCurrentTemplateAndUnsupportedArgs();
 
 console.log("govern live evidence ref status reporter tests passed");
