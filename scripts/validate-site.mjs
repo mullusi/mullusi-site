@@ -53,6 +53,7 @@ const requiredFiles = [
   "ops/mullusi-doctrine.md",
   "ops/api-runtime-host-path.md",
   "ops/api-runtime-manual-evidence-checklist.md",
+  "ops/api-runtime-manual-evidence-runbook.md",
   "ops/api-production-readiness-gate.md",
   "ops/api-exposure-witness.md",
   "ops/website-origin-witness.md",
@@ -5290,7 +5291,11 @@ function validateOperatingGates() {
     },
     {
       file: "ops/api-runtime-manual-evidence-checklist.md",
-      terms: ["API Runtime Manual Evidence Checklist", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "manual_evidence_item_count=13", "manual_evidence_missing_count=13", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "STATUS:"],
+      terms: ["API Runtime Manual Evidence Checklist", "ops/api-runtime-manual-evidence-runbook.md", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "manual_evidence_item_count=13", "manual_evidence_missing_count=13", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "STATUS:"],
+    },
+    {
+      file: "ops/api-runtime-manual-evidence-runbook.md",
+      terms: ["API Runtime Manual Evidence Runbook", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "node scripts/validate-api-runtime-manual-evidence-checklist.mjs", "node scripts/check-api-production-readiness.mjs", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "raw_headers=not_recorded", "raw_payloads=not_recorded", "STATUS:"],
     },
     {
       file: "ops/api-production-readiness-gate.md",
@@ -5561,6 +5566,7 @@ function validateRuntimeGateState() {
     "ops/MULLUSI_INFRASTRUCTURE_ROOT.md",
     "ops/api-runtime-host-path.md",
     "ops/api-runtime-manual-evidence-checklist.md",
+    "ops/api-runtime-manual-evidence-runbook.md",
     "ops/api-production-readiness-gate.md",
     "ops/api-exposure-witness.md",
     "ops/recovery-inventory-template.md",
