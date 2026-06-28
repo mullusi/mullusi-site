@@ -176,6 +176,24 @@ function testSecretLikeValueBlocksContract() {
   assert.ok(result.hardFindings.includes("secret_like_value_present:runtimeHostPath"));
 }
 
+function testSharedPrivateValueScannerBlocksContract() {
+  const evidence = fixtureEvidence();
+  evidence.documents.recoveryWitness += "\nAuthorization: Bearer abcdefghijklmnopqrstuvwxyz123456";
+  evidence.documents.productionReadinessGate += "\npostgres://user:password@private.example/db";
+  const result = evaluateApiProductionReadinessEvidence(evidence);
+  const formatted = formatApiProductionReadinessResult(result);
+  const serialized = `${JSON.stringify(result)}\n${formatted}`;
+
+  assert.equal(result.apiProductionReadinessState, "GovernanceBlocked");
+  assert.equal(result.solverOutcome, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.secretBoundary, "Fail");
+  assert.ok(result.hardFindings.includes("forbidden_private_value_pattern:recoveryWitness:bearer_token"));
+  assert.ok(result.hardFindings.includes("forbidden_private_value_pattern:recoveryWitness:raw_header_authorization"));
+  assert.ok(result.hardFindings.includes("forbidden_private_value_pattern:productionReadinessGate:postgres_url"));
+  assert.doesNotMatch(serialized, /abcdefghijklmnopqrstuvwxyz123456|postgres:\/\/user:password|private\.example/);
+}
+
 function testRuntimeWitnessClosurePredicate() {
   assert.equal(runtimeWitnessClosed(closedWitness()), true);
   assert.equal(runtimeWitnessClosed(blockedWitness()), false);
@@ -316,7 +334,7 @@ function testInvalidReadinessStateValuesAreRedacted() {
   assert.ok(result.hardFindings.includes("recovery_witness_state_invalid:redacted_value"));
   assert.ok(result.hardFindings.includes("api_provisioning_allowed_invalid:redacted_value"));
   assert.ok(result.hardFindings.includes("runtime_witness_rollback_path_invalid:redacted_value"));
-  assert.doesNotMatch(serialized, /private\/|postgres|password|private\.example/);
+  assert.doesNotMatch(serialized, /private\/recovery-state|postgres:\/\/user:password@private\.example\/db|private\/product-repo|private\/authority-ref|private\/rollback-path/);
 }
 
 function testPublicReadinessScalarLabelRedactsUnsafeValues() {
@@ -330,6 +348,7 @@ testMissingManualEvidenceAwaitsEvidence();
 testRecoveryBlockDominatesReadiness();
 testBlockedProductRuntimeWitnessDoesNotBlockGatewayReadiness();
 testSecretLikeValueBlocksContract();
+testSharedPrivateValueScannerBlocksContract();
 testRuntimeWitnessClosurePredicate();
 testCurrentCliDefaultsAwaitEvidenceAfterRecovery();
 testCurrentCliRequireReadyFailsClosed();
