@@ -3,65 +3,65 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-27",
+    "updated": "2026-06-28",
     "count": 7
   },
   "items": [
     {
-      "title": "U.S. government will decide who gets to use GPT-5.6",
-      "url": "https://www.washingtonpost.com/technology/2026/06/26/openai-says-us-government-will-vet-users-its-latest-ai-model/",
-      "source": "washingtonpost.com",
-      "points": 1037,
-      "comments": 1092,
-      "date": "2026-06-26"
+      "title": "Anonymous GitHub account mass-dropping undisclosed 0-days",
+      "url": "https://github.com/bikini/exploitarium",
+      "source": "github.com",
+      "points": 820,
+      "comments": 322,
+      "date": "2026-06-27"
     },
     {
-      "title": "Previewing GPT‑5.6 Sol: a next-generation model",
-      "url": "https://openai.com/index/previewing-gpt-5-6-sol/",
-      "source": "openai.com",
-      "points": 1012,
-      "comments": 638,
-      "date": "2026-06-26"
+      "title": "DSpark: Speculative decoding accelerates LLM inference [pdf]",
+      "url": "https://github.com/deepseek-ai/DeepSpec/blob/main/DSpark_paper.pdf",
+      "source": "github.com",
+      "points": 762,
+      "comments": 323,
+      "date": "2026-06-27"
     },
     {
-      "title": "We can still stop California's 3D printer surveillance scheme",
-      "url": "https://www.eff.org/deeplinks/2026/06/we-can-still-stop-californias-3d-printer-surveillance-scheme",
-      "source": "eff.org",
-      "points": 403,
-      "comments": 134,
-      "date": "2026-06-26"
+      "title": "OpenRA",
+      "url": "https://www.openra.net/",
+      "source": "openra.net",
+      "points": 724,
+      "comments": 135,
+      "date": "2026-06-27"
     },
     {
-      "title": "Om",
-      "url": "https://daringfireball.net/2026/06/om",
-      "source": "daringfireball.net",
-      "points": 377,
-      "comments": 17,
-      "date": "2026-06-26"
+      "title": "Fintech Engineering Handbook",
+      "url": "https://w.pitula.me/fintech-engineering-handbook/",
+      "source": "w.pitula.me",
+      "points": 579,
+      "comments": 176,
+      "date": "2026-06-27"
     },
     {
-      "title": "MicroVMs: Run isolated sandboxes with full lifecycle control",
-      "url": "https://aws.amazon.com/blogs/aws/run-isolated-sandboxes-with-full-lifecycle-control-aws-lambda-introduces-microvms/",
-      "source": "aws.amazon.com",
-      "points": 332,
-      "comments": 187,
-      "date": "2026-06-23"
+      "title": "The case for physical media ownership",
+      "url": "https://dervis.de/physical/",
+      "source": "dervis.de",
+      "points": 445,
+      "comments": 299,
+      "date": "2026-06-27"
     },
     {
-      "title": "Ultrasound imaging of the brain",
-      "url": "https://alephneuro.com/blog/ultrasound-brain",
-      "source": "alephneuro.com",
-      "points": 284,
-      "comments": 114,
-      "date": "2026-06-26"
+      "title": "Suspicious Discontinuities (2020)",
+      "url": "https://danluu.com/discontinuities/",
+      "source": "danluu.com",
+      "points": 245,
+      "comments": 77,
+      "date": "2026-06-27"
     },
     {
-      "title": "Why does kinetic energy increase quadratically, not linearly, with speed? (2011)",
-      "url": "https://physics.stackexchange.com/questions/535/why-does-kinetic-energy-increase-quadratically-not-linearly-with-speed",
-      "source": "physics.stackexchange.com",
-      "points": 240,
-      "comments": 119,
-      "date": "2026-06-26"
+      "title": "Marfa Public Radio Puts You to Sleep",
+      "url": "https://www.marfapublicradio.org/podcast/marfa-public-radio-puts-you-to-sleep",
+      "source": "marfapublicradio.org",
+      "points": 243,
+      "comments": 60,
+      "date": "2026-06-28"
     }
   ]
 }
