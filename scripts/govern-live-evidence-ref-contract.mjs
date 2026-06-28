@@ -79,6 +79,11 @@ export const forbiddenEvidencePatterns = Object.freeze([
   { label: "bearer_token", pattern: /Bearer\s+[A-Za-z0-9._~+/-]{16,}/ },
   { label: "api_key_shape", pattern: /\b(?:sk|pk|rk|ghp|gho|ghu|ghs|github_pat)_[A-Za-z0-9_]{12,}/ },
   { label: "google_api_key_shape", pattern: /\bAIza[0-9A-Za-z_-]{20,}/ },
+  { label: "private_deploy_source_repo", pattern: /\bmullusi-company-site\b/i },
+  { label: "cloudflare_pages_preview_url", pattern: /https:\/\/[a-z0-9-]+\.mullusi-company-site\.pages\.dev\b/i },
+  { label: "raw_deployment_id", pattern: /^deployment_id=(?!redacted_value(?:\r?\n|$))[0-9a-f]{8}-[0-9a-f-]{27,}$/im },
+  { label: "raw_deployment_source", pattern: /^deployment_source=(?!redacted_value(?:\r?\n|$))[0-9a-f]{6,40}$/im },
+  { label: "raw_private_deploy_ref", pattern: /^private_deploy_pr=(?!redacted_ref(?:\r?\n|$))\S+|^private_deploy_merge_commit=(?!redacted_value(?:\r?\n|$))[0-9a-f]{40}$/im },
   { label: "raw_header_authorization", pattern: /^Authorization:/im },
   { label: "raw_json_payload", pattern: /^\s*{\s*"(?:input|prompt|message|token|authorization|password|secret)"/im },
 ]);
