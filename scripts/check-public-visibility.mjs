@@ -662,8 +662,8 @@ export function formatResult(result, evidence) {
     `dns_host=${record.host}`,
     `dns_resolver=${record.resolver}`,
     `dns_public_resolver=${record.publicResolver ? "true" : "false"}`,
-    `dns_a=${record.a.join(",")}`,
-    `dns_aaaa=${record.aaaa.join(",")}`,
+    `dns_a_count=${record.a.length}`,
+    `dns_aaaa_count=${record.aaaa.length}`,
     `dns_error=${publicDnsErrorCode(record.error)}`,
   ]);
   const routeLines = (evidence.routeRecords ?? []).flatMap((route) => {
