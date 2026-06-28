@@ -1,0 +1,33 @@
+{
+  "purpose": "Public-safe API runtime manual evidence ref intake template.",
+  "governance_scope": "pre-DNS api.mullusi.com runtime evidence refs only; no secrets, raw payloads, provider values, account ids, host addresses, database URLs, DNS targets, or billing details.",
+  "surface_id": "api.mullusi.com",
+  "ready_for_dns": false,
+  "api_dns_publication_allowed": false,
+  "secret_values_allowed": false,
+  "raw_payloads_allowed": false,
+  "provider_values_allowed": false,
+  "host_addresses_allowed": false,
+  "database_urls_allowed": false,
+  "dns_targets_allowed": false,
+  "evidence_refs": {
+    "production_image_published": "missing",
+    "runtime_host_ready": "missing",
+    "managed_postgres_ready": "missing",
+    "schema_applied": "missing",
+    "production_secrets_stored": "missing",
+    "deploy_env_check_ready": "missing",
+    "release_preflight_ready": "missing",
+    "persistence_check_ready": "missing",
+    "host_firewall_configured": "missing",
+    "tls_certificate_ready": "missing",
+    "rollback_path_defined": "missing",
+    "private_runtime_witness_ready": "missing",
+    "dns_authority_ready": "missing"
+  },
+  "status": {
+    "solver_outcome": "AwaitingEvidence",
+    "proof_state": "Unknown",
+    "next_action": "replace missing refs only after the private runtime action is complete and the ref is public-safe"
+  }
+}

@@ -70,6 +70,7 @@ Use `ops/api-runtime-manual-evidence-runbook.md` before changing any row to
 `state=Pass`.
 
 ```bash
+node scripts/validate-api-runtime-manual-evidence-intake.mjs
 node scripts/validate-api-runtime-manual-evidence-checklist.mjs
 node scripts/check-api-production-readiness.mjs
 ```
