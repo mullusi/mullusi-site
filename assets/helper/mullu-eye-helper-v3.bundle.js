@@ -40,6 +40,11 @@ Test contract: run node --check assets/helper/mullu-eye-helper-v3.bundle.js and 
 
   const HELPER_ROOT_ATTRIBUTE = "data-mullu-eye-helper-root";
   const INSTALL_STATE_KEY = "__mulluEyeHelperV3";
+  const HELPER_MODES = [
+    { id: "public-guide", label: "Guide", labelText: "Guide mode: plain public explanation" },
+    { id: "proof-lens", label: "Proof", labelText: "Proof mode: boundary and evidence summary" },
+    { id: "builder-inspect", label: "Inspect", labelText: "Inspect mode: packet and governed actions" },
+  ];
   const TARGET_CLASS_NAMES = [
     "mullu-eye-helper-target-button",
     "mullu-eye-helper-target-card",
@@ -321,6 +326,7 @@ Test contract: run node --check assets/helper/mullu-eye-helper-v3.bundle.js and 
       attentionTimer: 0,
       lastPointerAt: 0,
       keyboardElement: null,
+      mode: "public-guide",
     };
 
     function roleClassName(packet) {
@@ -785,6 +791,53 @@ Test contract: run node --check assets/helper/mullu-eye-helper-v3.bundle.js and 
       document.documentElement.classList.remove("mullu-eye-helper-panel-open");
     }
 
+    function proofSummaryForPacket(packet) {
+      const sectionText = `${packet.helperMetadata || ""} ${packet.heading || ""} ${packet.sectionText || ""}`.toLowerCase();
+      const boundary = sectionText.includes("reserved") || sectionText.includes("gated") || sectionText.includes("private")
+        ? "Boundary: staged or reserved surface; do not treat as public runtime evidence."
+        : "Boundary: published static route content; runtime authority remains separate.";
+      const evidence = packet.evidence.length > 0 ? `Evidence: ${packet.evidence.join(" + ")}.` : "Evidence: visible page text only.";
+      return `${boundary} ${evidence}`;
+    }
+
+    function publicSummaryForPacket(packet) {
+      if (packet.helperMetadata) return packet.helperMetadata;
+      if (packet.heading) return `This part explains ${packet.heading}.`;
+      if (packet.href) return `This link moves to ${packet.label || "the selected route"}.`;
+      return clampText(packet.sectionText || packet.text || "This section provides public page context.", 240);
+    }
+
+    function builderSummaryForPacket(packet) {
+      return packet.helperMetadata || packet.heading || clampText(packet.sectionText || packet.text || "No visible text available.", 220);
+    }
+
+    function summaryForMode(packet) {
+      if (state.mode === "proof-lens") return proofSummaryForPacket(packet);
+      if (state.mode === "builder-inspect") return builderSummaryForPacket(packet);
+      return publicSummaryForPacket(packet);
+    }
+
+    function renderModeControls(packet, x, y) {
+      const modes = document.createElement("div");
+      modes.className = "mullu-eye-helper-modes";
+      modes.setAttribute("role", "group");
+      modes.setAttribute("aria-label", "Mullu helper mode");
+      for (const mode of HELPER_MODES) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.dataset.mode = mode.id;
+        button.setAttribute("aria-label", mode.labelText);
+        button.setAttribute("aria-pressed", String(state.mode === mode.id));
+        button.textContent = mode.label;
+        button.addEventListener("click", () => {
+          state.mode = mode.id;
+          renderPanel(packet, x, y, "");
+        });
+        modes.append(button);
+      }
+      return modes;
+    }
+
     function renderPanel(packet, x, y, warningText) {
       const actions = actionsForPacket(packet);
       const title = packet.label || packet.heading || packet.role || "Page target";
@@ -814,7 +867,9 @@ Test contract: run node --check assets/helper/mullu-eye-helper-v3.bundle.js and 
 
       const summary = document.createElement("p");
       summary.className = "mullu-eye-helper-summary";
-      summary.textContent = packet.helperMetadata || packet.heading || clampText(packet.sectionText || packet.text || "No visible text available.", 220);
+      summary.textContent = summaryForMode(packet);
+
+      const modes = renderModeControls(packet, x, y);
 
       const meta = document.createElement("div");
       meta.className = "mullu-eye-helper-meta";
@@ -850,11 +905,19 @@ Test contract: run node --check assets/helper/mullu-eye-helper-v3.bundle.js and 
         actionsWrap.append(button);
       }
 
-      dom.panel.append(head, summary, meta, actionsWrap);
+      dom.panel.append(head, modes, summary);
+      if (state.mode === "proof-lens" || state.mode === "builder-inspect") {
+        dom.panel.append(meta);
+      }
+      if (state.mode === "builder-inspect") {
+        dom.panel.append(actionsWrap);
+      }
       if (packet.risky || warningText) {
         const warning = document.createElement("p");
         warning.className = "mullu-eye-helper-warning";
-        warning.textContent = warningText || "This target contains state-changing language. Risky actions require a second confirmation.";
+        warning.textContent = state.mode === "builder-inspect"
+          ? (warningText || "This target contains state-changing language. Risky actions require a second confirmation.")
+          : "This target contains state-changing language. Switch to Builder Inspect for governed actions.";
         dom.panel.append(warning);
       }
       dom.panel.hidden = false;

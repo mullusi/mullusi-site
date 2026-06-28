@@ -3789,7 +3789,7 @@ function validateIndexDesignContract() {
   const assetVersion = "2026.05.platform.29";
   const cssVersion = "2026.06.home.32";
   const fragmentVersion = "2026.06.fragment.6";
-  const eyeHelperVersion = "2026.06.helper.3";
+  const eyeHelperVersion = "2026.06.helper.4";
 
   if (
     !html.includes(`/assets/fragment-bootstrap.js?v=${fragmentVersion}`) ||
@@ -3895,6 +3895,15 @@ function validateIndexDesignContract() {
     [eyeHelperBundle, "copied_packet", "eye_helper_copy_packet_receipt_missing"],
     [eyeHelperBundle, "copied_receipts", "eye_helper_copy_receipts_receipt_missing"],
     [eyeHelperBundle, "requiresConfirmation", "eye_helper_low_confidence_confirmation_missing"],
+    [eyeHelperCss, ".mullu-eye-helper-modes", "eye_helper_modes_style_missing"],
+    [eyeHelperCss, 'button[aria-pressed="true"]', "eye_helper_selected_mode_style_missing"],
+    [eyeHelperBundle, "HELPER_MODES", "eye_helper_modes_registry_missing"],
+    [eyeHelperBundle, "public-guide", "eye_helper_public_guide_mode_missing"],
+    [eyeHelperBundle, "proof-lens", "eye_helper_proof_lens_mode_missing"],
+    [eyeHelperBundle, "builder-inspect", "eye_helper_builder_inspect_mode_missing"],
+    [eyeHelperBundle, "function renderModeControls", "eye_helper_mode_controls_missing"],
+    [eyeHelperBundle, "function publicSummaryForPacket", "eye_helper_public_summary_missing"],
+    [eyeHelperBundle, "function proofSummaryForPacket", "eye_helper_proof_summary_missing"],
     [eyeHelperBundle, "getBoundingClientRect", "eye_helper_measured_panel_position_missing"],
     [eyeHelperBundle, "pointerleave", "eye_helper_pointerleave_cleanup_missing"],
     [eyeHelperBundle, "addEventListener(\"resize\"", "eye_helper_resize_cleanup_missing"],
@@ -5550,9 +5559,9 @@ function validatePortfolioRouteContract() {
     "mailto:research@mullusi.com",
     "mailto:hello@mullusi.com",
     "mailto:support@mullusi.com",
-    "/assets/helper/mullu-eye-helper-v3.bundle.css?v=2026.06.helper.3",
-    "/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.3",
-    "/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.3",
+    "/assets/helper/mullu-eye-helper-v3.bundle.css?v=2026.06.helper.4",
+    "/assets/helper/mullu-eye-helper-v3.bundle.js?v=2026.06.helper.4",
+    "/assets/helper/mullu-eye-helper-v3.install.js?v=2026.06.helper.4",
     "/assets/pages/route-preferences.js",
   ];
   for (const term of requiredTerms) {
