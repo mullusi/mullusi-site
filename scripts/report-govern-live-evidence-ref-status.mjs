@@ -118,10 +118,11 @@ function lineValue(content, key) {
 function publicValue(value) {
   if (value === undefined) return "missing";
   if (value === null) return "null";
-  const text = String(value);
+  const text = String(value).trim();
+  if (text === "missing") return "missing";
   if (scanForbiddenEvidencePatterns("value", text).length > 0) return "redacted";
-  if (text.length > 96) return `${text.slice(0, 93)}...`;
-  return text;
+  const validation = validatePublicSafeEvidenceRef(text, { allowMissing: true });
+  return validation.valid ? text : "redacted";
 }
 
 function proofStateFromCounts(counts) {
