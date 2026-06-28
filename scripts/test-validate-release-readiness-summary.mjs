@@ -193,11 +193,29 @@ function testCliJsonAndUnsupportedArgs() {
   assert.match(invalid.stdout, /release_readiness_summary=GovernanceBlocked/);
 }
 
+function testPathBoundaryFailsClosedWithoutEcho() {
+  const outsidePath = path.join("..", "private-release-readiness-summary.md");
+  const outside = validateReleaseReadinessSummary(outsidePath);
+
+  assert.equal(outside.solverOutcome, "GovernanceBlocked");
+  assert.equal(outside.proofState, "Fail");
+  assert.equal(outside.releaseReadinessState, "Blocked");
+  assert.deepEqual(outside.findings, ["release_readiness_summary_path_outside_repo"]);
+  assert.doesNotMatch(formatReleaseReadinessSummaryReport(outside), /private-release-readiness-summary/);
+
+  const unreadable = validateReleaseReadinessSummary(path.join("ops", "missing-private-release-summary.md"));
+  assert.equal(unreadable.solverOutcome, "GovernanceBlocked");
+  assert.equal(unreadable.proofState, "Fail");
+  assert.deepEqual(unreadable.findings, ["release_readiness_summary_unreadable"]);
+  assert.doesNotMatch(formatReleaseReadinessSummaryReport(unreadable), /missing-private-release-summary/);
+}
+
 testCurrentReleaseReadinessSummaryPasses();
 testSyntheticMissingProductClaimDenialFailsClosed();
 testSyntheticOpsReportMismatchFailsClosed();
 testSyntheticUnsafeMirrorValuesUsePublicLabels();
 testSyntheticSecretPatternFailsClosed();
 testCliJsonAndUnsupportedArgs();
+testPathBoundaryFailsClosedWithoutEcho();
 
 console.log("release readiness summary validator tests passed");

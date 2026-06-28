@@ -18,6 +18,7 @@ import {
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
+const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultSummaryPath = "ops/release-readiness-summary.md";
 const allowedArgs = new Set(["--json"]);
 
@@ -82,8 +83,33 @@ function publicReleaseReadinessScalarLabel(value) {
   return "redacted_value";
 }
 
-function readUtf8(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+function blockedResult(finding) {
+  return {
+    findingCount: 1,
+    findings: [finding],
+    proofState: "Fail",
+    publicProductReleaseAllowed: false,
+    productRuntimeClaimsAllowed: false,
+    releaseReadinessState: "Blocked",
+    solverOutcome: "GovernanceBlocked",
+  };
+}
+
+function readUtf8Result(relativePath) {
+  if (typeof relativePath !== "string" || relativePath.trim() === "") {
+    return { content: "", finding: "release_readiness_summary_path_invalid" };
+  }
+
+  const targetPath = path.resolve(repoRoot, relativePath);
+  if (targetPath !== repoRoot && !targetPath.startsWith(repoRootPrefix)) {
+    return { content: "", finding: "release_readiness_summary_path_outside_repo" };
+  }
+
+  try {
+    return { content: fs.readFileSync(targetPath, "utf8"), finding: "" };
+  } catch {
+    return { content: "", finding: "release_readiness_summary_unreadable" };
+  }
 }
 
 function lineValue(content, key) {
@@ -133,14 +159,18 @@ export function validateReleaseReadinessSummaryEvidence(evidence) {
 export function collectReleaseReadinessSummaryEvidence(relativePath = defaultSummaryPath) {
   const opsEvidence = collectOpsNextEvidence();
   const opsDecision = decideOpsNextAction(opsEvidence);
+  const summaryResult = readUtf8Result(relativePath);
+  if (summaryResult.finding) return { blockedResult: blockedResult(summaryResult.finding) };
   return {
     opsNextReport: formatOpsNextReport(opsEvidence, opsDecision),
-    summary: readUtf8(relativePath),
+    summary: summaryResult.content,
   };
 }
 
 export function validateReleaseReadinessSummary(relativePath = defaultSummaryPath) {
-  return validateReleaseReadinessSummaryEvidence(collectReleaseReadinessSummaryEvidence(relativePath));
+  const evidence = collectReleaseReadinessSummaryEvidence(relativePath);
+  if (evidence.blockedResult) return evidence.blockedResult;
+  return validateReleaseReadinessSummaryEvidence(evidence);
 }
 
 export function formatReleaseReadinessSummaryReport(result) {
