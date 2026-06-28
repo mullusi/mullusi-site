@@ -1,14 +1,15 @@
 /*
 Purpose: validate the static Mullusi public website before deployment.
 Governance scope: required files, product registry schema, sitemap, robots policy, deployment controls, local links, and public-safe text.
-Dependencies: Node.js standard library only.
-Invariants: validation is deterministic, dependency-free, and exits nonzero on blocking findings.
+Dependencies: Node.js standard library and scripts/govern-live-evidence-ref-contract.mjs.
+Invariants: validation is deterministic, repository-local, and exits nonzero on blocking findings.
 */
 
 import fs from "node:fs";
 import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -349,6 +350,12 @@ function relativePathExists(baseRelativePath, relativePath) {
 
 function recordFailure(message) {
   failures.push(message);
+}
+
+function recordForbiddenEvidencePatternFailures(sourceLabel, content, failurePrefix) {
+  for (const finding of scanForbiddenEvidencePatterns(sourceLabel, content)) {
+    recordFailure(`${failurePrefix}:${finding}`);
+  }
 }
 
 function hasExactLine(text, expectedLine) {
@@ -1433,6 +1440,11 @@ function validateSearchIndexingWitness() {
     }
   }
 
+  recordForbiddenEvidencePatternFailures(
+    "ops/search-indexing-witness.md",
+    witness,
+    "search_indexing_witness_boundary_invalid",
+  );
   if (/account_id\s*=|billing_id\s*=|token\s*=|search_console_property\s*=|crawler_log\s*=|deployment_project=(?!redacted_project(?:\r?\n|$))\S+|deployment_id=(?!redacted_value(?:\r?\n|$))\S+|deployment_source=(?!redacted_value(?:\r?\n|$))\S+|--project-name\s+(?!redacted_project(?:\s|$))\S+/i.test(witness)) {
     recordFailure("search_indexing_witness_boundary_invalid");
   }
@@ -5349,6 +5361,13 @@ function validateOperatingGates() {
     }
     if (gate.file === "ops/live-deployment-integrity-witness.md" && /deployment_url=https:\/\/[^\s]+\.pages\.dev/i.test(content)) {
       recordFailure("live_deployment_integrity_witness_boundary_invalid");
+    }
+    if (gate.file === "ops/live-deployment-integrity-witness.md") {
+      recordForbiddenEvidencePatternFailures(
+        gate.file,
+        content,
+        "live_deployment_integrity_witness_boundary_invalid",
+      );
     }
     if (gate.file === "ops/live-deployment-integrity-witness.md" && /private_deploy_pr=(?!redacted_ref(?:\r?\n|$))\S+|private_deploy_merge_commit=(?!redacted_value(?:\r?\n|$))\S+/i.test(content)) {
       recordFailure("live_deployment_integrity_witness_boundary_invalid");

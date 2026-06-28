@@ -97,11 +97,30 @@ function testSecretAndRawPayloadPatternsFailClosed() {
   assert.match(tokenRef.findings.join("\n"), /forbidden_private_value_pattern:evidence_ref:api_key_shape/);
 }
 
+function testDeploymentIdentifierPatternsFailClosed() {
+  const content = [
+    "command=npx.cmd --yes wrangler@latest pages deployment list --project-name mullusi-company-site",
+    "deployment_url=https://314efdaf.mullusi-company-site.pages.dev",
+    "deployment_id=d029563d-95a9-4c84-b2ba-d8f149706373",
+    "deployment_source=9a7f36a",
+    "private_deploy_pr=mullusi-company-site#117",
+    "private_deploy_merge_commit=c223fffe6e35993dc9e190d56b7ef57facf28c12",
+  ].join("\n");
+  const findings = scanForbiddenEvidencePatterns("fixture", content);
+
+  assert.match(findings.join("\n"), /forbidden_private_value_pattern:fixture:private_deploy_source_repo/);
+  assert.match(findings.join("\n"), /forbidden_private_value_pattern:fixture:cloudflare_pages_preview_url/);
+  assert.match(findings.join("\n"), /forbidden_private_value_pattern:fixture:raw_deployment_id/);
+  assert.match(findings.join("\n"), /forbidden_private_value_pattern:fixture:raw_deployment_source/);
+  assert.match(findings.join("\n"), /forbidden_private_value_pattern:fixture:raw_private_deploy_ref/);
+}
+
 testRequiredKeysRemainStable();
 testAllowedFamiliesValidate();
 testMissingRefHandlingIsExplicit();
 testMalformedRefsFailClosed();
 testPathTraversalSegmentsFailClosed();
 testSecretAndRawPayloadPatternsFailClosed();
+testDeploymentIdentifierPatternsFailClosed();
 
 console.log("govern live evidence ref contract tests passed");
