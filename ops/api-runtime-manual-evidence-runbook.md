@@ -11,6 +11,10 @@ This runbook explains how to close the 13 checklist rows in
 `ops/api-runtime-manual-evidence-checklist.md` without storing private runtime
 values in Git.
 
+Prepare proposed refs first in
+`ops/api-runtime-manual-evidence-intake-template.json`, then validate the JSON
+before touching the Markdown checklist.
+
 The current state remains:
 
 ```text
@@ -80,6 +84,7 @@ evidence_item=<key> state=Pass public_safe_ref=<public-safe-ref> private_value_s
 4. Run:
 
 ```bash
+node scripts/validate-api-runtime-manual-evidence-intake.mjs
 node scripts/validate-api-runtime-manual-evidence-checklist.mjs
 node scripts/check-api-production-readiness.mjs
 node scripts/report-ops-next-action.mjs
