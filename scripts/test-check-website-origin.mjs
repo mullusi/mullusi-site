@@ -402,6 +402,40 @@ function testOriginReportRedactsPrivateResponseUrls() {
   assert.doesNotMatch(`${report}\n${serialized}`, /private\.example\.invalid|private_id=hidden|auth=hidden/);
 }
 
+function testOriginReportRedactsRawHeaderValues() {
+  const classification = {
+    verdict: "CloudflareOriginCandidate",
+    proofState: "Pass",
+    summary: "Synthetic header fixture.",
+  };
+  const response = {
+    finalUrl: "https://mullusi.com/",
+    statusCode: 200,
+    headers: {
+      server: "cloudflare-private-edge",
+      "cf-ray": "private-ray-id-IAD",
+      "x-github-request-id": "private-github-request",
+      "x-fastly-request-id": "private-fastly-request",
+      "x-served-by": "private-cache-node",
+      via: "private-varnish-hop",
+    },
+    redirectHistory: [],
+  };
+  const report = formatReport("https://mullusi.com/", response, classification);
+  const record = witnessRecord("https://mullusi.com/", response, classification);
+  const serialized = JSON.stringify(record);
+
+  assert.match(report, /^server=present$/m);
+  assert.match(report, /^cf_ray=present$/m);
+  assert.match(report, /^github_request=present$/m);
+  assert.match(report, /^fastly_request=present$/m);
+  assert.match(report, /^served_by=present$/m);
+  assert.match(report, /^via=present$/m);
+  assert.equal(record.cf_ray, "present");
+  assert.equal(record.github_request, "present");
+  assert.doesNotMatch(`${report}\n${serialized}`, /private-ray-id|private-github-request|private-fastly-request|private-cache-node|private-varnish-hop|cloudflare-private-edge/);
+}
+
 testGithubPagesOriginClassification();
 testCloudflareOriginCandidateClassification();
 testUnknownOriginClassification();
@@ -424,4 +458,5 @@ testCliRejectsUnsupportedArgumentWithoutNetwork();
 testCliRejectsUnsupportedArgumentAsJson();
 testPublicErrorCodeRedactsRawExceptionValues();
 testOriginReportRedactsPrivateResponseUrls();
+testOriginReportRedactsRawHeaderValues();
 console.log("website origin classification tests passed");
