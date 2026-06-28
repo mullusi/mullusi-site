@@ -86,6 +86,9 @@ function testAllRequiredEvidencePassesWithGlobalBoundary() {
   assert.equal(result.externalDistinctRegionPasses, 0);
   assert.match(formatted, /finding=none/);
   assert.match(formatted, /external_finding=external_probe_not_attached/);
+  assert.match(formatted, /^dns_a_count=1$/m);
+  assert.match(formatted, /^dns_aaaa_count=1$/m);
+  assert.doesNotMatch(formatted, /104\.21\.82\.46|2606:4700/);
 }
 
 function testDnsResolverFloorBlocksVisibilityClaim() {
