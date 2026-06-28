@@ -695,7 +695,7 @@ function validateWebsiteOriginWitness() {
     "first_redirect_url=",
     "first_redirect_url=https://mullusi.com/",
     "first_redirect_url=https://mullusi.com/proof/?gate=www-canonical",
-    "server=cloudflare",
+    "server=present",
     "verdict=CloudflareOriginCandidate",
     "proof_state=Pass",
     "origin_headers_no_github=true",
@@ -721,7 +721,7 @@ function validateWebsiteOriginWitness() {
       recordFailure(`website_origin_witness_term_missing:${term}`);
     }
   }
-  if (/x-github-request-id\s*=\S+|x-fastly-request-id\s*=\S+|x-served-by\s*=\S+|account_id\s*=|billing_id\s*=|token\s*=/i.test(witness)) {
+  if (/x-github-request-id\s*=\S+|x-fastly-request-id\s*=\S+|x-served-by\s*=\S+|server=(?!present(?:\r?\n|$))\S+|account_id\s*=|billing_id\s*=|token\s*=/i.test(witness)) {
     recordFailure("website_origin_witness_boundary_invalid");
   }
 }
