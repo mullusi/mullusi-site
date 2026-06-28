@@ -11,6 +11,7 @@ import https from "node:https";
 import path from "node:path";
 import { resolve4, resolve6, resolveCname } from "node:dns/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -80,6 +81,10 @@ export function parseApiExposureDocuments({ recoveryWitness, exposureWitness, ap
       "node scripts/check-api-exposure-gate.mjs",
       "STATUS:",
     ], "api-exposure-witness"),
+    ...scanForbiddenEvidencePatterns("recoveryWitness", recoveryWitness),
+    ...scanForbiddenEvidencePatterns("apiExposureWitness", exposureWitness),
+    ...scanForbiddenEvidencePatterns("apiProductionReadinessGate", apiGate),
+    ...scanForbiddenEvidencePatterns("apiRuntimeHostPath", runtimeHostPath),
   ];
 
   return {

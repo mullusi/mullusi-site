@@ -264,7 +264,35 @@ function testInvalidExposureStateValuesAreRedacted() {
   assert.ok(result.hardFindings.includes("api_exposure_state_invalid:redacted_value"));
   assert.ok(result.hardFindings.includes("api_dns_publication_allowed_invalid:redacted_value"));
   assert.ok(result.hardFindings.includes("api_runtime_public_state_invalid:redacted_value"));
-  assert.doesNotMatch(serialized, /private\/|postgres|password|private\.example/);
+  assert.doesNotMatch(serialized, /private\/recovery-state|postgres:\/\/user:password@private\.example\/db|private\/exposure-state|private\/dns-flag|private\/runtime-state/);
+}
+
+function testDocumentPrivateValuePatternsFailClosed() {
+  const parsed = parseApiExposureDocuments({
+    recoveryWitness: `${recoveryWitness({ state: "ReadyForProvisioning", allowed: "true" })}\nAuthorization: Bearer abcdefghijklmnopqrstuvwxyz123456`,
+    exposureWitness: exposureWitness({
+      exposureState: "ReadyForDns",
+      dnsAllowed: "true",
+      runtimeState: "ReadyForDns",
+      recoveryState: "ReadyForProvisioning",
+      provisioningAllowed: "true",
+    }),
+    apiGate: `${apiGateFixture()}\npostgres://user:password@private.example/db`,
+    runtimeHostPath: runtimeHostPathFixture(),
+  });
+  const result = evaluateApiExposureEvidence({
+    documentState: parsed,
+    liveState: liveState({ dnsState: "Absent", httpsState: "SkippedDnsAbsent" }),
+  });
+  const formatted = formatResult(result);
+  const serialized = `${JSON.stringify(result)}\n${formatted}`;
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.ok(result.hardFindings.includes("forbidden_private_value_pattern:recoveryWitness:bearer_token"));
+  assert.ok(result.hardFindings.includes("forbidden_private_value_pattern:recoveryWitness:raw_header_authorization"));
+  assert.ok(result.hardFindings.includes("forbidden_private_value_pattern:apiProductionReadinessGate:postgres_url"));
+  assert.doesNotMatch(serialized, /abcdefghijklmnopqrstuvwxyz123456|postgres:\/\/user:password|private\.example/);
 }
 
 function testPublicExposureScalarLabelRedactsUnsafeValues() {
@@ -284,6 +312,7 @@ testCurrentCliDefaultsAwaitRuntimeEvidence();
 testCurrentCliRequireReadyFailsClosed();
 testCurrentCliRejectsUnsupportedArgs();
 testInvalidExposureStateValuesAreRedacted();
+testDocumentPrivateValuePatternsFailClosed();
 testPublicExposureScalarLabelRedactsUnsafeValues();
 
 console.log("api exposure gate tests passed");
