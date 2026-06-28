@@ -7,6 +7,7 @@ Invariants: tests inspect public source contracts only, do not execute browser a
 
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import vm from "node:vm";
 
 const html = fs.readFileSync("index.html", "utf8");
 const bundle = fs.readFileSync("assets/helper/mullu-eye-helper-v3.bundle.js", "utf8");
@@ -35,6 +36,82 @@ function testBootAndHomepageMetadataContract() {
   assert.ok(install.includes("markBootState(\"failed\""));
   assert.ok(html.includes('data-mullu-helper="Explain the Mullusi homepage foundation boundary'));
   assert.ok(html.includes('data-mullu-helper="Explain product cards'));
+}
+
+function makeInstallRuntime({ readyState, helper }) {
+  const attributes = new Map();
+  const listeners = new Map();
+  const document = {
+    readyState,
+    documentElement: {
+      setAttribute(name, value) {
+        attributes.set(name, value);
+      },
+      removeAttribute(name) {
+        attributes.delete(name);
+      },
+      getAttribute(name) {
+        return attributes.get(name) || null;
+      },
+    },
+    addEventListener(type, listener) {
+      listeners.set(type, listener);
+    },
+  };
+  const window = {
+    document,
+    MulluEyeHelper: helper,
+    setTimeout(listener) {
+      listener();
+    },
+  };
+  return {
+    context: vm.createContext({ document, window }),
+    document,
+    listeners,
+  };
+}
+
+function testInstallExecutionContract() {
+  let installCount = 0;
+  const installedRuntime = makeInstallRuntime({
+    readyState: "complete",
+    helper: {
+      install(options) {
+        installCount += 1;
+        assert.equal(options.activeByDefault, false);
+        assert.equal(options.eyeCursorOptions.enabledOnCoarsePointer, false);
+      },
+    },
+  });
+  vm.runInContext(install, installedRuntime.context);
+  assert.equal(installCount, 1);
+  assert.equal(installedRuntime.document.documentElement.getAttribute("data-mullu-eye-helper-boot"), "installed");
+
+  const unavailableRuntime = makeInstallRuntime({ readyState: "loading", helper: null });
+  vm.runInContext(install, unavailableRuntime.context);
+  assert.equal(unavailableRuntime.document.documentElement.getAttribute("data-mullu-eye-helper-boot"), null);
+  unavailableRuntime.listeners.get("DOMContentLoaded")();
+  assert.equal(unavailableRuntime.document.documentElement.getAttribute("data-mullu-eye-helper-boot"), "unavailable");
+  assert.equal(
+    unavailableRuntime.document.documentElement.getAttribute("data-mullu-eye-helper-error"),
+    "Mullu Eye Helper bundle is unavailable.",
+  );
+
+  const failedRuntime = makeInstallRuntime({
+    readyState: "complete",
+    helper: {
+      install() {
+        throw new Error("install blocked");
+      },
+    },
+  });
+  assert.throws(() => vm.runInContext(install, failedRuntime.context), /install blocked/);
+  assert.equal(failedRuntime.document.documentElement.getAttribute("data-mullu-eye-helper-boot"), "failed");
+  assert.equal(
+    failedRuntime.document.documentElement.getAttribute("data-mullu-eye-helper-error"),
+    "Mullu Eye Helper install failed.",
+  );
 }
 
 function testTargetPacketAndEvidenceContract() {
@@ -92,6 +169,7 @@ function testReadmeVerificationContract() {
 }
 
 testBootAndHomepageMetadataContract();
+testInstallExecutionContract();
 testTargetPacketAndEvidenceContract();
 testAuthorityAndFailureGuards();
 testInteractionSurfaceContract();
