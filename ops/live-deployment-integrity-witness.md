@@ -41,7 +41,7 @@ private_deploy_merge_commit=c223fffe6e35993dc9e190d56b7ef57facf28c12
 deploy_workflow=Deploy to Cloudflare Pages
 deploy_workflow_run_id=28187685917
 deploy_workflow_state=SolvedVerified
-deployment_url=https://314efdaf.mullusi-company-site.pages.dev
+deployment_url=redacted_url
 publication_method=github_actions_workflow_dispatch
 ```
 
