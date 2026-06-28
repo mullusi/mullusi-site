@@ -121,6 +121,26 @@ function testLiveContentHashMismatchBlocks() {
   assert.ok(result.hardFindings.includes("live_content_hash_mismatch:index.html"));
 }
 
+function testPrivateValuePatternBlocksEvenWhenHashMatches() {
+  const unsafeIndex = "<!doctype html>\nAuthorization: Bearer abcdefghijklmnopqrstuvwxyz123456\n";
+  const liveHashes = fixtureHashes({
+    "index.html": publicFileContentHash("index.html", unsafeIndex),
+  });
+  const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({
+    liveHashes,
+    localHashes: liveHashes,
+    fileOverrides: { "index.html": unsafeIndex },
+  }));
+  const serialized = `${JSON.stringify(result)}\n${formatResult(result)}`;
+
+  assert.equal(result.verdict, "GovernanceBlocked");
+  assert.equal(result.proofState, "Fail");
+  assert.equal(result.liveContentHashes, "Pass");
+  assert.ok(result.hardFindings.includes("forbidden_private_value_pattern:liveFile:index.html:bearer_token"));
+  assert.ok(result.hardFindings.includes("forbidden_private_value_pattern:liveFile:index.html:raw_header_authorization"));
+  assert.doesNotMatch(serialized, /abcdefghijklmnopqrstuvwxyz123456|Authorization: Bearer/);
+}
+
 function testKnownCloudflareHtmlTransformIsAcceptedBoundary() {
   const result = evaluateDeploymentIntegrityEvidence(fixtureEvidence({
     fileOverrides: {
@@ -278,6 +298,7 @@ function testPublicErrorCodeRedactsRawExceptionValues() {
 testCanonicalHashesIgnoreJsonMetaContentHash();
 testMatchingLiveManifestPasses();
 testLiveContentHashMismatchBlocks();
+testPrivateValuePatternBlocksEvenWhenHashMatches();
 testKnownCloudflareHtmlTransformIsAcceptedBoundary();
 testCloudflareTransformWithContentDriftBlocks();
 testRouteSentinelDriftBlocks();
