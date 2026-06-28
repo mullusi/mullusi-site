@@ -107,6 +107,7 @@ export function validatePublicSafeEvidenceRef(value, options = {}) {
   if (!ref) findings.push("evidence_ref_empty");
   if (/\s/.test(ref)) findings.push("evidence_ref_must_not_contain_whitespace");
   if (ref.length > 160) findings.push(`evidence_ref_too_long:${ref.length}`);
+  if (/(^|\/)\.{1,2}(?:\/|$)/.test(ref)) findings.push("evidence_ref_must_not_contain_path_traversal_segments");
   const shape = publicSafeEvidenceRefShapes.find((candidate) => ref.startsWith(candidate.family));
   if (!shape) {
     findings.push(`evidence_ref_family_not_allowed:${ref ? "present" : "missing"}`);

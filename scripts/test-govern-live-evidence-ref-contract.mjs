@@ -75,6 +75,16 @@ function testMalformedRefsFailClosed() {
   assert.match(malformedApproval.findings.join("\n"), /evidence_ref_shape_invalid:approval:\/\//);
 }
 
+function testPathTraversalSegmentsFailClosed() {
+  const siteOpsTraversal = validatePublicSafeEvidenceRef("site:ops/public/../private-witness.md");
+  const controlPlaneTraversal = validatePublicSafeEvidenceRef("control-plane:receipt/runtime/./private-receipt");
+
+  assert.equal(siteOpsTraversal.valid, false);
+  assert.match(siteOpsTraversal.findings.join("\n"), /evidence_ref_must_not_contain_path_traversal_segments/);
+  assert.equal(controlPlaneTraversal.valid, false);
+  assert.match(controlPlaneTraversal.findings.join("\n"), /evidence_ref_must_not_contain_path_traversal_segments/);
+}
+
 function testSecretAndRawPayloadPatternsFailClosed() {
   const bearerFindings = scanForbiddenEvidencePatterns("fixture", "Authorization: Bearer abcdefghijklmnopqrstuvwxyz123456");
   const payloadFindings = scanForbiddenEvidencePatterns("fixture", "{\"prompt\":\"raw user payload\"}");
@@ -91,6 +101,7 @@ testRequiredKeysRemainStable();
 testAllowedFamiliesValidate();
 testMissingRefHandlingIsExplicit();
 testMalformedRefsFailClosed();
+testPathTraversalSegmentsFailClosed();
 testSecretAndRawPayloadPatternsFailClosed();
 
 console.log("govern live evidence ref contract tests passed");
