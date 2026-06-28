@@ -9,6 +9,7 @@ Test contract: run node scripts/test-check-live-safety-witness.mjs.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { scanForbiddenEvidencePatterns } from "./govern-live-evidence-ref-contract.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(scriptPath), "..");
@@ -118,6 +119,7 @@ function requireWitnessValue(findings, fileName, block, targetUrl, key, expected
 }
 
 function validateBoundary(findings, fileName, content) {
+  findings.push(...scanForbiddenEvidencePatterns(fileName, content));
   for (const pattern of forbiddenPublicWitnessPatterns) {
     if (pattern.test(content)) {
       findings.push(`artifact_boundary_invalid:${fileName}:${pattern}`);
