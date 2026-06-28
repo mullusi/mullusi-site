@@ -3913,6 +3913,12 @@ function validateIndexDesignContract() {
     [eyeHelperBundle, "global.MulluEyeHelper", "eye_helper_global_missing"],
     [eyeHelperInstall, "activeByDefault: false", "eye_helper_inactive_boot_missing"],
     [eyeHelperInstall, "enabledOnCoarsePointer: false", "eye_helper_coarse_pointer_guard_missing"],
+    [eyeHelperInstall, "data-mullu-eye-helper-boot", "eye_helper_boot_state_marker_missing"],
+    [eyeHelperInstall, "MAX_ATTEMPTS", "eye_helper_boot_retry_budget_missing"],
+    [eyeHelperInstall, "document.readyState === \"loading\"", "eye_helper_late_document_boot_missing"],
+    [eyeHelperInstall, "markBootState(\"installed\"", "eye_helper_installed_marker_missing"],
+    [eyeHelperInstall, "markBootState(\"unavailable\"", "eye_helper_unavailable_marker_missing"],
+    [eyeHelperInstall, "markBootState(\"failed\"", "eye_helper_failed_marker_missing"],
   ];
   for (const [sourceText, requiredTerm, failureCode] of eyeHelperContracts) {
     if (!sourceText.includes(requiredTerm)) {

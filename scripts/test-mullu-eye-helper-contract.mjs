@@ -27,6 +27,12 @@ function testBootAndHomepageMetadataContract() {
   assert.ok(indexOfRequired(html, "/assets/helper/mullu-eye-helper-v3.bundle.js") < indexOfRequired(html, "/assets/helper/mullu-eye-helper-v3.install.js"));
   assert.ok(install.includes("activeByDefault: false"));
   assert.ok(install.includes("enabledOnCoarsePointer: false"));
+  assert.ok(install.includes("data-mullu-eye-helper-boot"));
+  assert.ok(install.includes("MAX_ATTEMPTS"));
+  assert.ok(install.includes("document.readyState === \"loading\""));
+  assert.ok(install.includes("markBootState(\"installed\""));
+  assert.ok(install.includes("markBootState(\"unavailable\""));
+  assert.ok(install.includes("markBootState(\"failed\""));
   assert.ok(html.includes('data-mullu-helper="Explain the Mullusi homepage foundation boundary'));
   assert.ok(html.includes('data-mullu-helper="Explain product cards'));
 }
