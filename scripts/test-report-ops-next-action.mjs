@@ -287,9 +287,9 @@ function testCliReportsCurrentStateAndRejectsUnsupportedArgs() {
   assert.match(result.stdout, /private_recovery_values=not_read/);
   assert.match(result.stdout, /host_addresses=not_recorded/);
   assert.match(result.stdout, /api_runtime_manual_evidence_intake=SolvedVerified/);
-  assert.match(result.stdout, /api_runtime_manual_evidence_intake_path=ops\/api-runtime-manual-evidence-intake-template\.json/);
+  assert.match(result.stdout, /api_runtime_manual_evidence_intake_path=none/);
   assert.match(result.stdout, /api_runtime_manual_evidence_checklist=SolvedVerified/);
-  assert.match(result.stdout, /api_runtime_manual_evidence_checklist_path=ops\/api-runtime-manual-evidence-checklist\.md/);
+  assert.match(result.stdout, /api_runtime_manual_evidence_checklist_path=none/);
   assert.match(result.stdout, /manual_evidence_missing_count=0/);
 
   const invalid = runReporter(["--invalid"]);

@@ -202,29 +202,34 @@ function testDocumentMismatchFails() {
   assert.ok(result.hardFindings.includes("api_exposure_provisioning_flag_mismatch"));
 }
 
-function testCurrentCliDefaultsAwaitRuntimeEvidence() {
+function testCurrentCliDefaultsAwaitLiveProbe() {
   const result = runGateCli([]);
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_exposure_state=AwaitingEvidence$/m);
+  assert.match(result.stdout, /^proof_state=Unknown$/m);
   assert.match(result.stdout, /^recovery_witness_state=ReadyForProvisioning$/m);
   assert.match(result.stdout, /^api_provisioning_allowed=true$/m);
-  assert.match(result.stdout, /^configured_exposure_state=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^configured_dns_allowed=false$/m);
-  assert.match(result.stdout, /^api_runtime_public_state=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^soft_finding=none$/m);
+  assert.match(result.stdout, /^configured_exposure_state=SolvedVerified$/m);
+  assert.match(result.stdout, /^configured_dns_allowed=true$/m);
+  assert.match(result.stdout, /^api_runtime_public_state=SolvedVerified$/m);
+  assert.match(result.stdout, /^dns_probe_state=NotRequested$/m);
+  assert.match(result.stdout, /^soft_finding=api_dns_not_present_for_solved_verified$/m);
+  assert.match(result.stdout, /^soft_finding=api_https_not_reachable_for_solved_verified$/m);
   assert.match(result.stdout, /^blocker=none$/m);
   assert.match(result.stdout, /^raw_host_values=not_recorded$/m);
   assert.match(result.stdout, /^private_recovery_values=not_read$/m);
 }
 
-function testCurrentCliRequireReadyFailsClosed() {
-  const result = runGateCli(["--require-ready"]);
+function testCurrentLiveCliRequireReadyPasses() {
+  const result = runGateCli(["--live", "--require-ready"]);
 
-  assert.equal(result.status, 1);
-  assert.match(result.stdout, /^api_exposure_state=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^proof_state=Unknown$/m);
-  assert.match(result.stdout, /^configured_exposure_state=AwaitingEvidence$/m);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^api_exposure_state=SolvedVerified$/m);
+  assert.match(result.stdout, /^proof_state=Pass$/m);
+  assert.match(result.stdout, /^configured_exposure_state=SolvedVerified$/m);
+  assert.match(result.stdout, /^dns_probe_state=Present$/m);
+  assert.match(result.stdout, /^https_probe_state=Reachable$/m);
   assert.match(result.stdout, /^blocker=none$/m);
 }
 
@@ -307,8 +312,8 @@ testSolvedVerifiedFixtureWithDnsProbePasses();
 testDnsPresentWhileBlockedFailsClosed();
 testHttpsReachableWhileBlockedFailsClosed();
 testDocumentMismatchFails();
-testCurrentCliDefaultsAwaitRuntimeEvidence();
-testCurrentCliRequireReadyFailsClosed();
+testCurrentCliDefaultsAwaitLiveProbe();
+testCurrentLiveCliRequireReadyPasses();
 testCurrentCliRejectsUnsupportedArgs();
 testInvalidExposureStateValuesAreRedacted();
 testDocumentPrivateValuePatternsFailClosed();

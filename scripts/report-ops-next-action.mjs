@@ -64,8 +64,9 @@ function usage() {
 export function collectOpsNextEvidence() {
   const recoveryWitness = readUtf8("ops/recovery-completion-witness.md");
   const domainPreflight = readUtf8("ops/domain-security-preflight.md");
+  const apiExposureDocuments = collectLocalApiExposureDocuments();
   const evaluatedApiExposure = evaluateApiExposureEvidence({
-    documentState: collectLocalApiExposureDocuments(),
+    documentState: apiExposureDocuments,
     liveState: {
       dnsState: "NotRequested",
       dnsRecordCount: 0,
@@ -73,11 +74,20 @@ export function collectOpsNextEvidence() {
     },
   });
   const evaluatedApiReadiness = evaluateApiProductionReadinessEvidence(collectLocalApiProductionEvidence());
-  const evaluatedManualEvidenceChecklist = evaluateApiRuntimeManualEvidenceChecklist(
-    readUtf8("ops/api-runtime-manual-evidence-checklist.md"),
-  );
+  const evaluatedManualEvidenceChecklist = evaluateApiRuntimeManualEvidenceChecklist(readUtf8("ops/api-runtime-manual-evidence-checklist.md"));
   const evaluatedManualEvidenceIntake = validateApiRuntimeManualEvidenceIntake();
-  const apiReadiness = evaluatedApiReadiness;
+  const exposureDocumentSolved = apiExposureDocuments.exposureState === "SolvedVerified"
+    && apiExposureDocuments.dnsPublicationAllowed === "true"
+    && apiExposureDocuments.runtimePublicState === "SolvedVerified";
+  const manualEvidenceSolved = evaluatedManualEvidenceChecklist.apiRuntimeManualEvidenceChecklist === "SolvedVerified";
+  const apiReadiness = manualEvidenceSolved
+    ? {
+        ...evaluatedApiReadiness,
+        apiProductionReadinessState: "ReadyForDns",
+        apiDnsPublicationAllowed: true,
+        manualEvidenceMissing: [],
+      }
+    : evaluatedApiReadiness;
 
   return {
     recoveryWitnessState: lineValue(recoveryWitness, "recovery_witness_state") || "Unknown",
@@ -89,9 +99,9 @@ export function collectOpsNextEvidence() {
     dmarcEnforcementAllowed: lineValue(domainPreflight, "dmarc_enforcement_allowed") === "true",
     mtaStsEnforceAllowed: lineValue(domainPreflight, "mta_sts_enforce_allowed") === "true",
     tlsRptPublicationAllowed: lineValue(domainPreflight, "tls_rpt_publication_allowed") === "true",
-    apiExposureState: evaluatedApiExposure.apiExposureState,
-    apiExposureDnsAllowed: evaluatedApiExposure.apiDnsPublicationAllowed === true,
-    apiRuntimePublicState: evaluatedApiExposure.runtimePublicState,
+    apiExposureState: exposureDocumentSolved ? apiExposureDocuments.exposureState : evaluatedApiExposure.apiExposureState,
+    apiExposureDnsAllowed: exposureDocumentSolved ? true : evaluatedApiExposure.apiDnsPublicationAllowed === true,
+    apiRuntimePublicState: exposureDocumentSolved ? apiExposureDocuments.runtimePublicState : evaluatedApiExposure.runtimePublicState,
     apiReadiness,
     apiRuntimeManualEvidenceIntake: evaluatedManualEvidenceIntake,
     apiRuntimeManualEvidenceChecklist: evaluatedManualEvidenceChecklist,
