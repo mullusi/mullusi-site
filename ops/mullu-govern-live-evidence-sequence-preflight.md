@@ -35,14 +35,14 @@ public_claim_update_allowed=false
 runtime_witness_update_allowed=false
 provider_values_recorded=false
 static_website_integrity=SolvedVerified
-api_exposure_probe=2026-06-25:SolvedVerified
+api_exposure_probe=2026-06-29:SolvedVerified
 complete_mode_current_state=GovernanceBlocked
 complete_mode_blocker_count=8
 operator_runbook=ops/mullu-govern-live-evidence-operator-runbook.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
 live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
-last_reviewed=2026-06-27
+last_reviewed=2026-06-29
 ```
 
 The repository-local preflights are organized, but live evidence collection is

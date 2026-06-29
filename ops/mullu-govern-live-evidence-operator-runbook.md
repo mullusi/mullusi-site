@@ -34,17 +34,17 @@ sequence_preflight=ops/mullu-govern-live-evidence-sequence-preflight.md
 runtime_witness_packet=ops/runtime-witness/mullu-govern-closure-packet.md
 safe_local_command=node scripts/validate-govern-live-evidence-sequence-preflight.mjs
 static_website_integrity=SolvedVerified
-api_exposure_probe=2026-06-25:SolvedVerified
+api_exposure_probe=2026-06-29:SolvedVerified
 complete_mode_current_state=GovernanceBlocked
 complete_mode_blocker_count=8
 secret_values_allowed=false
 raw_request_bodies_allowed=false
 raw_response_bodies_allowed=false
 provider_values_allowed=false
-last_reviewed=2026-06-27
+last_reviewed=2026-06-29
 ```
 
-## 2026-06-27 Status Refresh
+## 2026-06-29 Status Refresh
 
 The live evidence ref status reporter still returns `AwaitingEvidence` and
 does not find invalid public-safe refs:
@@ -134,7 +134,7 @@ public_product_release_allowed=false
 
 ## Current Complete-Mode Intake Block
 
-Observed on 2026-06-25:
+Observed on 2026-06-29:
 
 ```text
 command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete

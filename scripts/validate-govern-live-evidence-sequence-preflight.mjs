@@ -60,7 +60,7 @@ const requiredWitnessTerms = [
   { id: "runtime_witness_update_allowed", text: "runtime_witness_update_allowed=false" },
   { id: "provider_values_recorded", text: "provider_values_recorded=false" },
   { id: "static_website_integrity", text: "static_website_integrity=SolvedVerified" },
-  { id: "api_exposure_probe", text: "api_exposure_probe=2026-06-25:SolvedVerified" },
+  { id: "api_exposure_probe", text: "api_exposure_probe=2026-06-29:SolvedVerified" },
   { id: "complete_mode_current_state", text: "complete_mode_current_state=GovernanceBlocked" },
   { id: "complete_mode_blocker_count", text: "complete_mode_blocker_count=8" },
   {
@@ -81,7 +81,7 @@ const requiredWitnessTerms = [
   },
   { id: "complete_mode_requires_operator_ref", text: "finding=approval_ref_required:operator_approval_ref" },
   { id: "complete_mode_requires_runtime_ref", text: "finding=approval_ref_required:runtime_witness_ref" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-27" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-29" },
   { id: "status_block", text: "STATUS:" },
 ];
 

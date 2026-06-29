@@ -28,16 +28,16 @@ operator_request_command=node scripts/emit-govern-live-evidence-operator-request
 ref_status_command=node scripts/report-govern-live-evidence-ref-status.mjs
 intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
 static_website_integrity=SolvedVerified
-api_exposure_probe=2026-06-25:SolvedVerified
+api_exposure_probe=2026-06-29:SolvedVerified
 complete_mode_current_state=GovernanceBlocked
 complete_mode_blocker_count=8
 secret_values_allowed=false
 raw_payloads_allowed=false
 provider_values_allowed=false
-last_reviewed=2026-06-27
+last_reviewed=2026-06-29
 ```
 
-## 2026-06-27 Status Refresh
+## 2026-06-29 Status Refresh
 
 Use the status reporter before editing the ignored local intake:
 
@@ -69,7 +69,7 @@ raw_payloads=not_read
 
 ## Complete-Mode Blocker Snapshot
 
-Observed on 2026-06-25:
+Observed on 2026-06-29:
 
 ```text
 command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete

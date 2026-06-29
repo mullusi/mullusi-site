@@ -42,7 +42,7 @@ const requiredChecklistTerms = [
     text: "intake_validator=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
   },
   { id: "static_website_integrity", text: "static_website_integrity=SolvedVerified" },
-  { id: "api_exposure_probe", text: "api_exposure_probe=2026-06-25:SolvedVerified" },
+  { id: "api_exposure_probe", text: "api_exposure_probe=2026-06-29:SolvedVerified" },
   { id: "complete_mode_current_state", text: "complete_mode_current_state=GovernanceBlocked" },
   { id: "complete_mode_blocker_count", text: "complete_mode_blocker_count=8" },
   {
@@ -62,7 +62,7 @@ const requiredChecklistTerms = [
   { id: "secret_values_allowed", text: "secret_values_allowed=false" },
   { id: "raw_payloads_allowed", text: "raw_payloads_allowed=false" },
   { id: "provider_values_allowed", text: "provider_values_allowed=false" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-27" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-29" },
   { id: "status_block", text: "STATUS:" },
 ];
 
