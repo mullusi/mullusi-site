@@ -65,7 +65,8 @@ rollback_path_defined=Pass
 rollback_path_evidence_ref=site:ops/api-production-readiness-gate.md
 private_runtime_witness_ready=Pass
 private_runtime_witness_evidence_ref=control-plane:receipt/runtime-witness-ready-2026-06-29
-dns_authority_ready=AwaitingEvidence
+dns_authority_ready=Pass
+dns_authority_evidence_ref=cloudflare:audit/dns-authority-2026-06-29
 ```
 
 ## Host Layout
@@ -134,4 +135,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: provider-neutral host path, external persistence, staged HSTS, no secret storage, no placeholder subdomain
   Open issues: TLS, DNS target
-  Next action: collect dns_authority_ready evidence before declaring DNS authority closed
+  Next action: run final readiness validation before any approval-bound DNS publication

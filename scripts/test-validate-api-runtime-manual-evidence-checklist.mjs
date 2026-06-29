@@ -50,24 +50,24 @@ function runCli(args = []) {
   });
 }
 
-function testCurrentChecklistAwaitsEvidence() {
+function testCurrentChecklistSolvedVerified() {
   const result = runCli();
 
   assert.equal(result.status, 0);
-  assert.match(result.stdout, /^api_runtime_manual_evidence_checklist=AwaitingEvidence$/m);
+  assert.match(result.stdout, /^api_runtime_manual_evidence_checklist=SolvedVerified$/m);
   assert.match(result.stdout, /^manual_evidence_item_count=13$/m);
-  assert.match(result.stdout, /^manual_evidence_missing_count=1$/m);
-  assert.match(result.stdout, /^api_dns_publication_allowed=false$/m);
+  assert.match(result.stdout, /^manual_evidence_missing_count=0$/m);
+  assert.match(result.stdout, /^api_dns_publication_allowed=true$/m);
   assert.match(result.stdout, /^secret_values=not_recorded$/m);
   assert.match(result.stdout, /^provider_values=not_recorded$/m);
 }
 
-function testCurrentChecklistRequireReadyFailsClosed() {
+function testCurrentChecklistRequireReadyPasses() {
   const result = runCli(["--require-ready"]);
 
-  assert.equal(result.status, 1);
-  assert.match(result.stdout, /^api_runtime_manual_evidence_checklist=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^blocker=manual_evidence_missing:dns_authority_ready$/m);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^api_runtime_manual_evidence_checklist=SolvedVerified$/m);
+  assert.match(result.stdout, /^blocker=none$/m);
 }
 
 function testAllPassFixtureAllowsDnsReadiness() {
@@ -147,15 +147,15 @@ function testJsonOutputIsPublicSafe() {
   const payload = JSON.parse(result.stdout);
 
   assert.equal(result.status, 0);
-  assert.equal(payload.apiRuntimeManualEvidenceChecklist, "AwaitingEvidence");
-  assert.equal(payload.apiDnsPublicationAllowed, false);
-  assert.equal(payload.manualEvidenceMissing.length, 1);
+  assert.equal(payload.apiRuntimeManualEvidenceChecklist, "SolvedVerified");
+  assert.equal(payload.apiDnsPublicationAllowed, true);
+  assert.equal(payload.manualEvidenceMissing.length, 0);
   assert.equal(JSON.stringify(payload).includes("secret"), true);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 
-testCurrentChecklistAwaitsEvidence();
-testCurrentChecklistRequireReadyFailsClosed();
+testCurrentChecklistSolvedVerified();
+testCurrentChecklistRequireReadyPasses();
 testAllPassFixtureAllowsDnsReadiness();
 testMissingEvidenceRowBlocksContract();
 testPassWithoutRefBlocksContract();

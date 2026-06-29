@@ -23,11 +23,11 @@
     "tls_certificate_ready": "receipt://api-runtime/tls-ready/2026-06-29",
     "rollback_path_defined": "site:ops/api-production-readiness-gate.md",
     "private_runtime_witness_ready": "control-plane:receipt/runtime-witness-ready-2026-06-29",
-    "dns_authority_ready": "missing"
+    "dns_authority_ready": "cloudflare:audit/dns-authority-2026-06-29"
   },
   "status": {
-    "solver_outcome": "AwaitingEvidence",
-    "proof_state": "Unknown",
-    "next_action": "collect dns_authority_ready next; keep DNS blocked until all remaining refs are public-safe"
+    "solver_outcome": "SolvedVerified",
+    "proof_state": "Pass",
+    "next_action": "run final readiness validation before any approval-bound DNS publication"
   }
 }

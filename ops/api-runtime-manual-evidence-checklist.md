@@ -14,10 +14,10 @@ The checklist records only evidence state and public-safe references. Private
 values remain outside Git.
 
 ```text
-api_runtime_manual_evidence_checklist=AwaitingEvidence
+api_runtime_manual_evidence_checklist=SolvedVerified
 manual_evidence_item_count=13
-manual_evidence_missing_count=1
-api_dns_publication_allowed=false
+manual_evidence_missing_count=0
+api_dns_publication_allowed=true
 secret_values=not_recorded
 host_addresses=not_recorded
 database_urls=not_recorded
@@ -61,7 +61,7 @@ evidence_item=host_firewall_configured state=Pass public_safe_ref=receipt://api-
 evidence_item=tls_certificate_ready state=Pass public_safe_ref=receipt://api-runtime/tls-ready/2026-06-29 private_value_storage=outside_git
 evidence_item=rollback_path_defined state=Pass public_safe_ref=site:ops/api-production-readiness-gate.md private_value_storage=outside_git
 evidence_item=private_runtime_witness_ready state=Pass public_safe_ref=control-plane:receipt/runtime-witness-ready-2026-06-29 private_value_storage=outside_git
-evidence_item=dns_authority_ready state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
+evidence_item=dns_authority_ready state=Pass public_safe_ref=cloudflare:audit/dns-authority-2026-06-29 private_value_storage=outside_git
 ```
 
 ## Validation
@@ -82,5 +82,5 @@ references and the production readiness gate is run with matching evidence.
 STATUS:
   Completeness: 100%
   Self-attested invariants: no raw provider values, no secret values, no host addresses, no database URLs, no DNS target, DNS remains blocked while evidence is missing
-  Open issues: 1 pre-DNS evidence item remains AwaitingEvidence
-  Next action: collect public-safe reference for dns_authority_ready without storing private values in Git
+  Open issues: none
+  Next action: run final readiness validation before any approval-bound DNS publication

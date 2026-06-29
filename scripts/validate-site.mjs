@@ -5297,11 +5297,11 @@ function validateOperatingGates() {
     },
     {
       file: "ops/api-runtime-manual-evidence-checklist.md",
-      terms: ["API Runtime Manual Evidence Checklist", "ops/api-runtime-manual-evidence-runbook.md", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "manual_evidence_item_count=13", "manual_evidence_missing_count=1", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "STATUS:"],
+      terms: ["API Runtime Manual Evidence Checklist", "ops/api-runtime-manual-evidence-runbook.md", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "api_runtime_manual_evidence_checklist=SolvedVerified", "manual_evidence_item_count=13", "manual_evidence_missing_count=0", "api_dns_publication_allowed=true", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "STATUS:"],
     },
     {
       file: "ops/api-runtime-manual-evidence-runbook.md",
-      terms: ["API Runtime Manual Evidence Runbook", "ops/api-runtime-manual-evidence-intake-template.json", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "node scripts/report-api-runtime-manual-evidence-next.mjs", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "node scripts/validate-api-runtime-manual-evidence-checklist.mjs", "node scripts/check-api-production-readiness.mjs", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "raw_headers=not_recorded", "raw_payloads=not_recorded", "STATUS:"],
+      terms: ["API Runtime Manual Evidence Runbook", "ops/api-runtime-manual-evidence-intake-template.json", "api_runtime_manual_evidence_checklist=SolvedVerified", "api_dns_publication_allowed=true", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "node scripts/report-api-runtime-manual-evidence-next.mjs", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "node scripts/validate-api-runtime-manual-evidence-checklist.mjs", "node scripts/check-api-production-readiness.mjs", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "raw_headers=not_recorded", "raw_payloads=not_recorded", "STATUS:"],
     },
     {
       file: "ops/api-production-readiness-gate.md",
@@ -5500,9 +5500,9 @@ function validateRuntimeGateState() {
     }
   }
   for (const term of [
-    "api_runtime_manual_evidence_checklist=AwaitingEvidence",
+    "api_runtime_manual_evidence_checklist=SolvedVerified",
     "manual_evidence_item_count=13",
-    "api_dns_publication_allowed=false",
+    "api_dns_publication_allowed=true",
     "private_value_storage=outside_git",
     "secret_values=not_recorded",
     "host_addresses=not_recorded",
@@ -5565,6 +5565,8 @@ function validateRuntimeGateState() {
                         ? `evidence_item=${key} state=Pass public_safe_ref=site:ops/api-production-readiness-gate.md`
                         : key === "private_runtime_witness_ready"
                           ? `evidence_item=${key} state=Pass public_safe_ref=control-plane:receipt/runtime-witness-ready-2026-06-29`
+                          : key === "dns_authority_ready"
+                            ? `evidence_item=${key} state=Pass public_safe_ref=cloudflare:audit/dns-authority-2026-06-29`
         : `evidence_item=${key} state=AwaitingEvidence public_safe_ref=missing`;
     if (!apiRuntimeManualEvidenceChecklist.includes(expectedChecklistRow)) {
       recordFailure(`api_runtime_manual_evidence_row_missing:${key}`);
@@ -5593,6 +5595,8 @@ function validateRuntimeGateState() {
                         ? `"${key}": "site:ops/api-production-readiness-gate.md"`
                         : key === "private_runtime_witness_ready"
                           ? `"${key}": "control-plane:receipt/runtime-witness-ready-2026-06-29"`
+                          : key === "dns_authority_ready"
+                            ? `"${key}": "cloudflare:audit/dns-authority-2026-06-29"`
         : `"${key}": "missing"`;
     if (!apiRuntimeManualEvidenceIntakeTemplate.includes(expectedIntakeRef)) {
       recordFailure(`api_runtime_manual_evidence_intake_ref_missing:${key}`);
@@ -5612,7 +5616,7 @@ function validateRuntimeGateState() {
     }
   }
   for (const term of [
-    "testCurrentTemplateReportsTlsNext",
+    "testCurrentTemplateReportsComplete",
     "testReporterAdvancesToNextMissingKey",
     "testCompleteIntakeReportsNone",
     "testInvalidRefBlocksWithoutEcho",
@@ -5638,7 +5642,7 @@ function validateRuntimeGateState() {
     }
   }
   for (const term of [
-    "testCurrentTemplateIsValidButIncomplete",
+    "testCurrentTemplateIsValidAndComplete",
     "testRequireCompleteFailsOnMissingRefs",
     "testCompleteFixturePasses",
     "testMissingKeyBlocks",
@@ -5663,8 +5667,8 @@ function validateRuntimeGateState() {
     }
   }
   for (const term of [
-    "testCurrentChecklistAwaitsEvidence",
-    "testCurrentChecklistRequireReadyFailsClosed",
+    "testCurrentChecklistSolvedVerified",
+    "testCurrentChecklistRequireReadyPasses",
     "testAllPassFixtureAllowsDnsReadiness",
     "testMissingEvidenceRowBlocksContract",
     "testPrivateValuePatternsBlockWithoutEchoingValues",
