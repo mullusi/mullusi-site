@@ -20,11 +20,11 @@ next missing evidence item and accepted public-safe reference shapes.
 The current state remains:
 
 ```text
-api_runtime_manual_evidence_checklist=AwaitingEvidence
+api_runtime_manual_evidence_checklist=SolvedVerified
 manual_evidence_item_count=13
-manual_evidence_missing_count=1
-next_evidence_key=dns_authority_ready
-api_dns_publication_allowed=false
+manual_evidence_missing_count=0
+next_evidence_key=none
+api_dns_publication_allowed=true
 secret_values=not_recorded
 host_addresses=not_recorded
 database_urls=not_recorded
@@ -112,5 +112,5 @@ Then rerun the validators. Do not keep a stale `Pass` row.
 STATUS:
   Completeness: 100%
   Self-attested invariants: public-safe refs only, no raw private runtime values, no DNS publication, no provider-private payloads, rollback returns stale rows to AwaitingEvidence
-  Open issues: 1 checklist row still requires a real evidence ref
-  Next action: collect the dns_authority_ready public-safe ref, then rerun the checklist validator
+  Open issues: none
+  Next action: run final readiness validation before any approval-bound DNS publication

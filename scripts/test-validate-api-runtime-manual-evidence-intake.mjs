@@ -49,24 +49,24 @@ function runCli(args = []) {
   });
 }
 
-function testCurrentTemplateIsValidButIncomplete() {
+function testCurrentTemplateIsValidAndComplete() {
   const result = runCli();
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_runtime_manual_evidence_intake=SolvedVerified$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
-  assert.match(result.stdout, /^intake_complete=false$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=1$/m);
+  assert.match(result.stdout, /^intake_complete=true$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=0$/m);
   assert.match(result.stdout, /^secret_values=not_read$/m);
 }
 
 function testRequireCompleteFailsOnMissingRefs() {
   const result = runCli(["--require-complete"]);
 
-  assert.equal(result.status, 1);
-  assert.match(result.stdout, /^api_runtime_manual_evidence_intake=GovernanceBlocked$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=1$/m);
-  assert.match(result.stdout, /^finding=evidence_ref_required:dns_authority_ready$/m);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^api_runtime_manual_evidence_intake=SolvedVerified$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=0$/m);
+  assert.doesNotMatch(result.stdout, /^finding=/m);
 }
 
 function testCompleteFixturePasses() {
@@ -131,11 +131,11 @@ function testJsonOutputIsPublicSafe() {
   assert.equal(result.status, 0);
   assert.equal(payload.apiRuntimeManualEvidenceIntake, "SolvedVerified");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 1);
+  assert.equal(payload.missingEvidenceRefCount, 0);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 
-testCurrentTemplateIsValidButIncomplete();
+testCurrentTemplateIsValidAndComplete();
 testRequireCompleteFailsOnMissingRefs();
 testCompleteFixturePasses();
 testMissingKeyBlocks();

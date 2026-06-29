@@ -132,10 +132,10 @@ export function evaluateApiRuntimeManualEvidenceNext(content) {
   const missingCount = expectedEvidenceKeys.filter((key) => evidenceRefs?.[key] === "missing").length;
 
   return {
-    apiRuntimeManualEvidenceNext: findings.length === 0 ? "AwaitingEvidence" : "GovernanceBlocked",
+    apiRuntimeManualEvidenceNext: findings.length === 0 ? (missingCount === 0 ? "SolvedVerified" : "AwaitingEvidence") : "GovernanceBlocked",
     solverOutcome: findings.length === 0 ? (missingCount === 0 ? "SolvedVerified" : "AwaitingEvidence") : "GovernanceBlocked",
     proofState: findings.length === 0 ? (missingCount === 0 ? "Pass" : "Unknown") : "Fail",
-    readyForDns: false,
+    readyForDns: findings.length === 0 && missingCount === 0,
     nextEvidenceKey: findings.length === 0 ? nextKey : "unknown",
     nextPrivateAction: findings.length === 0 ? guidance.privateAction : "unknown",
     acceptedRefExamples: findings.length === 0 ? guidance.acceptedRefs : ["unknown"],
