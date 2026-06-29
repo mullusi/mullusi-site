@@ -43,13 +43,14 @@ Do not create or route the public DNS record until these are true:
 
 ```text
 production_image_published=Pass
-runtime_host_ready=AwaitingEvidence
+runtime_host_ready=Pass
 runtime_host_evidence_ref=render:event/host-ready-2026-06-29
 managed_postgres_ready=Pass
 managed_postgres_evidence_ref=control-plane:receipt/docs/GOVERN_CLOUD_PRIVATE_STAGING_WITNESS_2026-06-11.md
-schema_applied=AwaitingEvidence
+schema_applied=Pass
 schema_applied_evidence_ref=control-plane:receipt/docs/GOVERN_CLOUD_PRIVATE_STAGING_WITNESS_2026-06-11.md
-production_secrets_stored=AwaitingEvidence
+production_secrets_stored=Pass
+production_secrets_evidence_ref=receipt://api-runtime/secrets-stored/2026-06-29
 deploy_env_check=AwaitingEvidence
 release_preflight=AwaitingEvidence
 persistence_check=AwaitingEvidence
@@ -125,5 +126,5 @@ Rollback must preserve the existing public website and email foundation:
 STATUS:
   Completeness: 100%
   Self-attested invariants: provider-neutral host path, external persistence, staged HSTS, no secret storage, no placeholder subdomain
-  Open issues: production secret store, deploy environment validation, DNS target
-  Next action: collect the production_secrets_stored public-safe ref before any DNS publication
+  Open issues: deploy environment validation, DNS target
+  Next action: collect the deploy_env_check_ready public-safe ref before any DNS publication
