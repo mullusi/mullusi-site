@@ -5297,7 +5297,7 @@ function validateOperatingGates() {
     },
     {
       file: "ops/api-runtime-manual-evidence-checklist.md",
-      terms: ["API Runtime Manual Evidence Checklist", "ops/api-runtime-manual-evidence-runbook.md", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "manual_evidence_item_count=13", "manual_evidence_missing_count=12", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "STATUS:"],
+      terms: ["API Runtime Manual Evidence Checklist", "ops/api-runtime-manual-evidence-runbook.md", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "manual_evidence_item_count=13", "manual_evidence_missing_count=11", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "STATUS:"],
     },
     {
       file: "ops/api-runtime-manual-evidence-runbook.md",
@@ -5543,13 +5543,17 @@ function validateRuntimeGateState() {
   ]) {
     const expectedChecklistRow = key === "production_image_published"
       ? `evidence_item=${key} state=Pass public_safe_ref=github:actions/runs/28353797103:api-image-published`
-      : `evidence_item=${key} state=AwaitingEvidence public_safe_ref=missing`;
+      : key === "runtime_host_ready"
+        ? `evidence_item=${key} state=Pass public_safe_ref=render:event/host-ready-2026-06-29`
+        : `evidence_item=${key} state=AwaitingEvidence public_safe_ref=missing`;
     if (!apiRuntimeManualEvidenceChecklist.includes(expectedChecklistRow)) {
       recordFailure(`api_runtime_manual_evidence_row_missing:${key}`);
     }
     const expectedIntakeRef = key === "production_image_published"
       ? `"${key}": "github:actions/runs/28353797103:api-image-published"`
-      : `"${key}": "missing"`;
+      : key === "runtime_host_ready"
+        ? `"${key}": "render:event/host-ready-2026-06-29"`
+        : `"${key}": "missing"`;
     if (!apiRuntimeManualEvidenceIntakeTemplate.includes(expectedIntakeRef)) {
       recordFailure(`api_runtime_manual_evidence_intake_ref_missing:${key}`);
     }
@@ -5568,7 +5572,7 @@ function validateRuntimeGateState() {
     }
   }
   for (const term of [
-    "testCurrentTemplateReportsRuntimeHostNext",
+    "testCurrentTemplateReportsManagedPostgresNext",
     "testReporterAdvancesToNextMissingKey",
     "testCompleteIntakeReportsNone",
     "testInvalidRefBlocksWithoutEcho",

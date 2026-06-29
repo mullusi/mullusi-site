@@ -12,7 +12,7 @@
   "dns_targets_allowed": false,
   "evidence_refs": {
     "production_image_published": "github:actions/runs/28353797103:api-image-published",
-    "runtime_host_ready": "missing",
+    "runtime_host_ready": "render:event/host-ready-2026-06-29",
     "managed_postgres_ready": "missing",
     "schema_applied": "missing",
     "production_secrets_stored": "missing",
@@ -28,6 +28,6 @@
   "status": {
     "solver_outcome": "AwaitingEvidence",
     "proof_state": "Unknown",
-    "next_action": "collect runtime_host_ready next; keep DNS blocked until all remaining refs are public-safe"
+    "next_action": "collect managed_postgres_ready next; keep DNS blocked until all remaining refs are public-safe"
   }
 }
