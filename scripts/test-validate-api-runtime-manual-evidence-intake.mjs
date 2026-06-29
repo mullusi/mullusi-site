@@ -56,7 +56,7 @@ function testCurrentTemplateIsValidButIncomplete() {
   assert.match(result.stdout, /^api_runtime_manual_evidence_intake=SolvedVerified$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
   assert.match(result.stdout, /^intake_complete=false$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=11$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=10$/m);
   assert.match(result.stdout, /^secret_values=not_read$/m);
 }
 
@@ -65,8 +65,8 @@ function testRequireCompleteFailsOnMissingRefs() {
 
   assert.equal(result.status, 1);
   assert.match(result.stdout, /^api_runtime_manual_evidence_intake=GovernanceBlocked$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=11$/m);
-  assert.match(result.stdout, /^finding=evidence_ref_required:managed_postgres_ready$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=10$/m);
+  assert.match(result.stdout, /^finding=evidence_ref_required:schema_applied$/m);
 }
 
 function testCompleteFixturePasses() {
@@ -131,7 +131,7 @@ function testJsonOutputIsPublicSafe() {
   assert.equal(result.status, 0);
   assert.equal(payload.apiRuntimeManualEvidenceIntake, "SolvedVerified");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 11);
+  assert.equal(payload.missingEvidenceRefCount, 10);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 

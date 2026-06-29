@@ -36,14 +36,14 @@ function runCli(args = []) {
   });
 }
 
-function testCurrentTemplateReportsManagedPostgresNext() {
+function testCurrentTemplateReportsSchemaAppliedNext() {
   const result = runCli();
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_runtime_manual_evidence_next=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^next_evidence_key=managed_postgres_ready$/m);
-  assert.match(result.stdout, /^next_private_action=provision_managed_postgres_with_backups$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=11$/m);
+  assert.match(result.stdout, /^next_evidence_key=schema_applied$/m);
+  assert.match(result.stdout, /^next_private_action=apply_production_schema$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=10$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
 }
 
@@ -101,13 +101,13 @@ function testJsonOutputIsPublicSafe() {
   const payload = JSON.parse(result.stdout);
 
   assert.equal(result.status, 0);
-  assert.equal(payload.nextEvidenceKey, "managed_postgres_ready");
+  assert.equal(payload.nextEvidenceKey, "schema_applied");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 11);
+  assert.equal(payload.missingEvidenceRefCount, 10);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 
-testCurrentTemplateReportsManagedPostgresNext();
+testCurrentTemplateReportsSchemaAppliedNext();
 testReporterAdvancesToNextMissingKey();
 testCompleteIntakeReportsNone();
 testInvalidRefBlocksWithoutEcho();
