@@ -53,8 +53,10 @@ production_secrets_stored=Pass
 production_secrets_evidence_ref=receipt://api-runtime/secrets-stored/2026-06-29
 deploy_env_check=Pass
 deploy_env_check_evidence_ref=receipt://api-runtime/deploy-env-ready/2026-06-29
-release_preflight=AwaitingEvidence
-persistence_check=AwaitingEvidence
+release_preflight=Pass
+release_preflight_evidence_ref=receipt://api-runtime/release-preflight-ready/2026-06-29
+persistence_check=Pass
+persistence_check_evidence_ref=receipt://api-runtime/persistence-ready/2026-06-29
 host_firewall_configured=AwaitingEvidence
 tls_certificate_ready=AwaitingEvidence
 rollback_path_defined=AwaitingEvidence
@@ -127,5 +129,5 @@ Rollback must preserve the existing public website and email foundation:
 STATUS:
   Completeness: 100%
   Self-attested invariants: provider-neutral host path, external persistence, staged HSTS, no secret storage, no placeholder subdomain
-  Open issues: release preflight, DNS target
-  Next action: collect the release_preflight_ready public-safe ref before any DNS publication
+  Open issues: host firewall, DNS target
+  Next action: collect the host_firewall_configured public-safe ref before any DNS publication

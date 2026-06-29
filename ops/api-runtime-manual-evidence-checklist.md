@@ -16,7 +16,7 @@ values remain outside Git.
 ```text
 api_runtime_manual_evidence_checklist=AwaitingEvidence
 manual_evidence_item_count=13
-manual_evidence_missing_count=7
+manual_evidence_missing_count=5
 api_dns_publication_allowed=false
 secret_values=not_recorded
 host_addresses=not_recorded
@@ -55,8 +55,8 @@ evidence_item=managed_postgres_ready state=Pass public_safe_ref=control-plane:re
 evidence_item=schema_applied state=Pass public_safe_ref=control-plane:receipt/docs/GOVERN_CLOUD_PRIVATE_STAGING_WITNESS_2026-06-11.md private_value_storage=outside_git
 evidence_item=production_secrets_stored state=Pass public_safe_ref=receipt://api-runtime/secrets-stored/2026-06-29 private_value_storage=outside_git
 evidence_item=deploy_env_check_ready state=Pass public_safe_ref=receipt://api-runtime/deploy-env-ready/2026-06-29 private_value_storage=outside_git
-evidence_item=release_preflight_ready state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
-evidence_item=persistence_check_ready state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
+evidence_item=release_preflight_ready state=Pass public_safe_ref=receipt://api-runtime/release-preflight-ready/2026-06-29 private_value_storage=outside_git
+evidence_item=persistence_check_ready state=Pass public_safe_ref=receipt://api-runtime/persistence-ready/2026-06-29 private_value_storage=outside_git
 evidence_item=host_firewall_configured state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
 evidence_item=tls_certificate_ready state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
 evidence_item=rollback_path_defined state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
@@ -82,5 +82,5 @@ references and the production readiness gate is run with matching evidence.
 STATUS:
   Completeness: 100%
   Self-attested invariants: no raw provider values, no secret values, no host addresses, no database URLs, no DNS target, DNS remains blocked while evidence is missing
-  Open issues: 7 pre-DNS evidence items remain AwaitingEvidence
-  Next action: collect public-safe reference for release_preflight_ready without storing private values in Git
+  Open issues: 5 pre-DNS evidence items remain AwaitingEvidence
+  Next action: collect public-safe reference for host_firewall_configured without storing private values in Git
