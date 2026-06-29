@@ -16,7 +16,7 @@ values remain outside Git.
 ```text
 api_runtime_manual_evidence_checklist=AwaitingEvidence
 manual_evidence_item_count=13
-manual_evidence_missing_count=10
+manual_evidence_missing_count=9
 api_dns_publication_allowed=false
 secret_values=not_recorded
 host_addresses=not_recorded
@@ -52,7 +52,7 @@ targets, tokens, raw provider payloads, raw message headers, or recovery codes.
 evidence_item=production_image_published state=Pass public_safe_ref=github:actions/runs/28353797103:api-image-published private_value_storage=outside_git
 evidence_item=runtime_host_ready state=Pass public_safe_ref=render:event/host-ready-2026-06-29 private_value_storage=outside_git
 evidence_item=managed_postgres_ready state=Pass public_safe_ref=control-plane:receipt/docs/GOVERN_CLOUD_PRIVATE_STAGING_WITNESS_2026-06-11.md private_value_storage=outside_git
-evidence_item=schema_applied state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
+evidence_item=schema_applied state=Pass public_safe_ref=control-plane:receipt/docs/GOVERN_CLOUD_PRIVATE_STAGING_WITNESS_2026-06-11.md private_value_storage=outside_git
 evidence_item=production_secrets_stored state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
 evidence_item=deploy_env_check_ready state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
 evidence_item=release_preflight_ready state=AwaitingEvidence public_safe_ref=missing private_value_storage=outside_git
@@ -82,5 +82,5 @@ references and the production readiness gate is run with matching evidence.
 STATUS:
   Completeness: 100%
   Self-attested invariants: no raw provider values, no secret values, no host addresses, no database URLs, no DNS target, DNS remains blocked while evidence is missing
-  Open issues: 10 pre-DNS evidence items remain AwaitingEvidence
-  Next action: collect public-safe reference for schema_applied without storing private values in Git
+  Open issues: 9 pre-DNS evidence items remain AwaitingEvidence
+  Next action: collect public-safe reference for production_secrets_stored without storing private values in Git
