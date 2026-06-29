@@ -3,64 +3,64 @@
     "name": "Mullusi Frontier Signal",
     "source": "Hacker News",
     "sourceUrl": "https://news.ycombinator.com",
-    "updated": "2026-06-28",
+    "updated": "2026-06-29",
     "count": 7
   },
   "items": [
     {
-      "title": "Anonymous GitHub account mass-dropping undisclosed 0-days",
-      "url": "https://github.com/bikini/exploitarium",
+      "title": "GLM 5.2 beats Claude in our benchmarks",
+      "url": "https://semgrep.dev/blog/2026/we-have-mythos-at-home-glm-52-beats-claude-in-our-cyber-benchmarks/",
+      "source": "semgrep.dev",
+      "points": 921,
+      "comments": 421,
+      "date": "2026-06-28"
+    },
+    {
+      "title": "Age verification is just a precursor to automated attribution of speech",
+      "url": "https://nonogra.ph/age-verification-is-just-a-precursor-to-attribution-of-speech-06-29-2026",
+      "source": "nonogra.ph",
+      "points": 622,
+      "comments": 360,
+      "date": "2026-06-29"
+    },
+    {
+      "title": "HackerRank open sourced its ATS. My resume scored 90/100. Oh wait 74. No – 88",
+      "url": "https://danunparsed.com/p/hackerrank-open-source-ats",
+      "source": "danunparsed.com",
+      "points": 608,
+      "comments": 255,
+      "date": "2026-06-29"
+    },
+    {
+      "title": "The KIDS Act would require age checks to get online",
+      "url": "https://www.eff.org/deeplinks/2026/06/kids-act-would-require-age-checks-get-online",
+      "source": "eff.org",
+      "points": 534,
+      "comments": 438,
+      "date": "2026-06-28"
+    },
+    {
+      "title": "I used Claude Code to get a second opinion on my MRI",
+      "url": "https://antoine.fi/mri-analysis-using-claude-code-opus",
+      "source": "antoine.fi",
+      "points": 473,
+      "comments": 606,
+      "date": "2026-06-28"
+    },
+    {
+      "title": "Librepods: AirPods liberated",
+      "url": "https://github.com/librepods-org/librepods",
       "source": "github.com",
-      "points": 820,
-      "comments": 322,
-      "date": "2026-06-27"
+      "points": 418,
+      "comments": 150,
+      "date": "2026-06-28"
     },
     {
-      "title": "DSpark: Speculative decoding accelerates LLM inference [pdf]",
-      "url": "https://github.com/deepseek-ai/DeepSpec/blob/main/DSpark_paper.pdf",
-      "source": "github.com",
-      "points": 762,
-      "comments": 323,
-      "date": "2026-06-27"
-    },
-    {
-      "title": "OpenRA",
-      "url": "https://www.openra.net/",
-      "source": "openra.net",
-      "points": 724,
-      "comments": 135,
-      "date": "2026-06-27"
-    },
-    {
-      "title": "Fintech Engineering Handbook",
-      "url": "https://w.pitula.me/fintech-engineering-handbook/",
-      "source": "w.pitula.me",
-      "points": 579,
-      "comments": 176,
-      "date": "2026-06-27"
-    },
-    {
-      "title": "The case for physical media ownership",
-      "url": "https://dervis.de/physical/",
-      "source": "dervis.de",
-      "points": 445,
-      "comments": 299,
-      "date": "2026-06-27"
-    },
-    {
-      "title": "Suspicious Discontinuities (2020)",
-      "url": "https://danluu.com/discontinuities/",
-      "source": "danluu.com",
-      "points": 245,
-      "comments": 77,
-      "date": "2026-06-27"
-    },
-    {
-      "title": "Marfa Public Radio Puts You to Sleep",
-      "url": "https://www.marfapublicradio.org/podcast/marfa-public-radio-puts-you-to-sleep",
-      "source": "marfapublicradio.org",
-      "points": 243,
-      "comments": 60,
+      "title": "5k menus from the New York Public Library’s Buttolph Collection (1880-1920)",
+      "url": "https://pudding.cool/2026/06/menu-story/",
+      "source": "pudding.cool",
+      "points": 382,
+      "comments": 101,
       "date": "2026-06-28"
     }
   ]
