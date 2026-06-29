@@ -42,8 +42,9 @@ backend deployment package.
 Do not create or route the public DNS record until these are true:
 
 ```text
-production_image_published=AwaitingEvidence
+production_image_published=Pass
 runtime_host_ready=AwaitingEvidence
+runtime_host_evidence_ref=render:event/host-ready-2026-06-29
 managed_postgres_ready=AwaitingEvidence
 schema_applied=AwaitingEvidence
 production_secrets_stored=AwaitingEvidence
@@ -122,5 +123,5 @@ Rollback must preserve the existing public website and email foundation:
 STATUS:
   Completeness: 100%
   Self-attested invariants: provider-neutral host path, external persistence, staged HSTS, no secret storage, no placeholder subdomain
-  Open issues: concrete host provider, managed PostgreSQL endpoint, production secret store, DNS target
-  Next action: provision the private host and managed PostgreSQL, then execute the backend production release checklist
+  Open issues: concrete managed PostgreSQL evidence, production secret store, DNS target
+  Next action: collect the managed_postgres_ready public-safe ref before any DNS publication

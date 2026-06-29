@@ -290,7 +290,7 @@ function testCliReportsCurrentStateAndRejectsUnsupportedArgs() {
   assert.match(result.stdout, /api_runtime_manual_evidence_intake_path=ops\/api-runtime-manual-evidence-intake-template\.json/);
   assert.match(result.stdout, /api_runtime_manual_evidence_checklist=AwaitingEvidence/);
   assert.match(result.stdout, /api_runtime_manual_evidence_checklist_path=ops\/api-runtime-manual-evidence-checklist\.md/);
-  assert.match(result.stdout, /manual_evidence_missing_count=12/);
+  assert.match(result.stdout, /manual_evidence_missing_count=11/);
 
   const invalid = runReporter(["--invalid"]);
   assert.equal(invalid.status, 1);
@@ -305,7 +305,7 @@ function testCliJsonModeReportsStructuredFailure() {
   assert.equal(current.status, 0);
   assert.equal(typeof payload.opsNextState, "string");
   assert.equal(payload.privateRecoveryValues, "not_read");
-  assert.equal(payload.manualEvidenceMissingCount, 12);
+  assert.equal(payload.manualEvidenceMissingCount, 11);
   assert.equal(Object.hasOwn(payload, "apiReadiness"), false);
 
   const invalid = runReporter(["--json", "--invalid"]);
