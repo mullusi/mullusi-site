@@ -36,14 +36,14 @@ function runCli(args = []) {
   });
 }
 
-function testCurrentTemplateReportsProductionImageFirst() {
+function testCurrentTemplateReportsRuntimeHostNext() {
   const result = runCli();
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_runtime_manual_evidence_next=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^next_evidence_key=production_image_published$/m);
-  assert.match(result.stdout, /^next_private_action=publish_versioned_api_image$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=13$/m);
+  assert.match(result.stdout, /^next_evidence_key=runtime_host_ready$/m);
+  assert.match(result.stdout, /^next_private_action=provision_private_linux_runtime_host$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=12$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
 }
 
@@ -101,13 +101,13 @@ function testJsonOutputIsPublicSafe() {
   const payload = JSON.parse(result.stdout);
 
   assert.equal(result.status, 0);
-  assert.equal(payload.nextEvidenceKey, "production_image_published");
+  assert.equal(payload.nextEvidenceKey, "runtime_host_ready");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 13);
+  assert.equal(payload.missingEvidenceRefCount, 12);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 
-testCurrentTemplateReportsProductionImageFirst();
+testCurrentTemplateReportsRuntimeHostNext();
 testReporterAdvancesToNextMissingKey();
 testCompleteIntakeReportsNone();
 testInvalidRefBlocksWithoutEcho();

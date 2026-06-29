@@ -11,7 +11,7 @@
   "database_urls_allowed": false,
   "dns_targets_allowed": false,
   "evidence_refs": {
-    "production_image_published": "missing",
+    "production_image_published": "github:actions/runs/28353797103:api-image-published",
     "runtime_host_ready": "missing",
     "managed_postgres_ready": "missing",
     "schema_applied": "missing",
@@ -28,6 +28,6 @@
   "status": {
     "solver_outcome": "AwaitingEvidence",
     "proof_state": "Unknown",
-    "next_action": "replace missing refs only after the private runtime action is complete and the ref is public-safe"
+    "next_action": "collect runtime_host_ready next; keep DNS blocked until all remaining refs are public-safe"
   }
 }
