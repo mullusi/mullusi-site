@@ -41,9 +41,9 @@ function testCurrentTemplateReportsTlsNext() {
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_runtime_manual_evidence_next=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^next_evidence_key=tls_certificate_ready$/m);
-  assert.match(result.stdout, /^next_private_action=issue_tls_without_premature_dns_publication$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=3$/m);
+  assert.match(result.stdout, /^next_evidence_key=dns_authority_ready$/m);
+  assert.match(result.stdout, /^next_private_action=confirm_api_dns_authority_only$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=1$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
 }
 
@@ -101,9 +101,9 @@ function testJsonOutputIsPublicSafe() {
   const payload = JSON.parse(result.stdout);
 
   assert.equal(result.status, 0);
-  assert.equal(payload.nextEvidenceKey, "tls_certificate_ready");
+  assert.equal(payload.nextEvidenceKey, "dns_authority_ready");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 3);
+  assert.equal(payload.missingEvidenceRefCount, 1);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 

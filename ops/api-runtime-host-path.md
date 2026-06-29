@@ -59,10 +59,12 @@ persistence_check=Pass
 persistence_check_evidence_ref=receipt://api-runtime/persistence-ready/2026-06-29
 host_firewall_configured=Pass
 host_firewall_evidence_ref=receipt://api-runtime/firewall-configured/2026-06-29
-tls_certificate_ready=AwaitingEvidence
+tls_certificate_ready=Pass
+tls_certificate_evidence_ref=receipt://api-runtime/tls-ready/2026-06-29
 rollback_path_defined=Pass
 rollback_path_evidence_ref=site:ops/api-production-readiness-gate.md
-private_runtime_witness_ready=AwaitingEvidence
+private_runtime_witness_ready=Pass
+private_runtime_witness_evidence_ref=control-plane:receipt/runtime-witness-ready-2026-06-29
 dns_authority_ready=AwaitingEvidence
 ```
 
@@ -132,4 +134,4 @@ STATUS:
   Completeness: 100%
   Self-attested invariants: provider-neutral host path, external persistence, staged HSTS, no secret storage, no placeholder subdomain
   Open issues: TLS, DNS target
-  Next action: collect the tls_certificate_ready public-safe ref before any DNS publication
+  Next action: collect dns_authority_ready evidence before declaring DNS authority closed
