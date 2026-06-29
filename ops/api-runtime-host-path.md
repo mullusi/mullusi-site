@@ -51,7 +51,8 @@ schema_applied=Pass
 schema_applied_evidence_ref=control-plane:receipt/docs/GOVERN_CLOUD_PRIVATE_STAGING_WITNESS_2026-06-11.md
 production_secrets_stored=Pass
 production_secrets_evidence_ref=receipt://api-runtime/secrets-stored/2026-06-29
-deploy_env_check=AwaitingEvidence
+deploy_env_check=Pass
+deploy_env_check_evidence_ref=receipt://api-runtime/deploy-env-ready/2026-06-29
 release_preflight=AwaitingEvidence
 persistence_check=AwaitingEvidence
 host_firewall_configured=AwaitingEvidence
@@ -126,5 +127,5 @@ Rollback must preserve the existing public website and email foundation:
 STATUS:
   Completeness: 100%
   Self-attested invariants: provider-neutral host path, external persistence, staged HSTS, no secret storage, no placeholder subdomain
-  Open issues: deploy environment validation, DNS target
-  Next action: collect the deploy_env_check_ready public-safe ref before any DNS publication
+  Open issues: release preflight, DNS target
+  Next action: collect the release_preflight_ready public-safe ref before any DNS publication
