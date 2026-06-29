@@ -7,16 +7,16 @@ Invariants: no token value, package digest, private package metadata, host addre
 
 # API Runtime Image Evidence Discovery
 
-This witness records the current public-safe discovery state for the first
-pre-DNS API runtime evidence item:
+This witness records the public-safe closure state for the first pre-DNS API
+runtime evidence item:
 
 ```text
 evidence_item=production_image_published
-production_image_published=AwaitingEvidence
+production_image_published=Pass
 api_runtime_manual_evidence_next=AwaitingEvidence
 api_dns_publication_allowed=false
-github_actions_image_publish_run=not_found
-github_packages_read_scope=AwaitingEvidence
+github_actions_image_publish_run=github:actions/runs/28353797103:api-image-published
+github_packages_read_scope=not_required_for_public_safe_ref
 secret_values=not_recorded
 provider_values=not_recorded
 host_addresses=not_recorded
@@ -43,14 +43,17 @@ gh api /orgs/mullusi/packages?package_type=container --paginate
 Observed public-safe result:
 
 ```text
-recent_actions_image_publish_workflow=not_found
-github_package_listing_result=blocked_missing_read_packages_scope
-production_image_public_safe_ref=missing
+recent_actions_image_publish_workflow=github:actions/runs/28353797103
+github_package_listing_result=not_required_for_public_safe_ref
+production_image_public_safe_ref=github:actions/runs/28353797103:api-image-published
+operator_approval_ref=approval://api-image-publication/2026-06-29-operator-approved
 ```
 
-The package listing block is not a runtime failure and is not proof that no
-package exists. It means the available GitHub token cannot inspect package
-metadata. Do not mark `production_image_published` as `Pass` from this state.
+The publication receipt reports `image_published=true`,
+`secret_values_serialized=false`, `dns_mutated=false`, and
+`runtime_mutated=false`. The receipt is sufficient for this checklist item and
+does not close runtime host, managed persistence, secret storage, TLS, private
+witness, or DNS authority evidence.
 
 ## Accepted Closure Ref
 
@@ -74,6 +77,6 @@ node scripts/validate-api-runtime-manual-evidence-intake.mjs
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: no raw package metadata, no token values, no DNS publication, no production image claim without public-safe evidence
-  Open issues: production_image_published remains AwaitingEvidence
-  Next action: publish or identify an immutable API image publication run and record only its public-safe ref
+  Self-attested invariants: no raw package metadata, no token values, no DNS publication, image evidence recorded only as public-safe run ref
+  Open issues: runtime_host_ready is the next missing pre-DNS evidence item
+  Next action: collect the runtime_host_ready public-safe ref without storing private values

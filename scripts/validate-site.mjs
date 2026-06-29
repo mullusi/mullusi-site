@@ -5293,11 +5293,11 @@ function validateOperatingGates() {
     },
     {
       file: "ops/api-runtime-image-evidence-discovery.md",
-      terms: ["API Runtime Image Evidence Discovery", "production_image_published=AwaitingEvidence", "api_runtime_manual_evidence_next=AwaitingEvidence", "api_dns_publication_allowed=false", "github_actions_image_publish_run=not_found", "github_packages_read_scope=AwaitingEvidence", "blocked_missing_read_packages_scope", "production_image_public_safe_ref=missing", "github:actions/runs/NNN:api-image-published", "receipt://api-runtime/image-published/YYYY-MM-DD", "secret_values=not_recorded", "provider_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "dns_targets=not_recorded", "raw_payloads=not_recorded", "STATUS:"],
+      terms: ["API Runtime Image Evidence Discovery", "production_image_published=Pass", "api_runtime_manual_evidence_next=AwaitingEvidence", "api_dns_publication_allowed=false", "github_actions_image_publish_run=github:actions/runs/28353797103:api-image-published", "github_packages_read_scope=not_required_for_public_safe_ref", "production_image_public_safe_ref=github:actions/runs/28353797103:api-image-published", "github:actions/runs/NNN:api-image-published", "receipt://api-runtime/image-published/YYYY-MM-DD", "secret_values=not_recorded", "provider_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "dns_targets=not_recorded", "raw_payloads=not_recorded", "STATUS:"],
     },
     {
       file: "ops/api-runtime-manual-evidence-checklist.md",
-      terms: ["API Runtime Manual Evidence Checklist", "ops/api-runtime-manual-evidence-runbook.md", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "manual_evidence_item_count=13", "manual_evidence_missing_count=13", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "STATUS:"],
+      terms: ["API Runtime Manual Evidence Checklist", "ops/api-runtime-manual-evidence-runbook.md", "node scripts/validate-api-runtime-manual-evidence-intake.mjs", "api_runtime_manual_evidence_checklist=AwaitingEvidence", "manual_evidence_item_count=13", "manual_evidence_missing_count=12", "api_dns_publication_allowed=false", "production_image_published", "runtime_host_ready", "managed_postgres_ready", "schema_applied", "production_secrets_stored", "deploy_env_check_ready", "release_preflight_ready", "persistence_check_ready", "host_firewall_configured", "tls_certificate_ready", "rollback_path_defined", "private_runtime_witness_ready", "dns_authority_ready", "secret_values=not_recorded", "host_addresses=not_recorded", "database_urls=not_recorded", "provider_values=not_recorded", "STATUS:"],
     },
     {
       file: "ops/api-runtime-manual-evidence-runbook.md",
@@ -5541,10 +5541,16 @@ function validateRuntimeGateState() {
     { key: "private_runtime_witness_ready" },
     { key: "dns_authority_ready" },
   ]) {
-    if (!apiRuntimeManualEvidenceChecklist.includes(`evidence_item=${key} state=AwaitingEvidence public_safe_ref=missing`)) {
+    const expectedChecklistRow = key === "production_image_published"
+      ? `evidence_item=${key} state=Pass public_safe_ref=github:actions/runs/28353797103:api-image-published`
+      : `evidence_item=${key} state=AwaitingEvidence public_safe_ref=missing`;
+    if (!apiRuntimeManualEvidenceChecklist.includes(expectedChecklistRow)) {
       recordFailure(`api_runtime_manual_evidence_row_missing:${key}`);
     }
-    if (!apiRuntimeManualEvidenceIntakeTemplate.includes(`"${key}": "missing"`)) {
+    const expectedIntakeRef = key === "production_image_published"
+      ? `"${key}": "github:actions/runs/28353797103:api-image-published"`
+      : `"${key}": "missing"`;
+    if (!apiRuntimeManualEvidenceIntakeTemplate.includes(expectedIntakeRef)) {
       recordFailure(`api_runtime_manual_evidence_intake_ref_missing:${key}`);
     }
   }
@@ -5562,7 +5568,7 @@ function validateRuntimeGateState() {
     }
   }
   for (const term of [
-    "testCurrentTemplateReportsProductionImageFirst",
+    "testCurrentTemplateReportsRuntimeHostNext",
     "testReporterAdvancesToNextMissingKey",
     "testCompleteIntakeReportsNone",
     "testInvalidRefBlocksWithoutEcho",
