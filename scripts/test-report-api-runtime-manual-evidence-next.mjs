@@ -43,7 +43,7 @@ function testCurrentTemplateReportsTlsNext() {
   assert.match(result.stdout, /^api_runtime_manual_evidence_next=AwaitingEvidence$/m);
   assert.match(result.stdout, /^next_evidence_key=tls_certificate_ready$/m);
   assert.match(result.stdout, /^next_private_action=issue_tls_without_premature_dns_publication$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=4$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=3$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
 }
 
@@ -103,7 +103,7 @@ function testJsonOutputIsPublicSafe() {
   assert.equal(result.status, 0);
   assert.equal(payload.nextEvidenceKey, "tls_certificate_ready");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 4);
+  assert.equal(payload.missingEvidenceRefCount, 3);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 

@@ -22,7 +22,7 @@ The current state remains:
 ```text
 api_runtime_manual_evidence_checklist=AwaitingEvidence
 manual_evidence_item_count=13
-manual_evidence_missing_count=4
+manual_evidence_missing_count=3
 next_evidence_key=tls_certificate_ready
 api_dns_publication_allowed=false
 secret_values=not_recorded
@@ -112,5 +112,5 @@ Then rerun the validators. Do not keep a stale `Pass` row.
 STATUS:
   Completeness: 100%
   Self-attested invariants: public-safe refs only, no raw private runtime values, no DNS publication, no provider-private payloads, rollback returns stale rows to AwaitingEvidence
-  Open issues: 4 checklist rows still require real evidence refs
+  Open issues: 3 checklist rows still require real evidence refs
   Next action: collect the tls_certificate_ready public-safe ref, then rerun the checklist validator
