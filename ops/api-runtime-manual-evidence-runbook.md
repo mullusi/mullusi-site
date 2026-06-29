@@ -22,8 +22,8 @@ The current state remains:
 ```text
 api_runtime_manual_evidence_checklist=AwaitingEvidence
 manual_evidence_item_count=13
-manual_evidence_missing_count=9
-next_evidence_key=production_secrets_stored
+manual_evidence_missing_count=8
+next_evidence_key=deploy_env_check_ready
 api_dns_publication_allowed=false
 secret_values=not_recorded
 host_addresses=not_recorded
@@ -112,5 +112,5 @@ Then rerun the validators. Do not keep a stale `Pass` row.
 STATUS:
   Completeness: 100%
   Self-attested invariants: public-safe refs only, no raw private runtime values, no DNS publication, no provider-private payloads, rollback returns stale rows to AwaitingEvidence
-  Open issues: 9 checklist rows still require real evidence refs
-  Next action: collect the production_secrets_stored public-safe ref, then rerun the checklist validator
+  Open issues: 8 checklist rows still require real evidence refs
+  Next action: collect the deploy_env_check_ready public-safe ref, then rerun the checklist validator

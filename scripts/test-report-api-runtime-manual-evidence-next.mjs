@@ -36,14 +36,14 @@ function runCli(args = []) {
   });
 }
 
-function testCurrentTemplateReportsProductionSecretsNext() {
+function testCurrentTemplateReportsDeployEnvNext() {
   const result = runCli();
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_runtime_manual_evidence_next=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^next_evidence_key=production_secrets_stored$/m);
-  assert.match(result.stdout, /^next_private_action=store_runtime_secrets_outside_git$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=9$/m);
+  assert.match(result.stdout, /^next_evidence_key=deploy_env_check_ready$/m);
+  assert.match(result.stdout, /^next_private_action=run_deploy_environment_check$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=8$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
 }
 
@@ -101,13 +101,13 @@ function testJsonOutputIsPublicSafe() {
   const payload = JSON.parse(result.stdout);
 
   assert.equal(result.status, 0);
-  assert.equal(payload.nextEvidenceKey, "production_secrets_stored");
+  assert.equal(payload.nextEvidenceKey, "deploy_env_check_ready");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 9);
+  assert.equal(payload.missingEvidenceRefCount, 8);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 
-testCurrentTemplateReportsProductionSecretsNext();
+testCurrentTemplateReportsDeployEnvNext();
 testReporterAdvancesToNextMissingKey();
 testCompleteIntakeReportsNone();
 testInvalidRefBlocksWithoutEcho();

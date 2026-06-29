@@ -15,7 +15,7 @@
     "runtime_host_ready": "render:event/host-ready-2026-06-29",
     "managed_postgres_ready": "control-plane:receipt/docs/GOVERN_CLOUD_PRIVATE_STAGING_WITNESS_2026-06-11.md",
     "schema_applied": "control-plane:receipt/docs/GOVERN_CLOUD_PRIVATE_STAGING_WITNESS_2026-06-11.md",
-    "production_secrets_stored": "missing",
+    "production_secrets_stored": "receipt://api-runtime/secrets-stored/2026-06-29",
     "deploy_env_check_ready": "missing",
     "release_preflight_ready": "missing",
     "persistence_check_ready": "missing",
@@ -28,6 +28,6 @@
   "status": {
     "solver_outcome": "AwaitingEvidence",
     "proof_state": "Unknown",
-    "next_action": "collect production_secrets_stored next; keep DNS blocked until all remaining refs are public-safe"
+    "next_action": "collect deploy_env_check_ready next; keep DNS blocked until all remaining refs are public-safe"
   }
 }
