@@ -36,14 +36,14 @@ function runCli(args = []) {
   });
 }
 
-function testCurrentTemplateReportsHostFirewallNext() {
+function testCurrentTemplateReportsTlsNext() {
   const result = runCli();
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_runtime_manual_evidence_next=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^next_evidence_key=host_firewall_configured$/m);
-  assert.match(result.stdout, /^next_private_action=configure_required_host_firewall_only$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=5$/m);
+  assert.match(result.stdout, /^next_evidence_key=tls_certificate_ready$/m);
+  assert.match(result.stdout, /^next_private_action=issue_tls_without_premature_dns_publication$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=4$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
 }
 
@@ -101,13 +101,13 @@ function testJsonOutputIsPublicSafe() {
   const payload = JSON.parse(result.stdout);
 
   assert.equal(result.status, 0);
-  assert.equal(payload.nextEvidenceKey, "host_firewall_configured");
+  assert.equal(payload.nextEvidenceKey, "tls_certificate_ready");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 5);
+  assert.equal(payload.missingEvidenceRefCount, 4);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 
-testCurrentTemplateReportsHostFirewallNext();
+testCurrentTemplateReportsTlsNext();
 testReporterAdvancesToNextMissingKey();
 testCompleteIntakeReportsNone();
 testInvalidRefBlocksWithoutEcho();
