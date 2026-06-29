@@ -16,34 +16,34 @@ Can api.mullusi.com be publicly exposed now?
 Current answer:
 
 ```text
-api_exposure_state=AwaitingEvidence
-api_dns_publication_allowed=false
-api_runtime_public_state=AwaitingEvidence
+api_exposure_state=SolvedVerified
+api_dns_publication_allowed=true
+api_runtime_public_state=SolvedVerified
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
-last_reviewed=2026-06-25
+last_reviewed=2026-06-29
 ```
 
-The exposure state is `AwaitingEvidence` until the live DNS and HTTPS probes are
-explicitly requested and recorded. This file does not promote product runtime
-witnesses; it only records the public-safe API gateway exposure boundary.
+The exposure state is `SolvedVerified` after public DNS, HTTPS reachability, and
+runtime witness probes are explicitly requested and recorded. This file does not
+promote product runtime witnesses; it only records the public-safe API gateway
+exposure boundary.
 
-Observed on 2026-06-25:
+Observed on 2026-06-29:
 
 ```text
-command=node scripts/check-api-exposure-gate.mjs
-verdict=AwaitingEvidence
-proof_state=Unknown
-api_dns_publication_allowed=false
+command=node scripts/check-api-exposure-gate.mjs --live --require-ready
+verdict=SolvedVerified
+proof_state=Pass
+api_dns_publication_allowed=true
 recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
-api_runtime_public_state=AwaitingEvidence
-dns_probe_state=NotRequested
-dns_record_count=0
-https_probe_state=NotRequested
+api_runtime_public_state=SolvedVerified
+dns_probe_state=Present
+dns_record_count=5
+https_probe_state=Reachable
 blocker=none
-soft_finding=api_dns_not_present_for_solved_verified
-soft_finding=api_https_not_reachable_for_solved_verified
+soft_finding=none
 raw_host_values=not_recorded
 secret_values=not_read
 private_recovery_values=not_read
@@ -73,7 +73,7 @@ be reachable and recorded after DNS activation.
 | Host path | accepted | accepted |
 | Pre-DNS runtime evidence | Pass | Pass |
 | DNS publication | allowed | true |
-| Public runtime witness | SolvedVerified after DNS | AwaitingEvidence |
+| Public runtime witness | SolvedVerified after DNS | SolvedVerified |
 
 ## Executable Check
 
@@ -101,16 +101,16 @@ recovery_witness_state=ReadyForProvisioning
 api_provisioning_allowed=true
 ```
 
-Then record:
+Then record the current public-safe exposure state:
 
 ```text
-api_exposure_state=AwaitingEvidence
-api_dns_publication_allowed=false
+api_exposure_state=SolvedVerified
+api_dns_publication_allowed=true
 ```
 
 Do not promote from memory or assumption. Promotion requires private recovery
-evidence, release preflight evidence, persistence evidence, and rollback
-authority to be checked first.
+evidence, release preflight evidence, persistence evidence, rollback authority,
+DNS authority, and live public probe evidence to be checked first.
 
 ## Safe Halt Rule
 

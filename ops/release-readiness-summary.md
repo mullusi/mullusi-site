@@ -11,16 +11,15 @@ This file is the public-safe go/no-go map for the Mullusi website and product
 release boundary. It prevents a closed static website witness from being
 misread as a product/runtime release witness.
 
-Observed on 2026-06-25 after public mirror PR #239, private deploy-source PR
-#117, and Cloudflare Pages workflow run `28187685917`:
+Observed on 2026-06-29 after API public exposure live probe:
 
 ```text
 website_static_deployment_integrity=SolvedVerified
 live_status_manifest=Pass
 local_status_manifest_match=Pass
-api_exposure_state=AwaitingEvidence
-api_dns_publication_allowed=false
-api_production_readiness_state=AwaitingEvidence
+api_exposure_state=SolvedVerified
+api_dns_publication_allowed=true
+api_production_readiness_state=ReadyForDns
 product_runtime_release_witness=AwaitingEvidence
 product_runtime_claims_allowed=false
 public_product_release_allowed=false
@@ -39,8 +38,8 @@ private_recovery_values=not_read
 | Static website publication | SolvedVerified | `ops/live-deployment-integrity-witness.md` | Keep public and monitor strict parity |
 | Public visibility | SolvedVerified | `ops/public-visibility-witness.md` | Keep public and monitor regional visibility |
 | Security headers | SolvedVerified | `ops/security-header-witness.md` | Keep current Cloudflare header policy |
-| API DNS exposure | AwaitingEvidence | `ops/api-exposure-witness.md` | Re-run live/manual evidence before DNS action |
-| API production readiness | AwaitingEvidence | `ops/api-production-readiness-gate.md` | Close private runtime evidence before DNS |
+| API DNS exposure | SolvedVerified | `ops/api-exposure-witness.md` | Keep API gateway monitored |
+| API production readiness | ReadyForDns | `ops/api-production-readiness-gate.md` | Pre-DNS evidence is closed; public exposure now separately witnessed |
 | Product runtime witnesses | AwaitingEvidence | `ops/runtime-witness/registry.json` | Do not claim product runtime release |
 | Recovery prerequisite | ReadyForProvisioning | `ops/recovery-completion-witness.md` | Continue private runtime provisioning |
 | Domain security readback | SolvedVerified | `ops/domain-security-witness.md` | Keep current DNS/mail controls and monitor |
@@ -52,8 +51,8 @@ private_recovery_values=not_read
 static_website_public=true
 static_website_integrity=SolvedVerified
 product_runtime_release=false
-api_dns_publication_allowed=false
-api_gateway_public=false
+api_dns_publication_allowed=true
+api_gateway_public=true
 runtime_claims_allowed=false
 product_runtime_claims_allowed=false
 public_product_release_allowed=false
@@ -69,7 +68,7 @@ witness evidence are still open.
 ## Next-Action Order
 
 1. Keep strict static deployment integrity in scheduled probes.
-2. Close private API runtime evidence before any DNS action.
+2. Keep API gateway public exposure monitored through live probes.
 3. Select one product runtime witness candidate and prepare the product-status
    promotion decision plus service health, rollback, privacy, and contract
    evidence.
@@ -83,7 +82,7 @@ witness evidence are still open.
 | Edge case | Required response |
 | --- | --- |
 | Static website passes but runtime witnesses remain open | Report website as `SolvedVerified`; report product/runtime release as `AwaitingEvidence` |
-| `api` DNS appears while `api_dns_publication_allowed=false` | Enter `SafeHalt`; remove only `api` DNS and preserve apex/www/email |
+| API live probe regresses after `SolvedVerified` | Enter `SafeHalt`; remove or repair only `api` exposure and preserve apex/www/email |
 | Domain hardening evidence regresses | Return mutation permissions to false and rerun the preflight |
 | Private recovery inventory is missing from Git | Treat as expected blocker; do not commit private locations or codes |
 | Product page copy implies runtime availability | Reword or remove until runtime witness closes |
