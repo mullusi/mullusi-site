@@ -36,14 +36,14 @@ function runCli(args = []) {
   });
 }
 
-function testCurrentTemplateReportsReleasePreflightNext() {
+function testCurrentTemplateReportsHostFirewallNext() {
   const result = runCli();
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_runtime_manual_evidence_next=AwaitingEvidence$/m);
-  assert.match(result.stdout, /^next_evidence_key=release_preflight_ready$/m);
-  assert.match(result.stdout, /^next_private_action=run_release_preflight$/m);
-  assert.match(result.stdout, /^missing_evidence_ref_count=7$/m);
+  assert.match(result.stdout, /^next_evidence_key=host_firewall_configured$/m);
+  assert.match(result.stdout, /^next_private_action=configure_required_host_firewall_only$/m);
+  assert.match(result.stdout, /^missing_evidence_ref_count=5$/m);
   assert.match(result.stdout, /^ready_for_dns=false$/m);
 }
 
@@ -101,13 +101,13 @@ function testJsonOutputIsPublicSafe() {
   const payload = JSON.parse(result.stdout);
 
   assert.equal(result.status, 0);
-  assert.equal(payload.nextEvidenceKey, "release_preflight_ready");
+  assert.equal(payload.nextEvidenceKey, "host_firewall_configured");
   assert.equal(payload.readyForDns, false);
-  assert.equal(payload.missingEvidenceRefCount, 7);
+  assert.equal(payload.missingEvidenceRefCount, 5);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }
 
-testCurrentTemplateReportsReleasePreflightNext();
+testCurrentTemplateReportsHostFirewallNext();
 testReporterAdvancesToNextMissingKey();
 testCompleteIntakeReportsNone();
 testInvalidRefBlocksWithoutEcho();
