@@ -56,7 +56,7 @@ function testCurrentChecklistAwaitsEvidence() {
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^api_runtime_manual_evidence_checklist=AwaitingEvidence$/m);
   assert.match(result.stdout, /^manual_evidence_item_count=13$/m);
-  assert.match(result.stdout, /^manual_evidence_missing_count=4$/m);
+  assert.match(result.stdout, /^manual_evidence_missing_count=3$/m);
   assert.match(result.stdout, /^api_dns_publication_allowed=false$/m);
   assert.match(result.stdout, /^secret_values=not_recorded$/m);
   assert.match(result.stdout, /^provider_values=not_recorded$/m);
@@ -150,7 +150,7 @@ function testJsonOutputIsPublicSafe() {
   assert.equal(result.status, 0);
   assert.equal(payload.apiRuntimeManualEvidenceChecklist, "AwaitingEvidence");
   assert.equal(payload.apiDnsPublicationAllowed, false);
-  assert.equal(payload.manualEvidenceMissing.length, 4);
+  assert.equal(payload.manualEvidenceMissing.length, 3);
   assert.equal(JSON.stringify(payload).includes("secret"), true);
   assert.doesNotMatch(result.stdout, /postgres:\/\/|Authorization:|Bearer\s+[A-Za-z0-9]/);
 }

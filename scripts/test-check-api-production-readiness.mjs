@@ -80,7 +80,8 @@ function fixtureEvidence({ recoveryState = "ReadyForProvisioning", allowed = "tr
         "api.mullusi.com",
         "external managed PostgreSQL",
         "Strict-Transport-Security: max-age=86400",
-        "rollback_path_defined=AwaitingEvidence",
+        "rollback_path_defined=Pass",
+        "rollback_path_evidence_ref=site:ops/api-production-readiness-gate.md",
       ].join("\n"),
       productionReadinessGate: [
         "no_gateway_runtime_evidence -> no_api_dns",

@@ -60,7 +60,8 @@ persistence_check_evidence_ref=receipt://api-runtime/persistence-ready/2026-06-2
 host_firewall_configured=Pass
 host_firewall_evidence_ref=receipt://api-runtime/firewall-configured/2026-06-29
 tls_certificate_ready=AwaitingEvidence
-rollback_path_defined=AwaitingEvidence
+rollback_path_defined=Pass
+rollback_path_evidence_ref=site:ops/api-production-readiness-gate.md
 private_runtime_witness_ready=AwaitingEvidence
 dns_authority_ready=AwaitingEvidence
 ```
