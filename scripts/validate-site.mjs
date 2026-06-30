@@ -4718,7 +4718,8 @@ function validateProofPageContract() {
   const proofBoot = readUtf8("assets/pages/proof.js");
   const proofRenderer = readUtf8("assets/pages/proof-renderer.js");
   const routePreferences = readUtf8("assets/pages/route-preferences.js");
-  const html = `${readUtf8("proof/index.html")}\n${proofBoot}\n${proofRenderer}\n${routePreferences}`;
+  const proofRouteHtml = readUtf8("proof/index.html");
+  const html = `${proofRouteHtml}\n${proofBoot}\n${proofRenderer}\n${routePreferences}`;
   const requiredProofTerms = [
     'id="products"',
     "Product evidence lanes",
@@ -4798,9 +4799,15 @@ function validateProofPageContract() {
       recordFailure(`proof_page_contract_missing:${term}`);
     }
   }
-  if (!readUtf8("proof/index.html").includes("/assets/pages/route-preferences.js")
-    || !readUtf8("proof/index.html").includes("/assets/pages/proof-renderer.js")
-    || !readUtf8("proof/index.html").includes("/assets/pages/proof.js")) {
+  if (!proofRouteHtml.includes("Ask evidence questions")) {
+    recordFailure("proof_contact_cta_missing");
+  }
+  if (proofRouteHtml.includes("Request evidence access")) {
+    recordFailure("proof_contact_cta_access_claim_present");
+  }
+  if (!proofRouteHtml.includes("/assets/pages/route-preferences.js")
+    || !proofRouteHtml.includes("/assets/pages/proof-renderer.js")
+    || !proofRouteHtml.includes("/assets/pages/proof.js")) {
     recordFailure("proof_page_script_graph_invalid");
   }
   if (!proofBoot.includes("MullusiProofRenderer.init()") || proofBoot.includes("fetch(") || proofBoot.includes("innerHTML")) {
