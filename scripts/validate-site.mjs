@@ -2485,7 +2485,7 @@ function validateSiteContent() {
       requireString(service.status, `${label}.status`);
       requireString(service.summary, `${label}.summary`);
       const proofSurface = requireString(service.proofSurface, `${label}.proofSurface`);
-      if (!/^[a-z0-9.-]+\.mullusi\.com$/.test(proofSurface)) {
+      if (!/^(?:[a-z0-9.-]+\.)?mullusi\.com$/.test(proofSurface)) {
         recordFailure(`site_service_proof_surface_invalid:${proofSurface}`);
       }
     }

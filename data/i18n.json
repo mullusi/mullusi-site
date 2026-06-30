@@ -723,15 +723,15 @@
       "am": "የአገልግሎት ድርድር"
     },
     "services.title": {
-      "en": "What teams will use",
+      "en": "Product paths and planned surfaces",
       "am": "ጥቅሎች መሣሪያዎችን ያሰራጫሉ። የሙሉሲ አገልግሎቶች የሚተዳደር ፍርድን ይሸከማሉ"
     },
     "services.body": {
-      "en": "Mullusi brings product help, developer access, team review, and status visibility into one work system.",
+      "en": "Mullusi starts with the public Mullu Govern route, then adds developer, operator, and review surfaces only as evidence closes.",
       "am": "ጥቅሎች ተጠቃሚዎች እንዲገናኙ፣ እንዲያረጋግጡና ሥራ እንዲያስገቡ ይረዳሉ። የተስተናገዱ አገልግሎቶች አስተዳደርን ያከናውናሉ፣ ዱካዎችን ይጠብቃሉ፣ የማረጋገጫ ማህተሞችን ይሰጣሉ፣ የአሠራር ቁጥጥርንም ያጋልጣሉ።"
     },
     "govern.tag": {
-      "en": "Work Review Service",
+      "en": "Work Review Path",
       "am": "Govern Cloud v1"
     },
     "govern.title": {

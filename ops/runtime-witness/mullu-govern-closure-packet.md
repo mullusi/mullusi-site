@@ -31,8 +31,37 @@ static_deployment_witness=ops/live-deployment-integrity-witness.md
 static_website_integrity=SolvedVerified
 api_exposure_probe=2026-06-25:SolvedVerified
 live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
-last_reviewed=2026-06-27
+last_reviewed=2026-06-30
 ```
+
+## 2026-06-30 Public Probe Update
+
+Public-safe status-code probes confirm the product route remains blocked and
+show the gateway witness/conformance proof endpoints are not presently exposed
+on the public API host:
+
+```text
+command=curl status-only probes for https://api.mullusi.com
+health_probe_status=200
+v1_health_probe_status=404
+gateway_witness_probe_status=404
+runtime_conformance_probe_status=404
+deployment_witness_probe_status=404
+audit_verify_probe_status=404
+proof_verify_probe_status=404
+govern_evaluate_post_status=404
+runtime_witness_closure_allowed=false
+product_claims_allowed=false
+public_write_route_allowed=false
+raw_response_bodies=not_recorded
+raw_response_headers=not_recorded
+secret_values=not_read
+```
+
+This update does not close any live evidence lane. It strengthens the
+`AwaitingEvidence` result because current public probes do not expose the
+runtime witness, conformance, deployment, audit, or proof verification surfaces
+required for product runtime closure.
 
 ## 2026-06-27 Review Update
 

@@ -3,7 +3,7 @@
     "name": "Mullusi",
     "version": "2026.05.site-content",
     "purpose": "Structured public website content for Mullusi.",
-    "content_hash": "sha256:abed5214b2511cbbc59dc505e0d0ab55dac93f8b618783d7c292a663f4936338"
+    "content_hash": "sha256:da8f3afb723434212f3f07915a9d3891b7a18cf5a700b97fe66985a82385b55e"
   },
   "platformLayers": [
     {
@@ -314,11 +314,11 @@
   ],
   "services": [
     {
-      "name": "Mullusi Work Cloud",
-      "delivery": "hosted service",
-      "status": "primary offer",
-      "summary": "Hosted symbolic intelligence service for reviewing proposed work, preserving the record, and returning an inspectable result.",
-      "proofSurface": "api.mullusi.com",
+      "name": "Mullu Govern Foundation",
+      "delivery": "public product route",
+      "status": "live public route",
+      "summary": "Public route for reviewing proposed work, preserving the record, and returning an inspectable result.",
+      "proofSurface": "mullusi.com",
       "am": {
         "name": "ሙሉሲ Govern Cloud",
         "delivery": "የተስተናገደ አገልግሎት",
@@ -327,10 +327,10 @@
       }
     },
     {
-      "name": "Developer Packages",
-      "delivery": "npm package",
-      "status": "access layer",
-      "summary": "Client SDK, CLI, and local validators for connecting work systems to Mullusi services.",
+      "name": "Developer Path",
+      "delivery": "planned package path",
+      "status": "planned developer path",
+      "summary": "Planned SDK, CLI, and local validators for connecting work systems after release evidence closes.",
       "proofSurface": "docs.mullusi.com",
       "am": {
         "name": "የአበልጻጊ ጥቅሎች",
@@ -340,10 +340,10 @@
       }
     },
     {
-      "name": "Mullusi Dashboard",
-      "delivery": "web workspace",
-      "status": "operator surface",
-      "summary": "Workspace for projects, reviews, usage, teams, status, and operator visibility.",
+      "name": "Operator Workspace",
+      "delivery": "planned web workspace",
+      "status": "planned operator path",
+      "summary": "Planned workspace for projects, reviews, usage, teams, status, and operator visibility.",
       "proofSurface": "dashboard.mullusi.com",
       "am": {
         "name": "ሙሉሲ ዳሽቦርድ",
@@ -353,10 +353,10 @@
       }
     },
     {
-      "name": "Mullu Inspect Service",
-      "delivery": "hosted inspection",
-      "status": "diagnostic offer",
-      "summary": "Inspection service for websites, APIs, and workflows that need clearer status, evidence, and repair notes.",
+      "name": "Mullu Inspect Planning",
+      "delivery": "planned inspection workflow",
+      "status": "planned diagnostic path",
+      "summary": "Planned inspection workflow for websites, APIs, and workflows that need clearer status, evidence, and repair notes.",
       "proofSurface": "sandbox.mullusi.com",
       "am": {
         "name": "የሙሉ ምርመራ አገልግሎት",
@@ -379,9 +379,9 @@
       }
     },
     {
-      "name": "Enterprise Mullusi",
-      "delivery": "private deployment boundary",
-      "status": "contract offer",
+      "name": "Private Deployment Planning",
+      "delivery": "planned private deployment boundary",
+      "status": "enterprise planning",
       "summary": "Planned private deployment option for teams that need custom rules, exportable records, and support limits after release evidence closes.",
       "proofSurface": "dashboard.mullusi.com",
       "am": {
@@ -450,11 +450,11 @@
       }
     },
     {
-      "name": "Certification",
+      "name": "Proof Review Planning",
       "audience": "systems needing external proof",
-      "status": "contract",
-      "priceSignal": "per assessment",
-      "summary": "Paid proof review, structural inspection, violation report, repair plan, and Mullusi proof-of-resolution stamp.",
+      "status": "planned",
+      "priceSignal": "scoped review planning",
+      "summary": "Planned proof review, structural inspection, violation report, repair plan, and proof-of-resolution record after release evidence closes.",
       "am": {
         "name": "ማረጋገጫ",
         "audience": "ውጫዊ ማረጋገጫ የሚያስፈልጋቸው ሥርዓቶች",
