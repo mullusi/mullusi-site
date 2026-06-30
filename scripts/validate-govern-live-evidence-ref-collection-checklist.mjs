@@ -53,6 +53,8 @@ const requiredChecklistTerms = [
   { id: "status_missing_ref_count", text: "missing_ref_count=8" },
   { id: "status_local_guard_missing_count", text: "local_guard_missing_count=8" },
   { id: "status_invalid_ref_count", text: "invalid_ref_count=0" },
+  { id: "status_report_operator_example", text: "ref=operator_approval_ref status=missing current=missing local_guard=missing accepted_shape=approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved accepted_example=approval://mullu-govern/live-evidence/2026-06-30/operator-approved next_action=collect_explicit_operator_approval_ref" },
+  { id: "status_report_action_example", text: "ref=api_contract_test_ref status=missing current=missing local_guard=missing accepted_shape=github:actions/runs/NNN:govern-evaluate-contract-live accepted_example=github:actions/runs/123:govern-evaluate-contract-live next_action=collect_live_contract_test_ref_after_approval" },
   {
     id: "complete_mode_command",
     text: "command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete",
