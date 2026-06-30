@@ -47,8 +47,8 @@ function testValidatorCarriesDoctrineWordingGate() {
     "status_website_publication_scope_missing",
     "homepage_last_updated_datetime_mismatch",
     "i18n_last_updated_am_mojibake",
-    "A work system for plans, approvals, and evidence.",
-    "Mullu Govern helps teams turn important requests into clear plans, reviewed actions, approval decisions, and durable records.",
+    "Review important symbolic intelligence or software actions before they run.",
+    "Mullusi helps teams review risky symbolic intelligence or software actions before they execute, then keeps the approval, evidence, reason, and result in one inspectable record.",
     "Preserve the decision trail so teams can inspect what happened, who approved it, and what remains unresolved.",
     "Static website published; product runtime release witnesses AwaitingEvidence.",
     "Mullusi Contact - Foundation Questions",
@@ -79,8 +79,8 @@ function testPublicSurfacesCarryHardenedDoctrineTerms() {
     [
       "index.html",
       [
-        "A work system for plans, approvals, and evidence.",
-        "Mullu Govern helps teams turn important requests into clear plans, reviewed actions, approval decisions, and durable records.",
+        "Review important symbolic intelligence or software actions before they run.",
+        "Mullusi helps teams review risky symbolic intelligence or software actions before they execute, then keeps the approval, evidence, reason, and result in one inspectable record.",
         "Preserve the decision trail so teams can inspect what happened, who approved it, and what remains unresolved.",
         "output-derived actions become proposals first",
         "A practical operating layer for controlled work",
@@ -171,7 +171,7 @@ function testDoctrineNavigationIsTranslated() {
   assert.ok(i18n.strings["nav.doctrine"].am.length > 0);
   assert.equal(
     i18n.strings["activeHero.title"].en,
-    "A work system for plans, approvals, and evidence.",
+    "Review important symbolic intelligence or software actions before they run.",
   );
 }
 
@@ -239,8 +239,8 @@ assertExcludes(readUtf8("proof/index.html"), "Request evidence access", "proof c
 assertExcludes(readUtf8("terms/index.html"), "Runtime access", "terms runtime boundary");
 assertExcludes(readUtf8("playground/index.html"), "live runtime remains", "playground runtime boundary");
 assertExcludes(readUtf8("data/site.json"), "live runtime availability", "sample response runtime boundary");
-assertIncludes(readUtf8("index.html"), 'datetime="2026-06-09"', "homepage source date boundary");
-assertIncludes(readUtf8("index.html"), "Public state updated 2026-06-09", "homepage source date boundary");
-assertIncludes(readUtf8("data/i18n.json"), '"en": "Public state updated 2026-06-09"', "i18n source date boundary");
-assertIncludes(readUtf8("data/i18n.json"), "2026-06-09", "i18n source date boundary");
+assertIncludes(readUtf8("index.html"), 'datetime="2026-06-30"', "homepage source date boundary");
+assertIncludes(readUtf8("index.html"), "Public state updated 2026-06-30", "homepage source date boundary");
+assertIncludes(readUtf8("data/i18n.json"), '"en": "Public state updated 2026-06-30"', "i18n source date boundary");
+assertIncludes(readUtf8("data/i18n.json"), "2026-06-30", "i18n source date boundary");
 console.log("validate-site doctrine wording tests passed");

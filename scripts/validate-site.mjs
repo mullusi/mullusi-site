@@ -4867,8 +4867,8 @@ function validateDoctrineWordingContract() {
     {
       file: "index.html",
       terms: [
-        "A work system for plans, approvals, and evidence.",
-        "Mullu Govern helps teams turn important requests into clear plans, reviewed actions, approval decisions, and durable records.",
+        "Review important symbolic intelligence or software actions before they run.",
+        "Mullusi helps teams review risky symbolic intelligence or software actions before they execute, then keeps the approval, evidence, reason, and result in one inspectable record.",
         "Preserve the decision trail so teams can inspect what happened, who approved it, and what remains unresolved.",
         "output-derived actions become proposals first",
         'href="/doctrine/"',
@@ -4974,7 +4974,7 @@ function validateFoundationModeBoundary() {
       "status/index.html",
       [
         "Published website routes are live and linked.",
-        "Product runtime, API, dashboard, sandbox, metrics, learn, pilot access, and proof-stamp release witnesses remain separate AwaitingEvidence claims.",
+        "Product runtime, API, dashboard, sandbox, metrics, learn, pilot access, and proof-stamp release witnesses are not open yet; their technical evidence states remain on proof and status records.",
         "They do not claim open pilot access.",
       ],
     ],
@@ -5001,13 +5001,13 @@ function validateFoundationModeBoundary() {
         "For foundation-stage questions, proof-boundary review, prerequisite planning, and public-route feedback.",
         "does not claim backend storage, access workflow, or pilot workflow.",
         "Structured question fields",
-        "Mullusi%20foundation%20question",
+        "Request%20a%20Mullu%20Govern%20fit%20review",
       ],
     ],
     [
       "index.html",
       [
-        "A work system for plans, approvals, and evidence.",
+        "Review important symbolic intelligence or software actions before they run.",
         "A practical operating layer for controlled work",
         "Turn a request into a clear next action",
         "Keep human judgment in the workflow",
