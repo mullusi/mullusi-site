@@ -24,6 +24,7 @@ proof_state=Pass
 packet_state=AwaitingEvidence
 approval_state=NotApproved
 operator_approval_ref=missing
+live_evidence_operator_approval_ref=approval://mullu-govern/live-evidence/2026-06-30/operator-approved
 ready_for_approval=false
 public_write_route_allowed=false
 route_publication_action=none
@@ -40,9 +41,10 @@ live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-op
 last_reviewed=2026-06-27
 ```
 
-The packet is structurally organized, but it is not ready for approval because
-the real approval-bound evidence refs remain missing. This preflight makes
-that boundary explicit and machine-checked.
+The packet is structurally organized, but it is not ready for public-beta
+approval because the product/runtime approval-bound evidence refs remain
+missing. The live evidence collection operator approval is recorded below as a
+collection-only ref and does not approve route publication.
 
 ## Aggregated Evidence Ledger
 
@@ -66,6 +68,7 @@ evidence refs:
 
 ```text
 operator_approval_ref=missing
+live_evidence_operator_approval_ref=approval://mullu-govern/live-evidence/2026-06-30/operator-approved
 product_status_promotion_ref=missing
 api_contract_test_ref=missing
 privacy_activation_ref=missing
@@ -81,10 +84,11 @@ public_claim_update_ref=missing
 if approval_readiness_preflight_state == Ready:
   allow_next_action("prepare_operator_approval_request")
   deny_publication(reason="approval_readiness_is_not_approval")
+if live_evidence_operator_approval_ref != missing:
+  allow_next_action("collect_public_safe_evidence_refs")
+  deny_publication(reason="collection_approval_is_not_public_beta_approval")
 if operator_approval_ref == missing:
-  require_request_packet(command="node scripts/emit-govern-live-evidence-operator-request.mjs")
-if operator_approval_ref == missing:
-  deny_approval(reason="operator_approval_missing")
+  deny_public_beta_approval(reason="public_beta_operator_approval_missing")
 if ready_for_approval == false:
   deny_route_publication(reason="approval_packet_still_awaiting_evidence")
 ```
@@ -95,6 +99,6 @@ may be used as operator approval readiness evidence.
 
 STATUS:
   Completeness: 100%
-  Self-attested invariants: approval remains NotApproved, operator approval ref remains missing, public write route remains blocked, product status remains limited-preview, privacy and retention remain not-active, no DNS/runtime/auth mutation, no raw secret or provider values recorded
-  Open issues: operator approval, product-status promotion approval, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, runtime witness closure
-  Next action: prepare a later approval request only after the missing evidence refs are closed
+  Self-attested invariants: approval remains NotApproved, public-beta operator approval ref remains missing, live evidence collection operator approval ref is public-safe, public write route remains blocked, product status remains limited-preview, privacy and retention remain not-active, no DNS/runtime/auth mutation, no raw secret or provider values recorded
+  Open issues: product-status promotion approval, live API contract execution evidence, privacy activation approval, retention activation approval, dashboard operator-readiness evidence, public claim update evidence, runtime witness closure
+  Next action: collect the remaining public-safe evidence refs without publishing the route

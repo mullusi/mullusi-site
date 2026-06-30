@@ -47,8 +47,12 @@ function guardContents(valueByKey = {}) {
   const lines = requiredLiveEvidenceApprovalKeys
     .map((key) => `${key}=${valueByKey[key] ?? "missing"}`)
     .join("\n");
+  const approvalReadinessLines = [
+    `live_evidence_operator_approval_ref=${valueByKey.operator_approval_ref ?? "missing"}`,
+    ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=${valueByKey[key] ?? "missing"}`),
+  ].join("\n");
   return {
-    "ops/mullu-govern-approval-readiness-preflight.md": lines,
+    "ops/mullu-govern-approval-readiness-preflight.md": approvalReadinessLines,
     "ops/mullu-govern-product-status-preflight.md": lines,
     "ops/mullu-govern-privacy-retention-preflight.md": lines,
     "ops/mullu-govern-dashboard-operator-readiness-preflight.md": lines,
