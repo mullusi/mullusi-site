@@ -25,6 +25,7 @@ const stableStatusExampleDate = "2026-06-30";
 export const governLiveEvidenceRefPlan = Object.freeze({
   operator_approval_ref: {
     guardPath: "ops/mullu-govern-approval-readiness-preflight.md",
+    guardKey: "live_evidence_operator_approval_ref",
     acceptedShape: "approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved",
     evidenceKind: "operator approval record",
     nextAction: "collect_explicit_operator_approval_ref",
@@ -161,7 +162,7 @@ export function analyzeGovernLiveEvidenceRefStatusContent(content, guardContents
     const value = approvalRefs?.[key] ?? "missing";
     const validation = validatePublicSafeEvidenceRef(value, { allowMissing: true });
     const guardContent = guardContents[plan.guardPath] ?? "";
-    const localGuardValue = lineValue(guardContent, key) || "missing";
+    const localGuardValue = lineValue(guardContent, plan.guardKey ?? key) || "missing";
     const localGuardMissing = localGuardValue === "missing";
     const status = validation.valid === false
       ? "invalid"

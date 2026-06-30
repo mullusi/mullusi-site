@@ -44,6 +44,7 @@ function validEvidence(overrides = {}) {
     "packet_state=AwaitingEvidence",
     "approval_state=NotApproved",
     "operator_approval_ref=missing",
+    "live_evidence_operator_approval_ref=approval://mullu-govern/live-evidence/2026-06-30/operator-approved",
     "ready_for_approval=false",
     "public_write_route_allowed=false",
     "route_publication_action=none",

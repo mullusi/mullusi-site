@@ -36,6 +36,7 @@ const requiredWitnessTerms = [
   { id: "packet_state", text: "packet_state=AwaitingEvidence" },
   { id: "approval_state", text: "approval_state=NotApproved" },
   { id: "operator_approval_ref", text: "operator_approval_ref=missing" },
+  { id: "live_evidence_operator_approval_ref", text: "live_evidence_operator_approval_ref=approval://mullu-govern/live-evidence/2026-06-30/operator-approved" },
   { id: "ready_for_approval", text: "ready_for_approval=false" },
   { id: "public_write_route_allowed", text: "public_write_route_allowed=false" },
   { id: "route_publication_action", text: "route_publication_action=none" },
@@ -67,6 +68,7 @@ const publicApprovalReadinessAllowedScalars = new Set([
   "GovernanceBlocked",
   "Pass",
   "Fail",
+  "approval://mullu-govern/live-evidence/2026-06-30/operator-approved",
 ]);
 
 function blockedResult(finding) {
