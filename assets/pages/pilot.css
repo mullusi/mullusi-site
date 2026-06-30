@@ -247,6 +247,71 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       line-height: 1.25;
       overflow-wrap: anywhere;
     }
+    .readiness-ladder {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      gap: 18px;
+      align-items: start;
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid rgba(232, 177, 92, 0.24);
+      background:
+        linear-gradient(135deg, rgba(232, 177, 92, 0.08), transparent 40%),
+        rgba(7, 8, 12, 0.76);
+    }
+    .readiness-ladder-copy {
+      position: sticky;
+      top: 18px;
+      min-width: 0;
+    }
+    .readiness-ladder-copy h2 {
+      max-width: 16ch;
+      margin-top: 10px;
+      font-size: 34px;
+    }
+    .readiness-ladder-copy p {
+      max-width: 44ch;
+      margin-bottom: 0;
+    }
+    .ladder-steps {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .ladder-steps li {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 12px;
+      min-width: 0;
+      padding: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.18);
+    }
+    .ladder-steps span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      min-height: 32px;
+      border: 1px solid rgba(92, 230, 196, 0.28);
+      color: var(--accent);
+      font-size: 11px;
+      line-height: 1;
+    }
+    .ladder-steps strong {
+      display: block;
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.25;
+    }
+    .ladder-steps p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      line-height: 1.5;
+    }
     .card, .boundary {
       border: 1px solid var(--line);
       background: rgba(17, 20, 15, 0.86);
@@ -299,7 +364,10 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
     }
     @media (max-width: 860px) {
       .grid, .boundary dl { grid-template-columns: 1fr; }
-      .fit-panel { grid-template-columns: 1fr; }
+      .fit-panel,
+      .readiness-ladder { grid-template-columns: 1fr; }
+      .readiness-ladder-copy { position: static; }
+      .readiness-ladder-copy h2 { max-width: none; }
       .pilot-state-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 700px) {
@@ -316,6 +384,21 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       }
       .fit-checklist div {
         min-height: 72px;
+      }
+      .readiness-ladder {
+        padding: 12px;
+      }
+      .readiness-ladder-copy h2 {
+        font-size: 28px;
+      }
+      .ladder-steps li {
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 9px;
+        padding: 11px;
+      }
+      .ladder-steps span {
+        width: 32px;
+        min-height: 28px;
       }
       .card {
         min-height: 0;
