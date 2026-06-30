@@ -16,6 +16,22 @@ const backendRoot = path.join(repoRoot, "backend");
 const nodeExecutable = process.execPath;
 const requestedArgs = new Set(process.argv.slice(2));
 const defaultStepTimeoutMs = 60_000;
+const apiProductionReadinessFlags = [
+  "--production-image-published",
+  "--runtime-host-ready",
+  "--managed-postgres-ready",
+  "--schema-applied",
+  "--production-secrets-stored",
+  "--deploy-env-ready",
+  "--release-preflight-ready",
+  "--persistence-ready",
+  "--host-firewall-configured",
+  "--tls-certificate-ready",
+  "--rollback-path-defined",
+  "--private-runtime-witness-ready",
+  "--dns-authority-ready",
+  "--require-ready",
+];
 
 function nodeStep(label, args, timeoutMs = defaultStepTimeoutMs) {
   return {
@@ -145,9 +161,9 @@ export function checkpointSteps(options = {}) {
     nodeStep("govern live evidence sequence preflight tests", ["scripts/test-validate-govern-live-evidence-sequence-preflight.mjs"]),
     nodeStep("govern live evidence operator runbook", ["scripts/validate-govern-live-evidence-operator-runbook.mjs"]),
     nodeStep("govern live evidence operator runbook tests", ["scripts/test-validate-govern-live-evidence-operator-runbook.mjs"]),
-    nodeStep("API exposure gate", ["scripts/check-api-exposure-gate.mjs"]),
+    nodeStep("API exposure gate", ["scripts/check-api-exposure-gate.mjs", "--live", "--require-ready"]),
     nodeStep("API exposure gate tests", ["scripts/test-check-api-exposure-gate.mjs"]),
-    nodeStep("API production readiness", ["scripts/check-api-production-readiness.mjs"]),
+    nodeStep("API production readiness", ["scripts/check-api-production-readiness.mjs", ...apiProductionReadinessFlags]),
     nodeStep("API production readiness tests", ["scripts/test-check-api-production-readiness.mjs"]),
     nodeStep("API runtime manual evidence next reporter", ["scripts/report-api-runtime-manual-evidence-next.mjs"]),
     nodeStep("API runtime manual evidence next reporter tests", ["scripts/test-report-api-runtime-manual-evidence-next.mjs"]),
