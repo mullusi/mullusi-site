@@ -42,7 +42,7 @@ operator_runbook=ops/mullu-govern-live-evidence-operator-runbook.md
 live_evidence_ref_intake=ops/mullu-govern-live-evidence-ref-intake-template.json
 live_evidence_operator_request_command=node scripts/emit-govern-live-evidence-operator-request.mjs
 live_evidence_ref_intake_command=node scripts/validate-govern-live-evidence-ref-intake.mjs
-last_reviewed=2026-06-29
+last_reviewed=2026-06-30
 ```
 
 The repository-local preflights are organized, but live evidence collection is

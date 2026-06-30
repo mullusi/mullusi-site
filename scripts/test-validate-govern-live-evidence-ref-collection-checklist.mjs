@@ -56,8 +56,11 @@ function validChecklist() {
     "raw_payloads_allowed=false",
     "provider_values_allowed=false",
     "last_reviewed=2026-06-27",
-    "| Approval ref | Accepted shape | Evidence source | Must not include | Current state |",
-    ...requiredLiveEvidenceApprovalKeys.map((key) => `| \`${key}\` | \`github:pull/101:bounded-ref\` | reviewed public-safe evidence | secret, token, raw payload, authorization headers, account ids, provider host values, database URLs | \`missing\` |`),
+    "| Approval ref | Accepted shape | Accepted example | Evidence source | Must not include | Current state |",
+    "approval://mullu-govern/live-evidence/2026-06-30/operator-approved",
+    "github:actions/runs/123:govern-evaluate-contract-live",
+    "shape examples only",
+    ...requiredLiveEvidenceApprovalKeys.map((key) => `| \`${key}\` | \`github:pull/101:bounded-ref\` | \`github:pull/123:bounded-ref\` | reviewed public-safe evidence | secret, token, raw payload, authorization headers, account ids, provider host values, database URLs | \`missing\` |`),
     "private_value_must_not_enter_public_ref",
     "raw_payload_must_not_enter_public_ref",
     "ref_grammar_invalid",
@@ -80,7 +83,7 @@ function testCurrentChecklistPasses() {
 }
 
 function testSyntheticMissingApprovalRowFailsClosed() {
-  const checklist = validChecklist().replace("| `runtime_witness_ref` | `github:pull/101:bounded-ref` | reviewed public-safe evidence | secret, token, raw payload, authorization headers, account ids, provider host values, database URLs | `missing` |", "");
+  const checklist = validChecklist().replace("| `runtime_witness_ref` | `github:pull/101:bounded-ref` | `github:pull/123:bounded-ref` | reviewed public-safe evidence | secret, token, raw payload, authorization headers, account ids, provider host values, database URLs | `missing` |", "");
   const result = validateGovernLiveEvidenceRefCollectionChecklistContent(checklist);
 
   assert.equal(result.solverOutcome, "GovernanceBlocked");

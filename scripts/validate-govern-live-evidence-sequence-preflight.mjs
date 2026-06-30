@@ -81,7 +81,7 @@ const requiredWitnessTerms = [
   },
   { id: "complete_mode_requires_operator_ref", text: "finding=approval_ref_required:operator_approval_ref" },
   { id: "complete_mode_requires_runtime_ref", text: "finding=approval_ref_required:runtime_witness_ref" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-29" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-30" },
   { id: "status_block", text: "STATUS:" },
 ];
 
