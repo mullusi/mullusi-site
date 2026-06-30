@@ -92,9 +92,17 @@ export function resolveGovernLiveEvidenceOperatorRequestIntakePath(
   return templateIntakePath;
 }
 
-function requestForRef(ref) {
+function exampleForAcceptedShape(acceptedShape, generatedAtUtc) {
+  const requestDate = String(generatedAtUtc || `${stableDate()}T00:00:00Z`).slice(0, 10);
+  return acceptedShape
+    .replaceAll("YYYY-MM-DD", requestDate)
+    .replaceAll("NNN", "123");
+}
+
+function requestForRef(ref, generatedAtUtc) {
   const plan = governLiveEvidenceRefPlan[ref.key];
   return {
+    accepted_example: exampleForAcceptedShape(plan.acceptedShape, generatedAtUtc),
     accepted_shape: plan.acceptedShape,
     evidence_kind: plan.evidenceKind,
     key: ref.key,
@@ -115,9 +123,10 @@ function requestForRef(ref) {
 export function buildGovernLiveEvidenceOperatorRequest(statusResult, options = {}) {
   const missingRefs = statusResult.refs.filter((ref) => ref.status === "missing" || ref.status === "candidate_without_local_activation");
   const invalidRefs = statusResult.refs.filter((ref) => ref.status === "invalid");
+  const generatedAtUtc = options.generatedAtUtc || `${stableDate()}T00:00:00Z`;
 
   return {
-    generated_at_utc: options.generatedAtUtc || `${stableDate()}T00:00:00Z`,
+    generated_at_utc: generatedAtUtc,
     intake_path: publicIntakePathLabel(options.intakePath || resolveGovernLiveEvidenceOperatorRequestIntakePath()),
     invalid_ref_count: invalidRefs.length,
     missing_ref_count: missingRefs.length,
@@ -130,7 +139,7 @@ export function buildGovernLiveEvidenceOperatorRequest(statusResult, options = {
     proof_state: invalidRefs.length > 0 ? "Fail" : missingRefs.length > 0 ? "Unknown" : "Pass",
     public_write_route_allowed: false,
     raw_payloads_allowed: false,
-    requests: missingRefs.map(requestForRef),
+    requests: missingRefs.map((ref) => requestForRef(ref, generatedAtUtc)),
     secret_values_allowed: false,
     solver_outcome: invalidRefs.length > 0 ? "GovernanceBlocked" : missingRefs.length > 0 ? "AwaitingEvidence" : "SolvedVerified",
   };
@@ -150,6 +159,7 @@ export function formatGovernLiveEvidenceOperatorRequest(packet) {
       `request=${request.key}`,
       `status=${request.status}`,
       `accepted_shape=${request.accepted_shape}`,
+      `accepted_example=${request.accepted_example}`,
       `requested_action=${request.requested_action}`,
     ].join(" ")),
     "secret_values=not_read",
