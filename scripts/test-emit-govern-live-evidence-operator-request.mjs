@@ -57,10 +57,13 @@ function testBuildsMissingRefRequests() {
   assert.equal(packet.intake_path, "local_intake");
   assert.equal(packet.missing_ref_count, 2);
   assert.equal(packet.requests.length, 2);
+  assert.equal(packet.requests[0].accepted_example, "approval://mullu-govern/live-evidence/2026-06-27/operator-approved");
+  assert.equal(packet.requests[1].accepted_example, "github:actions/runs/123:govern-evaluate-contract-live");
   assert.match(report, /request=operator_approval_ref/);
   assert.match(report, /^intake_path=local_intake$/m);
   assert.doesNotMatch(report, /ops\/example\.local\.json/);
   assert.match(report, /accepted_shape=approval:\/\/mullu-govern\/live-evidence\/YYYY-MM-DD\/operator-approved/);
+  assert.match(report, /accepted_example=approval:\/\/mullu-govern\/live-evidence\/2026-06-27\/operator-approved/);
   assert.match(report, /secret_values=not_read/);
 }
 
