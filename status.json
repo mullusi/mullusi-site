@@ -62,8 +62,8 @@
     }
   ],
   "content_hashes": {
-    "index.html": "sha256:af4b02fbf3c1e1a902c7dc12267bebce7776631e4557cc08ebda4dac38cdbd80",
-    "data/site.json": "sha256:abed5214b2511cbbc59dc505e0d0ab55dac93f8b618783d7c292a663f4936338",
+    "index.html": "sha256:fd9ffa42a2b20ff8dc9d888376103345cb1466dfc44668c62e0baff24d34dbe7",
+    "data/site.json": "sha256:da8f3afb723434212f3f07915a9d3891b7a18cf5a700b97fe66985a82385b55e",
     "data/generated/products.json": "sha256:e16956ef5d0615659475556263818039cde94b674ffcecf064c2161a66f26d97",
     "data/manual/public-surfaces.json": "sha256:fdd9f22b1ddbc30cbccb3dcbc42f003aed34732d65326480b4ecaa70184c50c4",
     "data/generated/homepage-product-registry.json": "sha256:45f7c64ef020d9d44098929aba1e945164b8c0166bc5a049bb8b155ea5a698ba",
