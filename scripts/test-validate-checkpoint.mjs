@@ -182,6 +182,41 @@ function testCloudflareArtifactBoundaryHasLongBudget() {
   assert.equal(typeof step?.cwd, "string");
 }
 
+function testApiExposureGateRequiresLiveReadyEvidence() {
+  const step = checkpointSteps().find((candidate) => candidate.label === "API exposure gate");
+
+  assert.equal(step?.args.includes("scripts/check-api-exposure-gate.mjs"), true);
+  assert.equal(step?.args.includes("--live"), true);
+  assert.equal(step?.args.includes("--require-ready"), true);
+  assert.equal(typeof step?.cwd, "string");
+}
+
+function testApiProductionReadinessRequiresManualEvidenceFlags() {
+  const step = checkpointSteps().find((candidate) => candidate.label === "API production readiness");
+  const requiredFlags = [
+    "--production-image-published",
+    "--runtime-host-ready",
+    "--managed-postgres-ready",
+    "--schema-applied",
+    "--production-secrets-stored",
+    "--deploy-env-ready",
+    "--release-preflight-ready",
+    "--persistence-ready",
+    "--host-firewall-configured",
+    "--tls-certificate-ready",
+    "--rollback-path-defined",
+    "--private-runtime-witness-ready",
+    "--dns-authority-ready",
+    "--require-ready",
+  ];
+
+  assert.equal(step?.args.includes("scripts/check-api-production-readiness.mjs"), true);
+  for (const flag of requiredFlags) {
+    assert.equal(step?.args.includes(flag), true);
+  }
+  assert.equal(typeof step?.cwd, "string");
+}
+
 function testPublicStepErrorCodeRedactsRawExecutionDetails() {
   const timeout = publicStepErrorCode(new Error("spawnSync node ETIMEDOUT after 60000ms"));
   const missing = publicStepErrorCode(new Error("spawn C:\\secret\\node.exe ENOENT"));
@@ -198,5 +233,7 @@ testDefaultCheckpointSteps();
 testBackendStepIsOptIn();
 testCommandsDoNotUseShellWrappers();
 testCloudflareArtifactBoundaryHasLongBudget();
+testApiExposureGateRequiresLiveReadyEvidence();
+testApiProductionReadinessRequiresManualEvidenceFlags();
 testPublicStepErrorCodeRedactsRawExecutionDetails();
 console.log("checkpoint validation tests passed");
