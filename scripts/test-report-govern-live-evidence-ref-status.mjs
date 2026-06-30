@@ -74,6 +74,8 @@ function testMissingTemplateRefsReportAwaitingEvidence() {
   assert.equal(result.proofState, "Unknown");
   assert.equal(result.missingRefCount, 8);
   assert.match(report, /ref=operator_approval_ref status=missing/);
+  assert.match(report, /accepted_example=approval:\/\/mullu-govern\/live-evidence\/2026-06-30\/operator-approved/);
+  assert.match(report, /accepted_example=github:actions\/runs\/123:govern-evaluate-contract-live/);
 }
 
 function testCompleteRefsStillRequireLocalActivationGuards() {
@@ -92,6 +94,7 @@ function testCompleteRefsWithLocalGuardsPass() {
   assert.equal(result.proofState, "Pass");
   assert.equal(result.invalidRefCount, 0);
   assert.equal(result.localGuardMissingCount, 0);
+  assert.equal(result.refs[0].acceptedExample, "approval://mullu-govern/live-evidence/2026-06-30/operator-approved");
 }
 
 function testPrivatePatternIsRedacted() {

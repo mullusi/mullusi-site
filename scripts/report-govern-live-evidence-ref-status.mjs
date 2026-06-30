@@ -20,6 +20,7 @@ const repoRoot = path.resolve(path.dirname(scriptPath), "..");
 const repoRootPrefix = `${repoRoot}${path.sep}`;
 const defaultIntakePath = "ops/mullu-govern-live-evidence-ref-intake-template.json";
 const allowedArgs = new Set(["--help", "-h", "--json"]);
+const stableStatusExampleDate = "2026-06-30";
 
 export const governLiveEvidenceRefPlan = Object.freeze({
   operator_approval_ref: {
@@ -125,6 +126,12 @@ function publicValue(value) {
   return validation.valid ? text : "redacted";
 }
 
+function exampleForAcceptedShape(acceptedShape) {
+  return acceptedShape
+    .replaceAll("YYYY-MM-DD", stableStatusExampleDate)
+    .replaceAll("NNN", "123");
+}
+
 function proofStateFromCounts(counts) {
   if (counts.invalidRefCount > 0 || counts.findings.length > 0) return "Fail";
   if (counts.missingRefCount > 0 || counts.localGuardMissingCount > 0) return "Unknown";
@@ -165,6 +172,7 @@ export function analyzeGovernLiveEvidenceRefStatusContent(content, guardContents
           : "candidate";
 
     refs.push({
+      acceptedExample: exampleForAcceptedShape(plan.acceptedShape),
       acceptedShape: plan.acceptedShape,
       evidenceKind: plan.evidenceKind,
       key,
@@ -235,6 +243,7 @@ export function formatGovernLiveEvidenceRefStatusReport(result) {
       `current=${ref.refValue}`,
       `local_guard=${ref.localGuardValue}`,
       `accepted_shape=${ref.acceptedShape}`,
+      `accepted_example=${ref.acceptedExample}`,
       `next_action=${ref.nextAction}`,
     ].join(" ")),
     "secret_values=not_read",
