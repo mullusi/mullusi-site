@@ -59,10 +59,14 @@ const requiredChecklistTerms = [
   },
   { id: "complete_mode_requires_operator_ref", text: "finding=approval_ref_required:operator_approval_ref" },
   { id: "complete_mode_requires_runtime_ref", text: "finding=approval_ref_required:runtime_witness_ref" },
+  { id: "accepted_example_column", text: "| Approval ref | Accepted shape | Accepted example | Evidence source | Must not include | Current state |" },
+  { id: "operator_approval_example", text: "approval://mullu-govern/live-evidence/2026-06-30/operator-approved" },
+  { id: "api_contract_test_example", text: "github:actions/runs/123:govern-evaluate-contract-live" },
+  { id: "accepted_example_warning", text: "shape examples only" },
   { id: "secret_values_allowed", text: "secret_values_allowed=false" },
   { id: "raw_payloads_allowed", text: "raw_payloads_allowed=false" },
   { id: "provider_values_allowed", text: "provider_values_allowed=false" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-29" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-30" },
   { id: "status_block", text: "STATUS:" },
 ];
 

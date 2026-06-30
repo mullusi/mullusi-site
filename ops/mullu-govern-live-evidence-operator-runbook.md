@@ -41,10 +41,10 @@ secret_values_allowed=false
 raw_request_bodies_allowed=false
 raw_response_bodies_allowed=false
 provider_values_allowed=false
-last_reviewed=2026-06-29
+last_reviewed=2026-06-30
 ```
 
-## 2026-06-29 Status Refresh
+## 2026-06-30 Status Refresh
 
 The live evidence ref status reporter still returns `AwaitingEvidence` and
 does not find invalid public-safe refs:
@@ -63,7 +63,8 @@ raw_payloads=not_read
 ```
 
 The operator request emitter still asks for the same eight public-safe refs and
-keeps the write route blocked:
+keeps the write route blocked. It prints concrete `accepted_example` values so
+the operator can distinguish ref grammar from real evidence:
 
 ```text
 command=node scripts/emit-govern-live-evidence-operator-request.mjs
@@ -73,6 +74,8 @@ missing_ref_count=8
 invalid_ref_count=0
 public_write_route_allowed=false
 next_action=supply_public_safe_refs_in_ignored_local_intake
+request=operator_approval_ref status=missing accepted_shape=approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved accepted_example=approval://mullu-govern/live-evidence/2026-06-30/operator-approved requested_action=collect_explicit_operator_approval_ref
+request=api_contract_test_ref status=missing accepted_shape=github:actions/runs/NNN:govern-evaluate-contract-live accepted_example=github:actions/runs/123:govern-evaluate-contract-live requested_action=collect_live_contract_test_ref_after_approval
 secret_values=not_read
 provider_values=not_read
 raw_payloads=not_read
@@ -134,7 +137,7 @@ public_product_release_allowed=false
 
 ## Current Complete-Mode Intake Block
 
-Observed on 2026-06-29:
+Observed on 2026-06-30:
 
 ```text
 command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete

@@ -97,7 +97,9 @@ const requiredRunbookTerms = [
   { id: "raw_request_bodies_allowed", text: "raw_request_bodies_allowed=false" },
   { id: "raw_response_bodies_allowed", text: "raw_response_bodies_allowed=false" },
   { id: "provider_values_allowed", text: "provider_values_allowed=false" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-29" },
+  { id: "operator_request_example", text: "accepted_example=approval://mullu-govern/live-evidence/2026-06-30/operator-approved" },
+  { id: "operator_request_action_example", text: "accepted_example=github:actions/runs/123:govern-evaluate-contract-live" },
+  { id: "last_reviewed", text: "last_reviewed=2026-06-30" },
   { id: "status_block", text: "STATUS:" },
 ];
 

@@ -34,10 +34,10 @@ complete_mode_blocker_count=8
 secret_values_allowed=false
 raw_payloads_allowed=false
 provider_values_allowed=false
-last_reviewed=2026-06-29
+last_reviewed=2026-06-30
 ```
 
-## 2026-06-29 Status Refresh
+## 2026-06-30 Status Refresh
 
 Use the status reporter before editing the ignored local intake:
 
@@ -56,20 +56,20 @@ raw_payloads=not_read
 
 ## Ref Checklist
 
-| Approval ref | Accepted shape | Evidence source | Must not include | Current state |
-| --- | --- | --- | --- | --- |
-| `operator_approval_ref` | `approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved` | operator approval record for this product and route boundary | private notes, tokens, account ids | `missing` |
-| `product_status_promotion_ref` | `github:pull/NNN:product-status-public-beta-approval` | merged PR or approval PR that keeps promotion bounded | raw provider state, secrets, unreviewed status claims | `missing` |
-| `privacy_activation_ref` | `github:pull/NNN:privacy-govern-policy-activation` | reviewed privacy activation PR before collection | raw user data, mailbox contents, private screenshots | `missing` |
-| `retention_activation_ref` | `github:pull/NNN:govern-retention-activation` | reviewed retention activation PR for every data class | database URLs, storage credentials, private hostnames | `missing` |
-| `dashboard_operator_readiness_ref` | `receipt://dashboard/govern/operator-readiness/YYYY-MM-DD` | public-safe dashboard readiness receipt | cookies, session ids, account ids, screenshots with private values | `missing` |
-| `api_contract_test_ref` | `github:actions/runs/NNN:govern-evaluate-contract-live` | live contract test run after approval | raw request bodies, raw response bodies, authorization headers | `missing` |
-| `public_claim_update_ref` | `github:pull/NNN:govern-public-claim-update` | bounded public copy/status PR | overclaims, unsupported product runtime claims | `missing` |
-| `runtime_witness_ref` | `github:pull/NNN:runtime-witness-govern-closure` | runtime witness closure after all prior refs exist | provider host values, database URLs, tokens, raw logs | `missing` |
+| Approval ref | Accepted shape | Accepted example | Evidence source | Must not include | Current state |
+| --- | --- | --- | --- | --- | --- |
+| `operator_approval_ref` | `approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved` | `approval://mullu-govern/live-evidence/2026-06-30/operator-approved` | operator approval record for this product and route boundary | private notes, tokens, account ids | `missing` |
+| `product_status_promotion_ref` | `github:pull/NNN:product-status-public-beta-approval` | `github:pull/123:product-status-public-beta-approval` | merged PR or approval PR that keeps promotion bounded | raw provider state, secrets, unreviewed status claims | `missing` |
+| `privacy_activation_ref` | `github:pull/NNN:privacy-govern-policy-activation` | `github:pull/123:privacy-govern-policy-activation` | reviewed privacy activation PR before collection | raw user data, mailbox contents, private screenshots | `missing` |
+| `retention_activation_ref` | `github:pull/NNN:govern-retention-activation` | `github:pull/123:govern-retention-activation` | reviewed retention activation PR for every data class | database URLs, storage credentials, private hostnames | `missing` |
+| `dashboard_operator_readiness_ref` | `receipt://dashboard/govern/operator-readiness/YYYY-MM-DD` | `receipt://dashboard/govern/operator-readiness/2026-06-30` | public-safe dashboard readiness receipt | cookies, session ids, account ids, screenshots with private values | `missing` |
+| `api_contract_test_ref` | `github:actions/runs/NNN:govern-evaluate-contract-live` | `github:actions/runs/123:govern-evaluate-contract-live` | live contract test run after approval | raw request bodies, raw response bodies, authorization headers | `missing` |
+| `public_claim_update_ref` | `github:pull/NNN:govern-public-claim-update` | `github:pull/123:govern-public-claim-update` | bounded public copy/status PR | overclaims, unsupported product runtime claims | `missing` |
+| `runtime_witness_ref` | `github:pull/NNN:runtime-witness-govern-closure` | `github:pull/123:runtime-witness-govern-closure` | runtime witness closure after all prior refs exist | provider host values, database URLs, tokens, raw logs | `missing` |
 
 ## Complete-Mode Blocker Snapshot
 
-Observed on 2026-06-29:
+Observed on 2026-06-30:
 
 ```text
 command=node scripts/validate-govern-live-evidence-ref-intake.mjs --require-complete
@@ -124,6 +124,10 @@ node scripts\validate-govern-live-evidence-ref-intake.mjs --path=ops/mullu-gover
 ```powershell
 node scripts\emit-govern-live-evidence-operator-request.mjs --path=ops/mullu-govern-live-evidence-ref-intake.local.json
 ```
+
+The emitted request packet includes `accepted_example` values. Treat those as
+shape examples only; replace `123` and dates with the real public-safe PR,
+run, receipt, or approval ref after the evidence exists.
 
 ## Stop Conditions
 
