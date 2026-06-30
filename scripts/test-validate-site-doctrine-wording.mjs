@@ -227,6 +227,7 @@ assertExcludes(readUtf8("data/i18n.json"), "product-ready public-source releases
 assertIncludes(readUtf8("index.html"), "Runtime Witness", "runtime witness label boundary");
 assertIncludes(readUtf8("data/i18n.json"), "Runtime Witness", "runtime witness label boundary");
 assertIncludes(readUtf8("proof/index.html"), "Runtime witness", "proof runtime witness boundary");
+assertIncludes(readUtf8("proof/index.html"), "Ask evidence questions", "proof contact boundary");
 assertIncludes(readUtf8("terms/index.html"), "Runtime product boundary", "terms runtime boundary");
 assertIncludes(readUtf8("playground/index.html"), "not the runtime service", "playground runtime boundary");
 assertIncludes(readUtf8("data/site.json"), "does not claim runtime availability", "sample response runtime boundary");
@@ -234,6 +235,7 @@ assertIncludes(readUtf8("mullu/index.html"), "pilot workflow are not claimed", "
 assertExcludes(readUtf8("index.html"), "Live Runtime", "runtime witness label boundary");
 assertExcludes(readUtf8("mullu/index.html"), "pilot intake", "mullu foundation route");
 assertExcludes(readUtf8("proof/index.html"), "Live runtime witness", "proof runtime witness boundary");
+assertExcludes(readUtf8("proof/index.html"), "Request evidence access", "proof contact boundary");
 assertExcludes(readUtf8("terms/index.html"), "Runtime access", "terms runtime boundary");
 assertExcludes(readUtf8("playground/index.html"), "live runtime remains", "playground runtime boundary");
 assertExcludes(readUtf8("data/site.json"), "live runtime availability", "sample response runtime boundary");
