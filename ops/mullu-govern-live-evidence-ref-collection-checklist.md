@@ -49,6 +49,8 @@ missing_ref_count=8
 local_guard_missing_count=8
 invalid_ref_count=0
 finding_count=0
+ref=operator_approval_ref status=missing current=missing local_guard=missing accepted_shape=approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved accepted_example=approval://mullu-govern/live-evidence/2026-06-30/operator-approved next_action=collect_explicit_operator_approval_ref
+ref=api_contract_test_ref status=missing current=missing local_guard=missing accepted_shape=github:actions/runs/NNN:govern-evaluate-contract-live accepted_example=github:actions/runs/123:govern-evaluate-contract-live next_action=collect_live_contract_test_ref_after_approval
 secret_values=not_read
 provider_values=not_read
 raw_payloads=not_read
