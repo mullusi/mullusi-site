@@ -6,7 +6,7 @@
   <meta name="google" content="notranslate" />
   <meta name="theme-color" content="#050609" />
   <title>Mullusi Playground - Browser Demo</title>
-  <meta name="description" content="A static Mullusi browser demo that shows the shape of a reviewed work result. It is not a live endpoint and not a proof stamp.">
+  <meta name="description" content="A static Mullusi browser demo for practical work-review scenarios. It is not a live endpoint and not a proof stamp.">
   <link rel="canonical" href="https://mullusi.com/playground/" />
   <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" href="/assets/mullusi-icon.svg" type="image/svg+xml" />
@@ -16,7 +16,7 @@
   <meta property="og:site_name" content="Mullusi" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Mullusi Playground - Browser Demo" />
-  <meta property="og:description" content="A static Mullusi browser demo that shows the shape of a reviewed work result. It is not a live endpoint and not a proof stamp." />
+  <meta property="og:description" content="A static Mullusi browser demo for practical work-review scenarios. It is not a live endpoint and not a proof stamp." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mullusi.com/playground/" />
   <meta property="og:image" content="https://mullusi.com/assets/mullusi-icon-512.png" />
@@ -53,8 +53,8 @@
     <p class="lede">
       This page runs a deterministic mock entirely in your browser. It contacts
       no server, issues no proof stamp, and is not the runtime service. It
-      exists only to make the output shape tangible while the runtime stays
-      AwaitingEvidence.
+      exists only to make the output shape tangible while the runtime is not
+      open.
     </p>
     <section class="playground-gate" aria-label="Playground claim boundary">
       <div class="playground-flow" aria-label="Simulator boundary sequence">
@@ -75,7 +75,7 @@
         </div>
         <div>
           <span>Runtime witness</span>
-          <strong>AwaitingEvidence</strong>
+          <strong>Not open</strong>
         </div>
         <div>
           <span>Proof stamp</span>
@@ -105,29 +105,30 @@
         <div>
           <div class="eyebrow">Interactive preview</div>
           <h2>Simulate a reviewed work result.</h2>
-          <p class="lede">Choose a work action, set the effect size, and declare whether the action has lineage. The browser mock will show whether the proposed action can move forward.</p>
+          <p class="lede">Choose a practical workflow, set its risk score, and declare whether evidence and a human reviewer are present. The browser mock will show whether the proposed action can move forward.</p>
         </div>
         <form id="sim-form">
           <label>
-            Action
+            Scenario
             <select id="action">
-              <option value="transfer_funds">transfer_funds</option>
-              <option value="read_balance">read_balance</option>
-              <option value="deploy_gateway">deploy_gateway</option>
-              <option value="purge_ledger">purge_ledger</option>
+              <option value="approve_release_note">Approve a release note</option>
+              <option value="review_vendor_invoice">Review a vendor invoice</option>
+              <option value="gate_github_change">Gate a repository change</option>
+              <option value="review_support_action">Review a customer support action</option>
+              <option value="bypass_review">Bypass review and execute</option>
             </select>
           </label>
           <label>
-            Account balance
-            <input id="balance" type="number" value="100" min="0" step="1" inputmode="numeric" />
-          </label>
-          <label>
-            Amount
-            <input id="amount" type="number" value="150" min="0" step="1" inputmode="numeric" />
+            Risk score
+            <input id="risk" type="number" value="4" min="1" max="10" step="1" inputmode="numeric" />
           </label>
           <label class="check">
             <input id="lineage" type="checkbox" />
-            Declare lineage for this effect
+            Evidence is attached
+          </label>
+          <label class="check">
+            <input id="reviewer" type="checkbox" />
+            Human reviewer is selected
           </label>
           <button type="submit">Simulate review</button>
         </form>
@@ -154,7 +155,7 @@
             </div>
             <div>
               <span>Runtime</span>
-              <strong>AwaitingEvidence</strong>
+              <strong>Not open</strong>
             </div>
           </div>
         </div>
@@ -163,7 +164,7 @@
           <div class="eyebrow trace-eyebrow">Simulated record</div>
           <ul class="trace" id="trace"></ul>
         </div>
-        <p class="sim-banner" id="result-banner">Simulated - not a live proof stamp. The runtime service remains AwaitingEvidence.</p>
+        <p class="sim-banner" id="result-banner">Simulated - not a live proof stamp. The runtime service is not open.</p>
       </div>
     </section>
   </main>

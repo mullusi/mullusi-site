@@ -482,6 +482,20 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       font-size: 18px;
     }
 
+    .surface-stage {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      margin-bottom: 18px;
+      padding: 0 9px;
+      border: 1px solid color-mix(in srgb, var(--green) 34%, transparent);
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
     .surface p {
       margin: 0;
       color: var(--muted);
