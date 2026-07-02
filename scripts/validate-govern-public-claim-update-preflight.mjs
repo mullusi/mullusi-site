@@ -34,6 +34,7 @@ const requiredWitnessTerms = [
   { id: "product_status_current", text: "product_status_current=limited-preview" },
   { id: "public_claim_update_allowed", text: "public_claim_update_allowed=false" },
   { id: "public_claim_update_ref", text: "public_claim_update_ref=missing" },
+  { id: "bounded_public_claim_update_ref", text: "bounded_public_claim_update_ref=github:pull/348:govern-public-claim-update" },
   { id: "public_beta_claim_allowed", text: "public_beta_claim_allowed=false" },
   { id: "renderable_claim_count", text: "renderable_claim_count=0" },
   { id: "govern_blocked_claim_count", text: "govern_blocked_claim_count=3" },

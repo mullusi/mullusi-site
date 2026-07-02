@@ -62,6 +62,7 @@ export const governLiveEvidenceRefPlan = Object.freeze({
   },
   public_claim_update_ref: {
     guardPath: "ops/mullu-govern-public-claim-update-preflight.md",
+    guardKey: "bounded_public_claim_update_ref",
     acceptedShape: "github:pull/NNN:govern-public-claim-update",
     evidenceKind: "bounded public claim update PR",
     nextAction: "collect_public_claim_update_ref",

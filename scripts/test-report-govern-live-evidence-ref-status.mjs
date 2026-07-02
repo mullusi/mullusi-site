@@ -51,13 +51,17 @@ function guardContents(valueByKey = {}) {
     `live_evidence_operator_approval_ref=${valueByKey.operator_approval_ref ?? "missing"}`,
     ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=${valueByKey[key] ?? "missing"}`),
   ].join("\n");
+  const publicClaimLines = [
+    `bounded_public_claim_update_ref=${valueByKey.public_claim_update_ref ?? "missing"}`,
+    ...requiredLiveEvidenceApprovalKeys.map((key) => `${key}=${valueByKey[key] ?? "missing"}`),
+  ].join("\n");
   return {
     "ops/mullu-govern-approval-readiness-preflight.md": approvalReadinessLines,
     "ops/mullu-govern-product-status-preflight.md": lines,
     "ops/mullu-govern-privacy-retention-preflight.md": lines,
     "ops/mullu-govern-dashboard-operator-readiness-preflight.md": lines,
     "ops/mullu-govern-evaluate-contract-preflight.md": lines,
-    "ops/mullu-govern-public-claim-update-preflight.md": lines,
+    "ops/mullu-govern-public-claim-update-preflight.md": publicClaimLines,
     "ops/runtime-witness/mullu-govern-closure-packet.md": lines,
   };
 }
