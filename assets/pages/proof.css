@@ -49,6 +49,12 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
     a { color: inherit; }
 
+    code,
+    pre {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
     .skip-link {
       position: fixed;
       top: 12px;
@@ -346,6 +352,81 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       margin: 0;
       color: var(--muted);
       font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .proof-guide {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      gap: 18px;
+      max-width: 940px;
+      padding: 18px;
+      border: 1px solid rgba(232, 177, 92, 0.24);
+      background:
+        linear-gradient(135deg, rgba(232, 177, 92, 0.08), transparent 40%),
+        rgba(255, 255, 255, 0.025);
+    }
+
+    .guide-copy {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .guide-copy h2 {
+      max-width: 16ch;
+      margin: 10px 0 0;
+      font-size: 34px;
+    }
+
+    .guide-copy p {
+      max-width: 44ch;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .guide-grid article {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      min-height: 164px;
+      padding: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    :root[data-theme="light"] .guide-grid article {
+      background: rgba(17, 24, 39, 0.035);
+    }
+
+    .guide-grid span {
+      color: var(--green);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .guide-grid h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
+    .guide-grid p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
       line-height: 1.45;
     }
 
@@ -1481,6 +1562,7 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       .nav-links { display: none; }
       .grid,
       .proof-decision,
+      .proof-guide,
       .proof-console-flow,
       .proof-console-grid,
       .proof-summary,
@@ -1514,7 +1596,8 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
       .proof-meta div { grid-template-columns: 1fr; }
       .proof-console-flow span:not(:last-child)::after { display: none; }
       footer { flex-direction: column; }
-      .decision-copy h2 { max-width: none; }
+      .decision-copy h2,
+      .guide-copy h2 { max-width: none; }
       h1 { font-size: 48px; }
       h2 { font-size: 32px; }
     }
@@ -1590,11 +1673,25 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
         padding: 10px;
       }
 
+      .proof-guide {
+        gap: 10px;
+        padding: 10px;
+      }
+
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-grid article {
+        min-height: 0;
+      }
+
       .decision-grid {
         grid-template-columns: 1fr;
       }
 
-      .decision-copy h2 {
+      .decision-copy h2,
+      .guide-copy h2 {
         font-size: 26px;
       }
 
@@ -1643,6 +1740,14 @@ Invariants: no secrets, no runtime claims, no JavaScript dependency.
 
       .proof-console p {
         font-size: 12px;
+      }
+
+      pre,
+      pre code,
+      .verifier-sample code,
+      .verifier-response-card code {
+        white-space: pre-wrap;
+        word-break: break-word;
       }
 
       .product-proof-head,
