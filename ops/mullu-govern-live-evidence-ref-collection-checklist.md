@@ -46,11 +46,12 @@ command=node scripts/report-govern-live-evidence-ref-status.mjs
 govern_live_evidence_ref_status=AwaitingEvidence
 proof_state=Unknown
 missing_ref_count=8
-local_guard_missing_count=7
+local_guard_missing_count=6
 invalid_ref_count=0
 finding_count=0
 ref=operator_approval_ref status=missing current=missing local_guard=approval://mullu-govern/live-evidence/2026-06-30/operator-approved accepted_shape=approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved accepted_example=approval://mullu-govern/live-evidence/2026-06-30/operator-approved next_action=collect_explicit_operator_approval_ref
 ref=api_contract_test_ref status=missing current=missing local_guard=missing accepted_shape=github:actions/runs/NNN:govern-evaluate-contract-live accepted_example=github:actions/runs/123:govern-evaluate-contract-live next_action=collect_live_contract_test_ref_after_approval
+ref=public_claim_update_ref status=missing current=missing local_guard=github:pull/348:govern-public-claim-update accepted_shape=github:pull/NNN:govern-public-claim-update accepted_example=github:pull/123:govern-public-claim-update next_action=collect_public_claim_update_ref
 secret_values=not_read
 provider_values=not_read
 raw_payloads=not_read

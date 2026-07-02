@@ -93,6 +93,7 @@ function validEvidence(overrides = {}) {
     "product_status_current=limited-preview",
     "public_claim_update_allowed=false",
     "public_claim_update_ref=missing",
+    "bounded_public_claim_update_ref=github:pull/348:govern-public-claim-update",
     "public_beta_claim_allowed=false",
     "renderable_claim_count=0",
     "govern_blocked_claim_count=3",
