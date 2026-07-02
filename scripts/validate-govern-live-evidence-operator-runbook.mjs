@@ -102,7 +102,13 @@ const requiredRunbookTerms = [
   { id: "provider_values_allowed", text: "provider_values_allowed=false" },
   { id: "operator_request_example", text: "accepted_example=approval://mullu-govern/live-evidence/2026-06-30/operator-approved" },
   { id: "operator_request_action_example", text: "accepted_example=github:actions/runs/123:govern-evaluate-contract-live" },
-  { id: "last_reviewed", text: "last_reviewed=2026-06-30" },
+  { id: "local_status_command", text: "command=node scripts/report-govern-live-evidence-ref-status.mjs --path=ops/mullu-govern-live-evidence-ref-intake.local.json" },
+  { id: "local_status_missing_ref_count", text: "missing_ref_count=6" },
+  { id: "local_status_operator_candidate", text: "ref=operator_approval_ref status=candidate current=approval://mullu-govern/live-evidence/2026-06-30/operator-approved local_guard=approval://mullu-govern/live-evidence/2026-06-30/operator-approved accepted_shape=approval://mullu-govern/live-evidence/YYYY-MM-DD/operator-approved accepted_example=approval://mullu-govern/live-evidence/2026-06-30/operator-approved next_action=verify_sequence_order" },
+  { id: "local_status_public_claim_candidate", text: "ref=public_claim_update_ref status=candidate current=github:pull/348:govern-public-claim-update local_guard=github:pull/348:govern-public-claim-update accepted_shape=github:pull/NNN:govern-public-claim-update accepted_example=github:pull/123:govern-public-claim-update next_action=verify_sequence_order" },
+  { id: "local_status_not_product_approval", text: "not a product approval, not route publication, and not runtime witness closure" },
+  { id: "committed_template_refs", text: "Confirm every committed template ref is still `missing`." },
+  { id: "last_reviewed", text: "last_reviewed=2026-07-02" },
   { id: "status_block", text: "STATUS:" },
 ];
 
