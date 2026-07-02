@@ -32,12 +32,33 @@ runtime_mutation=none
 dashboard_auth_mutation=none
 secret_rotation_required=false
 provider_dashboard_values_recorded=false
-last_reviewed=2026-06-25
+last_reviewed=2026-07-02
 ```
 
 The product manifest reserves the operator dashboard route, and the proof
 boundary blocks dashboard operator-readiness claims until verified. This
 preflight only proves the boundary exists and remains fail-closed.
+
+## 2026-07-02 Public Probe Update
+
+Public-safe status-only probes show the dashboard host is reachable while the
+reserved Govern operator path is not currently exposed:
+
+```text
+command=curl status-only probes for https://dashboard.mullusi.com
+dashboard_root_status=200
+dashboard_govern_route_status=404
+dashboard_operator_readiness_ref=missing
+dashboard_live_claim_allowed=false
+public_write_route_allowed=false
+raw_response_bodies=not_recorded
+raw_response_headers=not_recorded
+secret_values=not_read
+```
+
+This update does not close dashboard operator readiness. It records that the
+public host exists, but the reserved product operator path still lacks
+authenticated readiness evidence.
 
 ## Gate Ledger
 

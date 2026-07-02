@@ -44,6 +44,12 @@ function validEvidence(overrides = {}) {
     "dashboard_auth_mutation=none",
     "secret_rotation_required=false",
     "provider_dashboard_values_recorded=false",
+    "last_reviewed=2026-07-02",
+    "## 2026-07-02 Public Probe Update",
+    "command=curl status-only probes for https://dashboard.mullusi.com",
+    "dashboard_root_status=200",
+    "dashboard_govern_route_status=404",
+    "reserved product operator path still lacks",
     "STATUS:",
   ].join("\n");
   return {

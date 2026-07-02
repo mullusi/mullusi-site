@@ -33,6 +33,12 @@ const requiredWitnessTerms = [
   { id: "dashboard_auth_mutation", text: "dashboard_auth_mutation=none" },
   { id: "secret_rotation_required", text: "secret_rotation_required=false" },
   { id: "provider_dashboard_values_recorded", text: "provider_dashboard_values_recorded=false" },
+  { id: "last_reviewed", text: "last_reviewed=2026-07-02" },
+  { id: "public_probe_update", text: "## 2026-07-02 Public Probe Update" },
+  { id: "status_only_probe_command", text: "command=curl status-only probes for https://dashboard.mullusi.com" },
+  { id: "dashboard_root_status", text: "dashboard_root_status=200" },
+  { id: "dashboard_govern_route_status", text: "dashboard_govern_route_status=404" },
+  { id: "public_probe_no_readiness", text: "reserved product operator path still lacks" },
   { id: "status_block", text: "STATUS:" },
 ];
 
